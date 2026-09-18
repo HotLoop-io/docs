@@ -9,4 +9,4 @@ Plain static HTML and CSS, no build step. Edit the `.html` files directly and pu
 - `licensing.html`, the full license text and a plain language summary
 - `assets/`, the shared stylesheet and logo
 
-See [`HotLoop-io/HotLoop-io`](https://github.com/HotLoop-io/HotLoop-io) for the org overview and the canonical `LICENSE.md`.
+This repo is part of the HotLoop-io org. See [github.com/HotLoop-io](https://github.com/HotLoop-io) for the full picture, or [`HotLoop-io/HotLoop-io`](https://github.com/HotLoop-io/HotLoop-io) for the canonical `LICENSE.md`.
