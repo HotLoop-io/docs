@@ -1,6 +1,8 @@
 ---
-title: The write gate
+title: "The write gate: safe writes to equipment"
 description: Every write, from the UI, the API, an automation, or an agent, goes through one function that cannot be routed around. Here is what it checks.
+sidebar:
+  label: "The write gate"
 ---
 
 This software can command machinery, so it is worth being precise about what stands in the way.

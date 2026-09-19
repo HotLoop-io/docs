@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/og.mjs && astro build",
-    "preview": "astro preview"
+    "build": "node scripts/og.mjs && astro build && node scripts/seo-audit.mjs dist",
+    "preview": "astro preview",
+    "audit": "node scripts/seo-audit.mjs dist"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.2",
@@ -20,6 +21,7 @@
     "sharp": "^0.35.4"
   },
   "devDependencies": {
+    "node-html-parser": "^9.0.4",
     "opentype.js": "^2.0.0"
   }
 }

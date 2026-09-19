@@ -34,6 +34,23 @@ export default defineConfig({
         './src/styles/theme.css',
       ],
       head: [
+        // Structured data. It says what this site is and who publishes it, and
+        // nothing else. It ties the docs to the same organization as hotloop.io.
+        {
+          tag: 'script',
+          attrs: { type: 'application/ld+json' },
+          content: JSON.stringify([
+            {
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              '@id': `${site}/#website`,
+              name: 'HotLoop Docs',
+              url: `${site}/`,
+              inLanguage: 'en',
+              publisher: { '@type': 'Organization', '@id': 'https://hotloop.io/#organization', name: 'HotLoop', url: 'https://hotloop.io/' },
+            },
+          ]).replace(/</g, '\\u003c'),
+        },
         { tag: 'meta', attrs: { property: 'og:image', content: `${site}/og/docs.png` } },
         { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
         { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },

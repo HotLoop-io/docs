@@ -1,6 +1,8 @@
 ---
-title: HotLoop Gateway
-description: An industrial automation gateway. It polls real equipment over seven native protocols, keeps the history, raises ISA-18.2 alarms, runs automations, and exposes the plant to agents over MCP.
+title: "HotLoop Gateway overview"
+description: "An industrial automation gateway with seven native protocols, ISA-18.2 alarms, a historian, and MCP access for agents."
+sidebar:
+  label: "Overview"
 ---
 
 :::caution[Not yet published]

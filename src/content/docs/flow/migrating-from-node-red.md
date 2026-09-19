@@ -1,6 +1,8 @@
 ---
-title: Migrating from Node-RED
+title: "Migrating from Node-RED to HotLoop Flow"
 description: How to move an existing Node-RED flow to HotLoop Flow, what will not load, and what behaves differently on purpose.
+sidebar:
+  label: "Migrating from Node-RED"
 ---
 
 Flow reads Node-RED v1 flow files, so migrating starts with the file you already have. This page is the order to do it in, and the things worth knowing before you deploy.

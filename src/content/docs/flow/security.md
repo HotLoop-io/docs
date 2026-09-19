@@ -1,6 +1,8 @@
 ---
-title: Security posture
+title: "Flow security: a safer Node-RED alternative"
 description: Not a feature list. The four places where "anyone who can edit a flow" stops being a synonym for "anyone who owns the box."
+sidebar:
+  label: "Security posture"
 ---
 
 Node-RED's actual trust model is that anyone who can deploy a flow already owns the box, and the `exec` node is right there in the palette. That model is fine on a Pi in a workshop. It is not fine on a customer's plant floor, and it is not hypothetical: [CVE-2025-41656](https://nvd.nist.gov/vuln/detail/CVE-2025-41656) records unauthenticated remote command execution, rated critical, because authentication for the Node-RED server is not configured by default.

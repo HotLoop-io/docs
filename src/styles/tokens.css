@@ -90,8 +90,16 @@
      at all, so a CDN font is not slow there, it is absent.
      Declaring a family you never load is the specific bug to avoid here: the
      gateway's UI has named Inter since it was written and has been rendering
-     in Segoe UI the entire time, because nothing ever loaded it. */
-  --hl-font:      'Inter Variable', 'Inter', 'Segoe UI', system-ui,
+     in Segoe UI the entire time, because nothing ever loaded it.
+
+     'Inter Fallback' is a local Arial with its metrics adjusted to match Inter,
+     so when the real font arrives and replaces it, text does not reflow. Without
+     it the swap moved the hero of hotloop.io enough to score 0.17 on Cumulative
+     Layout Shift, and Google's threshold is 0.1. Each site defines it with an
+     @font-face (size-adjust 109.56%, ascent-override 88.42%, descent-override
+     22.02%, line-gap-override 0%, all computed from the font files). A consumer
+     that does not define it loses nothing, since an unknown family is skipped. */
+  --hl-font:      'Inter Variable', 'Inter Fallback', 'Inter', 'Segoe UI', system-ui,
                   -apple-system, Roboto, sans-serif;
   --hl-font-mono: 'JetBrains Mono', 'Cascadia Mono', ui-monospace,
                   SFMono-Regular, Menlo, Consolas, monospace;

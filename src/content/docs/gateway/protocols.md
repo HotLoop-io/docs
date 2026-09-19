@@ -1,8 +1,9 @@
 ---
-title: "Protocols"
+title: "Protocols: OPC UA, Modbus, MQTT, Sparkplug B"
 description: "Exactly what the Gateway speaks, how far each driver has been verified, and what to do about everything else."
 sidebar:
-  order: 2
+  label: "Protocols"
+  order: 3
 ---
 
 This document says exactly what the gateway speaks, exactly how far each driver

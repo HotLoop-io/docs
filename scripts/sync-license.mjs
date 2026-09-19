@@ -22,8 +22,10 @@ const legal = readFileSync(src, 'utf8')
 if (/—/.test(legal)) { console.error('the license text contains an em-dash; it is legal text, so decide by hand'); process.exit(1); }
 
 const page = `---
-title: Licensing
+title: "HotLoop licensing: Gateway and Flow"
 description: HotLoop is two products with two licenses. Gateway is free for individuals, with business use through Embernet. Flow is Apache-2.0, free for everyone.
+sidebar:
+  label: Licensing
 ---
 
 Two products, licensed separately on purpose. Which license applies depends on the product, and for the Gateway, on who is running it.

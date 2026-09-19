@@ -1,6 +1,8 @@
 ---
-title: HotLoop Flow
+title: "HotLoop Flow overview"
 description: A Node-RED-compatible flow engine in one static Go binary, with bounded queues, a goroutine per node, and a license that lets anyone run it.
+sidebar:
+  label: "Overview"
 ---
 
 :::note[Published today as Emberwire]

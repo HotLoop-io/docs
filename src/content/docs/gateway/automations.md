@@ -1,8 +1,9 @@
 ---
-title: "Automations"
-description: "Triggers, conditions, actions, and run modes, and why a rule is compiled when you save it."
+title: "Automations: triggers, conditions, actions"
+description: "Triggers, conditions, actions, and run modes, and why a rule is compiled when you save it, not when it fires."
 sidebar:
-  order: 3
+  label: "Automations"
+  order: 4
 ---
 
 A rule is three things: something happens, a condition holds, actions run.

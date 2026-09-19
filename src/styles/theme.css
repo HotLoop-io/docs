@@ -11,6 +11,18 @@
  * placed on an orange fill uses --hl-on-accent, never white, which measures 3.13:1.
  */
 
+/* A local Arial adjusted to occupy the same space as Inter, so the swap from this
+   to the real font does not move any text. The four numbers are computed from the
+   Inter and Arial font files. See the note beside --hl-font in tokens.css. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 109.56%;
+  ascent-override: 88.42%;
+  descent-override: 22.02%;
+  line-gap-override: 0%;
+}
+
 :root,
 :root[data-theme='light'] {
   --sl-font: var(--hl-font);

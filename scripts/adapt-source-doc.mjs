@@ -17,7 +17,7 @@ import { dirname } from 'node:path';
 const args = process.argv.slice(2);
 const [inFile, outFile] = args;
 const flag = (n) => { const i = args.indexOf(`--${n}`); return i > -1 ? args[i + 1] : undefined; };
-const title = flag('title'), description = flag('description'), order = flag('order');
+const title = flag('title'), description = flag('description'), order = flag('order'), label = flag('label');
 if (!inFile || !outFile || !title || !description) {
   console.error('usage: node scripts/adapt-source-doc.mjs <in.md> <out.md> --title "..." --description "..." [--order N]');
   process.exit(1);
@@ -101,7 +101,13 @@ if (left) {
 text = text.replace(/^# .*\n+/, '');
 
 const fm = ['---', `title: ${JSON.stringify(title)}`, `description: ${JSON.stringify(description)}`];
-if (order) fm.push('sidebar:', `  order: ${order}`);
+// The page title is written for search results and can be long. The sidebar label
+// stays short, so the navigation reads the same as it always did.
+if (order || label) {
+  fm.push('sidebar:');
+  if (label) fm.push(`  label: ${JSON.stringify(label)}`);
+  if (order) fm.push(`  order: ${order}`);
+}
 fm.push('---', '');
 
 mkdirSync(dirname(outFile), { recursive: true });

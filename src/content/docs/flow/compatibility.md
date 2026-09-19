@@ -1,6 +1,8 @@
 ---
-title: Compatibility
+title: "Node-RED compatibility: flows.json and nodes"
 description: What loads, what loads byte for byte, what is refused, and how each of the 51 node types compares to Node-RED.
+sidebar:
+  label: "Compatibility"
 ---
 
 ## Your flow files load byte for byte

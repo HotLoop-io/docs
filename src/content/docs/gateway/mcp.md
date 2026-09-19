@@ -1,8 +1,9 @@
 ---
-title: "Model Context Protocol"
-description: "The Gateway as an MCP server and client: tools, resources, the write path, and site federation."
+title: "Model Context Protocol server and client"
+description: "The Gateway as an MCP server and client: tools, resources, the write path, and how sites are federated."
 sidebar:
-  order: 4
+  label: "Model Context Protocol"
+  order: 5
 ---
 
 The gateway speaks MCP in both directions: agents can read and drive the plant,

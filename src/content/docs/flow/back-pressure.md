@@ -1,6 +1,8 @@
 ---
-title: Back-pressure and bounded queues
+title: "Back-pressure and bounded queues in Flow"
 description: Everything unbounded in Node-RED is bounded in Flow, visibly. Here is what is bounded, what happens at the limit, and how to choose a policy.
+sidebar:
+  label: "Back-pressure and bounded queues"
 ---
 
 This is the throughline of the entire project, so it gets its own page. Node-RED's characteristic failure mode is a pod that quietly inflates until the kubelet kills it, leaving a log that explains nothing to the person holding the pager.
