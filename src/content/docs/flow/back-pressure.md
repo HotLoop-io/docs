@@ -11,7 +11,7 @@ In Flow, every place a queue could grow without limit has a limit, and hitting t
 
 ## What is bounded
 
-| | Node-RED | Flow |
+| Area | Node-RED | Flow |
 |---|---|---|
 | Node inbox | Unbounded | Bounded, four overflow policies |
 | Delay and rate-limit queue | Unbounded | Bounded, refused to a Catch node past the limit |

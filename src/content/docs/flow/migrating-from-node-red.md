@@ -36,7 +36,7 @@ Every node type that is not fully compatible says what is different. Look up eac
 
 ## 4. Expect these differences, which are deliberate
 
-| | Node-RED | Flow |
+| Area | Node-RED | Flow |
 |---|---|---|
 | Message cloning | The first recipient on a wire gets the original | Every recipient gets its own copy |
 | Queues | Unbounded | Bounded, with a policy per node |

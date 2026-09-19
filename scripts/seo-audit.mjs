@@ -93,6 +93,23 @@ for (const f of htmlFiles) {
   const h1 = root.querySelectorAll('h1').filter((h) => !h.closest('[hidden]'));
   if (!is404 && h1.length !== 1) err(route, `has ${h1.length} <h1>, want exactly 1`);
 
+  // headings never skip a level going down (h2 straight to h4), which is what
+  // Lighthouse's heading-order audit fails and what a screen reader's outline shows
+  let prevLevel = 0;
+  for (const h of root.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
+    if (h.closest('[hidden]')) continue;
+    const level = Number(h.tagName[1]);
+    if (prevLevel && level > prevLevel + 1) {
+      err(route, `heading jumps from h${prevLevel} to h${level}: "${h.text.trim().slice(0, 50)}"`);
+    }
+    prevLevel = level;
+  }
+
+  // a column header with no text leaves every cell under it unlabeled
+  for (const th of root.querySelectorAll('th')) {
+    if (!th.text.trim() && !th.querySelector('img, svg')) err(route, 'table has an empty <th>');
+  }
+
   // canonical: present, absolute, and it points at this very page
   const canon = root.querySelector('link[rel="canonical"]')?.getAttribute('href');
   if (!canon) { if (!is404) err(route, 'missing canonical'); }
