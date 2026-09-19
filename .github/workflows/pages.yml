@@ -1,0 +1,68 @@
+name: Deploy Pages
+
+# Deploys docs.hotloop.io on every push to main. Pages keeps serving the last
+# successful deployment if a build fails, so a broken build never takes the site
+# down. Pages must be set to "GitHub Actions" as its source in the repo settings.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      # src/styles/tokens.css is a vendored copy of the canonical file in
+      # HotLoop-io/HotLoop-io. If they drift, fail here rather than ship docs whose
+      # colors quietly disagree with the brand standard.
+      - name: Design tokens match the canonical copy
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main/brand/tokens.css -o "$RUNNER_TEMP/canonical-tokens.css"
+          diff -u --strip-trailing-cr "$RUNNER_TEMP/canonical-tokens.css" src/styles/tokens.css
+
+      # The license text on the site is generated from the canonical LICENSE.md.
+      # Regenerate it and fail if the committed page is out of date.
+      - name: Licensing page matches the canonical license
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main/LICENSE.md -o "$RUNNER_TEMP/LICENSE.md"
+          cp src/content/docs/licensing.md "$RUNNER_TEMP/licensing.committed.md"
+          node scripts/sync-license.mjs "$RUNNER_TEMP/LICENSE.md"
+          diff -u --strip-trailing-cr "$RUNNER_TEMP/licensing.committed.md" src/content/docs/licensing.md
+
+      - uses: actions/configure-pages@v6
+
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

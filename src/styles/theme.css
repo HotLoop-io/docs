@@ -1,0 +1,124 @@
+/* Maps the HotLoop design tokens onto Starlight's own variables.
+ *
+ * tokens.css already flips every value between light and dark on
+ * :root[data-theme], and Starlight always sets that attribute, so everything
+ * below is written once, in terms of tokens, and both themes follow. There is no
+ * hex value in this file that is not a token.
+ *
+ * Two rules from the brand standard matter here. Links and accent text use
+ * --hl-link, which is the dark cut in light mode and the bright orange in dark,
+ * because the bright orange on the light ground measures 3.0:1. And anything
+ * placed on an orange fill uses --hl-on-accent, never white, which measures 3.13:1.
+ */
+
+:root,
+:root[data-theme='light'] {
+  --sl-font: var(--hl-font);
+  --sl-font-mono: var(--hl-font-mono);
+  --sl-text-body: 1rem;
+
+  /* Starlight names its greys by role: white is the strongest text, black is the
+     page ground, and the numbered greys step between. Map them onto the tokens. */
+  --sl-color-white: var(--hl-ink);
+  --sl-color-gray-1: var(--hl-ink);
+  --sl-color-gray-2: var(--hl-ink);
+  --sl-color-gray-3: var(--hl-ink-soft);
+  --sl-color-gray-4: var(--hl-ink-soft);
+  --sl-color-gray-5: var(--hl-line-strong);
+  --sl-color-gray-6: var(--hl-sunken);
+  --sl-color-gray-7: var(--hl-card);
+  --sl-color-black: var(--hl-bg);
+
+  --sl-color-text: var(--hl-ink);
+  --sl-color-bg: var(--hl-bg);
+  --sl-color-bg-nav: var(--hl-bg);
+  --sl-color-bg-sidebar: var(--hl-bg);
+  --sl-color-bg-inline-code: var(--hl-sunken);
+  --sl-color-hairline: var(--hl-border);
+  --sl-color-hairline-light: var(--hl-border);
+  --sl-color-hairline-shade: var(--hl-border);
+
+  /* Accent. The fill is the brand orange. Text uses the theme-aware link color. */
+  --sl-color-accent: var(--hl-orange);
+  --sl-color-accent-high: var(--hl-link);
+  --sl-color-accent-low: var(--hl-orange-tint);
+  --sl-color-text-accent: var(--hl-link);
+  --sl-color-text-invert: var(--hl-on-accent);
+  --sl-color-bg-accent: var(--hl-orange);
+
+  /* Callouts. The accent is never used for state, so each kind takes its color
+     from the semantic ramp, and the -text half carries type. */
+  --sl-color-blue: var(--hl-info);
+  --sl-color-blue-low: var(--hl-info-tint);
+  --sl-color-blue-high: var(--hl-info-text);
+  --sl-color-orange: var(--hl-warn);
+  --sl-color-orange-low: var(--hl-warn-tint);
+  --sl-color-orange-high: var(--hl-warn-text);
+  --sl-color-red: var(--hl-danger);
+  --sl-color-red-low: var(--hl-danger-tint);
+  --sl-color-red-high: var(--hl-danger-text);
+  --sl-color-green: var(--hl-ok);
+  --sl-color-green-low: var(--hl-ok-tint);
+  --sl-color-green-high: var(--hl-ok-text);
+  --sl-color-purple: var(--hl-ok);
+  --sl-color-purple-low: var(--hl-ok-tint);
+  --sl-color-purple-high: var(--hl-ok-text);
+
+  /* Comfortable measure, and a slightly wider column for the tables in these docs. */
+  --sl-content-width: 46rem;
+}
+
+/* Headings and page title: the same tight, heavy signature as the marketing site. */
+.sl-markdown-content :is(h1, h2, h3, h4) { letter-spacing: var(--hl-ls-heading); font-weight: 800; }
+h1#_top, .hero h1 { letter-spacing: var(--hl-ls-tight); font-weight: 800; }
+
+/* The primary button sits on an orange fill, so its text is the dark ink. */
+.sl-link-button.primary {
+  background: var(--hl-gradient);
+  border-color: transparent;
+  color: var(--hl-on-accent);
+  font-weight: 700;
+}
+.sl-link-button.primary:hover { filter: brightness(1.05); color: var(--hl-on-accent); }
+.sl-link-button.minimal { color: var(--hl-link); }
+
+/* Tables: the docs lean on them, so they get real cell padding and never force the
+   page wider than the screen. Starlight already lets a table scroll sideways inside
+   the content column, and this keeps the header row readable while it does. */
+.sl-markdown-content table { font-size: var(--hl-fs-sm); }
+.sl-markdown-content :is(th, td) { padding: 0.6em 0.9em; vertical-align: top; }
+.sl-markdown-content th {
+  font-size: var(--hl-fs-2xs); letter-spacing: var(--hl-ls-label); text-transform: uppercase;
+  color: var(--hl-ink-soft); background: var(--hl-sunken); white-space: nowrap;
+}
+.sl-markdown-content :not(pre) > code { border: 1px solid var(--hl-border); }
+
+/* The current page in the sidebar sits on an orange fill, so its text is the dark
+   ink. Left to Starlight's default it renders white, which is 3.13:1 and fails. */
+nav.sidebar a[aria-current='page'],
+nav.sidebar a[aria-current='page']:hover {
+  background: var(--hl-orange);
+  color: var(--hl-on-accent);
+}
+
+/* Cards use the same radius as the marketing site. */
+.card { border-radius: var(--hl-r-card); }
+
+/* On a phone a wide table scrolls inside its own box rather than crushing its
+   columns into one-word lines, and a code span inside a table cell never breaks
+   mid-identifier ("settings.js" must not become "settings.j" and "s"). */
+@media (max-width: 640px) {
+  .sl-markdown-content table { display: block; overflow-x: auto; max-width: 100%; }
+  .sl-markdown-content :is(th, td) { min-width: 8.5rem; }
+  .sl-markdown-content :is(th, td) code { white-space: nowrap; overflow-wrap: normal; }
+}
+
+/* Focus is visible on every ground. */
+:focus-visible { outline: 2px solid var(--hl-focus); outline-offset: 2px; }
+
+/* Long identifiers in code must wrap on a phone rather than push the page wide. */
+.sl-markdown-content :not(pre) > code { overflow-wrap: anywhere; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
