@@ -1,0 +1,41 @@
+---
+title: HotLoop documentation
+description: Documentation for HotLoop Gateway and HotLoop Flow, including what has not been proven yet.
+template: splash
+hero:
+  tagline: Two pieces of software for closing the loop between what a sensor says and what a machine does. Documented plainly, including what is not proven yet.
+  actions:
+    - text: HotLoop Gateway
+      link: /gateway/overview/
+      icon: right-arrow
+    - text: HotLoop Flow
+      link: /flow/overview/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Start here
+
+<CardGrid>
+  <Card title="HotLoop Gateway" icon="setting">
+    An industrial automation gateway. It polls real equipment over seven native protocols, keeps the history, raises alarms, and exposes the plant to agents. [Read the overview](/gateway/overview/).
+  </Card>
+  <Card title="HotLoop Flow" icon="random">
+    A Node-RED-compatible flow engine in one static Go binary. Bounded queues, a goroutine per node, and Apache-2.0. [Read the overview](/flow/overview/).
+  </Card>
+  <Card title="Migrating from Node-RED" icon="right-arrow">
+    Have flows already? Start by asking the import command what will happen. [Read the guide](/flow/migrating-from-node-red/).
+  </Card>
+  <Card title="Licensing" icon="information">
+    Two products, two licenses. Flow is free for everyone, and the Gateway is free for individuals. [Which one applies to you](/licensing/).
+  </Card>
+</CardGrid>
+
+## What these docs will and will not tell you
+
+They will tell you what each product does, how far each piece has been proven, and what is not done yet. Both products keep a table of what has and has not been verified against real equipment, and these docs repeat it instead of rounding up.
+
+They do not yet cover installation. The images, charts, and command names are changing as both products move into this organization, and a command that is wrong within a week is worse than no command. Installation pages will land when the names are final.
+
+For the products' current status, see the [release notes](https://hotloop.io/releases/) and the [integrations table](https://hotloop.io/integrations/).
