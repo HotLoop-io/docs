@@ -1,11 +1,11 @@
 ---
 title: "Install HotLoop Flow with Podman or Helm"
-description: "Run HotLoop Flow 2.0.2 with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
+description: "Run HotLoop Flow 2.0.3 with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow 2.0.2 is current, and 2.0.0 was the first release under this name. It ships as a 25 MB container image for amd64 and arm64, a Helm chart, and source you can build yourself. There is no Docker or Compose path here, on purpose.
+HotLoop Flow 2.0.3 is current, and 2.0.0 was the first release under this name. It ships as a 25 MB container image for amd64 and arm64, a Helm chart, and source you can build yourself. There is no Docker or Compose path here, on purpose.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands, and it refuses to run without a credential secret, which is what encrypts the credentials stored with your flows. Every path below sets both.
 
@@ -14,7 +14,7 @@ Flow starts locked. It refuses to run without an admin account, because a flow c
 Make a password hash first. The image has no shell in it, so the hashing is a command of the binary itself, and it refuses anything under eight characters.
 
 ```bash
-podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.0.2 hash-password -password 'something-long'
+podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.0.3 hash-password -password 'something-long'
 ```
 
 Then run it, with the hash from above in single quotes, since it is full of dollar signs.
@@ -24,7 +24,7 @@ podman run -d --name hotloop-flow -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<the hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.0.2
+  ghcr.io/hotloop-io/hotloop-flow:2.0.3
 ```
 
 Open `http://localhost:1880/` and sign in as `admin`. `/health` answers with the version once it is up.
@@ -54,7 +54,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Container]
-Image=ghcr.io/hotloop-io/hotloop-flow:2.0.2
+Image=ghcr.io/hotloop-io/hotloop-flow:2.0.3
 ContainerName=hotloop-flow
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
@@ -90,8 +90,12 @@ One release is one instance, and the chart pins one replica on purpose. Flow hol
 The chart has three network modes: `cluster`, which is the default, `host`, and `macvlan`, which gives the pod its own address on an OT segment and needs Multus. The [README](https://github.com/HotLoop-io/hotloop-flow#deploying-on-embernet) covers them, and the resource presets, in full.
 
 :::note[Where the chart has been run]
-The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, and upgrades. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, but have not been run on a cluster.
+The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, upgrades, and a deploy from the EmberNET App Store through Fleet. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, but have not been run on a cluster.
 :::
+
+## From the EmberNET App Store
+
+HotLoop Flow is in the EmberNET App Store catalogue. For a tenant on its own cluster the dashboard deploys it through Fleet, which needs dashboard 4.9.37 or later: earlier versions created a Fleet bundle that installed nothing. The dashboard passes its tenant labels and the chart puts them on everything it creates, from Flow 2.0.3.
 
 ## From source
 
