@@ -76,6 +76,7 @@ export default defineConfig({
           label: 'HotLoop Flow',
           items: [
             { slug: 'flow/overview' },
+            { slug: 'flow/install' },
             { slug: 'flow/security' },
             { slug: 'flow/back-pressure' },
             { slug: 'flow/compatibility' },
