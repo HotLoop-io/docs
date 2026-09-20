@@ -6,7 +6,7 @@ sidebar:
 ---
 
 :::note[Renamed from Emberwire]
-Version 2.0.0 is the first release under the HotLoop Flow name. Version 0.1.0 was published as Emberwire, and 2.0.0 does not keep the old names working. The [install page](/flow/install/) has the commands, and the [release notes](https://hotloop.io/releases/flow/) list everything that a saved flow, a WASM module, or a credentials file from 0.1.0 needs redone.
+Version 2.0.1 is current, and 2.0.0 was the first release under the HotLoop Flow name. Version 0.1.0 was published as Emberwire, and 2.x does not keep the old names working. The [install page](/flow/install/) has the commands, and the [release notes](https://hotloop.io/releases/flow/) list everything that a saved flow, a WASM module, or a credentials file from 0.1.0 needs redone.
 :::
 
 HotLoop Flow is a flow engine in Go, and Node-RED's idea with a different runtime. It is one static binary, with an editor of its own and a scheduler that holds up when a sensor starts talking faster than the thing reading it.
