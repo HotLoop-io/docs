@@ -8,7 +8,7 @@ sidebar:
 Flow reads Node-RED v1 flow files, so migrating starts with the file you already have. This page is the order to do it in, and the things worth knowing before you deploy.
 
 :::note
-Flow is published today as Emberwire, and the HotLoop Flow release is coming. The steps below do not depend on the name, and commands and image names will be added here when they are final.
+Flow was published as Emberwire, in version 0.1.0, and is HotLoop Flow now. The steps below do not depend on the name, and commands and image names will be added here once the first release under the new name is out.
 :::
 
 ## 1. Ask it what will happen

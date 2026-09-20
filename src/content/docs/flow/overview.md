@@ -5,8 +5,8 @@ sidebar:
   label: "Overview"
 ---
 
-:::note[Published today as Emberwire]
-Version 0.1.0 is public under its original name, Emberwire, at [github.com/Embernet-ai/emberwire](https://github.com/Embernet-ai/emberwire). The HotLoop Flow release is coming, and it will move into the HotLoop-io org. This documentation covers what does not change with the rename. Commands, image names, and configuration variable names will be added when they are final.
+:::note[Renamed from Emberwire]
+Version 0.1.0 was published under the name Emberwire. The code is HotLoop Flow now, at [github.com/HotLoop-io/hotloop-flow](https://github.com/HotLoop-io/hotloop-flow), and the first release under the new name has not been cut yet. That release renames the image, the chart, the environment variables, and two node types, and it does not keep the old names working. A saved flow that uses the two database nodes, a WASM module built against the old exports, or a credentials file from 0.1.0 has to be redone. This documentation covers what does not change. Commands, image names, and configuration variable names will be added once that release is out.
 :::
 
 HotLoop Flow is a flow engine in Go, and Node-RED's idea with a different runtime. It is one static binary, with an editor of its own and a scheduler that holds up when a sensor starts talking faster than the thing reading it.
