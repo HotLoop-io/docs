@@ -38,4 +38,4 @@ There are two binaries today. The **Gateway** is the whole thing. The **Edge Rel
 
 ## License
 
-HotLoop Gateway is source-available under the HotLoop Community License. It is free for individual, home, hobbyist, nonprofit, and educational use, and any business use goes through [Embernet](https://embernet.ai). It is not an OSI-approved open source license. See [Licensing](/licensing/) for the plain-language version and the full text.
+HotLoop Gateway is source-available under the HotLoop Community License. It is free for individual, home, hobbyist, nonprofit, and educational use, and any business use goes through [EmberNET](https://embernet.ai), where signing up is free and business use of HotLoop is free. It is not an OSI-approved open source license. See [Licensing](/licensing/) for the plain-language version and the full text, and [Using HotLoop in a business](/business/) for both ways to run it at work.

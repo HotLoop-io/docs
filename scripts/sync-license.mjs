@@ -23,7 +23,7 @@ if (/—/.test(legal)) { console.error('the license text contains an em-dash; it
 
 const page = `---
 title: "HotLoop licensing: Gateway and Flow"
-description: HotLoop is two products with two licenses. Gateway is free for individuals, with business use through Embernet. Flow is Apache-2.0, free for everyone.
+description: HotLoop is two products with two licenses. Gateway is free for individuals, with business use through EmberNET. Flow is Apache-2.0, free for everyone.
 sidebar:
   label: Licensing
 ---
@@ -33,16 +33,18 @@ Two products, licensed separately on purpose. Which license applies depends on t
 | Product | Who | Cost | How to get it |
 |---|---|---|---|
 | HotLoop Gateway | Individual, home, hobbyist, nonprofit, or education | Free | Self-host directly, no agreement needed |
-| HotLoop Gateway | Any business or for-profit use, internal or customer-facing | Through Embernet | Exclusively through [Embernet](https://embernet.ai) |
+| HotLoop Gateway | Any business or for-profit use, internal or customer-facing | Free, through EmberNET | Exclusively through [EmberNET](https://embernet.ai) |
 | HotLoop Flow | Anyone, including businesses and commercial use | Free | Self-host directly under Apache-2.0, no agreement needed |
 
 ## HotLoop Flow is Apache-2.0
 
-Flow is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0), which is an OSI-approved open source license with no business-use restriction. A business can run it, modify it, and ship it commercially without asking anyone, and it does not need Embernet or anybody else's permission.
+Flow is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0), which is an OSI-approved open source license with no business-use restriction. A business can run it, modify it, and ship it commercially without asking anyone, and it does not need EmberNET or anybody else's permission.
 
 ## HotLoop Gateway is source-available
 
-The Gateway is under the HotLoop Community License. It is source-available, and it is **not** an OSI-approved open source license, because it restricts business use. Individuals get it free, and any business that wants it goes through our partner [Embernet](https://embernet.ai), which provides the support, the SLAs, and the warranty.
+The Gateway is under the HotLoop Community License. It is source-available, and it is **not** an OSI-approved open source license, because it restricts business use. Individuals get it free, and any business that wants it goes through our partner [EmberNET](https://embernet.ai). You can sign up for EmberNET for free, and business use of HotLoop there is free.
+
+Support, SLAs, and warranties come from [Fireball Industries](https://fireballz.ai), HotLoop's official systems integrator, not from EmberNET. Fireball will also design, install, and support the rollout for you if you would rather not do it yourself. [Using HotLoop in a business](/business/) covers both paths.
 
 ### A few concrete situations
 
@@ -52,12 +54,12 @@ The Gateway is under the HotLoop Community License. It is source-available, and 
 | A hobby project you are building for fun | Free |
 | A class project or a student lab | Free |
 | A local nonprofit running it in their own space | Free |
-| Running it inside a company, internal only, no customers touching it | Through Embernet |
-| Deploying it as part of a product or service you sell | Through Embernet |
-| A landlord automating a rental property they operate as a business | Through Embernet |
-| A contractor installing and managing it for paying clients | Through Embernet |
+| Running it inside a company, internal only, no customers touching it | Through EmberNET |
+| Deploying it as part of a product or service you sell | Through EmberNET |
+| A landlord automating a rental property they operate as a business | Through EmberNET |
+| A contractor installing and managing it for paying clients | Through EmberNET |
 
-Genuinely unsure which side of the Gateway line you are on? Ask before you build a whole setup on a bad assumption. Email [support@hotloop.io](mailto:support@hotloop.io), or go straight to Embernet if it looks like a business case.
+Genuinely unsure which side of the Gateway line you are on? Ask before you build a whole setup on a bad assumption. Email [support@hotloop.io](mailto:support@hotloop.io), or go straight to [EmberNET](https://embernet.ai) if it looks like a business case.
 
 ## One note on history
 
