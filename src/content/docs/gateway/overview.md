@@ -6,7 +6,7 @@ sidebar:
 ---
 
 :::caution[Not yet published]
-Version 4.13.0 is merged, and the code is moving into the HotLoop-io org. Nothing is downloadable yet. The [release notes](https://hotloop.io/releases/gateway/) say exactly which versions have and have not been tagged.
+Version 4.15.3 is merged, and the code has moved into the HotLoop-io org, at HotLoop-io/hotloop, which is private for now. Nothing is downloadable yet. The [release notes](https://hotloop.io/releases/gateway/) say exactly which versions have and have not been tagged.
 :::
 
 HotLoop Gateway polls real equipment over real protocols, keeps what it reads, alarms on it, automates against it, and exposes the whole plant to agents over MCP. It is written in Go and it ships as one static binary with no sidecar, running as a non-root user with every capability dropped.

@@ -80,6 +80,11 @@ corrupt the protocol stream.
 | `trigger_automation` | run a rule now |
 | `describe_protocol` | what this build actually speaks |
 | `recent_events` | the system log, to work out what happened in what order |
+| `list_entities` | find entities by domain, equipment node or label, with the services each takes |
+| `get_states` | current state of one or more entities, with quality and attributes |
+| `call_service` | **command an entity**: `switch.turn_on`, `number.set_value` |
+
+An entity is what people call a thing on the plant, `sensor.zone_1_temperature` or `switch.conveyor_run`, wrapping one or more tags. For an agent it's usually the better handle, because the name means something and the entity knows what you can do to it. `call_service` takes a **required** `reason`, same as `write_tag`, and turns the call into writes through the same write gate. Entities are merged after 4.15.3 and don't have a version number yet.
 
 ## Resources
 
