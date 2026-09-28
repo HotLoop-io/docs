@@ -1,6 +1,6 @@
 ---
 title: "HotLoop licensing: Gateway and Flow"
-description: HotLoop is two products with two licenses. Gateway is free for individuals, with business use through Embernet. Flow is Apache-2.0, free for everyone.
+description: HotLoop is two products with two licenses. Gateway is free for individuals, with business use through EmberNET. Flow is Apache-2.0, free for everyone.
 sidebar:
   label: Licensing
 ---
@@ -10,18 +10,18 @@ Two products, licensed separately on purpose. Which license applies depends on t
 | Product | Who | Cost | How to get it |
 |---|---|---|---|
 | HotLoop Gateway | Individual, home, hobbyist, nonprofit, or education | Free | Self-host directly, no agreement needed |
-| HotLoop Gateway | Any business or for-profit use, internal or customer-facing | Free, through Embernet | Exclusively through [Embernet](https://embernet.ai) |
+| HotLoop Gateway | Any business or for-profit use, internal or customer-facing | Free, through EmberNET | Exclusively through [EmberNET](https://embernet.ai) |
 | HotLoop Flow | Anyone, including businesses and commercial use | Free | Self-host directly under Apache-2.0, no agreement needed |
 
 ## HotLoop Flow is Apache-2.0
 
-Flow is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0), which is an OSI-approved open source license with no business-use restriction. A business can run it, modify it, and ship it commercially without asking anyone, and it does not need Embernet or anybody else's permission.
+Flow is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0), which is an OSI-approved open source license with no business-use restriction. A business can run it, modify it, and ship it commercially without asking anyone, and it does not need EmberNET or anybody else's permission.
 
 ## HotLoop Gateway is source-available
 
-The Gateway is under the HotLoop Community License. It is source-available, and it is **not** an OSI-approved open source license, because it restricts business use. Individuals get it free, and any business that wants it goes through our partner [Embernet](https://embernet.ai), which provides the support, the SLAs, and the warranty. You can sign up for Embernet for free, and business use of HotLoop there is free.
+The Gateway is under the HotLoop Community License. It is source-available, and it is **not** an OSI-approved open source license, because it restricts business use. Individuals get it free, and any business that wants it goes through our partner [EmberNET](https://embernet.ai). You can sign up for EmberNET for free, and business use of HotLoop there is free.
 
-If you would rather have someone design, install, and support the rollout for you, [Fireball Industries](https://fireballz.ai) is HotLoop's official systems integrator. [Using HotLoop in a business](/business/) covers both paths.
+Support, SLAs, and warranties come from [Fireball Industries](https://fireballz.ai), HotLoop's official systems integrator, not from EmberNET. Fireball will also design, install, and support the rollout for you if you would rather not do it yourself. [Using HotLoop in a business](/business/) covers both paths.
 
 ### A few concrete situations
 
@@ -31,12 +31,12 @@ If you would rather have someone design, install, and support the rollout for yo
 | A hobby project you are building for fun | Free |
 | A class project or a student lab | Free |
 | A local nonprofit running it in their own space | Free |
-| Running it inside a company, internal only, no customers touching it | Through Embernet |
-| Deploying it as part of a product or service you sell | Through Embernet |
-| A landlord automating a rental property they operate as a business | Through Embernet |
-| A contractor installing and managing it for paying clients | Through Embernet |
+| Running it inside a company, internal only, no customers touching it | Through EmberNET |
+| Deploying it as part of a product or service you sell | Through EmberNET |
+| A landlord automating a rental property they operate as a business | Through EmberNET |
+| A contractor installing and managing it for paying clients | Through EmberNET |
 
-Genuinely unsure which side of the Gateway line you are on? Ask before you build a whole setup on a bad assumption. Email [support@hotloop.io](mailto:support@hotloop.io), or go straight to [Embernet](https://embernet.ai) if it looks like a business case.
+Genuinely unsure which side of the Gateway line you are on? Ask before you build a whole setup on a bad assumption. Email [support@hotloop.io](mailto:support@hotloop.io), or go straight to [EmberNET](https://embernet.ai) if it looks like a business case.
 
 ## One note on history
 
@@ -60,15 +60,15 @@ This is a source-available license. It is **not** an OSI-approved open source li
 - **"You"** means the person or entity exercising rights under this license.
 - **"Individual Use"** means use of the Software by a natural person for personal, household, hobbyist, educational, or noncommercial community or nonprofit purposes. The Software must not be used by, for, or on behalf of any business or for-profit organization, and must not be used to generate revenue or to provide a commercial product or service to any third party.
 - **"Business Use"** means any use of the Software by, for, or on behalf of a business, company, corporation, partnership, sole proprietorship, or other for-profit entity, for any purpose whatsoever, including purely internal operations, regardless of whether the Software is resold, sublicensed, or exposed to anyone outside that entity, and regardless of whether a fee is charged.
-- **"Embernet"** means Embernet and its designated affiliates, the sole authorized commercial partner for Business Use of HotLoop.
+- **"EmberNET"** means EmberNET and its designated affiliates, the sole authorized commercial partner for Business Use of HotLoop.
 
 ### 2. Grant for Individual Use
 
 Subject to the terms of this license, HotLoop grants You a worldwide, royalty-free, non-exclusive license to use, copy, modify, self-host, and distribute the Software, in original or modified form, solely for Individual Use. Any copy or substantial portion of the Software that You distribute must retain this license and all copyright notices.
 
-### 3. Business Use Requires Embernet
+### 3. Business Use Requires EmberNET
 
-**No rights are granted under this license for Business Use.** If You wish to use HotLoop in connection with any business or for-profit purpose, You must obtain it through Embernet's official Business/Enterprise offering, under a separate commercial agreement with Embernet. Embernet is the sole and exclusive authorized channel through which HotLoop may be obtained and used for Business Use. Deploying or operating the Software for Business Use without a commercial agreement with Embernet is not authorized, and is a violation of this license.
+**No rights are granted under this license for Business Use.** If You wish to use HotLoop in connection with any business or for-profit purpose, You must obtain it through EmberNET's official Business/Enterprise offering, under a separate commercial agreement with EmberNET. EmberNET is the sole and exclusive authorized channel through which HotLoop may be obtained and used for Business Use. Deploying or operating the Software for Business Use without a commercial agreement with EmberNET is not authorized, and is a violation of this license.
 
 ### 4. Trademarks
 
@@ -80,7 +80,7 @@ You may modify the Software for Your own Individual Use. If You redistribute the
 
 ### 6. Termination
 
-Your rights under this license terminate automatically if You use the Software in violation of its terms, including any unauthorized Business Use. Reinstatement, if any, is at the sole discretion of HotLoop and Embernet.
+Your rights under this license terminate automatically if You use the Software in violation of its terms, including any unauthorized Business Use. Reinstatement, if any, is at the sole discretion of HotLoop and EmberNET.
 
 ### 7. No Warranty
 
@@ -88,7 +88,7 @@ THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ### 8. Questions
 
-For a Business Use license, contact Embernet. For anything else, contact support@hotloop.io.
+For a Business Use license, contact EmberNET. For anything else, contact support@hotloop.io.
 
 ---
 
