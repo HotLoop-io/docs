@@ -84,6 +84,7 @@ export default defineConfig({
           ],
         },
         { slug: 'licensing' },
+        { slug: 'business' },
       ],
     }),
   ],

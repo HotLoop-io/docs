@@ -10,7 +10,7 @@ Two products, licensed separately on purpose. Which license applies depends on t
 | Product | Who | Cost | How to get it |
 |---|---|---|---|
 | HotLoop Gateway | Individual, home, hobbyist, nonprofit, or education | Free | Self-host directly, no agreement needed |
-| HotLoop Gateway | Any business or for-profit use, internal or customer-facing | Through Embernet | Exclusively through [Embernet](https://embernet.ai) |
+| HotLoop Gateway | Any business or for-profit use, internal or customer-facing | Free, through Embernet | Exclusively through [Embernet](https://embernet.ai) |
 | HotLoop Flow | Anyone, including businesses and commercial use | Free | Self-host directly under Apache-2.0, no agreement needed |
 
 ## HotLoop Flow is Apache-2.0
@@ -19,7 +19,9 @@ Flow is licensed under the [Apache License, Version 2.0](https://www.apache.org/
 
 ## HotLoop Gateway is source-available
 
-The Gateway is under the HotLoop Community License. It is source-available, and it is **not** an OSI-approved open source license, because it restricts business use. Individuals get it free, and any business that wants it goes through our partner [Embernet](https://embernet.ai), which provides the support, the SLAs, and the warranty.
+The Gateway is under the HotLoop Community License. It is source-available, and it is **not** an OSI-approved open source license, because it restricts business use. Individuals get it free, and any business that wants it goes through our partner [Embernet](https://embernet.ai), which provides the support, the SLAs, and the warranty. You can sign up for Embernet for free, and business use of HotLoop there is free.
+
+If you would rather have someone design, install, and support the rollout for you, [Fireball Industries](https://fireballz.ai) is HotLoop's official systems integrator. [Using HotLoop in a business](/business/) covers both paths.
 
 ### A few concrete situations
 
@@ -34,7 +36,7 @@ The Gateway is under the HotLoop Community License. It is source-available, and 
 | A landlord automating a rental property they operate as a business | Through Embernet |
 | A contractor installing and managing it for paying clients | Through Embernet |
 
-Genuinely unsure which side of the Gateway line you are on? Ask before you build a whole setup on a bad assumption. Email [support@hotloop.io](mailto:support@hotloop.io), or go straight to Embernet if it looks like a business case.
+Genuinely unsure which side of the Gateway line you are on? Ask before you build a whole setup on a bad assumption. Email [support@hotloop.io](mailto:support@hotloop.io), or go straight to [Embernet](https://embernet.ai) if it looks like a business case.
 
 ## One note on history
 
