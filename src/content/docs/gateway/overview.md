@@ -47,8 +47,9 @@ These merged after the 4.16.0 tag and land in the next release. You can't instal
 - **Helpers.** The seven Home Assistant input helpers: toggles, numbers, selects, text, counters, timers and schedules. The values a plant's people own, like the batch target or which shift is on, kept across restarts and never clamped.
 - **Logbook.** One timeline of state changes, writes, alarms, automation runs and config changes, for the whole plant, one node of the equipment tree, one entity, or one actor, a person or an agent.
 - **The automation language.** Condition, wait and stop steps inside a sequence, and `forSec` on a state trigger, so "the press has run for ten minutes" is a trigger and not a hack.
+- **Scripts.** Write the CIP cycle once, give it a name, and run it the same way from the Scripts screen, a rule, MCP or its own entity. Typed fields are refused when they're out of range, never trimmed, and a dry run goes through the real gate.
 
-Scripts, named sequences you write once and run from a rule, the UI, MCP or their own entity, are in review now. Recipes and blueprints come after that. A native UniFi integration, built in Go and starting with UniFi Network, is in development too.
+Recipes and blueprints come next. A native UniFi integration, built in Go and starting with UniFi Network, is in development too.
 
 ## License
 
