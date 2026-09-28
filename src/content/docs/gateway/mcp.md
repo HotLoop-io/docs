@@ -84,7 +84,7 @@ corrupt the protocol stream.
 | `get_states` | current state of one or more entities, with quality and attributes |
 | `call_service` | **command an entity**: `switch.turn_on`, `number.set_value` |
 
-An entity is what people call a thing on the plant, `sensor.zone_1_temperature` or `switch.conveyor_run`, wrapping one or more tags. For an agent it's usually the better handle, because the name means something and the entity knows what you can do to it. `call_service` takes a **required** `reason`, same as `write_tag`, and turns the call into writes through the same write gate. Entities are merged after 4.15.3 and don't have a version number yet.
+An entity is what people call a thing on the plant, `sensor.zone_1_temperature` or `switch.conveyor_run`, wrapping one or more tags. For an agent it's usually the better handle, because the name means something and the entity knows what you can do to it. `call_service` takes a **required** `reason`, same as `write_tag`, and turns the call into writes through the same write gate. Entities shipped in 4.16.0.
 
 ## Resources
 
