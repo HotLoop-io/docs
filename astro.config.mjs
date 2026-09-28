@@ -15,7 +15,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'HotLoop Docs',
-      description: 'Documentation for HotLoop Gateway and HotLoop Flow, including what has not been proven yet.',
+      description: 'Documentation for the HotLoop lineup and HotLoop Flow, including what has not been proven yet.',
       logo: { src: './src/assets/logo-mark.svg', alt: 'HotLoop' },
       favicon: '/favicon.svg',
       social: [
@@ -62,14 +62,24 @@ export default defineConfig({
         { tag: 'meta', attrs: { name: 'theme-color', content: '#14120F', media: '(prefers-color-scheme: dark)' } },
       ],
       sidebar: [
+        { slug: 'products' },
         {
           label: 'HotLoop Gateway',
           items: [
             { slug: 'gateway/overview' },
+            { slug: 'gateway/install' },
+            { slug: 'gateway/upgrading' },
             { slug: 'gateway/write-gate' },
             { slug: 'gateway/protocols' },
             { slug: 'gateway/automations' },
             { slug: 'gateway/mcp' },
+          ],
+        },
+        {
+          label: 'HotLoop Edge Relay',
+          items: [
+            { slug: 'edge-relay/overview' },
+            { slug: 'edge-relay/install' },
           ],
         },
         {

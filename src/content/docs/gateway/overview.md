@@ -5,14 +5,16 @@ sidebar:
   label: "Overview"
 ---
 
-:::caution[Not yet published]
-Version 4.15.3 is merged, and the code has moved into the HotLoop-io org, at HotLoop-io/hotloop, which is private for now. Nothing is downloadable yet. The [release notes](https://hotloop.io/releases/gateway/) say exactly which versions have and have not been tagged.
+:::note[4.16.0 is out]
+The first published release since 4.3.1, with everything from 4.4.0 to 4.15.3 in it at once. The image is `ghcr.io/hotloop-io/hotloop:4.16.0` and the chart is `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repository, HotLoop-io/hotloop, is still private. [Install it](/gateway/install/), or if you're on 4.3.1, [read the upgrade first](/gateway/upgrading/), because it is not a plain `helm upgrade`.
 :::
 
 HotLoop Gateway polls real equipment over real protocols, keeps what it reads, alarms on it, automates against it, and exposes the whole plant to agents over MCP. It is written in Go and it ships as one static binary with no sidecar, running as a non-root user with every capability dropped.
 
 ## Where to start
 
+- [Install](/gateway/install/) is Helm from the published chart, and what to set before a real plant sees it.
+- [Upgrading from 4.3.1](/gateway/upgrading/) is the procedure, and every API change a script will notice.
 - [The write gate](/gateway/write-gate/) explains what stands between a command and a machine, and why nothing can route around it.
 - [Protocols](/gateway/protocols/) states exactly what the Gateway speaks and how far each driver has been verified, including the two that have never touched a physical PLC.
 - [Automations](/gateway/automations/) covers triggers, conditions, and actions, and why a rule is compiled when you save it.
@@ -32,9 +34,21 @@ HotLoop Gateway polls real equipment over real protocols, keeps what it reads, a
 
 **Overview, Devices, Tags, Trends, Alarms, Automations, and Protocols** are the working screens. **Sites** reads across plants, and a site that does not answer is shown as unreachable, with the reason, and left out of the roll-up.
 
-## Editions
+## Where it sits in the lineup
 
-There are two binaries today. The **Gateway** is the whole thing. The **Edge Relay** is a second, lighter binary with no database, about 16.9 MB against the Gateway's 33.4 MB, that polls equipment and forwards it over Sparkplug B. Fleet management in the Gateway tracks and commands registered relays.
+HotLoop is one codebase shipped as four products, all released together from one tag: IoT, Edge, the Gateway and the Edge Relay. The Gateway is the top of it: everything in IoT and Edge, plus fleet management, multi-site roll-ups and scheduled reports. [The lineup](/products/) has what each one carries.
+
+Today you can install the Gateway and the [Edge Relay](/edge-relay/overview/). The relay is its own image and chart, about 15 MB against the Gateway's 34, with no database and no UI, and fleet management in the Gateway tracks and commands registered relays. IoT and Edge arrive in an upcoming release.
+
+## On main, and not in 4.16.0
+
+These merged after the 4.16.0 tag and land in the next release. You can't install them yet.
+
+- **Helpers.** The seven Home Assistant input helpers: toggles, numbers, selects, text, counters, timers and schedules. The values a plant's people own, like the batch target or which shift is on, kept across restarts and never clamped.
+- **Logbook.** One timeline of state changes, writes, alarms, automation runs and config changes, for the whole plant, one node of the equipment tree, one entity, or one actor, a person or an agent.
+- **The automation language.** Condition, wait and stop steps inside a sequence, and `forSec` on a state trigger, so "the press has run for ten minutes" is a trigger and not a hack.
+
+Scripts, named sequences you write once and run from a rule, the UI, MCP or their own entity, are in review now. Recipes and blueprints come after that. A native UniFi integration, built in Go and starting with UniFi Network, is in development too.
 
 ## License
 
