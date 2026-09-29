@@ -9,7 +9,7 @@ HotLoop is built once and shipped four ways. Each product has its own image and 
 
 | Product | Install today? | Database | What it adds |
 |---|---|---|---|
-| **HotLoop IoT** | No, upcoming release | SQLite or PostgreSQL | The base: Home Assistant, rewritten in Go for OT |
+| **HotLoop IoT** | No, upcoming release | SQLite or PostgreSQL | The base: entities, automations and discovery, built in Go for OT |
 | **HotLoop Edge** | No, upcoming release | SQLite, PostgreSQL or TimescaleDB | IoT plus the machine layer |
 | **HotLoop Gateway** | Yes, [4.16.0](/gateway/install/) | SQLite, PostgreSQL or TimescaleDB | Everything, plus fleet, multi-site and reports |
 | **HotLoop Edge Relay** | Yes, [4.16.0](/edge-relay/install/) | None | Headless poll and forward over Sparkplug B |
@@ -18,7 +18,7 @@ The database is picked by a setting, in the same image. Today's Gateway runs on 
 
 ## HotLoop IoT
 
-The Home Assistant model, rewritten natively in Go for the plant floor. We don't run, embed, bridge or fork Home Assistant. We rebuilt what it does: entities, automations, helpers, scripts, the logbook, dashboards, notifications and MCP, plus the ISA-18.2 alarm engine and backups. On top of that, MQTT with Home Assistant style discovery, so Shelly, ESPHome, Tasmota and Zigbee2MQTT devices show up by themselves, and every industrial driver HotLoop has.
+HotLoop's automation base, written natively in Go for the plant floor: entities, automations, helpers, scripts, the logbook, dashboards, notifications and MCP, plus the ISA-18.2 alarm engine and backups. Every line of it is ours, nothing embedded, bridged or forked. On top of that, MQTT with discovery in the format Shelly, ESPHome, Tasmota and Zigbee2MQTT already publish, so those devices show up by themselves, and every industrial driver HotLoop has.
 
 **Not out yet.** IoT ships once MQTT discovery lands, so its first release finds your devices instead of making you type topics. It arrives in an upcoming release, and there's no date on it. Most of what it carries already runs inside the Gateway today.
 

@@ -44,7 +44,7 @@ Today you can install the Gateway and the [Edge Relay](/edge-relay/overview/). T
 
 These merged after the 4.16.0 tag and land in the next release. You can't install them yet.
 
-- **Helpers.** The seven Home Assistant input helpers: toggles, numbers, selects, text, counters, timers and schedules. The values a plant's people own, like the batch target or which shift is on, kept across restarts and never clamped.
+- **Helpers.** Seven kinds of helper: toggles, numbers, selects, text, counters, timers and schedules. The values a plant's people own, like the batch target or which shift is on, kept across restarts and never clamped.
 - **Logbook.** One timeline of state changes, writes, alarms, automation runs and config changes, for the whole plant, one node of the equipment tree, one entity, or one actor, a person or an agent.
 - **The automation language.** Condition, wait and stop steps inside a sequence, and `forSec` on a state trigger, so "the press has run for ten minutes" is a trigger and not a hack.
 - **Scripts.** Write the CIP cycle once, give it a name, and run it the same way from the Scripts screen, a rule, MCP or its own entity. Typed fields are refused when they're out of range, never trimmed, and a dry run goes through the real gate.
