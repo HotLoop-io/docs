@@ -13,6 +13,8 @@ Flow changes that in four places.
 
 Not a warning in a log nobody reads, and not a default you are trusted to change. It is a startup error, with the remedy printed next to it. The cause NVD records for the CVE above is that authentication is not configured by default, and this removes that default entirely.
 
+Running without a login takes `HOTLOOP_FLOW_INSECURE=true` in the environment, set on purpose. `auth.enabled: false` in the config file is not enough on its own, because a config file is where a copy-paste lands. With it set, every boot logs a warning and the editor shows a **no login** badge where Sign out would be, so the next person to open it knows. It does not waive the credential secret. Up to and including 2.0.4 the variable did nothing at all, and the refusal came back regardless; 2.0.5 fixed that.
+
 ## The `exec` node ships disabled
 
 An operator names the commands a flow is permitted to run, and an enabled node with an empty allowlist is a configuration error, not a license to run anything.
@@ -34,6 +36,8 @@ The flow file itself is written to a temporary file, synced, renamed into place,
 ## Discovery nodes
 
 The discovery nodes get the same treatment. They are off by default, bounded by an operator-configured CIDR allowlist, and a hostname that resolves to one in-scope address and one out-of-scope address is refused outright, because otherwise DNS is simply the way around the allowlist.
+
+They need no extra privilege either. The scan node only makes TCP connections and the interface node only reads the interface list, so the pod keeps every Linux capability dropped with discovery on. Up to 2.0.4 the chart added `NET_RAW` and `NET_ADMIN` when discovery was enabled, for raw-socket scanning that was never written. That is gone, and CI fails if a capability comes back.
 
 ## Function nodes
 
