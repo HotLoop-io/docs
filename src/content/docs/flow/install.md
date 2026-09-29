@@ -1,11 +1,11 @@
 ---
 title: "Install HotLoop Flow with Podman or Helm"
-description: "Run HotLoop Flow 2.0.4 with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
+description: "Run HotLoop Flow 2.0.5 with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow 2.0.4 is current, and 2.0.0 was the first release under this name. It ships as a 25 MB container image for amd64 and arm64, a Helm chart, and source you can build yourself. There is no Docker or Compose path here, on purpose.
+HotLoop Flow 2.0.5 is current, and 2.0.0 was the first release under this name. It ships as a 25 MB container image for amd64 and arm64, a Helm chart, and source you can build yourself. There is no Docker or Compose path here, on purpose.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands, and it refuses to run without a credential secret, which is what encrypts the credentials stored with your flows. Every path below sets both.
 
@@ -14,7 +14,7 @@ Flow starts locked. It refuses to run without an admin account, because a flow c
 Make a password hash first. The image has no shell in it, so the hashing is a command of the binary itself, and it refuses anything under eight characters.
 
 ```bash
-podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.0.4 hash-password -password 'something-long'
+podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.0.5 hash-password -password 'something-long'
 ```
 
 Then run it, with the hash from above in single quotes, since it is full of dollar signs.
@@ -24,7 +24,7 @@ podman run -d --name hotloop-flow -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<the hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.0.4
+  ghcr.io/hotloop-io/hotloop-flow:2.0.5
 ```
 
 Open `http://localhost:1880/` and sign in as `admin`. `/health` answers with the version once it is up.
@@ -54,7 +54,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Container]
-Image=ghcr.io/hotloop-io/hotloop-flow:2.0.4
+Image=ghcr.io/hotloop-io/hotloop-flow:2.0.5
 ContainerName=hotloop-flow
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
@@ -97,7 +97,9 @@ The chart has been installed and exercised on a four-node k3s cluster, in the de
 
 HotLoop Flow is in the EmberNET App Store catalogue. For a tenant on its own cluster the dashboard deploys it through Fleet, which needs dashboard 4.9.37 or later: earlier versions created a Fleet bundle that installed nothing. The dashboard passes its tenant labels and the chart puts them on everything it creates, from Flow 2.0.3.
 
-From 2.0.4 the deployed tile gets its name and icon right. The pod and the Service carry the `embernet.ai/app-icon` annotation, so the dashboard no longer has to guess an icon by looking up the release name in the catalog, which never matched. It defaults to the chart's own icon. Set `embernet.appIcon` to use your own, and serve it with `Access-Control-Allow-Origin`, or the tile comes up blank. The `embernet.ai/app-name` label is the chart name now, not the release name, which is what the dashboard itself writes on everything it deploys. The instance is still in `app.kubernetes.io/instance` and the Service name, and no selector changed, so upgrading in place is fine. Nothing else changed in 2.0.4, and the [release notes](https://hotloop.io/releases/flow/) have every version back to 0.1.0.
+From 2.0.4 the deployed tile gets its name and icon right. The pod and the Service carry the `embernet.ai/app-icon` annotation, so the dashboard no longer has to guess an icon by looking up the release name in the catalog, which never matched. It defaults to the chart's own icon. Set `embernet.appIcon` to use your own, and serve it with `Access-Control-Allow-Origin`, or the tile comes up blank. The `embernet.ai/app-name` label is the chart name now, not the release name, which is what the dashboard itself writes on everything it deploys. The instance is still in `app.kubernetes.io/instance` and the Service name, and no selector changed, so upgrading in place is fine.
+
+From 2.0.5, turning discovery on no longer hands the pod `NET_RAW` and `NET_ADMIN`. The scan node only ever made TCP connections, so those two were privilege for nothing, and every render now keeps all capabilities dropped. Nothing you set needs to change. The [release notes](https://hotloop.io/releases/flow/) have every version back to 0.1.0.
 
 ## From source
 
