@@ -1,9 +1,9 @@
 ---
 title: HotLoop documentation
-description: Documentation for HotLoop Gateway, Edge Relay and the rest of the lineup, and HotLoop Flow, including what has not been proven yet.
+description: Install and run HotLoop Gateway, the Edge Relay and HotLoop Flow, with every claim marked as proven on real equipment or not proven yet.
 template: splash
 hero:
-  tagline: Software for closing the loop between what a sensor says and what a machine does. Documented plainly, including what is not proven yet.
+  tagline: Plant-floor software written in Go. It reads your equipment, keeps every reading, and won't move a machine nobody armed. These docs say what's been proven and what hasn't, and they don't round up.
   actions:
     - text: Install the Gateway
       link: /gateway/install/
@@ -18,36 +18,49 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Start here
+## What HotLoop is
+
+An automation platform for the plant floor, written from scratch in Go. It polls PLCs and instruments over the protocols they already speak, keeps every reading with its quality, raises ISA-18.2 alarms, runs automations, and lets an agent read the whole plant over MCP. Every write to a machine goes through one gate, and every tag starts read-only, because the worst possible way to meet new software is watching it move a press you never told it to touch.
+
+It ships as four products out of one codebase: IoT, Edge, Gateway and Edge Relay. HotLoop Flow is its own product: Node-RED's idea on a Go runtime, under Apache-2.0.
+
+## What you can install today
 
 <CardGrid>
-  <Card title="HotLoop Gateway 4.16.0" icon="setting">
-    An industrial automation gateway. It polls real equipment over seven native protocols, keeps the history, raises alarms, and exposes the plant to agents. [Install it](/gateway/install/), or [upgrade from 4.3.1](/gateway/upgrading/).
+  <Card title="HotLoop Gateway 4.17.0" icon="setting">
+    The whole site in one box: eight native protocols (read-only UniFi is the newest), a historian, alarms, recipes, scripts, a logbook, fleet, multi-site, reports and MCP. Helm on any Kubernetes, k3s included. [Install it](/gateway/install/). Coming from 4.16.0 or 4.3.1? [Read the upgrade first](/gateway/upgrading/). One of them seals your device passwords with a new key and the other is not a plain `helm upgrade` at all.
   </Card>
-  <Card title="HotLoop Edge Relay 4.16.0" icon="rocket">
-    The headless one. Polls, forwards over Sparkplug B, and buffers to disk when the link dies. [Install it](/edge-relay/install/) with Helm or Quadlet.
+  <Card title="HotLoop Edge Relay 4.17.0" icon="rocket">
+    Headless and dumb on purpose. It polls with the Gateway's drivers, forwards over Sparkplug B, and buffers to disk when the uplink dies. No database, no UI, no write path. [Install it](/edge-relay/install/) with Helm or a Quadlet unit.
   </Card>
-  <Card title="The lineup" icon="list-format">
-    One codebase, four products: IoT, Edge, Gateway and Edge Relay. IoT and Edge arrive in an upcoming release. [What each one carries](/products/).
-  </Card>
-  <Card title="HotLoop Flow" icon="random">
-    A Node-RED-compatible flow engine in one static Go binary. Bounded queues, a goroutine per node, and Apache-2.0. [Read the overview](/flow/overview/).
-  </Card>
-  <Card title="Migrating from Node-RED" icon="right-arrow">
-    Have flows already? Start by asking the import command what will happen. [Read the guide](/flow/migrating-from-node-red/).
-  </Card>
-  <Card title="Licensing" icon="information">
-    Two licenses. Flow is free for everyone, and the lineup is free for individuals and free for business through EmberNET. [Which one applies to you](/licensing/).
-  </Card>
-  <Card title="Using HotLoop in a business" icon="rocket">
-    Sign up for EmberNET free and use HotLoop there free, or have our Official Systems Integrators, Fireball Industries, roll it out for you. [Pick your path](/business/).
+  <Card title="HotLoop Flow 2.0.5" icon="random">
+    Your Node-RED `flows.json`, loaded unchanged, in a 25.1 MB image instead of 717 MB. Every queue has a ceiling, and it refuses to start without a login unless you opt out on purpose. [Install it](/flow/install/), or [bring your flows over](/flow/migrating-from-node-red/).
   </Card>
 </CardGrid>
 
-## What these docs will and will not tell you
+HotLoop IoT and HotLoop Edge aren't out. There's no image to pull, so there's no install page, because a command for an image that doesn't exist is worse than no command at all. Most of what they'll carry already runs in the Gateway 4.17.0, helpers, scripts, recipes, blueprints and the logbook included, and IoT waits on MQTT discovery, which isn't built. [What each product carries](/products/), and what's still missing.
 
-They will tell you what each product does, how far each piece has been proven, and what is not done yet. The Gateway and Flow each keep a table of what has and has not been verified against real equipment, and these docs repeat it instead of rounding up.
+## Where to go next
 
-They cover installing what you can actually install: [the Gateway](/gateway/install/), [the Edge Relay](/edge-relay/install/) and [Flow](/flow/install/). IoT and Edge get install pages the day they ship, not before, because a command for an image that doesn't exist is worse than no command.
+<CardGrid>
+  <Card title="The write gate" icon="warning">
+    The UI, the API, a rule, a script and an agent all write through one function, with the same checks in the same order. If you only read one page before a real plant sees this, [read that one](/gateway/write-gate/).
+  </Card>
+  <Card title="New in 4.17.0" icon="puzzle">
+    Recipes, scripts, blueprints, helpers, the logbook and a read-only UniFi driver. A 4.16.0 Gateway has none of them, so each page says so at the top and the sidebar marks it New in 4.17.0. Start with [recipes](/gateway/recipes/), and [upgrade](/gateway/upgrading/) if you're still on 4.16.0.
+  </Card>
+  <Card title="Licensing" icon="information">
+    Flow is Apache-2.0, free for everyone. IoT, Edge, Gateway and Edge Relay are free for individuals, and a business signs up for EmberNET free and runs them there free. [Which one applies to you](/licensing/).
+  </Card>
+  <Card title="Running it at a business" icon="approve-check">
+    Do it yourself on EmberNET, or have our Official Systems Integrators, Fireball Industries, design, install and support it. Support, SLAs and warranties come from them. [Pick your path](/business/).
+  </Card>
+</CardGrid>
 
-For the products' current status, see the [release notes](https://hotloop.io/releases/) and the [integrations table](https://hotloop.io/integrations/).
+## How to read these docs
+
+"Verified" means it ran against the real thing: a real OPC UA server, a real broker, Ignition itself. Anything tested against a simulator or a stand-in says exactly that. S7comm and EtherNet/IP have never talked to a physical PLC, and [Protocols](/gateway/protocols/) tells you so before it tells you how to use them.
+
+Gateway and Edge Relay pages describe 4.17.0, and Flow pages describe 2.0.5, unless the top of the page says otherwise. Planning a rollout around something? Check that first, not after the upgrade turns out not to have it.
+
+Status for everything, product by product, lives in the [release notes](https://hotloop.io/releases/) and the [integrations table](https://hotloop.io/integrations/).
