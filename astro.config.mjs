@@ -4,6 +4,9 @@ import starlight from '@astrojs/starlight';
 
 const site = 'https://docs.hotloop.io';
 
+// A page about something 4.17.0 added. A 4.16.0 Gateway doesn't have it.
+const NEW_IN_4_17 = { text: 'New in 4.17.0', variant: 'tip' };
+
 export default defineConfig({
   site,
   trailingSlash: 'always',
@@ -73,6 +76,15 @@ export default defineConfig({
             { slug: 'gateway/protocols' },
             { slug: 'gateway/automations' },
             { slug: 'gateway/mcp' },
+            // New in 4.17.0. The badge says so in the sidebar, so somebody still
+            // on 4.16.0 finds out here, not from a missing screen, that they
+            // need to upgrade first. Drop the badges when the next release ships.
+            { slug: 'gateway/scripts', badge: NEW_IN_4_17 },
+            { slug: 'gateway/recipes', badge: NEW_IN_4_17 },
+            { slug: 'gateway/blueprints', badge: NEW_IN_4_17 },
+            { slug: 'gateway/helpers', badge: NEW_IN_4_17 },
+            { slug: 'gateway/logbook', badge: NEW_IN_4_17 },
+            { slug: 'gateway/unifi', badge: NEW_IN_4_17 },
           ],
         },
         {
