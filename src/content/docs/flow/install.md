@@ -1,11 +1,11 @@
 ---
 title: "Install HotLoop Flow with Podman or Helm"
-description: "Run HotLoop Flow 2.0.5 with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
+description: "Run HotLoop Flow 2.1.0 with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow 2.0.5 is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:2.0.5`, a 25.1 MB image for amd64 and arm64, plus a Helm chart and source you can build yourself. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
+HotLoop Flow 2.1.0 is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:2.1.0`, a 32.1 MB image for amd64 and arm64, plus a Helm chart and source you can build yourself. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands. And it refuses to run without a credential secret, which encrypts every broker and database password stored with your flows. Every path below sets both.
 
@@ -14,7 +14,7 @@ Flow starts locked. It refuses to run without an admin account, because a flow c
 Make a password hash first. The image has no shell, so hashing is a subcommand of the binary itself, and it refuses anything under eight characters.
 
 ```bash
-podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.0.5 hash-password -password 'something-long'
+podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.1.0 hash-password -password 'something-long'
 ```
 
 Then make the credential secret, and save it somewhere you'll still find it in a year:
@@ -30,7 +30,7 @@ podman run -d --name hotloop-flow -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<the hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET='<the secret>' \
-  ghcr.io/hotloop-io/hotloop-flow:2.0.5
+  ghcr.io/hotloop-io/hotloop-flow:2.1.0
 ```
 
 Open `http://localhost:1880/` and sign in as `admin`. `/health` answers with the version once the process is up, and `/ready` says whether the runtime actually started.
@@ -60,7 +60,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Container]
-Image=ghcr.io/hotloop-io/hotloop-flow:2.0.5
+Image=ghcr.io/hotloop-io/hotloop-flow:2.1.0
 ContainerName=hotloop-flow
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data

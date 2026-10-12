@@ -17,7 +17,7 @@ Before you deploy anything, run the `import` subcommand against your `flows.json
 
 ```bash
 podman run --rm -v "$PWD/flows.json":/flows.json:ro,Z \
-  ghcr.io/hotloop-io/hotloop-flow:2.0.5 import /flows.json
+  ghcr.io/hotloop-io/hotloop-flow:2.1.0 import /flows.json
 ```
 
 It lists every node type in the file, subflow internals included, as supported, partially supported with each node's note printed under it, or not supported. Read the not-supported group first: those nodes won't start. The rest of the flow will.

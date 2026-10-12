@@ -6,7 +6,7 @@ sidebar:
 ---
 
 :::note[Renamed from Emberwire]
-2.0.5 is current, and 2.0.0 was the first release under the HotLoop Flow name. Before that it was Emberwire 0.1.0, and 2.x reads nothing the old name wrote: the `EMBERWIRE_*` variables, the two `emberwire-` database node types, WASM modules built against the old exports and the 0.1.0 credentials file all have to be redone. The [install page](/flow/install/) has the commands, and the [release notes](https://hotloop.io/releases/flow/) list every break.
+2.1.0 is current, and 2.0.0 was the first release under the HotLoop Flow name. Before that it was Emberwire 0.1.0, and 2.x reads nothing the old name wrote: the `EMBERWIRE_*` variables, the two `emberwire-` database node types, WASM modules built against the old exports and the 0.1.0 credentials file all have to be redone. The [install page](/flow/install/) has the commands, and the [release notes](https://hotloop.io/releases/flow/) list every break.
 :::
 
 HotLoop Flow is a visual flow engine for the plant floor, written in Go. It's Node-RED's idea on a different runtime: one static binary, an editor of its own, and a scheduler that stays upright when a sensor gets chattier than whatever is reading it.
