@@ -25,7 +25,7 @@ No binary on your machine? The image carries it:
 
 ```bash
 podman run --rm -v "$PWD/flows.json":/flows.json:ro,Z \
-  ghcr.io/hotloop-io/hotloop-flow:2.0.5 import /flows.json
+  ghcr.io/hotloop-io/hotloop-flow:2.1.0 import /flows.json
 ```
 
 It lists every node type in the file, subflow internals included, in three groups: supported, partially supported with each node's note printed under it, and not supported, which means those nodes won't start. The rest of the flow still runs. A deploy works the same way: a broken node gets reported and logged and every other node runs, because one typo in one dialog shouldn't stop a line when the other 40 nodes are fine.

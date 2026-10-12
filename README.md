@@ -14,7 +14,7 @@ Node 22.12 or newer is required, and `.nvmrc` pins the version CI uses.
 
 Docs for the HotLoop lineup (the Gateway and the Edge Relay today, IoT and Edge when they ship) and for HotLoop Flow, including what has not been proven yet. Every page says what it has actually been run against, because a doc that rounds up is how somebody finds out at commissioning.
 
-Install pages exist for what you can install: Gateway 4.16.0, Edge Relay 4.16.0 and Flow 2.0.5. When a release ships, the image tags on those pages move the same day its release notes land on hotloop.io, so the two never disagree about what's current.
+Install pages exist for what you can install: Gateway 4.16.0, Edge Relay 4.16.0 and Flow 2.1.0. When a release ships, the image tags on those pages move the same day its release notes land on hotloop.io, so the two never disagree about what's current.
 
 Some Gateway pages cover work that is merged on main and not in any release yet. Each one says so in a caution box at the top, and carries a **Next release** badge in the sidebar (the `NEXT` badge in `astro.config.mjs`). When the next release ships them, drop the badge and the box in the same change.
 
