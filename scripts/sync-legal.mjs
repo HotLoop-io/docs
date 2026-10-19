@@ -29,8 +29,8 @@ const PAGES = {
     out: 'terms.md',
     title: 'Terms',
     description: 'The terms that go with HotLoop, mirrored from the canonical copy in the HotLoop-io organization, so this site cannot say something they do not.',
-    // The canonical file still carries its effective-date placeholder, and a page with a bracketed blank in it does not go live.
-    isNew: (t) => !/\[EFFECTIVE DATE\]/.test(t),
+    // A bracketed all-caps blank such as the effective date means the canonical file is not finished, and a page with a blank in it does not go live.
+    isNew: (t) => !/\[[A-Z][A-Z0-9 _-]{2,}\]/.test(t),
     canonical: 'https://github.com/HotLoop-io/HotLoop-io/blob/main/TERMS.md',
     lead: 'The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site.',
   },
