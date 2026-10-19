@@ -1,0 +1,40 @@
+---
+// hotloop.io's light/dark toggle. It writes the key Starlight's own theme provider reads,
+// so a stored choice is honored on the next page before first paint.
+---
+
+<button type="button" class="theme-toggle" aria-label="Switch between light and dark" data-theme-toggle>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+  </svg>
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--hl-border); background: var(--hl-card); color: var(--hl-ink-soft); cursor: pointer;
+    transition: color var(--hl-transition-fast), border-color var(--hl-transition-fast);
+  }
+  .theme-toggle:hover { color: var(--hl-ink); border-color: var(--hl-line-strong); }
+  .theme-toggle svg { width: 18px; height: 18px; grid-area: 1 / 1; }
+  .sun { display: none; }
+  :global(:root[data-theme='dark']) .sun { display: block; }
+  :global(:root[data-theme='dark']) .moon { display: none; }
+</style>
+
+<script>
+  // Only an explicit choice is stored. Starlight's provider sets data-theme from the system
+  // when nothing is stored, so the attribute is always there to read.
+  const KEY = 'starlight-theme';
+  document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem(KEY, next); } catch {}
+    });
+  });
+</script>

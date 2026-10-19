@@ -1,0 +1,87 @@
+---
+// The six products, as hotloop.io draws them. Versions and release state come from
+// src/data/sync.json, which the sync writes, so this can't disagree with the pages.
+import sync from '../data/sync.json';
+
+const hot = sync.repos.hotloop.release;
+const flow = sync.repos.flow.release;
+const cascade = sync.repos.cascade.release;
+
+const info: Record<string, { summary: string; chip: string; kind: 'ok' | 'warn' | 'info'; install?: string }> = {
+  iot: {
+    summary: 'The automation base. Entities, automations, dashboards, alarms, MQTT discovery and every driver, on SQLite or PostgreSQL. Built for a Pi.',
+    chip: 'Next release', kind: 'warn',
+  },
+  edge: {
+    summary: 'IoT plus the machine layer: an OPC UA server, Sparkplug B publishing, and store-and-forward that keeps the plant running with the uplink down.',
+    chip: 'Next release', kind: 'warn',
+  },
+  gateway: {
+    summary: 'The site brain. Everything in Edge, plus fleet management of edge relays, multi-site roll-ups and scheduled reports.',
+    chip: `Version ${hot.version}`, kind: 'ok', install: '/gateway/install/',
+  },
+  'edge-relay': {
+    summary: 'Headless and dumb on purpose. It polls with the same drivers, forwards over Sparkplug B, and buffers to disk when the uplink dies.',
+    chip: `Version ${hot.version}`, kind: 'ok', install: '/edge-relay/install/',
+  },
+  flow: {
+    summary: 'Your Node-RED flows, loaded unchanged, on a Go runtime with a ceiling on every queue. A separate product that runs next to HotLoop.',
+    chip: `Version ${flow.version}`, kind: 'ok', install: '/flow/install/',
+  },
+  cascade: {
+    summary: 'The plant talking to everything else. Alarms, webhooks and schedules become checkpointed workflows against real systems.',
+    chip: `Pre-release ${cascade.version}`, kind: 'info',
+  },
+};
+---
+
+<div class="picker">
+  {sync.products.map((p) => {
+    const i = info[p.id];
+    return (
+      <article class="card">
+        <div class="top">
+          <h3>{p.name}</h3>
+          <span class={`chip ${i.kind}`}>{i.chip}</span>
+        </div>
+        <p class="tag">{p.tagline}</p>
+        <p>{i.summary}</p>
+        <div class="links">
+          <a class="btn primary" href={`/${p.id}/overview/`}>Read the docs</a>
+          {i.install && <a class="btn" href={i.install}>Install</a>}
+        </div>
+      </article>
+    );
+  })}
+</div>
+
+<style>
+  .picker { display: grid; gap: var(--hl-s5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-block: var(--hl-s6); }
+  .card {
+    background: var(--hl-card); border: 1px solid var(--hl-border); border-radius: var(--hl-r-card);
+    padding: var(--hl-s6); box-shadow: var(--hl-sh-1); display: flex; flex-direction: column; gap: var(--hl-s3);
+  }
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--hl-s3); flex-wrap: wrap; }
+  h3 { margin: 0; font-size: var(--hl-fs-xl); font-weight: 800; letter-spacing: var(--hl-ls-heading); }
+  p { margin: 0; color: var(--hl-ink-soft); font-size: var(--hl-fs-sm); }
+  p.tag { color: var(--hl-ink); font-weight: 600; }
+  .links { margin-top: auto; padding-top: var(--hl-s3); display: flex; flex-wrap: wrap; gap: var(--hl-s3); }
+  .btn {
+    display: inline-flex; align-items: center; padding: 0.7em 1.4em; border-radius: var(--hl-r-pill);
+    border: 1px solid var(--hl-border); background: var(--hl-card); color: var(--hl-ink);
+    font-weight: 700; font-size: var(--hl-fs-sm); text-decoration: none;
+    transition: transform var(--hl-transition-fast), border-color var(--hl-transition-fast), box-shadow var(--hl-transition-fast);
+  }
+  .btn:hover { color: var(--hl-ink); border-color: var(--hl-orange); transform: translateY(-1px); box-shadow: var(--hl-sh-1); }
+  .btn.primary { background: var(--hl-gradient); color: var(--hl-on-accent); border-color: transparent; }
+  .btn.primary:hover { color: var(--hl-on-accent); box-shadow: var(--hl-sh-2); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.5em; padding: 0.25em 0.8em; border-radius: var(--hl-r-pill);
+    border: 1px solid var(--hl-border); background: var(--hl-card);
+    font-size: var(--hl-fs-2xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--hl-ink-soft);
+  }
+  .chip::before { content: ''; width: 0.5em; height: 0.5em; border-radius: 50%; background: currentColor; }
+  .chip.ok { color: var(--hl-ok-text); background: var(--hl-ok-tint); border-color: color-mix(in srgb, var(--hl-ok) 35%, transparent); }
+  .chip.warn { color: var(--hl-warn-text); background: var(--hl-warn-tint); border-color: color-mix(in srgb, var(--hl-warn) 40%, transparent); }
+  .chip.info { color: var(--hl-info-text); background: var(--hl-info-tint); border-color: color-mix(in srgb, var(--hl-info) 35%, transparent); }
+</style>

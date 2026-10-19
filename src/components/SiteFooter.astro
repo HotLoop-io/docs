@@ -1,0 +1,83 @@
+---
+import sync from '../data/sync.json';
+import { existsSync } from 'node:fs';
+
+const year = new Date().getFullYear();
+const products = sync.products;
+// The License and Terms pages exist only once the canonical text has been synced in.
+const hasLicense = existsSync(new URL('../content/docs/license.md', import.meta.url));
+const hasTerms = existsSync(new URL('../content/docs/terms.md', import.meta.url));
+---
+
+<footer class="site">
+  <div class="wrap top">
+    <div class="about">
+      <a class="brand" href="/" aria-label="HotLoop Docs, home">
+        <img src="/brand/logo-mark.svg" alt="" width="28" height="28" />
+        <span class="word" translate="no">hot<span>loop</span></span>
+      </a>
+      <p>Automation loops for the real world. These docs say what has been proven on real equipment and what hasn't, and they don't round up.</p>
+    </div>
+
+    <nav aria-label="Products">
+      <h2>Products</h2>
+      <a href="/products/">The lineup</a>
+      {products.map((p) => <a href={`/${p.id}/overview/`}>{p.name}</a>)}
+    </nav>
+
+    <nav aria-label="Docs">
+      <h2>Docs</h2>
+      <a href="/install/">Install</a>
+      <a href="/install/helm/">k3s and Helm</a>
+      <a href="/install/quadlet/">Podman Quadlet</a>
+      <a href="/install/auto-update/">The :stable auto-update</a>
+      <a href="/releases/">Release notes</a>
+      <a href="/roadmap/">Roadmap</a>
+      {hasLicense && <a href="/license/">License</a>}
+      {hasTerms && <a href="/terms/">Terms</a>}
+    </nav>
+
+    <nav aria-label="Community">
+      <h2>HotLoop</h2>
+      <a href="https://hotloop.io/">hotloop.io</a>
+      <a href="https://github.com/HotLoop-io">GitHub</a>
+      <a href="https://github.com/orgs/HotLoop-io/discussions">Discussions</a>
+      <a href="https://www.reddit.com/r/HotLoop/">Reddit, r/HotLoop</a>
+      <a href="mailto:support@hotloop.io">support@hotloop.io</a>
+    </nav>
+  </div>
+
+  <div class="wrap bottom">
+    <p>
+      Every HotLoop product is under HotLoop's Business Source License 1.1. Home and lab use is free, and business use is free through <a href="https://embernet.ai">EmberNET</a>.
+      Official Systems Integrators: <a href="https://fireballz.ai">Fireball Industries</a>.
+    </p>
+    <p class="small">&copy; {year} HotLoop</p>
+  </div>
+</footer>
+
+<style>
+  footer.site { border-top: 1px solid var(--hl-border); background: var(--hl-sunken); margin-top: var(--hl-s8); position: relative; z-index: 1; }
+  @media (min-width: 50rem) { :global(:root[data-has-sidebar]) footer.site { margin-inline-start: var(--sl-content-inline-start, 0); } }
+  .wrap { width: min(100% - 2 * var(--hl-s5), var(--hl-w-wide)); margin-inline: auto; }
+  .top { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: var(--hl-s7); padding-block: var(--hl-s8) var(--hl-s7); }
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--hl-ink); margin-bottom: var(--hl-s3); }
+  .word { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.03em; }
+  .word span { color: var(--hl-link); }
+  :global(:root[data-theme='dark']) .word span { color: var(--hl-orange); }
+  .about p { color: var(--hl-ink-soft); font-size: var(--hl-fs-sm); max-width: 34ch; }
+  nav { display: grid; gap: var(--hl-s2); align-content: start; }
+  nav h2 {
+    font-size: var(--hl-fs-2xs); font-weight: 600; letter-spacing: var(--hl-ls-label);
+    text-transform: uppercase; color: var(--hl-ink-soft); margin: 0 0 var(--hl-s2); border: 0; padding: 0;
+  }
+  nav a { color: var(--hl-ink); text-decoration: none; font-size: var(--hl-fs-sm); }
+  nav a:hover { color: var(--hl-link); text-decoration: underline; }
+  .bottom {
+    display: flex; flex-wrap: wrap; gap: var(--hl-s3) var(--hl-s6); justify-content: space-between;
+    padding-block: var(--hl-s5); border-top: 1px solid var(--hl-border);
+    color: var(--hl-ink-soft); font-size: var(--hl-fs-xs);
+  }
+  .bottom p { max-width: 70ch; margin: 0; }
+  @media (max-width: 800px) { .top { grid-template-columns: 1fr 1fr; } .about { grid-column: 1 / -1; } }
+</style>

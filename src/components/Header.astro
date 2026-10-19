@@ -1,0 +1,87 @@
+---
+// hotloop.io's header, with the docs' product picker in it. The primary links are the
+// same ones, so the two sites read as one.
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import sync from '../data/sync.json';
+
+const path = Astro.url.pathname;
+const products = sync.products.map((p) => ({ ...p, href: `/${p.id}/overview/` }));
+const inProducts = products.some((p) => path.startsWith(`/${p.id}/`)) || path === '/products/';
+const links = [
+  { href: '/install/', label: 'Install' },
+  { href: '/releases/', label: 'Releases' },
+];
+---
+
+<div class="header">
+  <div class="title-wrapper"><SiteTitle /></div>
+
+  <nav aria-label="Primary" class="primary">
+    <details class="picker">
+      <summary class:list={[{ current: inProducts }]}>Products
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="sheet">
+        {products.map((p) => (
+          <a href={p.href}>
+            <strong>{p.name}</strong>
+            <span>{p.tagline}</span>
+          </a>
+        ))}
+        <a href="/products/"><strong>The lineup</strong><span>Which one fits the box.</span></a>
+      </div>
+    </details>
+    {links.map((l) => <a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a>)}
+    <a href="https://hotloop.io/">hotloop.io</a>
+  </nav>
+
+  <div class="end">
+    <Search />
+    <a class="gh" href="https://github.com/HotLoop-io" aria-label="HotLoop on GitHub">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg>
+      <span>GitHub</span>
+    </a>
+    <ThemeSelect />
+  </div>
+</div>
+
+<style>
+  .header { display: flex; align-items: center; justify-content: space-between; gap: var(--hl-s5); height: 100%; }
+  .title-wrapper { flex: none; }
+  .primary { display: none; gap: var(--hl-s1); align-items: center; margin-inline-end: auto; }
+  .primary a, .primary summary {
+    color: var(--hl-ink-soft); text-decoration: none; cursor: pointer;
+    font-size: var(--hl-fs-sm); font-weight: 600;
+    padding: 0.5em 0.9em; border-radius: var(--hl-r-pill);
+    transition: color var(--hl-transition-fast), background var(--hl-transition-fast);
+  }
+  .primary a:hover, .primary summary:hover, .primary summary.current, .primary a[aria-current='page'] { color: var(--hl-ink); background: var(--hl-sunken); }
+  .picker { position: relative; }
+  .picker summary { list-style: none; display: inline-flex; align-items: center; gap: 4px; }
+  .picker summary::-webkit-details-marker { display: none; }
+  .picker summary svg { width: 14px; height: 14px; }
+  .sheet {
+    position: absolute; left: 0; top: 46px; min-width: 300px; display: grid; padding: var(--hl-s2);
+    background: var(--hl-card); border: 1px solid var(--hl-border);
+    border-radius: var(--hl-r-card); box-shadow: var(--hl-sh-2); z-index: 60;
+  }
+  .sheet a { display: grid; padding: 0.6em 1em; border-radius: var(--hl-r-sm); text-decoration: none; color: var(--hl-ink); font-weight: 400; }
+  .sheet a strong { font-size: var(--hl-fs-sm); }
+  .sheet a span { font-size: var(--hl-fs-xs); color: var(--hl-ink-soft); }
+  .sheet a:hover { background: var(--hl-sunken); }
+
+  .end { display: flex; align-items: center; gap: var(--hl-s2); }
+  .gh {
+    display: none; align-items: center; gap: 8px;
+    padding: 0 16px; height: 40px; border-radius: var(--hl-r-pill);
+    border: 1px solid var(--hl-border); background: var(--hl-card);
+    color: var(--hl-ink); text-decoration: none; font-weight: 600; font-size: var(--hl-fs-sm);
+  }
+  .gh:hover { border-color: var(--hl-line-strong); color: var(--hl-ink); }
+  .gh svg { width: 17px; height: 17px; }
+
+  @media (min-width: 72rem) { .primary { display: flex; } .gh { display: inline-flex; } }
+  @media (max-width: 49.99rem) { .end :global(.theme-toggle) { display: none; } }
+</style>

@@ -134,3 +134,22 @@ nav.sidebar a[aria-current='page']:hover {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* A header cell that holds only a screen-reader label is positioned absolutely by the
+   utility class. Without a positioned parent it sits outside a scrolling table and
+   widens the whole page on a phone. */
+.sl-markdown-content th { position: relative; }
+
+/* The same translucent, blurred header as hotloop.io. */
+.header {
+  background: color-mix(in srgb, var(--hl-bg) 82%, transparent) !important;
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+}
+
+/* Sidebar group labels use the brand's small uppercase label, and links are pills. */
+nav.sidebar .large { font-size: var(--hl-fs-sm); font-weight: 700; }
+nav.sidebar a { border-radius: var(--hl-r-pill); }
+
+/* The next-release and written-against-main boxes read as the site's notices. */
+.starlight-aside { border-radius: var(--hl-r-card); }

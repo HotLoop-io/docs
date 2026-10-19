@@ -1,0 +1,21 @@
+---
+// The same brand lockup as hotloop.io: the mark, then the wordmark with "loop" in the link color.
+---
+
+<a class="brand" href="/" aria-label="HotLoop Docs, home">
+  <img src="/brand/logo-mark.svg" alt="" width="30" height="30" />
+  <span class="word" translate="no">hot<span>loop</span></span>
+  <span class="docs-tag">docs</span>
+</a>
+
+<style>
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--hl-ink); }
+  .word { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.03em; }
+  .word span { color: var(--hl-link); }
+  :global(:root[data-theme='dark']) .word span { color: var(--hl-orange); }
+  .docs-tag {
+    font-size: var(--hl-fs-2xs); font-weight: 600; letter-spacing: var(--hl-ls-label);
+    text-transform: uppercase; color: var(--hl-ink-soft);
+    border: 1px solid var(--hl-border); border-radius: var(--hl-r-pill); padding: 0.15em 0.7em;
+  }
+</style>

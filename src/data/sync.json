@@ -1,0 +1,851 @@
+{
+  "repos": {
+    "hotloop": {
+      "slug": "HotLoop-io/hotloop",
+      "ref": "origin/main",
+      "sha": "9d25dc1852eacc39c1c0e696d4b282a7a383f8af",
+      "release": {
+        "tag": "v4.17.0",
+        "version": "4.17.0",
+        "prerelease": false,
+        "publishedAt": "2026-09-30T00:53:23Z",
+        "sha": "2e71d09a24d1d82c38f7adc911933128b17879a9"
+      }
+    },
+    "flow": {
+      "slug": "HotLoop-io/hotloop-flow",
+      "ref": "origin/main",
+      "sha": "ed15cab686d6726f1ad4476e5384199887870692",
+      "release": {
+        "tag": "v2.1.0",
+        "version": "2.1.0",
+        "prerelease": false,
+        "publishedAt": "2026-10-12T02:09:17Z",
+        "sha": "a5802ee1478cf2b1592badf6e363928a1efd7158"
+      }
+    },
+    "cascade": {
+      "slug": "HotLoop-io/hotloop-cascade",
+      "ref": "origin/main",
+      "sha": "b2d9a742bfd187b366b0c020b47b1148ee6d2885",
+      "release": {
+        "tag": "v0.1.0-rc.8",
+        "version": "0.1.0-rc.8",
+        "prerelease": true,
+        "publishedAt": "2026-10-19T04:05:04Z",
+        "sha": "33d093e15315584fc4c421058d551f4a68b71340"
+      }
+    }
+  },
+  "products": [
+    {
+      "id": "iot",
+      "name": "HotLoop IoT",
+      "repo": "hotloop",
+      "tagline": "The automation base, built in Go for OT."
+    },
+    {
+      "id": "edge",
+      "name": "HotLoop Edge",
+      "repo": "hotloop",
+      "tagline": "IoT plus the machine layer."
+    },
+    {
+      "id": "gateway",
+      "name": "HotLoop Gateway",
+      "repo": "hotloop",
+      "tagline": "Everything, for the whole site."
+    },
+    {
+      "id": "edge-relay",
+      "name": "HotLoop Edge Relay",
+      "repo": "hotloop",
+      "tagline": "Poll, forward, survive."
+    },
+    {
+      "id": "flow",
+      "name": "HotLoop Flow",
+      "repo": "flow",
+      "tagline": "Node-RED compatible flows on a Go runtime."
+    },
+    {
+      "id": "cascade",
+      "name": "HotLoop Cascade",
+      "repo": "cascade",
+      "tagline": "The plant talking to everything else."
+    }
+  ],
+  "pages": [
+    {
+      "slug": "iot/entities",
+      "product": "iot",
+      "group": "The base",
+      "title": "Entities",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/ENTITIES.md",
+      "release": false
+    },
+    {
+      "slug": "iot/equipment",
+      "product": "iot",
+      "group": "The base",
+      "title": "The equipment tree and labels",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/EQUIPMENT.md",
+      "release": false
+    },
+    {
+      "slug": "iot/helpers",
+      "product": "iot",
+      "group": "The base",
+      "title": "Helpers",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/HELPERS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/logbook",
+      "product": "iot",
+      "group": "The base",
+      "title": "The logbook",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/LOGBOOK.md",
+      "release": false
+    },
+    {
+      "slug": "iot/sun",
+      "product": "iot",
+      "group": "The base",
+      "title": "The sun",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/SUN.md",
+      "release": false
+    },
+    {
+      "slug": "iot/automations",
+      "product": "iot",
+      "group": "Automation",
+      "title": "Automations",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/AUTOMATIONS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/blueprints",
+      "product": "iot",
+      "group": "Automation",
+      "title": "Blueprints",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/BLUEPRINTS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/scripts",
+      "product": "iot",
+      "group": "Automation",
+      "title": "Scripts",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/SCRIPTS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/recipes",
+      "product": "iot",
+      "group": "Automation",
+      "title": "Recipes",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/RECIPES.md",
+      "release": false
+    },
+    {
+      "slug": "iot/dashboards",
+      "product": "iot",
+      "group": "Screens and alerts",
+      "title": "Dashboards",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/DASHBOARDS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/notifications",
+      "product": "iot",
+      "group": "Screens and alerts",
+      "title": "Alarm notifications",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/NOTIFY.md",
+      "release": false
+    },
+    {
+      "slug": "iot/mcp",
+      "product": "iot",
+      "group": "Screens and alerts",
+      "title": "MCP",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/MCP.md",
+      "release": false
+    },
+    {
+      "slug": "iot/protocols",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "Protocols and drivers",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/PROTOCOLS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/broker",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "The embedded MQTT broker",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/BROKER.md",
+      "release": false
+    },
+    {
+      "slug": "iot/mqtt-discovery",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "MQTT discovery",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/DISCOVERY.md",
+      "release": false
+    },
+    {
+      "slug": "iot/network-discovery",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "Network discovery",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/NETWORK-DISCOVERY.md",
+      "release": false
+    },
+    {
+      "slug": "iot/unifi",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "UniFi Network",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/UNIFI.md",
+      "release": false
+    },
+    {
+      "slug": "iot/historian-targets",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "Historian targets",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/HISTORIAN-TARGETS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/authentication",
+      "product": "iot",
+      "group": "Operate",
+      "title": "Authentication and users",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/AUTH.md",
+      "release": false
+    },
+    {
+      "slug": "iot/backup",
+      "product": "iot",
+      "group": "Operate",
+      "title": "Backups and restore",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/BACKUP.md",
+      "release": false
+    },
+    {
+      "slug": "iot/migrations",
+      "product": "iot",
+      "group": "Operate",
+      "title": "Migrations only add",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/MIGRATIONS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/api",
+      "product": "iot",
+      "group": "Operate",
+      "title": "The HTTP API",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/API.md",
+      "release": false
+    },
+    {
+      "slug": "edge/edge-publish",
+      "product": "edge",
+      "group": "What Edge adds",
+      "title": "Edge publish and store-and-forward",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/EDGE-PUBLISH.md",
+      "release": false
+    },
+    {
+      "slug": "edge/opc-ua-server",
+      "product": "edge",
+      "group": "What Edge adds",
+      "title": "The OPC UA server",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/OPCUA-SERVER.md",
+      "release": false
+    },
+    {
+      "slug": "gateway/fleet",
+      "product": "gateway",
+      "group": "What the Gateway adds",
+      "title": "Fleet management",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/FLEET.md",
+      "release": false
+    },
+    {
+      "slug": "gateway/reports",
+      "product": "gateway",
+      "group": "What the Gateway adds",
+      "title": "Scheduled reports",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/REPORTS.md",
+      "release": false
+    },
+    {
+      "slug": "edge-relay/reference",
+      "product": "edge-relay",
+      "group": "Reference",
+      "title": "Edge Relay reference",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/EDGE-RELAY.md",
+      "release": false
+    },
+    {
+      "slug": "install/helm",
+      "product": "shared",
+      "group": "Install",
+      "title": "k3s and Helm",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/DEPLOYMENT.md",
+      "release": false
+    },
+    {
+      "slug": "install/quadlet",
+      "product": "shared",
+      "group": "Install",
+      "title": "Podman Quadlet",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "deploy/quadlet/README.md",
+      "release": false
+    },
+    {
+      "slug": "install/auto-update",
+      "product": "shared",
+      "group": "Install",
+      "title": "The :stable auto-update",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "deploy/quadlet/README.md",
+      "release": false
+    },
+    {
+      "slug": "products",
+      "product": "shared",
+      "group": "Lineup",
+      "title": "The lineup",
+      "label": null,
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/PRODUCTS.md",
+      "release": false
+    },
+    {
+      "slug": "roadmap",
+      "product": "shared",
+      "group": "Lineup",
+      "title": "HotLoop roadmap",
+      "label": null,
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/ROADMAP.md",
+      "release": false
+    },
+    {
+      "slug": "flow/overview",
+      "product": "flow",
+      "group": "Start here",
+      "title": "HotLoop Flow",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/quick-start",
+      "product": "flow",
+      "group": "Start here",
+      "title": "Quick start",
+      "label": null,
+      "status": "released",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/migrating-from-node-red",
+      "product": "flow",
+      "group": "Start here",
+      "title": "Bring your Node-RED flows",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/back-pressure",
+      "product": "flow",
+      "group": "How it runs",
+      "title": "Back-pressure, visibly",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/store-and-forward",
+      "product": "flow",
+      "group": "How it runs",
+      "title": "Store and forward",
+      "label": null,
+      "status": "next",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/durable-state",
+      "product": "flow",
+      "group": "How it runs",
+      "title": "Durable state, measured",
+      "label": null,
+      "status": "next",
+      "repo": "flow",
+      "source": "docs/durable/README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/subflows",
+      "product": "flow",
+      "group": "How it runs",
+      "title": "Subflows",
+      "label": null,
+      "status": "released",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/deploys",
+      "product": "flow",
+      "group": "Review and test",
+      "title": "Every deploy is a record",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/tests",
+      "product": "flow",
+      "group": "Review and test",
+      "title": "Tests next to the flows",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/tracing",
+      "product": "flow",
+      "group": "Review and test",
+      "title": "Tracing and replay",
+      "label": null,
+      "status": "next",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/palette",
+      "product": "flow",
+      "group": "Nodes",
+      "title": "The palette",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/plant-floor",
+      "product": "flow",
+      "group": "Nodes",
+      "title": "The plant floor",
+      "label": null,
+      "status": "next",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/sandboxes",
+      "product": "flow",
+      "group": "Nodes",
+      "title": "Two sandboxes",
+      "label": null,
+      "status": "released",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/compatibility",
+      "product": "flow",
+      "group": "Nodes",
+      "title": "Node-RED compatibility",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "docs/compatibility.md",
+      "release": false
+    },
+    {
+      "slug": "flow/security",
+      "product": "flow",
+      "group": "Run it",
+      "title": "Security posture",
+      "label": null,
+      "status": "released",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/configuration",
+      "product": "flow",
+      "group": "Run it",
+      "title": "Configuration",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/admin-api",
+      "product": "flow",
+      "group": "Run it",
+      "title": "The admin API",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/metrics",
+      "product": "flow",
+      "group": "Run it",
+      "title": "Metrics",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/deploying",
+      "product": "flow",
+      "group": "Run it",
+      "title": "Deploying Flow",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "docs/deploying.md",
+      "release": false
+    },
+    {
+      "slug": "flow/troubleshooting",
+      "product": "flow",
+      "group": "Run it",
+      "title": "When it refuses to start",
+      "label": null,
+      "status": "released",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/where-it-stands",
+      "product": "flow",
+      "group": "Project",
+      "title": "Where Flow stands",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/benchmarks",
+      "product": "flow",
+      "group": "Project",
+      "title": "Benchmarks",
+      "label": null,
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/bench/README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/building",
+      "product": "flow",
+      "group": "Project",
+      "title": "Building Flow",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/roadmap",
+      "product": "flow",
+      "group": "Project",
+      "title": "Flow roadmap",
+      "label": null,
+      "status": "changed",
+      "repo": "flow",
+      "source": "docs/ROADMAP.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/overview",
+      "product": "cascade",
+      "group": "Start here",
+      "title": "HotLoop Cascade",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/status",
+      "product": "cascade",
+      "group": "Start here",
+      "title": "Where Cascade stands",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/running",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "Running Cascade",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/importing",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "Bringing a workflow in",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/observability",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "Watching it",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/file-steps",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "The file steps",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/quadlet",
+      "product": "cascade",
+      "group": "Install",
+      "title": "Cascade with Podman Quadlet",
+      "label": null,
+      "status": "changed",
+      "repo": "cascade",
+      "source": "deploy/quadlet/README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/building",
+      "product": "cascade",
+      "group": "Install",
+      "title": "Building Cascade",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/roadmap",
+      "product": "cascade",
+      "group": "Project",
+      "title": "Cascade roadmap",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/ROADMAP.md",
+      "release": false
+    },
+    {
+      "slug": "releases/hotloop-4-16-0",
+      "product": "releases",
+      "group": "HotLoop",
+      "title": "HotLoop 4.16.0 release notes",
+      "label": "4.16.0",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.16.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-17-0",
+      "product": "releases",
+      "group": "HotLoop",
+      "title": "HotLoop 4.17.0 release notes",
+      "label": "4.17.0",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.17.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-18-3",
+      "product": "releases",
+      "group": "HotLoop",
+      "title": "HotLoop 4.18.3 release notes",
+      "label": "4.18.3",
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/releases/4.18.3.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-1-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.1.0 release notes",
+      "label": "2.1.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.1.0.md",
+      "release": true
+    }
+  ],
+  "pinned": [
+    "business.md",
+    "edge/overview.md",
+    "edge-relay/install.md",
+    "edge-relay/overview.md",
+    "flow/install.md",
+    "gateway/install.md",
+    "gateway/overview.md",
+    "gateway/upgrading.md",
+    "install/index.md",
+    "iot/overview.md"
+  ]
+}

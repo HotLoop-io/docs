@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "sync": "node scripts/sync-docs.mjs",
     "build": "node scripts/og.mjs && astro build && node scripts/seo-audit.mjs dist",
     "preview": "astro preview",
     "audit": "node scripts/seo-audit.mjs dist"
@@ -21,6 +22,7 @@
     "sharp": "^0.35.4"
   },
   "devDependencies": {
+    "github-slugger": "^2.0.0",
     "node-html-parser": "^9.0.4",
     "opentype.js": "^2.0.0"
   }

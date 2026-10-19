@@ -1,0 +1,13 @@
+---
+// Starlight's own page frame, then hotloop.io's footer under it. The sidebar is fixed, so on a
+// wide screen the footer starts where the content column does.
+import Default from '@astrojs/starlight/components/PageFrame.astro';
+import SiteFooter from './SiteFooter.astro';
+---
+
+<Default {...Astro.props}>
+  <slot name="header" slot="header" />
+  <slot name="sidebar" slot="sidebar" />
+  <slot />
+</Default>
+<SiteFooter />
