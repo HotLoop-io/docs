@@ -95,7 +95,7 @@ We proved that by rendering both charts side by side, not by running it on a liv
 - **OPC UA tags you imported keep the type they were imported with.** Discover tags used to call every node a float. It reads each node's real type now, but tags imported before keep `float`, and HotLoop's own OPC UA server publishes a tag as its declared type, so a text tag reaches Ignition as `Bad_TypeMismatch`. Go declare your text tags `string`.
 - **Edge publish has a values block now.** If you set it through `extraEnv`, move it to `edgePublish:` and drop the variables, or they're set twice.
 - **The OPC UA server says `HotLoop`** as its manufacturer, where it used to say Fireball Industries. If a client or an inventory script matches on that string, change it before it stops matching.
-- **The license.** The terms changed after 4.3.1. The current ones are on [the License page](https://hotloop.io/license/).
+- **The license.** The terms changed after 4.3.1. The current ones are on [the License page](/license/).
 
 ### API changes from 4.3.1
 

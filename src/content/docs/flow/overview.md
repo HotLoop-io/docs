@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at ed15cab, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at d40cbeb, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 **Wire the plant. Review it like code.**
@@ -48,7 +48,8 @@ Current release is `2.1.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.1.0`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. About
 36,000 lines of Go, more than a third of it tests, 64 node types, and the race
-detector comes back clean on every package. Its license and terms are on the [License](https://hotloop.io/license/) page.
+detector comes back clean on every package. Home and lab use is free, and
+business use is free through EmberNET, under HotLoop's Business Source License.
 
 ## The numbers
 

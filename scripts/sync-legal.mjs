@@ -29,7 +29,8 @@ const PAGES = {
     out: 'terms.md',
     title: 'Terms',
     description: 'The terms that go with HotLoop, mirrored from the canonical copy in the HotLoop-io organization, so this site cannot say something they do not.',
-    isNew: () => true,
+    // The canonical file still carries its effective-date placeholder, and a page with a bracketed blank in it does not go live.
+    isNew: (t) => !/\[EFFECTIVE DATE\]/.test(t),
     canonical: 'https://github.com/HotLoop-io/HotLoop-io/blob/main/TERMS.md',
     lead: 'The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site.',
   },

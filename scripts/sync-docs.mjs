@@ -82,7 +82,7 @@ const refs = {};
 const shas = {};
 const releases = {};
 for (const r of Object.keys(REPOS)) {
-  if (!flag('no-fetch')) git(r, 'fetch', '--quiet', '--tags', 'origin');
+  if (!flag('no-fetch')) git(r, 'fetch', '--quiet', 'origin');
   refs[r] = refArg[r] || 'origin/main';
   shas[r] = git(r, 'rev-parse', refs[r]).trim();
   let tag = relArg[r];

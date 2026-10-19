@@ -10,7 +10,7 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at ed15cab. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
+This page was written from `main` at d40cbeb. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
 :::
 
 `scan` could find a PLC and nothing in the palette could talk to it, which is a
