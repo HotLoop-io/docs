@@ -15,7 +15,7 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "d40cbeb4fea8b22d71bdbaf1ed84b48d4cb1255d",
+      "sha": "0cea8558a17d701a4c19cb858d24646711f067ce",
       "release": {
         "tag": "v2.1.0",
         "version": "2.1.0",
@@ -27,7 +27,7 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "b2d9a742bfd187b366b0c020b47b1148ee6d2885",
+      "sha": "a0a88af427e4db7b4a47bad7bbbb32355f9d0a5a",
       "release": {
         "tag": "v0.1.0-rc.8",
         "version": "0.1.0-rc.8",

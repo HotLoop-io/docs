@@ -10,19 +10,23 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at d40cbeb. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
+This page was written from `main` at 0cea855. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
 :::
 
 `scan` could find a PLC and nothing in the palette could talk to it, which is a
-funny thing to ship in a product for plants. Modbus TCP, OPC UA and Sparkplug B
-are in now.
+funny thing to ship in a product for plants. Modbus TCP, S7, EtherNet/IP, OPC UA
+and Sparkplug B are in now.
 Each one is a config node that holds the connection to the device and action
 nodes that point at it, same shape as the InfluxDB node, and the editor builds
 every dialog from the descriptor like everything else.
 
-They sit on MIT-licensed libraries, [simonvetter/modbus](https://github.com/simonvetter/modbus)
-v1.6.4 and [gopcua/opcua](https://github.com/gopcua/opcua) v0.9.1. Nothing is
-copied out of HotLoop's drivers, which are a different license and stay that way.
+They sit on open source libraries: [simonvetter/modbus](https://github.com/simonvetter/modbus)
+v1.6.4 (MIT), [gopcua/opcua](https://github.com/gopcua/opcua) v0.9.1 (MIT),
+[robinson/gos7](https://github.com/robinson/gos7) (BSD-3-Clause, no tagged
+releases, so it's pinned to the latest commit) and
+[danomagnum/gologix](https://github.com/danomagnum/gologix) v0.44.0-beta (MIT).
+Nothing is copied out of HotLoop's drivers, which are a different license and stay
+that way.
 
 **Modbus TCP** is `modbus read` and `modbus write` on a `hotloop-flow-modbus`
 server. Holding registers, input registers, coils and discrete inputs. Registers
@@ -32,6 +36,32 @@ not agree on either and the manual will not say. A quantity is values, not
 registers, so two float32 is four registers on the wire. Addresses are zero
 based as they go on the wire, and the dialog and the error both say out loud that
 register 40001 in a manual is address 0.
+
+**S7** is `s7 read` and `s7 write` on a `hotloop-flow-s7` server, over ISO on TCP.
+gos7 is a Go implementation of the protocol and has none of Snap7's C library in
+it, which matters because Snap7 is LGPL and I'm not linking that into a product I ship. You
+write the address the way Siemens does: `DB1.DBX0.0`, `DB1.DBW4`,
+`M10.2`, `MW20`, `I0.0`, `QB4`, with `E` and `A` for the German spellings. The
+size letter has to agree with the data type, so `DB1.DBW0` read as a float32 is
+refused before it goes anywhere, with the address you meant. A quantity of 3 on a
+bit is three bits on from the one you named. A string is an S7 STRING: the write
+reads its maximum length first and refuses text that won't fit instead of
+writing past it. A bit is written with the protocol's own bit write, which
+changes that bit and leaves the other seven in the byte alone. An S7-1200 or
+S7-1500 says no to all of it until PUT/GET is permitted and the data block's
+Optimized block access is off, and the errors say so, because that is the thing
+everybody trips on.
+
+**EtherNet/IP** is `ethernetip read` and `ethernetip write` on a
+`hotloop-flow-ethernetip` controller, tag access on ControlLogix, CompactLogix
+and Micro800. You name the tag the way Logix spells it, with members
+(`Pump1.Speed`), array elements (`Samples[4]`) and bits (`Status.3`), and the data
+type it holds. A quantity above 1 moves that many array elements from the one
+named. A tag read as the wrong type is refused and the error says to use the
+tag's own. The path to the CPU is `1,0` unless you change it, and empty for a
+controller you reach directly. PLC-5, SLC and MicroLogix speak PCCC and not CIP
+tags, and they're out. Yes, the library is tagged beta. It's the newest release
+there is, and I'd rather tell you than leave it out.
 
 **OPC UA** is `opcua read`, `opcua write` and `opcua subscribe` on a
 `hotloop-flow-opcua` server. Security mode None, Sign or SignAndEncrypt with the
@@ -65,11 +95,27 @@ by hand from the Eclipse schema and the 3.0 specification, and tested against
 that schema compiled with Google's protobuf, which is a different implementation
 from mine. The schema is EPL-2.0, so it isn't in this repository: CI fetches it
 pinned to a commit and a hash. It was also run against a real Mosquitto, and by
-hand against pysparkplug, in both directions, edge node and host. Not done: no
-primary host application wait (an edge node is born without waiting for a host),
-no second broker, no DataSet, Template or PropertySet values (the metric arrives
-named and marked unsupported), no metric metadata, and an edge node doesn't
-publish arrays.
+hand against pysparkplug, in both directions, edge node and host.
+
+An edge node can name a **primary host application**. It subscribes to that
+host's STATE and says nothing, no NBIRTH and no DBIRTH, until the host says it
+is online. A death certificate older than the last online STATE is some old
+session's and gets ignored. A current one gets an NDEATH, a disconnect and a
+start over. A list of **other brokers** is where it starts over: one at a time,
+round and round, moving on when a broker can't be reached, when the host is
+offline there, and, with more than one broker, when the host never published
+there at all. With one broker an offline host just keeps the edge node waiting,
+connected, until it isn't. The edge node is on one broker at a time, as the spec
+says. The array types, **DataSet**, **Template** and a metric's **PropertySet**
+are carried both ways: arrays in the packed little endian form the spec gives,
+a DataSet as `{columns, types, rows}`, a Template as a definition or an instance
+with its parameters and members, and properties on any metric as
+`{"engUnit": "degC", "Quality": {"type": "Int32", "value": 192}}`. A Template
+instance whose definition isn't in the NBIRTH is refused at birth with what to
+declare. The Eclipse schema reads every one of them off the wire, and its own
+bytes read back the other way. Not done: a metric's metadata (files and multi-part
+bytes), a host application that talks to more than one broker, and MQTT 5. It
+hasn't met Ignition's MQTT Engine.
 
 **When the device goes quiet.** This is what a plant floor does all day, so it
 is tested the ugly way, against the real simulators with a line in between that
@@ -81,8 +127,11 @@ An OPC UA subscription notices on its own, turns its badge red, raises one error
 for a Catch node per outage and not one per retry, waits 1 second and then
 longer up to 30, and picks the subscription back up when the server returns. No
 redeploy. Errors name the thing to change: the Modbus exception code and what it
-usually means, the OPC UA status code and which setting it points at, a refused
-connection versus a silent one.
+usually means, the OPC UA status code and which setting it points at, the S7
+refusal that means PUT/GET is off, a refused connection versus a silent one. An
+OPC UA server that takes the connection and never answers endpoint discovery costs
+the node that asked its timeout and nobody else anything: the other nodes on that
+server, and a flow that is being stopped, don't queue behind it.
 
 **Writes change equipment, and there is no ceremony.** I looked for a
 confirmation pattern in Flow to follow and there isn't one for equipment. The
@@ -97,12 +146,34 @@ built, but nothing here stands in its way.
 
 **Tested against** Microsoft's OPC PLC (`opc-plc` 2.15.11) with anonymous and
 username logins across None, Sign and SignAndEncrypt, and against pymodbus
-through `oitc/modbus-server` 2.3.0, with real exception codes coming back. CI
-starts both, and fails if a test skips instead of running. Not done:
-Aes256_Sha256_RsaPss fails against OPC PLC on the client's signature
-(`BadSecurityChecksFailed`), so it isn't in the dropdown. Basic256 and
-Basic128Rsa15 are deprecated and the simulator doesn't offer them, so they're
-out too. A setting I can't test doesn't get a dropdown entry. No Modbus RTU, no
-Modbus over TLS, no OPC UA events, history or method calls, no browse, and 64 bit
+through `oitc/modbus-server` 2.3.0, with real exception codes coming back. S7 is
+tested against the server in python-snap7 3.2.1 (MIT), written in pure Python and
+a different implementation of the protocol from gos7. EtherNet/IP is tested
+against `ab_server` from libplctag 2.7.2, the simulator libplctag runs its own
+tests on, and the values Flow wrote were read back with libplctag's own client as
+well. Both are built from `testdata/plant`, run as separate containers, and
+nothing from either is linked into Flow (libplctag is MPL-2.0 or LGPL). CI starts
+all four and fails if a test skips instead of running.
+
+Neither the S7 nor the EtherNet/IP nodes have met a Siemens or Rockwell box yet.
+The python-snap7 server doesn't do a bit write the way a CPU does (it
+overwrites the whole byte), so the bit write is checked on the wire, request by
+request, and not by reading the byte back. `ab_server` matches tag names with
+their case and Logix doesn't, and gologix sends them lower case, so the
+simulator's tags are lower case.
+
+**Aes256_Sha256_RsaPss isn't in the OPC UA dropdown, and the fault is in
+gopcua.** v0.9.1 pads RSA-OAEP-SHA256 with 130 bytes where the number is 66
+(two hash lengths of 32, plus 2), so the secure channel request is cut into
+blocks the .NET stack under OPC PLC doesn't expect, and it answers
+`BadSecurityChecksFailed`. I changed that one constant in a copy of gopcua and
+the same client connected to the same OPC PLC in Sign and in SignAndEncrypt. The
+fix is two open pull requests on gopcua (#915 and #931) and no release has it, so
+the policy stays out, and a test fails the day a gopcua update carries it.
+Basic256 and Basic128Rsa15 are deprecated and the simulator doesn't offer them,
+so they're out too. A setting I can't test doesn't get a dropdown entry.
+
+Not done: no Modbus RTU, no Modbus over TLS, no OPC UA events, history or method
+calls, no browse, no S7 timers or counters, no PCCC controllers, and 64 bit
 integers past 2^53 come out as a string of their exact digits because a flow's
 numbers can't hold them.

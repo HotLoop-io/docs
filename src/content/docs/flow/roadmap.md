@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at d40cbeb, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
@@ -158,14 +158,16 @@ biggest hole in a product built for plants.
 
 - [x] Modbus TCP read and write
 - [x] OPC UA read, subscribe and write
-- [ ] S7 read and write
+- [x] S7 read and write
 - [x] Sparkplug B, as an edge node and as a host
-- [ ] EtherNet/IP read and write
-- [ ] Every one of them tested against a real device or the real simulator,
+- [x] EtherNet/IP read and write
+- [x] Every one of them tested against a real device or the real simulator,
       including what happens when the device goes silent and when it comes back.
       Modbus TCP is done against pymodbus, OPC UA against Microsoft's OPC PLC,
-      silent and switched-off both, and Sparkplug B against a real Mosquitto with
-      the edge node cut off and the host restarted. S7 and EtherNet/IP are not done
+      silent and switched-off both, Sparkplug B against a real Mosquitto with
+      the edge node cut off and the host restarted, S7 against python-snap7's
+      server, and EtherNet/IP against libplctag's `ab_server`. All simulators.
+      No Siemens CPU or Logix controller has been in front of any of it
 - [ ] HotLoop nodes: entity changes in, entity state, call a script, apply a
       recipe. Every command goes through HotLoop's write gate and lands in its
       logbook as `flow:<node id>`, and a write the gate refuses arrives at a
@@ -262,6 +264,15 @@ but plenty of people drop one that doesn't.
       the config, selection to subflow takes the flow's own configuration nodes
       and the environment variables its nodes read, and deleting a flow or a node
       takes its id out of the Catch, Status and Complete scopes that named it
+- [x] A node pointing at a config node that isn't in the file (a flow deleted
+      with its own broker while a subflow, a hand edit or an import still names
+      it) is reported by `hotloop-flow import`, in the editor on load and on
+      deploy, and in the deploy answer, and the node is a start failure instead
+      of a node that quietly never works
+- [x] The durable wire kill test passed locally and failed on a slower runner.
+      The queue counted a message as waiting before it was on disk, so a copy
+      taken the moment the count hit 100 could be one short. It counts after the
+      commit now
 - [x] Secrets by reference: a node reads a password from a mounted Kubernetes
       Secret or file, so it never lives in the flow file at all
 - [ ] Bring your flows: `hotloop-flow import` keeps reporting exactly what will
