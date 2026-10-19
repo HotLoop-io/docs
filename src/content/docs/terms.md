@@ -33,11 +33,11 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 3.1 The Software is licensed under the HotLoop Business Source License 1.1, the text of which is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
 
-3.2 In plain words, and subject to the license text: home and lab use is free. Business use is free when it runs through EmberNET, which is our channel for business use. Hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted.
+3.2 In plain words, and subject to the license text: home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Business use is free when it runs through EmberNET, which is our channel for business use, and a systems integrator may install and operate HotLoop for a customer under either the customer's EmberNET account or its own. Hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted.
 
-3.3 The license applies to each version separately. Each version converts to GPL-3.0 four years after that version is first made publicly available. Until then, the license governs it.
+3.3 The license applies to each version separately. Each version converts to GPL-3.0 or later four years after that version is first made publicly available. Until then, the license governs it.
 
-3.4 Business use means what the license says it means. If you are not sure whether your use is home and lab use or business use, ask us before you deploy.
+3.4 Business use, and the schools, nonprofits and government bodies that are free of it, mean what the license says they mean. If you are not sure which side your use falls on, ask us before you deploy.
 
 ## 4. How you may use the Sites and the Software
 
@@ -142,9 +142,11 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 16.1 Neither of us is liable to the other for indirect, incidental, special or consequential damages, or for lost profits, revenue, production or data.
 
-16.2 Our total liability under these terms and the license is capped at US$100. HotLoop is provided without charge, so there are no fees to base a cap on.
+16.2 HotLoop is provided as is, free of charge. To the extent the law allows, we are not liable to you for any damages arising from HotLoop, the Sites or these terms, whatever the legal theory.
 
-16.3 The cap and exclusions do not apply to: your breach of the license or of Section 5; fraud or wilful misconduct; or bodily injury or death caused by negligence. If a third party makes a claim against us that arises from your data, your configurations, your use of HotLoop or your breach of these terms, you will defend us and pay any damages finally awarded and any settlement you agree to.
+16.3 Nothing in this section excludes or limits liability that the law does not allow to be excluded or limited, including fraud or wilful misconduct and bodily injury or death caused by negligence. Sections 16.1 and 16.2 do not limit what you owe us for your breach of the license or of Section 5.
+
+16.4 If a third party makes a claim against us that arises from your data, your configurations, your use of HotLoop or your breach of these terms, you will defend us and pay any damages finally awarded and any settlement you agree to.
 
 ## 17. Export control
 
