@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at d40cbeb, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 | Method and path | Permission | Notes |

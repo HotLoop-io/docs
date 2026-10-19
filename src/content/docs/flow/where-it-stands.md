@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at d40cbeb, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 **It runs.** It starts, serves the API and the editor, loads flows off the
@@ -35,9 +35,9 @@ the point. A flow that leans on one breaks the day it stops being there.
 
 **Not done yet**, roughly in the order it bothers me:
 
-- **No S7 or EtherNet/IP nodes yet.** Modbus TCP, OPC UA and Sparkplug B are
-  in. `scan` finds an EtherNet/IP device and nothing in the palette can talk to
-  it. Phase 5.
+- **The S7 and EtherNet/IP nodes have only met simulators.** They are tested
+  against real servers that speak the protocols, and they have not talked to a
+  Siemens CPU or a Logix controller. Phase 5 stays that honest until they have.
 - **Durable wires have never been on a Pi.** Store and forward and the disk
   writes were measured on an x86 box under WSL. The Pi 4 and Zero 2 W numbers
   are still to do, and I won't print a card figure I didn't measure on a card.

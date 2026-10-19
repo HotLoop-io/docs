@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at d40cbeb, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Flow reads Node-RED's v1 `flows.json` format, the flat JSON array that every
@@ -52,6 +52,18 @@ at all. Subflow internals are counted against the expanded graph rather than the
 file, so an instance never gets reported as "supported" while staying silent
 about what is inside it. That is the difference between finding out at your desk
 and finding out when a line stops.
+
+A node can also point at a config node that is not in the file. Delete a flow and
+its own MQTT broker goes with it, while a subflow that used that broker keeps
+pointing at an id that names nothing. A hand edit or a half-copied export does
+the same thing. I used to find that out when the first message hit the node, and
+the nodes that only look their server up then said nothing at all. Now the import
+report has a section for it that names every node and the id it can't find, the
+editor puts the same lines in the log when it loads, and a deploy answers with
+them and marks those nodes as failed to start, with the property that holds the
+bad id. The rest of the flow keeps running. A node you disabled, and a TLS
+setting that is blank or says `true` or `false`, are not reported, because
+those are not mistakes.
 
 By compatibility level the 64 node types are 12 full, 21 partial, 14 deliberately
 divergent, and 17 of Flow's own. Every node declares how it relates to

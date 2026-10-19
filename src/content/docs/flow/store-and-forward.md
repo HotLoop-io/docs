@@ -10,7 +10,7 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at d40cbeb. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
+This page was written from `main` at 0cea855. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
 :::
 
 Mark a wire durable and, while the node on the other end keeps up, it is an
