@@ -6,6 +6,9 @@ name: Deploy Pages
 on:
   push:
     branches: [main]
+  # A pull request runs the same build and audit, and never deploys.
+  pull_request:
+    branches: [main]
   workflow_dispatch: {}
 
 permissions:
@@ -39,14 +42,16 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main/brand/tokens.css -o "$RUNNER_TEMP/canonical-tokens.css"
           diff -u --strip-trailing-cr "$RUNNER_TEMP/canonical-tokens.css" src/styles/tokens.css
 
-      # The license text on the site is generated from the canonical LICENSE.md.
-      # Regenerate it and fail if the committed page is out of date.
-      - name: Licensing page matches the canonical license
+      # The License and Terms pages are the canonical LICENSE.md and TERMS.md, wrapped in a
+      # title. Once either file is the new text, its page has to be committed and current, or
+      # this fails. Until then there is no page, and nothing here to compare.
+      - name: License and Terms pages match the canonical text
         run: |
-          curl -fsSL https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main/LICENSE.md -o "$RUNNER_TEMP/LICENSE.md"
-          cp src/content/docs/licensing.md "$RUNNER_TEMP/licensing.committed.md"
-          node scripts/sync-license.mjs "$RUNNER_TEMP/LICENSE.md"
-          diff -u --strip-trailing-cr "$RUNNER_TEMP/licensing.committed.md" src/content/docs/licensing.md
+          base=https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main
+          args="--license $RUNNER_TEMP/LICENSE.md"
+          curl -fsSL "$base/LICENSE.md" -o "$RUNNER_TEMP/LICENSE.md"
+          if curl -fsSL "$base/TERMS.md" -o "$RUNNER_TEMP/TERMS.md"; then args="$args --terms $RUNNER_TEMP/TERMS.md"; fi
+          node scripts/sync-legal.mjs --check $args
 
       - uses: actions/configure-pages@v6
 
@@ -59,6 +64,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
