@@ -26,14 +26,14 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "f67483bbff1cf7eff7f16ca320f8f2652cbcaa2c",
-      "sha": "f67483bbff1cf7eff7f16ca320f8f2652cbcaa2c",
+      "ref": "origin/main",
+      "sha": "9ac23ed7bde932f41f618cda2127f82888bb536a",
       "release": {
-        "tag": "v0.1.1",
-        "version": "0.1.1",
+        "tag": "v0.1.2",
+        "version": "0.1.2",
         "prerelease": false,
-        "publishedAt": null,
-        "sha": "57510f34706336b4ae3bbc3937a50fd4cea4dcc8"
+        "publishedAt": "2026-10-20T17:50:33Z",
+        "sha": "4f47dac563b90a14a08d25de0144a1846902ebe9"
       }
     }
   },
@@ -764,7 +764,7 @@
       "group": "Install",
       "title": "Cascade with Podman Quadlet",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -855,6 +855,17 @@
       "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/0.1.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-0-1-2",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 0.1.2 release notes",
+      "label": "0.1.2",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/0.1.2.md",
       "release": true
     }
   ],

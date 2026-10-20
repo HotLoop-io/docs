@@ -6,20 +6,19 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at f67483b, and it differs from the copy in HotLoop Cascade 0.1.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 9ac23ed, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
-0.1.1 is out, and it is the first release that isn't a candidate. There was a
-0.1.0 tag that never published anything: its chart test failed on a hosted
-runner and I cancelled the run, so nothing reached the registry. 0.1.1 is the
-same code with the test fixed. The engine, the editor, the connectors, the
+0.1.2 is out. 0.1.1 was the first release that isn't a candidate, and 0.1.2 is the
+same code built and tested on Podman only. There was a 0.1.0 tag that never
+published anything: its chart test failed on a hosted runner and I cancelled the
+run, so nothing reached the registry. 0.1.1 was the same code with the test
+fixed. The engine, the editor, the connectors, the
 importer, the metrics and traces, the Helm chart and the Quadlet units were each
 tried against real services before it went out. What isn't here yet (SAML, LDAP,
 SCIM, environments, the HA scheduler with leases, more connectors, AI steps) is
 0.2.0 and on, and it's in `docs/ROADMAP.md`.
 
-The repository and the registry are both private. The image is
-`ghcr.io/hotloop-io/hotloop-cascade`, with tags `0.1.1`, `0.1`, `0`, `latest`
-and `stable`, for amd64 and arm64. The pull fails until you
-`podman login ghcr.io` (as root, for the Quadlet units) with an account that can
-read it, and a box that can't pull just stays on what it has.
+The repository is private. The image and the chart are public and pull with no
+login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `0.1.2`,
+`0.1`, `0`, `latest` and `stable`, for amd64 and arm64.
