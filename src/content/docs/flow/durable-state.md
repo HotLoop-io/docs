@@ -3,15 +3,7 @@
 title: "Durable state, measured"
 description: "Context that survives a restart and durable wires that only touch the disk when the target stops answering, with the scripts and numbers behind both."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 0cea855. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
-:::
 
 A historian going down for an hour shouldn't cost you an hour of readings, and a
 counter in a flow shouldn't start over because the pod moved. Both of those are a
@@ -190,7 +182,7 @@ below. It doesn't survive a power cut on every filesystem. `full` does, and
 
 Measured 2026-10-19 on Linux under WSL2, with the native binary built from this
 branch and a real InfluxDB 2.9.1 (`docker.io/library/influxdb:2.9.1`, the newest
-2.x on Docker Hub that day) in Podman. Nothing is mocked. The script is
+2.x on docker.io that day) in Podman. Nothing is mocked. The script is
 store-and-forward.sh, and it is the whole experiment:
 
 ```bash

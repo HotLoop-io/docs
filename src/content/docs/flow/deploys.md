@@ -5,10 +5,6 @@ description: "Who, when, why and the exact bytes of every deploy, diffed node by
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 "What changed, who changed it, put it back" is the first thing anybody asks
 after a line stops. Three `.bak` files answer none of it. They don't know who,
 they roll over after three saves, and the one you need is always the fourth.

@@ -5,10 +5,6 @@ description: "The phases still to build for Flow, what is done, and why the edit
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -269,6 +265,25 @@ but plenty of people drop one that doesn't.
       it) is reported by `hotloop-flow import`, in the editor on load and on
       deploy, and in the deploy answer, and the node is a start failure instead
       of a node that quietly never works
+- [x] The gaps that one left: a config reference that names a tab, a subflow, a
+      group, a plain node or the wrong kind of config node is reported and
+      fails to start like one that names nothing, a rollback puts the file's
+      warnings in the editor log once and not twice, and `hotloop-flow import`
+      writes its report to a writer like `deploy` does, so its tests stop
+      swapping out standard output
+- [x] gos7 wrote a raw timeout line to Go's global logger on every network
+      error (`tcpclient.go`, the `log.Printf` in `Send`) and had no way to turn
+      it off. Flow carries gos7 in `third_party/gos7` now, with that one line
+      sent through the handler's `Logger`, which Flow leaves unset. Nothing else
+      in the library is touched, and `third_party/gos7/HOTLOOP_PATCH.txt` says
+      when the copy can go. Upstream still has the line; I didn't ask them to
+      take the change
+- [x] The durable wire purge test could count one more dropped than it had
+      sampled as queued. The test was wrong, not the queue: it waited for 28 of
+      30 messages on disk and then held the purge to exactly what it had seen,
+      while the spool was still counting the last ones. How many of the 30 are
+      on disk when the wire goes depends on timing, so it holds the purge to
+      what it saw as a floor and to the 30 sent as a ceiling now
 - [x] The durable wire kill test passed locally and failed on a slower runner.
       The queue counted a message as waiting before it was on disk, so a copy
       taken the moment the count hit 100 could be one short. It counts after the

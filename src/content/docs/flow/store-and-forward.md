@@ -3,15 +3,7 @@
 title: "Store and forward"
 description: "Mark a wire durable and messages go to disk, in order, when the node behind it stops answering, and survive a kill -9."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 0cea855. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
-:::
 
 Mark a wire durable and, while the node on the other end keeps up, it is an
 ordinary wire and writes nothing to disk. The moment that node stops taking

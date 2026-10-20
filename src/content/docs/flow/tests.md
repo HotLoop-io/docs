@@ -5,10 +5,6 @@ description: "Write a test file beside a flow, run it on a fake clock, gate the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 "Did my change break the line?" should get answered before the deploy, by the
 person making the change, not at 3 AM by the person on call. So a flow can have
 tests, and they're YAML that lives next to the flow file and goes through the

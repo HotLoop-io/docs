@@ -23,7 +23,7 @@ There are two ways to run a HotLoop product for real: Helm on k3s or any Kuberne
 |---|---|---|---|---|
 | [HotLoop Gateway](/gateway/overview/) | 4.17.0 | Yes | On `main`, next release | [Install the Gateway](/gateway/install/) |
 | [HotLoop Edge Relay](/edge-relay/overview/) | 4.17.0 | Yes | Yes | [Install the Edge Relay](/edge-relay/install/) |
-| [HotLoop Flow](/flow/overview/) | 2.1.0 | Yes | Yes | [Install Flow](/flow/install/) |
+| [HotLoop Flow](/flow/overview/) | 2.2.0 | Yes | Yes | [Install Flow](/flow/install/) |
 | [HotLoop IoT](/iot/overview/) | Not released | On `main`, next release | On `main`, next release | [Overview](/iot/overview/) |
 | [HotLoop Edge](/edge/overview/) | Not released | On `main`, next release | On `main`, next release | [Overview](/edge/overview/) |
 | [HotLoop Cascade](/cascade/overview/) | 0.1.1 | Yes, after a `helm registry login ghcr.io` | Yes, after a `podman login ghcr.io`, see [Cascade with Podman Quadlet](/cascade/quadlet/) | [Running Cascade](/cascade/running/) |
