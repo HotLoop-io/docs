@@ -5,6 +5,10 @@ description: "Run Cascade as systemd services with Podman Quadlet, on SQLite or 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 9ac23ed, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Two ways to run it. Both want Podman 5.0 or newer and a root install, so they
 start at boot with nobody logged in. Both follow
 `ghcr.io/hotloop-io/hotloop-cascade:stable`, run it read-only and nonroot with
@@ -83,7 +87,6 @@ timer on once per box:
 
 ```sh
 sudo systemctl enable --now podman-auto-update.timer
-sudo podman login ghcr.io      # the registry is private; without this the pull fails
 ```
 
 When it fires, Podman pulls `:stable`, and if the digest changed it restarts the
@@ -142,5 +145,4 @@ when the first of them rolled back the other showed `true` instead, with a
 restart, and it ended up on the good image anyway. Which one rolls back first
 changed from run to run.
 
-Not run: a real Raspberry Pi, and a real ghcr.io pull (the registry is private
-and needs `podman login`).
+Not run: a real Raspberry Pi, and a Quadlet auto-update against ghcr.io itself.

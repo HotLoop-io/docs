@@ -156,6 +156,10 @@ export const SKIPPED_SECTIONS = {
 
 // Rewrites for a page that is generated without a manifest entry of its own, keyed by slug.
 export const SLUG_RULES = {
+  // The 0.1.1 notes were true when written. The registry has been public since 0.1.2, so say both.
+  'releases/cascade-0-1-1': [
+    [ws('The registry is private. `podman login ghcr.io` as root once, or the pull fails and the box stays on what it has.'), 'The registry was private for this release, so it wanted a `podman login ghcr.io` as root first. The image and chart are public from 0.1.2 on and pull with no login.'],
+  ],
   // The pinned HotLoop ref is 4.17.0, and those two files say docker run. The fix is on HotLoop main, so these rules stand in until a released ref carries it. Drop both once the pinned ref is 4.18.5.
   'iot/authentication': [
     [ws('`helm install` or `docker run` now comes up requiring one.'), '`helm install` or a Podman Quadlet unit now comes up requiring one.'],

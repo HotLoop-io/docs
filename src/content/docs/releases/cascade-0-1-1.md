@@ -33,7 +33,7 @@ On a plain box: the Quadlet units under `deploy/quadlet`, SQLite on one box or P
 
 Migrations only go forward. A rollback puts the old image back, it does not un-migrate your database, so take a backup before you turn updates on.
 
-The registry is private. `podman login ghcr.io` as root once, or the pull fails and the box stays on what it has.
+The registry was private for this release, so it wanted a `podman login ghcr.io` as root first. The image and chart are public from 0.1.2 on and pull with no login.
 
 Lose the key that seals stored credentials and every stored credential is unreadable. Keep a copy somewhere that isn't the box.
 
