@@ -16,7 +16,7 @@ anything else on the same segment that could reach the port.
 
 That is no longer the default. It is still available, deliberately, for a
 deployment that really is isolated behind the dashboard and wants to say so, see [Running without a login](#running-without-a-login), but a bare
-`helm install` or `docker run` now comes up requiring one.
+`helm install` or a Podman Quadlet unit now comes up requiring one.
 
 ## The short version
 
