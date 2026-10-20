@@ -5,10 +5,6 @@ description: "Run Cascade as systemd services with Podman Quadlet, on SQLite or 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at a0a88af, and it differs from the copy in HotLoop Cascade 0.1.0-rc.8, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Two ways to run it. Both want Podman 5.0 or newer and a root install, so they
 start at boot with nobody logged in. Both follow
 `ghcr.io/hotloop-io/hotloop-cascade:stable`, run it read-only and nonroot with

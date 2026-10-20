@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
+      "ref": "9d25dc1852eacc39c1c0e696d4b282a7a383f8af",
       "sha": "9d25dc1852eacc39c1c0e696d4b282a7a383f8af",
       "release": {
         "tag": "v4.17.0",
@@ -14,7 +14,7 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "origin/main",
+      "ref": "0cea8558a17d701a4c19cb858d24646711f067ce",
       "sha": "0cea8558a17d701a4c19cb858d24646711f067ce",
       "release": {
         "tag": "v2.1.0",
@@ -27,13 +27,13 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "a0a88af427e4db7b4a47bad7bbbb32355f9d0a5a",
+      "sha": "f67483bbff1cf7eff7f16ca320f8f2652cbcaa2c",
       "release": {
-        "tag": "v0.1.0-rc.8",
-        "version": "0.1.0-rc.8",
-        "prerelease": true,
-        "publishedAt": "2026-10-19T04:05:04Z",
-        "sha": "33d093e15315584fc4c421058d551f4a68b71340"
+        "tag": "v0.1.1",
+        "version": "0.1.1",
+        "prerelease": false,
+        "publishedAt": null,
+        "sha": "57510f34706336b4ae3bbc3937a50fd4cea4dcc8"
       }
     }
   },
@@ -709,7 +709,7 @@
       "group": "Start here",
       "title": "Where Cascade stands",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -720,7 +720,7 @@
       "group": "Use it",
       "title": "Running Cascade",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -764,7 +764,7 @@
       "group": "Install",
       "title": "Cascade with Podman Quadlet",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -833,6 +833,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.1.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-0-1-1",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 0.1.1 release notes",
+      "label": "0.1.1",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/0.1.1.md",
       "release": true
     }
   ],

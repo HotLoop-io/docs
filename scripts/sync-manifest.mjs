@@ -119,20 +119,22 @@ export const PAGES = [
 
   // ---- HotLoop Cascade ----
   { product: 'cascade', group: 'Start here', slug: 'cascade/overview', repo: 'cascade', file: 'README.md', intro: true, sections: ["What it won't do"], title: 'HotLoop Cascade', description: 'Workflows that get the plant talking to everything else, checkpointed so a retry is a database row, in one static Go binary.' },
-  { product: 'cascade', group: 'Start here', slug: 'cascade/status', repo: 'cascade', file: 'README.md', sections: ['Where it stands'], title: 'Where Cascade stands', description: 'Cascade is pre-0.1.0: what is built, what 0.1.0 still waits on, and where the release gets cut.' },
+  { product: 'cascade', group: 'Start here', slug: 'cascade/status', repo: 'cascade', file: 'README.md', sections: ['Where it stands'], title: 'Where Cascade stands', description: 'Cascade is released: what is in it, what is not in it yet, and why a pull needs a registry login.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/running', repo: 'cascade', file: 'README.md', sections: ['Running it'], title: 'Running Cascade', description: 'Run Cascade with Podman Quadlet or Helm on k3s, on SQLite or Postgres, with the health check the units and the chart probes use.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/importing', repo: 'cascade', file: 'README.md', sections: ['Bringing a workflow in'], title: 'Bringing a workflow in', description: 'Import an existing workflow into Cascade, what maps across and what the importer tells you it could not carry.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/observability', repo: 'cascade', file: 'README.md', sections: ['Watching it'], title: 'Watching it', description: 'Health, readiness, Prometheus metrics and traces for every run and step, so a stuck job shows up on a graph and not in a complaint.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/file-steps', repo: 'cascade', file: 'README.md', sections: ['The file steps'], title: 'The file steps', description: 'The steps that read, write, list and move files, build CSV or Excel, and read a PDF, all fenced to one directory and off until you set it.' },
   { product: 'cascade', group: 'Install', slug: 'cascade/quadlet', repo: 'cascade', file: 'deploy/quadlet/README.md', title: 'Cascade with Podman Quadlet', description: 'Run Cascade as systemd services with Podman Quadlet, on SQLite or with Postgres and a separate worker, with an update window you control.' },
   { product: 'cascade', group: 'Install', slug: 'cascade/building', repo: 'cascade', file: 'README.md', sections: ['Building'], title: 'Building Cascade', description: 'Build the Cascade binary and image from source, and run the vet and race test suite against real services.' },
-  { product: 'cascade', group: 'Project', slug: 'cascade/roadmap', repo: 'cascade', file: 'docs/ROADMAP.md', title: 'Cascade roadmap', description: 'What Cascade has built and what comes after the 0.1.0 MVP, phase by phase, and what each phase has to prove first.' },
+  { product: 'cascade', group: 'Project', slug: 'cascade/roadmap', repo: 'cascade', file: 'docs/ROADMAP.md', title: 'Cascade roadmap', description: 'What Cascade has built and what comes after the first release, phase by phase, and what each phase has to prove first.' },
 ];
 
 // Release notes are every file in docs/releases, found on the ref, not listed here.
 export const RELEASE_NOTES = [
   { repo: 'hotloop', dir: 'docs/releases', slugPrefix: 'releases/hotloop-', label: 'HotLoop' },
   { repo: 'flow', dir: 'docs/releases', slugPrefix: 'releases/flow-', label: 'HotLoop Flow' },
+  // 0.1.0 was tagged and never published anything, so it gets no page. A note for a release that does not exist is a claim that it does.
+  { repo: 'cascade', dir: 'docs/release-notes', slugPrefix: 'releases/cascade-', label: 'HotLoop Cascade', skip: ['0.1.0'] },
 ];
 
 // README sections that are deliberately not on the site, so a new section nobody
