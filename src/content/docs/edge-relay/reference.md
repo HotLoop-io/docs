@@ -574,7 +574,7 @@ inherits that gap rather than adding a new one.
 
 ## Deploying it
 
-Two supported paths, both containers, no bare `podman run`/`docker run`
+Two supported paths, both containers, no bare `podman run`
 invoked from a shell that dies with the session, and no Docker:
 
 - **`charts/hotloop-edge-relay`**, a k3s Helm chart, separate from

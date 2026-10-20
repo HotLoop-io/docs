@@ -146,6 +146,7 @@ export const SKIPPED_SECTIONS = {
       'Layout', 'Adding a node', // contributor notes
       'The rest of HotLoop', // the lineup lives here already, and the license wording lives on the License page
       'Licence', // the License page renders the canonical text
+      'License', // the same section since the spelling fix
     ],
   },
   cascade: {
@@ -155,6 +156,13 @@ export const SKIPPED_SECTIONS = {
 
 // Rewrites for a page that is generated without a manifest entry of its own, keyed by slug.
 export const SLUG_RULES = {
+  // The pinned HotLoop ref is 4.17.0, and those two files say docker run. The fix is on HotLoop main, so these rules stand in until a released ref carries it. Drop both once the pinned ref is 4.18.5.
+  'iot/authentication': [
+    [ws('`helm install` or `docker run` now comes up requiring one.'), '`helm install` or a Podman Quadlet unit now comes up requiring one.'],
+  ],
+  'edge-relay/reference': [
+    [ws('no bare `podman run`/`docker run`'), 'no bare `podman run`'],
+  ],
   // The only Apache text left is about the ported Node-RED files, which keep their own headers. The sync refuses the word on purpose, so say it without naming the license.
   'releases/flow-2-2-0': [
     [ws('The ported Node-RED files keep their Apache-2.0 headers and credits, so the Apache text now ships in `LICENSES/Apache-2.0.txt` next to `NOTICE`,'), 'The ported Node-RED files keep their original license headers and credits, so their license text now ships in `LICENSES/` next to `NOTICE`,'],
