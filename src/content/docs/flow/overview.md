@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at b1bd5de, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 **Wire the plant. Review it like code.**
@@ -44,11 +44,11 @@ What that means on a bad night:
 It runs your existing flows unchanged, too. That's [further down](/flow/migrating-from-node-red/),
 because it's a feature, not the point.
 
-Current release is `2.1.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.1.0`
+Current release is `2.2.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.2.0`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. About
 36,000 lines of Go, more than a third of it tests, 64 node types, and the race
-detector comes back clean on every package. Home and lab use is free, and
+detector comes back clean on every package. Home and lab use is free, so is use by schools, nonprofits and government, and
 business use is free through EmberNET, under HotLoop's Business Source License.
 
 ## The numbers
@@ -62,7 +62,7 @@ what's printed.
 | <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
 |---|---|
 | Binary, linux/amd64, static | **22.0 MB** |
-| Image, `2.1.0` amd64, as `podman image inspect` reports it | **32.1 MB** |
+| Image, `2.2.0` amd64, as `podman image inspect` reports it | **39.1 MB** |
 | Start to answering its first request | **0.05 s** |
 | RSS, idle | **16.4 to 16.7 MiB** |
 | RSS, peak under the HTTP load below | **26.4 to 28.5 MiB** |
@@ -70,13 +70,12 @@ what's printed.
 | HTTP latency p50 / p99 | **0.39 to 0.41 ms / 1.78 to 4.03 ms** |
 | Engine, five-node chain, no I/O | **2.20 to 3.11 µs a message**, 3.9 KB allocated |
 
-The image row is the published `2.1.0` image, read on 2026-10-12 with
-`podman image inspect ghcr.io/hotloop-io/hotloop-flow:2.1.0 --format '{{.Size}}'`
-(32,057,016 bytes). It was 25.4 MB at `2.0.5`. The difference is
-`LICENSE`, `NOTICE` and `THIRD_PARTY_LICENSES` in `/usr/share/doc/hotloop-flow/`,
-the last of which is 275 KB of license text for everything compiled in, plus
-whatever else changed between the two releases. I did not split the
-growth between those, so don't read all of it as licenses. The other rows are
+The image row is the published `2.2.0` image, read on 2026-10-20 with
+`podman image inspect ghcr.io/hotloop-io/hotloop-flow:2.2.0 --format '{{.Size}}'`
+(39,095,482 bytes). It was 32.1 MB at `2.1.0` and 25.4 MB at `2.0.5`. Part of
+that is the license text in `/usr/share/doc/hotloop-flow/`, and 2.2.0 also added
+the plant nodes, tracing and the SQLite state store. I did not split the growth
+between those, so don't read all of it as any one of them. The other rows are
 still the 2026-10-02 build.
 
 The start, memory and HTTP rows are one command against

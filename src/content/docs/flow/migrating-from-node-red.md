@@ -5,10 +5,6 @@ description: "Import a Node-RED flows.json unchanged, see what it maps to node b
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Flow reads Node-RED's v1 `flows.json` format, the flat JSON array that every
 Node-RED export and flow library entry is written in. Point it at your file and
 it runs.
@@ -64,6 +60,14 @@ them and marks those nodes as failed to start, with the property that holds the
 bad id. The rest of the flow keeps running. A node you disabled, and a TLS
 setting that is blank or says `true` or `false`, are not reported, because
 those are not mistakes.
+
+An id that exists is not the same as an id that works. I missed that the first
+time. If the setting points at a tab, a subflow, a group or a plain node, or at
+a config node of the wrong kind, like a TLS setting aimed at an MQTT broker,
+it gets the same report and the same failed start, and the line says what the
+id actually is and which kind the setting wants. The editor only offers you the
+right kind, so this only comes from a hand edit or a pasted id, which is
+exactly where it bites.
 
 By compatibility level the 64 node types are 12 full, 21 partial, 14 deliberately
 divergent, and 17 of Flow's own. Every node declares how it relates to

@@ -5,10 +5,6 @@ description: "Every deliberate divergence from Node-RED, node by node, with the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 0cea855, and it differs from the copy in HotLoop Flow 2.1.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Generated from the node registry. Do not edit by hand, change the
 `Compatibility` field on the node's descriptor and regenerate:
 

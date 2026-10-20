@@ -3,15 +3,7 @@
 title: "Tracing and replay"
 description: "Click a debug message and see where it went, replay it into a draft, turn a trace into a test, and send spans to OpenTelemetry."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 0cea855. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
-:::
 
 A value goes wrong at 2 AM and the debug sidebar tells you the value. It does
 not tell you which of the nine nodes it went through changed it, how long the

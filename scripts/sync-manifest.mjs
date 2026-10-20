@@ -155,6 +155,10 @@ export const SKIPPED_SECTIONS = {
 
 // Rewrites for a page that is generated without a manifest entry of its own, keyed by slug.
 export const SLUG_RULES = {
+  // The only Apache text left is about the ported Node-RED files, which keep their own headers. The sync refuses the word on purpose, so say it without naming the license.
+  'releases/flow-2-2-0': [
+    [ws('The ported Node-RED files keep their Apache-2.0 headers and credits, so the Apache text now ships in `LICENSES/Apache-2.0.txt` next to `NOTICE`,'), 'The ported Node-RED files keep their original license headers and credits, so their license text now ships in `LICENSES/` next to `NOTICE`,'],
+  ],
   'releases/hotloop-4-16-0': [
     [ws('- License: the HotLoop Community License v1.0, not Apache-2.0. Free for individual, home, hobbyist, nonprofit and education use; businesses sign up free through EmberNET.'),
       '- License: the terms changed with this release. The current terms are on the [License]({{LICENSE_URL}}) page, and a business install should read them before it upgrades.'],

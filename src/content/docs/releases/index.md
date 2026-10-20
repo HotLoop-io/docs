@@ -5,7 +5,7 @@ description: "What shipped in every HotLoop, HotLoop Flow and HotLoop Cascade re
 editUrl: false
 ---
 
-Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop release is 4.17.0, the latest Flow release is 2.1.0, and the latest Cascade release is 0.1.1.
+Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop release is 4.17.0, the latest Flow release is 2.2.0, and the latest Cascade release is 0.1.1.
 
 ## HotLoop
 
@@ -17,6 +17,7 @@ IoT, Edge, Gateway and Edge Relay release together from one tag.
 
 ## HotLoop Flow
 
+- [HotLoop Flow 2.2.0 release notes](/releases/flow-2-2-0/)
 - [HotLoop Flow 2.1.0 release notes](/releases/flow-2-1-0/)
 
 ## HotLoop Cascade

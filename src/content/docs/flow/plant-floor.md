@@ -3,15 +3,7 @@
 title: "The plant floor"
 description: "Modbus TCP, OPC UA, Sparkplug B and the other nodes that talk to PLCs and brokers, and what each has been run against."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 0cea855. HotLoop Flow 2.1.0 is the latest release, and it does not have what this page describes. An install from 2.1.0 will not match this page.
-:::
 
 `scan` could find a PLC and nothing in the palette could talk to it, which is a
 funny thing to ship in a product for plants. Modbus TCP, S7, EtherNet/IP, OPC UA
@@ -23,7 +15,8 @@ every dialog from the descriptor like everything else.
 They sit on open source libraries: [simonvetter/modbus](https://github.com/simonvetter/modbus)
 v1.6.4 (MIT), [gopcua/opcua](https://github.com/gopcua/opcua) v0.9.1 (MIT),
 [robinson/gos7](https://github.com/robinson/gos7) (BSD-3-Clause, no tagged
-releases, so it's pinned to the latest commit) and
+releases, so it's pinned to the latest commit, and carried in `third_party/gos7`
+with one line changed, `third_party/gos7/HOTLOOP_PATCH.txt` says which) and
 [danomagnum/gologix](https://github.com/danomagnum/gologix) v0.44.0-beta (MIT).
 Nothing is copied out of HotLoop's drivers, which are a different license and stay
 that way.
