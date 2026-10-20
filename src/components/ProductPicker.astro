@@ -30,7 +30,7 @@ const info: Record<string, { summary: string; chip: string; kind: 'ok' | 'warn' 
   },
   cascade: {
     summary: 'The plant talking to everything else. Alarms, webhooks and schedules become checkpointed workflows against real systems.',
-    chip: `Pre-release ${cascade.version}`, kind: 'info',
+    chip: cascade.prerelease ? `Pre-release ${cascade.version}` : `Version ${cascade.version}`, kind: cascade.prerelease ? 'info' : 'ok', install: '/cascade/running/',
   },
 };
 ---

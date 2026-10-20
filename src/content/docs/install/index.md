@@ -26,7 +26,7 @@ There are two ways to run a HotLoop product for real: Helm on k3s or any Kuberne
 | [HotLoop Flow](/flow/overview/) | 2.1.0 | Yes | Yes | [Install Flow](/flow/install/) |
 | [HotLoop IoT](/iot/overview/) | Not released | On `main`, next release | On `main`, next release | [Overview](/iot/overview/) |
 | [HotLoop Edge](/edge/overview/) | Not released | On `main`, next release | On `main`, next release | [Overview](/edge/overview/) |
-| [HotLoop Cascade](/cascade/overview/) | 0.1.0-rc.8, a pre-release | In the repo, 0.1.0 is not out | In the repo, see [Cascade with Podman Quadlet](/cascade/quadlet/) | [Where Cascade stands](/cascade/status/) |
+| [HotLoop Cascade](/cascade/overview/) | 0.1.1 | Yes, after a `helm registry login ghcr.io` | Yes, after a `podman login ghcr.io`, see [Cascade with Podman Quadlet](/cascade/quadlet/) | [Running Cascade](/cascade/running/) |
 
 HotLoop IoT, Edge, Gateway and the Edge Relay come out of one tag, in lockstep, so they share a version number. Flow and Cascade have their own. A command for an image that doesn't exist is worse than no command at all, so the products that aren't out have no install page, only an overview that says so.
 

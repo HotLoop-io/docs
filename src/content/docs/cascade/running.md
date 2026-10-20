@@ -5,16 +5,30 @@ description: "Run Cascade with Podman Quadlet or Helm on k3s, on SQLite or Postg
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at f67483b, and it differs from the copy in HotLoop Cascade 0.1.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 On a Podman host, `deploy/quadlet` has systemd units. One file and a volume is
 Cascade on SQLite; `deploy/quadlet/postgres` is the server, a worker and
 PostgreSQL on a network of their own. Both start at boot, restart on failure and
 run read-only, nonroot, with every capability dropped. Its README walks through
 it.
 
+To pull a version by hand:
+
+```sh
+sudo podman login ghcr.io
+podman pull ghcr.io/hotloop-io/hotloop-cascade:0.1.1
+```
+
+The units follow `:stable` and Podman's auto-update timer moves them.
+
 On k3s, `charts/hotloop-cascade` is the Helm chart:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 0.1.0
+helm registry login ghcr.io
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 0.1.1
 ```
 
 That is one pod on SQLite with a volume. `--set split=true` with PostgreSQL
