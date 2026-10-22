@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 4daa906, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at cbe2c19, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 0.1.2 is out. 0.1.1 was the first release that isn't a candidate, and 0.1.2 is the

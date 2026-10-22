@@ -5,6 +5,10 @@ description: "Import a Node-RED flows.json unchanged, see what it maps to node b
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at f1f417f, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Flow reads Node-RED's v1 `flows.json` format, the flat JSON array that every
 Node-RED export and flow library entry is written in. Point it at your file and
 it runs.
@@ -69,8 +73,8 @@ id actually is and which kind the setting wants. The editor only offers you the
 right kind, so this only comes from a hand edit or a pasted id, which is
 exactly where it bites.
 
-By compatibility level the 64 node types are 12 full, 21 partial, 14 deliberately
-divergent, and 17 of Flow's own. Every node declares how it relates to
+By compatibility level the 75 node types are 12 full, 21 partial, 14 deliberately
+divergent, and 28 of Flow's own. Every node declares how it relates to
 Node-RED's node of the same name, and **a test fails the build if a node claims
 partial compatibility without stating in writing what is missing.** A node
 that is 90% compatible and silent about the other 10% is more dangerous than one

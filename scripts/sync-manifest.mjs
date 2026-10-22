@@ -10,7 +10,7 @@ export const REPOS = {
     slug: 'HotLoop-io/hotloop',
     private: true,
     // Where the products shipped by this repo get their release notes.
-    releaseName: 'HotLoop',
+    releaseName: 'HotLoop core',
   },
   flow: { slug: 'HotLoop-io/hotloop-flow', private: false, releaseName: 'HotLoop Flow' },
   cascade: { slug: 'HotLoop-io/hotloop-cascade', private: true, releaseName: 'HotLoop Cascade' },
@@ -131,7 +131,7 @@ export const PAGES = [
 
 // Release notes are every file in docs/releases, found on the ref, not listed here.
 export const RELEASE_NOTES = [
-  { repo: 'hotloop', dir: 'docs/releases', slugPrefix: 'releases/hotloop-', label: 'HotLoop' },
+  { repo: 'hotloop', dir: 'docs/releases', slugPrefix: 'releases/hotloop-', label: 'HotLoop core' },
   { repo: 'flow', dir: 'docs/releases', slugPrefix: 'releases/flow-', label: 'HotLoop Flow' },
   // 0.1.0 was tagged and never published anything, so it gets no page. A note for a release that does not exist is a claim that it does.
   { repo: 'cascade', dir: 'docs/release-notes', slugPrefix: 'releases/cascade-', label: 'HotLoop Cascade', skip: ['0.1.0'] },

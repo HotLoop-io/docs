@@ -163,7 +163,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { slug: 'releases', label: 'All releases' },
-            { label: 'HotLoop', collapsed: true, items: hlRelease.sort(relSort).map(page) },
+            { label: 'HotLoop core', collapsed: true, items: hlRelease.sort(relSort).map(page) },
             { label: 'HotLoop Flow', collapsed: true, items: flowRelease.sort(relSort).map(page) },
             { label: 'HotLoop Cascade', collapsed: true, items: cascadeRelease.sort(relSort).map(page) },
           ],
