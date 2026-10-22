@@ -33,6 +33,8 @@ const info: Record<string, { summary: string; chip: string; kind: 'ok' | 'warn' 
     chip: cascade.prerelease ? `Pre-release ${cascade.version}` : `Version ${cascade.version}`, kind: cascade.prerelease ? 'info' : 'ok', install: '/cascade/running/',
   },
 };
+// Flow and Cascade keep their own roadmaps. The four HotLoop products share one.
+const roadmap: Record<string, string> = { flow: '/flow/roadmap/', cascade: '/cascade/roadmap/' };
 ---
 
 <div class="picker">
@@ -49,6 +51,7 @@ const info: Record<string, { summary: string; chip: string; kind: 'ok' | 'warn' 
         <div class="links">
           <a class="btn primary" href={`/${p.id}/overview/`}>Read the docs</a>
           {i.install && <a class="btn" href={i.install}>Install</a>}
+          <a class="btn" href={roadmap[p.id] ?? '/roadmap/'}>Roadmap</a>
         </div>
       </article>
     );
