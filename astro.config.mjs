@@ -33,6 +33,7 @@ const iotItems = () => [{ slug: 'iot/overview', label: 'Overview' }, { slug: 'io
 const edgeItems = () => [{ slug: 'edge/overview', label: 'Overview' }, { slug: 'edge/install', label: 'Install' }, ...pages('edge').map(page)];
 const flowRelease = sync.pages.filter((p) => p.release && p.slug.startsWith('releases/flow-'));
 const hlRelease = sync.pages.filter((p) => p.release && p.slug.startsWith('releases/hotloop-'));
+const cascadeRelease = sync.pages.filter((p) => p.release && p.slug.startsWith('releases/cascade-'));
 const relSort = (a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true });
 
 export default defineConfig({
@@ -164,6 +165,7 @@ export default defineConfig({
             { slug: 'releases', label: 'All releases' },
             { label: 'HotLoop', collapsed: true, items: hlRelease.sort(relSort).map(page) },
             { label: 'HotLoop Flow', collapsed: true, items: flowRelease.sort(relSort).map(page) },
+            { label: 'HotLoop Cascade', collapsed: true, items: cascadeRelease.sort(relSort).map(page) },
           ],
         },
         { slug: 'roadmap', label: 'HotLoop roadmap' },
