@@ -70,7 +70,7 @@ and below it every version back to 4.4.0.
   `image.repository` override. The new database pod mounts the old volume
   and the Gateway migrates it forward on start.
 - License: HotLoop's own license terms, not the ones 4.3.1 shipped with. Free
-  for home and lab use; businesses sign up free through EmberNET. The current
+  for home and lab use; businesses sign up free through EmberNet. The current
   terms are in LICENSE.
 - There is a login, writes default to off, and a timezone that won't load
   stops startup instead of running on UTC.

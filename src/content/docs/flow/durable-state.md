@@ -137,7 +137,7 @@ wired to.
 
 **Some properties don't make the trip.** A live handle can't cross a restart and
 can't be replied to after the fact, so `msg.req` and `msg.res` (the HTTP In
-node's) and anything else that won't serialise is left out of messages on a
+node's) and anything else that won't serialize is left out of messages on a
 durable wire, and the first time that happens on a wire it's logged with the
 property's name. The payload is never left out: if it can't be stored the message
 is refused with an error naming the path.

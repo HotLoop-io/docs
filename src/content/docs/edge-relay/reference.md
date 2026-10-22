@@ -638,7 +638,7 @@ still better than filling the node's disk under everything else on it. The
 install notes print a warning when persistence is off. It's fine for a trial.
 For a relay whose readings matter, give it the PVC.
 
-### From the EmberNET App Store
+### From the EmberNet App Store
 
 The store lists the relay as HotLoop Edge Relay, one per node. A store deploy
 hands the chart three things: the display name (the release name), a node

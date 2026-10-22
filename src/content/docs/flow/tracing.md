@@ -13,7 +13,7 @@ again, and taking them out. I've done that on a live line. Never again.
 
 So every message that enters the flow gets a trace. Every debug message in the
 sidebar has a **Trace** button, and one click lights the path that message took
-on the canvas: the nodes it went through, the wires it travelled, and
+on the canvas: the nodes it went through, the wires it traveled, and
 everything it never touched dimmed. Each node on the path says how long it had
 the message (`8.3 µs`, or `8.3 µs ×3` when it handled three pieces of it), and
 the Trace panel beside it lists every hop in order with the message as that

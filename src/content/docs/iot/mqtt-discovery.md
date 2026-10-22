@@ -688,7 +688,7 @@ changes nothing and reloads nothing.
 ## Backups
 
 `mqtt_devices` (who accepted and ignored what), `mqtt_configs` (every config as
-it arrived, byte for byte) and `mqtt_discovered` (each component, normalised)
+it arrived, byte for byte) and `mqtt_discovered` (each component, normalized)
 are in every backup. The decisions are the part no device can announce back.
 
 ## The API

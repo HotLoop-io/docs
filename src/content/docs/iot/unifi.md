@@ -277,7 +277,7 @@ stays where they put it.
   where you put it stays put while the screen refreshes. A drag that ends on a
   device does not pick it. **Plant overlay** puts the HotLoop devices linked to
   a client in a dashed box per line of the Plant tree, to the right of the
-  network and labelled with the line's path, each with a cable to the switch
+  network and labeled with the line's path, each with a cable to the switch
   port it is plugged into, what the network says about it (up, down or not
   seen) and what HotLoop says about it. A device linked but on no line is in a
   box called "Not on the Plant tree". It stays on once you turn it on. Two consoles

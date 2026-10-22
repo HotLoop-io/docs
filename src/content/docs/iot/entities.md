@@ -119,7 +119,7 @@ Delete a tag and its entities are **orphaned**, not deleted: `orphaned_at` is
 set and the state goes `unavailable`. Bring the same tag back, by the tag
 editor or by a browse re-import, and the registry finds the orphan by
 `unique_id` and re-adopts it. Its entity_id, name, device class, icon and every
-other customisation come back with it.
+other customization come back with it.
 
 That is deliberate. On a plant floor a tag gets deleted and re-imported far
 more often than anybody means "forget everything about this point", and an
@@ -160,7 +160,7 @@ year, and running it twice is running it once. It runs:
   `DELETE /api/alarms/{id}`), so a client that creates a tag or a definition
   and immediately asks for its entity finds it.
 
-Registration is serialised across replicas with a database advisory lock, so
+Registration is serialized across replicas with a database advisory lock, so
 two replicas importing the same device cannot hand out the same `_2`. Each
 reconcile that changes something writes one line to the system log, not one
 per entity: an import of five thousand points is one event.
@@ -778,7 +778,7 @@ State, first rule that matches:
 3. open limit made: **`open`**. Closed limit made: **`closed`**.
 4. no limit switches, only a position: at or below 1% **`closed`**, at or above
    99% **`open`**.
-5. between the ends, travelling or stopped by what it is commanded to: a
+5. between the ends, traveling or stopped by what it is commanded to: a
    position command read back more than 1% above the position is
    **`opening`**, more than 1% below **`closing`**, within 1% **`stopped`**; an
    on/off command read back on is **`opening`**, off is **`closing`**; with
@@ -1105,7 +1105,7 @@ would be showing the past as the present. Quality is drawn before the value:
 |---|---|
 | good | the value, no mark |
 | uncertain | the value, an amber edge and an "uncertain" badge |
-| bad | the last good value, greyed on a hatch, "bad", and "last good value, reading bad", with the reason after it when the driver gave one |
+| bad | the last good value, grayed on a hatch, "bad", and "last good value, reading bad", with the reason after it when the driver gave one |
 | no reading yet | "Unknown", in italics, and "reading bad" with the reason when there is one |
 | unavailable | "Unavailable", the whole tile hatched |
 
@@ -1140,7 +1140,7 @@ registry decides, and its refusal is shown as it wrote it.
 ## Backup and restore
 
 `entities` and `entity_bindings` are in the backup (`internal/backup.Tables`),
-entity_id, customisations and all. That includes composites, every role and
+entity_id, customizations and all. That includes composites, every role and
 every option, which matters more for them than for anything else: a tag's
 entity could be rebuilt from its tag, but nothing can rebuild a composite
 except the backup. Alarm entities come back with their definitions, and a

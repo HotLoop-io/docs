@@ -170,6 +170,6 @@ same Podman network as the tests:
   vendor class.
 
 "Listening sends nothing" is held by the tests that run with probing off: a
-neighbour on the segment asks the questions, the way a phone does, and a
+neighbor on the segment asks the questions, the way a phone does, and a
 probe is refused. What isn't proven is the plant itself: no real ESPHome node,
 Shelly or PLC has been put on the bench for this yet.

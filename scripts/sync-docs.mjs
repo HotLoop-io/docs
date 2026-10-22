@@ -129,7 +129,12 @@ const AMERICAN = [
   [/\binitialise(d|s)?\b/g, 'initialize$1'], [/\borganis(e|es|ed|ing|ation|ations)\b/g, 'organiz$1'],
   [/\bdialled\b/g, 'dialed'], [/\blicence\b/g, 'license'], [/\bhonoured\b/g, 'honored'],
   [/\bcolour(s|ed)?\b/g, 'color$1'], [/\bcatalogue\b/g, 'catalog'], [/\bdefence\b/g, 'defense'],
-  [/\bcentre\b/g, 'center'], [/\bgrey\b/g, 'gray'],
+  [/\bcentre\b/g, 'center'], [/\bgrey(ed)?\b/g, 'gray$1'],
+  [/\b([Uu]n)?(normal|synchron|custom|serial|recogn)is(e|es|ed|ing|ation|ations)\b/g, '$1$2iz$3'],
+  [/\blicences\b/g, 'licenses'], [/\bartefacts?\b/g, (m) => (m.endsWith('s') ? 'artifacts' : 'artifact')],
+  [/\btravell(ed|ing|er|ers)\b/g, 'travel$1'], [/\blabelled\b/g, 'labeled'], [/\bneighbour(s|ing)?\b/g, 'neighbor$1'],
+  // The official spelling is EmberNet. A word boundary leaves EmberNETEndpoint alone, and code is masked.
+  [/\bEmberNET\b/g, 'EmberNet'],
 ];
 
 // Mask fenced code and inline code so no rewrite touches them, and give them back after.

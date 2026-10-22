@@ -1,32 +1,32 @@
 ---
 title: Using HotLoop in a business
-description: Two ways to run HotLoop at a business. Sign up for EmberNET free and use HotLoop there free, or have Fireball Industries roll it out and stand behind it.
+description: Two ways to run HotLoop at a business. Sign up for EmberNet free and use HotLoop there free, or have Fireball Industries roll it out and stand behind it.
 sidebar:
   label: Using HotLoop in a business
 ---
 
-Running HotLoop at work? There are two ways to do it, and they aren't either/or. Do it yourself on EmberNET, or have people who do this for a living roll it out for you, or both.
+Running HotLoop at work? There are two ways to do it, and they aren't either/or. Do it yourself on EmberNet, or have people who do this for a living roll it out for you, or both.
 
-Every HotLoop product is under HotLoop's Business Source License 1.1: IoT, Edge, Gateway, Edge Relay, Flow and Cascade. Home and lab use is free. Business use is free through EmberNET. Each version converts to GPL-3.0 after four years. [The License page]({{LICENSE_URL}}) has the text, and the text wins over anything I write here.
+Every HotLoop product is under HotLoop's Business Source License 1.1: IoT, Edge, Gateway, Edge Relay, Flow, and Cascade. Home and lab use is free. Business use is free through EmberNet. Each version converts to GPL-3.0 after four years. [The License page]({{LICENSE_URL}}) has the text, and the text wins over anything I write here.
 
 ## What counts as business use
 
 More than people expect, and that's on purpose. If a business or any other for-profit is the one running it, or you're running it for them, treat it as business use. Purely internal use counts. Charging nobody counts. Whether HotLoop is making you money or saving you money doesn't enter into it. Better to know that before you've built a plant's worth of automation on "it's only internal."
 
-## EmberNET
+## EmberNet
 
-EmberNET is the way a business uses HotLoop. Signing up is free, and using HotLoop there is free. There's no license key to paste anywhere, because which product you run is just which image you pulled.
+EmberNet is the way a business uses HotLoop. Signing up is free, and using HotLoop there is free. There's no license key to paste anywhere, because which product you run is just which image you pulled.
 
 [Sign up at embernet.ai](https://embernet.ai/)
 
 ## Have it rolled out for you: Fireball Industries
 
-Fireball Industries are HotLoop's Official Systems Integrators. If you'd rather not have your own people learn HotLoop on your own plant floor, on a live line, they'll design it, install it and support it.
+Fireball Industries are HotLoop's Official Systems Integrators. If you'd rather not have your own people learn HotLoop on your own plant floor, on a live line, they'll design it, install it, and support it.
 
-They're also where support, SLAs and warranties come from, not EmberNET. The software itself comes as is, with no warranty, so if your plant needs somebody on the hook when a line goes down at 3 AM, that somebody is Fireball. EmberNET is where business use happens. Fireball Industries is who stands behind it.
+They're also where support, SLAs, and warranties come from, not EmberNet. The software itself comes as is, with no warranty, so if your plant needs somebody on the hook when a line goes down at 3 AM, that somebody is Fireball. EmberNet is where business use happens. Fireball Industries is who stands behind it.
 
 [Talk to Fireball Industries at fireballz.ai](https://fireballz.ai/)
 
 ## Still not sure?
 
-Ask first. It's a lot cheaper than finding out after a whole setup is built on a wrong guess. Email [support@hotloop.io](mailto:support@hotloop.io) and we'll tell you which side of the line you're on. If it's plainly a business, skip the email and go straight to [EmberNET](https://embernet.ai/).
+Ask first. It's a lot cheaper than finding out after a whole setup is built on a wrong guess. Email [support@hotloop.io](mailto:support@hotloop.io) and we'll tell you which side of the line you're on. If it's plainly a business, skip the email and go straight to [EmberNet](https://embernet.ai/).

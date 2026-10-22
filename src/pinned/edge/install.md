@@ -6,9 +6,9 @@ sidebar:
   label: "Install"
 ---
 
-HotLoop Edge first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`, built for amd64, arm64 and arm/v7, and the chart is `hotloop-edge` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
+HotLoop Edge first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`, built for amd64, arm64, and arm/v7, and the chart is `hotloop-edge` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 
-A cluster gets Helm. An industrial PC or a Pi with no cluster gets Podman Quadlet. The database is a choice you make once: TimescaleDB (the default), plain PostgreSQL, or a SQLite file with no database container at all.
+A cluster gets Helm. An industrial PC or a Pi with no cluster gets Podman Quadlet. The database is a choice you make once: TimescaleDB (the default), plain PostgreSQL or a SQLite file with no database container at all.
 
 ## Helm
 
@@ -19,9 +19,9 @@ helm install hotloop hotloop/hotloop-edge --version {{hotloop}} \
   --namespace hotloop --create-namespace
 ```
 
-Call the release `hotloop` whichever product it is. The release name is what the database's volume, the Secrets and the Service are named after, and keeping it is what lets a site move up a product later.
+Call the release `hotloop` whichever product it is. The release name is what the database's volume, the Secrets, and the Service are named after, and keeping it is what lets a site move up a product later.
 
-That deploys Edge plus TimescaleDB 2.30.1 beside it on a 20 Gi volume, keeping 90 days of history. The chart generates the database password, the MCP token and an admin password into the release Secret, and reuses them on every upgrade. It generates `<release>-secret-key` too, the key that encrypts every device password HotLoop keeps. That key is part of your data, and [the Gateway install page](/gateway/install/#back-up-the-key-before-you-need-it) says why and how to back it up. It is the same key.
+That deploys Edge plus TimescaleDB 2.30.1 beside it on a 20 Gi volume, keeping 90 days of history. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade. It generates `<release>-secret-key` too, the key that encrypts every device password HotLoop keeps. That key is part of your data, and [the Gateway install page](/gateway/install/#back-up-the-key-before-you-need-it) says why and how to back it up. It is the same key.
 
 For plain PostgreSQL or a SQLite file, set `database.type` to `postgresql` or `sqlite` when you install. A SQLite file is one writer on one local disk, so it is one replica and never NFS. Moving between databases later is a backup and a restore, because the new database starts empty. [Backups](/iot/backup/) has the restore.
 
@@ -97,7 +97,7 @@ A new image migrates the database on its way up, and if it can't start, Podman p
 
 ## Moving up a product
 
-IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user and hour of history. On Quadlet it is copying the bigger product's `hotloop.container` and `hotloop-db.container` over yours, and [the lineup](/products/) has the Helm form. The Quadlet move has been run, IoT then Edge then the Gateway on one database volume. The same move as a `helm upgrade` on a real cluster, and going back down a product, have not been run, so don't take a box you care about down a product.
+IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history. On Quadlet it is copying the bigger product's `hotloop.container` and `hotloop-db.container` over yours, and [the lineup](/products/) has the Helm form. The Quadlet move has been run, IoT then Edge then the Gateway on one database volume. The same move as a `helm upgrade` on a real cluster, and going back down a product, have not been run, so don't take a box you care about down a product.
 
 ## What has and hasn't been run
 
@@ -105,4 +105,4 @@ The Edge Quadlet units are generated from the Gateway's, which were run for real
 
 ## License
 
-HotLoop Edge is under HotLoop's Business Source License 1.1. Home and lab use is free, and business use is free through EmberNET. See [the License page]({{LICENSE_URL}}) and [Using HotLoop in a business](/business/).
+HotLoop Edge is under HotLoop's Business Source License 1.1. Home and lab use is free, and business use is free through EmberNet. See [the License page]({{LICENSE_URL}}) and [Using HotLoop in a business](/business/).

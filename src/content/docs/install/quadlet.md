@@ -77,7 +77,7 @@ It also means one HotLoop per box. Two would fight over port 8080 anyway.
 
 ### Verified
 
-The three products' shipped files, untouched, generate under the `quadlet`
+The shipped IoT, Edge, and Gateway files, untouched, generate under the `quadlet`
 generator from Podman 6.1.3 with the same structure: the app requires the
 database and the network, publishes its own port, carries the auto-update
 label, and the database carries none and publishes nothing.

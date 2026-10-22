@@ -107,7 +107,7 @@ a perfectly good-looking last reading in it.
 |---|---|---|---|
 | Connected, at least one poll delivered this session | good | **Good** | sent |
 | | uncertain | Uncertain | sent |
-| | bad, or an unrecognised quality | Bad | none |
+| | bad, or an unrecognized quality | Bad | none |
 | Connected, no poll delivered yet this session | any | BadWaitingForInitialData | none |
 | Connected, nothing cached at all | n/a | BadWaitingForInitialData | none |
 | Degraded (session up, polls failing or partial) | good | **UncertainLastUsableValue** | sent |
@@ -286,7 +286,7 @@ still has to authenticate with a HotLoop username and password.
 **User name and password, against HotLoop's own users.** There is one user
 database, not a second credential store: the authenticator looks the user up
 with the same `store.User` the HTTP login uses, compares with the same bcrypt
-hashes (`auth.CheckPassword`), normalises the user name the same way (lower
+hashes (`auth.CheckPassword`), normalizes the user name the same way (lower
 case, trimmed), runs one bcrypt comparison whether or not the user exists so
 that response time does not reveal which user names are real, and refuses a
 disabled account. Unknown user, wrong password, disabled user and a user without
@@ -597,7 +597,7 @@ ships a real server package. Choices worth knowing:
   `gammazero/deque` (MIT), `gammazero/workerpool` (MIT), `google/uuid` (BSD-3)
   and `pkg/errors` (BSD-2). The ~39 figure in the search results is the whole
   module graph including test-only dependencies; none of those are compiled in.
-  All licences are permissive, none is vendored or modified, so `NOTICE`, which lists only vendored or modified code and non-permissive licences, is
+  All licenses are permissive, none is vendored or modified, so `NOTICE`, which lists only vendored or modified code and non-permissive licenses, is
   unchanged.
 - **No cgo.** The binary still builds with `CGO_ENABLED=0` and runs on
   `distroless/static`.
@@ -630,9 +630,9 @@ Beyond issue 57 above (worked around) and the deprecated policies (documented):
 - **A discovery-only channel dereferences `DiscoveryURLs[0]`**, which panics on
   the first unauthenticated connection if the application description has none;
   it is always set here.
-- **Unsynchronised diagnostic counters** (from reading the code; not
+- **Unsynchronized diagnostic counters** (from reading the code; not
   reproduced): the library increments its `serverDiagnosticsSummary` counters
-  from every connection's goroutine without synchronisation whenever a login is
+  from every connection's goroutine without synchronization whenever a login is
   refused, so two clients refused at the same instant would race. Only counters
   could be corrupted, and nothing here reads them (the subtree is removed), but
   the writes themselves are upstream's and remain.

@@ -5,7 +5,7 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
-Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNET
+Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet
 dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the
 actor recorded against a write came from a header the proxy set, spoofable by
 anything else on the same segment that could reach the port.
@@ -313,7 +313,7 @@ exactly as every version before 4.4.0 did: no session required, the actor
 recorded against a write comes from `X-EmberNET-User` or similar proxy
 headers, and falls back to `"operator"` if none is set.
 
-This is a real, defensible choice for a deployment where the EmberNET
+This is a real, defensible choice for a deployment where the EmberNet
 dashboard's own NetworkPolicy is the actual perimeter and nothing else can
 reach the pod. It is no longer the default because that condition is easy to
 believe is true and hard to verify from inside the pod itself, the whole
