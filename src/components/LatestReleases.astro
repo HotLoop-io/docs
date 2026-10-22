@@ -1,0 +1,23 @@
+---
+// The newest release page from each of the three lines, read from the sync's page list.
+import sync from '../data/sync.json';
+
+const newest = (prefix: string) =>
+  sync.pages.filter((p) => p.release && p.slug.startsWith(prefix)).sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))[0];
+const rows = [
+  { label: 'HotLoop core', page: newest('releases/hotloop-') },
+  { label: 'HotLoop Flow', page: newest('releases/flow-') },
+  { label: 'HotLoop Cascade', page: newest('releases/cascade-') },
+];
+---
+
+<ul class="latest">
+  {rows.map((r) => <li><a href={`/${r.page.slug}/`}>{r.label}: {r.page.label || r.page.title}</a></li>)}
+  <li><a href="/releases/">All release notes</a></li>
+</ul>
+
+<style>
+  .latest { display: flex; flex-wrap: wrap; gap: var(--hl-s2) var(--hl-s5); list-style: none; padding: 0; margin: var(--hl-s3) 0; }
+  .latest li { margin: 0; }
+  .latest a { font-weight: 600; }
+</style>

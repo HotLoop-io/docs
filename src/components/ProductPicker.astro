@@ -1,83 +1,69 @@
 ---
-// The six products, as hotloop.io draws them. Versions and release state come from
-// src/data/sync.json, which the sync writes, so this can't disagree with the pages.
+// The family map: six products on three release lines, each with the same five things
+// (docs, install, release notes, roadmap, and its version). Versions and release state
+// come from src/data/sync.json, which the sync writes, so this can't disagree with the pages.
 import sync from '../data/sync.json';
 
 const hot = sync.repos.hotloop.release;
 const flow = sync.repos.flow.release;
 const cascade = sync.repos.cascade.release;
 
-const info: Record<string, { summary: string; chip: string; kind: 'ok' | 'warn' | 'info'; install?: string }> = {
-  iot: {
-    summary: 'The automation base. Entities, automations, dashboards, alarms, MQTT discovery and every driver, on SQLite or PostgreSQL. Built for a Pi.',
-    chip: `Version ${hot.version}`, kind: 'ok', install: '/iot/install/',
-  },
-  edge: {
-    summary: 'IoT plus the machine layer: an OPC UA server, Sparkplug B publishing, and store-and-forward that keeps the plant running with the uplink down.',
-    chip: `Version ${hot.version}`, kind: 'ok', install: '/edge/install/',
-  },
-  gateway: {
-    summary: 'The site brain. Everything in Edge, plus fleet management of edge relays, multi-site roll-ups and scheduled reports.',
-    chip: `Version ${hot.version}`, kind: 'ok', install: '/gateway/install/',
-  },
-  'edge-relay': {
-    summary: 'Headless and dumb on purpose. It polls with the same drivers, forwards over Sparkplug B, and buffers to disk when the uplink dies.',
-    chip: `Version ${hot.version}`, kind: 'ok', install: '/edge-relay/install/',
-  },
-  flow: {
-    summary: 'Your Node-RED flows, loaded unchanged, on a Go runtime with a ceiling on every queue. A separate product that runs next to HotLoop.',
-    chip: `Version ${flow.version}`, kind: 'ok', install: '/flow/install/',
-  },
-  cascade: {
-    summary: 'The plant talking to everything else. Alarms, webhooks and schedules become checkpointed workflows against real systems.',
-    chip: cascade.prerelease ? `Pre-release ${cascade.version}` : `Version ${cascade.version}`, kind: cascade.prerelease ? 'info' : 'ok', install: '/cascade/running/',
-  },
-};
-// Flow and Cascade keep their own roadmaps. The four HotLoop products share one.
-const roadmap: Record<string, string> = { flow: '/flow/roadmap/', cascade: '/cascade/roadmap/' };
+const latest = (prefix: string) =>
+  sync.pages.filter((p) => p.release && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
+
+const lines = [
+  { id: 'core', label: 'HotLoop core', version: hot.version, note: 'One codebase, one version. IoT to Edge to Gateway is the path a site grows along, and Edge Relay is the headless forwarder beside them.', notes: `/${latest('releases/hotloop-')}/`, roadmap: '/roadmap/', ids: ['iot', 'edge', 'gateway', 'edge-relay'] },
+  { id: 'flow', label: 'Flow', version: flow.version, note: 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/flow-')}/`, roadmap: '/flow/roadmap/', ids: ['flow'] },
+  { id: 'cascade', label: 'Cascade', version: cascade.version, note: cascade.prerelease ? 'Pre-release. Its own release line, running next to HotLoop.' : 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/cascade-')}/`, roadmap: '/cascade/roadmap/', ids: ['cascade'] },
+];
+const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/' };
 ---
 
-<div class="picker">
-  {sync.products.map((p) => {
-    const i = info[p.id];
-    return (
-      <article class="card">
-        <div class="top">
-          <h3>{p.name}</h3>
-          <span class={`chip ${i.kind}`}>{i.chip}</span>
-        </div>
-        <p class="tag">{p.tagline}</p>
-        <p>{i.summary}</p>
-        <div class="links">
-          <a class="btn primary" href={`/${p.id}/overview/`}>Read the docs</a>
-          {i.install && <a class="btn" href={i.install}>Install</a>}
-          <a class="btn" href={roadmap[p.id] ?? '/roadmap/'}>Roadmap</a>
-        </div>
-      </article>
-    );
-  })}
+<div class="map">
+  {lines.map((l) => (
+    <section class="line" aria-labelledby={`line-${l.id}`}>
+      <header>
+        <h3 id={`line-${l.id}`}>{l.label} line</h3>
+        <span class="chip ok">{l.id === 'cascade' && cascade.prerelease ? 'Pre-release ' : 'Version '}{l.version}</span>
+        <p>{l.note}</p>
+      </header>
+      <div class="picker">
+        {l.ids.map((id) => {
+          const p = sync.products.find((x) => x.id === id)!;
+          return (
+            <article class="card">
+              <h4><a href={`/${p.id}/overview/`}>{p.name}</a></h4>
+              <p class="tag">{p.tagline}</p>
+              <p class="links">
+                <a href={`/${p.id}/overview/`}>Docs</a>
+                <a href={install[p.id]}>Install</a>
+                <a href={l.notes}>Release notes</a>
+                <a href={l.roadmap}>Roadmap</a>
+              </p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  ))}
 </div>
 
 <style>
-  .picker { display: grid; gap: var(--hl-s5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-block: var(--hl-s6); }
+  .map { display: grid; gap: var(--hl-s6); margin-block: var(--hl-s6); }
+  .line header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hl-s2) var(--hl-s3); margin-bottom: var(--hl-s3); }
+  .line header h3 { margin: 0; font-size: var(--hl-fs-lg); font-weight: 800; letter-spacing: var(--hl-ls-heading); }
+  .line header p { flex-basis: 100%; margin: 0; color: var(--hl-ink-soft); font-size: var(--hl-fs-sm); }
+  .picker { display: grid; gap: var(--hl-s4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
   .card {
     background: var(--hl-card); border: 1px solid var(--hl-border); border-radius: var(--hl-r-card);
-    padding: var(--hl-s6); box-shadow: var(--hl-sh-1); display: flex; flex-direction: column; gap: var(--hl-s3);
+    padding: var(--hl-s5); box-shadow: var(--hl-sh-1); display: flex; flex-direction: column; gap: var(--hl-s2);
   }
-  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--hl-s3); flex-wrap: wrap; }
-  h3 { margin: 0; font-size: var(--hl-fs-xl); font-weight: 800; letter-spacing: var(--hl-ls-heading); }
+  h4 { margin: 0; font-size: var(--hl-fs-md); font-weight: 800; letter-spacing: var(--hl-ls-heading); }
+  h4 a { color: var(--hl-ink); text-decoration: none; }
+  h4 a:hover { color: var(--hl-link); text-decoration: underline; }
   p { margin: 0; color: var(--hl-ink-soft); font-size: var(--hl-fs-sm); }
   p.tag { color: var(--hl-ink); font-weight: 600; }
-  .links { margin-top: auto; padding-top: var(--hl-s3); display: flex; flex-wrap: wrap; gap: var(--hl-s3); }
-  .btn {
-    display: inline-flex; align-items: center; padding: 0.7em 1.4em; border-radius: var(--hl-r-pill);
-    border: 1px solid var(--hl-border); background: var(--hl-card); color: var(--hl-ink);
-    font-weight: 700; font-size: var(--hl-fs-sm); text-decoration: none;
-    transition: transform var(--hl-transition-fast), border-color var(--hl-transition-fast), box-shadow var(--hl-transition-fast);
-  }
-  .btn:hover { color: var(--hl-ink); border-color: var(--hl-orange); transform: translateY(-1px); box-shadow: var(--hl-sh-1); }
-  .btn.primary { background: var(--hl-gradient); color: var(--hl-on-accent); border-color: transparent; }
-  .btn.primary:hover { color: var(--hl-on-accent); box-shadow: var(--hl-sh-2); }
+  .links { margin-top: auto; padding-top: var(--hl-s2); display: flex; flex-wrap: wrap; gap: var(--hl-s2) var(--hl-s4); font-weight: 600; }
   .chip {
     display: inline-flex; align-items: center; gap: 0.5em; padding: 0.25em 0.8em; border-radius: var(--hl-r-pill);
     border: 1px solid var(--hl-border); background: var(--hl-card);
@@ -85,6 +71,4 @@ const roadmap: Record<string, string> = { flow: '/flow/roadmap/', cascade: '/cas
   }
   .chip::before { content: ''; width: 0.5em; height: 0.5em; border-radius: 50%; background: currentColor; }
   .chip.ok { color: var(--hl-ok-text); background: var(--hl-ok-tint); border-color: color-mix(in srgb, var(--hl-ok) 35%, transparent); }
-  .chip.warn { color: var(--hl-warn-text); background: var(--hl-warn-tint); border-color: color-mix(in srgb, var(--hl-warn) 40%, transparent); }
-  .chip.info { color: var(--hl-info-text); background: var(--hl-info-tint); border-color: color-mix(in srgb, var(--hl-info) 35%, transparent); }
 </style>

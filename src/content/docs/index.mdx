@@ -17,15 +17,32 @@ hero:
       variant: minimal
 ---
 
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ProductPicker from '../../components/ProductPicker.astro';
+import LatestReleases from '../../components/LatestReleases.astro';
 
-## Pick your product
+## The family
 
-Four products come from one codebase and one tag: IoT, Edge, Gateway and Edge Relay. Flow and Cascade are their own products, and they run next to HotLoop, never inside it. Each section below shows only what that product ships. A bigger product carries everything the smaller one has, and its section links back to those pages.
+HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, Edge Relay), plus Flow for wiring and Cascade for workflows. They ship on three release lines, so each carries its own version. Each section in the sidebar shows only what that product ships, and a bigger product links back to the pages it carries from a smaller one.
 
 <ProductPicker />
 
 Not sure which one fits the box? [The lineup](/products/) has the table, the sizes and the way up from one product to the next.
+
+## Start here by what you're doing
+
+<CardGrid>
+  <LinkCard title="Monitor a machine" description="Read the equipment, keep the history, raise the alarms." href="/iot/overview/" />
+  <LinkCard title="Run a line HMI" description="Dashboards bound to a screen, and an OPC UA server for your SCADA." href="/edge/overview/" />
+  <LinkCard title="Connect sites" description="Fleet management, multi-site roll-ups and scheduled reports." href="/gateway/overview/" />
+  <LinkCard title="Wire logic in Flow" description="Run your Node-RED flows on a Go runtime." href="/flow/quick-start/" />
+  <LinkCard title="Automate business workflows in Cascade" description="Alarms and schedules become checkpointed workflows." href="/cascade/running/" />
+  <LinkCard title="Forward from a small box" description="Poll, forward over Sparkplug B, and buffer when the uplink dies." href="/edge-relay/overview/" />
+</CardGrid>
+
+## The latest from each line
+
+<LatestReleases />
 
 ## How to read these docs
 
