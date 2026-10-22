@@ -10,11 +10,11 @@ const cascade = sync.repos.cascade.release;
 const info: Record<string, { summary: string; chip: string; kind: 'ok' | 'warn' | 'info'; install?: string }> = {
   iot: {
     summary: 'The automation base. Entities, automations, dashboards, alarms, MQTT discovery and every driver, on SQLite or PostgreSQL. Built for a Pi.',
-    chip: 'Next release', kind: 'warn',
+    chip: `Version ${hot.version}`, kind: 'ok', install: '/iot/install/',
   },
   edge: {
     summary: 'IoT plus the machine layer: an OPC UA server, Sparkplug B publishing, and store-and-forward that keeps the plant running with the uplink down.',
-    chip: 'Next release', kind: 'warn',
+    chip: `Version ${hot.version}`, kind: 'ok', install: '/edge/install/',
   },
   gateway: {
     summary: 'The site brain. Everything in Edge, plus fleet management of edge relays, multi-site roll-ups and scheduled reports.',

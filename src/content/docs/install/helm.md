@@ -5,10 +5,6 @@ description: "Deploy any HotLoop chart on k3s or any Kubernetes: the values wort
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The chart deploys two workloads: the gateway (a Deployment, it holds no durable
 state of its own) and TimescaleDB (a StatefulSet with a volume). That is the
 default. `database.type` picks another database: plain PostgreSQL, or SQLite,
@@ -495,7 +491,7 @@ itself refuses to start:
 
 ```
 refusing to start: this database's schema is more than one release ahead of
-HotLoop 4.18.3. ...
+HotLoop 4.18.10. ...
 ```
 
 That is not a fault to work around. It means the database has moved further than

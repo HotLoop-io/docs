@@ -5,10 +5,6 @@ description: "State changes, writes, alarms, rule runs and config changes on one
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 One timeline of what happened on the plant, newest first: the pump went on,
 somebody wrote 180 to the zone 1 setpoint, the high temperature alarm was
 raised and acknowledged, the cooldown automation ran, a device was
@@ -30,7 +26,7 @@ equipment itself did. The logbook is those five in one list.
 | `write` | `write_audit` | a write to a tag, written, refused or failed, by whom and through which door |
 | `alarm` | `alarm_events` | an alarm raised, acknowledged, cleared, shelved, with the note given |
 | `automation` | `automation_runs` | a rule ran, how it ended, what started it |
-| `event` | `events` | configuration changes, service calls' summaries and the reasons given for writes, and what a UniFi console reports the moment it happens, under the console's device (a switch losing contact is a warning) |
+| `event` | `events` | configuration changes, service calls' summaries and the reasons given for writes, and what a UniFi console reports the moment it happens, filed under the switch or access point it is about (a switch losing contact is a warning) |
 | `script` | `script_runs` | a [script](/iot/scripts/) ran, how it ended, who started it and what called it |
 | `recipe` | `recipe_applications` | a [recipe](/iot/recipes/) was applied, or refused: which version, by whom, how many targets went out and were read back |
 
@@ -113,6 +109,11 @@ at the time it was first seen down.
   automations with a trigger on any of it, and the node itself for its
   configuration changes. An automation run is also in a place if it wrote
   there while it ran, whatever triggered it.
+  A UniFi console's events are found by the network, not by anything a
+  person placed on the tree: the switch a linked device hangs off, and every
+  switch between it and the gateway, so a switch dropping shows under every
+  line it feeds. A console placed on the tree finds the events about
+  everything it adopted. See [UNIFI.md](/iot/unifi/#events).
 - **Entity:** the same, for one entity: its state changes, writes to it and
   its tags, its alarms, the rules it triggers or that wrote to it, and config
   changes to it or its tags. An entity that has since been deleted is still

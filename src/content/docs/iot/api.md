@@ -5,10 +5,6 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -356,6 +352,7 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/api/unifi/{id}/devices` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
+| `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -654,7 +651,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm"]
   },
   "siteId": "docs",
-  "version": "4.18.3"
+  "version": "4.18.10"
 }
 ```
 
@@ -942,7 +939,30 @@ The newest events the console has reported since HotLoop connected, newest
 first (`?limit=` up to 200, default 50), and the state of the events websocket.
 Each event has the controller's `key` (`EVT_SW_Lost_Contact`), its own `message`,
 `severity` (`warning` when the controller flags it as something going wrong) and
-the device, client and port it is about. They are also in the logbook.
+the device, client and port it is about. They are also in the logbook, filed
+under the switch or access point they are about (see
+[UNIFI.md](/iot/unifi/#events)).
+
+### `POST /api/unifi/{id}/starter-alarms`
+
+Makes the usual alarms for the site from what the console has now, as ordinary
+alarm definitions under `/api/alarms`: every adopted device offline (priority 2,
+60 s on-delay), every uplink port down (priority 1, 10 s), a gateway with two
+or more WANs running on a backup one (priority 2, 30 s). The body is optional.
+`{"poeLimitW": 25}` adds a priority 3 alarm on every PoE port's `poe_w` draw
+over that many watts, 30 s on-delay; the console doesn't say what a port's
+budget is, so HotLoop doesn't guess one. A negative limit is a `400`.
+
+```json
+{"created":[{"id":"unifi-devoffline-9c1e2a77b3d0","name":"USW Lite 8 PoE offline","kind":"offline","tag":"d.002722e2e633.online","priority":2}],
+ "kept":[]}
+```
+
+`kept` are alarms the set calls for that were already there: its own from an
+earlier press, or someone's own alarm on the same tag. So it is safe to press
+again after adopting more gear, and it only adds the new gear. The OT-network
+and off-the-network alarms are not part of it; they come with marking a
+network OT and watching a device. `503` until the console has been read once.
 
 ## MQTT discovery
 
@@ -1246,6 +1266,7 @@ Creates the tag if `deviceId` and `name` are new, replaces it if not.
 | `writable` | bool | **Arms the tag for writing, from every path: UI, automations, entities, MCP.** Left out is `false` |
 | `hasRange`, `minValue`, `maxValue` | bool, number, number | With `hasRange`, a write outside the range is refused (never clamped) |
 | `scale`, `offset` | number | engineering = raw x scale + offset. A scale of 0 is 1 |
+| `noData` | list | Raw values that mean "no measurement", each `{"raw", "reason"}`. `raw` is a string (`"0x8005"`, `"-32763"`) or a bare number, and comes back as a string. A reading whose raw value is on the list is bad quality with that `reason`, checked before `scale` and `offset`. Up to 32 codes. A code that is not a whole number, is listed twice, or can't be the point's type is `400`. See [PROTOCOLS.md](/iot/protocols/#no-data-values) for what to write for each type and the Yokogawa DX example |
 | `deadband`, `deadbandPercent` | number | Changes smaller than this are not written to history |
 | `deviceClass` | string | The class the tag's entities start with (`power`, `connectivity`, `temperature`...), when it means something for their domain. Taken when the tag is created and ignored on a replace: from then on the entity owns its class, so change it there |
 
@@ -1355,13 +1376,24 @@ range. Every attempt, refused or not, is in `GET /api/writes`.
 | `bucket` | Bucket size in seconds. Default: picked so the window is about 400 buckets, on a 1 s to 1 day ladder |
 | `raw` | `true` for the readings themselves instead of buckets |
 | `limit` | Default 5000, at most 100000 |
+| `carry` | `true` to also say what each tag was holding when the window began (buckets only) |
 
 Bucketed, oldest first per tag. `badCount` is how many readings in the bucket
-were not good quality; they are counted, not averaged in:
+were not good quality; they are counted, not averaged in. `from` and `to` are
+the window the answer is for, exactly `minutes` apart and ending when the
+question was asked:
 
 ```json
-{"buckets":[{"deviceId":"extruder-1","tagName":"Temperature","bucket":"2026-09-27T20:21:00Z","avg":18.986210570239944,"min":0,"max":20.83008050535897,"first":0,"last":20.83008050535897,"count":22,"badCount":1}],"raw":false}
+{"buckets":[{"deviceId":"extruder-1","tagName":"Temperature","bucket":"2026-09-27T20:21:00Z","avg":18.986210570239944,"min":0,"max":20.83008050535897,"first":0,"last":20.83008050535897,"count":22,"badCount":1}],"from":"2026-09-27T19:22:00Z","raw":false,"to":"2026-09-27T20:22:00Z"}
 ```
+
+The historian keeps a reading when a value moves past its deadband, not on every
+poll, so a tag that has held still has nothing in the window to draw. With
+`carry=true` the answer also has `"carry":[{"deviceId":"extruder-1","tagName":"Temperature","ts":"2026-09-27T16:40:12Z","value":21.4}]`:
+the last reading before `from`, for each tag whose last reading before it was
+good and had a number in it. A tag whose last reading was bad or uncertain, that
+has no earlier reading, or that is text, has no entry, because what it held isn't
+known and I won't hand a chart a guess. The trend card draws from this.
 
 Raw, newest first:
 
@@ -1771,7 +1803,15 @@ Creates or replaces a definition.
 | `enabled` | bool | Left out is `false` |
 | `deadband` | number | How far back the value must come before it clears. Without one, a value sitting on the limit chatters |
 | `onDelaySec`, `offDelaySec` | int | How long the condition must hold before it raises, or be clear before it returns to normal |
-| `message`, `description` | string | `message` takes `{value}`, `{limit}`, `{tag}`, `{device}`, `{unit}` |
+| `message`, `description` | string | `message` takes `{value}`, `{limit}`, `{tag}`, `{device}`, `{unit}`, `{condition}` and `{reason}` (why the reading is bad, empty when it is good) |
+
+`{value}` is written the way the value card writes it, unit included: whole
+numbers as they are, two places from 1 up, one from 100 up, four below 1, and
+scientific past ten million or under 0.01 (`8.20 pH`, `212.5 F`, `1.235e+7`).
+I did that because a tag with scale 0.1 and a raw 82 is 8.200000000000001 as a
+float, and the banner used to say so. A text reading is said as it is. The tag
+itself, the writes and the automations still see the exact number; only the
+sentence is rounded. `{limit}` is the limit as you typed it.
 
 Answers the definition; the engine reloads and the alarm entity is made before
 the answer. `400` on a failed validation (`"alarm x: priority must be 1-4, got
@@ -2024,7 +2064,7 @@ Its runs, newest first, with their traces. `?limit=` (default 50, at most
 ## Recipes
 
 Sets of values applied together: a product grade's setpoints, a changeover.
-Each one is an entity, `scene.<id>`, too.
+Each one is also an entity, `scene.<id>`.
 A recipe is checked whole before anything goes out and refused whole on any
 reason; its targets then go out in order under one call id, the first that
 fails stops the rest, and nothing is undone; every written value is read back

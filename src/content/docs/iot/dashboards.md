@@ -3,15 +3,7 @@
 title: "Dashboards"
 description: "Pages of cards built per role or per screen: gauges, trends, entity lists and buttons, with the same layout on a panel PC, a laptop and a phone."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
@@ -112,9 +104,9 @@ should hear that and not the person pressing it.
 | `status` | Devices up, tags reporting, alarms, historian, uptime: the Board's strip | none | 12 x 1 |
 | `gauge` | One tag as the Board's dial, with its range and its alarm limits marked | `tag` | 3 x 3 |
 | `value` | One tag as a big number, colored by its alarm state | `tag`, `decimals` | 3 x 2 |
-| `trend` | Up to six tags over 15 minutes to a week | `tags`, `minutes` | 6 x 3 |
+| `trend` | Up to six tags over 15 minutes to a week | `tags`, `minutes`, `labels` | 6 x 3 |
 | `entities` | The entities you pick, as their own tiles with their own controls | `entities` (up to 30) | 6 x 3 |
-| `alarms` | The alarm list, with Acknowledge for whoever may | `outstanding`, `limit` | 6 x 3 |
+| `alarms` | The alarm list, with Acknowledge for whoever may | `outstanding`, `limit`, `devices`, `equipment` | 6 x 3 |
 | `button` | Writes one value to one tag, after asking | `tag`, `value`, `label`, `confirm` | 3 x 1 |
 | `script` | Runs a script through the Scripts screen's prompt | `script`, `label` | 3 x 1 |
 | `recipe` | Picks one of up to eight recipes and opens its apply drawer | `recipes` | 4 x 2 |
@@ -132,6 +124,61 @@ Things worth knowing about the ones that aren't obvious:
   audit trail (`dashboard <id> / <card>` if left empty). Switching it off is for
   a panel where holding the button is the point; it is an engineer's decision and
   the Settings screen's "Confirm before writing" overrides it back on.
+- **`alarms`** lists the whole plant's alarms unless you point it somewhere.
+  `devices` is a list of device ids. `equipment` is a list of equipment node ids
+  from `GET /api/equipment`, any level (a site, an area, a line, a cell), and a
+  node stands for every device placed at or under it, so an area's page can show
+  the area's alarms and nobody else's. With both, an alarm is listed when it is on
+  either one. Leave them out, or empty, and the card is the whole plant, which is
+  what every card saved before these fields did. The limit counts what is left
+  after the filter, and `outstanding` still drops what is back to normal and
+  acknowledged. A card limited to a place with no alarms says "here" so nobody
+  reads it as a quiet plant, and a card whose equipment has since been deleted
+  says that instead of showing an empty list. Equipment is stored as the node's
+  id, so renaming or moving a node doesn't break the card. The dashboard is
+  refused at save if a device or a node isn't there. In the builder you type the
+  path (`Plant 2 / Scrubbers / Kettle 3`) and it keeps the id. This card reads
+  the tree, so a role needs `equipment.read` (operators and viewers have it).
+
+  ```json
+  {
+    "id": "kettle-alarms", "type": "alarms", "title": "Scrubber alarms", "w": 6, "h": 3,
+    "config": { "outstanding": true, "limit": 10, "equipment": [14], "devices": ["oven-1"] }
+  }
+  ```
+- **`trend`** draws the window you asked for, ending now, and not just the span
+  the readings happened to cover: `minutes: 480` is an axis of the last eight
+  hours with a tick on each round hour, in the time zone of whoever is looking.
+  A tag that hasn't moved is a flat line at its last good reading, because that
+  is what a stopped mill or a closed valve looks like, and the historian only
+  keeps a reading when a value moves past its deadband, so there may be one
+  reading in the window, or none. Nothing on the line is made up. What the tag
+  held when the window began is its last good reading before it (`GET
+  /api/history` says so with `carry=true`), and the line is that value from the
+  start of the window to the first reading inside it. After the last reading it
+  is held on to the last time the tag was heard from, never past now. There is no
+  line before the first reading anybody has, and a tag whose last reading before
+  the window was bad has no carry at all, because what it held is not known. A
+  stretch of bad readings is a gap, the same as it always was. One reading on its
+  own is a line to now, or a dot if there is nowhere to draw it to.
+
+  The legend names each line by the tag's own name, the same name the number
+  card shows, without the device in front. Two lines with the same name from
+  different devices keep their full ids so you can tell them apart. `labels` is
+  an optional object from a tag in `tags` to the text you want instead, 1 to 80
+  characters, and a label for a tag that isn't plotted is refused. The hover
+  tooltip always has the full id next to the label.
+
+  ```json
+  {
+    "id": "mills", "type": "trend", "title": "Mill temperatures", "w": 6, "h": 3,
+    "config": {
+      "tags": ["plant-5-temperatures/Large Sand Mill Temperature", "plant-5-temperatures/Small Sand Mill Temperature"],
+      "minutes": 480,
+      "labels": { "plant-5-temperatures/Large Sand Mill Temperature": "Large mill" }
+    }
+  }
+  ```
 - **`camera`** loads the address in the browser, not on the server. A card's
   config is readable by every role that opens the dashboard, so an address with a
   login or a token in it is refused when the dashboard is saved. Use an address

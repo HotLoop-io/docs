@@ -5,6 +5,10 @@ description: "No login is a startup error, exec ships off, file nodes are fenced
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 673b9d8, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The rule underneath all of this: anyone who can deploy a flow can make the box do
 things, because that's what flows are for. So "who can deploy a flow" gets
 answered by the operator, on purpose, and never by a default.

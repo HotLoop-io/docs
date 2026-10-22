@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.17.0
+reviewed: hotloop=4.18.10
 title: "Install the Edge Relay with Helm or Quadlet"
 description: "Run HotLoop Edge Relay {{hotloop}} on a cluster with Helm, or on a Pi or industrial PC as a systemd service with Podman Quadlet. The unit files are here in full."
 sidebar:
@@ -10,8 +10,8 @@ Two supported ways, both containers, both starting on boot and restarting when t
 
 Whichever way you go, the relay needs two things: a broker to publish to, and a Sparkplug group id. The image pulls with no login.
 
-:::note[Coming from 4.16.0]
-4.16.0's relay couldn't take a pushed device file on either install below: the push died on a read-only mount while the Gateway said `config pushed`. And `persistence.enabled=false` didn't even boot. 4.17.0 fixes both. [Upgrading from 4.16.0](/gateway/upgrading/#the-edge-relay) has the relay's part, including the stale push the broker may hand back at first boot.
+:::note[Coming from 4.17.0 or 4.16.0]
+From 4.17.0, upgrade the chart with `--reset-then-reuse-values`, and Quadlet users take the new `edge-relay.container`, which follows `:stable` instead of pinning 4.17.0. [Upgrading from 4.17.0](/gateway/upgrading/#the-edge-relay-and-quadlet) has the relay's part. 4.16.0's relay couldn't take a pushed device file on either install below: the push died on a read-only mount while the Gateway said `config pushed`, and `persistence.enabled=false` didn't even boot. 4.17.0 fixed both, and [Upgrading from 4.16.0](/gateway/upgrading/#the-edge-relay) has that part, including the stale push the broker may hand back at first boot.
 :::
 
 ## The device file
@@ -44,7 +44,9 @@ Both ways read the same document: the devices to poll and the tags to read on th
 
 These are the same device and tag shapes the Gateway's API takes, checked with the same rules: a device needs a protocol HotLoop knows, and a tag needs a device that exists. On top of that the relay refuses a device id declared twice and a tag pointing at a device that was never declared, the two mistakes a hand-edited file makes that a database would have caught for you.
 
-It's read once at start. Change it, restart the relay. No live reload, on purpose.
+The local file is read at start, and again when a push is cleared. Change it, restart the relay. It isn't watched, on purpose. A device file pushed from a Gateway is the one that applies live, and it wins over this one for as long as it exists.
+
+The file can also carry a `discovery` list of MQTT brokers the relay listens to for devices that announce themselves, read-only. [The reference](/edge-relay/reference/) has the format.
 
 A device's `config` block can hold credentials, like an OPC UA `username` and `password`. They sit in that file in the clear, and the relay has no API to hide them behind, so where the file lives matters. Both paths below cover it.
 
@@ -105,17 +107,17 @@ curl localhost:8081/status
 
 The forward queue lives on its own PVC, 256Mi by default (`persistence.size`), so buffered readings survive the pod moving. The same volume holds the OPC UA client certificate and its trust store at `/data/opcua-client-pki`, so a secured server trusts the relay once, not after every restart.
 
-`edgePublish.queueMaxBytes` is `0` by default, which means unbounded, and the install notes say so. A long enough broker outage fills that volume instead of dropping old readings, and a full volume is a second outage stacked on the first. Set it comfortably under `persistence.size`, and once the queue hits the cap the oldest readings go first.
+`edgePublish.queueMaxBytes` is 64 MiB by default (`67108864`), where it used to be `0`, unbounded. Past the cap the oldest readings are dropped and counted. That is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate, about 180 bytes a reading, and keep it comfortably under `persistence.size`. Set it to `0` and it is unbounded again: a long enough broker outage then fills the volume instead of dropping old readings, a full volume is a second outage stacked on the first, and the install notes say so. A relay upgraded with `--reuse-values` keeps whatever it had.
 
-`persistence.enabled=false` boots in 4.17.0 (on 4.16.0 it killed the relay at boot), with an emptyDir at `/data` capped at `persistence.size`. Know what that costs before you pick it: every time the pod is replaced (a node drain, an eviction, a `kubectl delete pod`, a `helm upgrade` that rolls it) it loses the forward queue and every reading buffered in it, any pushed device file (the relay quietly goes back to the chart's `devices`), and the OPC UA client certificate, so every secured server has to trust the relay again. The install notes print that warning. Fine for a trial. For a relay whose readings matter, keep the PVC.
+`persistence.enabled=false` boots since 4.17.0 (on 4.16.0 it killed the relay at boot), with an emptyDir at `/data` capped at `persistence.size`. Know what that costs before you pick it: every time the pod is replaced (a node drain, an eviction, a `kubectl delete pod`, a `helm upgrade` that rolls it) it loses the forward queue and every reading buffered in it, any pushed device file (the relay quietly goes back to the chart's `devices`), and the OPC UA client certificate, so every secured server has to trust the relay again. The install notes print that warning. Fine for a trial. For a relay whose readings matter, keep the PVC.
 
-A pushed device file lives on that same volume, at `/data/pushed-devices.json` (`pushedDevicesFile` in the chart's values), and wins over the chart's `devices` for as long as it exists, through restarts, reschedules and a `helm upgrade` that changes `devices`. The relay logs which file it booted from. To go back to the chart's list, clear the push with `DELETE /api/fleet/{id}/config` on the Gateway while the relay is connected, then restart it.
+A pushed device file lives on that same volume, at `/data/pushed-devices.json` (`pushedDevicesFile` in the chart's values), and wins over the chart's `devices` for as long as it exists, through restarts, reschedules and a `helm upgrade` that changes `devices`. The relay logs which file it booted from. To go back to the chart's list, clear the push with `DELETE /api/fleet/{id}/config` on the Gateway while the relay is connected, and it switches to the chart's list on the spot. A push applies live as well, with no restart.
 
 ## Quadlet
 
-For a Pi or an industrial PC outside any cluster. Quadlet turns the container into a real systemd service: it starts on boot with nobody logged in, restarts when it dies, and logs to the journal. It needs Podman 4.4 or newer. Raspberry Pi OS Bookworm ships 4.3, which has no Quadlet at all, so use Trixie or newer.
+For a Pi or an industrial PC outside any cluster. Quadlet turns the container into a real systemd service: it starts on boot with nobody logged in, restarts when it dies, and logs to the journal. This unit was run on Podman 4.9.3, and its keys were checked against the `quadlet` binary of Podman 5.8.6. Raspberry Pi OS Bookworm ships 4.3, which has no Quadlet at all, so use Trixie or newer.
 
-Make the directories first:
+The unit and its data volume are in `deploy/quadlet/` in the HotLoop repository, next to `devices.example.json`. Make the directories first:
 
 ```bash
 sudo mkdir -p /etc/containers/systemd /etc/edge-relay
@@ -126,16 +128,35 @@ Save this as `/etc/containers/systemd/edge-relay.container`, and change the brok
 ```ini
 [Unit]
 Description=HotLoop Edge Relay
+Documentation=https://github.com/HotLoop-io/hotloop/blob/main/docs/EDGE-RELAY.md
 After=network-online.target
 Wants=network-online.target
 
 [Container]
-Image=ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}
+# Every box tracks :stable, so this line never needs editing.
+Image=ghcr.io/hotloop-io/hotloop-edge-relay:stable
+AutoUpdate=registry
 ContainerName=edge-relay
+
+# The image has no shell or curl, so the binary asks itself. A JSON array,
+# not a string, because a string runs through /bin/sh -c and there isn't one.
+HealthCmd=["/edge-relay", "--healthcheck"]
+HealthInterval=10s
+HealthRetries=3
+HealthStartPeriod=20s
+Notify=healthy
+# Podman 4.9 reads Notify=healthy as plain true. Without this line a broken
+# release is not rolled back there.
+PodmanArgs=--sdnotify=healthy
+
+# The image digest, written by the ExecStartPre below, for the Gateway's fleet list.
+EnvironmentFile=/run/edge-relay/relay.env
 
 Environment=HOTLOOP_EDGE_PUBLISH_BROKER=tcp://gateway.example.local:1883
 Environment=HOTLOOP_EDGE_PUBLISH_GROUP=Plant1
 Environment=HOTLOOP_EDGE_PUBLISH_NODE=press-line-3
+# The outage queue's limit, 64 MiB.
+Environment=HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES=67108864
 Environment=HOTLOOP_EDGE_RELAY_DEVICES_FILE=/etc/edge-relay/devices.json
 # Where a pushed device file lands, instead of failing on the read-only
 # mount below. It wins over the file above for as long as it exists.
@@ -160,6 +181,15 @@ DropCapability=all
 [Service]
 Restart=always
 RestartSec=5
+# Exit status 75 is a relay stopping because an operator approved an update.
+SuccessExitStatus=75
+
+RuntimeDirectory=edge-relay
+ExecStartPre=/bin/sh -c '/usr/bin/podman image exists ghcr.io/hotloop-io/hotloop-edge-relay:stable || /usr/bin/podman pull ghcr.io/hotloop-io/hotloop-edge-relay:stable'
+ExecStartPre=/bin/sh -c 'echo HOTLOOP_IMAGE_DIGEST=$$(/usr/bin/podman image inspect --format "{{.Digest}}" ghcr.io/hotloop-io/hotloop-edge-relay:stable) > /run/edge-relay/relay.env'
+
+# A bad image fails three healthchecks in about a minute, and then it is rolled back.
+TimeoutStartSec=120
 
 [Install]
 WantedBy=multi-user.target
@@ -184,7 +214,19 @@ curl localhost:8081/status
 
 Broker takes anonymous connections? Skip the secret and delete the `Secret=` line. On an isolated OT network that's a real setup, not a mistake to work around. The `:Z` on the device file mount is for SELinux, and harmless on a distro without it.
 
-To change devices: edit the file, then `sudo systemctl restart edge-relay.service`. To upgrade: change the `Image=` tag, `sudo systemctl daemon-reload`, restart. When something looks wrong, `sudo journalctl -u edge-relay.service` before anything else. The relay says why it rejected a device file or a push, and reading that takes less time than second-guessing your JSON.
+To change devices from the box: edit the file, then `sudo systemctl restart edge-relay.service`. A device file pushed from the Gateway needs none of that, because it applies live. While a push is in place it is what the relay runs and boots from, so your edits to the local file do nothing until you clear the push with `DELETE /api/fleet/{id}/config` on the Gateway. When something looks wrong, `sudo journalctl -u edge-relay.service` before anything else. The relay says which file it is on, and why it rejected a device file or a push, and reading that takes less time than second-guessing your JSON.
+
+### Updates
+
+The unit follows `:stable`, and Podman moves it once its timer is on:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+When the timer fires, Podman pulls `:stable`, and if the digest changed it restarts the unit on the new image. The unit isn't up until the relay's own healthcheck passes, so if the new image never does, Podman puts the previous one back and starts that. A release that can't start costs a few minutes on one box, and not a relay that stays down. The forward queue and a pushed device file live on the data volume, which a new image doesn't touch. The Gateway's fleet list shows each relay's version and image digest and logs a line when one changes.
+
+Podman updates every labeled container on the machine when it runs, not just this one. A site that wants a person to say when has two opt-ins, both in `deploy/quadlet/`. `edge-relay-hold.conf` holds updates until an admin on the Gateway approves them with `POST /api/fleet/{id}/update`, and it needs the timer off for the whole machine. `update-window.conf` lets the timer fire only in a window, like Sunday at 03:00. The Gateway can't tell you an update is waiting, only what each relay runs now. The hold was run with a real update held for 30 seconds, then taken on approval, and the reference page, [Updating a relay](/edge-relay/reference/#updating-a-relay), has everything it does and can't do.
 
 ## Then: manage it from a Gateway
 
@@ -212,4 +254,4 @@ Then register each relay by its group and node. Registering is on purpose: a rel
 
 `statusUrl` is optional. Without it the Gateway knows online and offline from births and deaths. With it, the Gateway also polls the relay's `/status` for queue depth and device counts, and a relay it can't reach shows as unreachable, never as a healthy zero. The Quadlet unit above only publishes 8081 on `127.0.0.1`, so a Gateway on another box can't reach `/status` until you change `PublishPort=`, and then it's reachable by anyone on that network too.
 
-From then on the Gateway tracks the relay and can send it `POST /api/fleet/{id}/rebirth`, `POST /api/fleet/{id}/restart` or `POST /api/fleet/{id}/config`, that last one being the push, which lands in 4.17.0 and never did on 4.16.0. `DELETE /api/fleet/{id}/config` clears a push. All of this is API only: there's no Fleet screen in the Gateway's UI. Before you rely on any of that, lock the broker's ACL down so only the Gateway can publish commands and device files. [The overview](/edge-relay/overview/#who-gets-to-command-it) says why.
+From then on the Gateway tracks the relay and can send it `POST /api/fleet/{id}/rebirth`, `POST /api/fleet/{id}/restart`, `POST /api/fleet/{id}/update` or `POST /api/fleet/{id}/config`. That last one is the push, which lands from 4.17.0 and never did on 4.16.0, and applies live from 4.18.10. `DELETE /api/fleet/{id}/config` clears a push, and the relay goes back to its local file on the spot. All of this is API only: there's no Fleet screen in the Gateway's UI. Before you rely on any of that, lock the broker's ACL down so only the Gateway can publish commands and device files. [The overview](/edge-relay/overview/#who-gets-to-command-it) says why.

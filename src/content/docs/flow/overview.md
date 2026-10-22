@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at b1bd5de, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 673b9d8, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 **Wire the plant. Review it like code.**

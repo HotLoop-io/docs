@@ -88,7 +88,7 @@ export const PAGES = [
   { product: 'shared', group: 'Install', slug: 'install/helm', repo: 'hotloop', file: 'docs/DEPLOYMENT.md', title: 'k3s and Helm', description: 'Deploy any HotLoop chart on k3s or any Kubernetes: the values worth setting, the database choice, upgrades, rollbacks and what a good install looks like.' },
   { product: 'shared', group: 'Install', slug: 'install/quadlet', repo: 'hotloop', file: 'deploy/quadlet/README.md', stopAt: 'Updates', title: 'Podman Quadlet', description: 'Run HotLoop as real systemd services on a Pi or small industrial PC with Podman Quadlet, with no Docker, no Compose and no cluster.' },
   { product: 'shared', group: 'Install', slug: 'install/auto-update', repo: 'hotloop', file: 'deploy/quadlet/README.md', sections: ['Updates'], title: 'The :stable auto-update', description: 'Every box follows the stable tag and Podman moves it. What an update does, what a rollback cannot undo, and how to hold updates until you say.' },
-  { product: 'shared', group: 'Lineup', slug: 'products', repo: 'hotloop', file: 'docs/PRODUCTS.md', title: 'The lineup', description: 'Four products from one codebase, what each one has, which database each runs, how to install it and how to move a site up a product.', bannerExtra: 'The release you can install today, HotLoop 4.17.0, ships the Gateway and the Edge Relay. HotLoop IoT and HotLoop Edge are built from this same code and arrive with the next release.' },
+  { product: 'shared', group: 'Lineup', slug: 'products', repo: 'hotloop', file: 'docs/PRODUCTS.md', title: 'The lineup', description: 'Four products from one codebase, what each one has, which database each runs, how to install it and how to move a site up a product.' },
   { product: 'shared', group: 'Lineup', slug: 'roadmap', repo: 'hotloop', file: 'docs/ROADMAP.md', title: 'HotLoop roadmap', description: "What HotLoop is, what is left to build and what is broken, in the order it gets done. If it is not on the list, it is not getting done." },
 
   // ---- HotLoop Flow ----
@@ -160,27 +160,17 @@ export const SLUG_RULES = {
   'releases/cascade-0-1-1': [
     [ws('The registry is private. `podman login ghcr.io` as root once, or the pull fails and the box stays on what it has.'), 'The registry was private for this release, so it wanted a `podman login ghcr.io` as root first. The image and chart are public from 0.1.2 on and pull with no login.'],
   ],
-  // The pinned HotLoop ref is 4.17.0, and those two files say docker run. The fix is on HotLoop main, so these rules stand in until a released ref carries it. Drop both once the pinned ref is 4.18.5.
-  'iot/authentication': [
-    [ws('`helm install` or `docker run` now comes up requiring one.'), '`helm install` or a Podman Quadlet unit now comes up requiring one.'],
-  ],
-  'edge-relay/reference': [
-    [ws('no bare `podman run`/`docker run`'), 'no bare `podman run`'],
-  ],
   // The only Apache text left is about the ported Node-RED files, which keep their own headers. The sync refuses the word on purpose, so say it without naming the license.
   'releases/flow-2-2-0': [
     [ws('The ported Node-RED files keep their Apache-2.0 headers and credits, so the Apache text now ships in `LICENSES/Apache-2.0.txt` next to `NOTICE`,'), 'The ported Node-RED files keep their original license headers and credits, so their license text now ships in `LICENSES/` next to `NOTICE`,'],
   ],
-  'releases/hotloop-4-16-0': [
-    [ws('- License: the HotLoop Community License v1.0, not Apache-2.0. Free for individual, home, hobbyist, nonprofit and education use; businesses sign up free through EmberNET.'),
-      '- License: the terms changed with this release. The current terms are on the [License]({{LICENSE_URL}}) page, and a business install should read them before it upgrades.'],
-  ],
 };
 
 Object.assign(SLUG_RULES, {
+  // HotLoop's ROADMAP.md still says IoT and Edge are not released, and 4.18.10 is the release that has them. These stand in until the source says so. Drop both once it does.
   roadmap: [
-    [ws('No license keys and no unlocking at runtime. HotLoop is free. A tier is an image,'), 'No license keys and no unlocking at runtime. A tier is an image,'],
-    [ws('2026-09-28: the first public release since 4.3.1, and the one the Community License applies from'), '2026-09-28: the first public release since 4.3.1'],
+    [ws('(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet'), '(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
+    [ws('(`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0)'), '(`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
   ],
   'cascade/overview': [
     [ws("scoped API keys and HA workers ship to everyone. There is no license check anywhere in the code, so there's nothing to rug-pull later."), 'scoped API keys and HA workers are all in the one binary. There is no license check anywhere in the code.'],

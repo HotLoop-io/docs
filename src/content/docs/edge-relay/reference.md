@@ -5,10 +5,6 @@ description: "The headless poll-and-forward Sparkplug B node: what it does, ever
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.6.0. `cmd/edge-relay` is a second binary, not a mode of the
 Gateway: a poll-and-forward Sparkplug B edge node with no database, no web
 UI, no auth and no write path. It exists to run on a Pi or a small industrial
@@ -31,7 +27,7 @@ That is enforced by what the binary's own `main.go` imports, not by a flag, ther
 features off. The resulting binary is roughly a third of the size of the
 Gateway's (12.5 MB vs. 33.9 MB on amd64, 11.7 MB vs. 31.6 MB on arm64,
 `CGO_ENABLED=0`, both stripped, measured from the images this repository's
-Dockerfiles build). And it is checked:
+Containerfiles build). And it is checked:
 `TestEdgeRelayDoesNotImportGatewayOnlyPackages` asks `go list -deps` what the
 binary actually links, and fails if any of those packages creeps in through a
 shared one.
@@ -94,6 +90,11 @@ binary is a different way of arriving at the same `Offer()` call.
 }
 ```
 
+A tag takes everything the Gateway's tags do, `noData` included: a list of
+raw values that mean "no measurement" (a recorder's 0x8005), each with a
+reason, so a dead channel reads bad on the relay and in the Sparkplug stream
+instead of as a number. See [No-data values](/iot/protocols/#no-data-values).
+
 Same `Device` and `Tag` JSON shapes the Gateway's own API accepts, see
 `internal/model/device.go`, validated with the identical rules (a device
 needs a known protocol, a tag needs a device that exists), plus two checks a
@@ -105,7 +106,7 @@ All seven of the Gateway's protocol drivers are compiled in: OPC UA, Modbus,
 MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect and HTTP. Nothing about the
 device file format is edge-relay-specific.
 
-### Discovery (4.18.3)
+### Discovery (4.18.10)
 
 A relay can listen to an MQTT broker for devices that announce themselves, the
 way the Gateway does (see [DISCOVERY.md](/iot/mqtt-discovery/)), and read and forward
@@ -485,7 +486,7 @@ Two endpoints, both unauthenticated, both read-only:
   without the file's addresses and credentials going out on an
   unauthenticated port. With a `discovery` broker in the file it also says,
   under `discovery`, how each one is doing and how many devices it found (see
-  [Discovery](#discovery-4183)).
+  Discovery).
 
 Deliberately no auth in front of either: an edge relay has no user database,
 no session store and no identity system to build one from, and adding a
@@ -588,7 +589,7 @@ invoked from a shell that dies with the session, and no Docker:
   into a real systemd service: starts on boot, restarts on failure, logs to
   journald, see that directory's own README for install steps.
 
-Both use the same image (`Dockerfile.edge-relay`, built and proven in CI) and
+Both use the same image (`Containerfile.edge-relay`, built and proven in CI) and
 the same environment variables documented above.
 
 Every release publishes both, from 4.16.0 on. The image is

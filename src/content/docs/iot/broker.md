@@ -5,10 +5,6 @@ description: "A broker in the same process, so one small box can be the whole in
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.11.0. `internal/broker` lets this Gateway run its own MQTT broker
 in-process, so a small, single-box HotLoop install has nothing extra to
 deploy. Off by default (`HOTLOOP_BROKER_ENABLED`): a deployment that already

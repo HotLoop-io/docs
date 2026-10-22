@@ -5,10 +5,6 @@ description: "Logical snapshots of the database, restores that refuse a newer sc
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.12.0. `internal/backup` takes logical, table-data-only snapshots
 of the historian and restores them. Off by default (`HOTLOOP_BACKUP_ENABLED`):
 a deployment that has not configured a backup volume should not have this
@@ -29,7 +25,7 @@ row count and columns with their types).
   (`gcr.io/distroless/static-debian12:nonroot`) is deliberately a static
   binary and nothing else, no shell, no package manager, no external
   binaries of any kind. That is a design decision this feature does not get
-  to override; see the `Dockerfile`'s own header comment. Everything here
+  to override; see the `Containerfile`'s own header comment. Everything here
   goes over the same database connection the app already holds.
 - **Not a schema backup.** `internal/store/migrations`, applied automatically
   by `store.Migrate` on every start (`HOTLOOP_DB_MIGRATE`, on by default),

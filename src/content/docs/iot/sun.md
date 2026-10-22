@@ -3,15 +3,7 @@
 title: "The sun"
 description: "Sunrise, sunset, dawn, dusk and the sun position worked out on the box from a latitude and longitude, with no weather service and no internet."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 Tell HotLoop where the plant is and it knows where the sun is. Sunrise, sunset,
 dawn, dusk, solar noon, the sun's height and its bearing, all worked out on the

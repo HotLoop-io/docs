@@ -2,20 +2,20 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "9d25dc1852eacc39c1c0e696d4b282a7a383f8af",
-      "sha": "9d25dc1852eacc39c1c0e696d4b282a7a383f8af",
+      "ref": "origin/main",
+      "sha": "c118b2f2485e18b27f2b1b688d107600faab1ab3",
       "release": {
-        "tag": "v4.17.0",
-        "version": "4.17.0",
+        "tag": "v4.18.10",
+        "version": "4.18.10",
         "prerelease": false,
-        "publishedAt": "2026-09-30T00:53:23Z",
-        "sha": "2e71d09a24d1d82c38f7adc911933128b17879a9"
+        "publishedAt": "2026-10-21T19:37:15Z",
+        "sha": "1e89f84fc6ffe5f8e2db49969ab0d57fc6f1148e"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "b1bd5de99b54472605b995721d363712c1a688b5",
-      "sha": "b1bd5de99b54472605b995721d363712c1a688b5",
+      "ref": "origin/main",
+      "sha": "673b9d8fdd5105955e980a438962ca118df019cb",
       "release": {
         "tag": "v2.2.0",
         "version": "2.2.0",
@@ -26,8 +26,8 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "9ac23ed",
-      "sha": "9ac23ed7bde932f41f618cda2127f82888bb536a",
+      "ref": "origin/main",
+      "sha": "4daa906f7fd553f8fce6156fedda1d1eb0e46516",
       "release": {
         "tag": "v0.1.2",
         "version": "0.1.2",
@@ -82,7 +82,7 @@
       "group": "The base",
       "title": "Entities",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ENTITIES.md",
       "release": false
@@ -115,7 +115,7 @@
       "group": "The base",
       "title": "The logbook",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/LOGBOOK.md",
       "release": false
@@ -126,7 +126,7 @@
       "group": "The base",
       "title": "The sun",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/SUN.md",
       "release": false
@@ -137,7 +137,7 @@
       "group": "Automation",
       "title": "Automations",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/AUTOMATIONS.md",
       "release": false
@@ -181,7 +181,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -192,7 +192,7 @@
       "group": "Screens and alerts",
       "title": "Alarm notifications",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/NOTIFY.md",
       "release": false
@@ -214,7 +214,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -225,7 +225,7 @@
       "group": "Devices and data",
       "title": "The embedded MQTT broker",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BROKER.md",
       "release": false
@@ -236,7 +236,7 @@
       "group": "Devices and data",
       "title": "MQTT discovery",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DISCOVERY.md",
       "release": false
@@ -247,7 +247,7 @@
       "group": "Devices and data",
       "title": "Network discovery",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/NETWORK-DISCOVERY.md",
       "release": false
@@ -258,7 +258,7 @@
       "group": "Devices and data",
       "title": "UniFi Network",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/UNIFI.md",
       "release": false
@@ -269,7 +269,7 @@
       "group": "Devices and data",
       "title": "Historian targets",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/HISTORIAN-TARGETS.md",
       "release": false
@@ -280,7 +280,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -291,7 +291,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -302,7 +302,7 @@
       "group": "Operate",
       "title": "Migrations only add",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/MIGRATIONS.md",
       "release": false
@@ -313,7 +313,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -324,7 +324,7 @@
       "group": "What Edge adds",
       "title": "Edge publish and store-and-forward",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/EDGE-PUBLISH.md",
       "release": false
@@ -335,7 +335,7 @@
       "group": "What Edge adds",
       "title": "The OPC UA server",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/OPCUA-SERVER.md",
       "release": false
@@ -346,7 +346,7 @@
       "group": "What the Gateway adds",
       "title": "Fleet management",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/FLEET.md",
       "release": false
@@ -357,7 +357,7 @@
       "group": "What the Gateway adds",
       "title": "Scheduled reports",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/REPORTS.md",
       "release": false
@@ -368,7 +368,7 @@
       "group": "Reference",
       "title": "Edge Relay reference",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/EDGE-RELAY.md",
       "release": false
@@ -379,7 +379,7 @@
       "group": "Install",
       "title": "k3s and Helm",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DEPLOYMENT.md",
       "release": false
@@ -390,7 +390,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -401,7 +401,7 @@
       "group": "Install",
       "title": "The :stable auto-update",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -412,7 +412,7 @@
       "group": "Lineup",
       "title": "The lineup",
       "label": null,
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PRODUCTS.md",
       "release": false
@@ -423,7 +423,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -588,7 +588,7 @@
       "group": "Run it",
       "title": "Security posture",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -814,14 +814,14 @@
       "release": true
     },
     {
-      "slug": "releases/hotloop-4-18-3",
+      "slug": "releases/hotloop-4-18-10",
       "product": "releases",
       "group": "HotLoop",
-      "title": "HotLoop 4.18.3 release notes",
-      "label": "4.18.3",
-      "status": "next",
+      "title": "HotLoop 4.18.10 release notes",
+      "label": "4.18.10",
+      "status": "changed",
       "repo": "hotloop",
-      "source": "docs/releases/4.18.3.md",
+      "source": "docs/releases/4.18.10.md",
       "release": true
     },
     {
@@ -871,6 +871,7 @@
   ],
   "pinned": [
     "business.md",
+    "edge/install.md",
     "edge/overview.md",
     "edge-relay/install.md",
     "edge-relay/overview.md",
@@ -879,6 +880,7 @@
     "gateway/overview.md",
     "gateway/upgrading.md",
     "install/index.md",
+    "iot/install.md",
     "iot/overview.md"
   ]
 }

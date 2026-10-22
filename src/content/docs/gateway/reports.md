@@ -5,10 +5,6 @@ description: "Historian numbers on a schedule as CSV or HTML, stored and emailed
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.14.0. `internal/reports` runs operator-defined reports on a schedule:
 it queries the historian, renders the result as CSV and HTML, stores it on a
 volume, and optionally emails it. It is the counterpart of Ignition's Reporting
