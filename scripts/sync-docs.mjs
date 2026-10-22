@@ -429,13 +429,13 @@ for (const [slug, p] of mainPages) {
     .sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))
     .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (on main, next release)' : ''}`)
     .join('\n');
-  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop, HotLoop Flow and HotLoop Cascade release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
+  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, HotLoop Flow and HotLoop Cascade release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
   out.set('releases/index.md', `${fm}
-Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
+Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
 
-## HotLoop
+## HotLoop core
 
-IoT, Edge, Gateway and Edge Relay release together from one tag.
+IoT, Edge, Gateway and Edge Relay release together from one tag, so they share these notes.
 
 ${rows('hotloop')}
 

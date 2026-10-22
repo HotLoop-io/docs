@@ -148,4 +148,4 @@ If you have a script or an integration against the API, this is the list. Everyt
 - **New: `?dry_run=true` on `POST /api/services/{domain}/{service}`.** It runs the gate's checks, writes nothing, audits nothing, and answers with the refusal the real call would give. `dry_run` takes `true` or `false` and nothing else; `yes` is a 400, because a guess the wrong way turns a question into a command.
 - **`GET /api/settings`** names the variable a value actually came from in `envVar`, fallbacks included, and a variable set to an empty string counts as unset.
 
-The [release notes](https://hotloop.io/releases/gateway/) have the rest of what changed, version by version back to 4.4.0. Once you're up on 4.16.0 and the historian is still full, go do [Upgrading from 4.16.0](#upgrading-from-4160), and then [Upgrading from 4.17.0](#upgrading-from-4170).
+The [release notes](https://hotloop.io/releases/core/) have the rest of what changed, version by version back to 4.4.0. Once you're up on 4.16.0 and the historian is still full, go do [Upgrading from 4.16.0](#upgrading-from-4160), and then [Upgrading from 4.17.0](#upgrading-from-4170).

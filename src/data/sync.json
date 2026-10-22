@@ -15,7 +15,7 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "673b9d8fdd5105955e980a438962ca118df019cb",
+      "sha": "f1f417fe59cc1924c76f03b6e4f823d86a1c035a",
       "release": {
         "tag": "v2.2.0",
         "version": "2.2.0",
@@ -27,7 +27,7 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "4daa906f7fd553f8fce6156fedda1d1eb0e46516",
+      "sha": "cbe2c19f2beb64f7d965a90af6fbc9d7ca724c2a",
       "release": {
         "tag": "v0.1.2",
         "version": "0.1.2",
@@ -456,7 +456,7 @@
       "group": "Start here",
       "title": "Bring your Node-RED flows",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -544,7 +544,7 @@
       "group": "Nodes",
       "title": "The palette",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -555,7 +555,7 @@
       "group": "Nodes",
       "title": "The plant floor",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -577,7 +577,7 @@
       "group": "Nodes",
       "title": "Node-RED compatibility",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/compatibility.md",
       "release": false
@@ -775,7 +775,7 @@
       "group": "Install",
       "title": "Building Cascade",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -794,8 +794,8 @@
     {
       "slug": "releases/hotloop-4-16-0",
       "product": "releases",
-      "group": "HotLoop",
-      "title": "HotLoop 4.16.0 release notes",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.16.0 release notes",
       "label": "4.16.0",
       "status": "released",
       "repo": "hotloop",
@@ -805,8 +805,8 @@
     {
       "slug": "releases/hotloop-4-17-0",
       "product": "releases",
-      "group": "HotLoop",
-      "title": "HotLoop 4.17.0 release notes",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.17.0 release notes",
       "label": "4.17.0",
       "status": "released",
       "repo": "hotloop",
@@ -816,8 +816,8 @@
     {
       "slug": "releases/hotloop-4-18-10",
       "product": "releases",
-      "group": "HotLoop",
-      "title": "HotLoop 4.18.10 release notes",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.18.10 release notes",
       "label": "4.18.10",
       "status": "changed",
       "repo": "hotloop",

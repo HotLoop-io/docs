@@ -5,6 +5,10 @@ description: "Build the Cascade binary and image from source, and run the vet an
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at cbe2c19, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 You need Go 1.27.1.
 
 ```sh
@@ -15,7 +19,7 @@ test/run.sh       # vet and every test with -race, against real services
 
 The tests run against real services, never mocks. `test/services/up.sh` starts
 them in Podman on a network of their own (Postgres, Hydra, a headless Chrome,
-Mosquitto, a HotLoop gateway, ntfy, Gotify, a mail server and ERPNext), and `test/run.sh` runs the suite in a `golang` container on
+Mosquitto, a HotLoop gateway, ntfy, Gotify, a mail server, ERPNext, OpenLDAP and a Samba Active Directory controller), and `test/run.sh` runs the suite in a `golang` container on
 that network. CI runs the same two scripts. A test whose service is missing
 fails instead of skipping, because a skipped integration test is a test that
 never ran. `test/services/down.sh` cleans up, and it only ever touches
