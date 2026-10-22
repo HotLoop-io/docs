@@ -162,7 +162,7 @@ returns a password hash or a session token except the one login hands you.
 ### camelCase, except where it is snake_case
 
 Most of the API is camelCase (`deviceId`, `pollIntervalMs`, `createdAt`), as it
-has been since the first version and as the EmberNET dashboard's `TagValue`
+has been since the first version and as the EmberNet dashboard's `TagValue`
 contract requires.
 
 The entity, state, service, equipment and label endpoints are snake_case
@@ -215,9 +215,8 @@ feature answers 400 with an error naming the variable:
 
 ### Not in this product
 
-HotLoop ships as IoT, Edge and Gateway out of one codebase, and a feature a
-product doesn't have isn't switched off, it isn't in the binary. Its routes
-still answer, after the same permission check, with a 404 that says so and
+HotLoop ships as IoT, Edge, Gateway, and Edge Relay out of one codebase, and a feature a
+product doesn't have isn't switched off, it isn't in the binary. On IoT, Edge, and Gateway its routes still answer, after the same permission check, with a 404 that says so and
 names both ends, so a script can tell "wrong box" from "wrong URL":
 
 ```json
@@ -1294,7 +1293,7 @@ device.
 [{"deviceId":"extruder-1","protocol":"opcua","tagName":"Temperature","tagValue":20.645294745260895,"unit":"C","quality":"good","timestamp":"2026-09-27T20:21:58.255722Z"}]
 ```
 
-This shape is the EmberNET dashboard's `TagValue` and is a contract. `quality`
+This shape is the EmberNet dashboard's `TagValue` and is a contract. `quality`
 is `good`, `uncertain` or `bad`; **a bad reading means the value is not known,
 not that it is zero**. A string reading carries `stringVal`, and its
 `tagValue` means nothing.
@@ -2921,7 +2920,7 @@ the same for everyone.
 ### `/`
 
 The single page, with its stylesheet and scripts inline so it renders the same
-at the root of a host, under a path, or inside the EmberNET dashboard's iframe.
+at the root of a host, under a path, or inside the EmberNet dashboard's iframe.
 Gzipped when the browser asks. `GET` and `HEAD` only; any other method is `405`.
 Any other path that no route matches lands here and gets a `404`, because
 serving the page for a typo would make it look like a working screen. No

@@ -39,7 +39,7 @@ Lose the key that seals stored credentials and every stored credential is unread
 
 ## License
 
-Cascade is under HotLoop's Business Source License 1.1 (`BUSL-1.1`), same as the rest of the HotLoop lineup. It is not open source and I'm not going to pretend it is. Each version turns into GPL-3.0 or later four years after it's first made public. Home and lab use is free, and so is production use by schools, nonprofits and government. Business use goes through EmberNET, where signing up is free and so is business use. Hosting it as a service for other people, reselling it and embedding it in something you sell are not granted. The `LICENSE` file is the legal text and it wins any argument with this paragraph.
+Cascade is under HotLoop's Business Source License 1.1 (`BUSL-1.1`), same as the rest of the HotLoop lineup. It is not open source and I'm not going to pretend it is. Each version turns into GPL-3.0 or later four years after it's first made public. Home and lab use is free, and so is production use by schools, nonprofits and government. Business use goes through EmberNet, where signing up is free and so is business use. Hosting it as a service for other people, reselling it and embedding it in something you sell are not granted. The `LICENSE` file is the legal text and it wins any argument with this paragraph.
 
 ## What's not here yet
 

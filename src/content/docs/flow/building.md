@@ -49,6 +49,6 @@ something broken, and a green checkmark is worse than a red one.
 
 Images and charts publish from **version tags only**, and both workflows refuse
 anything else twice: once in the trigger, once in a step that re-checks the ref.
-An artefact built from an untagged commit is one nobody can name out loud, and
+An artifact built from an untagged commit is one nobody can name out loud, and
 something on a plant floor can end up running it. Pushing to `main` runs CI and
 publishes nothing.

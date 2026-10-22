@@ -12,7 +12,7 @@ which is no second workload at all ([SQLite](#sqlite), below).
 
 ## Install
 
-Through the EmberNET dashboard's App Store, or directly:
+Through the EmberNet dashboard's App Store, or directly:
 
 ```bash
 helm install hotloop ./charts/hotloop \

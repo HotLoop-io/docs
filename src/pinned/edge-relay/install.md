@@ -111,7 +111,7 @@ The forward queue lives on its own PVC, 256Mi by default (`persistence.size`), s
 
 `persistence.enabled=false` boots since 4.17.0 (on 4.16.0 it killed the relay at boot), with an emptyDir at `/data` capped at `persistence.size`. Know what that costs before you pick it: every time the pod is replaced (a node drain, an eviction, a `kubectl delete pod`, a `helm upgrade` that rolls it) it loses the forward queue and every reading buffered in it, any pushed device file (the relay quietly goes back to the chart's `devices`), and the OPC UA client certificate, so every secured server has to trust the relay again. The install notes print that warning. Fine for a trial. For a relay whose readings matter, keep the PVC.
 
-A pushed device file lives on that same volume, at `/data/pushed-devices.json` (`pushedDevicesFile` in the chart's values), and wins over the chart's `devices` for as long as it exists, through restarts, reschedules and a `helm upgrade` that changes `devices`. The relay logs which file it booted from. To go back to the chart's list, clear the push with `DELETE /api/fleet/{id}/config` on the Gateway while the relay is connected, and it switches to the chart's list on the spot. A push applies live as well, with no restart.
+A pushed device file lives on that same volume, at `/data/pushed-devices.json` (`pushedDevicesFile` in the chart's values), and wins over the chart's `devices` for as long as it exists, through restarts, reschedules, and a `helm upgrade` that changes `devices`. The relay logs which file it booted from. To go back to the chart's list, clear the push with `DELETE /api/fleet/{id}/config` on the Gateway while the relay is connected, and it switches to the chart's list on the spot. A push applies live as well, with no restart.
 
 ## Quadlet
 
@@ -123,7 +123,7 @@ The unit and its data volume are in `deploy/quadlet/` in the HotLoop repository,
 sudo mkdir -p /etc/containers/systemd /etc/edge-relay
 ```
 
-Save this as `/etc/containers/systemd/edge-relay.container`, and change the broker, group and node for this box:
+Save this as `/etc/containers/systemd/edge-relay.container`, and change the broker, group, and node for this box:
 
 ```ini
 [Unit]
@@ -230,7 +230,7 @@ Podman updates every labeled container on the machine when it runs, not just thi
 
 ## Then: manage it from a Gateway
 
-Fleet management is off in the Gateway until you turn it on, because a Gateway with no relays has no broker to point it at. Set `HOTLOOP_FLEET_ENABLED` to `true` and point `HOTLOOP_FLEET_BROKER` at the same broker the relays publish to, with `HOTLOOP_FLEET_USER`, `HOTLOOP_FLEET_PASSWORD` and `HOTLOOP_FLEET_TLS` if it needs them. The Gateway chart has no fleet values of its own, so they go in its `extraEnv`:
+Fleet management is off in the Gateway until you turn it on, because a Gateway with no relays has no broker to point it at. Set `HOTLOOP_FLEET_ENABLED` to `true` and point `HOTLOOP_FLEET_BROKER` at the same broker the relays publish to, with `HOTLOOP_FLEET_USER`, `HOTLOOP_FLEET_PASSWORD`, and `HOTLOOP_FLEET_TLS` if it needs them. The Gateway chart has no fleet values of its own, so they go in its `extraEnv`:
 
 ```yaml
 extraEnv:

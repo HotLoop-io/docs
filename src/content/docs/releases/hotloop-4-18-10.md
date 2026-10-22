@@ -107,7 +107,7 @@ What changed in 4.18.10.
   one that keeps losing.
 - **The license changed.** All four products are under HotLoop's Business
   Source License 1.1 now. Home and lab use is free, so is use by schools,
-  nonprofits and government, and business use goes through EmberNET. Each
+  nonprofits and government, and business use goes through EmberNet. Each
   version turns into GPL-3.0 or later four years after it first goes out.
   It is not open source until then, and I'm not going to pretend it is.
   Read LICENSE

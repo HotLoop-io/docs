@@ -295,7 +295,7 @@ today, on TimescaleDB and on plain PostgreSQL, with the app started afterward.
   them. Devices from a backup older than the equipment tree get placed on it
   by their site, area and line text during the restore itself, the same way
   the upgrade placed them. What was never in the backup can't come back:
-  labels, composite entities, and entity names an operator customised after
+  labels, composite entities, and entity names an operator customized after
   the backup was taken.
 
 **A newer backup onto an older HotLoop: no, refused.** The manifest records

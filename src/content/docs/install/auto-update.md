@@ -144,7 +144,7 @@ reachable.
 
 The Edge Relay is different on one count: a Gateway can approve its update
 from the fleet screen, because a relay already listens for commands from the
-Gateway it forwards to. The three products have no such channel to reach them,
+Gateway it forwards to. IoT, Edge, and Gateway have no such channel to reach them,
 and building one would put a "restart this box" button on a web UI for the sake
 of a feature that `sudo podman auto-update` already is. See
 [EDGE-RELAY.md](/edge-relay/reference/#updating-a-relay) for the relay's

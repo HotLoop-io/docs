@@ -55,6 +55,8 @@ export default defineConfig({
     '/gateway/unifi/': '/iot/unifi/',
     // The license text is its own page, rendered from the canonical file in HotLoop-io/HotLoop-io.
     '/licensing/': LICENSE_TARGET,
+    // The 4.18.3 notes were a next-release page that 4.18.10 superseded, so the old address lands on the release that shipped.
+    '/releases/hotloop-4-18-3/': '/releases/hotloop-4-18-10/',
   },
   integrations: [
     starlight({

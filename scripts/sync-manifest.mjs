@@ -88,8 +88,8 @@ export const PAGES = [
   { product: 'shared', group: 'Install', slug: 'install/helm', repo: 'hotloop', file: 'docs/DEPLOYMENT.md', title: 'k3s and Helm', description: 'Deploy any HotLoop chart on k3s or any Kubernetes: the values worth setting, the database choice, upgrades, rollbacks and what a good install looks like.' },
   { product: 'shared', group: 'Install', slug: 'install/quadlet', repo: 'hotloop', file: 'deploy/quadlet/README.md', stopAt: 'Updates', title: 'Podman Quadlet', description: 'Run HotLoop as real systemd services on a Pi or small industrial PC with Podman Quadlet, with no Docker, no Compose and no cluster.' },
   { product: 'shared', group: 'Install', slug: 'install/auto-update', repo: 'hotloop', file: 'deploy/quadlet/README.md', sections: ['Updates'], title: 'The :stable auto-update', description: 'Every box follows the stable tag and Podman moves it. What an update does, what a rollback cannot undo, and how to hold updates until you say.' },
-  { product: 'shared', group: 'Lineup', slug: 'products', repo: 'hotloop', file: 'docs/PRODUCTS.md', title: 'The lineup', description: 'Four products from one codebase, what each one has, which database each runs, how to install it and how to move a site up a product.' },
-  { product: 'shared', group: 'Lineup', slug: 'roadmap', repo: 'hotloop', file: 'docs/ROADMAP.md', title: 'HotLoop roadmap', description: "What HotLoop is, what is left to build and what is broken, in the order it gets done. If it is not on the list, it is not getting done." },
+  { product: 'shared', group: 'Lineup', slug: 'products', repo: 'hotloop', file: 'docs/PRODUCTS.md', title: 'HotLoop products: six on three release lines', description: 'Six products on three release lines, what each of the four core products has, which database each runs, how to install them and how to move a site up a product.' },
+  { product: 'shared', group: 'Lineup', slug: 'roadmap', repo: 'hotloop', file: 'docs/ROADMAP.md', title: 'HotLoop roadmap', description: "What HotLoop is, what is left to build and what is broken, in the order it gets done, for HotLoop core. Flow and Cascade link their own." },
 
   // ---- HotLoop Flow ----
   { product: 'flow', group: 'Start here', slug: 'flow/overview', repo: 'flow', file: 'README.md', intro: true, sections: ['The numbers'], title: 'HotLoop Flow', description: 'A visual flow engine for the plant floor in one Go binary, with a ceiling on every queue, reviewable deploys and your existing Node-RED flows loaded unchanged.' },
@@ -171,6 +171,36 @@ Object.assign(SLUG_RULES, {
   roadmap: [
     [ws('(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet'), '(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
     [ws('(`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0)'), '(`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
+    // The roadmap is the core's. Say so, and say where the other two lines keep theirs. Links are HTML because the link pass runs after the rules and would drop a site path.
+    [ws('It ships as four products out of one codebase. See [Products](#products).'),
+      'HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow and Cascade keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a> and <a href="/cascade/roadmap/">the Cascade roadmap</a>.'],
+    [ws('Four products, one codebase, one tag. Every release ships all four in lockstep,'), 'HotLoop core is four products, one codebase, one tag. Every core release ships all four in lockstep,'],
+    [ws("Home Assistant's energy dashboard, pointed at a factory"), 'One energy dashboard, pointed at a factory floor'],
+  ],
+  'products': [
+    [ws('Four products, one codebase, one tag. Every release ships all four in lockstep,'),
+      'HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows.\n\nThey ship on three release lines. **HotLoop core** is IoT, Edge, Gateway, and Edge Relay: four products, one codebase, one tag. Every core release ships all four in lockstep,'],
+    [ws("PLC on your bench. Features split them. Protocols don't."),
+      "PLC on your bench. Features split them. Protocols don't.\n\n**Flow** and **Cascade** are their own lines with their own versions, so a Flow release never moves the core, and the other way around. Everything below the table is about the core. Here is where each of the six starts:\n\n"
+      + '| Product | Release line | Docs | Install | Release notes | Roadmap |\n|---|---|---|---|---|---|\n'
+      + [['IoT', 'HotLoop core', 'iot/overview', 'iot/install', 'releases/#hotloop-core', 'roadmap'],
+         ['Edge', 'HotLoop core', 'edge/overview', 'edge/install', 'releases/#hotloop-core', 'roadmap'],
+         ['Gateway', 'HotLoop core', 'gateway/overview', 'gateway/install', 'releases/#hotloop-core', 'roadmap'],
+         ['Edge Relay', 'HotLoop core', 'edge-relay/overview', 'edge-relay/install', 'releases/#hotloop-core', 'roadmap'],
+         ['Flow', 'Flow', 'flow/overview', 'flow/install', 'releases/#hotloop-flow', 'flow/roadmap'],
+         ['Cascade', 'Cascade', 'cascade/overview', 'cascade/running', 'releases/#hotloop-cascade', 'cascade/roadmap']]
+        .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
+      + '\n\nThe table that follows compares the four core products.'],
+  ],
+  'iot/api': [
+    [ws("HotLoop ships as IoT, Edge and Gateway out of one codebase,"), 'HotLoop ships as IoT, Edge, Gateway, and Edge Relay out of one codebase,'],
+    [ws('Its routes still answer, after the same permission check,'), 'On IoT, Edge, and Gateway its routes still answer, after the same permission check,'],
+  ],
+  'install/auto-update': [
+    [ws('The three products have no such channel to reach them,'), 'IoT, Edge, and Gateway have no such channel to reach them,'],
+  ],
+  'install/quadlet': [
+    [ws("The three products' shipped files, untouched,"), 'The shipped IoT, Edge, and Gateway files, untouched,'],
   ],
   'cascade/overview': [
     [ws("scoped API keys and HA workers ship to everyone. There is no license check anywhere in the code, so there's nothing to rug-pull later."), 'scoped API keys and HA workers are all in the one binary. There is no license check anywhere in the code.'],

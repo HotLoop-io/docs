@@ -105,7 +105,7 @@ One release is one instance, and the chart pins `replicaCount: 1` on purpose. Ea
 
 It's small on purpose too. The default `resources.preset` is `small`, requesting 10m of CPU and 64Mi of memory. Flow's process measured 16.6 MiB resident at idle, so it schedules on an edge node with 64Mi to spare, where the node-red chart's default 512Mi request would sit in Pending.
 
-The pod runs as uid 65532 on a read-only root filesystem, with no privilege escalation, `RuntimeDefault` seccomp and every Linux capability dropped, discovery included. Up to 2.0.4 the chart added `NET_RAW` and `NET_ADMIN` whenever discovery was on, for ARP sweeps nobody ever wrote. 2.0.5 stopped, CI fails if a capability comes back, and you don't need to change anything you set.
+The pod runs as uid 65532 on a read-only root filesystem, with no privilege escalation, `RuntimeDefault` seccomp, and every Linux capability dropped, discovery included. Up to 2.0.4 the chart added `NET_RAW` and `NET_ADMIN` whenever discovery was on, for ARP sweeps nobody ever wrote. 2.0.5 stopped, CI fails if a capability comes back, and you don't need to change anything you set.
 
 The chart has three network modes:
 
@@ -118,16 +118,16 @@ The chart has three network modes:
 `macvlan` is why the modes exist, because scanning a PLC network is pointless from a pod that only sees what the cluster routes to it. It's multi-instance safe and sitting right on that segment, with no port collisions because every instance carries its own address. The [Flow README](https://github.com/HotLoop-io/hotloop-flow#deploying-on-kubernetes) covers the modes and the resource presets in full.
 
 :::note[Where the chart has been run]
-The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, upgrades, and a deploy from the EmberNET App Store through Fleet. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, but have not been run on a cluster.
+The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, upgrades, and a deploy from the EmberNet App Store through Fleet. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, but have not been run on a cluster.
 :::
 
-## From the EmberNET App Store
+## From the EmberNet App Store
 
-You don't need this, and there's no EmberNET step anywhere in running Flow. But the chart carries the labels the EmberNET App Store looks for, so if you already run that dashboard, Flow is in its catalog and shows up as a tile.
+You don't need this, and there's no EmberNet step anywhere in running Flow. But the chart carries the labels the EmberNet App Store looks for, so if you already run EmberCORE, Flow is in its catalog and shows up as a tile.
 
-For a tenant on its own cluster, the dashboard deploys it through Fleet, which needs dashboard 4.9.37 or later. Earlier versions created a Fleet bundle that installed nothing. From Flow 2.0.3 the chart puts the dashboard's tenant labels on everything it creates.
+For a tenant on its own cluster, EmberCORE deploys it through Fleet, which needs EmberCORE 4.9.37 or later. Earlier versions created a Fleet bundle that installed nothing. From Flow 2.0.3 the chart puts EmberCORE's tenant labels on everything it creates.
 
-From 2.0.4 the deployed tile gets its name and icon right. The pod and the Service carry the `embernet.ai/app-icon` annotation, which defaults to the chart's own icon, so the dashboard stops guessing an icon from the release name, which never matched. Set `embernet.appIcon` to use your own, and serve it with `Access-Control-Allow-Origin`, or the tile comes up blank. The `embernet.ai/app-name` label is the chart name now, not the release name. The instance is still in `app.kubernetes.io/instance` and the Service name, and no selector changed, so upgrading in place is fine.
+From 2.0.4 the deployed tile gets its name and icon right. The pod and the Service carry the `embernet.ai/app-icon` annotation, which defaults to the chart's own icon, so EmberCORE stops guessing an icon from the release name, which never matched. Set `embernet.appIcon` to use your own, and serve it with `Access-Control-Allow-Origin`, or the tile comes up blank. The `embernet.ai/app-name` label is the chart name now, not the release name. The instance is still in `app.kubernetes.io/instance` and the Service name, and no selector changed, so upgrading in place is fine.
 
 The [release notes](https://hotloop.io/releases/flow/) have every version back to 0.1.0.
 

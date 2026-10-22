@@ -15,7 +15,7 @@ HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what i
 
 - Home and lab use is free.
 - Accredited schools and educational institutions, nonprofits and government bodies are free for their own operations and mission.
-- Business use is free when it runs through [EmberNET](https://embernet.ai). That's the only business path.
+- Business use is free when it runs through [EmberNet](https://embernet.ai). That's the only business path.
 - Hosting Flow as a service, reselling it and embedding it in a product you sell are not granted.
 - Each version converts to GPL-3.0 or later four years after it is first made public.
 
