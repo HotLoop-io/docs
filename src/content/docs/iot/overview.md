@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::caution[IoT is not released yet]
-There is no HotLoop IoT image to pull today. 4.17.0 is the latest release, and it ships the Gateway and the Edge Relay. IoT is built from the same code, with its own image, chart and Quadlet units, and arrives with the next release. Every page in this section is written from `main`, and each one says whether 4.17.0 has it.
+:::note[IoT is out, first released in 4.18.10]
+The image is `ghcr.io/hotloop-io/hotloop-iot:4.18.10` for amd64, arm64 and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
 :::
 
 IoT is the base the other three products are built on. If the box in front of you is a Pi, a NUC in a closet, a rack of smart plugs and sensors, or one PLC on a bench, this is the one. It is the smallest image of the three full products, and it still carries everything that makes HotLoop useful: the entities, the rules, the alarms and the one write gate that nothing gets around.
@@ -33,8 +33,8 @@ No OPC UA server, no Sparkplug publishing with store and forward, no fleet, no m
 
 ## Databases
 
-SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 16 by default, and `HOTLOOP_DB_TYPE=sqlite` puts the whole thing on a file with no database container at all. Moving to another database is a backup and a restore. [The lineup](/products/) has the table, and [Backups](/iot/backup/) has the restore.
+SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 16 by default, with 30 days of history kept, and `HOTLOOP_DB_TYPE=sqlite` puts the whole thing on a file with no database container at all. In the chart that is `database.type`, and asking the IoT chart for `timescaledb` fails the install. Moving to another database is a backup and a restore. [The lineup](/products/) has the table, and [Backups](/iot/backup/) has the restore.
 
 ## Installing it
 
-Helm or Podman Quadlet, the same two ways as the rest of the lineup: [k3s and Helm](/install/helm/) and [Podman Quadlet](/install/quadlet/). Both are on `main` and wait for the next release. Boxes follow `:stable` and update themselves, and [that page](/install/auto-update/) says what happens when an update can't start.
+Helm or Podman Quadlet, the same two ways as the rest of the lineup, and [the IoT install page](/iot/install/) has the commands for both. The boxes follow `:stable` and update themselves, and [that page](/install/auto-update/) says what happens when an update can't start.

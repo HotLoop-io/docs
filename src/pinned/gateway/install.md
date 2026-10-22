@@ -1,14 +1,14 @@
 ---
-reviewed: hotloop=4.17.0
+reviewed: hotloop=4.18.10
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Gateway {{hotloop}} ships as a container image for amd64 and arm64, about 34 MB, and a Helm chart. Both pull with no login. Already running an older release? Don't install over it. [Upgrading](/gateway/upgrading/) has the path from 4.16.0, which is a plain `helm upgrade` with one flag that bites, and the path from 4.3.1, which isn't plain at all because the chart was renamed.
+HotLoop Gateway {{hotloop}} ships as a container image for amd64 and arm64, about 37 MB on amd64 and 35 MB on arm64, and a Helm chart. Both pull with no login. It keeps the names it shipped under through 4.17.0, image `ghcr.io/hotloop-io/hotloop` and chart `hotloop`, so nobody running it has to change a thing. Already running an older release? Don't install over it. [Upgrading](/gateway/upgrading/) has the path from 4.17.0, which is a plain `helm upgrade`, and the paths from 4.16.0 and 4.3.1, which go in hops.
 
-It runs on any Kubernetes, k3s included. {{hotloop}} has no Quadlet unit for the Gateway, so off a cluster, the answer is k3s. The [Edge Relay](/edge-relay/install/) has one in that release. The Gateway's units are on `main` and arrive with the next release: [Podman Quadlet](/install/quadlet/). There's no Docker or Compose path, on purpose.
+Two ways to run it for real: the Helm chart on any Kubernetes, k3s included, and Podman Quadlet on a box that isn't in a cluster, below. There's no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 
 ## Helm
 
@@ -19,11 +19,11 @@ helm install hotloop hotloop/hotloop --version {{hotloop}} \
   --namespace hotloop --create-namespace
 ```
 
-That deploys the Gateway, plus TimescaleDB 2.30.1 beside it on a 20 Gi volume. The chart generates the database password, the MCP token and an admin password into the release Secret, and reuses them on every upgrade, so a `helm upgrade` never rotates a password out from under you or logs you out of your own plant.
+That deploys the Gateway, plus TimescaleDB 2.30.1 beside it on a 20 Gi volume, keeping 90 days of history. The database is a setting, `database.type`: `timescaledb` is the default, `postgresql` runs plain PostgreSQL 16, and `sqlite` runs the Gateway on a file with no database pod at all, on one replica and local storage, never NFS. Moving between them later is a backup and a restore, because the new database starts empty. The chart generates the database password, the MCP token and an admin password into the release Secret, and reuses them on every upgrade, so a `helm upgrade` never rotates a password out from under you or logs you out of your own plant.
 
 ## Back up the key before you need it
 
-The chart also generates a second Secret, `<release>-secret-key` (`hotloop-secret-key` with the command above). It holds the key that encrypts every password HotLoop keeps for a device: an OPC UA, MQTT, HTTP, MTConnect or UniFi `password`, and HTTP and MTConnect header values such as API keys. The key is never in the database and never in a backup, so a dump that walks out the door on a laptop holds ciphertext, not the keys to the plant.
+The chart also generates a second Secret, `<release>-secret-key` (`hotloop-secret-key` with the command above). It holds the key that encrypts every password HotLoop keeps for a device: an OPC UA, MQTT, HTTP, MTConnect or UniFi `password`, HTTP and MTConnect header values such as API keys, the password of each other MQTT broker discovery listens to, and the password of each historian target. The key is never in the database and never in a backup, so a dump that walks out the door on a laptop holds ciphertext, not the keys to the plant.
 
 The chart keeps that Secret across upgrades, and keeps it through a `helm uninstall` too, because a database left on its volume is useless for its credentials without it. That also means **the key is part of your data.** Start the Gateway without it and every device with a sealed password stays down, retrying, with an error that names the key it needs. A backup restores only where that key is mounted, and `--restore-from` refuses it by name anywhere else.
 
@@ -61,11 +61,49 @@ Put these in a values file and install with `-f`. Don't lean on `--set` for anyt
 | `database.postgresql.persistence.size` | `20Gi` | Your history lives here. Size it for your tag count and `historian.retentionDays` (90). |
 | `logbook.retentionDays` | `90` | Days of entity state changes the [logbook](/iot/logbook/) keeps. `0` keeps everything until the volume fills, and the Gateway warns you about it at start. |
 | `secretKey.existingSecret` | empty | A Secret you manage holding the device password key. Leave it empty and the chart makes one. Set it if you render the chart with `helm template`. |
+| `database.type` | `timescaledb` | Which database the app runs on: `timescaledb`, `postgresql` or `sqlite`. A setting, not a different image. |
+| `plant.latitude`, `plant.longitude` | empty | Where the plant is, in decimal degrees, so [the sun](/iot/sun/) is worked out on the box. Both or neither. |
+| `edgePublish.queueMaxBytes` | `67108864` | The outage queue's limit when you publish upstream over Sparkplug, 64 MiB. Past it the oldest readings are dropped and counted. `0` is unbounded, and a long enough outage then fills the volume. |
 | `database.postgresql.enabled` | `true` | Set `false` and fill in `database.external` to use your own PostgreSQL. With the TimescaleDB extension you get a hypertable, without it native partitioning. |
 | `opcuaClient.persistence.enabled` | `false` | Turn it on before you add a secured OPC UA device. Without it the client's certificates have nowhere to survive a restart, and the device refuses to connect rather than make you re-approve trust on both ends after every redeploy. |
 | `ingress` | off | Only if you want it reachable from outside the cluster by a name. |
 
 Writes ship off, and that's the point. Even with `safety.allowWrites` on, a tag is read-only until you arm it on its own, and every value is checked against the tag's range, refused and never clamped. [The write gate](/gateway/write-gate/) has every check, in order.
+
+## Podman Quadlet
+
+For a box that isn't in a cluster. Quadlet turns the containers into real systemd services: they start on boot with nobody logged in, restart when they die, and log to the journal. It needs **Podman 5.0 or newer**. Raspberry Pi OS Bookworm ships 4.3, which has no Quadlet at all, so a Pi wants Trixie or newer. Put the database volume on a USB SSD and not the SD card.
+
+The units are in the `gateway/` directory of the HotLoop repository, under `deploy/quadlet/`. [Podman Quadlet](/install/quadlet/) explains each file.
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+Then open `http://<this box>:8080` and log in as `admin`. The three secrets are the database password, the device password key (back it up somewhere that isn't this box, for the same reason as above), and the bcrypt hash of the admin's password, never the password itself. The unit keeps 90 days of history and follows `:stable`.
+
+Plain PostgreSQL instead of TimescaleDB is the same unit with `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` added to `hotloop.container`. A SQLite file is the files in `gateway/sqlite/` and nothing from the directory above, because they share unit names: `hotloop.container` and `hotloop-data.volume`, and two secrets, `hotloop-secret-key` and `hotloop-admin-password-hash`.
+
+Turn Podman's timer on once per box and the Gateway updates itself:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+The database container does not follow `:stable`, on purpose, and an update that can't start is rolled back. [The :stable auto-update](/install/auto-update/) says what an update does, what a rollback cannot undo, and how to hold updates until you say. These are the units that were run for real: rootless under systemd, including an update that migrates and then can't start and gets rolled back. A real Pi under systemd as root hasn't been done yet.
 
 ## Then
 

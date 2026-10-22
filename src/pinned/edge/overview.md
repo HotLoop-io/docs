@@ -1,13 +1,13 @@
 ---
-reviewed: hotloop=4.17.0
+reviewed: hotloop=4.18.10
 title: "HotLoop Edge overview"
 description: "HotLoop Edge is IoT plus the machine layer: an OPC UA server, Sparkplug B publishing, and store-and-forward that keeps the plant running with the uplink down."
 sidebar:
   label: "Overview"
 ---
 
-:::caution[Edge is not released yet]
-There is no HotLoop Edge image to pull today. {{hotloop}} is the latest release, and it ships the Gateway and the Edge Relay. Edge is built from the same code with its own image, chart and Quadlet units, and arrives with the next release. Until then the Gateway can run at the edge and publish Sparkplug upstream, and it has since 4.5.0.
+:::note[Edge is out, first released in 4.18.10]
+The image is `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}` for amd64, arm64 and arm/v7, about 37 MB on amd64 and 34 MB on arm, and the chart is `hotloop-edge` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `edge/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/edge/install/). Before 4.18.10 the Gateway could run at the edge and publish Sparkplug upstream, and it has since 4.5.0, but it was the whole Gateway to do it.
 :::
 
 Edge is a box bolted next to a line. It reads the machine, runs the rules on the machine, keeps working when the WAN goes down, and tells the rest of the plant what it saw. Think Ignition Edge, built in Go, with the same write gate as everything else.
@@ -16,10 +16,10 @@ It has everything [IoT](/iot/overview/) has, and two things on top.
 
 ## What Edge adds
 
-- **[Edge publish and store-and-forward](/edge/edge-publish/).** It publishes everything it reads upstream as a Sparkplug B edge node. When the link dies it buffers to disk and replays in order when the link comes back, so the historian upstream gets the outage backfilled and not a hole. A test cuts the uplink under load, kills the process mid-outage and counts every reading, and the page has the numbers.
-- **[The OPC UA server](/edge/opc-ua-server/).** Read-only and secured. The SCADA you already own sees every tag with no new driver, and Ignition has read it end to end.
+- **[Edge publish and store-and-forward](/edge/edge-publish/).** It publishes everything it reads upstream as a Sparkplug B edge node. When the link dies it buffers to disk and replays in order when the link comes back, so the historian upstream gets the outage backfilled and not a hole. Readings go to memory while the broker confirms them and to disk only when it stops, and a test cuts the uplink under load, kills the process mid-outage and counts every reading. A hard kill with the link up can still cost about one poll of readings, and the page says so, with the numbers.
+- **[The OPC UA server](/edge/opc-ua-server/).** Read-only and secured. The SCADA you already own sees every tag with no new driver, and Ignition 8.3.9 has read it end to end. It is off until you turn it on.
 
-The local screens and logic keep running with the uplink down, and a test boots the real binary against a link that swallows everything to prove it. Dashboards are the screens, and they're in [IoT](/iot/dashboards/). An HMI write that names a human, a PIN or a badge on a shared panel, isn't built yet. It's on [the roadmap](/roadmap/).
+The local screens and logic keep running with the uplink down, and a test boots the real binary against a link that swallows everything to prove it. A box that reboots during a WAN outage comes up with its screens and its alarms, where before 4.18.10 it crash-looped with no screens and no alarms until the WAN came back. Dashboards are the screens, and they're in [IoT](/iot/dashboards/). An HMI write that names a human, a PIN or a badge on a shared panel, isn't built yet. It's on [the roadmap](/roadmap/).
 
 ## What it doesn't have
 
@@ -27,8 +27,8 @@ No fleet, no multi-site and no scheduled reports. Those are the [Gateway's](/gat
 
 ## Databases
 
-SQLite, PostgreSQL or TimescaleDB, from the same binary. The chart and the Quadlet units run TimescaleDB by default, and 90 days of history is kept unless you change it. [The lineup](/products/) has the table.
+SQLite, PostgreSQL or TimescaleDB, from the same binary. The chart and the Quadlet units run TimescaleDB by default, and 90 days of history is kept unless you change it. In the chart that is `database.type`, and `HOTLOOP_DB_TYPE=sqlite` puts the box on a file with no database container. [The lineup](/products/) has the table.
 
 ## Installing it
 
-[k3s and Helm](/install/helm/) or [Podman Quadlet](/install/quadlet/), both on `main` and waiting for the next release. Moving a site from IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user and hour of history, and [the lineup](/products/) says what has and hasn't been run.
+[The Edge install page](/edge/install/) has Helm and Podman Quadlet, with the commands. Moving a site from IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user and hour of history, and [the lineup](/products/) says what has and hasn't been run.

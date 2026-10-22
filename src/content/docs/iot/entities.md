@@ -5,10 +5,6 @@ description: "The entity registry every automation, helper, script and screen is
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 `internal/entity` is the entity registry and the engine that computes entity
 state. It is the first piece of Phase 1 in [ROADMAP.md](/roadmap/): the
 foundation every automation, helper, script and screen in HotLoop is built on.

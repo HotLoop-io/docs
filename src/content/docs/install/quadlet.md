@@ -5,10 +5,6 @@ description: "Run HotLoop as real systemd services on a Pi or small industrial P
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 For a Pi or a small industrial PC that is **not** part of a k3s cluster. If
 it is, use the product's chart instead. This directory and the charts are the
 two supported ways to run HotLoop.

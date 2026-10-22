@@ -5,10 +5,6 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -761,9 +757,119 @@ list of options known not to be. See
    is not a point somebody has decided may be commanded. Mark tags writable one
    at a time, deliberately.
 4. Set `scale` and `offset` for raw counts: `engineering = raw × scale + offset`.
+   If the instrument sends a code when a channel is dead or out of range, list
+   it under [No-data values](#no-data-values) so it reads bad instead of as a
+   number.
 5. Set a `deadband` on anything noisy. It suppresses historian writes for
    changes too small to matter, and without it a 12-bit sensor jittering in its
    last bit writes a row every scan forever.
+
+## No-data values
+
+A recorder with a burnt-out thermocouple does not go quiet. It keeps answering,
+and what it puts in the register is a code: 0x8005 for "undefined", 0x7FFF for
+"over range". Read as an int16 with a scale of 0.1, 0x8005 is -3276.3 degrees,
+and until I fixed this it came back as **good** quality, went into the
+historian as a real temperature and sat there for the alarms to judge. A dead
+sensor looked like a cold one.
+
+So a tag can list the raw values that mean "no measurement". Each one has a
+reason. When a reading's raw value is on the list, the reading is **bad**, the
+reason is on it, and scale and offset never touch it.
+
+```json
+{
+  "deviceId": "dx-1", "name": "ch01", "address": "input:1:int16",
+  "dataType": "float", "unit": "C", "scale": 0.1, "enabled": true,
+  "noData": [
+    {"raw": "0x7FFF", "reason": "+over"},
+    {"raw": "0x8001", "reason": "-over"},
+    {"raw": "0x8002", "reason": "skip"},
+    {"raw": "0x8004", "reason": "error"},
+    {"raw": "0x8005", "reason": "undefined"},
+    {"raw": "0x7F7F", "reason": "power fail"},
+    {"raw": "0x7FFA", "reason": "burnout up"},
+    {"raw": "0x8006", "reason": "burnout down"}
+  ]
+}
+```
+
+Those eight are the Yokogawa DX family's codes, from the DX communication
+manual (IM 04L41B01-17E, section 4.3, page 4-35). They are not special to
+HotLoop: it is the same field on every tag of every protocol, and the DX list
+is just the one that bit us first. Each one is on the tag, so a recorder
+channel that really can read 0x7F7F in some other unit keeps it as a reading.
+
+| Field | <span class="sr-only">Details</span> |
+|---|---|
+| `raw` | The device's code, written the way its manual prints it: `"0x8005"` (hex), `"-32763"` or `32773` (decimal). A string or a bare number. Required |
+| `reason` | What the reading's quality says. Up to 120 characters. Left out, it reads `raw value 0x8005 means no measurement`, so a reading never goes bad without saying why |
+
+In the tag editor it is the **No-data values** box: one code per line, the code,
+a space, the reason.
+
+### Which number you write
+
+For a register-backed Modbus point the code is the integer the device holds,
+after the point's byte and word order is applied. That is the same number the
+point decodes to, so a manual that says "the instrument returns 8005h" means
+exactly `"0x8005"` here.
+
+- **int16 and the other signed types.** `0x8005` and `-32763` are the same
+  register, and so is `32773`. Write whichever the manual does; all three match.
+  A code that does not fit the type (`0x10000` on an int16) is refused when the
+  device connects, because a list that can never match is worse than an error.
+  Two spellings of one value on one tag are refused too.
+- **uint16 and the other unsigned types.** `0` up to the type's maximum. A
+  negative number is refused.
+- **int32, uint32, int64, uint64.** The same rules at 32 and 64 bits.
+  `0x7FFFFFFF` on an int32 with `CDAB` word order is the value after the words
+  are put the right way round, not the order they came off the wire in.
+- **float32 and float64.** The code is the register bit pattern, so it has to be
+  hex: `0x7FC00000` for a quiet NaN. A decimal is refused, because 32773 as a
+  float and 32773 as a bit pattern are different things and I won't guess.
+- **Bits, coils, discrete inputs and strings.** No raw number to compare, so
+  `noData` on one is refused when the device connects.
+
+The check is on the raw bits, before decode, before scale, before offset.
+
+### Other protocols
+
+Every driver that hands over an already decoded number checks the same list:
+S7comm, EtherNet/IP, OPC UA, HTTP and MQTT (including discovered devices).
+What they compare is that decoded number, as a whole number, so write it as
+the number it is. An S7 INT holding 0x8005 is -32763, so write `-32763`. Hex
+here is only another way to write the same number, because a decoded number has
+lost its width and can't be read back as a bit pattern. A fractional value
+never matches. The list is only worth setting where the device sends codes
+like these; most of what MTConnect and UniFi report never does.
+
+### What a sentinel does
+
+- **Quality** is `bad` and the reading carries the reason. It shows on
+  `GET /api/values` and the live stream (`reason`), next to the quality on the
+  Tags screen, and on the tag's entities as the `quality_reason` attribute.
+- **The value** is empty, not zero and not the scaled code. Scale and offset are
+  not applied.
+- **The historian** records the quality as bad, the same as any other bad
+  reading, and its value column holds nothing meaningful. A bucket with no good
+  reading shows as a gap on a trend, as it does for any bad reading.
+- **Alarms.** A bad reading never trips a value alarm: high, low, equal,
+  rate of change all hold their previous state, same as for any bad reading. A
+  `bad-quality` alarm on the tag does fire, and its default message carries the
+  reason (`dx-1/ch01 bad-quality: undefined`). Use `{reason}` in your own
+  message to put it there.
+- **The logbook** records the tag's entity going bad, and the reason is the
+  entity's `quality_reason` attribute.
+
+### Where it lives
+
+On the tag, saved with it. Through the API it is the `noData` list on
+`POST /api/tags` (see [API.md](/iot/api/#post-apitags)), in the editor it is the
+box above, and in an Edge Relay it is the same JSON in the device file's tag
+(see [EDGE-RELAY.md](/edge-relay/reference/)). Saving the tag reloads the running
+device, so a change takes effect on the next poll and nothing restarts by hand.
+A re-discovery leaves a tag's list alone.
 
 ## Quality
 

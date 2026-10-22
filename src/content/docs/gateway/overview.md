@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.17.0 is out]
-Recipes, scripts, blueprints, helpers, the logbook, a real automation language, read-only UniFi, and device passwords encrypted at rest. The image is `ghcr.io/hotloop-io/hotloop:4.17.0`, the chart is `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repo is still private. [Install it](/gateway/install/). On 4.16.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and afterwards a new Secret is part of your data. On 4.3.1? A plain `helm upgrade` fails outright. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
+:::note[4.18.10 is out]
+The release where HotLoop stops being one image. [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/) all ship from this tag, each with its own image and chart. The Gateway keeps `ghcr.io/hotloop-io/hotloop:4.18.10` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repo is still private. [Install it](/gateway/install/). On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
 :::
 
 HotLoop Gateway reads your plant. It polls PLCs and servers in their own protocols, keeps every reading and its quality in a historian, raises ISA-18.2 alarms that can page a phone, runs automations against all of it, and hands the whole plant to agents over MCP. A site runs one chart, the Gateway and its database, instead of a historian, an alarm server, a rules engine and a pile of glue, each one breaking on its own damn schedule.
@@ -19,14 +19,16 @@ It's written in Go, from scratch: one static binary on a distroless base, no sid
 
 ## Where to start
 
-The ground floor, in 4.17.0 and in 4.16.0 before it:
+The ground floor, in 4.18.10 and in every release back to 4.16.0:
 
-- [Install](/gateway/install/) is Helm from the published chart, the key to back up, and the handful of values to set before a real plant sees it.
-- [Upgrading](/gateway/upgrading/) is the procedure that keeps your data, from 4.16.0 or from 4.3.1, and every API change a script will trip over.
+- [Install](/gateway/install/) is Helm from the published chart or Podman Quadlet on a box, the key to back up, and the handful of values to set before a real plant sees it.
+- [Upgrading](/gateway/upgrading/) is the procedure that keeps your data, from 4.17.0, 4.16.0 or 4.3.1, and every API change a script will trip over.
 - [The write gate](/gateway/write-gate/) is every check between a request and a machine, in the order the code runs them, and what each refusal answers.
 - [Protocols](/iot/protocols/) says exactly how far each driver has been proven, including the two that have never touched a physical PLC.
 - [Automations](/iot/automations/) covers triggers, conditions and actions, and why a rule is compiled when you save it instead of when it fires at 3 AM.
 - [Model Context Protocol](/iot/mcp/) is the Gateway as an MCP server and client, and how one Gateway reads every site.
+
+New in 4.18.10, and not in 4.17.0: the four-product lineup, a choice of database, MQTT and network discovery, historian targets, and boxes that update themselves. [Below](#new-in-41810) is what each one buys you.
 
 New in 4.17.0, and not in 4.16.0:
 
@@ -34,7 +36,7 @@ New in 4.17.0, and not in 4.16.0:
 
 ## What it does with the data
 
-**Historian.** TimescaleDB. The history table is a hypertable when the extension is there and natively range-partitioned when it isn't, so a plain PostgreSQL works instead of failing. Set a deadband per tag. Without one, a sensor jittering in its last bit writes a row every scan forever, and a thousand tags polled every second is about 86 million rows a day.
+**Historian.** TimescaleDB by default, and plain PostgreSQL or a SQLite file work too, because [the database is a setting](#new-in-41810). The history table is a hypertable when the extension is there and natively range-partitioned when it isn't, so a plain PostgreSQL works instead of failing. Set a deadband per tag. Without one, a sensor jittering in its last bit writes a row every scan forever, and a thousand tags polled every second is about 86 million rows a day.
 
 **Alarms.** ISA-18.2, including the state most homegrown systems miss: `rtn-unack`, an alarm that cleared on its own before anybody saw it. Acknowledged and returned-to-normal are separate axes, so the transient trip at 03:00 is still on the list when the morning shift walks in, instead of vanishing with nobody the wiser. Asymmetric deadbands and on and off delays stop a borderline value from chattering the list into noise nobody reads. Shelving tops out at 24 hours, because a shelve with no end is a suppression nobody wrote down.
 
@@ -50,7 +52,7 @@ New in 4.17.0, and not in 4.16.0:
 
 **Entities** is the plant the way people talk about it, each thing under its place on the tree. Quality is drawn before the value: a bad reading shows its last good value greyed and hatched, and nothing you can't believe ever looks like something you can. An operator who trusts a stale number is how a tank gets overfilled. **Plant** is the tree editor.
 
-**Overview, Devices, Tags, Trends, Alarms, Automations and Protocols** are the working screens. 4.17.0 adds four: **Logbook** is the timeline, **Scripts** runs named sequences with a form for their fields, **Recipes** applies a set of setpoints and shows exactly what went out (a value that didn't read back shows amber, never green), and **Blueprints** turns a rule with blanks into a real rule, with **Check first** showing what it would do before it exists. **Sites** reads across plants, and a site that doesn't answer is shown as unreachable, with the reason, and left out of the roll-up. Counting a plant you can't reach as zero alarms is how a head office decides everything's fine on the worst night of the year.
+**Overview, Devices, Tags, Trends, Alarms, Automations and Protocols** are the working screens. 4.17.0 adds four: **Logbook** is the timeline, **Scripts** runs named sequences with a form for their fields, **Recipes** applies a set of setpoints and shows exactly what went out (a value that didn't read back shows amber, never green), and **Blueprints** turns a rule with blanks into a real rule, with **Check first** showing what it would do before it exists. Since 4.18.10, **Devices** also lists what discovery found, read-only until an admin accepts it. **Sites** reads across plants, and a site that doesn't answer is shown as unreachable, with the reason, and left out of the roll-up. Counting a plant you can't reach as zero alarms is how a head office decides everything's fine on the worst night of the year.
 
 **Settings** is what the Gateway is actually running with: every setting, its effective value, and whether it came from the database, an environment variable or the default. When it does something you didn't expect, this is where you find out why. The safety switches are read-only there on purpose, because the master control over whether this process can command equipment doesn't belong behind the same browser session that issues the writes.
 
@@ -58,7 +60,29 @@ New in 4.17.0, and not in 4.16.0:
 
 HotLoop is one codebase shipped as four products, all released together from one tag: IoT, Edge, the Gateway and the Edge Relay. The Gateway is the top of it: everything in IoT and Edge, plus fleet management, multi-site roll-ups and scheduled reports. Features split the products. Protocols never will: every product speaks every protocol we have, so nobody has to buy up a tier to read the PLC on their bench. [The lineup](/products/) has what each one carries.
 
-Today you can install the Gateway and the [Edge Relay](/edge-relay/overview/), both 4.17.0. The relay is its own image and chart, about 15 MB against the Gateway's 34, with no database and no UI. The Gateway's fleet management tracks and commands every registered relay, and it's API only (`/api/fleet`): there's no Fleet screen in the UI. IoT and Edge aren't released, and there's no date.
+All four are installable today, all 4.18.10. The relay is its own image and chart, about 15 MB against the Gateway's 37, with no database and no UI. The Gateway's fleet management tracks and commands every registered relay, and it's API only (`/api/fleet`): there's no Fleet screen in the UI.
+
+## New in 4.18.10
+
+:::note[Not in 4.17.0]
+Everything in this section shipped in 4.18.10. A 4.17.0 Gateway has none of it, so don't go looking for it there. [Upgrade](/gateway/upgrading/) first.
+:::
+
+:::caution[There is no 4.18.0 to 4.18.9]
+I tagged all ten, and none of them published a complete release. Nine published nothing. 4.18.8 passed every test and then I cancelled its run by mistake while it was publishing, so it left Gateway, Edge Relay, IoT and Edge images on ghcr.io with no chart and no release, and the Gateway, Edge Relay and IoT ones moved `:stable` with them. 4.18.10 replaces it, so a box that follows `:stable` may have run 4.18.8 until it updated.
+:::
+
+- **[Four products, one tag](/products/).** IoT and Edge are new on ghcr.io and in the chart repository, and the Gateway keeps its names. A product is a build, not a setting: the OPC UA server isn't switched off in the IoT image, it isn't in it. A route for a feature the product doesn't have answers `404` and names the product that does.
+- **The database is a setting.** `HOTLOOP_DB_TYPE=sqlite` runs any product on a file, with no second container. In the chart it's `database.type`, and a product offers only what it runs on. Moving between databases is a backup and a restore. [Install](/gateway/install/) has it.
+- **[MQTT discovery](/iot/mqtt-discovery/) and [network discovery](/iot/network-discovery/).** Point ESPHome, Zigbee2MQTT, Tasmota or a Shelly at the broker and it shows up, reading. It can't command anything until an admin accepts it and arms each point by hand. Network discovery listens and sends nothing unless you list a network to probe.
+- **[Historian targets](/iot/historian-targets/).** Every reading HotLoop keeps also goes to the plant's own PostgreSQL, TimescaleDB, SQL Server, InfluxDB or MySQL and MariaDB, the same rows with the same quality. A target that's down slows nothing down.
+- **Boxes follow `:stable` and roll a bad release back.** Podman Quadlet units for the Gateway, Edge and IoT are new, and [the auto-update page](/install/auto-update/) says what an update does. That only works because migrations only add, and an app refuses to start on a schema two releases ahead of it.
+- **[Edge publish](/edge/edge-publish/) survives the ugly cases.** A boot during an outage, a link that dies without a reset, and a replay that has to outrun the plant. The outage queue is capped at 64 MiB by default now.
+- **The Edge Relay takes a pushed config live,** with no restart and no lost Sparkplug session, discovers devices on a broker like the Gateway does, and reports its version and image digest in every birth, so the Gateway's fleet list shows what each one runs.
+- **Broker logins with rules.** A login made in Settings, MQTT carries publish and subscribe rules from a profile, checked on every publish, subscription and outgoing message.
+- **[The sun](/iot/sun/).** Sunrise, sunset and the sun's height worked out on the box from a latitude and a longitude.
+- **UniFi on a wall board and a phone,** and two more MCP tools, `get_network_topology` and `get_network_events`.
+- **Every image carries every third-party license,** and a GPL, AGPL or LGPL module, or one with no license, stops the build.
 
 ## New in 4.17.0
 

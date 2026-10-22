@@ -3,15 +3,7 @@
 title: "Network discovery"
 description: "HotLoop listens with mDNS, SSDP and DHCP and shows what is on the plant network, and sends nothing unless you list a network to probe."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 HotLoop listens to the plant network and tells you what's on it: the ESPHome
 node in the yard, the Shelly on the compressor, the OPC UA server on line 3,

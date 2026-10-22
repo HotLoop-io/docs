@@ -3,17 +3,7 @@
 title: "The lineup"
 description: "Four products from one codebase, what each one has, which database each runs, how to install it and how to move a site up a product."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-
-The release you can install today, HotLoop 4.17.0, ships the Gateway and the Edge Relay. HotLoop IoT and HotLoop Edge are built from this same code and arrive with the next release.
-:::
 
 Four products, one codebase, one tag. Every release ships all four in
 lockstep, same version, each with its own image, its own Helm chart and its own
@@ -90,7 +80,7 @@ So a smaller product answers for what it doesn't have instead of pretending:
 
 ## Sizes
 
-Measured from images built from this repository's Dockerfiles with Podman,
+Measured from images built from this repository's Containerfiles with Podman,
 stripped static binaries on distroless/static. The image is the binary plus
 about 3 MB of base.
 
@@ -179,9 +169,9 @@ has the steps; the short version:
   and Edge charts match their generator, and renders every chart the way a hand
   install and the App Store deploy it. `release.yml` runs it before anything
   builds, and it runs the same on a laptop.
-- One Dockerfile builds IoT, Edge and the Gateway, with `PRODUCT` picking the
+- One Containerfile builds IoT, Edge and the Gateway, with `PRODUCT` picking the
   build tag. The build asks the binary `--product` and fails if it's wrong.
-  `Dockerfile.edge-relay` builds the relay.
+  `Containerfile.edge-relay` builds the relay.
 - `charts/hotloop-iot` and `charts/hotloop-edge` are generated from
   `charts/hotloop` by `.github/scripts/make_product_charts.py` and committed.
   Edit the Gateway chart, rerun it, commit all three. A part of a template

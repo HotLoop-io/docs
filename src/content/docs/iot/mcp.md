@@ -93,6 +93,8 @@ Twenty-five of them.
 | `list_blueprints` | the blueprints people fill in to make rules, their inputs and versions |
 | `preview_blueprint` | the rule a blueprint would make with given inputs, and what it would do now; makes nothing |
 | `find_network_client` | where a device is on the plant network: its switch port, whether the port has a link, when the UniFi console last saw it |
+| `get_network_topology` | the plant network as the UniFi console draws it: what is plugged into what, each device's state, and the HotLoop devices that lose their network if it goes down |
+| `get_network_events` | the newest events a UniFi console has reported, and whether its events websocket is live |
 
 ### Entities
 
@@ -140,6 +142,20 @@ costs the console nothing. That also means an `--mcp-stdio` helper answers
 that no console is read in its process: it never logs in to one, because the
 Gateway beside it already holds the session. Ask the Gateway's endpoint. See
 [UNIFI.md](/iot/unifi/).
+
+`get_network_topology` is the map: each switch, access point and gateway under
+the one it is plugged into, with the port on both ends, the link, how many
+clients are on it, and the HotLoop devices linked to a client below it. That
+last part is the blast radius: it names the PLCs that lose their network if
+that switch goes. A switch the console lists as plugged into nothing says so
+and is not hung off the gateway. `get_network_events` is the console's newest
+events, newest first, with its own sentence, a warning flag where the console
+calls it negative, and whether the events websocket is live. Both take the
+console's `deviceId`, which can be left out when HotLoop reads only one, and
+both read the driver's last read like `find_network_client`, so they cost the
+console nothing and say the same thing in an `--mcp-stdio` helper: no console
+is read in that process. Older events are in `get_logbook`, filed under the
+switch or access point they were about.
 
 ### The logbook
 

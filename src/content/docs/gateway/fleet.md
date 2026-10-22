@@ -5,10 +5,6 @@ description: "Track every Edge Relay from its Sparkplug births and deaths, and s
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.7.0, building on 4.6.0's Edge Relay edition. `internal/fleet` lets the
 Gateway track registered edge relays, whether they're alive, and, for an
 authorized operator, ask one to rebirth, restart, or adopt a newly pushed

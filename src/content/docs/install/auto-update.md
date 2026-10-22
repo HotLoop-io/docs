@@ -3,15 +3,7 @@
 title: "The :stable auto-update"
 description: "Every box follows the stable tag and Podman moves it. What an update does, what a rollback cannot undo, and how to hold updates until you say."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 Every box tracks `:stable` and Podman updates it. That is the rule for all four
 products, and it is why no unit here pins a release number: a box pinned to

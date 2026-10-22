@@ -29,8 +29,8 @@ const grouped = (product) => {
 };
 // A bigger product carries everything the smaller one has, so its section links to those pages.
 const included = (label, items) => ({ label: `Included from ${label}`, collapsed: true, items });
-const iotItems = () => [{ slug: 'iot/overview', label: 'Overview' }, { slug: 'gateway/write-gate', label: 'The write gate' }, ...grouped('iot')];
-const edgeItems = () => [{ slug: 'edge/overview', label: 'Overview' }, ...pages('edge').map(page)];
+const iotItems = () => [{ slug: 'iot/overview', label: 'Overview' }, { slug: 'iot/install', label: 'Install' }, { slug: 'gateway/write-gate', label: 'The write gate' }, ...grouped('iot')];
+const edgeItems = () => [{ slug: 'edge/overview', label: 'Overview' }, { slug: 'edge/install', label: 'Install' }, ...pages('edge').map(page)];
 const flowRelease = sync.pages.filter((p) => p.release && p.slug.startsWith('releases/flow-'));
 const hlRelease = sync.pages.filter((p) => p.release && p.slug.startsWith('releases/hotloop-'));
 const relSort = (a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true });

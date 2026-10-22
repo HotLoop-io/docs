@@ -3,15 +3,7 @@
 title: "Migrations only add"
 description: "Why a migration never drops, renames or retypes anything, so a bad update can roll back to the last release without losing a row."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 A migration adds. It never drops, renames or retypes anything, never tightens a
 column or a constraint the last release writes through, and never deletes data.
@@ -97,11 +89,11 @@ The refusal reads:
 
 ```
 refusing to start: this database's schema is more than one release ahead of
-HotLoop 4.18.3. 0022_x.sql is the newest migration this release knows, and the
+HotLoop 4.18.10. 0022_x.sql is the newest migration this release knows, and the
 database has 2 it does not (up to 0024_z.sql), written by 4.19.0 and 4.20.0.
 Only the release right after this one is known to work on that schema. Start
 HotLoop 4.20.0 or newer against this database (an update to :stable gets
-there), or restore a backup taken by HotLoop 4.18.3 or earlier
+there), or restore a backup taken by HotLoop 4.18.10 or earlier
 ```
 
 On a box that follows `:stable` the next update fixes it, because `:stable`
@@ -134,3 +126,14 @@ also run against the real 4.17.0 image, which knows only 0001 to 0015
 (`test/prevrelease.sh`).
 
 Shipped migrations are never edited. A mistake in one is fixed by the next.
+
+A test holds me to that. `internal/store/migrations/SHIPPED.sum` lists every
+migration that exists at a released tag with the SHA-256 of its text (carriage
+returns removed, so a Windows checkout and a Linux one agree), and
+`TestShippedMigrationsAreUnedited` fails the build when a listed file changes
+or goes missing. Why it needs a test: a database that already ran the old text
+never runs the new one, so an edit quietly leaves two databases on the same
+version with two different schemas, and the one that breaks is the customer's.
+A migration that isn't listed is unreleased and can still change. The release
+adds the new ones to the list in the release commit (the step is in
+RELEASE_CHECKLIST.md, "The shipped migrations").

@@ -3,15 +3,7 @@
 title: "MQTT discovery"
 description: "Point ESPHome, Zigbee2MQTT, Tasmota or a Shelly at the broker and it shows up, read-only until an admin accepts it and arms each point."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 Point a device at HotLoop's broker and it shows up. Its sensors read, its
 switches show their state, its entities have the names, units and classes it
@@ -674,7 +666,7 @@ a decision in and no screen to make one on. So it takes whatever it hears,
 reads it and forwards it over Sparkplug, and nothing it finds can be armed: its
 tags are read-only like every discovered tag, its devices are never accepted,
 and the relay has no write path at all. Name the brokers in its device file; see
-[EDGE-RELAY.md](/edge-relay/reference/#discovery-4183). A device you can command gets
+[EDGE-RELAY.md](/edge-relay/reference/). A device you can command gets
 there the other way: accepted and armed on a Gateway, in a file it pushes. It
 forgets what it heard when it stops, and hears it again from the broker.
 

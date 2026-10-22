@@ -13,7 +13,8 @@ and every plant has the story about the night one of them got typed in wrong.
 
 So the numbers live here instead, and they go out in one go: checked whole
 first, sent in order, read back from the device afterwards, every one of them
-on the record. Every recipe is an entity too, `scene.<id>`. Ours is built for equipment that can hurt somebody,
+on the record. Every recipe is also an
+entity, `scene.<id>`. It's built for equipment that can hurt somebody,
 which is why most of this page is about what happens when something goes
 wrong.
 

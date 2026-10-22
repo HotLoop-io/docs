@@ -5,10 +5,6 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -36,8 +32,8 @@ you need.
 
 | Product | What it is | Databases | Where it stands |
 |---|---|---|---|
-| **HotLoop IoT** | Entities, automations, helpers, scripts, the logbook, dashboards, notifications, MCP, MQTT with discovery, the ISA-18.2 alarm engine, backups and every driver. The base the other three are built on | SQLite or Postgres | Split out: its own image (`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet |
-| **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine. Our Ignition Edge | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0) |
+| **HotLoop IoT** | Entities, automations, helpers, scripts, the logbook, dashboards, notifications, MCP, MQTT with discovery, the ISA-18.2 alarm engine, backups and every driver. The base the other three are built on | SQLite or Postgres | Split out: its own image (`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10 |
+| **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine. Our Ignition Edge | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10 |
 | **HotLoop Gateway** | Edge, plus fleet, multi-site and scheduled reports. The site brain | SQLite, Postgres or TimescaleDB | Shipping (`cmd/hotloop`) |
 | **HotLoop Edge Relay** | Dumb and tough: poll, forward, survive. No database, no UI. Its own product, not Edge with the screen unplugged | none | Shipping (`cmd/edge-relay`). Every release publishes its image and chart from 4.16.0 on |
 
@@ -70,7 +66,8 @@ IoT user, and telling him to buy the Gateway to talk to it would be a scam.
       doing anything, instead of guessing
 - [x] IoT keeps 30 days of history by default. Pi disks are small, and the
       Gateway is where long history lives
-- [ ] No license keys and no unlocking at runtime. A tier is an image, and upgrading is an image swap on the same data
+- [ ] No license keys and no unlocking at runtime. No tier is paid. A tier is an
+      image, and upgrading is an image swap on the same data
 - [x] **Every box follows `:stable` and updates itself.** The Gateway, Edge and
       IoT Quadlet units track `:stable` like the relay's, with Podman's
       auto-update, a healthcheck that needs no shell, and a rollback when the
@@ -196,7 +193,7 @@ This is where "better and cooler" has to be obvious from across the room.
       page documents no discovery messages. Everything is verified against
       recordings of real devices, and Tasmota and Shelly also against the
       makers' documentation, not against a device on the bench. See [DISCOVERY.md](/iot/mqtt-discovery/) and
-      [EDGE-RELAY.md](/edge-relay/reference/#discovery-4183). The four-product split
+      [EDGE-RELAY.md](/edge-relay/reference/). The four-product split
       waited on it
 - [x] Network discovery (mDNS, SSDP, DHCP): devices heard on the plant
       network show up on the Discovered screen with what they are and how
@@ -325,7 +322,14 @@ In order. Nothing in here writes to a controller until U5.
       off the gateway on a guess. Built and proven against the lab controller in
       a real browser on 2026-10-18; the amber strip is held to the house Cloud
       Gateway's real answers on a stand-in console, because the lab's emulated
-      gateway has no WANs. Not yet looked at on real gear. See
+      gateway has no WANs. Not yet looked at on real gear. The map pinches,
+      drags and zooms to eight times, there is a Plant overlay that groups the
+      linked HotLoop devices under their lines, latency sits beside each WAN
+      and a port's in and out are traced, and an admin can create the usual
+      alarms (device offline, uplink down, gateway on its backup, PoE over a
+      limit they give) in one press. Those were proven on 2026-10-19, with
+      touch emulated rather than on a screen, and a WAN throughput trace is
+      not built: no console field for it has been read from a real gateway. See
       [UNIFI.md](/iot/unifi/#the-screens)
 - [x] **U4: events.** The controller's events websocket, so a switch dropping
       off shows in seconds instead of at the next poll, and lands in the
@@ -334,7 +338,11 @@ In order. Nothing in here writes to a controller until U5.
       logbook six seconds after the cable went in, and a switch that stopped
       informing was in the logbook the moment the controller gave up on it, a
       minute and a half later, with its tags reading it on the next poll. A
-      dropped websocket and a silent one reconnect without a login. See
+      dropped websocket and a silent one reconnect without a login. Events are
+      filed in the logbook under the switch or AP they are about, and the
+      equipment filter finds them from a linked device through the switches
+      that feed it. The agent tools `get_network_topology` and
+      `get_network_events` read the map and the events. See
       [UNIFI.md](/iot/unifi/#events)
 - [ ] **U5: writes through the gate.** Locate LED first: zero risk, visible
       from across the room, and it proves the whole write path on real gear.
@@ -603,6 +611,16 @@ Found in code review and in the PRs so far. Each one is real, checked against
       driver keeps serving the last values as good. Catching that needs
       keep-alive visibility the library doesn't expose. Needs a watchdog on
       publish traffic, or an upstream fix (and report the race upstream)
+- [x] **A recorder's "no data" codes read as good measurements.** A Yokogawa
+      DX channel returning 0x8005 (undefined) on `input:1:int16` at scale 0.1
+      came back good, -3276.3, and was historized as a temperature. A tag now
+      lists the raw values that mean "no measurement", each with a reason;
+      one is checked before scale and offset and reads bad with the reason,
+      and never trips a value alarm. Modbus checks the register's bit pattern
+      (every integer width, byte and word order, float patterns in hex), and
+      every other driver that decodes a number checks the same list. Proven
+      against a Modbus server that isn't ours, with all eight DX codes. Fixed,
+      see [PROTOCOLS.md](/iot/protocols/#no-data-values)
 - [x] A Modbus device that went silent with its socket open (pulled cable, hung
       PLC) was marked degraded, not down, and its entities sat on their last
       value until TCP gave up. Now it's down within one poll plus twice its
@@ -660,7 +678,8 @@ The two that were failing:
 - [ ] Repoint the EmberNET App Store at `https://hotloop.io/hotloop` (owner
       action). Until then the store is reading a URL that no longer exists
 - [x] Cut the first release out of the HotLoop-io org. 4.16.0, tagged
-      2026-09-28: the first public release since 4.3.1
+      2026-09-28: the first public release since 4.3.1, and the first one
+      under its own license terms
 - [ ] Delete the stale `.kilo` worktree
 - [ ] Decide whether `docs/legacy/` still earns its space
 

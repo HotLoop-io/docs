@@ -1,22 +1,60 @@
 ---
-reviewed: hotloop=4.17.0
-title: "Upgrading HotLoop Gateway to 4.17.0"
-description: "From 4.16.0 it's a plain helm upgrade that seals your device passwords with a new key. From 4.3.1 it isn't. The commands, what changes, and what to back up."
+reviewed: hotloop=4.18.10
+title: "Upgrading HotLoop Gateway to {{hotloop}}"
+description: "From 4.17.0 it's a plain helm upgrade with a changed queue default. From 4.16.0 or 4.3.1 you go in hops. The commands, what changes, and what to back up."
 sidebar:
   label: "Upgrading"
 ---
 
-Two ways onto 4.17.0, and they are nothing alike. From 4.16.0 it's a plain `helm upgrade` with one flag that bites, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 on the way. Find the one that's yours and read all of it before you touch a running plant.
+Three ways onto {{hotloop}}, and they are nothing alike. From 4.17.0 it's a plain `helm upgrade`, with a couple of defaults that moved. From 4.16.0 you go through 4.17.0 first, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 and 4.17.0 on the way. The release notes cover one hop at a time, and none of them covers jumping over a release, so this page doesn't promise that one works. Find the one that's yours and read all of it before you touch a running plant.
+
+:::note[Older charts are fetched by URL]
+The chart repository's index lists only the latest chart, {{hotloop}}, so `hotloop/hotloop --version 4.17.0` won't resolve. The older chart tarballs are still served, and the commands below for 4.16.0 and 4.17.0 name the chart by its URL instead, like `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`.
+:::
+
+## Upgrading from 4.17.0
+
+Why bother: the Gateway stops being the only image. IoT and Edge are new, the database is a setting, devices that announce themselves over MQTT show up on their own, history can be written out to the plant's own database, and a box that follows `:stable` rolls a bad update back by itself. That last one only works because migrations only add. [The Gateway overview](/gateway/overview/#new-in-41810) has the list.
+
+It's a plain `helm upgrade`. I rendered the 4.17.0 and {{hotloop}} Gateway charts side by side with the same values: the same eight objects, the same selectors, the same volume claims.
+
+```bash
+helm repo update hotloop
+helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-values
+```
+
+`--reset-then-reuse-values`, or your values file with `-f`. Plain `--reuse-values` happens to render this time, but it replays 4.17.0's values and drops every default this release added, which is how you end up on the old queue limit below without meaning to.
+
+### What happens on the first start from 4.17.0
+
+- **Migrations 0016 to 0024 run:** `0016_mqtt_discovery`, `0017_broker_logins`, `0018_mqtt_sources`, `0019_historian_targets`, `0020_net_finds`, `0021_mqtt_source_dialects`, `0022_mqtt_source_shelly`, `0023_dashboards` (the table the dashboards you build are saved in) and `0024_tag_no_data` (a `no_data` column on tags, empty for every tag that already exists, which is what those tags already did). All additive. `pg_dump` first, like always.
+- **`edgePublish.queueMaxBytes` defaults to 64 MiB, not unbounded.** It only matters if you publish upstream over Sparkplug. Past the limit the oldest readings are dropped and counted. An unbounded queue fills the volume in a long enough outage, which is worse, but it is a changed default. 64 MiB is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate (about 180 bytes a reading), or set it to `0` for the old behavior. HotLoop warns at startup when you do. A release upgraded with `--reuse-values` keeps whatever it had.
+- **Broker logins.** Logins from `HOTLOOP_BROKER_USERS` still do anything, as before, because nobody should upgrade into a plant whose Sparkplug traffic bounces off rules they never wrote. Logins you make in Settings, MQTT carry topic rules from a profile. A broker with no `HOTLOOP_BROKER_USERS` starts now, and only HotLoop and the logins made in it get in.
+- **Going back to 4.17.0 works.** The schema only grew and 4.17.0 runs on it, and the release check proves it against the published 4.17.0 image. Take a backup before you upgrade anyway. From here on the app also counts how far ahead its database is, and refuses to start, naming both versions, once the database is two releases ahead of it.
+- **Want a different product?** IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user and hour of history. Take a backup, then `helm upgrade hotloop hotloop/hotloop-edge` on the same release. [The lineup](/products/) has what has and hasn't been run, and going back down a product hasn't.
+
+### The Edge Relay, and Quadlet
+
+Upgrade the relay's chart with `--reset-then-reuse-values` too. Quadlet users take the new `edge-relay.container`: it follows `:stable` instead of pinning 4.17.0, and it carries the healthcheck and `--sdnotify=healthy` that make a bad update roll back. Without those two a dead update is reported as a success. A device file pushed from the Gateway applies live now, with no restart, where on 4.17.0 it waited for one. [The Edge Relay install page](/edge-relay/install/) has the unit in full.
+
+The Gateway has Quadlet units now, which 4.17.0 didn't. They're the `gateway/` directory of [Podman Quadlet](/install/quadlet/), and [the Gateway install page](/gateway/install/#podman-quadlet) has the steps.
+
+### API changes from 4.17.0
+
+- **New routes:** `/api/discovery` and its `accept`, `ignore`, `unignore` and `review` actions, `/api/network-discovery` and its `probe`, `accept`, `ignore` and `unignore`, `/api/mqtt/brokers`, `/api/broker/logins`, `/api/historian/targets`, `GET /api/entities/{entity_id}/image` and `POST /api/fleet/{id}/update`, which approves the image update a relay is holding. Nothing was removed.
+- **`GET /api/status` says `product` and `features`,** and the image digest. A script asks instead of probing. A route for a feature the product doesn't have answers `404` with `{"error":...,"product":...,"feature":...}`.
+- **New permission:** `fleet.update`, admin only. The operator role didn't change.
 
 ## Upgrading from 4.16.0
+
+This is the hop to 4.17.0, and from 4.17.0 you go on to {{hotloop}} with [the section above](#upgrading-from-4170). Everything below was proven against 4.17.0.
 
 Why bother: 4.16.0 has bugs a running plant can trip over, and 4.17.0 fixes them. The command prompt can swallow a Set, so an operator watches the prompt close, figures the setpoint went out, and nothing was written. Saving a rule in the editor, even to rename it, quietly resets its run budget to five minutes. A device file pushed to an Edge Relay never lands, while the Gateway says `config pushed`. And an EmberNET App Store deploy loses its tenant. On top of the fixes you get [recipes](/iot/recipes/), [scripts](/iot/scripts/), [blueprints](/iot/blueprints/), [helpers](/iot/helpers/), the [logbook](/iot/logbook/), the new [automation](/iot/automations/) steps, read-only [UniFi](/iot/unifi/), and [MCP](/iot/mcp/) going from 16 tools to 25.
 
 It's a plain `helm upgrade`. We rendered both charts at both versions: every selector and every volume claim is identical, and the only new object is the key's Secret.
 
 ```bash
-helm repo update hotloop
-helm upgrade <release> hotloop/hotloop --version 4.17.0 --reset-then-reuse-values
+helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.17.0.tgz --reset-then-reuse-values
 ```
 
 `--reset-then-reuse-values`, or your values file with `-f`. **Not `--reuse-values`.** That replays 4.16.0's values and drops every default this chart added, and the render dies on the first one it needs (`nil pointer evaluating interface {}.enabled`, from `secretKey`). Nothing changes on the cluster when it does, so just run it again the right way.
@@ -35,11 +73,11 @@ So the new job after this upgrade: back up `<release>-secret-key` the way you ba
 
 ### The Edge Relay
 
-The relay is 4.17.0 too, released from the same tag. Upgrade its chart with `--version 4.17.0` and the same flag rule: `--reset-then-reuse-values` or your values file. `--reuse-values` on the relay doesn't even fail. It drops the chart's new `pushedDevicesFile` default, renders the variable empty, and a push goes right back to dying on the read-only mount. Then know four things.
+The relay is 4.17.0 too, released from the same tag. Upgrade its chart to 4.17.0, by the same kind of URL, `https://hotloop.io/hotloop/hotloop-edge-relay-4.17.0.tgz`, and with the same flag rule: `--reset-then-reuse-values` or your values file. `--reuse-values` on the relay doesn't even fail. It drops the chart's new `pushedDevicesFile` default, renders the variable empty, and a push goes right back to dying on the read-only mount. Then know four things.
 
-- **A pushed device file lives at `/data/pushed-devices.json`** (`HOTLOOP_EDGE_RELAY_PUSHED_FILE`, the chart's `pushedDevicesFile`), on the relay's volume. It wins over the chart's `devices` for as long as it exists, through restarts, reschedules and a `helm upgrade` that changes `devices`. The relay logs which file it booted from. To go back to the local file, `DELETE /api/fleet/{id}/config` on the Gateway (`fleet.config`) while the relay is connected, then restart it.
-- **An old push can come back.** A push you made to a 4.16.0 relay never landed, but the broker still holds it, retained, and a 4.17.0 relay picks it up at its first boot and runs it. If it's stale, clear it with the same `DELETE` right after the upgrade and restart the relay.
-- **Quadlet: take the new `edge-relay.container`.** It pins 4.17.0 and sets `HOTLOOP_EDGE_RELAY_PUSHED_FILE`. Without that line a push still fails on the read-only root. [The Edge Relay install page](/edge-relay/install/#quadlet) has the unit in full.
+- **A pushed device file lives at `/data/pushed-devices.json`** (`HOTLOOP_EDGE_RELAY_PUSHED_FILE`, the chart's `pushedDevicesFile`), on the relay's volume. It wins over the chart's `devices` for as long as it exists, through restarts, reschedules and a `helm upgrade` that changes `devices`. The relay logs which file it booted from. To go back to the local file, `DELETE /api/fleet/{id}/config` on the Gateway (`fleet.config`) while the relay is connected, then restart it. That restart is 4.17.0's. From 4.18.10 a connected relay switches back on the spot.
+- **An old push can come back.** A push you made to a 4.16.0 relay never landed, but the broker still holds it, retained, and a 4.17.0 relay picks it up at its first boot and runs it. If it's stale, clear it with the same `DELETE` right after the upgrade and restart the relay. From 4.18.10 the clear applies live and the restart isn't needed.
+- **Quadlet: take the new `edge-relay.container`.** 4.17.0's unit pinned 4.17.0 and set `HOTLOOP_EDGE_RELAY_PUSHED_FILE`, and the current one sets it too, but follows `:stable` instead. Without that line a push still fails on the read-only root. [The Edge Relay install page](/edge-relay/install/#quadlet) has the unit in full.
 - **`persistence.enabled=false` boots now,** on an emptyDir capped at `persistence.size`. Know what it costs before you pick it: every time the pod is replaced you lose the forward queue, any pushed device file, and the OPC UA client certificate. Anything you care about gets a PVC, which is the default.
 
 ### What a script against the API will notice
@@ -52,7 +90,7 @@ The relay is 4.17.0 too, released from the same tag. Upgrade its chart with `--v
 
 ## Upgrading from 4.3.1
 
-4.3.1 was published in August, and nothing after it was until 4.16.0. Everything from 4.4.0 to 4.15.3 was merged and never published, so leaving 4.3.1 you take all of it in one jump, under a new name, a new image, a new chart and a new license. This section takes you to 4.16.0, the release this procedure was proven against. From there, [Upgrading from 4.16.0](#upgrading-from-4160) above is the plain upgrade to 4.17.0. Read both before you touch a running plant. They're short, and they're shorter than explaining to the plant manager why the historian is empty.
+4.3.1 was published in August, and nothing after it was until 4.16.0. Everything from 4.4.0 to 4.15.3 was merged and never published, so leaving 4.3.1 you take all of it in one jump, under a new name, a new image, a new chart and a new license. This section takes you to 4.16.0, the release this procedure was proven against. From there, [Upgrading from 4.16.0](#upgrading-from-4160) above is the plain upgrade to 4.17.0, and [Upgrading from 4.17.0](#upgrading-from-4170) is the one after it. Read all three before you touch a running plant. They're short, and they're shorter than explaining to the plant manager why the historian is empty.
 
 ### New name on everything
 
@@ -72,11 +110,11 @@ The chart's name is baked into the Deployment's and the StatefulSet's selectors,
 3. Add the repository and upgrade with the values file you ran 4.3.1 with:
 
    ```bash
-   helm repo add hotloop https://hotloop.io/hotloop
-   helm repo update
-   helm upgrade <release> hotloop/hotloop --version 4.16.0 \
+   helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.16.0.tgz \
      -n <namespace> -f your-4.3.1-values.yaml
    ```
+
+   That's the 4.16.0 chart by its URL, because the repository's index lists only the latest chart. Once you're on 4.16.0, add the repository (`helm repo add hotloop https://hotloop.io/hotloop`) for the hops after it.
 
    Nothing in that file was removed from the chart. Rename any `IIOT_` in `extraEnv` to `HOTLOOP_`, and drop an `image.repository` override if you had one. Don't use `--reuse-values`. It skips every default this chart added since 4.3.1, which is more than half its keys, and you'd be running a chart that's mostly holes.
 
@@ -98,7 +136,7 @@ We proved that by rendering both charts side by side, not by running it on a liv
 
 ### API changes from 4.3.1
 
-If you have a script or an integration against the API, this is the list. Everything else is additions. The 4.16.0 to 4.17.0 changes [above](#what-a-script-against-the-api-will-notice) come on top.
+If you have a script or an integration against the API, this is the list. Everything else is additions. The 4.16.0 to 4.17.0 changes [above](#what-a-script-against-the-api-will-notice) come on top, and so do the 4.17.0 to {{hotloop}} ones [above them](#api-changes-from-4170).
 
 - **Empty lists are `[]`, never `null`,** in every response and every stream event, at any depth. `GET /api/runs`, automations, a device's tags, the write audit, users, alarm events, sparklines and an empty history window all used to answer `null`. A `null` you still see is never a list; it's a documented nullable field, like an entity's `equipment_id`.
 - **`/api/history` buckets with no good reading are `null`,** and draw as gaps, and bad readings stay out of trend averages. A trend and a report over the same hour now say the same thing.
@@ -109,4 +147,4 @@ If you have a script or an integration against the API, this is the list. Everyt
 - **New: `?dry_run=true` on `POST /api/services/{domain}/{service}`.** It runs the gate's checks, writes nothing, audits nothing, and answers with the refusal the real call would give. `dry_run` takes `true` or `false` and nothing else; `yes` is a 400, because a guess the wrong way turns a question into a command.
 - **`GET /api/settings`** names the variable a value actually came from in `envVar`, fallbacks included, and a variable set to an empty string counts as unset.
 
-The [release notes](https://hotloop.io/releases/gateway/) have the rest of what changed, version by version back to 4.4.0. Once you're up on 4.16.0 and the historian is still full, go do [Upgrading from 4.16.0](#upgrading-from-4160).
+The [release notes](https://hotloop.io/releases/gateway/) have the rest of what changed, version by version back to 4.4.0. Once you're up on 4.16.0 and the historian is still full, go do [Upgrading from 4.16.0](#upgrading-from-4160), and then [Upgrading from 4.17.0](#upgrading-from-4170).

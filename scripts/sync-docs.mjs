@@ -464,7 +464,8 @@ if (existsSync(PINNED)) {
       t = t.replace(rv[0], '');
     }
     t = t.replace(/\{\{(hotloop|flow|cascade)\}\}/g, (_, r) => releases[r].version).replace(/\{\{LICENSE_URL\}\}/g, licenseUrl());
-    if (/\{\{/.test(t)) fail(`${rel}: an unfilled {{token}}`);
+    // A Go template like `{{.Digest}}` in a unit file is content. An unfilled token is {{word}}.
+    if (/\{\{\s*[A-Za-z_]\w*\s*\}\}/.test(t)) fail(`${rel}: an unfilled {{token}}`);
     t = t.replace(/^---\n/, `---\n${MARK}\n`).replace(/^(---\n[^]*?\n)(---\n)/, (m, a, b) => (/editUrl:/.test(a) ? m : a + 'editUrl: false\n' + b));
     out.set(rel, t);
     pinned.push(rel);

@@ -5,10 +5,6 @@ description: "Publish everything a box reads to a central Gateway as a Sparkplug
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.5.0. Turns this gateway into a Sparkplug B **edge node**, publishing
 everything it reads to a central Gateway over MQTT, the opposite direction
 from the existing MQTT driver, which consumes Sparkplug as a primary host.

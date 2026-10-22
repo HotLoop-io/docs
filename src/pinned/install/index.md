@@ -19,14 +19,14 @@ There are two ways to run a HotLoop product for real: Helm on k3s or any Kuberne
 
 | Product | Latest release | Helm | Quadlet | Start here |
 |---|---|---|---|---|
-| [HotLoop Gateway](/gateway/overview/) | {{hotloop}} | Yes | On `main`, next release | [Install the Gateway](/gateway/install/) |
+| [HotLoop IoT](/iot/overview/) | {{hotloop}} | Yes | Yes | [Install IoT](/iot/install/) |
+| [HotLoop Edge](/edge/overview/) | {{hotloop}} | Yes | Yes | [Install Edge](/edge/install/) |
+| [HotLoop Gateway](/gateway/overview/) | {{hotloop}} | Yes | Yes | [Install the Gateway](/gateway/install/) |
 | [HotLoop Edge Relay](/edge-relay/overview/) | {{hotloop}} | Yes | Yes | [Install the Edge Relay](/edge-relay/install/) |
 | [HotLoop Flow](/flow/overview/) | {{flow}} | Yes | Yes | [Install Flow](/flow/install/) |
-| [HotLoop IoT](/iot/overview/) | Not released | On `main`, next release | On `main`, next release | [Overview](/iot/overview/) |
-| [HotLoop Edge](/edge/overview/) | Not released | On `main`, next release | On `main`, next release | [Overview](/edge/overview/) |
 | [HotLoop Cascade](/cascade/overview/) | {{cascade}} | Yes, no login needed | Yes, no login needed, see [Cascade with Podman Quadlet](/cascade/quadlet/) | [Running Cascade](/cascade/running/) |
 
-HotLoop IoT, Edge, Gateway and the Edge Relay come out of one tag, in lockstep, so they share a version number. Flow and Cascade have their own. A command for an image that doesn't exist is worse than no command at all, so the products that aren't out have no install page, only an overview that says so.
+HotLoop IoT, Edge, Gateway and the Edge Relay come out of one tag, in lockstep, so they share a version number. Flow and Cascade have their own. The IoT, Edge and Gateway Quadlet units need Podman 5.0 or newer, and the relay's unit was run on Podman 4.9.3. Raspberry Pi OS Bookworm ships 4.3, which has no Quadlet at all, so a Pi wants Trixie or newer.
 
 ## Before you put one on a real plant
 

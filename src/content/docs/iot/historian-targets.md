@@ -3,15 +3,7 @@
 title: "Historian targets"
 description: "Write every reading HotLoop keeps out to the plant's own PostgreSQL, TimescaleDB, SQL Server, InfluxDB or MySQL and MariaDB as well."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9d25dc1. HotLoop 4.17.0 is the latest release, and it does not have what this page describes. An install from 4.17.0 will not match this page.
-:::
 
 HotLoop keeps its own history, and it isn't going anywhere. But a plant
 already has a database. IT backs it up, patches it, points Power BI at it and

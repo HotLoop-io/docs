@@ -5,10 +5,6 @@ description: "Switches, ports, PoE, WAN failover and clients read from a UniFi c
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9d25dc1, and it differs from the copy in HotLoop 4.17.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A plant's network is equipment. When a PLC goes quiet, the first question is
 "is it the PLC, or the switch port it's plugged into", and until now the answer
 lived in the UniFi app on somebody's phone. So HotLoop reads the UniFi console
@@ -259,6 +255,10 @@ stays where they put it.
   Below it: devices online, clients wired and wireless, clients per network,
   the devices the console has lost, and the latest events. A WAN the console
   says nothing about is gray and says "no liveness reported", never green.
+  Every WAN that reports a latency has a trace beside the number, the same
+  line the entity tiles draw, from HotLoop's own buffer of that tag. An admin
+  gets **Create the usual alarms** at the bottom of the card, see
+  [the starter alarms](#the-starter-alarms).
 - **Map.** Left to right from the gateway. It is laid out the same way every
   time (a tidy tree, no physics, same read in and the same pixels out), so it
   doesn't jiggle on a wall board. The cables are the console's own
@@ -270,7 +270,17 @@ stays where they put it.
   and SSID, counted in a chip on the card. Click a device and everything that
   isn't downstream of it dims, and the side panel lists what is downstream, its
   clients, and the lines on the Plant tree it feeds: the HotLoop devices linked
-  to a client below it, each with the equipment path it sits at. Two consoles
+  to a client below it, each with the equipment path it sits at. The map zooms
+  and moves: pinch with two fingers, drag with one, ctrl-scroll or a trackpad's
+  pinch about the pointer, or the plus, minus and Fit buttons, from the whole
+  map up to eight times. It is plain SVG, so it stays sharp at any scale, and
+  where you put it stays put while the screen refreshes. A drag that ends on a
+  device does not pick it. **Plant overlay** puts the HotLoop devices linked to
+  a client in a dashed box per line of the Plant tree, to the right of the
+  network and labelled with the line's path, each with a cable to the switch
+  port it is plugged into, what the network says about it (up, down or not
+  seen) and what HotLoop says about it. A device linked but on no line is in a
+  box called "Not on the Plant tree". It stays on once you turn it on. Two consoles
   are one picture: a box of another console HotLoop reads that this console
   lists as a wired client is drawn here with its own subtree, dashed, marked
   "separate console". The map exports as an SVG for the site binder.
@@ -280,7 +290,7 @@ stays where they put it.
   was up and went down** (HotLoop remembers it was up since it started
   watching), dashed for a disabled one, the PoE bolt and watts, an arrow on the
   uplink. Click a port for who is on it, what is plugged into it, PoE mode and
-  traffic. A device the console has lost shows no numbers and no port links,
+  traffic, with a trace of what it has been receiving and sending. A device the console has lost shows no numbers and no port links,
   because what it said last isn't current.
 - **Clients.** Searchable by name, MAC or IP, with where it is, when the console
   last saw it, known or unknown on an OT network, and the HotLoop device linked
@@ -295,6 +305,29 @@ The routes behind it are `GET /api/unifi/consoles`, `.../overview`,
 `.../topology`, `.../devices`, `.../wifi` and `.../events`, documented in
 [API.md](/iot/api/).
 
+### The starter alarms
+
+The alarms a plant wants on its network before anybody has had to think about
+it, made from what the console has now. **Create the usual alarms** on the
+Overview (or `POST /api/unifi/{id}/starter-alarms`, see [API.md](/iot/api/)) makes:
+
+| Alarm | On | Priority | On-delay |
+|---|---|---|---|
+| a device offline | `d.<mac>.online`, for every adopted switch, AP and gateway | 2 | 60 s, so a firmware reboot pages nobody |
+| an uplink down | `p.<mac>.<nn>.up` on the port each device is plugged into its upstream by | 1 | 10 s |
+| a gateway on a backup WAN | `d.<mac>.wan.failover`, for a gateway with two or more WANs | 2 | 30 s |
+| a PoE port over a limit | `p.<mac>.<nn>.poe_w`, only when you give a limit in watts | 3 | 30 s |
+
+They are ordinary alarm definitions: shelve them, acknowledge them, send them
+to Discord, edit the delay or the limit, delete one. Pressing it again after
+adopting more gear adds only the new gear, and a tag that already has an alarm
+on it, made by hand or by an earlier press, is left alone. The PoE alarm takes
+a limit you give instead of one HotLoop picks, because no console I read says
+what a port's budget is, and a number I guessed would be a number someone
+trusted. "Unknown device on an OT network" and "a watched client off the
+network" are not in the button: they are made when a network is marked OT and
+when a device is watched or linked, with the record that gives them a meaning.
+
 ## Events
 
 The console's events websocket
@@ -305,10 +338,24 @@ budget as a read, and a refused login is waited out, not retried.
 
 **Polling is still the truth.** An event never writes a tag. What it does:
 
-1. It lands in the **logbook** the moment it arrives, as a device event on the
-   console's device, with the controller's own sentence ("Switch[...] was
-   disconnected") and its key. A switch dropping is on the timeline when it
-   happens, not when the next poll notices.
+1. It lands in the **logbook** the moment it arrives, with the controller's
+   own sentence ("Switch[...] was disconnected") and its key. A switch
+   dropping is on the timeline when it happens, not when the next poll
+   notices. It is filed under the switch, access point or gateway it is
+   about, not under the console's own device, because the console is the box
+   the controller runs on and not the thing that dropped. An event that names
+   only a client (the console says who joined, not where) is filed under the
+   switch or AP the last read has that client on, and if the client is new it
+   waits for the read the event has just asked for, up to thirty seconds,
+   then goes under the console if that read never has it. The logbook's
+   **Where** filter finds an event from the plant: a HotLoop device linked to
+   its client, the switch the console says that client is on, and every switch
+   between there and the gateway on the console's own downlink table. A
+   dropped switch is on the timeline of every line it feeds and on none that
+   it doesn't. Asking for the console itself still works as it always did: the
+   system log by `subject` equal to the console's id, and the logbook with the
+   console among the devices in scope, return all of that console's events,
+   the per-switch ones included.
 2. It goes in the log the Overview shows, and into `site.last_event` and
    `d.<mac>.last_event`, so an automation can trigger on one.
 3. It asks for the next read now. The read floor is ten seconds; an event
@@ -401,7 +448,36 @@ Application 10.6, emulated switches, logged in as View Only), 2026-10-18:
   WiFi, in both themes at laptop, panel and phone widths with nothing wider than
   the screen.
 
-**Not verified:** the screens and the stream on a real Cloud Gateway (nothing
+**The logbook, the starter alarms, the traces, the zoom and the overlay**, against the
+lab controller and, where it can't do it, the stand-in (2026-10-19):
+
+- A laptop plugged into a switch reaches the logbook filed under that switch,
+  and the Where filter finds it on the line the switch feeds through a
+  PLC's confirmed link, and not on a line it doesn't feed. The console says
+  only who joined, so the switch comes from the next read, and the test
+  proves that wait. The first version of this never showed a UniFi event in
+  the logbook at all: they went into the system log as device events and the
+  logbook read only config and write lines out of it. U4's test checked the
+  sink, not the logbook.
+- The starter set made from the lab site: an offline alarm for each switch,
+  the Lite-8's uplink alarm, four PoE alarms at the limit given, and nothing
+  for the gateway's WANs because the lab's emulated gateway has none. Pressed
+  twice, the second adds nothing. The uplink alarm raised when the Lite-8's
+  uplink cable came out, and a switch that stopped informing raised its
+  offline alarm when the controller gave up on it. The failover alarm raised
+  on the stand-in gateway with the house Cloud Gateway's answers, because the
+  lab can't be on a 5G.
+- In a real browser: a latency trace on a stand-in gateway's WAN1 that follows
+  the reading, a port's in and out traces, the pinch (two emulated fingers)
+  and drag, the limit at eight times, the zoom held across a repaint, the
+  overlay with PLC-07 in Line 2's box and its network reading going down with
+  the cable, and the export being the whole map. Touch is emulated through the
+  browser's own input pipeline, not a screen.
+
+**Not verified:** a PoE alarm firing (the lab's switches report no PoE draw, so
+there is nothing to cross a limit), a WAN throughput trace (no console field
+for it has been read from a real gateway, so there is no throughput trace on
+the WAN strip, only latency), pinch on a real touchscreen, the screens and the stream on a real Cloud Gateway (nothing
 here was pointed at the house gear), a real console's
 `downlink_table` and AP events (`ap`, `gw`, `port` and `ssid` on an event are
 the same pattern as the `sw` and `user` the lab sends, and have not been
