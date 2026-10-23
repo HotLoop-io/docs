@@ -5,10 +5,6 @@ description: "A visual flow engine for the plant floor in one Go binary, with a 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at f1f417f, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 **Wire the plant. Review it like code.**
 
 HotLoop Flow is a visual flow engine for the plant floor, written in Go. You wire
@@ -44,10 +40,10 @@ What that means on a bad night:
 It runs your existing flows unchanged, too. That's [further down](/flow/migrating-from-node-red/),
 because it's a feature, not the point.
 
-Current release is `2.2.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.2.0`
+Current release is `2.3.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.3.0`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. About
-36,000 lines of Go, more than a third of it tests, 75 node types, and the race
+36,000 lines of Go, more than a third of it tests, 79 node types, and the race
 detector comes back clean on every package. Home and lab use is free, so is use by schools, nonprofits and government, and
 business use is free through EmberNet, under HotLoop's Business Source License.
 
@@ -62,7 +58,7 @@ what's printed.
 | <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
 |---|---|
 | Binary, linux/amd64, static | **22.0 MB** |
-| Image, `2.2.0` amd64, as `podman image inspect` reports it | **39.1 MB** |
+| Image, `2.3.0` amd64, as `podman image inspect` reports it | **44.8 MB** |
 | Start to answering its first request | **0.05 s** |
 | RSS, idle | **16.4 to 16.7 MiB** |
 | RSS, peak under the HTTP load below | **26.4 to 28.5 MiB** |
@@ -70,13 +66,15 @@ what's printed.
 | HTTP latency p50 / p99 | **0.39 to 0.41 ms / 1.78 to 4.03 ms** |
 | Engine, five-node chain, no I/O | **2.20 to 3.11 µs a message**, 3.9 KB allocated |
 
-The image row is the published `2.2.0` image, read on 2026-10-20 with
-`podman image inspect ghcr.io/hotloop-io/hotloop-flow:2.2.0 --format '{{.Size}}'`
-(39,095,482 bytes). It was 32.1 MB at `2.1.0` and 25.4 MB at `2.0.5`. Part of
-that is the license text in `/usr/share/doc/hotloop-flow/`, and 2.2.0 also added
-the plant nodes, tracing and the SQLite state store. I did not split the growth
-between those, so don't read all of it as any one of them. The other rows are
-still the 2026-10-02 build.
+The image row is the `2.3.0` image built from the release tree the way the
+release workflow builds it, `podman build --platform linux/amd64 --build-arg
+VERSION=v2.3.0 .`, read on 2026-10-22 with
+`podman image inspect <that image> --format '{{.Size}}'` (44,833,285 bytes). It
+was not read from ghcr.io, because the tag wasn't pushed yet. It was 39.1 MB at
+`2.2.0`, 32.1 MB at `2.1.0` and 25.4 MB at `2.0.5`. Between 2.2.0 and 2.3.0 Flow
+gained the HotLoop and MCP nodes, JSON Schema checking and the WebAssembly
+plugin host, and I did not split the growth between them, so don't read all of
+it as any one of them. The other rows are still the 2026-10-02 build.
 
 The start, memory and HTTP rows are one command against
 the bench flow, set up exactly as in
@@ -100,6 +98,30 @@ purpose, because that's what a client of your flow sees. It isn't a scheduler
 benchmark and I won't let anybody quote it as one. And under saturation every
 runtime queues and queueing owns the tail, which is why p99 wanders more than
 p50 between runs.
+
+### On a Raspberry Pi 5
+
+The same flow and the same commands, 2026-10-22, on a Raspberry Pi 5 Model B
+(8 GB, four Cortex-A76 cores, Ubuntu 26.04.1, kernel `7.0.0-1020-raspi`) with
+its clock capped at 2.0 GHz, running the published `2.2.0` arm64 image as a pod
+with nothing else on the node but cluster DaemonSets. Three runs, range printed.
+
+| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+|---|---|
+| Start to answering its first request | **0.10 to 0.46 s** |
+| RSS, idle | **88.0 to 88.3 MiB** |
+| RSS, peak under the HTTP load | **40.3 to 40.5 MiB** |
+| HTTP, five-node flow, 8 connections, 30 s | **13.2k to 13.4k req/s** |
+| HTTP latency p50 / p99 | **0.48 ms / 2.72 to 2.78 ms** |
+| Engine, five-node chain, no I/O | **7.74 to 8.15 µs a message**, 4.0 KB allocated |
+| HTTP, the same command held for 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
+
+The last row is the honest one for a box that stays loaded. The board hit its
+soft temperature limit under a minute in, throttled from about two minutes in,
+and sat at 83 to 86 C with the clock at 1.5 to 1.7 GHz for the rest. The
+idle RSS is about five times the x86 figure above and I don't know why yet.
+The process, the board, the throttle readings, and what I didn't establish are
+in [docs/bench/](/flow/benchmarks/#results-on-a-raspberry-pi-5).
 
 `hotloop-flow bench` ships in this repository. The method and the rest of the
 caveats are in docs/bench/.

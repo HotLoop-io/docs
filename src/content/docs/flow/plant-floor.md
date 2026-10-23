@@ -5,10 +5,6 @@ description: "Modbus TCP, OPC UA, Sparkplug B and the other nodes that talk to P
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at f1f417f, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 `scan` could find a PLC and nothing in the palette could talk to it, which is a
 funny thing to ship in a product for plants. Modbus TCP, S7, EtherNet/IP, OPC UA
 and Sparkplug B are in now.

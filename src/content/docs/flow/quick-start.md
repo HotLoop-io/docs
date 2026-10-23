@@ -30,10 +30,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.2.0
+  ghcr.io/hotloop-io/hotloop-flow:2.3.0
 ```
 
-Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.2.0
+Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0
 hash-password -password 'something-long'`. The image is distroless nonroot with
 no shell in it, so there is nothing to `exec` into and nothing for anybody who
 gets code execution to pivot with.
@@ -51,6 +51,7 @@ TypeScript and native SVG, 48.5 kB of JS and 20.1 kB of CSS minified.
 | `hotloop-flow hash-password` | bcrypt hash for a password. Takes `-password` or `HOTLOOP_FLOW_PASSWORD`. Refuses anything under 8 characters. |
 | `hotloop-flow import <flows.json>` | Reports what would happen before you deploy it. |
 | `hotloop-flow diff <old> <new>` | Node-by-node diff of two flow files. Also git's diff driver and difftool. |
+| `hotloop-flow plugin keygen`, `sign`, `verify` | Makes a publisher key, signs a [plugin](/flow/plugins/), and runs every check a server runs when it loads one, saying why if it would refuse. |
 | `hotloop-flow test <tests.yaml>` | Runs [flow tests](/flow/tests/) in process. `-junit` for CI. |
 | `hotloop-flow deploy -file <flows.json>` | Shows the diff against a running instance, then deploys with a note. For CI. |
 | `hotloop-flow export` | The running flow file, byte for byte, or `-deployment N` from the history. |

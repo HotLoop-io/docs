@@ -104,7 +104,10 @@ export const PAGES = [
   { product: 'flow', group: 'Review and test', slug: 'flow/tracing', repo: 'flow', file: 'README.md', sections: ['Tracing and replay'], title: 'Tracing and replay', description: 'Click a debug message and see where it went, replay it into a draft, turn a trace into a test, and send spans to OpenTelemetry.' },
   { product: 'flow', group: 'Nodes', slug: 'flow/palette', repo: 'flow', file: 'README.md', sections: ['The palette'], title: 'The palette', description: 'Every node type Flow ships, labeled full, partial, divergent or Flow-only, with the difference from Node-RED written down.' },
   { product: 'flow', group: 'Nodes', slug: 'flow/plant-floor', repo: 'flow', file: 'README.md', sections: ['The plant floor'], title: 'The plant floor', description: 'Modbus TCP, OPC UA, Sparkplug B and the other nodes that talk to PLCs and brokers, and what each has been run against.' },
-  { product: 'flow', group: 'Nodes', slug: 'flow/sandboxes', repo: 'flow', file: 'README.md', sections: ['Two sandboxes, and only one of them runs flows yet'], title: 'Two sandboxes', description: 'How the Function node and the WebAssembly sandbox are fenced, what each can touch and which one runs flows today.' },
+  { product: 'flow', group: 'Nodes', slug: 'flow/sandboxes', repo: 'flow', file: 'README.md', sections: ['Two sandboxes, and only one of them runs flows yet'], title: 'Two sandboxes', description: 'How the Function node and the WebAssembly sandbox are fenced, what each can touch, and how a plugin runs in the second one.' },
+  { product: 'flow', group: 'Nodes', slug: 'flow/plugins', repo: 'flow', file: 'docs/plugins.md', title: 'Plugins without npm', description: 'A plugin is a signed WebAssembly module with a memory ceiling, a timeout and a descriptor, and it gets no host access unless you grant it.' },
+  { product: 'flow', group: 'Nodes', slug: 'flow/typed-wires', repo: 'flow', file: 'README.md', sections: ['Typed wires'], title: 'Typed wires', description: 'Put a JSON Schema on the json node and check messages on a wire, so a wrong shape lands at a Catch node and names every bad field.' },
+  { product: 'flow', group: 'Run it', slug: 'flow/mcp', repo: 'flow', file: 'README.md', sections: ['MCP, in both directions'], title: 'MCP, in both directions', description: 'An agent can call a flow as a tool, and a flow can call a tool on any MCP server, with three nodes and one config node.' },
   { product: 'flow', group: 'Nodes', slug: 'flow/compatibility', repo: 'flow', file: 'docs/compatibility.md', title: 'Node-RED compatibility', description: 'Every deliberate divergence from Node-RED, node by node, with the reason, so an imported flow gets the answer it got before.' },
   { product: 'flow', group: 'Run it', slug: 'flow/security', repo: 'flow', file: 'README.md', sections: ['Security posture'], title: 'Security posture', description: 'No login is a startup error, exec ships off, file nodes are fenced, and credentials are encrypted. What Flow refuses and how to opt out on purpose.' },
   { product: 'flow', group: 'Run it', slug: 'flow/configuration', repo: 'flow', file: 'README.md', sections: ['Configuration'], title: 'Configuration', description: 'Every setting Flow reads, its default, its environment override and what a bad value does at startup.' },
@@ -167,6 +170,19 @@ export const SLUG_RULES = {
 };
 
 Object.assign(SLUG_RULES, {
+  // The sync refuses the license name on purpose. These sentences are about libraries Flow links, not about a HotLoop product, so they say permissive and keep the facts.
+  'flow/plugins': [
+    [ws('both MIT or Apache-2.0, compiled into'), 'both permissively licensed, compiled into'],
+  ],
+  'flow/mcp': [
+    [ws('Apache-2.0 with some files still MIT while the project finishes relicensing,'), 'permissively licensed, with some files still MIT while the project finishes relicensing,'],
+  ],
+  'flow/typed-wires': [
+    [ws('(Apache-2.0, pure Go)'), '(permissively licensed, pure Go)'],
+  ],
+  'releases/flow-2-3-0': [
+    [ws('v6 (Apache-2.0)'), 'v6 (permissively licensed)'],
+  ],
   // HotLoop's ROADMAP.md still says IoT and Edge are not released, and 4.18.10 is the release that has them. These stand in until the source says so. Drop both once it does.
   roadmap: [
     [ws('(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet'), '(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
@@ -209,6 +225,6 @@ Object.assign(SLUG_RULES, {
     [ws('Everything here is free. No phase is a paid tier, and no license check exists anywhere in the code, so there is nothing to rug-pull later.'), 'No license check exists anywhere in the code.'],
   ],
   'flow/roadmap': [
-    [ws("HotLoop's drivers stay HotLoop's, and Flow stays Apache."), "HotLoop's drivers stay HotLoop's, and Flow's nodes stay Flow's."],
+    [ws("Flow keeps its own license, which was Apache-2.0 when this was decided and is"), "Flow keeps its own license, which was a different one when this was decided and is"],
   ],
 });

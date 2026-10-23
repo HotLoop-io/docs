@@ -11,8 +11,8 @@ go test ./...
 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o hotloop-flow ./cmd/hotloop-flow
 ```
 
-Static, no cgo, runs on distroless. goja is pure Go, and so is wazero for when
-the WASM host goes in, which is the only reason that sentence is true. CI fails
+Static, no cgo, runs on distroless. goja is pure Go, and so is wazero, which runs
+the plugins, and that is the only reason that sentence is true. CI fails
 the build if the binary exceeds 40MiB or turns out to be dynamically linked,
 because both of those are things you discover on a plant floor otherwise.
 

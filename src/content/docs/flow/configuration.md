@@ -53,6 +53,7 @@ auth:
     - name: ci
       hash: "sha256:..."
       permissions: ["flows.read", "flows.write"]
+      # rateLimit: {calls: 60, per: 1m}   # MCP tool calls per window; unset is no limit
 
 runtime:
   inboxCapacity: 1024
@@ -80,6 +81,13 @@ exec:
 
 files:
   allowedPaths: []          # extra trees on top of data.dir, which is always allowed
+
+plugins:
+  dir: ""                   # empty means plugins/ inside data.dir
+  trustedKeys: []           # publisher keys: ed25519:<base64>, a PEM public key, or a file holding one. Empty refuses every plugin
+  grants: {}                # plugin name to the host access it may have: clock, random, context.flow, context.global
+  maxMemoryMiB: 64          # the most memory any one plugin node can be given
+  maxTimeout: 5s            # the longest any one plugin node can be given for a message
 
 secrets:
   allowedPaths: []          # where a tls-config may read a certificate or key, on top of data.dir
@@ -143,6 +151,9 @@ Secret.
 | `HOTLOOP_FLOW_LOG_LEVEL`, `HOTLOOP_FLOW_LOG_FORMAT` | Logging. |
 | `HOTLOOP_FLOW_DISCOVERY_ENABLED`, `HOTLOOP_FLOW_DISCOVERY_CIDRS` | Discovery nodes. Comma-separated CIDRs. |
 | `HOTLOOP_FLOW_EXEC_ENABLED`, `HOTLOOP_FLOW_EXEC_ALLOWED_COMMANDS` | The exec node. Comma-separated commands. |
+| `HOTLOOP_FLOW_PLUGINS_DIR`, `HOTLOOP_FLOW_PLUGIN_TRUSTED_KEYS` | Where plugins are, and the publisher keys to trust. Comma-separated keys. |
+| `HOTLOOP_FLOW_PLUGIN_GRANTS` | What plugins may use: `name=cap,cap;name=cap`. |
+| `HOTLOOP_FLOW_PLUGIN_MAX_MEMORY_MIB`, `HOTLOOP_FLOW_PLUGIN_MAX_TIMEOUT` | The ceilings on a plugin node's memory and per-message time. |
 | `HOTLOOP_FLOW_FILE_ALLOWED_PATHS` | Extra file node roots. Comma-separated. |
 | `HOTLOOP_FLOW_SECRET_ALLOWED_PATHS` | Extra roots a secret file may be read from. Comma-separated. |
 | `HOTLOOP_FLOW_INSECURE` | `true` runs with authentication off, and nothing else does. Only `1`, `true`, `yes` and `on` count, so `false` or `0` can't turn it off by accident. For an isolated network you've decided to own. It doesn't waive the credential secret. |

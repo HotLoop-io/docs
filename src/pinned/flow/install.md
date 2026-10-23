@@ -1,12 +1,12 @@
 ---
-reviewed: flow=2.2.0
+reviewed: flow=2.3.0
 title: "Install HotLoop Flow with Podman or Helm"
 description: "Run HotLoop Flow {{flow}} with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, a 39.1 MB image for amd64 and arm64, plus a Helm chart and source you can build yourself. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
+HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, a 44.8 MB image on amd64 with an arm64 build beside it, plus a Helm chart and source you can build yourself. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands. And it refuses to run without a credential secret, which encrypts every broker and database password stored with your flows. Every path below sets both.
 
