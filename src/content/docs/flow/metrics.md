@@ -17,6 +17,7 @@ you should not need a second container to find out that your inbox is full.
 | `hotloop_flow_node_messages_received_total` | counter | Messages delivered to a node. |
 | `hotloop_flow_node_messages_sent_total` | counter | Messages a node has emitted. |
 | `hotloop_flow_node_errors_total` | counter | Errors a node raised. |
+| `hotloop_flow_node_schema_mismatches_total` | counter | Messages that broke a JSON Schema at a node: on its input port, on an output port, or in a `json` node. Each one went to a Catch node with the path of every bad field. |
 | `hotloop_flow_node_messages_dropped_total` | counter | Messages discarded because an inbox was full. |
 | `hotloop_flow_node_sends_blocked_total` | counter | Times a sender waited for space. Sustained back-pressure, which is the real signal that a flow cannot keep up. |
 | `hotloop_flow_node_queue_length` | gauge | Messages waiting right now. |

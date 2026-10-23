@@ -16,6 +16,7 @@ editUrl: false
 | `GET /metrics` | none | Prometheus. Counts and node ids only, never message contents or configuration. |
 | `GET /settings` | `settings.read` | |
 | `GET /nodes` | `nodes.read` | The registry, which is what drives the editor's palette and its dialogs. |
+| `GET /plugins` | `nodes.read` | The plugins that loaded, what each asks for and has been granted, and the ones that were refused with the reason. |
 | `GET /flows` | `flows.read` | |
 | `GET /flows/export` | `flows.read` | The flow file exactly as it sits on disk, for git. |
 | `POST /flows` | `flows.write` | Deploy. Takes an optional note for the deployment log. |
@@ -25,6 +26,7 @@ editUrl: false
 | `GET /deployments/{seq}/flows` | `flows.read` | That deployment's flow file, byte for byte. |
 | `GET /deployments/{from}/diff/{to}` | `flows.read` | Node-by-node diff between two deployments, structured and as text. |
 | `POST /flows/diff` | `flows.read` | The diff from what's live to the document in the body. Deploys nothing. |
+| `POST /flows/types` | `flows.read` | The typed-wire check a deploy makes, on the document in the body: `{"wires": [...]}`, empty when nothing is wrong. The editor draws the answer. Deploys nothing. |
 | `POST /deployments/{seq}/rollback` | `flows.write` | Deploys that record's flows and credentials again as a new deployment. Takes the rev header and an optional `{"note": ...}`. |
 | `GET /tests` | `flows.read` | The flow test suite kept beside the flow file, its file name, and whether deploys are gated on it. |
 | `PUT /tests` | `flows.write` | Replaces the suite. The body is the YAML; one that doesn't parse is a 400 with the reason. |
@@ -39,6 +41,7 @@ editUrl: false
 | `GET /runtime/stats` | `status.read` | |
 | `POST /inject/{id}` | `inject.write` | Fire an Inject node. |
 | `GET /comms` | `status.read` | The editor's status and debug websocket. Send the token as the subprotocol `hotloop-flow.bearer.<token>`, offered beside `hotloop-flow`. That is what the editor does. `?access_token=<token>` in the URL still works for scripts that already use it, and logs a warning for every connection that does, because a URL ends up in proxy and access logs. |
+| `POST /mcp` (and `GET` and `DELETE`, for the older revisions of the protocol) | `mcp.call` | The [MCP endpoint](/flow/mcp/), where flows are served as tools. A session or API token like any other. The tools a caller is offered, and may call, are the ones its permissions reach. 403 with authentication switched off. |
 
 `/metrics` and `/health` being unauthenticated is a decision rather than an
 oversight. A Prometheus scraper carries no bearer token, so requiring one means
@@ -49,7 +52,7 @@ A user with two-factor sign-in on sends `"code"` with the username and password
 to `POST /auth/token`. Without it the answer is a 401 with `"mfa": "required"`.
 
 Permissions are `"*"` for everything, an exact string such as `flows.read`, or a
-prefix grant such as `flows.*`. A read-only account for a dashboard that just
+prefix grant such as `flows.*`. An agent calling flows as MCP tools needs `mcp.call`. A read-only account for a dashboard that just
 wants to render flow status is `["flows.read", "status.read"]` and nothing more.
 
 Deploys take an optional `HotLoop-Flow-Deployment-Rev` header. Send the revision you

@@ -25,7 +25,7 @@ There are two ways to run a HotLoop product for real: Helm on k3s or any Kuberne
 | [HotLoop Edge](/edge/overview/) | 4.18.10 | Yes | Yes | [Install Edge](/edge/install/) |
 | [HotLoop Gateway](/gateway/overview/) | 4.18.10 | Yes | Yes | [Install the Gateway](/gateway/install/) |
 | [HotLoop Edge Relay](/edge-relay/overview/) | 4.18.10 | Yes | Yes | [Install the Edge Relay](/edge-relay/install/) |
-| [HotLoop Flow](/flow/overview/) | 2.2.0 | Yes | Yes | [Install Flow](/flow/install/) |
+| [HotLoop Flow](/flow/overview/) | 2.3.0 | Yes | Yes | [Install Flow](/flow/install/) |
 | [HotLoop Cascade](/cascade/overview/) | 0.1.2 | Yes, no login needed | Yes, no login needed, see [Cascade with Podman Quadlet](/cascade/quadlet/) | [Running Cascade](/cascade/running/) |
 
 HotLoop IoT, Edge, Gateway, and the Edge Relay come out of one tag, in lockstep, so they share a version number. Flow and Cascade have their own. The IoT, Edge, and Gateway Quadlet units need Podman 5.0 or newer, and the relay's unit was run on Podman 4.9.3. Raspberry Pi OS Bookworm ships 4.3, which has no Quadlet at all, so a Pi wants Trixie or newer.

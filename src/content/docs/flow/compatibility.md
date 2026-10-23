@@ -5,10 +5,6 @@ description: "Every deliberate divergence from Node-RED, node by node, with the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at f1f417f, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Generated from the node registry. Do not edit by hand, change the
 `Compatibility` field on the node's descriptor and regenerate:
 
@@ -52,14 +48,14 @@ stopped with D1012 instead of stalling the node's whole queue.
 
 ## Summary
 
-75 node types registered.
+79 node types registered.
 
 | Level | Count |
 |---|---|
 | full | 12 |
 | partial | 21 |
 | divergent | 14 |
-| hotloop-flow-only | 28 |
+| hotloop-flow-only | 32 |
 
 ## Common
 
@@ -83,6 +79,7 @@ stopped with D1012 instead of stalling the node's whole queue.
 | `hotloop-flow-ethernetip` | hotloop-flow-only | HotLoop Flow's own EtherNet/IP connection, for tag access on ControlLogix, CompactLogix and Micro800 controllers. It connects on the first request, drops the connection on any failure that makes it untrustworthy, and reconnects on the next one. |
 | `hotloop-flow-hotloop` | hotloop-flow-only | HotLoop Flow's own connection to a HotLoop. Logs in with an account and sends the bearer token HotLoop hands back, and logs in again when it expires. |
 | `hotloop-flow-influxdb` | hotloop-flow-only | HotLoop Flow's own InfluxDB connection, targeting the App Store's influxdb-app. |
+| `hotloop-flow-mcp-server` | hotloop-flow-only | HotLoop Flow's own connection to a Model Context Protocol server over Streamable HTTP. It sends a bearer token if it has one, connects on the first call and reconnects on the call after a failure. |
 | `hotloop-flow-modbus` | hotloop-flow-only | HotLoop Flow's own Modbus TCP connection. It connects on the first request, drops the connection on any failure that makes it untrustworthy, and reconnects on the next one. |
 | `hotloop-flow-opcua` | hotloop-flow-only | HotLoop Flow's own OPC UA connection. It connects on first use, notices when the server goes away, and opens a new session on the next request or, for a subscription, by itself with a growing wait between tries. |
 | `hotloop-flow-postgres` | hotloop-flow-only | HotLoop Flow's own PostgreSQL connection. Targets the App Store's postgresql-app and timescale-db-pod, which share a wire protocol. |
@@ -127,6 +124,9 @@ stopped with D1012 instead of stalling the node's whole queue.
 | `http in` | divergent | Serves a path, with Express-style :params and a trailing *, and builds the same msg.req / msg.res / msg.payload shape Node-RED does, including JSON, form-encoded and raw bodies. Three deliberate differences. A request that no HTTP Response node answers is closed with 504 after a timeout instead of being held open forever, because Node-RED's version leaks a connection per request until the process runs out of sockets and stops answering with nothing in the log. Two nodes claiming the same method and path is refused at deploy time rather than one of them silently never firing. And a path that would shadow the editor or the admin API is refused for the same reason. Uploads parse the way multer does in Node-RED: text fields into msg.payload, files into msg.req.files, a broken upload answered with 500. One bound multer lacks: an array index over 10,000 in a field name, a[99999999], is refused instead of building a sparse array that long. msg.req.cookies is cookie-parser's, j: values included. Ignored properties: `swaggerDoc`. |
 | `http request` | partial | Method, URL, headers, basic authentication, redirects and the three return types, with msg.url, msg.method and msg.headers overriding the node. The response body is size-capped and the call is bounded by a timeout, neither of which Node-RED does. TLS comes from a tls-config, or without one msg.rejectUnauthorized = false skips the certificate check for that one message, as in Node-RED. msg.cookies and a cookie header go out through a cookie jar, cookies a redirect sets follow the redirect, and msg.responseCookies and msg.redirectList come back, all as in Node-RED. A multipart/form-data content type with an object payload sends it as a form. Proxy settings and connection persistence are not implemented in this build. There is no egress allowlist: this node can reach anything the pod can, exactly as Node-RED's can, and the place to bound that is a NetworkPolicy rather than an edit dialog nobody outside the cluster can trust. Ignored properties: `proxy`, `persist`. |
 | `http response` | partial | Status code and headers from the node or from msg.statusCode and msg.headers, with the payload as the body. msg.cookies sets and clears cookies exactly as Express does for Node-RED, options and all; with more than one, they go out in name order rather than the order the object was built in. |
+| `mcp client` | hotloop-flow-only | HotLoop Flow's own node. It calls a tool on a Model Context Protocol server, or lists the tools it has. |
+| `mcp result` | hotloop-flow-only | HotLoop Flow's own node. It answers the call an mcp tool node started. |
+| `mcp tool` | hotloop-flow-only | HotLoop Flow's own node. It serves a flow as a Model Context Protocol tool at /mcp, for a caller authenticated like the admin API's, and it has no Node-RED counterpart. |
 | `modbus read` | hotloop-flow-only | HotLoop Flow's own Modbus TCP read. Not the same configuration as the community node-red-contrib-modbus, which does not run here. |
 | `modbus write` | hotloop-flow-only | HotLoop Flow's own Modbus TCP write. Not the same configuration as the community node-red-contrib-modbus, which does not run here. |
 | `mqtt in` | partial | Topic subscription with QoS and payload decoding, and on MQTT 5 the no local, retain as published and retain handling options, with the message's properties on msg.userProperties, msg.contentType, msg.responseTopic, msg.correlationData and msg.messageExpiryInterval, and its content type steering the auto-detect decoding the way Node-RED's does. Dynamic subscription via a control message is not implemented. |
@@ -153,7 +153,7 @@ stopped with D1012 instead of stalling the node's whole queue.
 |---|---|---|
 | `csv` | partial | Parsing to objects and rendering from objects are supported, with configurable separator and header handling. Multi-line quoted fields spanning separate messages are not reassembled. |
 | `html` | partial | Extracts elements by CSS selector, returning inner HTML, text or attributes, as one message per match or one message holding an array. The selector engine covers type, id, class, attribute, descendant, child and comma groups. Pseudo-classes, pseudo-elements, sibling combinators and the ~= and \|= attribute operators are refused at deploy time rather than ignored, because a selector that quietly drops its :nth-child matches the wrong elements and keeps working. Returned HTML is re-rendered from the parse tree, so it is normalized markup rather than the original bytes. |
-| `json` | partial | Conversion in both directions is supported. Schema validation against msg.schema is not implemented in this build. Ignored properties: `schema`. |
+| `json` | partial | Conversion in both directions is supported. Schema validation is supported, against msg.schema as in Node-RED and against a schema in the node's settings. The validator is not Ajv: it reads draft 2020-12 unless the schema names another draft, it refuses a $ref to anything outside the schema, and format keywords it does not know are ignored. |
 | `xml` | partial | Both directions, using xml2js's object convention: attributes under the key named by "attr" (default $), element text under "chr" (default _), and every child element as an array, which is xml2js's own explicitArray default. Set ew_explicitArray to false to collapse single children instead. The per-message msg.options that Node-RED passes through to xml2js is not honored, the other xml2js options change the shape of the output, and silently ignoring one would produce an object the flow does not expect while looking like it worked. Namespaces are kept as part of the element name rather than being resolved. Ignored properties: `options`. |
 | `yaml` | full | Conversion in both directions, toggling on the value's type when no action is set, as Node-RED's does. |
 

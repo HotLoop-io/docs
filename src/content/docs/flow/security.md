@@ -5,10 +5,6 @@ description: "No login is a startup error, exec ships off, file nodes are fenced
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at f1f417f, and it differs from the copy in HotLoop Flow 2.2.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The rule underneath all of this: anyone who can deploy a flow can make the box do
 things, because that's what flows are for. So "who can deploy a flow" gets
 answered by the operator, on purpose, and never by a default.
@@ -68,8 +64,8 @@ log or the audit trail.
 
 **Everything that matters leaves a trail.** Logins, failed logins (with whether
 the name even exists, which a client never gets told but an operator should),
-logouts, deploys, refused deploys, rollbacks, injects and saves of the flow
-tests go to
+logouts, deploys, refused deploys, rollbacks, injects, MCP tool calls and saves
+of the flow tests go to
 `data/audit.log`, one JSON line each, synced to disk before the request is
 answered. Each says who, from which address, and what: a deploy points at its
 deployment record, an inject names the node. `X-Forwarded-For` is kept beside

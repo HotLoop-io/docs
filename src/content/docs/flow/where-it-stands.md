@@ -37,8 +37,9 @@ the point. A flow that leans on one breaks the day it stops being there.
 - **Durable wires have never been on a Pi.** Store and forward and the disk
   writes were measured on an x86 box under WSL. The Pi 4 and Zero 2 W numbers
   are still to do, and I won't print a card figure I didn't measure on a card.
-- **A node that uses the WASM host.** The host is built and tested. Nothing in
-  the palette calls it, so WASM guests can't run in a flow today.
+- **Plugins have never run on a Pi.** The traps and the refusals are tested
+  against guests built from Rust, TinyGo and Go, and a signed plugin has run in a
+  real cluster, but the per-call numbers above are from an x86 box.
 - **It has never run on a real plant floor.** Shepherd Boy Farms is the intended
   first site. Everything past the deploy line is unproven in the field, and I'm
   not calling it production-hardened until a plant has had a real go at

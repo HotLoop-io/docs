@@ -70,7 +70,7 @@ To choose your own instead:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.2.0 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -145,6 +145,10 @@ finishes the handshake instead of leaving half-open connections on a PLC.
 | `exec.enabled`, `exec.allowedCommands` | off, empty | The exec node. Same rule. |
 | `files.allowedPaths` | empty | Extra trees the file nodes may reach beyond `/data`. |
 | `secrets.mounts` | empty | Secrets to mount read-only, each `{secretName, mountPath}`, for a tls-config's files and `ew_credentialFiles`. Each path joins the secret scope and never the file nodes'. |
+| `plugins.enabled` | off | [Plugins](/flow/plugins/). Off renders nothing. On, with `plugins.trustedKeys` empty, every plugin is refused. |
+| `plugins.trustedKeys`, `plugins.grants` | empty | The publisher keys to believe, and what each plugin may use by name (`clock`, `random`, `context.flow`, `context.global`). A flow using a plugin that asks for more fails the deploy. |
+| `plugins.maxMemoryMiB`, `plugins.maxTimeout` | `64`, `5s` | The most memory and the longest time any one plugin node can be given. |
+| `plugins.volume`, `plugins.mountPath`, `plugins.dir` | empty, `/etc/hotloop-flow/plugins`, empty | How the plugin files arrive. No volume: copy them into `plugins/` on the data volume. A volume is any Kubernetes volume source (an existing claim, a ConfigMap, a Secret), mounted read-only at `mountPath`, and `dir` follows it. |
 | `metrics.serviceMonitor.enabled` | off | Prometheus Operator scraping. |
 | `ingress.enabled` | off | If you want it reachable from outside the cluster. |
 
@@ -177,7 +181,7 @@ so the unit can be copied around, committed and reviewed without carrying
 anything that matters.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.2.0 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -196,7 +200,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.2.0
+Image=ghcr.io/hotloop-io/hotloop-flow:2.3.0
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -257,9 +261,9 @@ To try it, not to run a line on:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.2.0 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.2.0
+  ghcr.io/hotloop-io/hotloop-flow:2.3.0
 ```
 
 Then open <http://localhost:1880>. That credential secret is new every time you
