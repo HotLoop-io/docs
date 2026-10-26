@@ -141,6 +141,8 @@ Secret.
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | Credential encryption secret. |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | A single admin account with full permissions, which is what makes a first-run container usable without mounting a file. Both must be set. |
 | `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | A deploy token called `deploy`, for CI: `flows.read` and `flows.write`, nothing else. The hash, never the token. |
+| `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | Sign-in from the EmberCORE dashboard. The key is the dashboard's public ES256 key (a PEM file), the audience is `<tenant>/<release>`. With no key file it is off, and the default is off. |
+| `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | The issuer (`embernet-dashboard`), the header (`X-Embernet-Assertion`), and whether the editor leaves out its own sign-in form (`true`). |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | The git mirror. The password (an access token) is environment only. |
 | `HOTLOOP_FLOW_INBOX_CAPACITY`, `HOTLOOP_FLOW_OVERFLOW` | Scheduler defaults. |
 | `HOTLOOP_FLOW_STORE_PATH`, `HOTLOOP_FLOW_STORE_SYNCHRONOUS` | The state database: where it is, and whether every commit is fsynced. |

@@ -11,6 +11,7 @@ editUrl: false
 | `GET /ready` | none | Readiness, reported separately, so a runtime that failed to start leaves the Service without the kubelet killing the pod. |
 | `POST /auth/token` | none | Log in. A 429 with `Retry-After` while locked out. |
 | `POST /auth/revoke` | none | Log out. |
+| `GET /auth/mode` | no sign-in | Whether this runtime is opened from the EmberCORE dashboard: `{"dashboard": bool, "hideLogin": bool}`. The editor asks it before anybody has signed in. |
 | `GET /auth/mfa`, `POST /auth/mfa/setup`, `/confirm`, `/disable` | a signed-in user | Your own two-factor sign-in. Setup returns the key, the `otpauth://` link and the QR code. Confirm and disable take `{"code": ...}`. |
 | `POST /auth/mfa/reset` | `auth.admin` | Turns off somebody else's two-factor sign-in: `{"username": ...}`. |
 | `GET /metrics` | none | Prometheus. Counts and node ids only, never message contents or configuration. |
