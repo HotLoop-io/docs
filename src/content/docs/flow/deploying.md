@@ -70,7 +70,7 @@ To choose your own instead:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.4.0 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -122,6 +122,16 @@ Distroless nonroot as uid 65532, read-only root filesystem, no privilege
 escalation, `RuntimeDefault` seccomp, every capability dropped. Discovery
 included: `scan` only makes TCP connections, which need no capability, and
 finishes the handshake instead of leaving half-open connections on a PLC.
+
+### Signing in from the EmberCORE dashboard
+
+When the dashboard deploys Flow from the App Store it hands the chart its public key (`embernetSignin.publicKey`), and from then on the dashboard is the way in. It puts a token it signed in `X-Embernet-Assertion` on every request it proxies, the editor's websocket included, and Flow checks it with that key: the signature (ES256), the issuer (`embernet-dashboard`), that it was made for this app in this tenant (the audience is `<tenant>/<release>`, so a token for another app opens nothing here), and its expiry (about a minute, so there is nothing to revoke and a role changed in the dashboard lands on the next request).
+
+The permission comes from the tenant's role map in the dashboard: `*` is full access, `read` is read-only (the flows, the palette, the settings and the status, and nothing that changes them, no deployment log and no inject). A role that is neither, or none, gets no access. Someone signed in this way shows in the deployment log and the audit trail as `dashboard:<email>`.
+
+Off unless the key is set. With no key Flow ignores the header and behaves as it always did. With a key, a bad token is refused outright and nothing else on the request rescues it. The admin login and bearer tokens keep working beside it, which is the break-glass for staff and automation, and the editor shows "Open this from the EmberCORE dashboard" instead of its own sign-in form (`embernetSignin.hideLoginForm`).
+
+On a pod you run yourself, mount the PEM and set `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE` and `HOTLOOP_FLOW_ASSERTION_AUDIENCE`; Flow refuses to start with a key it cannot read or no audience.
 
 ### The values you'll actually touch
 
@@ -181,7 +191,7 @@ so the unit can be copied around, committed and reviewed without carrying
 anything that matters.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.4.0 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -200,7 +210,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.3.0
+Image=ghcr.io/hotloop-io/hotloop-flow:2.4.0
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -261,9 +271,9 @@ To try it, not to run a line on:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.3.0 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.4.0 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.3.0
+  ghcr.io/hotloop-io/hotloop-flow:2.4.0
 ```
 
 Then open <http://localhost:1880>. That credential secret is new every time you
