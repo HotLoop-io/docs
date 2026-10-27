@@ -19,14 +19,14 @@ Astro app with Svelte islands, built to static files at image build time, in the
 same colors and type as every other HotLoop screen, light or dark following your
 system until you pick.
 
-
+![Workflows, in folders](/synced/cascade/docs/screenshots/workflows.png)
 
 Workflows live in projects, and a project's workflows live in folders that nest as
 deep as your plant does: area, line, cell. A workflow moves between folders from
 its own row.
 
-
-
+![The canvas, a step selected and its settings beside it](/synced/cascade/docs/screenshots/editor.png)
+![The same, in dark](/synced/cascade/docs/screenshots/editor-dark.png)
 
 The canvas is where it has always been: drag from an output to an input, move a
 step, `Ctrl+S` to save, `Delete` to take a step out. Run to here runs what is on
@@ -35,7 +35,7 @@ its fields or JSON, and you can pin that output so the step stops running while 
 build the ones after it. Every field takes an expression and shows what it comes
 to against the last test run. A save over someone else's is told, not obeyed.
 
-
+![A failed run, drawn as it ran](/synced/cascade/docs/screenshots/run.png)
 
 A run is drawn with how every step did. Retry it from the step that failed, from
 any step, or debug it in the editor against changes: the steps before the one you
@@ -43,10 +43,10 @@ rerun keep what they did, so a write that already happened doesn't happen twice.
 person can leave a thumbs up or down, a note and tags on a run after the fact, and
 the executions list finds runs by them.
 
-
-
-
-
+![Executions, with what people said about them](/synced/cascade/docs/screenshots/executions.png)
+![Insights over the last seven days](/synced/cascade/docs/screenshots/insights.png)
+![Roles](/synced/cascade/docs/screenshots/roles.png)
+![Redaction policies](/synced/cascade/docs/screenshots/redaction.png)
 
 The rest is under Settings: variables, roles and who holds them, redaction
 policies (a workflow picks one in its settings, from the editor), external secret
