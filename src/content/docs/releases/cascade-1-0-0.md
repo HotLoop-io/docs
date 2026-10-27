@@ -11,7 +11,7 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at 78f6a9d. These notes are for a release that is not out. HotLoop Cascade 0.1.2 is the latest one you can install.
+This page was written from `main` at 271c7b0. These notes are for a release that is not out. HotLoop Cascade 0.1.2 is the latest one you can install.
 :::
 
 ## What this is

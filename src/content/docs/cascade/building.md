@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 78f6a9d, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 271c7b0, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 You need Go 1.27.1, and Podman for the editor: `test/web.sh` builds it in a pinned
@@ -25,7 +25,8 @@ Mosquitto, a HotLoop gateway, ntfy, Gotify, a mail server, EmberOps, OpenLDAP, a
 that network. The editor's browser tests (`test/e2e.sh`, run by `test/run.sh`) drive the real binary in a real Chrome across every screen, against the services behind the ones that talk to them. CI runs the same two scripts. A test whose service is missing
 fails instead of skipping, because a skipped integration test is a test that
 never ran. `test/services/down.sh` cleans up, and it only ever touches
-containers it made.
+containers it made. `test/screenshots.sh` retakes the pictures in this README, in light and dark, of a demo
+plant it makes for the purpose (`web/shots`), so they change when the editor does and not before.
 
 The database is a setting. `HOTLOOP_CASCADE_DATABASE` is `sqlite:<path>` (the
 default, under `HOTLOOP_CASCADE_DATA_DIR`) or a `postgres://` URL, and every

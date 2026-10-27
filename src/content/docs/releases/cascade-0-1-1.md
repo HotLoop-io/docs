@@ -7,6 +7,10 @@ sidebar:
   label: "0.1.1"
 ---
 
+:::note[Written against main]
+This page follows `main` at 271c7b0, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 ## What this is
 
 0.1.1 is the first release that isn't a candidate. There was a 0.1.0 tag and it never published anything: its chart test failed on a hosted runner and I cancelled the run, so nothing reached the registry. A tag stays where it is, so this is the same code with the test fixed. That test checked the upgrade by listing pods while the old ones were still stopping, which a quiet laptop never shows. It waits for the rollout to finish and the old pods to go now, and I run it with the old pods frozen so it can't pass by luck.

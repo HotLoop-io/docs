@@ -53,6 +53,10 @@ jobs:
           if curl -fsSL "$base/TERMS.md" -o "$RUNNER_TEMP/TERMS.md"; then args="$args --terms $RUNNER_TEMP/TERMS.md"; fi
           node scripts/sync-legal.mjs --check $args
 
+      # The sync's image rules: where a README image lands, and what it refuses.
+      - name: Sync image tests
+        run: node --test scripts/*.test.mjs
+
       - uses: actions/configure-pages@v6
 
       - run: npm run build
