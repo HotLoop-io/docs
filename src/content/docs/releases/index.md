@@ -11,6 +11,7 @@ Every release has its own page, written the day it shipped. A note marked "on ma
 
 IoT, Edge, Gateway and Edge Relay release together from one tag, so they share these notes.
 
+- [HotLoop core 4.18.11 release notes](/releases/hotloop-4-18-11/) (on main, next release)
 - [HotLoop core 4.18.10 release notes](/releases/hotloop-4-18-10/)
 - [HotLoop core 4.17.0 release notes](/releases/hotloop-4-17-0/)
 - [HotLoop core 4.16.0 release notes](/releases/hotloop-4-16-0/)
@@ -24,5 +25,6 @@ IoT, Edge, Gateway and Edge Relay release together from one tag, so they share t
 
 ## HotLoop Cascade
 
+- [HotLoop Cascade 1.0.0 release notes](/releases/cascade-1-0-0/) (on main, next release)
 - [HotLoop Cascade 0.1.2 release notes](/releases/cascade-0-1-2/)
 - [HotLoop Cascade 0.1.1 release notes](/releases/cascade-0-1-1/)

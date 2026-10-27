@@ -5,6 +5,10 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -37,8 +41,8 @@ default). Behind a proxy that serves the app under a path, set
 
 ### Logging in: a cookie or a bearer token
 
-Every `/api/` route needs a session, except logging in, inbound webhooks and
-alarm acknowledge links, each of which carries its own proof in the request.
+Every `/api/` route needs a session, except logging in (with a password, or with
+a PIN or badge at a kiosk panel), inbound webhooks and alarm acknowledge links, each of which carries its own proof in the request.
 `POST /api/auth/login` answers with a token and also sets it as the
 `iiot_session` cookie (HttpOnly, SameSite=Lax, Secure when the request came in
 over TLS or with `X-Forwarded-Proto: https`). A browser uses the cookie and
@@ -279,6 +283,7 @@ grants everything under a resource (`reports.*`). The admin role is `*`.
 | `fleet.update` | no | no | yes |
 | `fleet.config` | no | no | yes |
 | `notify.test` | no | no | yes |
+| `notify.escalation` | no | no | yes |
 | `backup.read` | no | no | yes |
 | `backup.run` | no | no | yes |
 | `reports.read` | yes | yes | yes |
@@ -317,7 +322,9 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/healthz` | none | all |
 | `GET` | `/readyz` | none | all |
 | `POST` | `/api/auth/login` | none | all |
+| `POST` | `/api/auth/kiosk` | none | all |
 | `POST` | `/api/auth/logout` | session | all |
+| `POST` | `/api/auth/activity` | session | all |
 | `GET` | `/api/auth/session` | session | all |
 | `POST` | `/api/auth/password` | session | all |
 | `GET` | `/api/users` | `users.manage` | all |
@@ -325,6 +332,9 @@ see [Not in this product](#not-in-this-product).
 | `PUT` | `/api/users/{username}` | `users.manage` | all |
 | `DELETE` | `/api/users/{username}` | `users.manage` | all |
 | `POST` | `/api/users/{username}/password` | `users.manage` | all |
+| `DELETE` | `/api/users/{username}/lockout` | `users.manage` | all |
+| `PUT` | `/api/users/{username}/pin` | `users.manage` | all |
+| `DELETE` | `/api/users/{username}/pin` | `users.manage` | all |
 | `GET` | `/api/status` | `status.read` | all |
 | `GET` | `/api/protocols` | `status.read` | all |
 | `GET` | `/api/diagnostics` | `status.read` | all |
@@ -365,6 +375,9 @@ see [Not in this product](#not-in-this-product).
 | `POST` | `/api/network-discovery/{key}/ignore` | `devices.write` | all |
 | `POST` | `/api/network-discovery/{key}/unignore` | `devices.write` | all |
 | `POST` | `/api/network-discovery/probe` | `devices.write` | all |
+| `GET` | `/api/integrations` | `devices.read` | all |
+| `POST` | `/api/integrations/{id}/probe` | `devices.write` | all |
+| `POST` | `/api/integrations/{id}/setup` | `devices.write` | all |
 | `GET` | `/api/broker/logins` | `users.manage` | all |
 | `POST` | `/api/broker/logins` | `users.manage` | all |
 | `PUT` | `/api/broker/logins/{name}` | `users.manage` | all |
@@ -464,6 +477,8 @@ see [Not in this product](#not-in-this-product).
 | `POST` | `/api/fleet/{id}/config` | `fleet.config` | gateway |
 | `DELETE` | `/api/fleet/{id}/config` | `fleet.config` | gateway |
 | `POST` | `/api/notify/test` | `notify.test` | all |
+| `GET` | `/api/notify/escalation` | `notify.escalation` | all |
+| `PUT` | `/api/notify/escalation` | `notify.escalation` | all |
 | `POST` | `/api/notify/ack/{token}` | none | all |
 | `GET` | `/api/backup` | `backup.read` | all |
 | `POST` | `/api/backup` | `backup.run` | all |
@@ -487,6 +502,8 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/api/stream` | `status.read` | all |
 | any | `/mcp` | MCP token | all |
 | any | `/mcp/` | MCP token | all |
+| `GET` | `/manifest.webmanifest` | none | all |
+| `GET` | `/sw.js` | none | all |
 | `GET` | `/static/` | none | all |
 | any | `/` | none | all |
 
@@ -538,7 +555,45 @@ No session needed, by construction.
 Also sets the `iiot_session` cookie to the same token. `401`
 `"invalid username or password"` for a wrong name, a wrong password or a
 disabled account alike, and it takes as long either way: which of the three it
-was is not something to tell a stranger.
+was is not something to tell a stranger. `429` for an account that has had too
+many wrong passwords or PINs in a row, whatever is sent, with a `Retry-After`
+header; see [AUTH.md](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins).
+
+### `POST /api/auth/kiosk`
+
+Sign in at a shared panel with a PIN or a badge, the way
+[AUTH.md](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out) describes. No
+session needed, by construction.
+
+| Field | Type | <span class="sr-only">Details</span> |
+|---|---|---|
+| `code` | string | Required. The PIN, or the value a keyboard-wedge badge reader typed. Surrounding spaces are ignored |
+| `username` | string | Optional. With it, only that account's PIN is checked and a wrong one counts toward that account's lockout. Without it, the code is looked for among every account's |
+
+```json
+{"expiresAt":"2026-10-21T08:21:00.571794Z","idleSec":300,"permissions":["status.read","tags.read"],"role":"operator","username":"olga"}
+```
+
+Sets the `iiot_session` cookie and, unlike `POST /api/auth/login`, does not
+answer with the token: a kiosk session belongs to the browser at the panel.
+`idleSec` is how long the session survives with nobody touching it. `401`
+`"that PIN or badge isn't recognized"` for a wrong code, a code that is too short
+and a disabled account's code alike, and it takes as long either way. `429` when the account is locked
+(see [The lockout](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins)), with a
+`Retry-After` header. A code sent without a `username` that matches nobody is
+not counted against any account; the panel that sent it, by client address, waits
+half a second longer before its next such try is checked, up to
+`ui.panelDelaySeconds`, and a right one starts it over. The panel is never locked. `400` when
+the deployment runs with no login (`HOTLOOP_AUTH_INSECURE`), since there is then
+nobody to sign in as.
+
+### `POST /api/auth/activity`
+
+A person touched the panel. No body. `{"status":"ok"}`. On a kiosk session this
+is what moves its idle limit on; so is every other request that is not a read (a
+write, an acknowledge). A `GET`, the live feed and the page's own background
+loads are not: they would otherwise keep the last person signed in for ever. A
+session made with a password has no idle limit and nothing to move.
 
 ### `POST /api/auth/logout`
 
@@ -552,6 +607,9 @@ Who am I. For the UI's boot sequence.
 ```json
 {"authenticated":true,"permissions":["*"],"role":"admin","username":"admin"}
 ```
+
+A session made at a kiosk panel adds `"idleSec"`, its idle limit in seconds, which
+is how the page knows to sign itself out.
 
 With auth switched off (`HOTLOOP_AUTH_INSECURE`), it answers
 `{"authenticated":false,"insecure":true}` instead of a 401, so the UI can say
@@ -580,10 +638,11 @@ the field has no JSON name.
 ### `GET /api/users`
 
 ```json
-[{"username":"admin","role":"admin","disabled":false,"createdAt":"2026-09-27T20:19:28.036228Z","updatedAt":"2026-09-27T20:19:28.036228Z","lastLogin":"2026-09-27T20:21:00.575455Z"}]
+[{"username":"admin","role":"admin","disabled":false,"hasPin":false,"locked":false,"createdAt":"2026-09-27T20:19:28.036228Z","updatedAt":"2026-09-27T20:19:28.036228Z","lastLogin":"2026-09-27T20:21:00.575455Z"}]
 ```
 
-`permissions` appears only on an account that has an explicit list.
+`permissions` appears only on an account that has an explicit list. `hasPin` says
+whether the account has a kiosk PIN or badge; the value and its hash never appear.
 
 ### `POST /api/users`
 
@@ -620,6 +679,32 @@ An admin sets somebody else's password without knowing the old one.
 `{"password": "..."}`, at least 8 characters. Answers
 `{"status":"password reset"}` and ends every session that account holds.
 
+### `PUT /api/users/{username}/pin`
+
+An admin gives an account a PIN or badge value for signing in at a kiosk panel,
+or replaces the one it has. `{"code": "482913"}`: 6 to 72 characters, no spaces
+or control characters, digits or anything else a badge reader types. Answers
+`{"status":"PIN set","username":"olga","hasPin":true}`. The value is hashed with
+bcrypt, as a password is, and is never logged or sent back. `400` for a code that
+is too short, too long or has a space in it, and for a code another account
+already has: a panel finds the account by the code alone, so one code opens one
+account. `404` for an unknown user. It does not touch the password or any
+session.
+
+### `DELETE /api/users/{username}/lockout`
+
+Lets a locked account back in before its lock runs out, and starts its count of
+wrong passwords and PINs from zero. `{"status":"unlocked","username":"olga","locked":false}`.
+`404` for an unknown user. A locked account shows `"locked":true` and
+`"lockedUntil"` in `GET /api/users`.
+
+### `DELETE /api/users/{username}/pin`
+
+Takes the PIN or badge away and signs the account out of every kiosk panel it is
+signed in at. Its password, and its sessions on its own computer, are untouched.
+`{"status":"PIN cleared","username":"olga","hasPin":false}`. `404` for an unknown
+user.
+
 ## Status and diagnostics
 
 ### `GET /api/status`
@@ -647,10 +732,10 @@ binary and a Helm install can't) and is left out otherwise.
     "bus": {"subscribers":4,"published":653,"dropped":0},
     "historian": {"queued":1085,"written":1085,"filtered":329,"dropped":0,"failed":0,"queueLen":0,"queueCap":50000},
     "writePolicy": {"allowWrites":true,"allowMcpWrites":false,"confirmWrites":true},
-    "protocols": ["ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm"]
+    "protocols": ["ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.18.10"
+  "version": "4.18.11"
 }
 ```
 
@@ -738,7 +823,7 @@ for a protocol with no driver, a failed validation or a credential rule; the
 runtime reloads with it straight away.
 
 ```json
-{"error":"no driver for protocol \"profibus\"; this build speaks: ethernet-ip, http, modbus, mqtt, mtconnect, opcua, s7comm"}
+{"error":"no driver for protocol \"profibus\"; this build speaks: ethernet-ip, http, modbus, mqtt, mtconnect, opcua, s7comm, snmp, unifi"}
 ```
 
 ### `GET /api/devices/{id}`
@@ -1183,6 +1268,69 @@ is listed in `HOTLOOP_NETDISC_PROBE_NETWORKS`, and nowhere else. Answers
 `{"status": ...}`, with what didn't go out in `status.probe.lastError`. `400`
 when no network has probing switched on: this button can't switch it on, only
 the deployment can.
+
+## Integrations
+
+The config flow for a kind of device a person points HotLoop at: ask what the
+integration needs, look at the real device with the answers, and make the
+device and its tags from what was found. See INTEGRATIONS.md.
+
+**Nothing here arms anything.** Every tag a setup makes is read-only. Arming
+one is `POST /api/tags` like every other point.
+
+### `GET /api/integrations`
+
+Every integration this build has, with the questions it asks:
+
+```json
+[{"id":"opcua","name":"OPC UA server","description":"A PLC, CNC, gateway or SCADA server ...",
+  "protocol":"opcua","addressLabel":"Endpoint","addressPlaceholder":"opc.tcp://192.168.1.20:4840","writable":true,
+  "fields":[{"key":"securityMode","label":"Security","kind":"choice","required":false,"default":"None",
+             "choices":[{"value":"None","label":"None"},{"value":"Sign","label":"Sign"}]},
+            {"key":"password","label":"Password","kind":"secret","required":false}]}]
+```
+
+`kind` is `text`, `number`, `bool`, `choice` or `secret`. A field with
+`showWhen` (`{"version":["3"]}`) is only asked when another answer has one of
+those values, and an answer to a question that is not showing is ignored.
+
+### `POST /api/integrations/{id}/probe`
+
+Checks the answers and goes and looks at the real device. Saves nothing.
+
+```json
+{"address":"opc.tcp://192.168.1.20:4840","options":{"securityMode":"None"}}
+```
+
+Answers `{"integration":"opcua","address":"opc.tcp://192.168.1.20:4840","found":{...}}`.
+`address` is the address as the integration resolved it. `found` has `name`
+(what the device calls itself), `identity` (what it says it is), `notes`
+(things to know before accepting) and `points`, each a tag-shaped
+`{name, address, dataType, unit, description, writable, deviceClass}` plus
+`group`, `sample` (what it read when it was found) and `suggested`.
+
+`400` for answers that don't fit the questions, all the problems at once; an
+answer for a question the integration doesn't ask is a `400` too, not ignored.
+`502` when the device didn't answer or answered with something that isn't its
+protocol, with what went wrong. `404` for an integration this build doesn't
+have. A secret is never in an answer or an error.
+
+### `POST /api/integrations/{id}/setup`
+
+Looks at the device again, then creates it and its tags. The body is the
+probe's, plus:
+
+| Field | Meaning |
+|---|---|
+| `deviceId` | The new device's id. Blank takes one from the name. `400` if a device has it |
+| `name` | The device's name. Blank takes what the device calls itself |
+| `points` | Names from `found.points` to set up. Blank takes the ones marked `suggested`. A name the device doesn't have is a `400` |
+| `site`, `area`, `line` | Where it goes on the equipment tree, as on `POST /api/devices` |
+
+The points are checked against the device as it is now, not against what a
+client says it found a minute ago. Answers `{"device":{...},"tags":3,"entities":["sensor.plc_sim_..."],"notes":[]}`.
+The device is enabled and polling, every tag is read-only, and each tag has
+its read entity. A setup that fails part way leaves no device behind.
 
 ## MQTT brokers
 
@@ -1845,8 +1993,10 @@ The alarm audit trail, newest first. `?alarm=` one definition, `?limit=`
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` is `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed` or
-`unsuppressed`.
+`type` is `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`,
+`unsuppressed`, `escalated` or `escalation-ended`. The last two are written by
+alarm escalation (`actor` is `escalation`), and their `note` says who was told
+and why the chain stopped. See [NOTIFY.md](/iot/notifications/#escalation).
 
 ## Automations
 
@@ -2450,8 +2600,9 @@ the relay is online: an offline relay never hears it. See
 
 ## Notifications
 
-Paging a phone when an alarm is raised, over a webhook, SMTP, ntfy or Gotify.
-Needs `HOTLOOP_NOTIFY_ENABLED`.
+Paging a phone when an alarm is raised, over a webhook, SMTP, ntfy or Gotify, and
+telling the next person when nobody acknowledges it. Needs
+`HOTLOOP_NOTIFY_ENABLED`.
 
 ### `POST /api/notify/test`
 
@@ -2468,6 +2619,48 @@ whatever quota the provider allows.
 carries `error`. A failed webhook names its scheme and host and nothing else,
 because for most paging services the URL is the credential. See
 [NOTIFY.md](/iot/notifications/).
+
+### `GET /api/notify/escalation`
+
+The alarm escalation policy, the channels a step may name, and the chains open
+right now. `available` is `false`, with an off policy and no channels, when
+`HOTLOOP_NOTIFY_ENABLED` isn't set; the answer is still `200`. Admin-only for read
+and write: the policy holds people's ntfy topics, which on a server anybody can
+reach are passwords.
+
+```json
+{"available":true,"policy":{"enabled":true,"minPriority":"high","contacts":[{"name":"Ana","ntfyTopic":"ana-phone-3f9c","emails":["ana@plant.test"]}],"steps":[{"afterMinutes":5,"contacts":["Ana"]},{"afterMinutes":10,"channels":["gotify"]}],"repeatEveryMinutes":15,"repeatTimes":2},"channels":["smtp","ntfy","gotify"],"active":[{"alarmId":"boiler-hi","name":"Boiler Trip","raisedAt":"2026-10-21T03:00:00Z","sent":1,"total":4,"nextAt":"2026-10-21T03:15:00Z"}],"limits":{"steps":10,"contacts":50,"repeats":20,"minutes":1440}}
+```
+
+`channels` are the ones this HotLoop has configured, which is all a step can
+name. `active` is every alarm being walked down the chain: how many sends have
+gone out of how many the policy has (steps, then repeats), and when the next is
+due. Nothing saved yet is `{"policy":{"enabled":false},...}`: off, with nothing in it.
+
+### `PUT /api/notify/escalation`
+
+Replaces the whole policy, not a patch, and answers what `GET` would. It applies
+to alarms raised from now on. `400` when notifications aren't enabled.
+
+```json
+{"enabled":true,"minPriority":"high",
+ "contacts":[{"name":"Ana","ntfyTopic":"ana-phone-3f9c","emails":["ana@plant.test"]}],
+ "steps":[{"afterMinutes":5,"contacts":["Ana"]},{"afterMinutes":10,"channels":["gotify"]}],
+ "repeatEveryMinutes":15,"repeatTimes":2}
+```
+
+`minPriority` is `critical`, `high` (the default), `medium` or `low`. A step is
+due `afterMinutes` (1 to 1440) after the one before it, the first after the
+raise, and names `contacts` from the list, `channels` the deployment has, or
+both. At most 10 steps, 50 contacts and 20 repeats. Unknown fields are refused.
+
+`400` with the reason when the policy can't work, in words you can act on: a
+step that names nobody, a contact who isn't in the list, a channel this HotLoop
+hasn't configured (the answer lists the ones it has), an ntfy topic with ntfy
+not configured or an address with email not configured, an address that isn't a
+plain one, a repeat with no interval. Nothing is stored when it is refused.
+Saving it is in the system log, without the topics. See
+[NOTIFY.md](/iot/notifications/#escalation).
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2668,6 +2861,10 @@ Changes the plant-identity settings, and only those:
 | `ui.siteId` | string, at most 200 characters |
 | `ui.timezone` | an IANA name this machine knows (`America/Chicago`) |
 | `ui.confirmWrites` | bool |
+| `ui.kioskIdleSeconds` | a whole number of seconds, 10 to 43200: how long a kiosk sign-in survives with nobody touching the panel. Default 900 |
+| `ui.lockoutAttempts` | a whole number, 0 to 100: wrong passwords or PINs in a row that lock one account. Default 10, and 0 is no lockout |
+| `ui.panelDelaySeconds` | a whole number of seconds, 0 to 30: the most a kiosk panel waits before checking the next PIN typed without a user name, after wrong ones. Default 3, and 0 is no wait |
+| `ui.lockoutSeconds` | a whole number of seconds, 10 to 86400: how long a locked account stays locked. Default 300 |
 
 ```json
 {"ui.plantName":"Demo Plant East","ui.timezone":"America/Chicago"}
@@ -2870,6 +3067,14 @@ one carries current values, so nothing is lost for long. The response sets
 `X-Accel-Buffering: no`, because a buffering proxy turns a live feed into a
 very slow download.
 
+The stream looks at its session again every five seconds and closes when the
+session is gone: signed out, expired, revoked, or the account disabled or no
+longer allowed `status.read`. It sends no event first. A browser's
+`EventSource` reconnects, gets the `401` above, and stops. With
+`HOTLOOP_AUTH_INSECURE=true` there is no session and nothing to check. The
+check does not count as the session being used, so a screen left open does not
+keep a session fresh.
+
 ## MCP
 
 ### `/mcp` and `/mcp/`
@@ -2916,6 +3121,26 @@ revalidated so a redeployed pod never serves a stale script to a page that is
 still open. The page itself does not need them (it carries its own inline);
 they are here for anything that wants them separately. No session: they are
 the same for everyone.
+
+### `GET /manifest.webmanifest`
+
+The web app manifest that lets a phone install the UI as an app: the product and
+plant name, `display` `standalone`, the theme colors, the icons (192 and 512
+pixel PNGs, a maskable 512 and the SVG) and shortcuts to Alarms and Dashboards.
+Every URL in it is relative to the manifest's own, so it is right wherever HotLoop
+is mounted. The name follows the plant name set in Settings, and the answer is
+`Cache-Control: no-cache` so a rename shows on the next look. No session: a phone
+asks before anybody has signed in. See
+[DASHBOARDS.md](/iot/dashboards/#on-a-phone).
+
+### `GET /sw.js`
+
+The service worker, at the root of where HotLoop is mounted so its scope covers
+the whole app. It keeps the page and the last answer to the reads a person looks
+at, and answers them marked as old when HotLoop can't be reached. It never answers,
+keeps or queues a write. The running version is in it, so each release gets a page
+cache of its own. `Cache-Control: no-cache`; no session. Only a browser in a secure
+context (https, or `localhost`) runs it.
 
 ### `/`
 

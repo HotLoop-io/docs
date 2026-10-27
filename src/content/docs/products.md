@@ -5,6 +5,10 @@ description: "Six products on three release lines, what each of the four core pr
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows.
 
 They ship on three release lines. **HotLoop core** is IoT, Edge, Gateway, and Edge Relay: four products, one codebase, one tag. Every core release ships all four in lockstep, same version, each with its own image, its own Helm chart and its own
@@ -37,7 +41,7 @@ The table that follows compares the four core products.
 | Quadlet units on SQLite | `deploy/quadlet/iot/sqlite/` | `deploy/quadlet/edge/sqlite/` | `deploy/quadlet/gateway/sqlite/` | none |
 | `database.type` in the chart | `postgresql` (default), `sqlite` | `timescaledb` (default), `postgresql`, `sqlite` | `timescaledb` (default), `postgresql`, `sqlite` | none |
 | Architectures | amd64, arm64, arm/v7 | amd64, arm64, arm/v7 | amd64, arm64 | amd64, arm64, arm/v7 |
-| Database the chart and Quadlet run | PostgreSQL 16 | TimescaleDB | TimescaleDB | none |
+| Database the chart and Quadlet run | PostgreSQL 17 | TimescaleDB | TimescaleDB | none |
 | History kept by default | 30 days | 90 days | 90 days | none |
 | Databases the binary runs on | SQLite or Postgres | SQLite, Postgres or TimescaleDB | SQLite, Postgres or TimescaleDB | none |
 
@@ -168,9 +172,11 @@ Take a backup first (`POST /api/backup`, see [BACKUP.md](/iot/backup/)) and copy
 off the box. What's been run: the Quadlet units, IoT then Edge then the Gateway,
 one database volume, the same device there at every step, and the IoT
 database's PostgreSQL 16 directory starting under the Gateway's TimescaleDB
-image. History stays in native partitions after that move; a hypertable takes a
-backup and a restore into a fresh TimescaleDB. What hasn't been run yet: the
-same move as a `helm upgrade` on a real cluster, and going back down a product.
+image. That was all on PostgreSQL 16; it has not been run again on 17, where the
+same two images share a major but IoT's plain directory still has no TimescaleDB
+extension in it. History stays in native partitions after that move; a hypertable
+takes a backup and a restore into a fresh TimescaleDB. What hasn't been run yet:
+the same move as a `helm upgrade` on a real cluster, and going back down a product.
 Don't take a box you care about down a product until it has been.
 
 ## How they ship

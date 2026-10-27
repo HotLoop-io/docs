@@ -8,7 +8,7 @@ sidebar:
 ---
 
 :::note[Written against main]
-This page follows `main` at c118b2f, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 The release where HotLoop stops being one image. IoT, Edge, the Gateway and the

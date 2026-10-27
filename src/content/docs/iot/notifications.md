@@ -5,6 +5,10 @@ description: "ntfy, Gotify, Discord, webhooks and email. Press Acknowledge on yo
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.10.0. `internal/notify` is the first increment of Phase 2 of the
 plan of record, whose own acceptance bar for this phase is literally "a 03:00
 alarm pages a phone." It registers with `alarm.Engine`'s existing
@@ -23,6 +27,11 @@ own, when someone shelves it for a shift, training them to swipe pages away
 unread the same way a chattering alarm trains them to ignore alarms. Raised
 is the one event that means "something needs a human who might not already be
 looking at a screen," which is the entire reason this package exists.
+
+The one other page is an escalation: the alarm was raised, nobody has
+acknowledged it, and the policy says to tell the next person. It's the same
+alarm still needing somebody, said again to someone else, not a new event. See
+"Escalation".
 
 One case that looks like an unshelve is really a raise. If the condition comes
 up while an alarm is shelved, nobody has been told, so when the shelve ends
@@ -55,7 +64,7 @@ to run.
 
 - **Webhook**: a POST of HotLoop's own JSON body (`alarmId`, `name`,
   `priority`, `priorityLabel`, `message`, `deviceId`, `tagName`, `raisedAt`,
-  `event`) to a configured URL. It works with anything that takes whatever
+  `event`, which is `raised`, or `escalated` for an escalation) to a configured URL. It works with anything that takes whatever
   JSON you send it: your own script behind a small HTTP listener, Node-RED, n8n,
   or a "catch any webhook" trigger in a workflow tool. (Pointed at an ntfy
   topic it pages, with the raw JSON as the text; use the ntfy channel above
@@ -630,6 +639,161 @@ The endpoint answers with `Access-Control-Allow-Origin: *` so the button also
 works from the ntfy web app, which presses it from its own origin. That gives
 nothing away: nothing on this route reads a cookie or a session.
 
+## Escalation
+
+Nobody acknowledged the alarm in N minutes, so the next person gets it. The
+first page goes out exactly as it always did, to every channel whose floor the
+alarm meets. Escalation is what happens after that, if the alarm is still
+sitting there unacknowledged. A page that went to a phone nobody was holding is
+the failure this exists for: at 03:00 the person on call is asleep, and the
+alarm should not wait for them.
+
+You set it up in **Settings, Alarm escalation**, or over the API
+(`GET` and `PUT /api/notify/escalation`). It's admin only, because it holds
+people's ntfy topics and decides who gets woken. Unlike the channels, which are
+read from the environment when HotLoop starts, the policy is data you edit and
+it takes effect when you save it. The channels it can use are the ones the
+deployment already configured. Nothing new is added to the list of four, plus
+the webhook and email.
+
+### The policy
+
+| Field | <span class="sr-only">Details</span> |
+|---|---|
+| `enabled` | Off until you turn it on. An off policy escalates nothing |
+| `minPriority` | The least severe alarm that escalates: `critical`, `high`, `medium` or `low`. Default `high`. A Medium alarm that's been sitting for an hour is a work order, not a 03:00 phone call |
+| `contacts` | The people. Each has a `name`, and an `ntfyTopic`, `emails`, or both. Up to 50 |
+| `steps` | Up to 10. Each has `afterMinutes` (1 to 1440) and who to tell: `contacts` by name, `channels` by name, or both |
+| `repeatEveryMinutes`, `repeatTimes` | After the last step, send it again this often, this many more times (at most 20). Both zero for no repeat |
+
+A **person** gets a notification of their own. Their `ntfyTopic` is a topic on
+the ntfy server this HotLoop already publishes to, with the same login, so
+their phone subscribes to a topic that is only theirs. Their `emails` go through
+the SMTP relay HotLoop already has. A person with a topic needs ntfy configured,
+and one with an address needs email configured, and the policy is refused with
+that said if they aren't. On a server anybody can reach, a topic is a password:
+make it long and random. The API shows topics to admins and nobody else, and
+they are never in the logbook, the system log or an error.
+
+A **channel** in a step is one of the deployment's own (`ntfy`, `gotify`,
+`smtp`, `webhook`, `discord-webhook`, `discord`) and reaches whoever is on it:
+the shared Discord channel, a Gotify app a crew shares, a webhook into
+something that pages. The policy is refused if a step names one this HotLoop
+hasn't configured, and the answer lists the ones it has.
+
+### When things go out
+
+A step is due `afterMinutes` after the one before it, and the first step
+`afterMinutes` after the alarm was raised. It's a sum from the raise, not from
+when the last send finished, so a slow relay or a restart doesn't stretch the
+schedule you wrote. With steps of 5 and 10 and a repeat of 15 minutes, twice:
+
+```
+ 0 min  alarm raised: the first page, as always
+ 5 min  step 1
+15 min  step 2
+30 min  step 2 again (repeat 1)
+45 min  step 2 again (repeat 2), and that is the last
+```
+
+### What stops it
+
+The chain is for one occurrence of one alarm, and it stops, with a row saying
+why, when any of these happens:
+
+- **Somebody acknowledges it.** From anywhere: the alarm screen, the
+  Acknowledge button on ntfy or Discord, the API, an automation. They all end in
+  the alarm engine, and before every step goes out the escalator asks the engine
+  whether this occurrence is still unacknowledged. A hook that arrives late
+  can't make it page an alarm somebody already answered.
+- **It returns to normal.** The alarm is still on the alarm list needing
+  somebody to acknowledge it, but nobody is woken up for something that fixed
+  itself. That's a call I made on purpose; change the floor or the steps if you
+  want a different one.
+- **It's shelved.**
+- **It trips again.** That's a new occurrence with its own chain, counted from
+  its own raise. Yesterday's chain never pages for today's alarm.
+
+An alarm somebody answers before step 1 is due leaves no trace in the
+escalation trail at all, which is the system working.
+
+### What arrives
+
+An escalation is the alarm's own notification with its title changed and a line
+added:
+
+```
+NOT ACKNOWLEDGED 15 min: Boiler Trip
+Nobody has acknowledged this alarm in 15 minutes (step 2 of 4). boiler/Pressure hi 90 (now 95)
+```
+
+It keeps the alarm's priority, so a Critical one is still max priority on
+Android. It carries the same signed Acknowledge button as the first page on
+ntfy and Discord (see "Acknowledge links"), so the person it wakes can
+acknowledge from where they were told. Gotify and email have no button. A
+webhook gets HotLoop's usual JSON with `event` set to `escalated`.
+
+A shared channel is paced like any other (see "Rate limits and summaries"), so a
+power dip that leaves forty alarms unacknowledged escalates as one summary,
+"40 alarms nobody has acknowledged", not forty pages and a ban. A person's own
+notification is a send of its own.
+
+### The audit trail
+
+Every escalation is a row in the alarm's own trail, which is what the
+[logbook](/iot/logbook/) reads, so it shows up there with no extra setup, filed
+under the alarm with the actor `escalation`:
+
+```
+alarm Boiler Trip escalated: boiler/Pressure hi 90 (now 95) (note: step 1 of 2: nobody acknowledged it in 5 min; notified Ana (email), Ana (ntfy))
+alarm Boiler Trip escalation-ended: boiler/Pressure hi 90 (now 95) (note: escalation stopped after 1 sent: acknowledged by notify:ntfy)
+```
+
+`GET /api/alarms/events` and the logbook's `alarm` kind carry the same rows as
+types `escalated` and `escalation-ended`. A step that reached nobody says so in
+capitals (`NOBODY WAS REACHED`) with each failure after it, and the chain
+carries on to the next step anyway: one dead relay shouldn't stop the page that
+goes out a different way. Saving the policy is in the system log without the
+topics.
+
+### Restarts, and where it runs
+
+The chains live in memory, so a restart at 03:00 in the middle of one can't be
+allowed to lose it. When HotLoop starts it looks at every alarm still
+unacknowledged, reads how many steps the audit rows say went out for that
+occurrence, and carries on from there: it doesn't send step 1 again and it
+doesn't skip step 2. A step that came due while HotLoop was down goes out in
+the first few seconds after it's back. A step that was in flight when the
+process was killed may go out twice, which is the right way round to be wrong
+for an alarm.
+
+A saved policy applies to alarms raised after you save it. A restart picks up
+every alarm still unacknowledged, whenever it was raised.
+
+The Gateway runs it. An `--mcp-stdio` helper doesn't, so one alarm is never
+escalated by two processes.
+
+### Tested against the lab's real servers
+
+`TestEscalationAgainstTheLabsRealServers` (`internal/api`) raises a real alarm
+on a real Modbus register and pages a real ntfy, a real Gotify and a real
+Mailpit, with the policy saved through the API. Ana's escalation lands on her
+own ntfy topic and in her own mailbox, with an Acknowledge button; the button is
+pressed from the message ntfy holds, with no session, and the alarm is
+acknowledged and nothing more goes out, not to Bo and not to Gotify. The alarm
+trips again and runs the whole chain: Ana at 5 minutes, then Bo's email and the
+Gotify channel at 15. The escalation rows are read back out of the logbook. The
+unit tests (`internal/notify/escalate_test.go`) cover the schedule, every way a
+chain stops, a floor, an off policy, a step that reaches nobody and a restart
+half way through, and the policy's validation.
+
+The clock is the one thing that isn't real: the escalator reads a clock the test
+moves forward by the minute, because a schedule in minutes is not something a
+test should wait for. **Not verified**: a real run with real minutes on a real
+plant, and what a given phone does with the notification once ntfy has it. The
+escalation to a Discord channel carries the same buttons as a raise, checked
+against the Discord stand-in like the rest of Discord, not the real service.
+
 ## TLS on the SMTP channel
 
 The channel upgrades to TLS via STARTTLS automatically whenever the relay
@@ -716,9 +880,11 @@ different sets of alarms, nothing requires them to agree.
 
 ## What it is not
 
-**Not a live-reload of who gets paged.** Channels are read once, from
+**Not a live-reload of the channels.** Channels are read once, from
 configuration, at process start, the same as `EdgePublishConfig` and
-`FleetConfig`. Changing `HOTLOOP_NOTIFY_*` needs a restart to take effect, there is no API to add or remove a channel at runtime in this MVP.
+`FleetConfig`. Changing `HOTLOOP_NOTIFY_*` needs a restart to take effect, there is no API to add or remove a channel at runtime in this MVP. The
+escalation policy is the exception: who is told next, and when, is data you edit
+and it takes effect when you save it (see "Escalation").
 
 **Not a table of its own.** Every notification attempt, success or
 failure, is written through `runtime.Manager.Event`, the same generic
@@ -795,7 +961,12 @@ Discord webhook URL go into a Secret the chart manages, or name your own with
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | Sends a synthetic test notification through every configured channel right now |
 | `POST /api/notify/ack/{token}` | none; the token is the authorization | Acknowledges the alarm occurrence the token was issued for. See "Acknowledge links" |
+| `GET /api/notify/escalation` | `notify.escalation` | The escalation policy, the channels a step may name, and the chains open right now. See "Escalation" |
+| `PUT /api/notify/escalation` | `notify.escalation` | Replaces the whole policy. Refused with the reason if a step names nobody or a channel that isn't configured |
 | `GET /api/diagnostics` | `status.read` | Under `notify.channels`, each channel's standing: whether Discord has refused it (and why, and since when), and the Discord bot's Gateway connection |
+
+`notify.escalation` is admin-only the same way. Reading the policy needs it too,
+because it holds people's ntfy topics.
 
 `notify.test` is admin-only, granted by the wildcard the admin role already
 carries and deliberately not added to the operator role's permission list, sending a real external message and spending whatever quota a paging

@@ -5,6 +5,10 @@ description: "What Cascade has built and what comes after the first release, pha
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 78f6a9d, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 No license check exists anywhere in the code. Each phase ends when
 its "real" list has been done against real systems, not when the code compiles.
 
@@ -19,10 +23,11 @@ Cut by `RELEASE_CHECKLIST.md`, not before.
 
 ## 0.2.0, identity and governance
 
-SAML, LDAP and AD, SCIM, custom roles, external secrets, log streaming,
-variables, folders, insights, execution annotations, the S3 and Azure blob
-backends, and execution redaction policies. Each one is tried against the real
-server it talks to.
+Built, and shipped inside 1.0.0 with the new editor. SAML, LDAP and AD, SCIM,
+custom roles, external secrets, log streaming, variables, folders, insights,
+execution annotations, the S3 and Azure blob backends, and execution redaction
+policies. Each one is tried against the real server it talks to, and each has a
+screen in the editor.
 
 ## 0.3.0, environments and scale
 
@@ -50,20 +55,13 @@ won't be one.
 Stability promises on the workflow file format and the API, an upgrade path
 tested from every 0.x, and the docs.
 
-## After 1.0, a new editor UI
+## The new editor UI
 
-The editor is a hand-built TypeScript app, and it has done its job. The last
-phase on this list, done after everything above and not before, is rewriting it
-in Astro, the same framework the HotLoop website runs on, built to static assets
-and embedded in the Go binary the way the editor is now. It is the same
-one-binary story with nothing new to run.
-
-The point is that every HotLoop project ends up with a modern UI that looks like
-it belongs to the same family, instead of each one carrying its own homegrown
-front end. A design pass comes first, with the layout, the components and the
-phone behavior settled on paper before a single page is built, because a rewrite
-without a design is just a more expensive way to get the same UI. Nothing about
-it changes the API, the file format or the Go side.
-
-This one waits its turn. Nothing starts on it until the rest of the list is
-shipped.
+Built, and in 1.0.0. The editor is rewritten in Astro with Svelte islands, built to
+static assets and embedded in the Go binary the way the old one was, so it is the
+same one-binary story with nothing new to run. It takes its colors, type and mark
+from the HotLoop brand files, and follows the system's light or dark. Every screen
+the old editor had is in it and does what it did (the canvas code came across
+unchanged), the 0.2.0 features have screens, and a browser test drives each of
+them against the real server in a real Chrome. Nothing about it changed the API,
+the file format or the Go side.

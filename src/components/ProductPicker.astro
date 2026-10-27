@@ -9,7 +9,7 @@ const flow = sync.repos.flow.release;
 const cascade = sync.repos.cascade.release;
 
 const latest = (prefix: string) =>
-  sync.pages.filter((p) => p.release && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
+  sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
 
 const lines = [
   { id: 'core', label: 'HotLoop core', version: hot.version, note: 'One codebase, one version. IoT to Edge to Gateway is the path a site grows along, and Edge Relay is the headless forwarder beside them.', notes: `/${latest('releases/hotloop-')}/`, roadmap: '/roadmap/', ids: ['iot', 'edge', 'gateway', 'edge-relay'] },

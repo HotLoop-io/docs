@@ -5,6 +5,10 @@ description: "The headless poll-and-forward Sparkplug B node: what it does, ever
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.6.0. `cmd/edge-relay` is a second binary, not a mode of the
 Gateway: a poll-and-forward Sparkplug B edge node with no database, no web
 UI, no auth and no write path. It exists to run on a Pi or a small industrial
@@ -486,7 +490,7 @@ Two endpoints, both unauthenticated, both read-only:
   without the file's addresses and credentials going out on an
   unauthenticated port. With a `discovery` broker in the file it also says,
   under `discovery`, how each one is doing and how many devices it found (see
-  Discovery).
+  [Discovery](#discovery-41810)).
 
 Deliberately no auth in front of either: an edge relay has no user database,
 no session store and no identity system to build one from, and adding a
