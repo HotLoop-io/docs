@@ -5,6 +5,10 @@ description: "Pages of cards built per role or per screen: gauges, trends, entit
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
 sitting where the zones are. Build as many as the plant needs, give each to the
@@ -219,12 +223,29 @@ URL fragment in the address (`#alarms`) the page opens where the address says.
 `/?screen=<name>` and it shows the dashboard whose `screens` has that name with
 no header, no tabs and bigger touch targets, because nobody walking past a panel
 PC has a use for a way out of the page. A name that no dashboard has says so
-instead of showing something else. The panel signs in like anyone: give it an
-operator or viewer account that stays signed in, and keep the account's role to
-what the panel is for.
+instead of showing something else.
+
+**A panel signs people in, not itself.** With nobody signed in it shows a single
+"PIN or badge" field. An operator types their PIN, or scans their badge (a
+keyboard-wedge reader types it into the field), and the panel opens the
+dashboard. Their name and a **Sign out** button sit in the corner, since the
+header that would show them is gone. Every write a button on that dashboard makes
+goes through the write gate as that person, and the audit trail and the Logbook
+name them: "olga wrote 250 to line-02/Speed", not "panel-3". After fifteen minutes
+of nobody touching the screen (a setting) the panel signs them out and goes back
+to the field, and a write sent after that is refused. An admin gives each person
+a code under **Settings, Users**. The whole of it, what a badge is, how the code
+is stored and what it does not do, is in
+[AUTH.md](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out).
+
+On your own computer none of this applies: you are signed in with your password,
+a button's write goes straight through the gate and logs you, and there is no
+idle sign-out. A panel that was signed in with a standing operator account, the
+way a panel had to be run before PINs, still works and still writes as that
+account. Give a shared panel no such login.
 
 This is what the Edge HMI is: a dashboard with `screens` set, on a machine that
-opens that address.
+opens that address, with the people at it signing in by PIN or badge.
 
 ## Building
 
@@ -255,6 +276,79 @@ save means somebody saved first: the page offers to load theirs.
 Rows are 76 px with a 16 px gap on the wide layouts. On a phone a card is as tall
 as its content with a floor from its rows, so nothing is cut off. The switcher
 scrolls sideways inside itself and the page never does.
+
+## On a phone
+
+The web UI installs on a phone and opens with no connection. It's the same page
+with a manifest, icons and a service worker, served by HotLoop itself, so there
+is nothing to build and nothing to install on the server.
+
+**Installing it.** On Android, Chrome's menu has **Install app**. On an iPhone,
+Safari's Share sheet has **Add to Home Screen**. It opens full screen, with the
+plant's name, and on Android a long press on its icon offers Alarms and Dashboards. A browser
+only installs a page and runs a service worker over **https**, or on `localhost`.
+On a plant's plain `http://` address HotLoop still opens in a tab exactly as it
+always has, but it can't be installed and it won't work offline. Put a
+certificate in front of it for phones (the ingress or the reverse proxy you
+already have). The browser tells you why when it won't install: Chrome's
+developer tools, Application, Manifest.
+
+**What it keeps.** The page itself, and the last answer to the reads a person
+looks at: the alarm list, the dashboards, the readings and entity states, the
+devices and tags, the status, the equipment tree and the board. While the page is
+open and connected it asks for those once a minute so there is something to open
+to, and not while the phone is in a pocket. Open it with no connection and the
+page loads, the alarm list and the dashboards show what the phone last saw, and a
+bar across the bottom says so, with the time:
+
+```
+Offline. This is what this phone last saw as of 10/22/2026, 05:42:23. Nothing you
+do here is sent until the connection is back.
+```
+
+When the connection is back, within a few seconds, the bar goes, the screen
+refreshes from live answers and the live feed reconnects.
+
+**What it never does.** Nothing that changes anything is sent from an offline
+page. A write, whether it's a value to a tag, a script, a recipe or an
+acknowledgement, is refused before it leaves the page, with the reason:
+
+```
+You are offline, so nothing was sent. Everything here is as of 10/22/2026, 05:42:23.
+Try again when the connection is back.
+```
+
+The service worker doesn't answer, keep or queue a write, and there is no
+background sync in it. A command to equipment is only ever sent by a person looking
+at a live answer, and a button pressed with no connection is not waiting
+somewhere to go out later. Acknowledging from a notification is a separate thing
+and needs the network the same way: the ntfy app presses its own button.
+
+**What it doesn't keep.** The live feed, trends and history, the logbook, the
+settings, the users, the escalation policy and anything about notifications. Some
+are too big and different every time to be worth keeping, and some hold things
+(people's ntfy topics, accounts) that don't belong in a phone's cache, so those
+screens need HotLoop to answer.
+
+**On the phone.** What's kept lives in the browser's cache storage on that phone, at
+most 200 answers, oldest dropped first. **Signing out empties it**, and so does a
+session that has expired or been revoked (the first `401` empties it). Only a
+signed-in session is ever kept, so an offline phone never opens to somebody else's
+data. A new HotLoop version gets a page cache of its own and the old one is
+deleted; the page is fetched live whenever there's a connection, so a new version
+or a renamed plant shows on the next open.
+
+**Where it's tested.** Chrome itself is asked whether the manifest parses and the
+page is installable (`TestBrowserPhoneAppInstallsAndWorksOffline`: no manifest
+errors, no installability errors, icons that are real PNGs of the size the
+manifest says). The same test takes the server away, for the page and the worker
+alike, and reloads: the page opens, the alarm list and a dashboard show what was
+kept, a write to a tag and an Acknowledge are both refused, the alarm is still
+unacknowledged and the write audit empty after the connection comes back, and
+signing out empties what was kept. `TestServiceWorkerNeverTouchesAWrite` holds
+the worker's source to the rule above. **Not verified**: installing on a real
+phone, Safari on an iPhone (it reads the same tags, but nobody has run it), and a
+real plant's Wi-Fi dropping out.
 
 ## Permissions
 

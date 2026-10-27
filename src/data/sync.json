@@ -3,7 +3,7 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "c118b2f2485e18b27f2b1b688d107600faab1ab3",
+      "sha": "1e8706a4d360e954039649213e5e99068c5fc54d",
       "release": {
         "tag": "v4.18.10",
         "version": "4.18.10",
@@ -27,7 +27,7 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "cbe2c19f2beb64f7d965a90af6fbc9d7ca724c2a",
+      "sha": "78f6a9d6a49f0b5a1411edbcf4c54a062567c03e",
       "release": {
         "tag": "v0.1.2",
         "version": "0.1.2",
@@ -181,7 +181,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -192,7 +192,7 @@
       "group": "Screens and alerts",
       "title": "Alarm notifications",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/NOTIFY.md",
       "release": false
@@ -203,7 +203,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -214,7 +214,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -280,7 +280,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -291,7 +291,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -302,7 +302,7 @@
       "group": "Operate",
       "title": "Migrations only add",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/MIGRATIONS.md",
       "release": false
@@ -313,7 +313,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -368,7 +368,7 @@
       "group": "Reference",
       "title": "Edge Relay reference",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/EDGE-RELAY.md",
       "release": false
@@ -379,7 +379,7 @@
       "group": "Install",
       "title": "k3s and Helm",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/DEPLOYMENT.md",
       "release": false
@@ -390,7 +390,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -401,7 +401,7 @@
       "group": "Install",
       "title": "The :stable auto-update",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -412,7 +412,7 @@
       "group": "Lineup",
       "title": "HotLoop products: six on three release lines",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/PRODUCTS.md",
       "release": false
@@ -423,7 +423,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -748,6 +748,17 @@
       "release": false
     },
     {
+      "slug": "cascade/editor",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "The editor",
+      "label": null,
+      "status": "next",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
       "slug": "cascade/running",
       "product": "cascade",
       "group": "Use it",
@@ -819,7 +830,7 @@
       "group": "Project",
       "title": "Cascade roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -855,6 +866,17 @@
       "status": "changed",
       "repo": "hotloop",
       "source": "docs/releases/4.18.10.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-18-11",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.18.11 release notes",
+      "label": "4.18.11",
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/releases/4.18.11.md",
       "release": true
     },
     {
@@ -921,6 +943,17 @@
       "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/0.1.2.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-1-0-0",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 1.0.0 release notes",
+      "label": "1.0.0",
+      "status": "next",
+      "repo": "cascade",
+      "source": "docs/release-notes/1.0.0.md",
       "release": true
     }
   ],

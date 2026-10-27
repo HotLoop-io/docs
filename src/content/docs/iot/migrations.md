@@ -5,6 +5,10 @@ description: "Why a migration never drops, renames or retypes anything, so a bad
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A migration adds. It never drops, renames or retypes anything, never tightens a
 column or a constraint the last release writes through, and never deletes data.
 That is the whole rule, and a test fails the build when a migration breaks it.
@@ -24,6 +28,25 @@ nothing left to roll back to.
 
 The Helm chart has the same problem: `helm rollback` puts the old image back
 and leaves the database where the new one moved it.
+
+## The database engine is not a migration
+
+PostgreSQL 16 to 17 is a change of server, not of schema, and it is made before
+the app starts, by `hotloop-pg-upgrade.sh` (docs/DEPLOYMENT.md, "PostgreSQL 17").
+The rules on this page are about the schema and hold across it: the app's
+migrations run on the 17 database exactly as they did on 16.
+
+A rollback is where the two meet. Podman's auto-update puts the previous
+release's *app* image back and leaves the database container alone, so on Quadlet
+a rolled-back app starts on the 17 database and works, for the reason on this
+page. `helm rollback` is different: it puts back everything the chart manages,
+and that includes the database image, so it takes the database back to
+PostgreSQL 16, which refuses the 17 directory, and the database does not start.
+What fixes it is the old directory the upgrade kept, `pgdata.pg16`, swapped back
+in as DEPLOYMENT.md describes. That gives you the database as it was at the
+upgrade: whatever the app wrote on 17 since is not in it, and the previous
+release then starts on the schema it left, which is the one-release-back case this
+page already covers. Roll forward when you can.
 
 ## What the check refuses
 

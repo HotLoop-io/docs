@@ -5,6 +5,10 @@ description: "Deploy any HotLoop chart on k3s or any Kubernetes: the values wort
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The chart deploys two workloads: the gateway (a Deployment, it holds no durable
 state of its own) and TimescaleDB (a StatefulSet with a volume). That is the
 default. `database.type` picks another database: plain PostgreSQL, or SQLite,
@@ -199,7 +203,7 @@ poll looks like a broken driver rather than a firewall rule.
 
 ### Edge deployments
 
-The app image is built for amd64 and arm64, and TimescaleDB 2.30.1-pg16 is
+The app image is built for amd64 and arm64, and TimescaleDB 2.30.1-pg17 is
 multi-arch, so the historian is not what stops an edge install.
 
 ```yaml
@@ -331,7 +335,7 @@ One value, `database.type`, and each product takes the ones it runs on:
 | `database.type` | What gets deployed | IoT | Edge | Gateway |
 |---|---|---|---|---|
 | `timescaledb` | The app and TimescaleDB (a StatefulSet and its volume). History in a hypertable | refused | default | default |
-| `postgresql` | The app and plain PostgreSQL 16 (a StatefulSet and its volume). History in native partitions | default | yes | yes |
+| `postgresql` | The app and plain PostgreSQL 17 (a StatefulSet and its volume). History in native partitions | default | yes | yes |
 | `sqlite` | The app alone, with the database file on a volume of its own | yes | yes | yes |
 
 ```bash
@@ -432,6 +436,13 @@ renamed far more often than it is redeployed:
 | Timezone | `HOTLOOP_TIMEZONE` |
 | Confirm before writing | `HOTLOOP_CONFIRM_WRITES` |
 
+Under the settings there are cards that are data rather than configuration, and
+they are editable for the same reason: **Users** ([AUTH.md](/iot/authentication/)),
+**Alarm escalation**, which says who is told next when nobody acknowledges an
+alarm and when ([NOTIFY.md](/iot/notifications/#escalation)), and the historian targets
+and MQTT logins. The channels an escalation can use are still the deployment's,
+set by `HOTLOOP_NOTIFY_*`.
+
 A stored value wins over the environment variable, so the chart's value becomes
 the starting point rather than the last word. A timezone the machine cannot
 resolve is refused rather than accepted and quietly ignored, which would leave
@@ -461,6 +472,122 @@ One limitation, stated because the screen states it too: the MCP server builds
 its instructions at startup, so it advertises the plant name it booted with until
 the pod restarts. Everything else picks a rename up on the next request.
 
+## PostgreSQL 17
+
+HotLoop's database is PostgreSQL 17 (TimescaleDB 2.30.1 on it for Edge and the
+Gateway, plain PostgreSQL 17.11 for IoT and for `database.type: postgresql`).
+Releases before this ran PostgreSQL 16, and PostgreSQL will not open another
+major version's data directory. So the move is done for you, on the upgrade, and
+there is nothing to run.
+
+**On the chart,** the database pod gets two init containers. The first runs the
+PostgreSQL 16 image and, only when the volume holds 16 data, copies that install
+into a scratch volume. The second runs the new image and `pg_upgrade`s into a
+new directory beside the old one. Both leave a fresh volume, or one already on
+17, alone. The upgrade is `helm upgrade`, nothing more. Expect the database pod
+to sit in `Init` for as long as a copy of the data takes, and the app to wait for
+it; `kubectl logs <release>-postgresql-0 -c pg-upgrade` is the log.
+
+**On Quadlet,** `hotloop-db-upgrade.container` runs before `hotloop-db.service`
+and does the same thing in a oneshot unit. Copy the new `hotloop-db.container`,
+`hotloop-db-upgrade.container` and `hotloop-db-upgrade.sh` from your product's
+directory into the units directory and restart the database unit; the
+[Quadlet README](/install/quadlet/) has the commands. The database
+unit requires the upgrade unit, so a box that only got the new database unit does
+not start on 16 data and says why: it fails, it does not guess.
+`journalctl -u hotloop-db-upgrade` is the log. The PostgreSQL 16 image is pulled
+only when the volume needs it, so a new box never downloads it.
+
+What it does, in order, all in `hotloop-pg-upgrade.sh` (one file, the same one
+the chart and the units run):
+
+1. No data directory, or one already on 17: nothing, and it says so. Any other
+   major is refused, with nothing changed.
+2. Starts the old server once on a private socket and stops it cleanly, which
+   replays the log after a power cut and reads the encoding and locale the new
+   cluster has to match.
+3. `initdb`s a new directory beside the old one with those settings, runs
+   `pg_upgrade` in copy mode (the old directory is only read), and carries
+   `postgresql.conf`, `postgresql.auto.conf`, `pg_hba.conf` and `pg_ident.conf`
+   across.
+4. Starts the new server once to prove it opens on the final settings and
+   gathers the planner statistics `pg_upgrade` does not carry.
+5. Only then swaps the names: the old directory becomes `pgdata.pg16`, the new one
+   `pgdata`.
+
+It needs about as much free space beside the data as the data takes, and checks
+before it starts. If anything fails before step 5, the upgrade exits non-zero,
+the 16 data is exactly as it was, and the database does not start on a
+half-built directory: on the chart the pod stays in `Init:Error`, on Quadlet the
+upgrade unit fails and the database unit behind it never starts. Fix what the log
+says and start it again; an unfinished attempt is removed and redone. The
+TimescaleDB extension comes across at the version it was on, and the app updates
+it to the shipped one on its next start, as it always has. TimescaleDB's own
+guidance for an in-place PostgreSQL upgrade is `pg_upgrade` with the old and new
+binaries
+([Tiger Data, "Upgrade PostgreSQL"](https://www.tigerdata.com/docs/deploy/self-hosted/upgrades/upgrade-pg)).
+
+The backup is the old directory itself. `pg_upgrade` in copy mode never writes
+to it, so `pgdata.pg16` is the whole PostgreSQL 16 database as it stood, which is
+a better backup than a dump and the one thing that makes the way back below
+possible. HotLoop's own backup ([BACKUP.md](/iot/backup/)) is made by the running
+app through the running database, so it cannot be taken in the step that runs
+before the database starts. Take one on the old release before you upgrade
+anyway, and copy it off the box.
+
+### Going back
+
+`helm rollback`, or putting the previous `hotloop-db.container` back, returns the
+database to the PostgreSQL 16 image (Podman's auto-update does not: it moves only the
+app), and PostgreSQL 16 will not open a 17
+directory (`database files are incompatible with server`, the log says the directory was initialized by version 16). Nothing is lost and
+nothing is half-changed; the database just does not start. What the previous
+release needs is its own 16 directory, which is `pgdata.pg16`. Stop the database,
+then put the names back:
+
+```sh
+# chart: after the rollback, stop the database, swap in a one-off pod, start it
+kubectl -n hotloop scale statefulset/hotloop-postgresql --replicas=0
+kubectl -n hotloop run pgswap --rm -it --restart=Never --image=busybox \
+  --overrides='{"spec":{"securityContext":{"runAsUser":999,"fsGroup":999},"containers":[{"name":"pgswap","image":"busybox","command":["sh","-c","cd /d && mv pgdata pgdata.pg17 && mv pgdata.pg16 pgdata"],"volumeMounts":[{"name":"d","mountPath":"/d"}]}],"volumes":[{"name":"d","persistentVolumeClaim":{"claimName":"data-hotloop-postgresql-0"}}]}}'
+kubectl -n hotloop scale statefulset/hotloop-postgresql --replicas=1
+
+# Quadlet: the volume is named hotloop-db
+sudo systemctl stop hotloop.service hotloop-db.service
+d=$(sudo podman volume inspect hotloop-db --format '{{.Mountpoint}}')
+sudo mv "$d/pgdata" "$d/pgdata.pg17" && sudo mv "$d/pgdata.pg16" "$d/pgdata"
+```
+
+That is the database as it was at the upgrade, and nothing written since. The
+swap-back only works once: the upgrade refuses to run while a `pgdata.pg16` is in
+the way, so the next upgrade attempt needs `pgdata.pg17` and the old directory
+dealt with first. Roll forward is the way, and a rollback is for a box that
+cannot run 17 at all. The app's own rollback rule is unchanged: the 16
+directory's schema is the one the release before the upgrade left, and a release
+that finds migrations it does not know about says so, see
+[MIGRATIONS.md](/iot/migrations/).
+
+### When you are satisfied
+
+`pgdata.pg16` stays until you delete it, because deleting it is deleting the
+only way back. It is as big as the database. Once the box has run on 17 for as
+long as you like:
+
+```sh
+# chart
+kubectl -n hotloop exec hotloop-postgresql-0 -c postgresql -- rm -rf /var/lib/postgresql/data/pgdata.pg16
+# Quadlet
+sudo rm -rf "$(sudo podman volume inspect hotloop-db --format '{{.Mountpoint}}')/pgdata.pg16"
+```
+
+### Turning it off
+
+`database.postgresql.upgrade.enabled: false` drops the init containers. A volume
+still on 16 then stops the database from starting, and the move is yours to do.
+Leave it on: with it on, a fresh install still pulls the PostgreSQL 16 image once
+per node because an init container's image is pulled before it runs, and then
+never runs it.
+
 ## Upgrading from 3.x
 
 **This is a replacement, not an upgrade.** 3.x was a different product. There is no migration path for its data, because it shares no data model with a tag historian.
@@ -484,6 +611,10 @@ index, never a drop, a rename or a type change), so the previous release works o
 the schema the newer one left, and `test/prevrelease.sh` proves it on the real
 previous image before each release ships. The rule and the check are in
 [MIGRATIONS.md](/iot/migrations/).
+
+The one thing a rollback across the PostgreSQL 17 release does put back is the
+database engine: the chart's database image goes back to 16, which will not open
+the upgraded directory. [Going back](#going-back) is the way out.
 
 It is safe for one release back. The database records which release applied each
 migration, and a release that finds migrations from two or more releases newer than

@@ -5,6 +5,10 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet
 dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the
 actor recorded against a write came from a header the proxy set, spoofable by
@@ -27,6 +31,9 @@ deployment that really is isolated behind the dashboard and wants to say so, see
 - **A session is a cookie or a bearer token**, whichever a client finds
   easier. The browser UI uses the cookie; a script or another service uses
   `Authorization: Bearer <token>`.
+- **A shared panel signs people in with a PIN or a badge** and signs them out when
+  nobody is touching it, so every write there is a person's name. See
+  [Kiosk panels](#kiosk-panels-pin-or-badge-and-an-idle-sign-out).
 - **Sessions expire.** `HOTLOOP_AUTH_SESSION_TTL`, 12 hours by default. There is
   no "remember me", a session that outlives a work shift is a session nobody
   is watching.
@@ -84,6 +91,165 @@ Permission strings are `resource.action`, `tags.write`, `alarms.ack`, or a
 resource wildcard, `tags.*`, or the global wildcard `*`. The full list a
 built-in role can grant lives in `internal/auth/auth.go`, next to the roles
 themselves, so it cannot drift from what the code actually checks.
+
+## Kiosk panels: PIN or badge, and an idle sign-out
+
+On your own computer you are already signed in: you typed your
+password once, and a write goes straight through the write gate and logs you, as
+it always did. Nothing about that changed. A panel on the wall is nobody's
+computer. If it is signed in as `panel-3`, the audit trail says "panel-3 opened
+the valve", which is not an audit trail. So a panel signs a person in with a PIN
+or a badge, every write is that person's, and the panel signs them out when
+nobody is touching it.
+
+### What the operator sees
+
+A panel is a physical screen: HotLoop opened at `/?screen=<name>` (see
+[DASHBOARDS.md](/iot/dashboards/#roles-and-screens)). With nobody signed in, it shows
+one field, "PIN or badge", and nothing of the plant. Type the PIN and press Enter,
+or scan the badge. The panel opens its dashboard, with who is signed in and a
+**Sign out** button in the corner, because the header that would normally say it
+is gone on a panel. Pressing a write button asks for the confirmation and the
+reason as anywhere else, and the write is recorded against that person.
+
+After the idle limit with nobody touching the screen, the panel signs the person
+out and goes back to the PIN field. The server enforces it as well as the page:
+a kiosk session that has been idle that long is deleted, and a write sent with
+its cookie afterwards is refused with a `401`, so closing the page, or a page
+that hung, does not leave somebody signed in. If the panel has to be used with a
+password instead, "Use a password" under the field is the ordinary sign-in, and
+it has the ordinary 12 hours and no idle limit, because that is somebody's own
+login.
+
+What counts as touching: a tap, a click, a key, or a write. What does not: the
+dashboard refreshing its numbers, or the live feed, which go on whether anybody
+is there or not.
+
+### Setting it up
+
+An admin gives each person a code in **Settings, Users**: **PIN or badge** on
+their row, the code twice, **Set it**. Or by the API, which is what a script that
+issues badges would use:
+
+```sh
+curl -X PUT -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"code":"482913"}' https://gateway/api/users/olga/pin
+
+# Take it away (also signs them out of every panel)
+curl -X DELETE -H "Authorization: Bearer $TOKEN" https://gateway/api/users/olga/pin
+```
+
+- **A PIN is a credential.** It is stored as a bcrypt hash at the same cost as a
+  password, never in the clear, never in the system log and never in a response.
+  The users list says only `hasPin`. A backup holds the hashes exactly as it holds
+  the password ones ([BACKUP.md](/iot/backup/)).
+- **A badge is a value a keyboard-wedge reader types.** There is no hardware
+  driver. A reader that acts as a keyboard types the badge's number into the
+  panel's one field and presses Enter, which is the form submitting. So a badge
+  is a code like a PIN: whatever the reader types, 6 to 72 characters with no
+  spaces, set on the account in the same place. Reading it from a reader that
+  does not act as a keyboard is not built.
+- **One code, one account.** The panel finds the person by the code alone, since
+  a badge reader types no user name, so setting a code another account has is
+  refused.
+- **The code is checked against every account that has one,** with the same bcrypt
+  a password costs, because a salted hash can't be looked up by value. That takes
+  as long as there are accounts with codes, a couple of seconds at the worst with
+  tens of them, and it takes the same time whether the code is right or wrong.
+- **A code signs in with the account's role.** Give it to somebody whose role is
+  what they should have at a panel. A kiosk session is the account's own
+  permissions and nothing narrower, and a viewer's code signs in a viewer, whose
+  writes the gate refuses as ever.
+- **Disabling an account** ends its panel sessions with the rest, and a disabled
+  account's code does not sign in. **Taking the code away** signs the account out
+  of the panels and leaves its password and its own computer's session alone.
+
+### The idle sign-out time
+
+Fifteen minutes by default. That is long enough to work a changeover at the panel
+with a clipboard, or to walk to the valve and see it move, and short enough that
+a panel left behind at the end of a job is not still somebody's name when the next
+person walks up. It is my judgment, not a number the code or a standard sets. Change it in **Settings, Plant, Kiosk idle sign-out (seconds)**, from 10
+seconds to 12 hours, with no redeploy, or set a default with
+`HOTLOOP_AUTH_KIOSK_IDLE` (a duration, `15m`). What is set in Settings wins over
+the variable. The session also still ends at `HOTLOOP_AUTH_SESSION_TTL`, as any
+session does.
+
+### The lockout after wrong passwords and PINs
+
+A wrong password or PIN is counted against the **account** it was tried on. Ten
+wrong in a row lock that account for five minutes, and nobody else's. A right
+password or PIN before the tenth starts the count again, and a lock that has run
+out gives a fresh ten. A locked account refuses a sign-in whatever is typed,
+right or wrong, with a `429` that says how long to wait. A lock stops new sign-ins and nothing else: a
+session the account already has goes on, its requests and its live feed
+included, so ten wrong guesses by somebody else can't blank an operator's screen
+on the line. It applies to the password sign-in and
+the PIN sign-in alike, and each lock is in the system log (category `auth`).
+
+- **Where the numbers come from.** NIST SP 800-63B says a verifier limits the
+  consecutive failed attempts on a single account: revision 3, section 5.2.2, and
+  revision 4, section 3.2.2, both put the most at 100 and say an operator may set
+  it lower. Revision 4 also allows making the claimant wait after failures. This
+  is that wait, not a permanent disabling. Ten is a tenth of NIST's ceiling, and
+  more than anybody mistypes by accident. Five minutes is long enough that ten
+  guesses per five minutes holds a six-character PIN's million possibilities out of
+  reach (about 350 days to try them all), and short enough that an operator who
+  fat-fingered a password is back after a coffee. 6 characters as the least for a
+  PIN is revision 3's section 5.1.1.2 floor for a secret that is assigned, which
+  an admin handing out a PIN is. Ten and five are my choice inside NIST's limit,
+  not NIST's numbers.
+- **Both are settings.** **Settings, Plant**: "Lock an account after this many
+  wrong passwords or PINs" (default 10, from 1 to 100, and 0 turns it off) and "How
+  long a locked account stays locked" (default 5 minutes, from 10 seconds to a day).
+  The variables are `HOTLOOP_AUTH_LOCKOUT_ATTEMPTS` and
+  `HOTLOOP_AUTH_LOCKOUT_DURATION` (a duration, `5m`). Settings wins over the
+  variable.
+- **An admin can unlock an account.** **Settings, Users** shows a locked account
+  as `locked` with an **Unlock** button, or `DELETE /api/users/{username}/lockout`.
+  It starts the count from zero.
+- **Never the panel.** A wrong code typed at a panel is never counted against the
+  panel, so one person's mistakes don't stop the next at it.
+- **A code on its own can't be counted, so the panel is slowed instead.** A badge
+  reader types only the badge, and a PIN typed alone matches no account when it is
+  wrong, so there is no account to count it against. Counting it against the panel
+  would lock the next worker out for the last one's mistakes, and the panel is
+  never locked. Instead each consecutive wrong one makes that panel wait half a
+  second longer before the next is checked: 0.5 seconds after the first miss, 1
+  after the second, and so on, up to the cap, 3 seconds by default. A right one
+  starts it over. So the next worker gets in after at most the cap, and somebody
+  guessing is held to one try per cap per panel: a million six-digit PINs would
+  take over a month. Tries sent together queue and each waits its turn. A PIN
+  typed with its user name is not slowed; it is the account's, and locks it like a
+  wrong password. The longest wait is **Settings, Plant, Longest a panel waits
+  after wrong PINs (seconds)**, 0 to 30, with `HOTLOOP_AUTH_PANEL_DELAY_CAP` as the
+  default (a duration, `3s`) and 0 turning it off. Three seconds is a pause a worker
+  who mistyped can stand, and slow enough to matter to somebody trying every code.
+  The step of half a second is fixed.
+- **Which panel is which.** The client address: the first hop of
+  `X-Forwarded-For` when a proxy set one, else the connection's own, which is what
+  the session list records too. Nothing better is known before sign-in: there is no
+  session yet, and a cookie handed out by the server is one the client can throw
+  away to start the wait over. So behind a proxy that sets `X-Forwarded-For` each
+  panel waits on its own. Behind one that doesn't, every panel shares the proxy's
+  address and they slow one another, by at most the cap. And a client that can
+  reach the port directly can send an `X-Forwarded-For` of its own and dodge the
+  wait. That is why this is a slowing and the lockout on the account is the
+  control: for guessing that matters, use the user name form, or long random badge
+  values.
+- **It says the account exists.** The `429` is for an account that exists, so it
+  tells someone trying names which ones do. That is what a lockout is.
+
+### What it does not do
+
+- **A code on its own can't be locked out.** See
+  [The lockout](#the-lockout-after-wrong-passwords-and-pins), which says why.
+- **No warning before it signs out.** The panel goes back to the PIN field when
+  the time is up.
+- **A panel left signed in with a password** (the way a panel had to be run before
+  this) still works as it did and still writes as that account. Give a shared
+  panel no standing operator login; give the people at it PINs.
+- **No reader driver, no SSO, no per-panel permissions.**
 
 ## Managing users
 
@@ -294,15 +460,17 @@ deployments of unreleased builds.
 
 Every write already went through `write_audit` with an `actor` column, see
 the write gate in the main README. That column now comes from the session,
-not a header:
+not a header, and at a kiosk panel the session is the person who signed in with
+their PIN or badge:
 
 ```
 > write_tag tag=press-01/Zone1_Temp value=99 reason="testing"
 ```
 
 records `j.smith`, the username on the session that made the call, not
-whatever `X-Forwarded-User` happened to say. Logins, logouts, password
-changes and every user-management action are logged to the system log
+whatever `X-Forwarded-User` happened to say. Logins, kiosk sign-ins, logouts, password
+changes and every user-management action, including setting or clearing a PIN
+(never the PIN itself), are logged to the system log
 (`GET /api/events`, category `auth`) for the same reason the write audit
 exists: a change six months from now should be explainable, not just visible.
 
@@ -333,8 +501,10 @@ than a default nobody chose.
 - **No per-tenant or per-site roles.** A user's permissions are the same
   everywhere this gateway runs, which is fine for one plant and would need
   more thought for the multi-site rollup in `Sites`.
-- **No account lockout after repeated failed logins.** The timing-safe
+- **No lockout for a PIN or badge typed on its own,** only for a password and a
+  PIN with its user name; see
+  [The lockout](#the-lockout-after-wrong-passwords-and-pins). The timing-safe
   comparison in `handleLogin` (see `dummyPasswordHash` in
-  `internal/api/auth.go`) stops username enumeration by response time; it does
-  not rate-limit guessing. A NetworkPolicy or an upstream proxy is still worth
-  having in front of the login endpoint.
+  `internal/api/auth.go`) stops username enumeration by response time. A
+  NetworkPolicy or an upstream proxy is still worth having in front of the login
+  endpoint.

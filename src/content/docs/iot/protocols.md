@@ -5,6 +5,10 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -29,6 +33,24 @@ detail.
 | S7comm | yes | frame-level decode and encode tests | **NOT verified against hardware** |
 | EtherNet/IP | yes | address, batching and type-mapping tests | **NOT verified against hardware** |
 | UniFi Network | yes | a real UniFi Network Application (10.6) with emulated switches and a gateway adopted over the real inform protocol, logged in as a View Only account; a real UniFi OS Server (5.1, Network 10.6) for the UniFi OS login ; read-only against the house Cloud Gateway Ultra and Express 7 (Network 10.6.106) with real USW-Lite-8-PoE switches and a U5G Backup | **verified live, read-only, on real consoles and switches, WAN and failover included. PoE draw above zero not seen yet**, see [UNIFI.md](/iot/unifi/#on-real-gear-2026-09-28) |
+| SNMP | yes | net-snmp's `snmpd` 5.9.4 (Debian's 5.9.4+dfsg-2 package) in a container, read over v1, v2c and v3 at every security level, over UDP and TCP; the driver is gosnmp, a different implementation | **verified live against a software agent, read-only. NOT verified against a switch, a UPS or a PDU** |
+| BACnet/IP | yes | bacpypes3 0.0.110, an independent BACnet stack in Python, serving every object type HotLoop reads; and frames recorded off it. The client is written for HotLoop and shares no code with it | **verified live against a software device, read-only. NOT verified against a vendor's controller, a BBMD or a routed network** |
+
+**BACnet/IP has not been read off a physical controller.** The device it was
+proven against is bacpypes3's, an independent implementation of the standard,
+and it is not any vendor's firmware. Vendors differ about what they put in the
+object list, how they answer a request that is too big and whether they answer
+a unicast Who-Is at all, and HotLoop's answers to the last two are tested only
+against the behavior bacpypes3 has. A controller on an MS/TP trunk behind a
+router cannot be reached.
+
+**SNMP has not been read off a physical switch, UPS or PDU.** The agent it was
+proven against is net-snmp's, which is what a Linux box runs and what many
+appliances are built on, and it is not any vendor's firmware. Vendors differ
+about which MIBs they serve, how they number interfaces and how they answer a
+bulk request, so treat the first read of a real device as commissioning, and
+compare the sampled values on the integration's probe with the device's own
+display.
 
 **S7comm and EtherNet/IP have not been run against a physical PLC.** Their
 decoding is tested thoroughly, every data type, sign extension, the two-byte S7
@@ -685,20 +707,202 @@ the truth underneath, and the UniFi tab draws the overview, the map, the
 faceplates, the clients, the networks and the WiFi. Everything about it is in
 [UNIFI.md](/iot/unifi/).
 
+### SNMP
+
+Anything with an SNMP agent: switches, UPSs, PDUs, power meters, and every Linux
+box running `snmpd`. Read-only. HotLoop never sends an SNMP SET, because a SET
+can change a switch's configuration and the point of this driver is to see the
+plant network, not to run it.
+
+The wire work is [gosnmp](https://github.com/gosnmp/gosnmp) 1.45.0, BSD-2-Clause.
+
+```
+1.3.6.1.2.1.1.5.0             sysName
+.1.3.6.1.2.1.1.3.0            sysUpTime, a leading dot is accepted
+1.3.6.1.2.1.2.2.1.8.2         ifOperStatus of the interface with ifIndex 2
+```
+
+A tag's address is the OID of one instance, dotted numbers. A scalar ends in
+`.0`; a table cell ends in its row's index. The tag's `dataType` decides what it
+becomes:
+
+* A number the agent sent (Integer, Gauge32, Counter32, Counter64, TimeTicks) is
+  that number. Scale and offset apply as they do everywhere.
+* An OCTET STRING is text, unless the tag is a number, and then it is parsed.
+  That is how a load average (`laLoad` is the text `0.15`) or a temperature
+  behind an agent arrives. Text that is not a number is a bad reading that says
+  so, never zero.
+* An OCTET STRING that is not printable (a MAC address) is `0x` and hex.
+
+**Counters are raw.** A Counter32 or Counter64 only goes up and wraps. The tag
+holds what the agent sent, and a rate is for whatever reads the tag. Counter64
+is held as a float, which is exact to 2^53; a port at line rate takes decades to
+get there.
+
+**TimeTicks are hundredths of a second**, so `sysUpTime` read as a plain tag is
+in 1/100 s. The integration scales it to seconds for you; a tag made by hand
+should set `scale` to `0.01`.
+
+**An object the agent doesn't have is a bad reading with the reason**, and the
+others in the same request still read: v2c and v3 say which ones were missing,
+and for v1, which answers a missing object with an error for the whole request,
+the driver takes that one out and asks again for the rest. An answer too big for
+the agent is asked again in halves.
+
+Device options (`config`):
+
+| Option | Meaning |
+|---|---|
+| `version` | `1`, `2c` or `3`. Default `2c` |
+| `community` | The v1 and v2c community. Required for those, and **there is no default**: `public` is how a plant's switches get read by whoever asks. A secret |
+| `username` | The v3 user |
+| `securityLevel` | `noAuthNoPriv`, `authNoPriv` or `authPriv`. Default: `authPriv` with a privacy passphrase, `authNoPriv` with only an authentication one, otherwise `noAuthNoPriv` |
+| `authProtocol` | `MD5`, `SHA`, `SHA224`, `SHA256`, `SHA384` or `SHA512`. Default `SHA` |
+| `authPassword` | The authentication passphrase. A secret |
+| `privProtocol` | `DES`, `AES`, `AES192`, `AES256`, `AES192C` or `AES256C`. Default `AES` |
+| `privPassword` | The privacy passphrase. A secret |
+| `contextName` | The v3 context. Almost always blank |
+| `transport` | `udp` (default) or `tcp` |
+| `retries` | How many times a request that got no answer is sent again, 0 to 10. Default 1 |
+| `maxRepetitions` | Rows per GETBULK in a walk. Default 10, which the smallest agents answer |
+| `browseRoots` | OIDs to walk when discovering points. Default: system, the interface tables, host resources, the load table and net-snmp's extend outputs |
+| `browseMaxNodes` | Where a browse stops. Default 2000 |
+
+The address is `host` or `host:port`, port 161 by default.
+
+**A wrong community answers with nothing.** An SNMPv1 or v2c agent drops a
+request carrying a community it doesn't know, so a wrong community, a wrong
+port, a firewall and an agent that is down all look like a timeout, and HotLoop's
+message says all four. SNMPv3 does tell them apart: a wrong passphrase or an
+unknown user is refused as such (`ErrAuthRejected`), and HotLoop waits a long
+time before trying the same credentials again.
+
+`Browse` walks the subtrees HotLoop can name and gives each object a name: the
+MIB's, as in `sysName`, `ifOperStatus.2`, `ifHCInOctets.2`, `laLoad.1`, or the
+OID as `oid.1.3.6.1...` for one it doesn't know. The names, and the OIDs, types
+and units behind them, come from the MIBs that define them: SNMPv2-MIB (RFC
+3418), IF-MIB (RFC 2863), HOST-RESOURCES-MIB (RFC 2790) and net-snmp's UCD-SNMP-MIB
+and NET-SNMP-EXTEND-MIB. The lab test reads each one off a real agent and holds
+it to the type its MIB gives it. Everything else the agent has still reads;
+add it as a tag by OID.
+
+The integration (see INTEGRATIONS.md) does the asking
+for you.
+
+### BACnet/IP
+
+A building automation controller, a meter, a thermostat: anything on the IP
+network that speaks BACnet. Read-only. HotLoop never writes a BACnet property,
+because a write lands on a commandable output through a priority array, and a
+priority that is left set holds the equipment where it was put after whoever set
+it has gone home. That is a feature to design on purpose, not one to leave
+lying around.
+
+The client is `internal/bacnet`, written for HotLoop from the structure of
+ASHRAE 135 (the encoding rules and the ReadProperty, ReadPropertyMultiple, Who-Is
+and I-Am services), with no code from any other BACnet stack. It is held to
+frames recorded off a real device, decoded by tests that always run, and to that
+device in the lab.
+
+```
+analog-input:1                present value of analog input 1
+ai:1                          the same, abbreviated
+av:3.units                    a property other than the present value, by name
+analog-input:1.117            or by number
+multi-state-value:2           present value of a multi-state value
+```
+
+A tag's address is the object, `<type>:<instance>`, and a dot and a property when
+it isn't the present value. The types, by name or abbreviation: `analog-input`
+(`ai`), `analog-output` (`ao`), `analog-value` (`av`), `binary-input` (`bi`),
+`binary-output` (`bo`), `binary-value` (`bv`), `multi-state-input` (`msi`),
+`multi-state-output` (`mso`), `multi-state-value` (`msv`), `accumulator`
+(`acc`), `integer-value` (`iv`), `positive-integer-value` (`piv`),
+`large-analog-value` (`lav`) and `characterstring-value` (`csv`). The properties
+by name are `present-value`, `object-name`, `description`, `units`,
+`status-flags`, `out-of-service`, `reliability`, `number-of-states`,
+`state-text`, `object-type`, `object-identifier`, `object-list`, `vendor-name`,
+`vendor-identifier`, `model-name`, `firmware-revision` and
+`application-software-version`; any other property is its number.
+
+What a tag becomes follows its `dataType`: a number the device sent (real,
+double, unsigned, signed, enumerated, boolean) is that number, and a binary
+object's `active` is 1 and `inactive` is 0; a character string is text, or a
+number if the tag is one and the text is a number; a `null` present value is a
+bad reading that says the device has nothing to report. A property that holds
+more than one value (an object list) can't be a tag.
+
+**Status flags are part of the reading.** Every poll asks for an object's status
+flags in the same request as its present value, and an object whose **fault** flag
+is set reads **bad**, with the reason. One that is **out of service** or
+**overridden** reads **uncertain**: its present value is something a person or a
+program put there, not a measurement, and the trend charts and reports leave
+uncertain readings out like bad ones (the quality rule).
+**In alarm** alone is a good reading of a point that is in alarm.
+
+**What the device doesn't have is a bad reading with the reason, and the rest
+still read.** ReadPropertyMultiple answers each property on its own, so an
+object that isn't there (`unknown-object`) or a property it doesn't have
+(`unknown-property`) fails that tag and no other. A device that refuses
+ReadPropertyMultiple is read one property at a time from then on.
+
+**Nothing is segmented.** The client tells a device it can't take a segmented
+answer. A device whose answer would not fit one frame aborts
+(`segmentation-not-supported`), and HotLoop asks for half as many objects at a
+time; a device whose object list is too big to send whole is read one element at a
+time.
+
+Device options (`config`):
+
+| Option | Meaning |
+|---|---|
+| `deviceInstance` | The instance number the device at this address is expected to have. When it is set and the device says another, the connection is refused: a different device answering at a reused address, or a controller that was swapped, is how a plant gets a clean-looking wrong number |
+| `localAddress` | The address of this machine's network card to send from, for a host with more than one. Usually blank |
+| `retries` | How many times a request that got no answer is sent again, 0 to 10. Default 1 |
+| `browseMaxObjects` | Where a browse stops. Default 1000 |
+
+The address is `host` or `host:port`, port 47808 by default. Nothing in BACnet/IP
+is a credential, so there are none to hide.
+
+**Connecting asks the device who it is.** HotLoop sends the device a unicast
+Who-Is and takes its device instance from the I-Am. A device that doesn't answer
+one is asked for its own device object under the wildcard instance (4194303),
+which the standard says a device answers as itself. A device that answers
+neither is reported with both tried, because the usual reasons look the same: a
+wrong address or port, a firewall, a device that is down, or a device on a
+network behind a router.
+
+**Routing is not built.** HotLoop talks to a device it can send a UDP datagram
+to. A controller on an MS/TP trunk behind a BACnet router, or on another BACnet
+network, is not reachable, and neither is a device only a BBMD can reach (foreign
+device registration). Address the router's own BACnet/IP side, or put a gateway
+in front: see [gateway mode](#everything-else-gateway-mode).
+
+`Browse` reads the device's own object (its name, vendor, model and firmware),
+its object list, and every object HotLoop reads: name, description, units,
+present value and status flags, and a multi-state object's state text. A tag is
+named after the object's own name, with the address added when two objects share
+one. Units become a label and, where they mean one, an entity class: degrees
+Celsius is `°C` and `temperature`, percent relative humidity is `%` and
+`humidity`, kilowatt hours is `kWh` and `energy`. A unit HotLoop has no label for
+is left unlabelled and named in the description by its number. The numbers and
+names of those units are held to a real device, which sends the number its own
+table gives each name. The integration (see
+INTEGRATIONS.md) does the asking for you.
+
 ## Everything else: gateway mode
 
-**PROFINET · EtherCAT · HART · BACnet/IP · DNP3 · FINS · MELSEC/SLMP · CANopen ·
-FANUC FOCAS**
+**PROFINET · EtherCAT · HART · DNP3 · FINS · MELSEC/SLMP · CANopen · FANUC FOCAS**
 
 These are not spoken natively and there is no driver for them. That is a
 deliberate choice, not a gap waiting to be filled with a stub.
 
 Sites running these protocols almost always already have a gateway that
 re-publishes on OPC UA or Modbus, a PROFINET IO controller with an OPC UA
-server, a HART multiplexer with a Modbus map, a BACnet/IP to Modbus bridge.
+server, a HART multiplexer with a Modbus map.
 Point a device at that endpoint and configure it as OPC UA or Modbus.
 
-Writing nine more drivers that each duplicate what a site's existing gateway
+Writing eight more drivers that each duplicate what a site's existing gateway
 already does would add nine more things to get subtly wrong, for protocols where
 the equipment is hardest to test against. If a site genuinely has no gateway and
 needs one of these natively, that is a real piece of work to schedule, not a
@@ -727,6 +931,8 @@ string replaces it. The rules, and what does not go through the API, are in
 | HTTP / REST | `password` (with `username`, sent as basic auth); every value in `headers` except plain ones such as `Accept` and `Content-Type`, which is where an API key or `Authorization` header goes; `body` and `writeBody` if they mention a credential | `http://user:pass@host` and `?api_key=` style query values, in the address and in `writeUrl` |
 | MTConnect | `password` (with `username`); every value in `headers`, with the same exceptions | `http://user:pass@host` and query values |
 | UniFi Network | `password` (with `username`). Only ever stored encrypted: without a key (below) the device can't be saved | none: the address is the console's `https://` URL |
+| BACnet/IP | none | none: the address is `host` or `host:port` |
+| SNMP | `community` (v1, v2c); `authPassword` and `privPassword` (v3), with `username` | none: the address is `host` or `host:port` |
 | Modbus, S7comm, EtherNet/IP | none | none: user information in the address is hidden, and the driver ignores it |
 
 **Encrypted at rest.** With `HOTLOOP_SECRET_KEY_FILE` set (the chart sets it,
@@ -751,7 +957,7 @@ list of options known not to be. See
 
 1. **Devices → Add device.** Pick the protocol, give it an address.
 2. **Discover tags** where the protocol supports it: OPC UA, EtherNet/IP,
-   MTConnect, MQTT (after a Sparkplug birth), HTTP. Modbus and S7comm cannot
+   MTConnect, MQTT (after a Sparkplug birth), HTTP, SNMP, BACnet/IP. Modbus and S7comm cannot
    enumerate their own points, so declare those from the device documentation.
 3. Imported tags are created **read-only**. A point the device happens to expose
    is not a point somebody has decided may be commanded. Mark tags writable one

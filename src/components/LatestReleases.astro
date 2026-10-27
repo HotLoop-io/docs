@@ -3,7 +3,7 @@
 import sync from '../data/sync.json';
 
 const newest = (prefix: string) =>
-  sync.pages.filter((p) => p.release && p.slug.startsWith(prefix)).sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))[0];
+  sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))[0];
 const rows = [
   { label: 'HotLoop core', page: newest('releases/hotloop-') },
   { label: 'HotLoop Flow', page: newest('releases/flow-') },

@@ -5,6 +5,10 @@ description: "Logical snapshots of the database, restores that refuse a newer sc
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.12.0. `internal/backup` takes logical, table-data-only snapshots
 of the historian and restores them. Off by default (`HOTLOOP_BACKUP_ENABLED`):
 a deployment that has not configured a backup volume should not have this
@@ -48,7 +52,7 @@ row count and columns with their types).
 ## Protect the backup files
 
 Backup files are sensitive. The `users.copy` file holds bcrypt password
-hashes, and `sessions.copy` and `write_audit.copy` hold session records and the
+and kiosk PIN hashes, and `sessions.copy` and `write_audit.copy` hold session records and the
 write audit trail. Files are created with mode `0640` (and the backup
 directory `0750`), and a pre-existing file is an error rather than
 overwritten, but that is a floor, not a substitute for protecting the volume:
@@ -70,6 +74,7 @@ never in a backup.
 - **With `HOTLOOP_SECRET_KEY_FILE` set** (the chart sets it, with a key it
   generates on install and keeps across upgrades and uninstalls), every keyed
   credential (the `password` of OPC UA, MQTT, HTTP, MTConnect and UniFi devices,
+  the `community` and passphrases of SNMP devices,
   HTTP and MTConnect header values such as API keys, the password of each
   other MQTT broker discovery listens to, and the password of each historian
   target) is encrypted in the database, and `devices.copy`, `mqtt_sources.copy`
@@ -272,6 +277,17 @@ What this does, in order:
 8. Exits. Nothing else in the process starts: no poll scheduler, no alarm
    engine, no API server. A restore has no use for any of them, and starting
    the runtime against a database mid-restore would be its own hazard.
+
+### Moving to PostgreSQL 17
+
+This backup is made by the running app, over its connection to the running
+database, so it cannot be the backup for the PostgreSQL 16 to 17 move: that move
+runs before the database starts. The upgrade's own safety is that it never
+writes to the PostgreSQL 16 directory, which it keeps whole as `pgdata.pg16`
+(docs/DEPLOYMENT.md, "PostgreSQL 17"). Take this backup on the old release
+before you upgrade anyway, because it is the copy that lives off the box.
+Restoring it onto the new database is the ordinary restore below: it carries
+rows, not the engine, so it does not care which major wrote them.
 
 ### Restoring onto a different version
 

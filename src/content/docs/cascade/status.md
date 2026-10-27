@@ -6,18 +6,22 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at cbe2c19, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 78f6a9d, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
-0.1.2 is out. 0.1.1 was the first release that isn't a candidate, and 0.1.2 is the
-same code built and tested on Podman only. There was a 0.1.0 tag that never
-published anything: its chart test failed on a hosted runner and I cancelled the
-run, so nothing reached the registry. 0.1.1 was the same code with the test
-fixed. The engine, the editor, the connectors, the
-importer, the metrics and traces, the Helm chart and the Quadlet units were each
-tried against real services before it went out. What isn't here yet (SAML, LDAP,
-SCIM, environments, the HA scheduler with leases, more connectors, AI steps) is
-0.2.0 and on, and it's in `docs/ROADMAP.md`.
+0.1.2 is the release out today. It was the first one that isn't a candidate: there
+was a 0.1.0 tag that never published anything, because its chart test failed on a
+hosted runner and I cancelled the run, so nothing reached the registry.
+
+Main has moved past it, and the next release is 1.0.0. It has everything in 0.1.2
+plus the identity and governance work, each piece tried against the real server it
+talks to: SAML (against Keycloak), LDAP and Active Directory (OpenLDAP and a Samba
+domain controller), SCIM (against scim2-tester), custom roles, external secrets
+(OpenBao), log streaming (a syslog server and Loki), variables, folders, insights,
+execution annotations, redaction policies, and S3 and Azure blob stores (Garage and
+Azurite). And it has a new editor, so every one of those has a screen. What isn't
+here yet (environments, the HA scheduler with leases, more connectors, AI steps) is
+in `docs/ROADMAP.md`.
 
 The repository is private. The image and the chart are public and pull with no
 login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `0.1.2`,

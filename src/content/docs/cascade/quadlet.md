@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at cbe2c19, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 78f6a9d, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Two ways to run it. Both want Podman 5.0 or newer and a root install, so they

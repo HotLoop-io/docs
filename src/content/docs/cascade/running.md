@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at cbe2c19, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 78f6a9d, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 On a Podman host, `deploy/quadlet` has systemd units. One file and a volume is
@@ -28,6 +28,11 @@ On k3s, `charts/hotloop-cascade` is the Helm chart:
 ```sh
 helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 0.1.2
 ```
+
+The chart carries the labels the EmberNet dashboard reads, on the Service and on
+the pods that serve the editor, so a store-deployed Cascade shows under Running
+Apps with a LAUNCH button. `gui.appName`, `gui.port` and `gui.displayName` change
+what it shows.
 
 That is one pod on SQLite with a volume. `--set split=true` with PostgreSQL
 (`--set postgresql.enabled=true` for one the chart runs, or

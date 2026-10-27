@@ -123,6 +123,7 @@ export const PAGES = [
   // ---- HotLoop Cascade ----
   { product: 'cascade', group: 'Start here', slug: 'cascade/overview', repo: 'cascade', file: 'README.md', intro: true, sections: ["What it won't do"], title: 'HotLoop Cascade', description: 'Workflows that get the plant talking to everything else, checkpointed so a retry is a database row, in one static Go binary.' },
   { product: 'cascade', group: 'Start here', slug: 'cascade/status', repo: 'cascade', file: 'README.md', sections: ['Where it stands'], title: 'Where Cascade stands', description: 'Cascade is released: what is in it, what is not in it yet, and where the image and chart live.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/editor', repo: 'cascade', file: 'README.md', sections: ['The editor'], title: 'The editor', description: 'The editor is built into the Cascade binary: folders, a canvas with run to here and pinned output, runs drawn step by step, and settings for roles and sign-in.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/running', repo: 'cascade', file: 'README.md', sections: ['Running it'], title: 'Running Cascade', description: 'Run Cascade with Podman Quadlet or Helm on k3s, on SQLite or Postgres, with the health check the units and the chart probes use.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/importing', repo: 'cascade', file: 'README.md', sections: ['Bringing a workflow in'], title: 'Bringing a workflow in', description: 'Import an existing workflow into Cascade, what maps across and what the importer tells you it could not carry.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/observability', repo: 'cascade', file: 'README.md', sections: ['Watching it'], title: 'Watching it', description: 'Health, readiness, Prometheus metrics and traces for every run and step, so a stuck job shows up on a graph and not in a complaint.' },
@@ -183,10 +184,7 @@ Object.assign(SLUG_RULES, {
   'releases/flow-2-3-0': [
     [ws('v6 (Apache-2.0)'), 'v6 (permissively licensed)'],
   ],
-  // HotLoop's ROADMAP.md still says IoT and Edge are not released, and 4.18.10 is the release that has them. These stand in until the source says so. Drop both once it does.
   roadmap: [
-    [ws('(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet'), '(`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
-    [ws('(`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Not released yet (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0)'), '(`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10'],
     // The roadmap is the core's. Say so, and say where the other two lines keep theirs. Links are HTML because the link pass runs after the rules and would drop a site path.
     [ws('It ships as four products out of one codebase. See [Products](#products).'),
       'HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow and Cascade keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a> and <a href="/cascade/roadmap/">the Cascade roadmap</a>.'],

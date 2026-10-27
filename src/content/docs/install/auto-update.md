@@ -5,6 +5,10 @@ description: "Every box follows the stable tag and Podman moves it. What an upda
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Every box tracks `:stable` and Podman updates it. That is the rule for all four
 products, and it is why no unit here pins a release number: a box pinned to
 `4.17.0` is exactly as old as the day somebody installed it, and nobody goes
@@ -97,7 +101,9 @@ and the database's can't.
   ([postgresql.org/support/versioning](https://www.postgresql.org/support/versioning/)).
   A tag that floated across majors would do it to a plant's historian during an
   unrelated restart. Pinning the major is the minimum, and not an "endpoint
-  pin" in the sense the rule above is about.
+  pin" in the sense the rule above is about. The one move HotLoop has made, 16
+  to 17, is `hotloop-db-upgrade.container`, run on purpose when you copy the
+  new units in.
 - A **minor release** (16.14 to 16.15) needs no dump and restore. The same page
   adds that some "might require additional steps so always read the release
   notes first". An unattended box doesn't read release notes.
@@ -118,8 +124,8 @@ one, and refuses an `AutoUpdate=` on it. The cost is that PostgreSQL's own patch
 releases reach a box when a release ships them, or when you change the tag by
 hand. Within the same major that is an edit to `hotloop-db.container`, a
 `daemon-reload` and a restart of the pod, after reading the release notes and
-taking a backup. A major version is a restore into a new database, the way
-[BACKUP.md](/iot/backup/) describes moving between versions.
+taking a backup. A major version is `pg_upgrade`, which HotLoop runs for 16 to 17 and which you
+run yourself, or restore into, for any other.
 
 ## Holding updates until you say
 

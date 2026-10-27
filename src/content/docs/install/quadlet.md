@@ -5,6 +5,10 @@ description: "Run HotLoop as real systemd services on a Pi or small industrial P
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 For a Pi or a small industrial PC that is **not** part of a k3s cluster. If
 it is, use the product's chart instead. This directory and the charts are the
 two supported ways to run HotLoop.
@@ -15,7 +19,7 @@ no user logged in, restart on failure, log to journald.
 
 | Directory | Product | Image |
 |---|---|---|
-| `iot/` | HotLoop IoT, with PostgreSQL 16 | `ghcr.io/hotloop-io/hotloop-iot` |
+| `iot/` | HotLoop IoT, with PostgreSQL 17 | `ghcr.io/hotloop-io/hotloop-iot` |
 | `edge/` | HotLoop Edge, with TimescaleDB | `ghcr.io/hotloop-io/hotloop-edge` |
 | `gateway/` | HotLoop Gateway, with TimescaleDB | `ghcr.io/hotloop-io/hotloop` |
 | this directory | HotLoop Edge Relay, no database | `ghcr.io/hotloop-io/hotloop-edge-relay` |
@@ -28,7 +32,7 @@ the database as a file and no database container. See
 
 ## IoT, Edge and the Gateway
 
-Each directory has the same five units:
+Each directory has the same units and one script:
 
 - **`hotloop.network`**: the network the app and its database share. The app
   reaches the database by name (`hotloop-db:5432`) and nothing else on the box
@@ -39,6 +43,10 @@ Each directory has the same five units:
 - **`hotloop-db.container`**: the database, the same image and version that
   product's chart runs. It reports started once it answers, so the app waits
   for a database it can use.
+- **`hotloop-db-upgrade.container`** and **`hotloop-db-upgrade.sh`**: the
+  database's move from PostgreSQL 16 to 17, once. It runs before the database
+  unit every time and does nothing unless the volume still holds 16 data. See
+  [PostgreSQL 16 to 17](#postgresql-16-to-17).
 - **`hotloop-db.volume`** and **`hotloop-data.volume`**: the database, and
   everything the app writes under `/data` (backups, certificates, the forward
   queue, reports). Named Podman volumes, so `podman system prune` leaves them
@@ -63,7 +71,8 @@ copying the bigger product's `hotloop.container` and `hotloop-db.container`
 over yours:
 
 ```sh
-sudo cp gateway/hotloop.container gateway/hotloop-db.container /etc/containers/systemd/
+sudo cp gateway/hotloop.container gateway/hotloop-db.container \
+  gateway/hotloop-db-upgrade.container gateway/hotloop-db-upgrade.sh /etc/containers/systemd/
 sudo systemctl daemon-reload
 sudo systemctl restart hotloop.service hotloop-db.service
 ```
@@ -92,6 +101,32 @@ the database and then can't start, which Podman rolled back, the previous
 release starting healthy on the database the failed one had already migrated.
 Edge and IoT were generated and compared, not run. Under systemd on a real
 Pi: not yet.
+
+## PostgreSQL 16 to 17
+
+HotLoop's database is PostgreSQL 17 from this release. A box that ran an
+earlier release has PostgreSQL 16 data, which PostgreSQL 17 will not open, so
+the move is a unit that runs before the database. Get the new files in place and
+restart the database, and that is all:
+
+```sh
+sudo cp hotloop-db.container hotloop-db-upgrade.container hotloop-db-upgrade.sh \
+  /etc/containers/systemd/
+sudo systemctl daemon-reload
+sudo systemctl restart hotloop-db.service
+journalctl -u hotloop-db-upgrade.service      # what it did
+```
+
+`hotloop-db.container` requires the upgrade unit, so a box that copied only the
+new database unit does not start on 16 data and the journal says why. The
+upgrade unit runs `pg_upgrade` in copy mode into a new directory beside the old
+one, starts the new server once to prove it opens, and only then swaps the
+names; the old data stays on the volume as `pgdata.pg16`. It pulls the
+PostgreSQL 16 image only when the volume needs it. A failure leaves the 16 data
+as it was and the database not started. The whole description, the way back and
+how to delete `pgdata.pg16` are in
+[DEPLOYMENT.md](/install/helm/#postgresql-17). For a rootless install
+the script path in the unit is `~/.config/containers/systemd`, from `%E`.
 
 ## SQLite instead of PostgreSQL
 

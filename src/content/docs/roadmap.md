@@ -5,6 +5,10 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -31,8 +35,8 @@ you need.
 
 | Product | What it is | Databases | Where it stands |
 |---|---|---|---|
-| **HotLoop IoT** | Entities, automations, helpers, scripts, the logbook, dashboards, notifications, MCP, MQTT with discovery, the ISA-18.2 alarm engine, backups and every driver. The base the other three are built on | SQLite or Postgres | Split out: its own image (`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10 |
-| **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine. Our Ignition Edge | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. First released in 4.18.10 |
+| **HotLoop IoT** | Entities, automations, helpers, scripts, the logbook, dashboards, notifications, MCP, MQTT with discovery, the ISA-18.2 alarm engine, backups and every driver. The base the other three are built on | SQLite or Postgres | Split out: its own image (`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 |
+| **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine. Our Ignition Edge | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0) |
 | **HotLoop Gateway** | Edge, plus fleet, multi-site and scheduled reports. The site brain | SQLite, Postgres or TimescaleDB | Shipping (`cmd/hotloop`) |
 | **HotLoop Edge Relay** | Dumb and tough: poll, forward, survive. No database, no UI. Its own product, not Edge with the screen unplugged | none | Shipping (`cmd/edge-relay`). Every release publishes its image and chart from 4.16.0 on |
 
@@ -83,10 +87,10 @@ IoT user, and telling him to buy the Gateway to talk to it would be a scam.
 - [x] The license's scope line names all four products, in the canonical
       license and every copy of it. It used to say Gateway, which arguably left
       the other three with no grant at all
-- [ ] **The split waits for MQTT discovery** (Phase 4). IoT's first release
-      finds Shelly and ESPHome devices out of the box, or it doesn't ship. An
-      automation base that can't find a smart plug on its own network is a
-      joke we're not telling
+- [ ] **The split shipped in 4.18.10 with MQTT discovery** (Phase 4). IoT's
+      first release finds Shelly and ESPHome devices out of the box, or it
+      doesn't ship. An automation base that can't find a smart plug on its own
+      network is a joke we're not telling
 
 ## The rules
 
