@@ -61,6 +61,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'HotLoop Docs',
+      routeMiddleware: './src/routeData.ts',
       components: {
         Header: './src/components/Header.astro',
         SiteTitle: './src/components/SiteTitle.astro',
