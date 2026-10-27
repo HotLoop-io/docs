@@ -40,6 +40,9 @@ export const GLOBAL_RULES = [
     'Every recipe is an entity too, `scene.<id>`.'],
   [ws('3.x deployed `homeassistant/home-assistant`. There is no migration path for its data because there is no shared data model: Home Assistant\'s recorder schema has nothing in common with a tag historian.'),
     '3.x was a different product. There is no migration path for its data, because it shares no data model with a tag historian.'],
+  // EmberNet's own name for the ERP, never the upstream one. Sources still say ERPNext (a tagged release note cannot be edited), so the rule is here.
+  [/\bERPNext\b/g, 'EmberOps'],
+  [/\bEmberOPS\b/g, 'EmberOps'],
 ];
 
 // Each entry: id (also the slug under the product), file or sections, title, description.

@@ -17,7 +17,7 @@ What it is: the workflow engine I wanted on a plant floor. One static Go binary,
 
 The engine, with every step checkpointed, so a `kill -9` in the middle of a run picks up where it left off. Durable waits, retries, error ports and error workflows. Expressions, and a Code step that runs JavaScript in its own jail in its own process.
 
-Webhooks with a durable inbox, schedules that fire each slot exactly once no matter how many mains are looking, MQTT, and a trigger for files that land in a directory. An HTTP step for anything with an API, and connectors for HotLoop, Postgres, ERPNext, email, ntfy, Gotify and Discord. No others, on purpose.
+Webhooks with a durable inbox, schedules that fire each slot exactly once no matter how many mains are looking, MQTT, and a trigger for files that land in a directory. An HTTP step for anything with an API, and connectors for HotLoop, Postgres, EmberOps, email, ntfy, Gotify and Discord. No others, on purpose.
 
 A credential vault with key rotation, OAuth2 for every grant a plant needs, sign-in with passwords, TOTP, passkeys or your OpenID Connect provider, enforced MFA, projects and roles, an audit log you can verify, every save kept as a version, and a scoped API with an OpenAPI document. Metrics, traces and probes, so somebody besides me can tell when it's stuck.
 
