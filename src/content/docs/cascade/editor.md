@@ -10,7 +10,7 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at 78f6a9d. HotLoop Cascade 0.1.2 is the latest release, and it does not have what this page describes. An install from 0.1.2 will not match this page.
+This page was written from `main` at 271c7b0. HotLoop Cascade 0.1.2 is the latest release, and it does not have what this page describes. An install from 0.1.2 will not match this page.
 :::
 
 The editor is baked into the binary, so there is nothing else to run and nothing it
