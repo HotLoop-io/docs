@@ -15,19 +15,19 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "226dcdb1c619d7b084f2757be6a7413e8309e201",
+      "sha": "dfb7159c9be3e092ee1a32a6a175f2ce0a727cbb",
       "release": {
-        "tag": "v2.4.0",
-        "version": "2.4.0",
+        "tag": "v2.5.0",
+        "version": "2.5.0",
         "prerelease": false,
-        "publishedAt": "2026-10-26T23:17:37Z",
-        "sha": "7c2a298516ac56e6ac7dde7f810f890d131e87ae"
+        "publishedAt": "2026-10-27T23:40:48Z",
+        "sha": "5a8f727d7cdec2aaf34df383ed351bc6e1be70ad"
       }
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "271c7b07454d23730a737996756361f3b07b7487",
+      "sha": "2b385d50d062b18c21aeb43c5961f14e899e979e",
       "release": {
         "tag": "v0.1.2",
         "version": "0.1.2",
@@ -435,6 +435,17 @@
       "title": "HotLoop Flow",
       "label": null,
       "status": "released",
+      "repo": "flow",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "flow/editor",
+      "product": "flow",
+      "group": "Start here",
+      "title": "The Flow editor",
+      "label": null,
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -921,6 +932,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.4.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-5-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.5.0 release notes",
+      "label": "2.5.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.5.0.md",
       "release": true
     },
     {
