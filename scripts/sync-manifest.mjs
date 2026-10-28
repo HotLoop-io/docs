@@ -96,6 +96,7 @@ export const PAGES = [
 
   // ---- HotLoop Flow ----
   { product: 'flow', group: 'Start here', slug: 'flow/overview', repo: 'flow', file: 'README.md', intro: true, sections: ['The numbers'], title: 'HotLoop Flow', description: 'A visual flow engine for the plant floor in one Go binary, with a ceiling on every queue, reviewable deploys and your existing Node-RED flows loaded unchanged.' },
+  { product: 'flow', group: 'Start here', slug: 'flow/editor', repo: 'flow', file: 'README.md', sections: ['What it looks like'], title: 'The Flow editor', description: 'The Flow editor in light and dark: the canvas with the debug dock and runtime table, the review before a deploy, a traced message, and the sign-in screens.' },
   { product: 'flow', group: 'Start here', slug: 'flow/quick-start', repo: 'flow', file: 'README.md', sections: ['Quick start'], title: 'Quick start', description: 'Build or run HotLoop Flow, set the admin account and credential secret it insists on, and start it, from source or from the image.' },
   { product: 'flow', group: 'Start here', slug: 'flow/migrating-from-node-red', repo: 'flow', file: 'README.md', sections: ['Bring your flows'], title: 'Bring your Node-RED flows', description: 'Import a Node-RED flows.json unchanged, see what it maps to node by node, and what Flow refuses to run and why.' },
   { product: 'flow', group: 'How it runs', slug: 'flow/back-pressure', repo: 'flow', file: 'README.md', sections: ['Back-pressure, visibly'], title: 'Back-pressure, visibly', description: 'A ceiling on every queue, a policy for what happens at the ceiling, and a graph of every message that did not fit, before it becomes an OOM kill.' },
@@ -121,7 +122,7 @@ export const PAGES = [
   { product: 'flow', group: 'Project', slug: 'flow/where-it-stands', repo: 'flow', file: 'README.md', sections: ['Where it stands'], title: 'Where Flow stands', description: 'What has been proven against real equipment, what has not, and what is known to be missing.' },
   { product: 'flow', group: 'Project', slug: 'flow/benchmarks', repo: 'flow', file: 'docs/bench/README.md', title: 'Benchmarks', description: 'How the Flow numbers were measured: the flow, the commands, the results, what they are not, and how memory is read.' },
   { product: 'flow', group: 'Project', slug: 'flow/building', repo: 'flow', file: 'README.md', sections: ['Building'], title: 'Building Flow', description: 'Build the Flow binary from source, run the tests and the race detector, regenerate the compatibility doc, and what CI refuses to ship.' },
-  { product: 'flow', group: 'Project', slug: 'flow/roadmap', repo: 'flow', file: 'docs/ROADMAP.md', title: 'Flow roadmap', description: 'The phases still to build for Flow, what is done, and why the editor rewrite in Astro is last.' },
+  { product: 'flow', group: 'Project', slug: 'flow/roadmap', repo: 'flow', file: 'docs/ROADMAP.md', title: 'Flow roadmap', description: 'The phases of Flow, what is done and what is next, including the editor rewrite in Astro.' },
 
   // ---- HotLoop Cascade ----
   { product: 'cascade', group: 'Start here', slug: 'cascade/overview', repo: 'cascade', file: 'README.md', intro: true, sections: ["What it won't do"], title: 'HotLoop Cascade', description: 'Workflows that get the plant talking to everything else, checkpointed so a retry is a database row, in one static Go binary.' },

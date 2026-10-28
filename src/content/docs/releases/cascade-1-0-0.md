@@ -11,7 +11,7 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at 271c7b0. These notes are for a release that is not out. HotLoop Cascade 0.1.2 is the latest one you can install.
+This page was written from `main` at 2b385d5. These notes are for a release that is not out. HotLoop Cascade 0.1.2 is the latest one you can install.
 :::
 
 ## What this is
@@ -32,9 +32,15 @@ SAML, against Keycloak, with signed responses only. LDAP and Active Directory, a
 
 The editor has a screen for each of them: Variables, Insights, and under Settings, Roles, Redaction, External secrets, Log streaming, and Sign-in and SCIM. The workflow list is your folders, a run's page has its annotation, and a workflow's own settings (in the side panel with nothing selected) pick its redaction policy. A person is only offered what their role allows, and the server still refuses the rest.
 
+## EmberOps steps are gone
+
+I took the EmberOps connector out. The nine steps (`erpnext.trigger`, `getList`, `getDoc`, `create`, `update`, `delete`, `submit`, `cancel` and `call`), the "When an EmberOps document is created or changes" trigger, the EmberOps credential type and the screens and docs that offered them are not in 1.0.0. If you need to reach EmberOps, the HTTP step calls its REST API with a credential, and that works today.
+
+A workflow you saved with one of those steps is not dropped and not quietly changed. It fails to validate and it won't start, and the message names the step and says EmberOps steps were removed in 1.0.0. Delete the step, or replace it with an HTTP step, and it runs again. A credential of the EmberOps type stays in your list, unused, and you can delete it. The importer no longer carries an EmberOps node across, so it comes in disabled with its settings in its notes, like any node it has no step for.
+
 ## Upgrading from 0.1.2
 
-`helm upgrade` to 1.0.0, or let `:stable` roll the Quadlet units. Eight migrations (0018 to 0025) run on the way up. They create tables for roles, variables, folders, annotations, redaction policies, SCIM, secret providers and log destinations, and add one column, the folder a workflow is in. They don't touch what you have, so your workflows, credentials and runs are where they were and the key still opens them. SAML, LDAP, SCIM and the blob stores are off until you set their `HOTLOOP_CASCADE_*` settings, which are in `docs/IDENTITY.md` and `docs/GOVERNANCE.md`. Nothing changes for an instance that sets none of them.
+`helm upgrade` to 1.0.0, or let `:stable` roll the Quadlet units. Eight migrations (0018 to 0025) run on the way up. They create tables for roles, variables, folders, annotations, redaction policies, SCIM, secret providers and log destinations, and add one column, the folder a workflow is in. They don't touch what you have, so your workflows, credentials and runs are where they were and the key still opens them. SAML, LDAP, SCIM and the blob stores are off until you set their `HOTLOOP_CASCADE_*` settings, which are in `docs/IDENTITY.md` and `docs/GOVERNANCE.md`. Nothing changes for an instance that sets none of them, unless a workflow of yours uses an EmberOps step (see above).
 
 ## Things you need to know
 
