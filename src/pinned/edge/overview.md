@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "HotLoop Edge overview"
 description: "HotLoop Edge is IoT plus the machine layer: an OPC UA server, Sparkplug B publishing, and store-and-forward that keeps the plant running with the uplink down."
 sidebar:

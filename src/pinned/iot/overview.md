@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "HotLoop IoT overview"
 description: "HotLoop IoT is the automation base: entities, automations, dashboards, alarms, MQTT discovery, and every protocol driver, on SQLite or PostgreSQL, built in Go."
 sidebar:
@@ -32,7 +32,7 @@ No OPC UA server, no Sparkplug publishing with store and forward, no fleet, no m
 
 ## Databases
 
-SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 16 by default, with 30 days of history kept, and `HOTLOOP_DB_TYPE=sqlite` puts the whole thing on a file with no database container at all. In the chart that is `database.type`, and asking the IoT chart for `timescaledb` fails the install. Moving to another database is a backup and a restore. [The lineup](/products/) has the table, and [Backups](/iot/backup/) has the restore.
+SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 17 by default, with 30 days of history kept, and `HOTLOOP_DB_TYPE=sqlite` puts the whole thing on a file with no database container at all. In the chart that is `database.type`, and asking the IoT chart for `timescaledb` fails the install. Moving to another database is a backup and a restore. [The lineup](/products/) has the table, and [Backups](/iot/backup/) has the restore.
 
 ## Installing it
 

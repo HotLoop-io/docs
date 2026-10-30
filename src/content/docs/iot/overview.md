@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[IoT is out, first released in 4.18.10]
-The image is `ghcr.io/hotloop-io/hotloop-iot:4.18.10` for amd64, arm64, and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
+The image is `ghcr.io/hotloop-io/hotloop-iot:4.18.11` for amd64, arm64, and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
 :::
 
 IoT is the base the other three products are built on. If the box in front of you is a Pi, a NUC in a closet, a rack of smart plugs and sensors, or one PLC on a bench, this is the one. It is the smallest image of the three full products, and it still carries everything that makes HotLoop useful: the entities, the rules, the alarms, and the one write gate that nothing gets around.
@@ -33,7 +33,7 @@ No OPC UA server, no Sparkplug publishing with store and forward, no fleet, no m
 
 ## Databases
 
-SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 16 by default, with 30 days of history kept, and `HOTLOOP_DB_TYPE=sqlite` puts the whole thing on a file with no database container at all. In the chart that is `database.type`, and asking the IoT chart for `timescaledb` fails the install. Moving to another database is a backup and a restore. [The lineup](/products/) has the table, and [Backups](/iot/backup/) has the restore.
+SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 17 by default, with 30 days of history kept, and `HOTLOOP_DB_TYPE=sqlite` puts the whole thing on a file with no database container at all. In the chart that is `database.type`, and asking the IoT chart for `timescaledb` fails the install. Moving to another database is a backup and a restore. [The lineup](/products/) has the table, and [Backups](/iot/backup/) has the restore.
 
 ## Installing it
 

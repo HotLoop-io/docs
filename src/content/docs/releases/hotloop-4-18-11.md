@@ -5,14 +5,7 @@ description: "What shipped in HotLoop core 4.18.11, what changed on upgrade, and
 editUrl: false
 sidebar:
   label: "4.18.11"
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 1e8706a. These notes are for a release that is not out. HotLoop core 4.18.10 is the latest one you can install.
-:::
 
 HotLoop's database is PostgreSQL 17 from this release, and every install that has
 PostgreSQL 16 data moves on its next upgrade without you running anything. That
@@ -108,7 +101,7 @@ What changed in 4.18.11.
 - **The alarm trail has two new event types,** `escalated` and `escalation-ended`,
   with `actor` set to `escalation`. A script that reads an alarm's history and
   assumes the old list will meet them.
-- `GET /api/stream` closes when its session ends, and a history bucket's time
+- `GET /api/stream` closes when its session ends, and every time history returns
   is in UTC. Both are under "What else is in it".
 
 ### Upgrading from 4.18.10
@@ -200,11 +193,22 @@ What changed in 4.18.11.
   or a disabled account. It checks every five seconds now and closes when the
   session is gone, without counting the check as the session being used, so a
   screen left on a wall still goes idle. No route, field or permission changed.
-- **A history bucket's time is written in UTC.** `HistoryBuckets` handed a
-  bucket edge back in the box's own timezone, so the same trend spelled its
-  times one way on a plant set to New York and another on a plant set to UTC.
-  The edge is an instant, and it is the same instant either way. A script that
-  compared the strings, not the times, will see the offset change.
+- **Every time history hands back is written in UTC.** History gave some of its
+  times back in the box's own timezone (on SQLite, the readings themselves), so
+  the same trend spelled `-04:00` on a plant set to New York and `Z` on one set to
+  UTC. That covered a bucket's edge, a raw reading, a tag's newest value, what it
+  held before a window, the oldest and newest times on the diagnostics page, and
+  the `from` and `to` of the window. Each is an instant and the same instant
+  either way, so a script that compares times sees no change. A script that
+  compared the strings will see the offset become `Z`.
+- **A node that reconnects announces itself once.** When an edge node got its
+  connection back, the reconnect and the node's sender could each find the session
+  not yet born and each publish an NBIRTH, a millisecond apart, with the same
+  bdSeq and nothing new in the second. If the node was being stopped just then,
+  the second landed after its NDEATH and a host saw a stopped node announce itself
+  again. The sender now publishes a birth only when the session has none or a tag
+  needs announcing. It is in the Edge Relay too. No topic, field or setting
+  changed.
 - **Docs that were wrong in 4.18.10.** Four links and counts: the Edge Relay page
   linked a discovery anchor that was never the heading, the 4.18.10 notes linked
   a 4.18.4 anchor, and the MCP page said twenty-five tools over a table of

@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:
@@ -19,7 +19,7 @@ helm install hotloop hotloop/hotloop --version {{hotloop}} \
   --namespace hotloop --create-namespace
 ```
 
-That deploys the Gateway, plus TimescaleDB 2.30.1 beside it on a 20 Gi volume, keeping 90 days of history. The database is a setting, `database.type`: `timescaledb` is the default, `postgresql` runs plain PostgreSQL 16, and `sqlite` runs the Gateway on a file with no database pod at all, on one replica and local storage, never NFS. Moving between them later is a backup and a restore, because the new database starts empty. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade, so a `helm upgrade` never rotates a password out from under you or logs you out of your own plant.
+That deploys the Gateway, plus TimescaleDB 2.30.1 beside it on a 20 Gi volume, keeping 90 days of history. The database is a setting, `database.type`: `timescaledb` is the default, `postgresql` runs plain PostgreSQL 17, and `sqlite` runs the Gateway on a file with no database pod at all, on one replica and local storage, never NFS. Moving between them later is a backup and a restore, because the new database starts empty. A box that already holds PostgreSQL 16 data moves to 17 on its next upgrade without you running anything, so [read how that goes](/gateway/upgrading/#upgrading-from-41810) before you touch a running plant. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade, so a `helm upgrade` never rotates a password out from under you or logs you out of your own plant.
 
 ## Back up the key before you need it
 

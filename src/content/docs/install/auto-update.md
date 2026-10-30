@@ -5,10 +5,6 @@ description: "Every box follows the stable tag and Podman moves it. What an upda
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every box tracks `:stable` and Podman updates it. That is the rule for all four
 products, and it is why no unit here pins a release number: a box pinned to
 `4.17.0` is exactly as old as the day somebody installed it, and nobody goes
