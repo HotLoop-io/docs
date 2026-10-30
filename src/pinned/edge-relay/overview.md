@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "HotLoop Edge Relay overview"
 description: "A headless Sparkplug B edge node. It polls with the Gateway's drivers, forwards upstream, and buffers to disk when the link drops. No database, no UI."
 sidebar:
@@ -39,7 +39,7 @@ Still on 4.16.0? [Upgrading from 4.16.0](/gateway/upgrading/#the-edge-relay) has
 ## What it does
 
 - **Polls** with the Gateway's own engine: the same workers, the same reconnect and back-off, and the same drivers for OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConnect, and HTTP. Since 4.18.10 it can also listen to MQTT brokers you name in the device file and read what announces itself there (ESPHome, Zigbee2MQTT, Tasmota, Shelly), and nothing it discovers can be armed, because a relay has no write path at all. Since 4.17.0 it can poll a UniFi console too, read-only: the tags its device file declares, and of the client work only the per-network client counts, with no OT watch. A driver bug fixed in the Gateway is fixed here.
-- **Forwards** as a Sparkplug B edge node: births, sequence numbers, and deaths the way the spec says.
+- **Forwards** as a Sparkplug B edge node: births, sequence numbers, and deaths the way the spec says. A reconnect announces the node once, not twice.
 - **Survives the link dying.** Readings queue to a single file on disk. When the broker comes back the queue drains before any live reading goes out, oldest first, each one flagged `is_historical` so the host upstream doesn't mistake a replay for the tag's current value. Delivery is at least once, so whatever consumes it has to tolerate a duplicate after a crash mid-replay. The queue is capped at 64 MiB by default, and past the cap the oldest readings are dropped and counted. That is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate, about 180 bytes a reading. Set it to `0` and it is unbounded, and a long enough outage fills the volume. [Install](/edge-relay/install/) says how to set it.
 - **Answers two read-only endpoints** on port 8081: `/healthz` (the process is up) and `/status` (device counts by connection state, tag count, queue depth, compiled-in protocols, whether the broker is connected, its version, image digest, and update mode, and which device file is running and which was refused). No tag values, no addresses, no config. Both are unauthenticated on purpose: there's no user database to hang a login on, and one shared token would be theater, not security. Keep them behind the same perimeter as the box.
 - **Takes orders from a Gateway.** Register a relay with the Gateway's fleet management (API only, there's no Fleet screen) and the Gateway tracks it from its births and deaths, and can send it a rebirth, a restart, a new device file, or the approval for an update it is holding. A pushed device file applies live, with no restart. A restart is its own command, because it drops the relay's broker session and every device session it holds, and a box that sits there for months shouldn't do that to take a config change.

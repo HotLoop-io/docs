@@ -5,10 +5,6 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 

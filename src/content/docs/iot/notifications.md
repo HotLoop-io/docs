@@ -5,10 +5,6 @@ description: "ntfy, Gotify, Discord, webhooks and email. Press Acknowledge on yo
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.10.0. `internal/notify` is the first increment of Phase 2 of the
 plan of record, whose own acceptance bar for this phase is literally "a 03:00
 alarm pages a phone." It registers with `alarm.Engine`'s existing

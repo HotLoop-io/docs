@@ -5,10 +5,6 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -1273,7 +1269,7 @@ the deployment can.
 
 The config flow for a kind of device a person points HotLoop at: ask what the
 integration needs, look at the real device with the answers, and make the
-device and its tags from what was found. See INTEGRATIONS.md.
+device and its tags from what was found. See [INTEGRATIONS.md](/iot/integrations/).
 
 **Nothing here arms anything.** Every tag a setup makes is read-only. Arming
 one is `POST /api/tags` like every other point.

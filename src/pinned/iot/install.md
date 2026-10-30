@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "Install HotLoop IoT {{hotloop}}"
 description: "Install HotLoop IoT {{hotloop}} on k3s with Helm, or on a Pi or small PC as systemd services with Podman Quadlet, on PostgreSQL, or a SQLite file."
 sidebar:
@@ -8,7 +8,7 @@ sidebar:
 
 HotLoop IoT first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, built for amd64, arm64, and arm/v7, and the chart is `hotloop-iot` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 
-Two ways in. A cluster gets Helm. A Pi, a NUC, or a small industrial PC with no cluster gets Podman Quadlet. Either way the database is a choice you make once: PostgreSQL 16 (the default), or a SQLite file with no database container at all.
+Two ways in. A cluster gets Helm. A Pi, a NUC, or a small industrial PC with no cluster gets Podman Quadlet. Either way the database is a choice you make once: PostgreSQL 17 (the default), or a SQLite file with no database container at all.
 
 ## Helm
 
@@ -21,7 +21,7 @@ helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
 
 Call the release `hotloop` whichever product it is. The release name is what the database's volume, the Secrets, and the Service are named after, and keeping it is what lets a site move up a product later.
 
-That deploys IoT plus PostgreSQL 16.15 beside it on a 10 Gi volume, keeping 30 days of history. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade, so a `helm upgrade` never rotates a password out from under you.
+That deploys IoT plus PostgreSQL 17.11 beside it on a 10 Gi volume, keeping 30 days of history. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade, so a `helm upgrade` never rotates a password out from under you.
 
 For a SQLite file and no database pod, ask for it when you install:
 

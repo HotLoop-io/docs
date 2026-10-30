@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "Install HotLoop Edge {{hotloop}}"
 description: "Install HotLoop Edge {{hotloop}} on k3s with Helm or on an industrial PC with Podman Quadlet, then turn on the OPC UA server and Sparkplug publishing."
 sidebar:
@@ -21,7 +21,7 @@ helm install hotloop hotloop/hotloop-edge --version {{hotloop}} \
 
 Call the release `hotloop` whichever product it is. The release name is what the database's volume, the Secrets, and the Service are named after, and keeping it is what lets a site move up a product later.
 
-That deploys Edge plus TimescaleDB 2.30.1 beside it on a 20 Gi volume, keeping 90 days of history. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade. It generates `<release>-secret-key` too, the key that encrypts every device password HotLoop keeps. That key is part of your data, and [the Gateway install page](/gateway/install/#back-up-the-key-before-you-need-it) says why and how to back it up. It is the same key.
+That deploys Edge plus TimescaleDB 2.30.1 on PostgreSQL 17 beside it on a 20 Gi volume, keeping 90 days of history. The chart generates the database password, the MCP token, and an admin password into the release Secret, and reuses them on every upgrade. It generates `<release>-secret-key` too, the key that encrypts every device password HotLoop keeps. That key is part of your data, and [the Gateway install page](/gateway/install/#back-up-the-key-before-you-need-it) says why and how to back it up. It is the same key.
 
 For plain PostgreSQL or a SQLite file, set `database.type` to `postgresql` or `sqlite` when you install. A SQLite file is one writer on one local disk, so it is one replica and never NFS. Moving between databases later is a backup and a restore, because the new database starts empty. [Backups](/iot/backup/) has the restore.
 

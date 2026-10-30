@@ -1,16 +1,60 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
-description: "From 4.17.0 it's a plain helm upgrade with a changed queue default. From 4.16.0 or 4.3.1 you go in hops. The commands, what changes, and what to back up."
+description: "From 4.18.10 the database moves to PostgreSQL 17 by itself, which needs disk and a backup. From 4.17.0 it is a plain helm upgrade. Older, you go in hops."
 sidebar:
   label: "Upgrading"
 ---
 
-Three ways onto {{hotloop}}, and they are nothing alike. From 4.17.0 it's a plain `helm upgrade`, with a couple of defaults that moved. From 4.16.0 you go through 4.17.0 first, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 and 4.17.0 on the way. The release notes cover one hop at a time, and none of them covers jumping over a release, so this page doesn't promise that one works. Find the one that's yours and read all of it before you touch a running plant.
+Four ways onto {{hotloop}}, and they are nothing alike. From 4.18.10 the database engine changes under you, and you want to know that before it happens. From 4.17.0 it's a plain `helm upgrade`, with a couple of defaults that moved. From 4.16.0 you go through 4.17.0 first, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 and 4.17.0 on the way. The release notes cover one hop at a time, and none of them covers jumping over a release, so this page doesn't promise that one works. Find the one that's yours and read all of it before you touch a running plant.
 
 :::note[Older charts are fetched by URL]
 The chart repository's index lists only the latest chart, {{hotloop}}, so `hotloop/hotloop --version 4.17.0` won't resolve. The older chart tarballs are still served, and the commands below for 4.16.0 and 4.17.0 name the chart by its URL instead, like `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`.
 :::
+
+## Upgrading from 4.18.10
+
+Why bother: the database is PostgreSQL 17 now, and the box moves itself. You also get [integrations](/iot/integrations/) with SNMP and BACnet/IP, kiosk sign-in, alarm escalation, and a UI that installs on a phone. [The Gateway overview](/gateway/overview/#new-in-41811) has the list. What follows is the part that bites.
+
+PostgreSQL will not open another major version's data directory, so a bare image change would have left every existing box with a database that can't start. HotLoop doesn't ask you to dump and reload. The first start after the upgrade runs a script before the database, and the script does the move.
+
+```bash
+helm repo update hotloop
+helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-values
+```
+
+The same for `hotloop-edge` and `hotloop-iot`. Take a backup on 4.18.10 first and copy it off the box. HotLoop's own backup is made by the running app through the running database, so it can't be taken in the step that runs before the database starts.
+
+### What happens on the first start from 4.18.10
+
+- **The database pod sits in `Init`, and the app waits for it.** On the chart it is two init containers on the database pod: the old image hands over its PostgreSQL 16 install and the new image runs `pg_upgrade`, in copy mode, into a new directory beside the old one. It starts the new server once to prove it opens, and only then swaps the names. How long that takes scales with your data, so watch the log the first time on a big one: `kubectl logs <release>-postgresql-0 -c pg-upgrade`. On Quadlet it is `hotloop-db-upgrade.container`, a oneshot unit the database unit requires: `journalctl -u hotloop-db-upgrade`.
+- **It needs about as much free space as your data takes, and it checks before it starts.** If there isn't room it stops with the 16 data exactly as it was and the database not started. Free the disk and start it again.
+- **`pgdata.pg16` stays on the volume, and it is yours to delete.** The old directory is renamed and left there. It is the whole PostgreSQL 16 database as it stood at the upgrade, which is your backup and your way back, and it is as big as the database. When the box has run on 17 as long as you want:
+
+  ```bash
+  # chart
+  kubectl -n hotloop exec hotloop-postgresql-0 -c postgresql -- rm -rf /var/lib/postgresql/data/pgdata.pg16
+  # Quadlet
+  sudo rm -rf "$(sudo podman volume inspect hotloop-db --format '{{.Mountpoint}}')/pgdata.pg16"
+  ```
+
+- **A failure leaves you where you were.** If anything fails before the swap, the 16 data is untouched and the database does not start on a half-built directory. On the chart the pod stays in `Init:Error`. On Quadlet the upgrade unit fails and the database unit behind it never starts. Fix what the log says and start it again.
+- **`helm rollback` to 4.18.10 will not start its database.** This is the caveat. A rollback puts the database image back to PostgreSQL 16, and 16 will not open a 17 directory. Nothing is lost and nothing is half changed, the database just does not start. Getting it back means the swap in [the deployment guide](https://github.com/HotLoop-io/hotloop/blob/v4.18.11/docs/DEPLOYMENT.md#going-back): stop the database, move `pgdata` to `pgdata.pg17` and `pgdata.pg16` to `pgdata`. **That drops every write made on 17 since the upgrade,** because `pgdata.pg16` is the database as it was at that moment. Roll forward when you can. The swap back works once, and the next upgrade refuses to run while a `pgdata.pg16` is in the way. It is documented, not run by a test.
+- **Quadlet boxes aren't hit by that.** Podman's auto-update rolls back only the app, never the database, and the 4.18.10 app reads a PostgreSQL 17 database fine, because migrations only add. A Quadlet box that rolls an update back keeps running.
+- **One new migration, `0025_kiosk_pin`.** It only adds columns, every one with a default, so 4.18.10 runs on the schema it leaves.
+- **A lockout is on now, for every install.** Ten wrong passwords or PINs in a row lock that one account for 5 minutes, and an admin can unlock it. A script that retries a wrong password more than ten times starts getting `429`. `HOTLOOP_AUTH_LOCKOUT_ATTEMPTS=0` turns it off.
+- **Turning the upgrade off.** `database.postgresql.upgrade.enabled: false` drops the init containers, and a volume still on 16 then stops the database from starting. Leave it on. With it on, a fresh install still pulls the PostgreSQL 16 image once per node, because an init container's image is pulled before it runs.
+
+### Quadlet, and the Edge Relay
+
+Copy the new `hotloop-db.container`, `hotloop-db-upgrade.container`, and `hotloop-db-upgrade.sh` from your product's directory in `deploy/quadlet/` into the units directory, run `systemctl daemon-reload`, and restart `hotloop-db.service`. The database unit requires the upgrade unit, so a box that only got the new database unit does not start on 16 data, and says why. The Edge Relay has no database and nothing to do. It ships at {{hotloop}} because every product ships in lockstep.
+
+### API changes from 4.18.10
+
+- **New routes:** `GET` and `PUT /api/notify/escalation`, `GET /manifest.webmanifest` and `GET /sw.js` (no session, because a phone asks before anybody has signed in), `GET /api/integrations` with `POST /api/integrations/{id}/probe` and `/setup`, `POST /api/auth/kiosk`, `POST /api/auth/activity`, `PUT` and `DELETE /api/users/{username}/pin`, and `DELETE /api/users/{username}/lockout`.
+- **A new permission, `notify.escalation`,** admin only. The viewer and operator roles did not get it.
+- **Two new protocols,** `snmp` and `bacnet`, in `GET /api/protocols`. The alarm trail has two new event types, `escalated` and `escalation-ended`, and a script that assumes the old list will meet them.
+- **Times come back in UTC,** every one history hands back. A script that compared the strings sees the offset become `Z`. One that compares instants sees nothing.
 
 ## Upgrading from 4.17.0
 
@@ -27,10 +71,11 @@ helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-
 
 ### What happens on the first start from 4.17.0
 
-- **Migrations 0016 to 0024 run:** `0016_mqtt_discovery`, `0017_broker_logins`, `0018_mqtt_sources`, `0019_historian_targets`, `0020_net_finds`, `0021_mqtt_source_dialects`, `0022_mqtt_source_shelly`, `0023_dashboards` (the table the dashboards you build are saved in) and `0024_tag_no_data` (a `no_data` column on tags, empty for every tag that already exists, which is what those tags already did). All additive. `pg_dump` first, like always.
+- **Migrations 0016 to 0025 run:** `0016_mqtt_discovery`, `0017_broker_logins`, `0018_mqtt_sources`, `0019_historian_targets`, `0020_net_finds`, `0021_mqtt_source_dialects`, `0022_mqtt_source_shelly`, `0023_dashboards` (the table the dashboards you build are saved in) and `0024_tag_no_data` (a `no_data` column on tags, empty for every tag that already exists, which is what those tags already did) and `0025_kiosk_pin` (columns for a PIN hash, a session's idle limit, and the lockout counters). All additive. `pg_dump` first, like always.
 - **`edgePublish.queueMaxBytes` defaults to 64 MiB, not unbounded.** It only matters if you publish upstream over Sparkplug. Past the limit the oldest readings are dropped and counted. An unbounded queue fills the volume in a long enough outage, which is worse, but it is a changed default. 64 MiB is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate (about 180 bytes a reading), or set it to `0` for the old behavior. HotLoop warns at startup when you do. A release upgraded with `--reuse-values` keeps whatever it had.
 - **Broker logins.** Logins from `HOTLOOP_BROKER_USERS` still do anything, as before, because nobody should upgrade into a plant whose Sparkplug traffic bounces off rules they never wrote. Logins you make in Settings, MQTT carry topic rules from a profile. A broker with no `HOTLOOP_BROKER_USERS` starts now, and only HotLoop and the logins made in it get in.
-- **Going back to 4.17.0 works.** The schema only grew and 4.17.0 runs on it, and the release check proves it against the published 4.17.0 image. Take a backup before you upgrade anyway. From here on the app also counts how far ahead its database is, and refuses to start, naming both versions, once the database is two releases ahead of it.
+- **The database moves from PostgreSQL 16 to 17 on this first start,** by itself, and it needs free disk. [The 4.18.10 section](#upgrading-from-41810) says how it goes, and that is the part to read first.
+- **Going back to 4.17.0 is a database swap now, not a `helm rollback`.** The schema only grew and 4.17.0 runs on it, but 4.17.0's database is PostgreSQL 16 and will not open the 17 directory the upgrade left; the swap back is in the 4.18.10 section. Take a backup before you upgrade anyway. From here on the app also counts how far ahead its database is, and refuses to start, naming both versions, once the database is two releases ahead of it.
 - **Want a different product?** IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history. Take a backup, then `helm upgrade hotloop hotloop/hotloop-edge` on the same release. [The lineup](/products/) has what has and hasn't been run, and going back down a product hasn't.
 
 ### The Edge Relay, and Quadlet

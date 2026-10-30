@@ -5,10 +5,6 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -786,7 +782,7 @@ and NET-SNMP-EXTEND-MIB. The lab test reads each one off a real agent and holds
 it to the type its MIB gives it. Everything else the agent has still reads;
 add it as a tag by OID.
 
-The integration (see INTEGRATIONS.md) does the asking
+The integration (see [INTEGRATIONS.md](/iot/integrations/#snmp)) does the asking
 for you.
 
 ### BACnet/IP
@@ -888,7 +884,7 @@ Celsius is `°C` and `temperature`, percent relative humidity is `%` and
 is left unlabelled and named in the description by its number. The numbers and
 names of those units are held to a real device, which sends the number its own
 table gives each name. The integration (see
-INTEGRATIONS.md) does the asking for you.
+[INTEGRATIONS.md](/iot/integrations/#bacnetip)) does the asking for you.
 
 ## Everything else: gateway mode
 

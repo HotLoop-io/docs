@@ -1,7 +1,7 @@
 ---
-reviewed: hotloop=4.18.10
+reviewed: hotloop=4.18.11
 title: "HotLoop Gateway overview"
-description: "An industrial gateway: eight native protocols, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
+description: "An industrial gateway: ten native protocols, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
   label: "Overview"
 ---
@@ -27,6 +27,8 @@ The ground floor, in {{hotloop}} and in every release back to 4.16.0:
 - [Automations](/iot/automations/) covers triggers, conditions, and actions, and why a rule is compiled when you save it instead of when it fires at 3 AM.
 - [Model Context Protocol](/iot/mcp/) is the Gateway as an MCP server and client, and how one Gateway reads every site.
 
+New in 4.18.11, and not in 4.18.10: the database is PostgreSQL 17 with an upgrade that runs itself, SNMP and BACnet/IP through one integrations flow, kiosk sign-in with a lockout, alarm escalation, and a UI that installs on a phone. [Below](#new-in-41811) is what each one buys you, and what it costs.
+
 New in 4.18.10, and not in 4.17.0: the four-product lineup, a choice of database, MQTT, and network discovery, historian targets, and boxes that update themselves. [Below](#new-in-41810) is what each one buys you.
 
 New in 4.17.0, and not in 4.16.0:
@@ -35,7 +37,7 @@ New in 4.17.0, and not in 4.16.0:
 
 ## What it does with the data
 
-**Historian.** TimescaleDB by default, and plain PostgreSQL or a SQLite file work too, because [the database is a setting](#new-in-41810). The history table is a hypertable when the extension is there and natively range-partitioned when it isn't, so a plain PostgreSQL works instead of failing. Set a deadband per tag. Without one, a sensor jittering in its last bit writes a row every scan forever, and a thousand tags polled every second is about 86 million rows a day.
+**Historian.** TimescaleDB by default (on PostgreSQL 17 since 4.18.11), and plain PostgreSQL or a SQLite file work too, because [the database is a setting](#new-in-41810). The history table is a hypertable when the extension is there and natively range-partitioned when it isn't, so a plain PostgreSQL works instead of failing. Set a deadband per tag. Without one, a sensor jittering in its last bit writes a row every scan forever, and a thousand tags polled every second is about 86 million rows a day.
 
 **Alarms.** ISA-18.2, including the state most homegrown systems miss: `rtn-unack`, an alarm that cleared on its own before anybody saw it. Acknowledged and returned-to-normal are separate axes, so the transient trip at 03:00 is still on the list when the morning shift walks in, instead of vanishing with nobody the wiser. Asymmetric deadbands and on and off delays stop a borderline value from chattering the list into noise nobody reads. Shelving tops out at 24 hours, because a shelve with no end is a suppression nobody wrote down.
 
@@ -61,6 +63,20 @@ HotLoop is one codebase shipped as four products, all released together from one
 
 All four are installable today, all {{hotloop}}. The relay is its own image and chart, about 15 MB against the Gateway's 37, with no database and no UI. The Gateway's fleet management tracks and commands every registered relay, and it's API only (`/api/fleet`): there's no Fleet screen in the UI.
 
+## New in 4.18.11
+
+:::caution[Read this one before you upgrade a running plant]
+The database engine changed. HotLoop runs on PostgreSQL 17 from this release, and a box with PostgreSQL 16 data moves itself on its next upgrade. It needs about as much free disk as your data takes, the database pod sits in `Init` for as long as the copy lasts, and `helm rollback` to 4.18.10 will not start its database. [Upgrading from 4.18.10](/gateway/upgrading/#upgrading-from-41810) has all of it. The short version: take a backup on 4.18.10 first, and roll forward.
+:::
+
+- **PostgreSQL 17, and the upgrade comes with it.** PostgreSQL won't open another major version's data directory, so a bare image change would have left every existing box with a database that can't start. A script runs before the database, copies your data across with `pg_upgrade`, proves the new server opens it, and only then swaps the names. The old directory stays as `pgdata.pg16`, which is your way back and is yours to delete. Proven on real 4.18.10 data for the Gateway, Edge, and IoT, on the chart and on Quadlet, with every row kept.
+- **[Integrations](/iot/integrations/): point HotLoop at a device you know the address of.** One flow for every kind of device: ask what it needs, look at the real thing with the answers, keep the points you want. Nothing it makes is armed, every tag is read-only, and a setup that fails part way leaves no device behind.
+- **SNMP and BACnet/IP, read-only.** SNMP v1, v2c, and v3 for switches, UPSs, PDUs, and meters, with no default community, because `public` is how a plant's switches get read by whoever asks. BACnet/IP for building controllers and meters. HotLoop never sends a SET and never writes a BACnet property: a write lands on a priority array, and a priority left set holds the equipment where it was put. Proven against a real net-snmp agent and recorded BACnet frames in the lab, not on a physical switch or controller, so treat the first read of a real device as commissioning.
+- **Kiosk sign-in, and a lockout that is on by default.** A panel opened at `/?screen=<name>` asks for one field, a PIN or whatever a keyboard badge reader types, and every write through the gate is that person's, so the audit trail says who opened the valve instead of "panel-3". Left alone for 15 minutes it signs out. The thing to know: ten wrong passwords or PINs in a row now lock that one account for 5 minutes on every install, kiosk or not, and a script that retries a wrong password will start getting `429`. `HOTLOOP_AUTH_LOCKOUT_ATTEMPTS=0` turns it off.
+- **Alarm escalation.** An alarm nobody acknowledges goes to the next person. An admin writes the policy: who, after how many minutes, and a repeat. An acknowledgement from anywhere stops it, and every step is a row in the alarm's own trail. It is off until you turn it on. A page to a phone on a nightstand used to be the end of it.
+- **The UI installs on a phone and opens with no connection.** It keeps the page and the last answers a person looks at, a bar says what time they are as of, and every write is refused before it leaves the page. It only runs over https or `localhost`.
+- **Smaller fixes you can notice.** The live feed closes when its session does. Every time history returns is in UTC, so a trend no longer spells `-04:00` on one plant and `Z` on another. A reconnecting edge node announces itself once, where a millisecond-apart second birth could make a host see a stopped node come back.
+
 ## New in 4.18.10
 
 :::note[Not in 4.17.0]
@@ -68,7 +84,7 @@ Everything in this section shipped in 4.18.10. A 4.17.0 Gateway has none of it, 
 :::
 
 :::caution[There is no 4.18.0 to 4.18.9]
-I tagged all ten, and none of them published a complete release. Nine published nothing. 4.18.8 passed every test and then I cancelled its run by mistake while it was publishing, so it left Gateway, Edge Relay, IoT, and Edge images on ghcr.io with no chart and no release, and the Gateway, Edge Relay, and IoT ones moved `:stable` with them. {{hotloop}} replaces it, so a box that follows `:stable` may have run 4.18.8 until it updated.
+I tagged all ten, and none of them published a complete release. Nine published nothing. 4.18.8 passed every test and then I cancelled its run by mistake while it was publishing, so it left Gateway, Edge Relay, IoT, and Edge images on ghcr.io with no chart and no release, and the Gateway, Edge Relay, and IoT ones moved `:stable` with them. 4.18.10 replaced it, so a box that follows `:stable` may have run 4.18.8 until it updated.
 :::
 
 - **[Four products, one tag](/products/).** IoT and Edge are new on ghcr.io and in the chart repository, and the Gateway keeps its names. A product is a build, not a setting: the OPC UA server isn't switched off in the IoT image, it isn't in it. A route for a feature the product doesn't have answers `404` and names the product that does.

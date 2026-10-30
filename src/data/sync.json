@@ -3,13 +3,13 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "1e8706a4d360e954039649213e5e99068c5fc54d",
+      "sha": "c718477175ce3c93b166c7153e02818302d640d9",
       "release": {
-        "tag": "v4.18.10",
-        "version": "4.18.10",
+        "tag": "v4.18.11",
+        "version": "4.18.11",
         "prerelease": false,
-        "publishedAt": "2026-10-21T19:37:15Z",
-        "sha": "1e89f84fc6ffe5f8e2db49969ab0d57fc6f1148e"
+        "publishedAt": "2026-10-30T03:26:10Z",
+        "sha": "b4386b08212ec8246dae254c620eba0c6aee08df"
       }
     },
     "flow": {
@@ -181,7 +181,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -192,7 +192,7 @@
       "group": "Screens and alerts",
       "title": "Alarm notifications",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/NOTIFY.md",
       "release": false
@@ -203,7 +203,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -214,7 +214,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -264,6 +264,17 @@
       "release": false
     },
     {
+      "slug": "iot/integrations",
+      "product": "iot",
+      "group": "Devices and data",
+      "title": "Integrations",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/INTEGRATIONS.md",
+      "release": false
+    },
+    {
       "slug": "iot/historian-targets",
       "product": "iot",
       "group": "Devices and data",
@@ -280,7 +291,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -291,7 +302,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -302,7 +313,7 @@
       "group": "Operate",
       "title": "Migrations only add",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/MIGRATIONS.md",
       "release": false
@@ -313,7 +324,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -368,7 +379,7 @@
       "group": "Reference",
       "title": "Edge Relay reference",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/EDGE-RELAY.md",
       "release": false
@@ -379,7 +390,7 @@
       "group": "Install",
       "title": "k3s and Helm",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DEPLOYMENT.md",
       "release": false
@@ -390,7 +401,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -401,7 +412,7 @@
       "group": "Install",
       "title": "The :stable auto-update",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -412,7 +423,7 @@
       "group": "Lineup",
       "title": "HotLoop products: six on three release lines",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PRODUCTS.md",
       "release": false
@@ -423,7 +434,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -874,7 +885,7 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.18.10 release notes",
       "label": "4.18.10",
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.18.10.md",
       "release": true
@@ -885,7 +896,7 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.18.11 release notes",
       "label": "4.18.11",
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.18.11.md",
       "release": true

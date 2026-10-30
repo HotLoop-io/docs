@@ -5,10 +5,6 @@ description: "Logical snapshots of the database, restores that refuse a newer sc
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.12.0. `internal/backup` takes logical, table-data-only snapshots
 of the historian and restores them. Off by default (`HOTLOOP_BACKUP_ENABLED`):
 a deployment that has not configured a backup volume should not have this

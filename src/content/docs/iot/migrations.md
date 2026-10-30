@@ -5,10 +5,6 @@ description: "Why a migration never drops, renames or retypes anything, so a bad
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1e8706a, and it differs from the copy in HotLoop core 4.18.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A migration adds. It never drops, renames or retypes anything, never tightens a
 column or a constraint the last release writes through, and never deletes data.
 That is the whole rule, and a test fails the build when a migration breaks it.
