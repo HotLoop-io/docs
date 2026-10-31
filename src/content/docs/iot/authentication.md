@@ -5,6 +5,10 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet
 dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the
 actor recorded against a write came from a header the proxy set, spoofable by
@@ -429,8 +433,9 @@ places hold them as they are stored:
 
 - **The database.** Device credentials are in the `config` and `address` columns.
   With `HOTLOOP_SECRET_KEY_FILE` set, the keyed ones in `config` (every
-  `password`, header values) are encrypted with a key kept outside the database;
-  anything written into an address or a URL is not. See
+  `password`, header values) are encrypted with a key kept outside the database,
+  and so is an address or an option with a credential written into its text
+  (`mqtt://user:pass@host`, `?token=`), sealed whole. See
   [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key).
 - **Backups.** `devices.copy` in a backup holds them, encrypted or not exactly as
   the database does. See [BACKUP.md](/iot/backup/#protect-the-backup-files).

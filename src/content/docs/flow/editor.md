@@ -5,10 +5,6 @@ description: "The Flow editor in light and dark: the canvas with the debug dock 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at c98ba80, and it differs from the copy in HotLoop Flow 2.5.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 It follows your system, light or dark, and each picture below is shown both ways,
 light first. Every picture below comes from `web/shots/screenshots.sh`, which starts the real binary
 and a real browser, so they get retaken when the editor changes and can't drift

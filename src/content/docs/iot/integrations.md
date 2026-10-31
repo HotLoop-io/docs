@@ -5,6 +5,10 @@ description: "Point HotLoop at a device you know the address of, look at the rea
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 An integration is how you point HotLoop at a kind of device you know the
 address of, answer a few questions, see what is actually on it, and keep the
 points you want. It makes the device and its tags. Entities follow from the tags
@@ -34,6 +38,16 @@ the tag editor, the same as a tag from any other source.
 | BACnet/IP device (`bacnet`) | [BACnet/IP](/iot/protocols/#bacnetip) | bacpypes3 0.0.110, an independent BACnet stack |
 
 More are added on this framework as they can be proven against a real server.
+
+## Going the other way
+
+An integration brings a device in. To send HotLoop's readings and events out to a
+Kafka broker, see [the Kafka API event stream](/iot/historian-targets/#kafka-api-event-stream)
+under historian targets: Apache Kafka and Redpanda, TLS and SASL, readings on one
+topic and the system log on another. To send them as OPC UA PubSub (UADP over UDP),
+or to read a publisher's, see [OPC UA PubSub](/iot/protocols/#opc-ua-pubsub-uadp):
+reading one is a device with the protocol `opcua-pubsub`, with no setup flow, since
+a datagram carries field positions and no names.
 
 ## SNMP
 

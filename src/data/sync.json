@@ -3,7 +3,7 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "9a7112117df1f6e9957e5a93b2f8245b092760fd",
+      "sha": "8742d798b466ee83d3c3e3dada480ef6ae94cef9",
       "release": {
         "tag": "v4.18.11",
         "version": "4.18.11",
@@ -15,13 +15,13 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "c98ba800777c1e684f60caa88591fee1158a181d",
+      "sha": "3d00e00d4dbee3a9063ca435ef7d0bab492424c4",
       "release": {
-        "tag": "v2.5.0",
-        "version": "2.5.0",
+        "tag": "v2.6.0",
+        "version": "2.6.0",
         "prerelease": false,
-        "publishedAt": "2026-10-27T23:40:48Z",
-        "sha": "5a8f727d7cdec2aaf34df383ed351bc6e1be70ad"
+        "publishedAt": "2026-10-31T18:41:44Z",
+        "sha": "61d8fcb1704b43714f64dbf4a0706d41f7d3fd8a"
       }
     },
     "cascade": {
@@ -181,7 +181,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -214,7 +214,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -236,7 +236,7 @@
       "group": "Devices and data",
       "title": "MQTT discovery",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/DISCOVERY.md",
       "release": false
@@ -269,7 +269,7 @@
       "group": "Devices and data",
       "title": "Integrations",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/INTEGRATIONS.md",
       "release": false
@@ -280,7 +280,7 @@
       "group": "Devices and data",
       "title": "Historian targets",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/HISTORIAN-TARGETS.md",
       "release": false
@@ -291,7 +291,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -302,7 +302,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -368,7 +368,7 @@
       "group": "What the Gateway adds",
       "title": "Scheduled reports",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/REPORTS.md",
       "release": false
@@ -456,7 +456,7 @@
       "group": "Start here",
       "title": "The Flow editor",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -621,7 +621,7 @@
       "group": "Run it",
       "title": "MCP, in both directions",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -954,6 +954,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.5.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-6-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.6.0 release notes",
+      "label": "2.6.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.6.0.md",
       "release": true
     },
     {

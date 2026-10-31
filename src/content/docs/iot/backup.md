@@ -5,6 +5,10 @@ description: "Logical snapshots of the database, restores that refuse a newer sc
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.12.0. `internal/backup` takes logical, table-data-only snapshots
 of the historian and restores them. Off by default (`HOTLOOP_BACKUP_ENABLED`):
 a deployment that has not configured a backup volume should not have this
@@ -81,9 +85,13 @@ never in a backup.
   brokers with a password and historian targets with a password can't be saved
   at all without a key. Set one and restart: everything already stored is
   encrypted at that start.
-- **Either way**, a credential written into a URL (`mqtt://user:pass@host`, a
-  `?token=` query value) or into free text such as an HTTP body stays in the
-  clear. Put it in the `password` option instead.
+- **A credential written into a URL or into text is sealed too** (`mqtt://user:pass@host`,
+  a `?token=` or `?api_key=` query value, an HTTP `body` that mentions a
+  password). A device's address or option that has one in it is sealed whole,
+  and the drivers get it back exactly as it was typed. A URL with nothing secret
+  in it is left readable. Without a key these are in the clear like the rest,
+  and the startup log says so; with one, everything already stored is sealed
+  at that start. The password option is still the better place for one.
 
 **Restoring needs the same key.** `--restore-from` checks the manifest before it
 loads a row: a backup encrypted with a key the restoring HotLoop does not have is

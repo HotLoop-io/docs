@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 9a71121, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
@@ -196,7 +196,7 @@ This is where "better and cooler" has to be obvious from across the room.
       page documents no discovery messages. Everything is verified against
       recordings of real devices, and Tasmota and Shelly also against the
       makers' documentation, not against a device on the bench. See [DISCOVERY.md](/iot/mqtt-discovery/) and
-      [EDGE-RELAY.md](/edge-relay/reference/). The four-product split
+      [EDGE-RELAY.md](/edge-relay/reference/#discovery-41810). The four-product split
       waited on it
 - [x] Network discovery (mDNS, SSDP, DHCP): devices heard on the plant
       network show up on the Discovered screen with what they are and how
@@ -410,6 +410,31 @@ back up and patch, and they are not adopting ours to get a trend.
       catches up from HotLoop's own history, so a restart in the middle of an
       outage loses nothing either
 - [x] Each one verified in CI against the real database in a container
+- [x] Kafka API event stream: readings and the system log out to any
+      Kafka-compatible broker, TLS and SASL, through the same queue and
+      catch-up as a database. Proven against Apache Kafka 4.4.0 and Redpanda
+      26.2.6. See [HISTORIAN-TARGETS.md](/iot/historian-targets/#kafka-api-event-stream).
+      Not yet: mutual TLS, Kerberos and OAuth logins, a schema registry, and a
+      catch-up for events (they have no history to be sent from)
+
+---
+
+## OPC UA PubSub
+
+- [x] Subscribe to UADP over UDP, unicast or multicast, as a device
+      (`opcua-pubsub`): Variant, DataValue and RawData fields, key, delta and
+      keep alive frames, lost-message and configuration-change handling. See
+      [PROTOCOLS.md](/iot/protocols/#opc-ua-pubsub-uadp)
+- [x] Publish tags as UADP, in Edge and Gateway, beside the OPC UA server
+- [x] Proven both ways against open62541 1.5.10, an independent OPC UA stack, in
+      the lab (the test image builds it)
+- [ ] A CODESYS publisher against it: HotLoop Transmitter, the CODESYS UADP
+      publisher library, is TX's, and waits on this subscriber
+- [ ] Message security (signed and encrypted NetworkMessages)
+- [ ] Delta frames from the publisher; DataSetMetaData and discovery messages
+      so a subscriber can name the fields; array and structure fields; events
+- [ ] Against a Siemens or Beckhoff publisher, and over a router (multicast
+      routing and the TTL)
 
 ---
 
@@ -524,10 +549,10 @@ Found in code review and in the PRs so far. Each one is real, checked against
       tooltip: the API left out a zero minimum. It always sends `minValue`,
       `maxValue` and `hasRange` now, and MCP's `list_tags` sends the range
       exactly when there is one. Fixed
-- [ ] Local test runs that share one MQTT broker or one Mailpit step on each
+- [x] Local test runs that share one MQTT broker or one Mailpit step on each
       other: Sparkplug topics collide, and one run's report email lands in the
-      other's mailbox. Give every test its own topic namespace and mailbox so
-      parallel runs can't collide (CI is fine, each run gets its own services)
+      other's mailbox. Every test has its own topic namespace, mailbox and
+      UniFi site now, so parallel runs can't collide. Fixed
 - [x] Trend charts and reports disagreed on bad data: `store.HistoryBuckets`
       averaged bad and uncertain readings in, reports left them out. Both
       follow the quality rule now (README, "The quality rule"), and a bucket
@@ -546,7 +571,9 @@ Found in code review and in the PRs so far. Each one is real, checked against
 - [x] The backup round-trip test only covered TimescaleDB mode. It runs on
       every database now, and from each one into the others: SQLite to
       Postgres and back, plain partitions to a hypertable and back. Fixed
-- [ ] No lockout or rate limit on failed logins
+- [x] No lockout or rate limit on failed logins. Ten wrong passwords or PINs lock
+      the account for five minutes, a panel is slowed instead of locked, and an
+      admin can unlock. Fixed, see [AUTH.md](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins)
 - [x] There was no user management screen, only the API. Settings has a Users
       card now for anyone with `users.manage`: add a user, change a role,
       switch one off, set a new password, delete. The server's own refusals (the
@@ -568,9 +595,13 @@ Found in code review and in the PRs so far. Each one is real, checked against
       a key kept outside the database, the chart generates and keeps one, and a
       restore refuses a backup it can't open unless told the key is gone.
       Fixed, see [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key)
-- [ ] A credential typed into a device's address or a URL option
-      (`mqtt://user:pass@host`, `?token=`) or into free text is still stored in
-      the clear. Every screen hides it; the database and backups don't
+- [x] A credential typed into a device's address or a URL option
+      (`mqtt://user:pass@host`, `?token=`) or into free text was stored in the
+      clear: every screen hid it, the database and backups didn't. Any string
+      that carries one, by the same test redaction hides it by, is sealed whole
+      now, the address column included, and a key turned on later seals what
+      was stored before it. Fixed, see
+      [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key)
 - [x] OPC UA browse labeled every node `float` instead of reading its data
       type, so a text tag served back out through our own OPC UA server came
       back `Bad_TypeMismatch`. Ignition 8.3.9 caught it. Fixed (#42)
@@ -609,10 +640,13 @@ Found in code review and in the PRs so far. Each one is real, checked against
       paused forever when two goroutines race at subscribe, and the device then
       reads bad for good while swearing it's connected. The driver now falls
       back to polled reads when a new subscription stays silent. Fixed
-- [ ] Same library: if its publish loop stops after values have arrived, the
-      driver keeps serving the last values as good. Catching that needs
-      keep-alive visibility the library doesn't expose. Needs a watchdog on
-      publish traffic, or an upstream fix (and report the race upstream)
+- [x] Same library: if its publish loop stopped after values had arrived, the
+      driver kept serving the last values as good, because the library hides its
+      keep-alives. After a quiet stretch the driver now reads the nodes and
+      compares, and falls back to reads when the server holds something the
+      subscription should have sent. Proved against opc-plc by stopping delivery
+      and watching a changing node keep moving, and a quiet node left alone. The
+      race itself, which is in the library, still wants reporting upstream. Fixed
 - [x] **A recorder's "no data" codes read as good measurements.** A Yokogawa
       DX channel returning 0x8005 (undefined) on `input:1:int16` at scale 0.1
       came back good, -3276.3, and was historized as a temperature. A tag now
@@ -627,17 +661,27 @@ Found in code review and in the PRs so far. Each one is real, checked against
       PLC) was marked degraded, not down, and its entities sat on their last
       value until TCP gave up. Now it's down within one poll plus twice its
       timeout. Fixed
-- [ ] S7comm and EtherNet/IP have the same early return when a poll runs out of
-      time. Fixing them needs an in-process S7 and CIP server to prove it
-      against, the way the Modbus fix was proven
+- [x] S7comm and EtherNet/IP had the same early return when a poll ran out of
+      time, so a PLC that went silent with its socket open stayed degraded
+      instead of down. Both stop reading and judge the session now, the way
+      Modbus does. Proved through the poll loop with a read that blocks until the
+      deadline (it fails with the old return and passes with the fix, and a PLC
+      that answers some blocks stays up), not on the wire. Fixed
+- [ ] The S7comm and EtherNet/IP silent-device tests above drive the poll loop,
+      not a socket. Proving them the way Modbus was proven needs an in-process S7
+      server (COTP and the S7 read) and a CIP server (RegisterSession, forward
+      open and the multi-service read) that go quiet on command
 
 ## Not verified yet
 
 - [ ] S7comm and EtherNet/IP against a physical PLC. Nobody should trust either
       on a live machine until this is done
 - [ ] OPC UA against KEPServerEX, WinCC, Siemens and Beckhoff
-- [ ] Reports: real mail providers, real spreadsheet apps, a browser, and the
-      biggest report on a big historian
+- [ ] Reports: real mail providers, Excel and Google Sheets, a phone's browser,
+      and the biggest report on a big historian. LibreOffice and Chromium were
+      done by hand on 2026-10-31 (see [REPORTS.md](/gateway/reports/)); a local attempt
+      at 50 tags by 1000 buckets over 18 million rows crashed its database and
+      measured nothing
 
 ## Tests and CI
 
@@ -682,7 +726,7 @@ The two that were failing:
 - [x] Cut the first release out of the HotLoop-io org. 4.16.0, tagged
       2026-09-28: the first public release since 4.3.1, and the first one
       under its own license terms
-- [ ] Delete the stale `.kilo` worktree
+- [x] Delete the stale `.kilo` worktree. It is gone: no path, branch or worktree by that name is left
 - [ ] Decide whether `docs/legacy/` still earns its space
 
 ---
