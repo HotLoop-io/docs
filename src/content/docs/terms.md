@@ -33,7 +33,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 3.1 The Software is licensed under the HotLoop Business Source License 1.1, the text of which is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
 
-3.2 In plain words, and subject to the license text: home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Business use is free when it runs through EmberNET, which is our channel for business use, and a systems integrator may install and operate HotLoop for a customer under either the customer's EmberNET account or its own. Hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted.
+3.2 In plain words, and subject to the license text: home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Business use is free when it runs through EmberNet, which is our channel for business use, and a systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted.
 
 3.3 The license applies to each version separately. Each version converts to GPL-3.0 or later four years after that version is first made publicly available. Until then, the license governs it.
 
@@ -94,11 +94,11 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 8.4 If you send us ideas or feedback, we may use them freely and owe you nothing for them.
 
-## 9. EmberNET
+## 9. EmberNet
 
-9.1 EmberNET is the channel business use goes through. It is a separate service with its own terms. Your agreement with EmberNET is between you and EmberNET, and we are not a party to it.
+9.1 EmberNet is the channel business use goes through. It is a separate service with its own terms. Your agreement with EmberNet is between you and EmberNet, and we are not a party to it.
 
-9.2 We do not warrant EmberNET and are not responsible for it.
+9.2 We do not warrant EmberNet and are not responsible for it.
 
 ## 10. Support
 

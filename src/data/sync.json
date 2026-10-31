@@ -3,7 +3,7 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "498fa27a0edab65d008934b87a3844d0fb31f27d",
+      "sha": "9a7112117df1f6e9957e5a93b2f8245b092760fd",
       "release": {
         "tag": "v4.18.11",
         "version": "4.18.11",
@@ -27,7 +27,7 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "2b385d50d062b18c21aeb43c5961f14e899e979e",
+      "sha": "c6febb43d237881a036e5dd73232ae40dd54ccdd",
       "release": {
         "tag": "v0.1.2",
         "version": "0.1.2",
