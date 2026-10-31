@@ -3,7 +3,7 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "c718477175ce3c93b166c7153e02818302d640d9",
+      "sha": "498fa27a0edab65d008934b87a3844d0fb31f27d",
       "release": {
         "tag": "v4.18.11",
         "version": "4.18.11",
@@ -324,7 +324,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -401,7 +401,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -412,7 +412,7 @@
       "group": "Install",
       "title": "The :stable auto-update",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -423,7 +423,7 @@
       "group": "Lineup",
       "title": "HotLoop products: six on three release lines",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/PRODUCTS.md",
       "release": false
@@ -434,7 +434,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -962,7 +962,7 @@
       "group": "HotLoop Cascade",
       "title": "HotLoop Cascade 0.1.1 release notes",
       "label": "0.1.1",
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/0.1.1.md",
       "release": true

@@ -404,11 +404,21 @@ function transform(page) {
 
 // ---- status against the latest release ----------------------------------------------
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
+// What a page says once the house rules have been applied, and nothing else. A word the rules
+// rewrite (a British spelling, a comparison the site never carries) is the same page whether the
+// source still has the old word or has been fixed at the source, so a spelling fix in main is not
+// "newer than what you have installed".
+function settled(body) {
+  let t = body;
+  for (const [re, to] of GLOBAL_RULES) t = t.replace(re, typeof to === 'function' ? to : to.replace('{{LICENSE_URL}}', licenseUrl()));
+  t = withMasked(t, (u) => { for (const [re, to] of AMERICAN) u = u.replace(re, to); return u; });
+  return norm(t);
+}
 function status(slug) {
   const r = relPages.get(slug);
   const m = mainPages.get(slug);
   if (!r) return 'next';
-  return norm(r.body) === norm(m.body) ? 'released' : 'changed';
+  return settled(r.body) === settled(m.body) ? 'released' : 'changed';
 }
 
 function banner(slug, st, entry) {
