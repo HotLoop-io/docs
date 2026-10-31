@@ -191,13 +191,11 @@ Object.assign(SLUG_RULES, {
   ],
   roadmap: [
     // The roadmap is the core's. Say so, and say where the other two lines keep theirs. Links are HTML because the link pass runs after the rules and would drop a site path.
-    [ws('It ships as four products out of one codebase. See [Products](#products).'),
+    [ws('HotLoop core ships as four products out of one codebase. See [Products](#products).'),
       'HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow and Cascade keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a> and <a href="/cascade/roadmap/">the Cascade roadmap</a>.'],
-    [ws('Four products, one codebase, one tag. Every release ships all four in lockstep,'), 'HotLoop core is four products, one codebase, one tag. Every core release ships all four in lockstep,'],
-    [ws("Home Assistant's energy dashboard, pointed at a factory"), 'One energy dashboard, pointed at a factory floor'],
   ],
   'products': [
-    [ws('Four products, one codebase, one tag. Every release ships all four in lockstep,'),
+    [ws('HotLoop core is four products, one codebase, one tag. Every core release ships all four in lockstep,'),
       'HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows.\n\nThey ship on three release lines. **HotLoop core** is IoT, Edge, Gateway, and Edge Relay: four products, one codebase, one tag. Every core release ships all four in lockstep,'],
     [ws("PLC on your bench. Features split them. Protocols don't."),
       "PLC on your bench. Features split them. Protocols don't.\n\n**Flow** and **Cascade** are their own lines with their own versions, so a Flow release never moves the core, and the other way around. Everything below the table is about the core. Here is where each of the six starts:\n\n"
@@ -210,16 +208,6 @@ Object.assign(SLUG_RULES, {
          ['Cascade', 'Cascade', 'cascade/overview', 'cascade/running', 'releases/#hotloop-cascade', 'cascade/roadmap']]
         .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
       + '\n\nThe table that follows compares the four core products.'],
-  ],
-  'iot/api': [
-    [ws("HotLoop ships as IoT, Edge and Gateway out of one codebase,"), 'HotLoop ships as IoT, Edge, Gateway, and Edge Relay out of one codebase,'],
-    [ws('Its routes still answer, after the same permission check,'), 'On IoT, Edge, and Gateway its routes still answer, after the same permission check,'],
-  ],
-  'install/auto-update': [
-    [ws('The three products have no such channel to reach them,'), 'IoT, Edge, and Gateway have no such channel to reach them,'],
-  ],
-  'install/quadlet': [
-    [ws("The three products' shipped files, untouched,"), 'The shipped IoT, Edge, and Gateway files, untouched,'],
   ],
   'cascade/overview': [
     [ws("scoped API keys and HA workers ship to everyone. There is no license check anywhere in the code, so there's nothing to rug-pull later."), 'scoped API keys and HA workers are all in the one binary. There is no license check anywhere in the code.'],

@@ -10,7 +10,7 @@ sidebar:
 The image is `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}` for amd64, arm64, and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
 :::
 
-IoT is the base the other three products are built on. If the box in front of you is a Pi, a NUC in a closet, a rack of smart plugs and sensors, or one PLC on a bench, this is the one. It is the smallest image of the three full products, and it still carries everything that makes HotLoop useful: the entities, the rules, the alarms, and the one write gate that nothing gets around.
+IoT is the base Edge and the Gateway are built on. If the box in front of you is a Pi, a NUC in a closet, a rack of smart plugs and sensors, or one PLC on a bench, this is the one. It is the smallest image of the three full products, and it still carries everything that makes HotLoop useful: the entities, the rules, the alarms, and the one write gate that nothing gets around.
 
 A bigger product never takes anything away from it. [Edge](/edge/overview/) is IoT plus the machine layer. The [Gateway](/gateway/overview/) is Edge plus the site layer. Everything on these pages is in both of them.
 
