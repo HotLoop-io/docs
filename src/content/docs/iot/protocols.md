@@ -5,6 +5,10 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -31,6 +35,8 @@ detail.
 | UniFi Network | yes | a real UniFi Network Application (10.6) with emulated switches and a gateway adopted over the real inform protocol, logged in as a View Only account; a real UniFi OS Server (5.1, Network 10.6) for the UniFi OS login ; read-only against the house Cloud Gateway Ultra and Express 7 (Network 10.6.106) with real USW-Lite-8-PoE switches and a U5G Backup | **verified live, read-only, on real consoles and switches, WAN and failover included. PoE draw above zero not seen yet**, see [UNIFI.md](/iot/unifi/#on-real-gear-2026-09-28) |
 | SNMP | yes | net-snmp's `snmpd` 5.9.4 (Debian's 5.9.4+dfsg-2 package) in a container, read over v1, v2c and v3 at every security level, over UDP and TCP; the driver is gosnmp, a different implementation | **verified live against a software agent, read-only. NOT verified against a switch, a UPS or a PDU** |
 | BACnet/IP | yes | bacpypes3 0.0.110, an independent BACnet stack in Python, serving every object type HotLoop reads; and frames recorded off it. The client is written for HotLoop and shares no code with it | **verified live against a software device, read-only. NOT verified against a vendor's controller, a BBMD or a routed network** |
+| OPC UA PubSub (UADP) | yes | open62541 1.5.10, an independent OPC UA stack, in both directions over multicast: its publisher read by HotLoop in Variant and DataValue encodings, key and delta frames, and in RawData for the one message its RawData publisher sends before it stops; HotLoop's publisher read by its subscriber in Variant and DataValue | **verified live against open62541, both ways. NOT verified against a CODESYS, Siemens or Beckhoff publisher, with message security (unsupported), or over a router** |
+| Kafka API (output) | yes | Apache Kafka 4.4.0 and Redpanda 26.2.6, each with TLS and a SASL login (SCRAM-SHA-256, SCRAM-SHA-512, and PLAIN where the broker has it), read back with a consumer | **verified live against two brokers. NOT verified against Confluent Cloud, Amazon MSK or Azure Event Hubs, or with Kerberos, OAuth or client certificates, which are not supported** |
 
 **BACnet/IP has not been read off a physical controller.** The device it was
 proven against is bacpypes3's, an independent implementation of the standard,
@@ -92,6 +98,17 @@ subscription and reads the tags on every poll until the device next reconnects.
 The OPC UA client library this driver is built on can start its publish loop
 paused on a loaded host and never send a publish request; that is the case this
 exists for.
+
+It falls back when a subscription stops after values have arrived, too. The
+library keeps its keep-alives to itself, so a stopped publish loop looks just
+like a plant where nothing is changing. After a subscription has been quiet for
+ten publishing intervals (thirty seconds at least), the driver reads every node
+once and compares it with what the subscription last delivered. If any node
+differs in value or quality, the server is holding something it would have sent,
+so the driver logs a warning, deletes the subscription and reads on every poll
+until the device reconnects. If they match, it carries on, and checks again after
+the same quiet. A healthy quiet subscription costs one batched read every thirty
+seconds.
 
 **Address the nodes by namespace URI.** This matters more than it looks:
 
@@ -545,6 +562,97 @@ verification against a running HotLoop and prints PASS or FAIL.
 HotLoop's Sparkplug edge node and Edge Relay against Ignition's MQTT Engine are
 next and not done.
 
+### OPC UA PubSub (UADP)
+
+The other OPC UA: not a client asking a server, but a publisher sending
+DataSets as UDP datagrams to whoever listens, unicast or multicast (OPC 10000-14,
+the UADP encoding). HotLoop subscribes, as a device, and publishes, as a
+setting. Written from the specification and not from another stack's code;
+the section numbers are in `internal/uadp`.
+
+**Subscribe.** Add a device with the protocol `opcua-pubsub`. The address is
+what to listen on: `udp://239.0.0.1:4840` joins a multicast group, `udp://:4840`
+listens for unicast. A tag's address is `<DataSetWriterId>/<field index>`, the
+field's position in the publisher's DataSet counting from 0: `1000/3` is the
+fourth field writer 1000 publishes. UADP carries no field names (they live in a
+DataSetMetaData the publisher serves some other way, or not at all), so the
+position is what a datagram can say. Browse lists the fields that have been
+heard, with their types.
+
+```json
+{"publisherId":"2234","writerGroupId":100,"interface":"eth0","timeoutMs":30000,
+ "dataSets":[{"writerId":62541,"types":["Float","UInt16","Boolean","Int32","Double"]}]}
+```
+
+- `publisherId` and `writerGroupId` keep a device to one publisher and group
+  when several share an address. Empty and zero take everything.
+- `interface` is the network card a multicast group is joined on. A machine with
+  more than one needs it.
+- `dataSets` is only for RawData, which carries no types on the wire: the
+  publisher's field types, in order, so the bytes can be read. Variant and
+  DataValue messages carry their own.
+- Key frames replace a DataSet's fields; delta frames change the ones they
+  name; keep alives prove the publisher is alive. A lost message (a gap in the
+  sequence numbers) marks that DataSetWriter's tags **uncertain** until its next
+  key frame, since a delta may have gone with it. A change in the DataSet's
+  configuration version forgets every field until a key frame says what they
+  mean now.
+- A writer silent for `timeoutMs` (30 seconds unless set) reads **bad** with
+  that said, and a device with nothing heard from its publisher within the
+  timeout is down. A field the publisher marks Bad is bad, and one it marks
+  Uncertain is uncertain; the reason is the status code.
+- The reading's time is the publisher's, from the field, the DataSetMessage or
+  the NetworkMessage, when it is set and not more than a minute ahead of this
+  clock, and the time it arrived otherwise.
+- Read-only. Message security (signed or encrypted NetworkMessages), chunked
+  messages, discovery messages, events, and array or structure fields are not
+  supported; a datagram with any of them is refused, counted by reason, and
+  never guessed at.
+
+**Publish.** Off until `HOTLOOP_UADP_PUBLISH_ENABLED` is set, in Edge and
+Gateway (the products that have the OPC UA server). It sends the tags a layout
+names:
+
+```json
+{"dataSets":[{"writerId":1,"name":"press","configMajor":1,"fields":[
+  {"device":"press-01","tag":"Zone1_Temp","type":"Float"},
+  {"device":"press-01","tag":"Cycle","type":"UInt32"}]}]}
+```
+
+| Variable | Default | <span class="sr-only">Details</span> |
+|---|---|---|
+| `HOTLOOP_UADP_PUBLISH_ADDRESS` | | `udp://239.0.0.1:4840` for a multicast group, `udp://host:4840` for one subscriber |
+| `HOTLOOP_UADP_PUBLISH_LAYOUT_FILE` or `_LAYOUT` | | the layout above, as a file or inline (the file wins) |
+| `HOTLOOP_UADP_PUBLISH_PUBLISHER_ID` | `1` | a number or a text |
+| `HOTLOOP_UADP_PUBLISH_WRITER_GROUP_ID` | `1` | |
+| `HOTLOOP_UADP_PUBLISH_INTERVAL` | `1s` | |
+| `HOTLOOP_UADP_PUBLISH_KEY_FRAME_EVERY` | `10` | at most this many intervals between key frames |
+| `HOTLOOP_UADP_PUBLISH_DATAVALUE` | `false` | DataValue fields (value, status, time) instead of Variants |
+| `HOTLOOP_UADP_PUBLISH_INTERFACE`, `_TTL` | system's, `1` | the card multicast leaves by, and its hop limit |
+
+Each DataSet goes out on its own DataSetWriter, one NetworkMessage each. A
+DataSet whose values changed goes out as a key frame (every field), one that
+didn't as a keep alive, and a key frame at least every `KEY_FRAME_EVERY`
+intervals so a subscriber that joined late converges. Delta frames are not sent:
+a key frame is complete, so a lost datagram costs one interval and not a wrong
+value. A tag that is bad is published as its status and never as its last
+value; one nothing has been read for yet is published as
+`BadWaitingForInitialData`. Values are clamped to their published type, not
+wrapped. Message security is not supported, so this belongs on a network the
+plant trusts. The same layout's tags can be read by HotLoop's own subscriber
+on another box.
+
+**What was proven, against whom.** open62541 (v1.5.10, a different codebase
+from `internal/uadp`) publishes to HotLoop's subscriber and subscribes to
+HotLoop's publisher, over multicast, in the lab (`test/services/uadp`). Two
+things about open62541 itself, found doing it: its subscriber discards keep
+alive messages ("Only keyframes are supported") though a keep alive is a valid
+DataSetMessage, and its RawData publisher sends one message and then stops with
+`BadInternalError`. HotLoop's publisher is read correctly by its subscriber all
+the same, and the RawData read is of that one message. The prior art in the
+UT3 project (a CODESYS ST publisher and a Go receiver) was read for
+interoperability and shares no code with this.
+
 ### Modbus TCP/RTU
 
 The 1979 workhorse. PLCs, VFDs, power meters, RTUs, and the fallback of every
@@ -886,6 +994,18 @@ names of those units are held to a real device, which sends the number its own
 table gives each name. The integration (see
 [INTEGRATIONS.md](/iot/integrations/#bacnetip)) does the asking for you.
 
+## Going out: the Kafka API
+
+Everything above brings a device's values in. HotLoop can also send them out
+to a Kafka broker as an event stream: every reading the historian keeps, and
+every line of the system log (alarms, devices up and down, changes), as JSON on
+topics you name. It is a historian target, set up under Settings, Historian
+targets, and it takes Apache Kafka, Redpanda, and anything else that speaks the
+Kafka API, over TLS with a SASL login. The record formats, what "at least once"
+means here, and what is and isn't proven are in
+[HISTORIAN-TARGETS.md](/iot/historian-targets/#kafka-api-event-stream). The client
+is [franz-go](https://github.com/twmb/franz-go).
+
 ## Everything else: gateway mode
 
 **PROFINET · EtherCAT · HART · DNP3 · FINS · MELSEC/SLMP · CANopen · FANUC FOCAS**
@@ -935,9 +1055,11 @@ string replaces it. The rules, and what does not go through the API, are in
 with a key it generates), every credential in the configuration column above is
 encrypted in the database with that key, which lives outside the database, so a
 dump or a backup holds ciphertext. The rest of HotLoop, and the drivers, never
-see the difference. A credential written into a URL (`mqtt://user:pass@host`)
-or into free text is hidden from every screen but stays in the clear in the
-database; use the `password` option. See
+see the difference. A credential written into a URL (`mqtt://user:pass@host`,
+`?api_key=`) or into free text such as an HTTP `body` is encrypted too: the whole
+address or option is sealed and comes back exactly as typed, and a URL with
+nothing secret in it is left readable. The `password` option is still the
+tidier place for one. See
 [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key).
 
 Any other option whose name looks like a credential (it contains `password`,

@@ -5,6 +5,10 @@ description: "Pages of cards built per role or per screen: gauges, trends, entit
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
 sitting where the zones are. Build as many as the plant needs, give each to the
@@ -304,6 +308,13 @@ do here is sent until the connection is back.
 
 When the connection is back, within a few seconds, the bar goes, the screen
 refreshes from live answers and the live feed reconnects.
+
+**Offline and never signed in.** A phone that has the app but isn't signed in
+(it never was, or it signed out, which empties what it kept) has nothing to
+show with no connection, so it shows the sign-in screen and says why: HotLoop
+isn't answering from here, and it keeps trying. The moment HotLoop answers, the
+page reloads by itself into the real sign-in. It never shows an app with nothing
+in it.
 
 **What it never does.** Nothing that changes anything is sent from an offline
 page. A write, whether it's a value to a tag, a script, a recipe or an

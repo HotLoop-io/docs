@@ -40,7 +40,7 @@ What that means on a bad night:
 It runs your existing flows unchanged, too. That's [further down](/flow/migrating-from-node-red/),
 because it's a feature, not the point.
 
-Current release is `2.5.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.5.0`
+Current release is `2.6.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.6.0`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. About
 36,000 lines of Go, more than a third of it tests, 79 node types, and the race

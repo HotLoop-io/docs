@@ -5,6 +5,10 @@ description: "Write every reading HotLoop keeps out to the plant's own PostgreSQ
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop keeps its own history, and it isn't going anywhere. But a plant
 already has a database. IT backs it up, patches it, points Power BI at it and
 answers for it in an audit, and they are not adopting ours to get a trend.
@@ -27,6 +31,7 @@ Databases HotLoop writes to:
 | Microsoft SQL Server | SQL Server 2025 CU9 | [below](#microsoft-sql-server) |
 | InfluxDB 2 and 3 | InfluxDB 2.9.1 and InfluxDB 3 Core 3.12.0 | [below](#influxdb-2-and-3) |
 | MySQL and MariaDB | MySQL 26.7.0 and MariaDB 13.0.2 | [below](#mysql-and-mariadb) |
+| Kafka API (event stream) | Apache Kafka 4.4.0 and Redpanda 26.2.6 | [below](#kafka-api-event-stream) |
 
 ## Adding one
 
@@ -300,6 +305,88 @@ there is no driver to pin and nothing to choose.
 - `useTls` switches to `https` and checks the certificate;
   `insecureSkipVerify` doesn't check it.
 
+## Kafka API (event stream)
+
+Not a database: a stream. Every reading the historian keeps goes to a Kafka
+topic, and, if you give it a second topic, so does every line HotLoop writes to
+its own system log (alarms, devices going up and down, configuration changes).
+It speaks the Kafka API, so Apache Kafka, Redpanda and anything else that
+answers that protocol take it. Same queue, same catch-up from HotLoop's own
+history, same "a broker that's down slows nothing down" as every other target.
+
+```json
+{"id":"plant-stream","name":"Plant event stream","kind":"kafka","address":"kafka1.plant.local:9093,kafka2.plant.local:9093",
+ "table":"hotloop.tags","username":"hotloop","password":"...","useTls":true,
+ "options":{"sasl":"scram-sha-512","caCert":"-----BEGIN CERTIFICATE-----...","eventsTopic":"hotloop.events"}}
+```
+
+- `address` is a list of brokers, comma separated, port 9092 unless given. One
+  is enough to start from: the broker says where the rest are.
+- `table` is the topic for readings (`hotloop.tags` unless you say otherwise).
+  `options.eventsTopic` is the topic for events, `hotloop.events` when you add
+  the target from the form or leave it out of the API call, and empty for no
+  events. The two can't be the same topic.
+- HotLoop makes the topics if they aren't there, with the broker's own default
+  partitions and replication. A login that can't make them is a target that's
+  down with the broker's reason, so make them first if yours can't.
+- `options.sasl` is `scram-sha-512`, `scram-sha-256` or `plain`, with the
+  `username` and `password`. PLAIN sends the password as it is, so HotLoop
+  refuses it without `useTls`. A login the broker turns down is **down**, with
+  "the broker refused the login" in the status, never "refusing readings".
+- `useTls` checks the broker's certificate. If it was signed by your own CA,
+  put the CA in `options.caCert` as PEM. `insecureSkipVerify` encrypts without
+  checking.
+- Client certificates (mutual TLS), Kerberos and OAuth logins are not
+  supported.
+
+**What lands on the readings topic.** One JSON object per reading, keyed
+`deviceId/tag` so one tag's readings stay in order on one partition:
+
+```json
+{"ts":"2026-10-31T12:00:00.123456Z","deviceId":"press-01","tag":"Zone1_Temp","value":21.5,"quality":"good","unit":"°C"}
+{"ts":"2026-10-31T12:00:00Z","deviceId":"press-01","tag":"Program","value":null,"text":"Grade A","quality":"good"}
+{"ts":"2026-10-31T12:00:00Z","deviceId":"press-01","tag":"Speed","value":null,"nonFinite":"NaN","quality":"bad"}
+```
+
+A number is `value`; text is `text` with `value` null; JSON can't carry NaN or
+an infinity, so those say `nonFinite` (`NaN`, `+Inf`, `-Inf`) and `value` is
+null. A field is only ever added to this, never changed. Headers:
+`hotloop-type: reading` and `content-type: application/json`. The record's own
+timestamp is when it was produced; the time of the reading is `ts`.
+
+**What lands on the events topic.** One JSON object per system log line, keyed
+by its subject (or its category when it has none), `hotloop-type: event`:
+
+```json
+{"at":"2026-10-31T12:00:00.456Z","severity":"warning","category":"alarm","subject":"press-01/Zone1_Temp",
+ "actor":"system","message":"Zone 1 is over 250","detail":{"limit":250,"value":251.5}}
+```
+
+`detail` is the JSON the line carried, as JSON, or text when it wasn't JSON.
+Lines about the historian targets themselves are left out, or a broker that's
+down would report itself down to itself.
+
+**It is at least once, and events are best effort.**
+- Readings: delivery is acknowledged by every in-sync replica, and the catch-up
+  after an outage overlaps what already went out on purpose, so a reading can
+  arrive twice. `deviceId`, `tag` and `ts` name a duplicate; a consumer that
+  cares drops the repeat. A reading that never reaches the broker is owed and
+  sent from HotLoop's own history, the same as for a database.
+- Events are the live feed. There is no history of them to catch up from, so
+  one produced while the broker is away, or past a full buffer, is lost, and
+  the target's status counts it (`eventsLost`) and the Settings card says so.
+- A broker that vanishes in the middle of a write turns the target **down**
+  within 25 seconds, and the readings in that write are owed. (franz-go would
+  otherwise wait forever on a write it can't prove didn't land; HotLoop lets it
+  give up, which is why a duplicate is possible.)
+- A reading the broker will never take (bigger than a message may be) is
+  refused on its own, counted, and named in the system log, and the rest of its
+  batch still goes.
+
+HotLoop speaks the Kafka API through
+[franz-go](https://github.com/twmb/franz-go) (BSD-3-Clause), credited in
+`NOTICE`. It added about 5 MiB to the binary.
+
 ## How it's tested
 
 Against the real database, in a container (`test/services/up.sh` starts it),
@@ -324,7 +411,12 @@ enough, and a login without it being down rather than refusing, until the
 grant lands and everything with it. MySQL and MariaDB add tag names that
 differ only in case, and a unique index somebody else added.
 PostgreSQL adds the hypertable on TimescaleDB, and SQL Server a table in a
-schema and a tag name too long for its key. InfluxDB is run in both versions:
+schema and a tag name too long for its key. The Kafka target is run against both Apache Kafka and Redpanda, each with TLS
+(a CA made for the run) and a SASL login: every login mechanism the broker
+offers, a wrong password being down and not refusing, a certificate from an
+unknown CA being down, one oversize reading refused without its batch, the
+system log arriving on its topic, and the broker being cut and coming back.
+Each is read back with a consumer. InfluxDB is run in both versions:
 a wrong token being down and not refusing, a missing bucket and a missing
 organization being down, a field somebody else typed differently being
 refused, and every character line protocol has to escape.

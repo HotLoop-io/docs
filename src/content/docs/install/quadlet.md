@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 9a71121, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 For a Pi or a small industrial PC that is **not** part of a k3s cluster. If

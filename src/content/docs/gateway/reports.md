@@ -5,6 +5,10 @@ description: "Historian numbers on a schedule as CSV or HTML, stored and emailed
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Added in 4.14.0. `internal/reports` runs operator-defined reports on a schedule:
 it queries the historian, renders the result as CSV and HTML, stores it on a
 volume, and optionally emails it. It is the counterpart of Ignition's Reporting
@@ -420,17 +424,27 @@ specific spreadsheet application.
 - Several of the tests above were proved by mutation, by breaking the code and
   watching the test fail. The pull request lists them.
 
+**Verified by hand, 2026-10-31, not by a test in the suite** (the lab has no
+spreadsheet application or browser to run it with):
+
+- LibreOffice 26.8.1 opened a rendered CSV with a tag named `=HYPERLINK(...)`,
+  `=cmd|' /C calc'!A0`, `+1+1`, `-2+3` and `@SUM(1+1)`, and saved it as xlsx. The
+  sheet holds no formula anywhere, every hostile name is text, the negative and
+  decimal numbers are numeric cells, and `Température ° ü 温度` survives when the
+  import is told the file is UTF-8. LibreOffice shows the apostrophe prefix as a
+  character; Excel hides it.
+- Chromium 151 rendered the HTML: the title, the table with a row per tag, the
+  hostile names as text, no script and no request to anywhere. At 1100 px wide the
+  table runs past the edge and the page scrolls sideways.
+
 **Not verified**:
 
 - Any specific mail provider or gateway. STARTTLS and implicit TLS on port 465
   both work, the same as the alarm channel (see
   [NOTIFY.md](/iot/notifications/#implicit-tls-port-465)); neither has been tried against a
   commercial provider.
-- Any specific spreadsheet application. The formula-injection defense is the
-  standard apostrophe prefix, checked by parsing the CSV, not by opening it in
-  Excel, LibreOffice, or Google Sheets.
-- A browser rendering of the HTML file. It is checked for escaping, for being
-  self-contained, and for what it says, not for how it looks.
+- Excel and Google Sheets. The formula-injection defense was opened in
+  LibreOffice 26.8 by hand on 2026-10-31 (below), and in neither of these.
 - Zones whose clock changes are not a whole hour (Lord Howe Island, 30 minutes)
   go through the same code, and a half-hour offset is tested for hour buckets, but
   such a change itself is not.

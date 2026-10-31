@@ -30,10 +30,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.5.0
+  ghcr.io/hotloop-io/hotloop-flow:2.6.0
 ```
 
-Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.5.0
+Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.6.0
 hash-password -password 'something-long'`. The image is distroless nonroot with
 no shell in it, so there is nothing to `exec` into and nothing for anybody who
 gets code execution to pivot with.

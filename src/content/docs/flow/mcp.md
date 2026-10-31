@@ -5,6 +5,10 @@ description: "An agent can call a flow as a tool, and a flow can call a tool on 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 3d00e00, and it differs from the copy in HotLoop Flow 2.6.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 An agent that speaks the Model Context Protocol can call a flow as a tool, and a
 flow can call a tool on any MCP server, HotLoop's own included. Three nodes and
 one config node do it: `mcp tool` and `mcp result` serve a flow, `mcp client` on
@@ -140,10 +144,12 @@ Secret, and every tool in HotLoop's MCP docs is there:
  "x": 300, "y": 100, "wires": [["use"]]}
 ```
 
-HotLoop sees the call as an MCP client's, under its own rules: writes from MCP
-are off unless HotLoop was told otherwise, and a `write_tag` it refuses comes
-back as the node's error in HotLoop's words. To write through HotLoop's gate
-from a flow without MCP, use the HotLoop nodes above.
+HotLoop sees the call as an MCP client's, under its own rules: MCP reads and
+writes, through the same gate as everybody else, so a `write_tag` to an armed tag
+in range goes through (once HotLoop's own writes are switched on) and one it
+refuses, a tag nobody marked writable say, comes back as the node's error in
+HotLoop's words. To write through HotLoop's gate from a flow without MCP, use
+the HotLoop nodes above.
 
 ## What it was tested against
 
