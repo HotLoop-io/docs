@@ -39,7 +39,7 @@ anything below it is refused. The only way to get a loop is to edit the
 hangs, and changing a node in the loop is refused with a message naming the
 nodes and telling you to set one of their `parent_id`s to NULL.
 
-## Site, area and line text still work
+## Site, area, and line text still work
 
 Every device has had free-text `site`, `area` and `line` fields since before
 the tree existed. They are not going anywhere. The 4.15 device editor writes

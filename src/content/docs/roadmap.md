@@ -359,7 +359,7 @@ In order. Nothing in here writes to a controller until U5.
 - [ ] **U6: self-healing.** A built-in blueprint: device silent for N minutes,
       cycle its port once, then alarm. Once, not forever
 
-### Protect, Access and power
+### Protect, Access, and power
 
 Built from Ubiquiti's docs, and each one merges when it's run against real gear
 on the bench, not before.

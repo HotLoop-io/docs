@@ -174,7 +174,7 @@ The entity, state, service, equipment and label endpoints are snake_case
 for the same consumers. Where the two meet, each side keeps its own case: a
 device has `equipmentId`, an entity has `equipment_id`.
 
-### Times, durations and tag keys
+### Times, durations, and tag keys
 
 - **Timestamps** are RFC 3339 in UTC, with fractional seconds when there are
   any: `2026-09-27T20:21:58.255869Z`. The display timezone setting changes what
@@ -1430,7 +1430,7 @@ A tag on a discovered device nobody has accepted can't be armed: `400`,
 `{"deleted":"tank-farm/level"}`, or `404`. The history stays. The tag's
 entities become orphans (see [ENTITIES.md](/iot/entities/#deleted-tags-orphans-and-re-adoption)).
 
-## Values, the board and writes
+## Values, the board, and writes
 
 ### `GET /api/values`
 
