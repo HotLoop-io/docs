@@ -278,7 +278,7 @@ saying so. It is a guard against applying the right numbers at the wrong
 moment, not an interlock: an interlock lives in the PLC, where it still works
 when the network does not.
 
-## From a rule, a script or an agent
+## From a rule, a script, or an agent
 
 A rule or a script applies one with an `apply_recipe` step (see
 [AUTOMATIONS.md](/iot/automations/)):

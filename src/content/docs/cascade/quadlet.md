@@ -30,7 +30,7 @@ sudo systemctl start hotloop-cascade
 Open `http://this-box:8080`. The first person to open it makes the first
 account, so do that before you share the address.
 
-## PostgreSQL, a server and workers
+## PostgreSQL, a server, and workers
 
 `postgres/`. The database, the server and, if you want them, more workers.
 Postgres is the queue, so the workers take work from the same place. The

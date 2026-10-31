@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at dfb7159, and it differs from the copy in HotLoop Flow 2.5.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at c98ba80, and it differs from the copy in HotLoop Flow 2.5.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 It follows your system, light or dark, and each picture below is shown both ways,

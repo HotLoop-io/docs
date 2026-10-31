@@ -35,6 +35,7 @@ import { fileURLToPath } from 'node:url';
 import GithubSlugger from 'github-slugger';
 import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
+import { oxfordHeadings } from './oxford.mjs';
 import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS } from './sync-manifest.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -388,6 +389,7 @@ function transform(page) {
   body = withMasked(body, (t) => {
     t = rewriteLinks(t, page);
     for (const [re, to] of AMERICAN) t = t.replace(re, to);
+    t = oxfordHeadings(t);
     // A bare <word> in prose is a tag to the renderer and vanishes. Show it as text.
     t = t.replace(/<(\/?)([A-Za-z][\w-]*)([^>\n]*)>/g, (m, slash, name, rest) => (KNOWN_HTML.has(name.toLowerCase()) || /^(https?|mailto):/i.test(m.slice(1)) ? m : `&lt;${slash}${name}${rest}&gt;`));
     // A line starting with ::: would open a Starlight aside.

@@ -113,7 +113,7 @@ purpose. So its `unique_id` is random, made once when it is created. It can
 never collide with anything else's, including a composite that was deleted and
 built again, which is a new entity and should be.
 
-## Deleted tags, orphans and re-adoption
+## Deleted tags, orphans, and re-adoption
 
 Delete a tag and its entities are **orphaned**, not deleted: `orphaned_at` is
 set and the state goes `unavailable`. Bring the same tag back, by the tag
@@ -832,7 +832,7 @@ because pressing it then cannot work. The last press is
 held in memory, so it resets on a restart; the audit trail has every press
 regardless, which is also why the logbook does not log a button's state.
 
-## Lights, covers and events
+## Lights, covers, and events
 
 Made by [MQTT discovery](/iot/mqtt-discovery/) for a device that announced one, bound
 to the tags discovery made for it. Nobody builds these out of PLC tags, so

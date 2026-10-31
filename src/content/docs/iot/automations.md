@@ -549,7 +549,7 @@ rule hung on an unreachable endpoint holds its run slot forever, and under
 as timed out, whether it was between steps or in the middle of a `delay` or a
 `wait`.
 
-### Waits, delays and run modes
+### Waits, delays, and run modes
 
 A run sitting in a `wait` or a `delay` is a run in progress, and the run mode
 decides what a trigger does to it:

@@ -30,7 +30,7 @@ Each of the first three also has a `sqlite/` directory: the same product with
 the database as a file and no database container. See
 [SQLite instead of PostgreSQL](#sqlite-instead-of-postgresql).
 
-## IoT, Edge and the Gateway
+## IoT, Edge, and the Gateway
 
 Each directory has the same units and one script:
 

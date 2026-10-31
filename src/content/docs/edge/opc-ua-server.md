@@ -95,7 +95,7 @@ reported `BadOutOfRange` with no value, never wrapped or clamped into something
 that looks plausible. A numeric tag whose reading carries text is
 `BadTypeMismatch`.
 
-### Value, quality and timestamps
+### Value, quality, and timestamps
 
 Each read (and each subscription sample) answers from the runtime's live cache, the same source `/api/values` serves, never from the database. The status
 code is derived from that reading **and the state of the device link behind
