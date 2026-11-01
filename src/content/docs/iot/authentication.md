@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet
@@ -495,10 +495,47 @@ acknowledged this way, specifically so "no auth" is always a decision someone
 made on purpose, written down in the deployment's own configuration, rather
 than a default nobody chose.
 
+## Signing in from the EmberNet dashboard
+
+A tenant who installs HotLoop from the EmberNet App Store goes from LAUNCH into
+the app already signed in as themselves, with no password handed out. The
+dashboard's app host puts `X-Embernet-Assertion` on every request it carries to
+this pod: an ES256 token, good for about a minute, signed with a private key
+only the dashboard holds. It names the person (`email`), the tenant, the one app
+it was made for (`aud`, `<tenant>/<Service name>`) and the HotLoop role the
+tenant maps that person's dashboard role to (`role`: `admin`, `operator` or
+`viewer`).
+
+It is off unless a public key is configured, and then everything else works as
+before: local accounts, the cookie, the bearer token, the kiosk panel.
+
+| Variable | Chart value | Does |
+|---|---|---|
+| `HOTLOOP_AUTH_ASSERTION_PUBLIC_KEY` | `embernetSignin.publicKey` | the dashboard's PUBLIC key, PKIX PEM, ECDSA P-256. The store fills it in on a deploy. |
+| `HOTLOOP_AUTH_ASSERTION_AUDIENCE` | worked out from the namespace and release name | `<tenant>/<Service name>`. Required with the key; a token made for another app or tenant is refused. |
+| `HOTLOOP_AUTH_ASSERTION_ISSUER` | `embernetSignin.issuer` | `embernet-dashboard` |
+| `HOTLOOP_AUTH_ASSERTION_HEADER` | `embernetSignin.header` | `X-Embernet-Assertion` |
+
+What a good assertion does: the person gets a user here the first time the
+dashboard vouches for them (named by their address, with no password, so there is
+nothing to guess into), the user's role follows what the dashboard sent on every
+request, and the audit trail names them. What a bad one does: 401, and it is not
+quietly set aside for a session cookie that happens to be there. Refused are a
+bad signature, any algorithm but ES256, an expired or not-yet-valid token, one
+that lives longer than ten minutes, a wrong issuer, another app or tenant's
+audience, a tenant claim that disagrees with the audience, a role that is not one
+of ours, and a name with no address in it.
+
+A local admin keeps the last word on somebody the dashboard let in: disable the
+user and they stay out, and give them an explicit permission list and they keep
+it. Writes still need the pod's own write switches; an assertion never widens
+them. Signing out of a session the dashboard made does nothing to end it: access
+ends at the next request the dashboard stops signing.
+
 ## What this does not cover yet
 
-- **No SSO / OpenID Connect.** Local accounts only. An identity-provider
-  integration is a reasonable next step and is not built.
+- **No OpenID Connect.** Local accounts, plus the EmberNet dashboard's signed
+  assertion above. An identity-provider integration is not built.
 - **No per-tenant or per-site roles.** A user's permissions are the same
   everywhere this gateway runs, which is fine for one plant and would need
   more thought for the multi-site rollup in `Sites`.

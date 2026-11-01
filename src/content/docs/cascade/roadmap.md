@@ -5,10 +5,6 @@ description: "What Cascade has built and what comes after the first release, pha
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at c6febb4, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 No license check exists anywhere in the code. Each phase ends when
 its "real" list has been done against real systems, not when the code compiles.
 
@@ -29,31 +25,66 @@ execution annotations, the S3 and Azure blob backends, and execution redaction
 policies. Each one is tried against the real server it talks to, and each has a
 screen in the editor.
 
-## 0.3.0, environments and scale
+## What 1.0.0 is, and what it is not
 
-Git source control and environments, protected instances, the multi-main HA
-scheduler with trigger leases, the webhook role, concurrency and rate limit
-controls, retention, backup and restore. It is done when I can kill the leader
-main during a minute-level schedule and find no duplicate and no missed runs
-over an hour.
+1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, and nothing else. The phases
+below that are not built are not built, and the version number does not change
+that. I called it 1.0.0 because the editor was the last piece I wanted before I
+put my name under the number, not because the list below is done.
 
-## 0.4.0, connectors and people
+It makes no promise yet about the workflow file format or the API. Nothing about
+either is frozen, and there is no upgrade test from every 0.x, only the ones in
+`RELEASE_CHECKLIST.md`. What a saved workflow does hold to today: the file says
+which version of its format it is (`cascade: 1`), every step carries its own
+version, and a workflow that names a step that no longer exists fails to
+validate and does not start, instead of being quietly changed. That is how the
+EmberOps steps were taken out in 1.0.0. A promise on the format and the API,
+and an upgrade path tested from every release before it, goes here when I can
+keep it, and not before.
 
-The rest of the approved connector list, the published declarative connector
-spec, a plugin SDK and index, and forms with human approval steps. Approvals
-have to work from a phone, because the person approving a recipe change is
-standing at the line, not sitting at a desk.
+## Not built: environments and scale
 
-## 0.5.0, AI and MCP
+Built from this phase: the webhook role (its own Deployment in the split shape
+of the chart), a concurrency limit per workflow, and many mains against one
+database. The schedule needs no leader for that: a slot is fired by a
+compare-and-swap in the transaction that queues the run, so two mains that both
+see it due fire it once, and `TestManyMainsFireEverySlotExactlyOnce` holds it to
+that. What I have not done is the test I set for this phase, killing a main
+during a minute-level schedule and finding no duplicate and no missed run over an
+hour.
+
+Not built, and open:
+
+- Git source control and environments.
+- Protected instances.
+- Rate limit controls.
+- Retention: nothing prunes finished executions today, so they stay until
+  somebody deletes them.
+- Backup and restore.
+
+## Not built: connectors and people
+
+The connectors on the approved list that were built are in: HTTP, ntfy, Discord,
+Gotify, email, HotLoop, MQTT, databases, files, and the S3 and Azure blob
+stores. The EmberOps connector was in 0.1.x and is gone in 1.0.0.
+
+Not built, and open:
+
+- The published declarative connector spec.
+- A plugin SDK and an index.
+- Forms with human approval steps. Approvals have to work from a phone, because
+  the person approving a recipe change is standing at the line, not sitting at a
+  desk.
+
+## Not built: AI and MCP
 
 LLM and agent steps, an MCP client and server, and a builder that uses your own
-model. Bring your own key or run it local. There is no hosted service and there
-won't be one.
+model. Bring your own key or run it local. None of it exists yet. There is no
+hosted service and there won't be one.
 
-## 1.0
-
-Stability promises on the workflow file format and the API, an upgrade path
-tested from every 0.x, and the docs.
+When the MCP server arrives, it ships on, with read and write, like every MCP in
+the HotLoop family. Who may do what is the signed-in user's permissions and each
+node's own limits, not a read-only mode.
 
 ## The new editor UI
 

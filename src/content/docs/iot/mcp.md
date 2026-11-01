@@ -5,6 +5,10 @@ description: "Let an agent read the whole plant and touch only what you armed, t
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The gateway speaks MCP in both directions: agents can read and drive the plant,
 and an automation rule can call a tool somewhere else.
 
@@ -37,6 +41,54 @@ cannot even enumerate what exists. Leaving `mcp.token` empty makes the chart
 generate one, the default deployment is not accidentally the open one. Combine
 it with the NetworkPolicy; a token is a second line of defense, not the only one.
 
+The endpoint is never open. Run the binary with no `HOTLOOP_MCP_TOKEN` (a
+Quadlet unit, a bare `hotloop`) and it makes a token at its first start and keeps
+it in its database, so the same one comes back after a restart, on every replica
+and after a restore. `hotloop mcp-token` prints it (the log says it made one, and
+never what it is). Set `HOTLOOP_MCP_TOKEN` to choose your own; with
+`HOTLOOP_MCP_OIDC_*` set the endpoint takes a login and keeps no token of its
+own. A client that used to connect to a bare binary with nothing now gets a `401`
+until it sends `Authorization: Bearer <that token>`.
+
+### With a Vord login or a Fireball Hub assertion
+
+The static token says which client called; it cannot say which person. With
+OIDC set, `/mcp` also takes `Authorization: Bearer <jwt>`, and the verified
+person's email becomes the audit actor: a write lands as `mcp:pat@example.com`
+instead of `mcp:<client name>`. Behavior with it unset is unchanged, and the
+static token keeps working beside it (with no static token set, only a verified
+JWT gets in).
+
+| Variable | Chart value | Does |
+|---|---|---|
+| `HOTLOOP_MCP_OIDC_ISSUER` | `mcp.oidc.issuer` | the Vord realm URL; accepts its access tokens |
+| `HOTLOOP_MCP_OIDC_AUDIENCE` | `mcp.oidc.audience` | the `aud` every token must carry; required with either of these |
+| `HOTLOOP_MCP_OIDC_HUB_JWKS_URL` | `mcp.oidc.hubJwksUrl` | the Fireball Hub's assertion keys; accepts its assertions |
+| `HOTLOOP_MCP_OIDC_REQUIRED_ROLE` | `mcp.oidc.requiredRole` | a realm role the caller must hold |
+| `HOTLOOP_MCP_OIDC_WRITE_ROLE` | `mcp.oidc.writeRole` | limits writes per caller, see below |
+
+A Vord access token is checked against the issuer's JWKS (found through its
+discovery document, cached ten minutes, refetched on an unknown `kid`): RS256
+or ES256 only, `iss` equal to the issuer, `aud` containing the audience, `exp`
+and `nbf` with 30 s of skew, and an `email` (or `preferred_username`) claim.
+Vord puts only `account` in `aud` by default; give the client scope an
+audience mapper for the audience you set.
+
+A Fireball Hub assertion is `typ` `fb-assert+jwt`, EdDSA, `iss` `fireball-hub`,
+`aud` the configured audience (the Hub module sends `hotloop`), unexpired, signed
+by a key in the Hub's JWKS. There is no `jti` replay cache: one tool call is
+several HTTP requests (initialize, then the call) carrying the same assertion,
+which lives 60 s. When the Hub says the call acts for someone else
+(`acting_as`), the actor reads `mcp:<email> for <acting_as email>`.
+
+Writes still need `HOTLOOP_ALLOW_WRITES`, the master switch; a
+token never widens it. `HOTLOOP_MCP_OIDC_WRITE_ROLE` narrows them per caller:
+`hotloop:hotloop.write` means the Vord client role `hotloop.write` on client
+`hotloop` (`resource_access.hotloop.roles`), a bare name means a realm role, and
+a Hub assertion must carry the role's name in `abilities`. A caller without it
+can read but `write_tag`, `call_service`, `run_script`, `apply_recipe` and
+`trigger_automation` refuse. The static token is not limited by it.
+
 ### Over stdio
 
 The same binary serves MCP on stdin and stdout with `--mcp-stdio`, for a client
@@ -51,8 +103,7 @@ plant rather than a hollow server.
       "args": ["--mcp-stdio"],
       "env": {
         "HOTLOOP_DB_HOST": "timescale.plant.local",
-        "HOTLOOP_DB_PASSWORD": "…",
-        "HOTLOOP_ALLOW_MCP_WRITES": "false"
+        "HOTLOOP_DB_PASSWORD": "…"
       }
     }
   }
@@ -186,10 +237,10 @@ switches:
   with `kinds: ["script"]` says how it ended.
 
 The run is the script's, as `script:<id>`, with the source `mcp`, so every
-write it makes meets the MCP switch in the gate exactly like `write_tag`. With
-`HOTLOOP_ALLOW_MCP_WRITES` off, `run_script` refuses before anything runs,
-the way `trigger_automation` does; a dry run is still answered, and says the
-switch is why.
+write it makes meets the gate exactly like `write_tag`. With writes switched
+off (`HOTLOOP_ALLOW_WRITES`), `run_script` refuses before anything runs, the way
+`trigger_automation` does; a dry run is still answered, and says the switch is
+why.
 
 ### Recipes
 
@@ -206,9 +257,8 @@ value would be refused; values out of range are refused, never adjusted. Then
 the targets go out in order under one call id, the first that fails stops the
 rest, and nothing is undone. The answer says, target by target, what went out
 and whether the device read the value back. The writes are the agent's, with
-the source `mcp`, so the MCP switch applies to each in the gate; with
-`HOTLOOP_ALLOW_MCP_WRITES` off, `apply_recipe` refuses before anything is
-checked. A recipe that names its own apply permission is for the people
+the source `mcp`, so the gate applies to each; with writes switched off
+(`HOTLOOP_ALLOW_WRITES`), `apply_recipe` refuses before anything is checked. A recipe that names its own apply permission is for the people
 granted it, and an agent is not one of them.
 
 ### Blueprints
@@ -227,8 +277,8 @@ months after the conversation that suggested it is over, and whether a plant
 has one is a person's call, made on the Blueprints screen with their name on
 it. So an agent can do the useful part (find the blueprint, work out the
 inputs, show what the rule would do) and hand the decision over. The preview
-stores nothing and writes nothing, so it is answered whatever
-`HOTLOOP_ALLOW_MCP_WRITES` says.
+stores nothing and writes nothing, so it is answered whether or not writes are
+on.
 
 ## Resources
 
@@ -264,23 +314,21 @@ deliberately declined. It is not a protocol error to be retried.
 
 ## Writing
 
-`write_tag` moves real equipment. Four things stand between a tool call and a
-machine:
+MCP reads and writes. `write_tag` moves real equipment, so the same things stand
+between a tool call and a machine that stand between an operator's click and one:
 
-1. `HOTLOOP_ALLOW_WRITES` must be on.
-2. `HOTLOOP_ALLOW_MCP_WRITES` must be on. This is a *narrowing* of the master
-   switch, not a way around it, with writes on and this off, an operator can
-   command a tag and an agent cannot.
-3. The tag must be marked writable. Tags are read-only until somebody says
+1. `HOTLOOP_ALLOW_WRITES`, the master switch for the whole deployment, must be
+   on. With it off nothing writes: not the UI, not the API, not an agent.
+2. The tag must be marked writable. Tags are read-only until somebody says
    otherwise, one at a time.
-4. The value must be within the tag's configured range. It is **rejected, not
+3. The value must be within the tag's configured range. It is **rejected, not
    clamped**, sending 400 when someone asked for 500 is quietly doing something
    different from what was asked.
 
 A **reason is required** and is recorded next to the write. An audit row nobody
 can interpret six months later is barely better than none.
 
-`call_service` gets exactly the same four, because it is nothing but writes
+`call_service` gets exactly the same three, because it is nothing but writes
 through the same gate, and then the entity's own checks on top (a number's
 step and narrower range, a text's pattern, the entity not being disabled). A
 refusal at any of them is audited against the entity as well as the tag:
@@ -289,16 +337,15 @@ the same row a refused `write_tag` leaves plus the entity. A call without a
 reason is refused before anything is attempted, like `write_tag`.
 
 `trigger_automation` is gated identically, because a rule's actions can command
-equipment; otherwise it would be a way around `write_tag` being switched off.
+equipment; otherwise it would be a way around the checks `write_tag` meets.
 
 ```
 > write_tag tag=press-01/Zone1_Temp value=99 reason="testing"
 write refused: press-01/Zone1_Temp: this tag is not marked writable
 ```
 
-To run a read-only agent, set `allowMcpWrites: false`. The server instructions
-then tell clients up front that writes are disabled, so an agent does not waste
-a turn discovering it.
+When writes are switched off the server instructions say so up front, so an
+agent does not waste a turn discovering it.
 
 ## Calling out
 

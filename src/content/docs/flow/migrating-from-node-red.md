@@ -69,7 +69,7 @@ id actually is and which kind the setting wants. The editor only offers you the
 right kind, so this only comes from a hand edit or a pasted id, which is
 exactly where it bites.
 
-By compatibility level the 79 node types are 12 full, 21 partial, 14 deliberately
+By compatibility level the 79 message node types are 12 full, 21 partial, 14 deliberately
 divergent, and 32 of Flow's own. Every node declares how it relates to
 Node-RED's node of the same name, and **a test fails the build if a node claims
 partial compatibility without stating in writing what is missing.** A node

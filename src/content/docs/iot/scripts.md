@@ -5,6 +5,10 @@ description: "Write a cycle once, name it, and run it from a rule, a screen, MCP
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A script is a sequence of steps with a name. The CIP cycle. The line purge.
 The changeover to product B. Every plant has a handful of procedures it runs
 exactly the same way every time, and the day somebody copies one into a
@@ -103,7 +107,7 @@ every log line carries that as its actor, and every write is audited against
 it in `GET /api/writes`, refused or not. The **source** is whoever started it:
 `ui` from the screen, `automation` from a rule, `mcp` from an agent. That
 matters because the gate decides on source. A script an agent starts writes as
-`mcp`, and with `HOTLOOP_ALLOW_MCP_WRITES` off every one of its writes is
+`mcp`, and with `HOTLOOP_ALLOW_WRITES` off every one of its writes is
 refused, exactly as the agent's own `write_tag` would be. `run_script` and an
 agent's `script.turn_on` refuse up front in that case rather than running a
 script whose every write is going to bounce.

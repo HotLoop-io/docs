@@ -5,6 +5,10 @@ description: "Deploy any HotLoop chart on k3s or any Kubernetes: the values wort
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The chart deploys two workloads: the gateway (a Deployment, it holds no durable
 state of its own) and TimescaleDB (a StatefulSet with a volume). That is the
 default. `database.type` picks another database: plain PostgreSQL, or SQLite,
@@ -86,7 +90,7 @@ The values that decide whether this pod can move machinery.
 ```yaml
 safety:
   allowWrites: false      # the master switch -- off by default since 4.4.0
-  allowMcpWrites: false   # a narrowing of it, for agents
+  allowMcpWrites: true    # agents (MCP) write wherever an operator could, once writes are on
   confirmWrites: true     # the UI asks before writing
 ```
 
@@ -102,8 +106,12 @@ To turn writes on once the deployment has been reviewed:
 ```yaml
 safety:
   allowWrites: true
-  allowMcpWrites: false  # let operators write while agents may not
 ```
+
+That is all it takes: MCP clients read and write like an operator does, under the
+same permissions, writable tags and ranges. `allowMcpWrites` ships on in every
+chart; it is there for a deployment that decides otherwise, and it is not a
+default anywhere.
 
 ### Historian
 
