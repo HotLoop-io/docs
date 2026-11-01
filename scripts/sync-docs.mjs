@@ -36,6 +36,7 @@ import GithubSlugger from 'github-slugger';
 import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
 import { oxfordHeadings } from './oxford.mjs';
+import { scan } from './forbidden.mjs';
 import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS } from './sync-manifest.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -517,6 +518,11 @@ const sync = {
   pinned,
 };
 for (const [k, v] of legalOut) out.set(k, v);
+// Nothing a public page must not say gets through the sync, whatever the source repo says.
+{
+  const hits = [...out].filter(([k]) => k !== '__sync.json').flatMap(([k, v]) => scan(k, v));
+  if (hits.length) fail(`a page names something it must not:\n  ${hits.join('\n  ')}`);
+}
 out.set('__sync.json', JSON.stringify(sync, null, 2) + '\n');
 
 // Existing generated files that this run no longer produces.

@@ -649,9 +649,7 @@ things about open62541 itself, found doing it: its subscriber discards keep
 alive messages ("Only keyframes are supported") though a keep alive is a valid
 DataSetMessage, and its RawData publisher sends one message and then stops with
 `BadInternalError`. HotLoop's publisher is read correctly by its subscriber all
-the same, and the RawData read is of that one message. The prior art in the
-UT3 project (a CODESYS ST publisher and a Go receiver) was read for
-interoperability and shares no code with this.
+the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go receiver written elsewhere were read for interoperability and share no code with this.
 
 ### Modbus TCP/RTU
 
