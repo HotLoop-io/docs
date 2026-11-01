@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
@@ -504,6 +504,9 @@ see [Not in this product](#not-in-this-product).
 | any | `/mcp/` | MCP token | all |
 | `GET` | `/manifest.webmanifest` | none | all |
 | `GET` | `/sw.js` | none | all |
+| `GET` | `/next` | none | all |
+| `GET` | `/next/` | none | all |
+| `GET` | `/next/manifest.webmanifest` | none | all |
 | `GET` | `/static/` | none | all |
 | any | `/` | none | all |
 
@@ -731,11 +734,11 @@ binary and a Helm install can't) and is left out otherwise.
     "tags": 5, "cachedTags": 5, "writesOk": 4, "writesRefused": 3,
     "bus": {"subscribers":4,"published":653,"dropped":0},
     "historian": {"queued":1085,"written":1085,"filtered":329,"dropped":0,"failed":0,"queueLen":0,"queueCap":50000},
-    "writePolicy": {"allowWrites":true,"allowMcpWrites":false,"confirmWrites":true},
-    "protocols": ["ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
+    "writePolicy": {"allowWrites":true,"allowMcpWrites":true,"confirmWrites":true},
+    "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.18.11"
+  "version": "4.19.0"
 }
 ```
 
@@ -1476,12 +1479,21 @@ the database, not the browser, because a board belongs to the plant: the panel
 PC on the floor and the laptop in the office show the same one.
 
 ```json
-{"columns":2,"tags":["extruder-1/Temperature","tank-farm/level"]}
+{"columns":2,"tags":["extruder-1/Temperature","tank-farm/level"],"rev":"9f2c41b07a6d3e58"}
 ```
+
+`rev` names the board as stored. Send it back with a save and the save is
+refused if the board has changed since (below).
 
 ### `PUT /api/board`
 
 The same shape. `columns` outside 1 to 4 becomes 3; duplicates are dropped.
+`rev` is optional: with the `rev` of the board you read, a save over a board that
+has changed since is a `409` and changes nothing, so a page that never read the
+board, or read an old one, can't replace the plant's with its copy. Leave it out
+and the save is not checked, which suits a client that sets the whole board every
+time. The web UI reads the board when it starts and sends the `rev` with every
+save.
 Every tag must exist (`404` naming the one that does not): a stale entry is a
 gauge that never moves. Answers the board as stored. Operators hold
 `board.write`: arranging the board is running the plant, not configuring it.
@@ -1499,6 +1511,16 @@ Writes one value to one tag, through the write gate.
 ```json
 {"tag":"tank-farm/level_sp","written":"72.5"}
 ```
+
+**A value is in the tag's units, as a reading is.** On a tag with a scale or an
+offset, what you send is what the tag would read back as, and HotLoop sends the
+device the count that gives it: 55.5 on a register scaled by 0.1 puts 555 in the
+register. (Up to 4.18, the number went to the device as it stood, so 55.5 became 55
+and read back as 5.5.) The range check and the audit row use your number, in the
+tag's units. A count that does not fit the register after that, such as 7000 on a
+`uint16` scaled by 0.1, is refused with the count and the register named, and
+nothing is sent. A fraction of a count is cut off, as a whole-count register
+always did: 12.34 on a tenth-scaled register holds 12.3.
 
 The gate checks, in order, that writes are switched on
 (`HOTLOOP_ALLOW_WRITES`), that the tag is armed, and that the value is in
@@ -3095,10 +3117,10 @@ WWW-Authenticate: Bearer realm="hotloop"
 unauthorized
 ```
 
-With no token configured the endpoint is open, which is only reasonable behind
-a NetworkPolicy, and startup says so in the log. An agent is a caller like any
-other: its writes go through the same write gate, narrowed further by
-`HOTLOOP_ALLOW_MCP_WRITES`, and are audited as `mcp:<client name>`. The tools
+With no token configured, HotLoop makes one at its first start and keeps it in
+its database (`hotloop mcp-token` prints it), so the endpoint is never open. An agent is a caller like any
+other: it reads and writes, its writes go through the same write gate
+as everybody's, and they are audited as `mcp:<client name>`. The tools
 and resources are in [MCP.md](/iot/mcp/).
 
 ```
@@ -3141,6 +3163,27 @@ at, and answers them marked as old when HotLoop can't be reached. It never answe
 keeps or queues a write. The running version is in it, so each release gets a page
 cache of its own. `Cache-Control: no-cache`; no session. Only a browser in a secure
 context (https, or `localhost`) runs it.
+
+### `GET /next`
+
+A redirect to `/next/`.
+
+### `GET /next/`
+
+The new web UI, beside the old one, which is still what `/` serves. It is built from
+`web/` into the binary: a page, its scripts, styles and fonts, a service worker and
+the installable app's icons, every URL in them relative to the page so it runs at the
+root of a host, under a path or behind a proxy. The server fills in the title and one
+data block, `<script type="application/json" id="iiot">`, with what only it knows:
+the plant, the site, the product, the features, the write policy and the timezone.
+No session: the page is the sign-in form until you sign in. A path under it that is
+not one of its files is a `404`, and a binary built without the UI says so in plain
+text and how to build it. With `HOTLOOP_UI=new` the same UI is served at `/` instead of
+the old one, and `/sw.js` and `/manifest.webmanifest` are its own.
+
+### `GET /next/manifest.webmanifest`
+
+The same manifest as `/manifest.webmanifest`, for the new UI at `/next/`.
 
 ### `/`
 

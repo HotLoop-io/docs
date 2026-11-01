@@ -3,15 +3,7 @@
 title: "The editor"
 description: "The editor is built into the Cascade binary: folders, a canvas with run to here and pinned output, runs drawn step by step, and settings for roles and sign-in."
 editUrl: false
-sidebar:
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at c6febb4. HotLoop Cascade 0.1.2 is the latest release, and it does not have what this page describes. An install from 0.1.2 will not match this page.
-:::
 
 The editor is baked into the binary, so there is nothing else to run and nothing it
 fetches from anywhere: open the address the server listens on and sign in. It is an

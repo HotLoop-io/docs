@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Added in 4.12.0. `internal/backup` takes logical, table-data-only snapshots
@@ -73,7 +73,7 @@ never in a backup.
 
 - **With `HOTLOOP_SECRET_KEY_FILE` set** (the chart sets it, with a key it
   generates on install and keeps across upgrades and uninstalls), every keyed
-  credential (the `password` of OPC UA, MQTT, HTTP, MTConnect and UniFi devices,
+  credential (the `password` of OPC UA, CODESYS, MQTT, HTTP, MTConnect and UniFi devices,
   the `community` and passphrases of SNMP devices,
   HTTP and MTConnect header values such as API keys, the password of each
   other MQTT broker discovery listens to, and the password of each historian

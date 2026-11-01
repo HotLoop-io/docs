@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 This document says exactly what the gateway speaks, exactly how far each driver
@@ -34,6 +34,7 @@ detail.
 | EtherNet/IP | yes | address, batching and type-mapping tests | **NOT verified against hardware** |
 | UniFi Network | yes | a real UniFi Network Application (10.6) with emulated switches and a gateway adopted over the real inform protocol, logged in as a View Only account; a real UniFi OS Server (5.1, Network 10.6) for the UniFi OS login ; read-only against the house Cloud Gateway Ultra and Express 7 (Network 10.6.106) with real USW-Lite-8-PoE switches and a U5G Backup | **verified live, read-only, on real consoles and switches, WAN and failover included. PoE draw above zero not seen yet**, see [UNIFI.md](/iot/unifi/#on-real-gear-2026-09-28) |
 | SNMP | yes | net-snmp's `snmpd` 5.9.4 (Debian's 5.9.4+dfsg-2 package) in a container, read over v1, v2c and v3 at every security level, over UDP and TCP; the driver is gosnmp, a different implementation | **verified live against a software agent, read-only. NOT verified against a switch, a UPS or a PDU** |
+| CODESYS | yes | a real CODESYS Control for Linux SL 4.22.0.0 runtime in a container, running two real PLC programs: HotLoop's own lab program, built from source with the CODESYS ScriptEngine (`test/services/codesys`), and a second, much larger program at its full size (over 100,000 variables, read in 2.4 seconds) | **verified live against a runtime in a container, reads and writes. NOT verified on a physical controller, on a runtime that has user management on or a certificate-secured endpoint, or on a download made from the IDE while the runtime stays up** |
 | BACnet/IP | yes | bacpypes3 0.0.110, an independent BACnet stack in Python, serving every object type HotLoop reads; and frames recorded off it. The client is written for HotLoop and shares no code with it | **verified live against a software device, read-only. NOT verified against a vendor's controller, a BBMD or a routed network** |
 | OPC UA PubSub (UADP) | yes | open62541 1.5.10, an independent OPC UA stack, in both directions over multicast: its publisher read by HotLoop in Variant and DataValue encodings, key and delta frames, and in RawData for the one message its RawData publisher sends before it stops; HotLoop's publisher read by its subscriber in Variant and DataValue | **verified live against open62541, both ways. NOT verified against a CODESYS, Siemens or Beckhoff publisher, with message security (unsupported), or over a router** |
 | Kafka API (output) | yes | Apache Kafka 4.4.0 and Redpanda 26.2.6, each with TLS and a SASL login (SCRAM-SHA-256, SCRAM-SHA-512, and PLAIN where the broker has it), read back with a consumer | **verified live against two brokers. NOT verified against Confluent Cloud, Amazon MSK or Azure Event Hubs, or with Kerberos, OAuth or client certificates, which are not supported** |
@@ -650,6 +651,114 @@ alive messages ("Only keyframes are supported") though a keep alive is a valid
 DataSetMessage, and its RawData publisher sends one message and then stops with
 `BadInternalError`. HotLoop's publisher is read correctly by its subscriber all
 the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go receiver written elsewhere were read for interoperability and share no code with this.
+### CODESYS
+
+A PLC that runs a CODESYS Control runtime (Linux SL, ARM64, Raspberry Pi, Windows,
+the virtual PLC), read and written by the names its programmer gave the
+variables: `Application.GVL_Line.rTemp`, not a node id. It is the OPC UA driver
+with the things a CODESYS PLC needs on top, so everything under
+[OPC UA: security and credentials](#opc-ua-security-and-credentials) holds for it
+and its options are those options.
+
+**Why the OPC UA server, and what that means for the PLC.** CODESYS documents one
+way for a third party to read a controller's variables, and it is the runtime's
+own OPC UA server: the application's Symbol Configuration (or, from CODESYS 3.5
+SP18, an IEC Symbol Set under the Communication Manager) says which variables are
+published and with what access, and the server serves them. The CODESYS Gateway's
+channel protocol is not documented for third parties and this driver does not
+speak it. So the PLC has to publish what you want to see:
+
+1. In the IDE add a **Symbol Configuration** to the application, with *Support OPC
+   UA features* on, and tick the variables, or mark them in the declaration with
+   `{attribute 'symbol' := 'readwrite'}` (`'read'` for read only).
+2. Download. A PLC with no Symbol Configuration answers the setup with a message
+   that says to add one.
+3. A variable is writable from HotLoop only when its symbol is `readwrite` and the
+   user it connects as is allowed to write it (the device's *Symbol Rights*).
+   HotLoop reads the access level and says which of the two refused a write.
+
+Sources: [CODESYS help, Symbol Configuration](https://content.helpme-codesys.com/en/CODESYS%20Communication/_cds_symbolconfiguration.html)
+and [IEC Symbol Set](https://content.helpme-codesys.com/en/CODESYS%20Communication/_comm_symbol_configuration.html)
+(the symbol name is `<application>.<POU>.<variable>`, access is read, write or
+execute per symbol, the groups' rights are on the device's Symbol Rights tab, and
+OPC UA needs a certificate on the controller); the
+[PLCopen OPC UA information model for IEC 61131-3](https://plcopen.org/system/files/downloads/plcopen_opc_ua_information_model_for_iec61131-3_version1.02.pdf)
+(release 1.02, the layout below); OPC UA Part 5 (OperationLimits). The node ids are
+what a 4.22.0.0 runtime answered, which this driver was written against; the
+exact `|var|` spelling is the runtime's, not a published contract, which is why a
+tag is addressed by symbol and the driver builds the node id.
+
+**Layout.** The runtime publishes, in the OPC UA Device Integration `DeviceSet`,
+one device for the PLC, `Resources` under it, and the application under that,
+with `GlobalVars` (the variable lists) and `Programs` beneath. A variable's node
+is `ns=<n>;s=|var|<device>.<application>.<list or program>.<variable>` in the
+namespace `CODESYSSPV3/3S/IecVarAccess`. The driver finds the device and
+application by browsing, so a tag survives the project being renamed.
+
+**Addresses.** An IEC symbol, with or without the application:
+
+```
+Application.GVL_Line.rTemp        a variable of a variable list
+GVL_Line.rTemp                    the same; the application is assumed
+Application.PLC_PRG.nCount        a program's variable
+GVL.motors[2].speed               a field of an element of an array of structures
+nsu=CODESYSSPV3/3S/IecVarAccess;s=|var|CODESYS Control for Linux SL.Application.GVL.x
+                                  a node id, if you have one
+```
+
+**Discover tags** lists what the application exports, as the types it has: a
+STRING is `string`, a BYTE `uint16`, a TIME `int64` (milliseconds), an
+enumeration `int32`, the integer widths keep theirs, REAL and LREAL are `float`.
+The runtime says a STRING, BYTE or TIME is a type of the PLCopen model (for
+example `ns=3;i=3013`); the driver follows its `HasSubtype` references to the
+standard type it is a kind of, which is also how a write to a BYTE is sent as a
+Byte. Each variable carries the access its symbol was given. A structure and an
+array are walked into: one point per field and per element. It leaves out the
+runtime's own properties (`|vprop|`), the task list and the Server object.
+
+An array lists its first 32 elements (`arrayElements`), because a buffer of a
+thousand elements is not a thousand things for a dashboard, and a tag can address
+any element by its symbol regardless. The list stops at `browseMaxNodes` and
+says so; `browseRoot` set to a symbol (`Application.GVL_Demo`) lists one part of
+the application. Browsing is breadth first, so the variables of a list come
+before the elements of its arrays, and the replies are kept to a size the
+runtime accepts (it closes the connection on a reply of a hundred arrays of a
+thousand elements).
+
+Configuration: the OPC UA options, and `device` (the PLC's name, only if the
+runtime lists more than one), `application` (only if none is called Application),
+`arrayElements`. A misspelled option is an error that lists the valid ones. The
+password is a secret, stored and redacted like every device secret.
+
+**What the runtime asks of a client.** It publishes `OperationLimits` of 100 for
+reads, browses and monitored items per request, and refuses a bigger one with
+`BadTooManyOperations`. The driver reads those limits at connect and cuts every
+request to them, for every OPC UA device (a CODESYS runtime was the first that
+mattered: before this the driver reported every discovered tag as a float and
+read none of the tags of a device with more than 100). Sampling defaults to one
+second and the queue to one item, because a PLC has a scan to keep and an
+Ignition gateway already reading it should not have it taken away; set
+`samplingIntervalMs` to ask for more.
+
+**Downloads, restarts and a lost link.** A runtime restart, or a new program
+loaded, drops the session. The device goes disconnected, every tag reads bad
+with the reason "the PLC's runtime is not answering", and HotLoop reconnects by
+itself with backoff and reads the symbols as they now are. A symbol that was
+reading and is refused as gone twice in a row is taken for a download in which
+the runtime kept the session, and the session is given up for the same
+reconnect. A tag for a variable the program does not have reads bad with the
+server's reason and does not cause a reconnect.
+
+**Writes.** A tag is read-only until someone marks it writable, as for every
+device, and nothing a setup creates is. Then the write gate is as for OPC UA, with
+the PLC's half in front of it: a write to a symbol exported read-only, or one the user may not write, is
+refused in the PLC's words and never sent.
+
+**Set up from the integrations flow** (`codesys`): the runtime's address, the
+OPC UA security questions, and optionally a first dashboard of the points kept
+(the screen WebVisu would have been; see
+[INTEGRATIONS.md](/iot/integrations/#codesys)). Verified against a 4.22.0.0 runtime
+in a container; see the status table for what that is not.
 
 ### Modbus TCP/RTU
 
@@ -1046,6 +1155,7 @@ string replaces it. The rules, and what does not go through the API, are in
 | MTConnect | `password` (with `username`); every value in `headers`, with the same exceptions | `http://user:pass@host` and query values |
 | UniFi Network | `password` (with `username`). Only ever stored encrypted: without a key (below) the device can't be saved | none: the address is the console's `https://` URL |
 | BACnet/IP | none | none: the address is `host` or `host:port` |
+| CODESYS | `password` (with `username`), as for OPC UA | none: user information in the address is hidden, and the driver ignores it |
 | SNMP | `community` (v1, v2c); `authPassword` and `privPassword` (v3), with `username` | none: the address is `host` or `host:port` |
 | Modbus, S7comm, EtherNet/IP | none | none: user information in the address is hidden, and the driver ignores it |
 
@@ -1073,7 +1183,7 @@ list of options known not to be. See
 
 1. **Devices → Add device.** Pick the protocol, give it an address.
 2. **Discover tags** where the protocol supports it: OPC UA, EtherNet/IP,
-   MTConnect, MQTT (after a Sparkplug birth), HTTP, SNMP, BACnet/IP. Modbus and S7comm cannot
+   MTConnect, MQTT (after a Sparkplug birth), HTTP, SNMP, BACnet/IP, CODESYS. Modbus and S7comm cannot
    enumerate their own points, so declare those from the device documentation.
 3. Imported tags are created **read-only**. A point the device happens to expose
    is not a point somebody has decided may be commanded. Mark tags writable one

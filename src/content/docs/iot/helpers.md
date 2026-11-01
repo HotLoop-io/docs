@@ -5,6 +5,10 @@ description: "The values a plant's people own, like a batch target or which shif
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A helper is a value the plant's people own rather than a PLC. "Line 2 is in
 changeover." "Today's batch target is 1,250 kg." "B shift is on." "Twelve
 parts scrapped since the last reset." "The purge has nine minutes left." None of
@@ -86,8 +90,8 @@ other command.
 
 From MCP there is no new tool: `list_entities` finds helpers, `get_states`
 reads them, `call_service` sets them. An agent changes a helper only on a
-deployment with `HOTLOOP_ALLOW_WRITES` and `HOTLOOP_ALLOW_MCP_WRITES` both on,
-the same switches a write to a tag needs. A helper moves no equipment, but it
+deployment with `HOTLOOP_ALLOW_WRITES` on, the same switch a write to a tag
+needs. A helper moves no equipment, but it
 is what rules act on, and an agent flipping the changeover switch is an agent
 starting whatever the changeover rule does.
 

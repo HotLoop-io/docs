@@ -5,6 +5,10 @@ description: "Switches, ports, PoE, WAN failover and clients read from a UniFi c
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A plant's network is equipment. When a PLC goes quiet, the first question is
 "is it the PLC, or the switch port it's plugged into", and until now the answer
 lived in the UniFi app on somebody's phone. So HotLoop reads the UniFi console
@@ -288,9 +292,9 @@ stays where they put it.
   front panel, one row for a small switch, two for 24 and 48 ports with the odd
   ones above the even. Green for a link, gray for none, **red for a port that
   was up and went down** (HotLoop remembers it was up since it started
-  watching), dashed for a disabled one, the PoE bolt and watts, an arrow on the
-  uplink. Click a port for who is on it, what is plugged into it, PoE mode and
-  traffic, with a trace of what it has been receiving and sending. A device the console has lost shows no numbers and no port links,
+  watching), dashed for a disabled one, a PoE bolt (the watts are in the port's tooltip and
+  detail), an arrow on the uplink. Click a port for who is on it, what is
+  plugged into it, PoE mode and watts and traffic, with a trace of what it has been receiving and sending. A device the console has lost shows no numbers and no port links,
   because what it said last isn't current.
 - **Clients.** Searchable by name, MAC or IP, with where it is, when the console
   last saw it, known or unknown on an OT network, and the HotLoop device linked

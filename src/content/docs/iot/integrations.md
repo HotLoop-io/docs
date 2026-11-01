@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 An integration is how you point HotLoop at a kind of device you know the
@@ -36,6 +36,7 @@ the tag editor, the same as a tag from any other source.
 | OPC UA server (`opcua`) | [OPC UA](/iot/protocols/#opc-ua) | Microsoft's opc-plc 2.12.48 |
 | SNMP device (`snmp`) | [SNMP](/iot/protocols/#snmp) | net-snmp's `snmpd` 5.9.4, v1, v2c and v3 |
 | BACnet/IP device (`bacnet`) | [BACnet/IP](/iot/protocols/#bacnetip) | bacpypes3 0.0.110, an independent BACnet stack |
+| CODESYS PLC (`codesys`) | [CODESYS](/iot/protocols/#codesys) | CODESYS Control for Linux SL 4.22.0.0, running HotLoop's lab program and a second, much larger program |
 
 More are added on this framework as they can be proven against a real server.
 
@@ -95,6 +96,30 @@ BACnet is read-only here, always. HotLoop does not write a property, and does
 not reach a device behind a BACnet router: see
 [the BACnet/IP driver](/iot/protocols/#bacnetip) for what is and isn't covered.
 
+## CODESYS
+
+For a PLC that runs a CODESYS Control runtime. The questions are the OPC UA
+ones (address, security, a user name and password if the PLC's user management
+is on) and, only if you need them, the part of the application to list, the PLC
+and application names, and how many elements of an array to list.
+
+The probe connects to the runtime's OPC UA server, finds the PLC and its
+application, and lists the variables the application exports (its Symbol
+Configuration) by the names the programmer wrote, with their types and whether
+each can be written. It suggests the application's own variables, not the
+elements of its buffers, and says in its notes how many arrays it listed in
+part. A PLC with nothing exported is told how to export something.
+
+Set up with `"dashboard": true` in the request and the points you keep also get
+a dashboard named for the device: a heading, a trend of the numbers that move,
+the device's alarms, and a value card for each point under a heading for its
+variable list. It is a first screen made from the program as it is, and it is
+edited like any dashboard. Nothing on it commands anything, and every tag is
+still read-only until armed.
+
+A PLC with a restarting runtime or a new program downloaded is picked up again
+by itself: see [the CODESYS driver](/iot/protocols/#codesys).
+
 ## The flow
 
 Three calls, in order, and the first two save nothing.
@@ -113,7 +138,9 @@ Three calls, in order, and the first two save nothing.
 3. **Keep.** `POST /api/integrations/{id}/setup` takes the same answers and the
    names of the points to keep (none named keeps the ones marked
    `suggested`), creates the device and its tags and reloads the runtime. The
-   device is enabled and polling.
+   device is enabled and polling. An integration that can lay out a first
+   dashboard (CODESYS) does when the request has `"dashboard": true`, and
+   answers with the dashboard's id.
 
 Setup looks at the device again instead of trusting the probe. A client's idea
 of what it found a minute ago is a claim, and the points are checked against the

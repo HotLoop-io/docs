@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 8742d79, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
@@ -208,6 +208,7 @@ This is where "better and cooler" has to be obvious from across the room.
       until a deployment gives it both. Tested against real avahi, MiniDLNA
       and udhcpc; not yet against real devices on the bench. See
       [NETWORK-DISCOVERY.md](/iot/network-discovery/)
+- [x] CODESYS, the PLC's variables by the names the programmer gave them, through the runtime's own OPC UA server: discovery of what the application exports, reads and writes, a first dashboard from the setup, and a reconnect with no hands after a restart or a download. Proven against a 4.22.0.0 runtime in a container running HotLoop's lab program and a second, much larger program; not on a physical controller. See [CODESYS](/iot/protocols/#codesys)
 - [ ] BACnet, SNMP, ONVIF cameras, Shelly native
 - [ ] **Firmata**, for Arduinos on USB. Verified on real boards only: Arduinos
       and a few other Firmata devices are on the way to the bench, and a
@@ -369,8 +370,8 @@ on the bench, not before.
       alarm notifications. A HotLoop alarm can fire a Protect alarm trigger so
       the cameras record. Live video comes with the Phase 3 camera card
 - [ ] **Access.** Door position, door events into the logbook, and unlock as a
-      write through the gate. Unlock from MCP is allowed behind the MCP write
-      switch like any other write, and audited like any other write
+      write through the gate. Unlock from MCP is allowed through the write gate
+      like any other write, and audited like any other write
 - [ ] **SmartPower PDU.** Outlet power, on, off and cycle as tags, feeding the
       Phase 5 energy work
 
@@ -670,6 +671,38 @@ Found in code review and in the PRs so far. Each one is real, checked against
       not a socket. Proving them the way Modbus was proven needs an in-process S7
       server (COTP and the S7 read) and a CIP server (RegisterSession, forward
       open and the multi-service read) that go quiet on command
+- [x] **A Pin from a page opened onto Tags saved a board of one tag over the real
+      board.** The page only read the board when the Board screen opened, so a
+      reload at `#tags` held an empty list and the first Pin replaced the plant's
+      board with that one tag. The page reads the board when it starts, Pin and
+      Unpin refuse until it has, and a save carries the board's `rev`: the server
+      refuses a save over a board that has changed since it was read (a `409`), so
+      a stale tab can't do it either. Fixed, see [API.md](/iot/api/#get-apiboard)
+- [x] **MCP shipped with writes off.** The server was on, but `allowMcpWrites`
+      defaulted to false in the code and in all three charts, so an agent could
+      read the plant and nothing more, and turning it on also meant setting a
+      second switch the master one already covers. MCP reads and writes in every
+      HotLoop product now: core and Flow ship it on with writes, and Cascade's will
+      the same when it is built. `allowMcpWrites` defaults to true and follows
+      `allowWrites`, which stays the master switch for the UI, the API and agents
+      alike (off by default); a user's permissions, a tag's writable mark and its
+      range apply to an agent as they do to the screen. The docs no longer tell
+      anybody to run a read-only agent. Fixed, see [MCP.md](/iot/mcp/#writing)
+- [x] The MCP endpoint was open to anybody who could reach the port when no
+      `HOTLOOP_MCP_TOKEN` was set (every chart sets one; a bare binary or a
+      Quadlet unit didn't), and the process only said so in its log. It makes a
+      token at its first start and keeps it in its database, `hotloop mcp-token`
+      prints it, and a call without it is a `401`. Proved against the built
+      binary: no token 401, a wrong one 401, the right one 200, the same one
+      after a restart. Fixed, see [MCP.md](/iot/mcp/)
+- [x] **An 8 port switch's faceplate widened the whole page by about 115px on a
+      phone.** Each column asked for 54px, so the eight were wider than the
+      screen and the top bar and every card slid sideways with them. A port is a
+      tight 34px tile now, the PoE watts moved from the tile to the port's detail
+      and its tooltip (the bolt marks PoE on the tile), and if a faceplate ever
+      does outgrow its card it scrolls inside it. A browser test hands the page's
+      own faceplate code eight ports at 390px: 113px wider before, the page
+      exactly the window after. Fixed
 
 ## Not verified yet
 
@@ -752,4 +785,22 @@ delayed for it.
       working and keeps being driven, and the API doesn't change for the UI's
       sake. A rewrite that loses a screen somebody uses on the floor isn't done
 
-Nothing here has been started.
+### Where it stands
+
+Started, and in the image. The new UI is built from `web/` (Astro, Svelte islands,
+static files embedded in the one binary, no Node on the box) and is served beside
+the old one at `/next/` on every install. The old UI is still what `/` serves, and
+nothing a person reaches today changed. Set `HOTLOOP_UI=new` and `/` serves the new
+UI instead, which is how it is lived with, and tested, at the address it will have
+once it is the default.
+
+- [x] The design pass: canonical HotLoop tokens, the official mark, four groups of
+      screens (Operate, Plant, Build, System) with a rail on a desk and a five-tab
+      bar on a phone
+- [x] The phone app in the new UI: installable, keeps the page and the last
+      answers, opens offline marked as old, refuses to send anything, and a first
+      visit with no connection says so on the sign-in screen
+- [ ] Every screen at parity, proved in a browser against the old one. Each lands
+      when it has been driven in a real browser, and the release notes say which
+- [ ] The 31 browser test files passing against the new UI unchanged, then the new
+      UI becomes the default and `assets/` goes

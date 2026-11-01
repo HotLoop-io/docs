@@ -5,10 +5,6 @@ description: "Cascade is released: what is in it, what is not in it yet, and whe
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at c6febb4, and it differs from the copy in HotLoop Cascade 0.1.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 0.1.2 is the release out today. It was the first one that isn't a candidate: there
 was a 0.1.0 tag that never published anything, because its chart test failed on a
 hosted runner and I cancelled the run, so nothing reached the registry.
