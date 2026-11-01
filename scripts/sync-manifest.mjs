@@ -42,6 +42,14 @@ export const GLOBAL_RULES = [
     '3.x was a different product. There is no migration path for its data, because it shares no data model with a tag historian.'],
   // EmberNet's own name for the ERP, never the upstream one. Sources still say ERPNext (a tagged release note cannot be edited), so the rule is here.
   [/\bERPNext\b/g, 'EmberOps'],
+  // No customer is named on a public page, and a product that has not shipped is not on the roadmap. These are
+  // global rules, so they do nothing once the source repo has fixed the sentence itself, and scripts/forbidden.mjs
+  // fails the sync and the build if anything of the kind survives.
+  [ws("The prior art in the UT3 project (a CODESYS ST publisher and a Go receiver) was read for interoperability and shares no code with this."),
+    'A CODESYS ST publisher and a Go receiver written elsewhere were read for interoperability and share no code with this.'],
+  [/a customer's production program/g, 'a second, much larger program'],
+  [ws("- [ ] A CODESYS publisher against it: HotLoop Transmitter, the CODESYS UADP publisher library, is TX's, and waits on this subscriber"),
+    '- [ ] Against a CODESYS publisher'],
   [/\bEmberOPS\b/g, 'EmberOps'],
 ];
 

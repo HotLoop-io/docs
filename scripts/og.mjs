@@ -26,7 +26,7 @@ const T = {
 };
 
 const load = (w) =>
-  opentype.parse(readFileSync(resolve(root, `node_modules/@fontsource/inter/files/inter-latin-${w}-normal.woff`)).buffer);
+  opentype.parse((() => { const b = readFileSync(resolve(root, `node_modules/@fontsource/inter/files/inter-latin-${w}-normal.woff`)); return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength); })());
 const bold = load(800);
 const regular = load(500);
 

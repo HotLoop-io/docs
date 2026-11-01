@@ -428,8 +428,7 @@ back up and patch, and they are not adopting ours to get a trend.
 - [x] Publish tags as UADP, in Edge and Gateway, beside the OPC UA server
 - [x] Proven both ways against open62541 1.5.10, an independent OPC UA stack, in
       the lab (the test image builds it)
-- [ ] A CODESYS publisher against it: HotLoop Transmitter, the CODESYS UADP
-      publisher library, is TX's, and waits on this subscriber
+- [ ] Against a CODESYS publisher
 - [ ] Message security (signed and encrypted NetworkMessages)
 - [ ] Delta frames from the publisher; DataSetMetaData and discovery messages
       so a subscriber can name the fields; array and structure fields; events

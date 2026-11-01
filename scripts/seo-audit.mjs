@@ -39,6 +39,28 @@ const warnings = [];
 const err = (route, msg) => errors.push(`${route}  ${msg}`);
 const warn = (route, msg) => warnings.push(`${route}  ${msg}`);
 
+// No customer name and no unreleased product, anywhere a reader or a search engine can get at it:
+// every text file in dist, the search index (Pagefind's fragments are gzip), and the sources the
+// social cards are drawn from, because the card text is outlined into the PNG and can't be grepped.
+{
+  const { scan } = await import('./forbidden.mjs');
+  const { gunzipSync } = await import('node:zlib');
+  const TEXT = /\.(html|xml|txt|json|css|js|mjs|svg|webmanifest|yaml|yml|md)$/i;
+  for (const f of files) {
+    const rel = '/' + relative(dist, f).split(sep).join('/');
+    let buf;
+    if (TEXT.test(f)) buf = readFileSync(f);
+    else if (/\/pagefind\//.test(rel)) {
+      const raw = readFileSync(f);
+      const at = raw.indexOf(Buffer.from([0x1f, 0x8b]));
+      try { buf = at >= 0 ? gunzipSync(raw.subarray(at)) : raw; } catch { buf = raw; }
+    } else continue;
+    for (const h of scan(rel, buf.toString('utf8'))) err('forbidden', h);
+  }
+  const root = join(dist, '..');
+  for (const f of [join(root, 'scripts', 'og.mjs')]) if (existsSync(f)) for (const h of scan('scripts/og.mjs', readFileSync(f, 'utf8'))) err('forbidden', h);
+}
+
 const titles = new Map();
 const descs = new Map();
 const idsByRoute = new Map();
