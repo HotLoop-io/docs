@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
+      "ref": "4d5da2f216e276bba9587f9aa5e3343bad13258f",
       "sha": "4d5da2f216e276bba9587f9aa5e3343bad13258f",
       "release": {
         "tag": "v4.18.11",
@@ -14,7 +14,7 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "origin/main",
+      "ref": "b1d8cc56826e6466c465d6b2473482b00d804f8e",
       "sha": "b1d8cc56826e6466c465d6b2473482b00d804f8e",
       "release": {
         "tag": "v2.7.0",
@@ -27,13 +27,13 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "0b6fbd5c0b593ccaf325667c2e0a0c1cb0869dac",
+      "sha": "dd8af77a63260c4ead704ef801b59865f288a7c6",
       "release": {
-        "tag": "v1.0.0",
-        "version": "1.0.0",
+        "tag": "v1.0.1",
+        "version": "1.0.1",
         "prerelease": false,
-        "publishedAt": "2026-11-01T19:16:03Z",
-        "sha": "6a3bdbe1d68e3ed92a594a0a66ee481d4dbc5fe8"
+        "publishedAt": "2026-11-01T20:06:03Z",
+        "sha": "0b6fbd5c0b593ccaf325667c2e0a0c1cb0869dac"
       }
     }
   },
@@ -775,7 +775,7 @@
       "group": "Start here",
       "title": "Where Cascade stands",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -797,7 +797,7 @@
       "group": "Use it",
       "title": "Running Cascade",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -833,6 +833,28 @@
       "status": "released",
       "repo": "cascade",
       "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/identity",
+      "product": "cascade",
+      "group": "Identity",
+      "title": "Identity and access",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/IDENTITY.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/governance",
+      "product": "cascade",
+      "group": "Governance",
+      "title": "Governing a Cascade instance",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/GOVERNANCE.md",
       "release": false
     },
     {
@@ -1039,7 +1061,7 @@
       "group": "HotLoop Cascade",
       "title": "HotLoop Cascade 1.0.1 release notes",
       "label": "1.0.1",
-      "status": "next",
+      "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/1.0.1.md",
       "release": true
