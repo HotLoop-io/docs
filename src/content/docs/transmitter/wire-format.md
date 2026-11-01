@@ -87,9 +87,7 @@ fields are "handled like a Structure DataType", so each value is encoded as a St
   because the field cannot grow. A receiver's field metadata must carry the same MaxStringLength and an
   ArrayDimensions entry for each array.
 
-The array count is the one place where receivers have disagreed in practice: open62541 1.4.9 reads it, and the
-decoder in UT3-Code at commit 79157e7a does not (see `docs/PROOF.md`). The reading above is the one the two quoted
-sentences support.
+This is the reading of the OPC Foundation's own reference stack. In UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` lines 389 to 403 say a string is "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", and that for an array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` at lines 593 to 648 implements it, and `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` asserts it. `docs/PROOF.md` has the rest.
 
 ## Size
 

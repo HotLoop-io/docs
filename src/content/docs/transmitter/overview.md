@@ -67,6 +67,6 @@ sections of the spec that define each byte.
 * It does not fragment. A message is at most 1472 bytes. A field list that does not fit puts the block in
   `ConfigError` and sends nothing.
 
-The wire format is in [What goes on the wire](/transmitter/wire-format/), every input and method is in the [API](/transmitter/api/), and what was run is in [What was run](/transmitter/proof/).
+The wire format is in [What goes on the wire](/tx2/wire-format/), every input and method is in the [API](/transmitter/api/), and what was run is in [What was run](/transmitter/proof/).
 
 HotLoop Transmitter is under the HotLoop Business Source License 1.1, like every HotLoop product.
