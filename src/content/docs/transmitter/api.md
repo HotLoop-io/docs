@@ -40,6 +40,7 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | bytes in the last message |
 | `diLastSocketResult` | UDINT | the last runtime error code from a socket call, 0 is fine |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microseconds spent in the last call of the block, and the longest since enable or `Clear()` |
+| `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | the longest time spent building one message, and in the send call itself, since enable or `Clear()` |
 
 ## Methods
 

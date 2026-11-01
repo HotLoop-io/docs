@@ -16,7 +16,7 @@ Everything below ran on 2026-11-01 on The Beast, from `test/run.sh`. The raw out
 
 ## The runtime
 
-`ghcr.io/embernet-ai/codesys-control-sl:4.22.0.0`, started by `test/lab/start_runtime.sh`, loads the application as a boot project and reports `Application started`, `CODESYS Control ready`. Demo mode, because there is no runtime license. The longest single run was about an hour; what happens at the end of the two hour demo window was not tried.
+`ghcr.io/embernet-ai/codesys-control-sl:4.22.0.0`, started by `test/lab/start_runtime.sh`, loads the application as a boot project and reports `Application started`, `CODESYS Control ready`. Demo mode, because there is no runtime license. The longest single run was under an hour; what happens at the end of the two hour demo window was not tried.
 
 ## What went over the wire, and who read it
 
