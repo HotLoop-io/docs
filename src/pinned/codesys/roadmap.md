@@ -21,7 +21,6 @@ This is the list of what is done and what is left, in the order it gets done. It
 
 - [ ] HotLoop {{codesysNeeds}} released.
 - [ ] The chart published at `{{codesysChartRepo}}`.
-- [ ] The provisioner image public, so it pulls with no login.
 - [ ] Release notes for the first version.
 
 ## To prove

@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::caution[Not released yet]
-HotLoop for CODESYS is built and has run against a real CODESYS runtime in the lab, and it is not out. It needs HotLoop 4.19.0, and the chart and the provisioner image are not published, so you can't install it yet. [Where it stands](/codesys/where-it-stands/) has the list.
+HotLoop for CODESYS is built and has run against a real CODESYS runtime in the lab, and it is not out. It needs HotLoop 4.19.0, and the chart is not published, so you can't install it yet. [Where it stands](/codesys/where-it-stands/) has the list.
 :::
 
 ## What this is

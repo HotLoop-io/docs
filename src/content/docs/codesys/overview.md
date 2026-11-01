@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::caution[Not released yet]
-HotLoop for CODESYS is built and has run against a real CODESYS runtime in the lab, and it is not out. It needs HotLoop 4.19.0, and the chart and the provisioner image are not published, so you can't install it yet. [Where it stands](/codesys/where-it-stands/) has the list.
+HotLoop for CODESYS is built and has run against a real CODESYS runtime in the lab, and it is not out. It needs HotLoop 4.19.0, and the chart is not published, so you can't install it yet. [Where it stands](/codesys/where-it-stands/) has the list.
 :::
 
 HotLoop for CODESYS is HotLoop running on the same node as a CODESYS runtime. It reads the PLC's variables through the runtime's own OPC UA server, puts them on screens that work on a panel PC, a phone, or a wall, raises alarms on them, and keeps the history. Nothing is installed in CODESYS and nothing writes to the PLC. What that buys you: the operators get a screen without a download to the PLC, and the PLC gets a second set of eyes that doesn't depend on anything else on the node.
