@@ -14,7 +14,7 @@ it.
 To pull a version by hand:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.0.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.0.2
 ```
 
 The units follow `:stable` and Podman's auto-update timer moves them.
@@ -22,7 +22,7 @@ The units follow `:stable` and Podman's auto-update timer moves them.
 On k3s, `charts/hotloop-cascade` is the Helm chart:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.0.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.0.2
 ```
 
 The chart carries the labels the EmberNet dashboard reads, on the Service and on

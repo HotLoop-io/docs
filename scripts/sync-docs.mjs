@@ -374,7 +374,7 @@ function transform(page) {
     re.lastIndex = 0;
     if (!re.test(body) && [...(e.rules || []), ...(SLUG_RULES[e.slug] || [])].some(([r]) => r === re)) fail(`${e.slug}: a page rule no longer matches its source: ${re}`);
     re.lastIndex = 0;
-    body = body.replace(re, typeof to === 'function' ? to : to.replace('{{LICENSE_URL}}', licenseUrl()));
+    body = body.replace(re, typeof to === 'function' ? to : to.replace('{{LICENSE_URL}}', licenseUrl()).replace(/\{\{(hotloop|flow|cascade)\}\}/g, (_, r) => releases[r].version));
   }
   // A table with an empty header cell leaves every cell under it unlabeled for a screen reader.
   {
