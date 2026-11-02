@@ -2,15 +2,12 @@
 // own, so no customer is named, not even by a project code, and a product that has not shipped
 // is not on the page. The build and the sync both fail on a match, in the generated pages, the
 // built HTML, the search index, and the strings the social cards are drawn from.
-//
-// When HotLoop Transmitter ships, take it off this list in the same change that adds it to the site.
 export const FORBIDDEN = [
   [/\bUT3\b/i, 'UT3, a customer project code'],
   [/\bTrane\b/i, 'Trane, a customer'],
   [/tranetech/i, 'tranetech, a customer tenant'],
   [/expert[ -]?lift/i, 'Expert Lift, a customer'],
   [/a customer'?s? production (program|plc)/i, 'a customer program, described by whose it is'],
-  [/HotLoop Transmitter/, 'HotLoop Transmitter, which is not on the public lineup until it ships'],
 ];
 
 // Returns one line per match, with a little of the text around it.
