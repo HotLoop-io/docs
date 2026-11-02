@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "4d5da2f216e276bba9587f9aa5e3343bad13258f",
+      "ref": "origin/main",
       "sha": "4d5da2f216e276bba9587f9aa5e3343bad13258f",
       "release": {
         "tag": "v4.18.11",
@@ -14,26 +14,26 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "b1d8cc56826e6466c465d6b2473482b00d804f8e",
-      "sha": "b1d8cc56826e6466c465d6b2473482b00d804f8e",
+      "ref": "origin/main",
+      "sha": "37f730bded1a7e2c0d4aba2bb79b3d59c9835a32",
       "release": {
-        "tag": "v2.7.0",
-        "version": "2.7.0",
+        "tag": "v2.8.0",
+        "version": "2.8.0",
         "prerelease": false,
-        "publishedAt": "2026-11-01T18:52:15Z",
-        "sha": "b1d8cc56826e6466c465d6b2473482b00d804f8e"
+        "publishedAt": "2026-11-02T04:38:59Z",
+        "sha": "37f730bded1a7e2c0d4aba2bb79b3d59c9835a32"
       }
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "dd8af77a63260c4ead704ef801b59865f288a7c6",
+      "sha": "437c21c21c4d9f1efa97cce5a38e17385009333f",
       "release": {
-        "tag": "v1.0.1",
-        "version": "1.0.1",
+        "tag": "v1.0.2",
+        "version": "1.0.2",
         "prerelease": false,
-        "publishedAt": "2026-11-01T20:06:03Z",
-        "sha": "0b6fbd5c0b593ccaf325667c2e0a0c1cb0869dac"
+        "publishedAt": "2026-11-02T01:09:18Z",
+        "sha": "437c21c21c4d9f1efa97cce5a38e17385009333f"
       }
     }
   },
@@ -775,7 +775,7 @@
       "group": "Start here",
       "title": "Where Cascade stands",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -797,7 +797,7 @@
       "group": "Use it",
       "title": "Running Cascade",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -1023,6 +1023,28 @@
       "release": true
     },
     {
+      "slug": "releases/flow-2-7-1",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.7.1 release notes",
+      "label": "2.7.1",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.7.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-8-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.8.0 release notes",
+      "label": "2.8.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.8.0.md",
+      "release": true
+    },
+    {
       "slug": "releases/cascade-0-1-1",
       "product": "releases",
       "group": "HotLoop Cascade",
@@ -1064,6 +1086,17 @@
       "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/1.0.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-1-0-2",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 1.0.2 release notes",
+      "label": "1.0.2",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/1.0.2.md",
       "release": true
     }
   ],

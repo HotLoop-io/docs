@@ -5,7 +5,7 @@ description: "Every node type Flow ships, labeled full, partial, divergent or Fl
 editUrl: false
 ---
 
-**79 node types for messages, and 21 more for FlowLab diagrams.**
+**79 node types for messages, and 28 more for FlowLab diagrams.**
 
 | Category | Nodes |
 |---|---|
@@ -17,7 +17,7 @@ editUrl: false
 | Storage | file, file in, watch, influxdb out, postgres |
 | Discover | scan, netinfo, for inventorying an OT segment |
 | Config | mqtt-broker, websocket-listener, websocket-client, influxdb, postgres, modbus, s7, ethernetip, opcua, sparkplug, hotloop, mcp-server |
-| FlowLab | constant, math, compare, logic, wait, bundle, field, build array, while loop, for loop, body in, body out, serial port, serial read, serial write, parse reading, stable value, log to text file, control, indicator, chart |
+| FlowLab | constant, math, compare, logic, wait, bundle, field, build array, while loop, for loop, body in, body out, serial port, serial read, serial write, parse reading, stable value, log to text file, log to TDMS file, statistics, integral, derivative, filter, read DAQ task, mqtt out, control, indicator, chart |
 
 The FlowLab row is a different kind of node. It runs on a tab that is a diagram, where
 a node runs once when every input has a value, and never takes a message. What
