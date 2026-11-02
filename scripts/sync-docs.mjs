@@ -472,7 +472,7 @@ for (const [slug, p] of mainPages) {
     .sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))
     .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (on main, next release)' : ''}`)
     .join('\n');
-  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, HotLoop Flow, HotLoop Cascade and HotLoop for CODESYS release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
+  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade, CODESYS and Transmitter release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
   out.set('releases/index.md', `${fm}
 Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}. ${CODESYS.released ? `The latest HotLoop for CODESYS release is ${CODESYS.version}.` : 'HotLoop for CODESYS has not been released yet.'}
 
@@ -493,6 +493,10 @@ ${rows('cascade')}
 ## HotLoop for CODESYS
 
 - [HotLoop for CODESYS ${CODESYS.version} release notes](/releases/codesys-${CODESYS.version.replace(/\./g, '-')}/)${CODESYS.released ? '' : ' (not released yet)'}
+
+## HotLoop Transmitter
+
+- [HotLoop Transmitter 1.0.0 release notes](/releases/transmitter-1-0-0/) (draft, not released yet)
 `);
 }
 

@@ -16,7 +16,7 @@ export const REPOS = {
   cascade: { slug: 'HotLoop-io/hotloop-cascade', private: true, releaseName: 'HotLoop Cascade' },
 };
 
-// The seven sections of the site, in the order the product picker shows them.
+// The eight sections of the site, in the order the product picker shows them.
 export const PRODUCTS = [
   { id: 'iot', name: 'HotLoop IoT', repo: 'hotloop', tagline: 'The automation base, built in Go for OT.' },
   { id: 'edge', name: 'HotLoop Edge', repo: 'hotloop', tagline: 'IoT plus the machine layer.' },
@@ -26,6 +26,8 @@ export const PRODUCTS = [
   { id: 'cascade', name: 'HotLoop Cascade', repo: 'cascade', tagline: 'The plant talking to everything else.' },
   // No repo here: HotLoop for CODESYS has no release to compare pages against, so its pages are all hand-written (src/pinned/codesys).
   { id: 'codesys', name: 'HotLoop for CODESYS', repo: null, tagline: 'Screens and alarms for a CODESYS PLC, beside the runtime.' },
+  // Hand-written like CODESYS: the library has no release yet, and its pages are plain files in src/content/docs/transmitter.
+  { id: 'transmitter', name: 'HotLoop Transmitter', repo: null, tagline: 'OPC UA PubSub from inside the PLC.' },
 ];
 
 // HotLoop for CODESYS, the seventh product and its own release line (HotLoop-io/hotloop-codesys).
@@ -114,7 +116,7 @@ export const PAGES = [
   { product: 'shared', group: 'Install', slug: 'install/helm', repo: 'hotloop', file: 'docs/DEPLOYMENT.md', title: 'k3s and Helm', description: 'Deploy any HotLoop chart on k3s or any Kubernetes: the values worth setting, the database choice, upgrades, rollbacks and what a good install looks like.' },
   { product: 'shared', group: 'Install', slug: 'install/quadlet', repo: 'hotloop', file: 'deploy/quadlet/README.md', stopAt: 'Updates', title: 'Podman Quadlet', description: 'Run HotLoop as real systemd services on a Pi or small industrial PC with Podman Quadlet, with no Docker, no Compose and no cluster.' },
   { product: 'shared', group: 'Install', slug: 'install/auto-update', repo: 'hotloop', file: 'deploy/quadlet/README.md', sections: ['Updates'], title: 'The :stable auto-update', description: 'Every box follows the stable tag and Podman moves it. What an update does, what a rollback cannot undo, and how to hold updates until you say.' },
-  { product: 'shared', group: 'Lineup', slug: 'products', repo: 'hotloop', file: 'docs/PRODUCTS.md', title: 'HotLoop products: seven on four release lines', description: 'Seven products on four release lines, what each of the four core products has, which database each runs, and how to move a site up a product.' },
+  { product: 'shared', group: 'Lineup', slug: 'products', repo: 'hotloop', file: 'docs/PRODUCTS.md', title: 'HotLoop products: eight on five release lines', description: 'Eight products on five release lines, what each of the four core products has, which database each runs, and how to move a site up a product.' },
   { product: 'shared', group: 'Lineup', slug: 'roadmap', repo: 'hotloop', file: 'docs/ROADMAP.md', title: 'HotLoop roadmap', description: "What HotLoop is, what is left to build and what is broken, in the order it gets done, for HotLoop core. Flow and Cascade link their own." },
 
   // ---- HotLoop Flow ----
@@ -217,13 +219,13 @@ Object.assign(SLUG_RULES, {
   roadmap: [
     // The roadmap is the core's. Say so, and say where the other two lines keep theirs. Links are HTML because the link pass runs after the rules and would drop a site path.
     [ws('HotLoop core ships as four products out of one codebase. See [Products](#products).'),
-      'HotLoop is seven products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, and HotLoop for CODESYS for the PLC\'s own screen. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow, Cascade, and HotLoop for CODESYS keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a>, <a href="/cascade/roadmap/">the Cascade roadmap</a>, and <a href="/codesys/roadmap/">the HotLoop for CODESYS roadmap</a>.'],
+      'HotLoop is eight products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, HotLoop for CODESYS for the PLC\'s own screens, and Transmitter for putting its values on the wire. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow, Cascade, HotLoop for CODESYS, and Transmitter keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a>, <a href="/cascade/roadmap/">the Cascade roadmap</a>, <a href="/codesys/roadmap/">the HotLoop for CODESYS roadmap</a>, and <a href="/transmitter/roadmap/">the Transmitter roadmap</a>.'],
   ],
   'products': [
     [ws('HotLoop core is four products, one codebase, one tag. Every core release ships all four in lockstep,'),
-      'HotLoop is seven products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, and HotLoop for CODESYS for the PLC\'s own screen.\n\nThey ship on four release lines. **HotLoop core** is IoT, Edge, Gateway, and Edge Relay: four products, one codebase, one tag. Every core release ships all four in lockstep,'],
+      'HotLoop is eight products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, HotLoop for CODESYS for the PLC\'s own screens, and Transmitter for putting its values on the wire.\n\nThey ship on five release lines. **HotLoop core** is IoT, Edge, Gateway, and Edge Relay: four products, one codebase, one tag. Every core release ships all four in lockstep,'],
     [ws("PLC on your bench. Features split them. Protocols don't."),
-      "PLC on your bench. Features split them. Protocols don't.\n\n**Flow**, **Cascade**, and **HotLoop for CODESYS** are their own lines with their own versions, so a Flow release never moves the core, and the other way around. Everything below the table is about the core. Here is where each of the seven starts:\n\n"
+      "PLC on your bench. Features split them. Protocols don't.\n\n**Flow**, **Cascade**, **HotLoop for CODESYS**, and **Transmitter** are their own lines with their own versions, so a Flow release never moves the core, and the other way around. Everything below the table is about the core. Here is where each of the eight starts:\n\n"
       + '| Product | Release line | Docs | Install | Release notes | Roadmap |\n|---|---|---|---|---|---|\n'
       + [['IoT', 'HotLoop core', 'iot/overview', 'iot/install', 'releases/#hotloop-core', 'roadmap'],
          ['Edge', 'HotLoop core', 'edge/overview', 'edge/install', 'releases/#hotloop-core', 'roadmap'],
@@ -231,7 +233,8 @@ Object.assign(SLUG_RULES, {
          ['Edge Relay', 'HotLoop core', 'edge-relay/overview', 'edge-relay/install', 'releases/#hotloop-core', 'roadmap'],
          ['Flow', 'Flow', 'flow/overview', 'flow/install', 'releases/#hotloop-flow', 'flow/roadmap'],
          ['Cascade', 'Cascade', 'cascade/overview', 'cascade/running', 'releases/#hotloop-cascade', 'cascade/roadmap'],
-         ['for CODESYS', 'HotLoop for CODESYS', 'codesys/overview', 'codesys/install', 'releases/#hotloop-for-codesys', 'codesys/roadmap']]
+         ['for CODESYS', 'HotLoop for CODESYS', 'codesys/overview', 'codesys/install', 'releases/#hotloop-for-codesys', 'codesys/roadmap'],
+         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-0-0', 'transmitter/roadmap']]
         .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
       + '\n\nThe table that follows compares the four core products.'],
   ],

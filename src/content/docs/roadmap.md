@@ -25,7 +25,7 @@ Every line of it is ours. Nothing is embedded, bridged or forked, so when
 something breaks at 3 AM there's one codebase to read and nobody else's bug to
 wait on.
 
-HotLoop is seven products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, and HotLoop for CODESYS for the PLC's own screen. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow, Cascade, and HotLoop for CODESYS keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a>, <a href="/cascade/roadmap/">the Cascade roadmap</a>, and <a href="/codesys/roadmap/">the HotLoop for CODESYS roadmap</a>.
+HotLoop is eight products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, HotLoop for CODESYS for the PLC's own screens, and Transmitter for putting its values on the wire. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow, Cascade, HotLoop for CODESYS, and Transmitter keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a>, <a href="/cascade/roadmap/">the Cascade roadmap</a>, <a href="/codesys/roadmap/">the HotLoop for CODESYS roadmap</a>, and <a href="/transmitter/roadmap/">the Transmitter roadmap</a>.
 
 ## Products
 

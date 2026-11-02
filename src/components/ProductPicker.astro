@@ -1,5 +1,5 @@
 ---
-// The family map: seven products on four release lines, each with the same five things
+// The family map: eight products on five release lines, each with the same five things
 // (docs, install, release notes, roadmap, and its version). Versions and release state
 // come from src/data/sync.json, which the sync writes, so this can't disagree with the pages.
 import sync from '../data/sync.json';
@@ -8,6 +8,8 @@ const hot = sync.repos.hotloop.release;
 const flow = sync.repos.flow.release;
 const cascade = sync.repos.cascade.release;
 const codesys = sync.codesys;
+// Transmitter has no release yet. When one ships, set this to true and give it the version.
+const transmitter = { released: false, version: '1.0.0' };
 
 const latest = (prefix: string) =>
   sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
@@ -17,8 +19,9 @@ const lines = [
   { id: 'flow', label: 'Flow', version: flow.version, note: 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/flow-')}/`, roadmap: '/flow/roadmap/', ids: ['flow'] },
   { id: 'cascade', label: 'Cascade', version: cascade.version, note: cascade.prerelease ? 'Pre-release. Its own release line, running next to HotLoop.' : 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/cascade-')}/`, roadmap: '/cascade/roadmap/', ids: ['cascade'] },
   { id: 'codesys', label: 'HotLoop for CODESYS', version: codesys.version, note: codesys.released ? 'Its own release line, running next to HotLoop.' : `Not released yet. It needs HotLoop ${codesys.needsCore}, and nothing of it is published.`, notes: `/releases/codesys-${codesys.version.replace(/\./g, '-')}/`, roadmap: '/codesys/roadmap/', ids: ['codesys'], unreleased: !codesys.released },
+  { id: 'transmitter', label: 'Transmitter', version: transmitter.version, note: transmitter.released ? 'Its own release line, running next to HotLoop.' : 'Not released yet. The library builds and has run against a CODESYS runtime in a container, and there is no download.', notes: `/releases/transmitter-${transmitter.version.replace(/\./g, '-')}/`, roadmap: '/transmitter/roadmap/', ids: ['transmitter'], unreleased: !transmitter.released },
 ];
-const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/', codesys: '/codesys/install/' };
+const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/', codesys: '/codesys/install/', transmitter: '/transmitter/install/' };
 ---
 
 <div class="map">

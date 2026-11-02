@@ -79,6 +79,12 @@
       "name": "HotLoop for CODESYS",
       "repo": null,
       "tagline": "Screens and alarms for a CODESYS PLC, beside the runtime."
+    },
+    {
+      "id": "transmitter",
+      "name": "HotLoop Transmitter",
+      "repo": null,
+      "tagline": "OPC UA PubSub from inside the PLC."
     }
   ],
   "codesys": {
@@ -433,7 +439,7 @@
       "slug": "products",
       "product": "shared",
       "group": "Lineup",
-      "title": "HotLoop products: seven on four release lines",
+      "title": "HotLoop products: eight on five release lines",
       "label": null,
       "status": "changed",
       "repo": "hotloop",
