@@ -15,13 +15,13 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "37f730bded1a7e2c0d4aba2bb79b3d59c9835a32",
+      "sha": "dd6a815f9dffd31420f6fd954808011e37b23d09",
       "release": {
-        "tag": "v2.8.0",
-        "version": "2.8.0",
+        "tag": "v2.8.1",
+        "version": "2.8.1",
         "prerelease": false,
-        "publishedAt": "2026-11-02T04:38:59Z",
-        "sha": "37f730bded1a7e2c0d4aba2bb79b3d59c9835a32"
+        "publishedAt": "2026-11-02T12:19:34Z",
+        "sha": "dd6a815f9dffd31420f6fd954808011e37b23d09"
       }
     },
     "cascade": {
@@ -1042,6 +1042,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.8.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-8-1",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.8.1 release notes",
+      "label": "2.8.1",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.8.1.md",
       "release": true
     },
     {
