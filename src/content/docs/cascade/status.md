@@ -5,10 +5,6 @@ description: "Cascade is released: what is in it, what is not in it yet, and whe
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at dd8af77, and it differs from the copy in HotLoop Cascade 1.0.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 1.0.1 is the release out today, and 1.0.0 is the one before it. 1.0.0 is the first
 with the identity and governance work, each piece tried against the real server it
 talks to: SAML (against Keycloak), LDAP and Active Directory (OpenLDAP and a Samba
