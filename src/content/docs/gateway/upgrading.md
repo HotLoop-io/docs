@@ -15,7 +15,7 @@ The chart repository's index lists only the latest chart, 4.18.11, so `hotloop/h
 
 ## Upgrading from 4.18.10
 
-Why bother: the database is PostgreSQL 17 now, and the box moves itself. You also get [integrations](/iot/integrations/) with SNMP and BACnet/IP, kiosk sign-in, alarm escalation, and a UI that installs on a phone. [The Gateway overview](/gateway/overview/#new-in-41811) has the list. What follows is the part that bites.
+Why bother: the database is PostgreSQL 17 now, and the box moves itself. You also get [integrations](/iot/integrations/) with SNMP and BACnet/IP, kiosk sign-in, alarm escalation, and a UI that installs on a phone. [The 4.18.11 release notes](/releases/hotloop-4-18-11/) have the list. What follows is the part that bites.
 
 PostgreSQL will not open another major version's data directory, so a bare image change would have left every existing box with a database that can't start. HotLoop doesn't ask you to dump and reload. The first start after the upgrade runs a script before the database, and the script does the move.
 
@@ -59,7 +59,7 @@ Copy the new `hotloop-db.container`, `hotloop-db-upgrade.container`, and `hotloo
 
 ## Upgrading from 4.17.0
 
-Why bother: the Gateway stops being the only image. IoT and Edge are new, the database is a setting, devices that announce themselves over MQTT show up on their own, history can be written out to the plant's own database, and a box that follows `:stable` rolls a bad update back by itself. That last one only works because migrations only add. [The Gateway overview](/gateway/overview/#new-in-41810) has the list.
+Why bother: the Gateway stops being the only image. IoT and Edge are new, the database is a setting, devices that announce themselves over MQTT show up on their own, history can be written out to the plant's own database, and a box that follows `:stable` rolls a bad update back by itself. That last one only works because migrations only add. [The 4.18.10 release notes](/releases/hotloop-4-18-10/) have the list.
 
 It's a plain `helm upgrade`. I rendered the 4.17.0 and 4.18.11 Gateway charts side by side with the same values: the same eight objects, the same selectors, the same volume claims.
 
