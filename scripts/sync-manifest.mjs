@@ -238,18 +238,6 @@ Object.assign(SLUG_RULES, {
         .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
       + '\n\nThe table that follows compares the four core products.'],
   ],
-  // Cascade's README on main still says 1.0.1 is the release out today. 1.0.2 is the release, so
-  // the install lines name the latest release, and the status page says what 1.0.2 is. Each rule
-  // fails the sync the moment the README is fixed at the source, and then it comes out of here.
-  'cascade/running': [
-    [/(?<v>hotloop-cascade:)\d+\.\d+\.\d+/g, "$<v>{{cascade}}"],
-    [/(?<v>hotloop-cascade --version )\d+\.\d+\.\d+/g, "$<v>{{cascade}}"],
-  ],
-  'cascade/status': [
-    [ws('1.0.1 is the release out today, and 1.0.0 is the one before it.'),
-      '1.0.2 is the release out today, and 1.0.1 and 1.0.0 are the two before it. 1.0.2 lets a workflow sign and verify with an HMAC key kept as a credential, and lets a public form on another website call a webhook from the browser. Nothing else changed from 1.0.1.'],
-    [ws('with tags `1.0.1`,'), 'with tags `{{cascade}}`,'],
-  ],
   'cascade/overview': [
     [ws("scoped API keys and HA workers ship to everyone. There is no license check anywhere in the code, so there's nothing to rug-pull later."), 'scoped API keys and HA workers are all in the one binary. There is no license check anywhere in the code.'],
   ],

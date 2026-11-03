@@ -305,6 +305,7 @@ HotLoop for CODESYS is built and has run against a real CODESYS runtime in the l
 :::
 
 `;
+const codesysHelmNote = () => `Not released yet, so these commands will not work today. The chart repository at ${CODESYS.chartRepo} answers and lists no chart, so \`helm repo add\` succeeds and \`helm install\` finds nothing to install. They are the commands the chart will take.`;
 const licenseUrl = () => (legalOut.has('license.md') || (!argv.includes('--legal') && existsSync(join(CONTENT, 'license.md'))) ? '/license/' : 'https://hotloop.io/license/');
 
 function slugHref(slug, anchor) { return `/${slug}/${anchor ? '#' + anchor : ''}`; }
@@ -518,6 +519,7 @@ if (existsSync(PINNED)) {
     // HotLoop for CODESYS has no release to read, so its tokens come from the manifest. The notice is the one
     // place a page says it is not out, so the day it is, one switch in the manifest takes it off every page.
     t = t.replace(/\{\{codesysNotice\}\}\n*/g, CODESYS.released ? '' : codesysNotice())
+      .replace(/\{\{codesysHelmNote\}\}\n*/g, CODESYS.released ? '' : codesysHelmNote() + '\n\n')
       .replace(/\{\{codesysNeeds\}\}/g, CODESYS.needsCore).replace(/\{\{codesysChartRepo\}\}/g, CODESYS.chartRepo).replace(/\{\{codesys\}\}/g, CODESYS.version);
     // A Go template like `{{.Digest}}` in a unit file is content. An unfilled token is {{word}}.
     if (/\{\{\s*[A-Za-z_]\w*\s*\}\}/.test(t)) fail(`${rel}: an unfilled {{token}}`);

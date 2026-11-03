@@ -26,6 +26,8 @@ The chart is marked for staff, so the Store lists it for EmberNet staff, and the
 
 ## With Helm
 
+Not released yet, so these commands will not work today. The chart repository at https://hotloop.io/hotloop-codesys/ answers and lists no chart, so `helm repo add` succeeds and `helm install` finds nothing to install. They are the commands the chart will take.
+
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/

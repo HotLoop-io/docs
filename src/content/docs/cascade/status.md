@@ -5,7 +5,11 @@ description: "Cascade is released: what is in it, what is not in it yet, and whe
 editUrl: false
 ---
 
-1.0.2 is the release out today, and 1.0.1 and 1.0.0 are the two before it. 1.0.2 lets a workflow sign and verify with an HMAC key kept as a credential, and lets a public form on another website call a webhook from the browser. Nothing else changed from 1.0.1. 1.0.0 is the first
+:::note[Written against main]
+This page follows `main` at 1f8ad0c, and it differs from the copy in HotLoop Cascade 1.0.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+1.0.2 is the release out today, and 1.0.1 and 1.0.0 are the two before it. 1.0.0 is the first
 with the identity and governance work, each piece tried against the real server it
 talks to: SAML (against Keycloak), LDAP and Active Directory (OpenLDAP and a Samba
 domain controller), SCIM (against scim2-tester), custom roles, external secrets
@@ -15,7 +19,9 @@ Azurite). It also has a new editor, so every one of those has a screen. 1.0.1 fi
 one mistake in sign-in: when the database could not be read, Cascade answered "not
 signed in" and cleared the cookie, so a short outage signed everyone out and could
 turn a good second factor into a wrong code. Now it says to try again and keeps the
-session. Nothing migrates between the two.
+session. 1.0.2 lets a workflow sign and verify with an HMAC key kept as a credential,
+and lets a public form on another website call a webhook from the browser. Nothing
+migrates between 1.0.0 and 1.0.2.
 
 What isn't here yet (Git source control and environments, more connectors, AI steps
 and an MCP server) is in `docs/ROADMAP.md`.

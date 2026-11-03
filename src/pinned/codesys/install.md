@@ -22,6 +22,8 @@ The chart is marked for staff, so the Store lists it for EmberNet staff, and the
 
 ## With Helm
 
+{{codesysHelmNote}}
+
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys {{codesysChartRepo}}
