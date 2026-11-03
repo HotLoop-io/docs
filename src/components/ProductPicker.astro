@@ -1,5 +1,5 @@
 ---
-// The family map: eight products on five release lines, each with the same five things
+// The family map: six products on three release lines, each with the same five things
 // (docs, install, release notes, roadmap, and its version). Versions and release state
 // come from src/data/sync.json, which the sync writes, so this can't disagree with the pages.
 import sync from '../data/sync.json';
@@ -7,9 +7,6 @@ import sync from '../data/sync.json';
 const hot = sync.repos.hotloop.release;
 const flow = sync.repos.flow.release;
 const cascade = sync.repos.cascade.release;
-const codesys = sync.codesys;
-// Transmitter has no release yet. When one ships, set this to true and give it the version.
-const transmitter = { released: false, version: '1.0.0' };
 
 const latest = (prefix: string) =>
   sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
@@ -18,10 +15,8 @@ const lines = [
   { id: 'core', label: 'HotLoop core', version: hot.version, note: 'One codebase, one version. IoT to Edge to Gateway is the path a site grows along, and Edge Relay is the headless forwarder beside them.', notes: `/${latest('releases/hotloop-')}/`, roadmap: '/roadmap/', ids: ['iot', 'edge', 'gateway', 'edge-relay'] },
   { id: 'flow', label: 'Flow', version: flow.version, note: 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/flow-')}/`, roadmap: '/flow/roadmap/', ids: ['flow'] },
   { id: 'cascade', label: 'Cascade', version: cascade.version, note: cascade.prerelease ? 'Pre-release. Its own release line, running next to HotLoop.' : 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/cascade-')}/`, roadmap: '/cascade/roadmap/', ids: ['cascade'] },
-  { id: 'codesys', label: 'HotLoop for CODESYS', version: codesys.version, note: codesys.released ? 'Its own release line, running next to HotLoop.' : `Not released yet. It needs HotLoop ${codesys.needsCore}, and nothing of it is published.`, notes: `/releases/codesys-${codesys.version.replace(/\./g, '-')}/`, roadmap: '/codesys/roadmap/', ids: ['codesys'], unreleased: !codesys.released },
-  { id: 'transmitter', label: 'Transmitter', version: transmitter.version, note: transmitter.released ? 'Its own release line, running next to HotLoop.' : 'Not released yet. The library builds and has run against a CODESYS runtime in a container, and there is no download.', notes: `/releases/transmitter-${transmitter.version.replace(/\./g, '-')}/`, roadmap: '/transmitter/roadmap/', ids: ['transmitter'], unreleased: !transmitter.released },
 ];
-const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/', codesys: '/codesys/install/', transmitter: '/transmitter/install/' };
+const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/' };
 ---
 
 <div class="map">
@@ -29,7 +24,7 @@ const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/ins
     <section class="line" aria-labelledby={`line-${l.id}`}>
       <header>
         <h3 id={`line-${l.id}`}>{l.label} line</h3>
-        {l.unreleased ? <span class="chip warn">Not released yet</span> : <span class="chip ok">{l.id === 'cascade' && cascade.prerelease ? 'Pre-release ' : 'Version '}{l.version}</span>}
+        <span class="chip ok">{l.id === 'cascade' && cascade.prerelease ? 'Pre-release ' : 'Version '}{l.version}</span>
         <p>{l.note}</p>
       </header>
       <div class="picker">
@@ -75,6 +70,5 @@ const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/ins
     font-size: var(--hl-fs-2xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--hl-ink-soft);
   }
   .chip::before { content: ''; width: 0.5em; height: 0.5em; border-radius: 50%; background: currentColor; }
-  .chip.warn { color: var(--hl-warn-text); background: var(--hl-warn-tint); border-color: color-mix(in srgb, var(--hl-warn) 35%, transparent); }
   .chip.ok { color: var(--hl-ok-text); background: var(--hl-ok-tint); border-color: color-mix(in srgb, var(--hl-ok) 35%, transparent); }
 </style>

@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at 3e371c8, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 This document says exactly what the gateway speaks, exactly how far each driver
@@ -650,9 +650,7 @@ things about open62541 itself, found doing it: its subscriber discards keep
 alive messages ("Only keyframes are supported") though a keep alive is a valid
 DataSetMessage, and its RawData publisher sends one message and then stops with
 `BadInternalError`. HotLoop's publisher is read correctly by its subscriber all
-the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go
-receiver written elsewhere were read for interoperability and share no code
-with this.
+the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go receiver written elsewhere were read for interoperability and share no code with this.
 ### CODESYS
 
 A PLC that runs a CODESYS Control runtime (Linux SL, ARM64, Raspberry Pi, Windows,
