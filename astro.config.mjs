@@ -162,6 +162,20 @@ export default defineConfig({
           items: grouped('cascade'),
         },
         {
+          label: 'HotLoop Transmitter',
+          collapsed: true,
+          items: [
+            { slug: 'transmitter/overview', label: 'Overview' },
+            { slug: 'transmitter/install', label: 'Install' },
+            { slug: 'transmitter/api', label: 'API' },
+            { slug: 'transmitter/wire-format', label: 'What goes on the wire' },
+            { slug: 'transmitter/timing', label: 'What it adds to the task' },
+            { slug: 'transmitter/proof', label: 'What was run' },
+            { slug: 'transmitter/roadmap', label: 'Roadmap' },
+            { slug: 'releases/transmitter-1-0-0', label: 'Release notes' },
+          ],
+        },
+        {
           label: 'Release notes',
           collapsed: true,
           items: [
