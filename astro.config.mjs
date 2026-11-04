@@ -162,6 +162,31 @@ export default defineConfig({
           items: grouped('cascade'),
         },
         {
+          label: 'HotLoop for CODESYS',
+          collapsed: true,
+          items: [
+            { slug: 'codesys/overview', label: 'Overview' },
+            { slug: 'codesys/install', label: 'Install' },
+            { slug: 'codesys/profile', label: 'The profile' },
+            { slug: 'codesys/where-it-stands', label: 'Where it stands' },
+            { slug: 'codesys/roadmap', label: 'Roadmap' },
+          ],
+        },
+        {
+          label: 'HotLoop Transmitter (not released)',
+          collapsed: true,
+          items: [
+            { slug: 'transmitter/overview', label: 'Overview' },
+            { slug: 'transmitter/install', label: 'Install' },
+            { slug: 'transmitter/api', label: 'API' },
+            { slug: 'transmitter/wire-format', label: 'What goes on the wire' },
+            { slug: 'transmitter/timing', label: 'What it adds to the task' },
+            { slug: 'transmitter/proof', label: 'What was run' },
+            { slug: 'transmitter/roadmap', label: 'Roadmap' },
+            { slug: 'releases/transmitter-1-0-0', label: 'Release notes (draft)' },
+          ],
+        },
+        {
           label: 'Release notes',
           collapsed: true,
           items: [
@@ -169,6 +194,7 @@ export default defineConfig({
             { label: 'HotLoop core', collapsed: true, items: hlRelease.sort(relSort).map(page) },
             { label: 'HotLoop Flow', collapsed: true, items: flowRelease.sort(relSort).map(page) },
             { label: 'HotLoop Cascade', collapsed: true, items: cascadeRelease.sort(relSort).map(page) },
+            { label: 'HotLoop for CODESYS', collapsed: true, items: [{ slug: `releases/codesys-${sync.codesys.version.replace(/\./g, '-')}`, label: sync.codesys.version, ...(sync.codesys.released ? {} : { badge: { text: 'Not released', variant: 'caution' } }) }] },
           ],
         },
         { slug: 'roadmap', label: 'HotLoop roadmap' },

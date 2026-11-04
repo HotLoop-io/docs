@@ -37,7 +37,7 @@ import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
 import { oxfordHeadings } from './oxford.mjs';
 import { scan } from './forbidden.mjs';
-import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS } from './sync-manifest.mjs';
+import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS, CODESYS } from './sync-manifest.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT = join(ROOT, 'src/content/docs');
@@ -300,6 +300,12 @@ for (const [repo, files] of Object.entries(SKIPPED_SECTIONS)) {
   }
 }
 
+const codesysNotice = () => `:::caution[Not released yet]
+HotLoop for CODESYS is built and has run against a real CODESYS runtime in the lab, and it is not out. It needs HotLoop ${CODESYS.needsCore}, and the chart is not published, so you can't install it yet. [Where it stands](/codesys/where-it-stands/) has the list.
+:::
+
+`;
+const codesysHelmNote = () => `Not released yet, so these commands will not work today. The chart repository at ${CODESYS.chartRepo} answers and lists no chart, so \`helm repo add\` succeeds and \`helm install\` finds nothing to install. They are the commands the chart will take.`;
 const licenseUrl = () => (legalOut.has('license.md') || (!argv.includes('--legal') && existsSync(join(CONTENT, 'license.md'))) ? '/license/' : 'https://hotloop.io/license/');
 
 function slugHref(slug, anchor) { return `/${slug}/${anchor ? '#' + anchor : ''}`; }
@@ -374,7 +380,7 @@ function transform(page) {
     re.lastIndex = 0;
     if (!re.test(body) && [...(e.rules || []), ...(SLUG_RULES[e.slug] || [])].some(([r]) => r === re)) fail(`${e.slug}: a page rule no longer matches its source: ${re}`);
     re.lastIndex = 0;
-    body = body.replace(re, typeof to === 'function' ? to : to.replace('{{LICENSE_URL}}', licenseUrl()));
+    body = body.replace(re, typeof to === 'function' ? to : to.replace('{{LICENSE_URL}}', licenseUrl()).replace(/\{\{(hotloop|flow|cascade)\}\}/g, (_, r) => releases[r].version));
   }
   // A table with an empty header cell leaves every cell under it unlabeled for a screen reader.
   {
@@ -467,9 +473,9 @@ for (const [slug, p] of mainPages) {
     .sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))
     .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (on main, next release)' : ''}`)
     .join('\n');
-  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, HotLoop Flow and HotLoop Cascade release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
+  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade, CODESYS and Transmitter release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
   out.set('releases/index.md', `${fm}
-Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
+Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}. ${CODESYS.released ? `The latest HotLoop for CODESYS release is ${CODESYS.version}.` : 'HotLoop for CODESYS has not been released yet.'}
 
 ## HotLoop core
 
@@ -484,6 +490,14 @@ ${rows('flow')}
 ## HotLoop Cascade
 
 ${rows('cascade')}
+
+## HotLoop for CODESYS
+
+- [HotLoop for CODESYS ${CODESYS.version} release notes](/releases/codesys-${CODESYS.version.replace(/\./g, '-')}/)${CODESYS.released ? '' : ' (not released yet)'}
+
+## HotLoop Transmitter
+
+- [HotLoop Transmitter 1.0.0 release notes](/releases/transmitter-1-0-0/) (draft, not released yet)
 `);
 }
 
@@ -502,6 +516,11 @@ if (existsSync(PINNED)) {
       t = t.replace(rv[0], '');
     }
     t = t.replace(/\{\{(hotloop|flow|cascade)\}\}/g, (_, r) => releases[r].version).replace(/\{\{LICENSE_URL\}\}/g, licenseUrl());
+    // HotLoop for CODESYS has no release to read, so its tokens come from the manifest. The notice is the one
+    // place a page says it is not out, so the day it is, one switch in the manifest takes it off every page.
+    t = t.replace(/\{\{codesysNotice\}\}\n*/g, CODESYS.released ? '' : codesysNotice())
+      .replace(/\{\{codesysHelmNote\}\}\n*/g, CODESYS.released ? '' : codesysHelmNote() + '\n\n')
+      .replace(/\{\{codesysNeeds\}\}/g, CODESYS.needsCore).replace(/\{\{codesysChartRepo\}\}/g, CODESYS.chartRepo).replace(/\{\{codesys\}\}/g, CODESYS.version);
     // A Go template like `{{.Digest}}` in a unit file is content. An unfilled token is {{word}}.
     if (/\{\{\s*[A-Za-z_]\w*\s*\}\}/.test(t)) fail(`${rel}: an unfilled {{token}}`);
     t = t.replace(/^---\n/, `---\n${MARK}\n`).replace(/^(---\n[^]*?\n)(---\n)/, (m, a, b) => (/editUrl:/.test(a) ? m : a + 'editUrl: false\n' + b));
@@ -514,6 +533,7 @@ if (existsSync(PINNED)) {
 const sync = {
   repos: Object.fromEntries(Object.keys(REPOS).map((r) => [r, { slug: REPOS[r].slug, ref: refs[r], sha: shas[r], release: releases[r] }])),
   products: PRODUCTS,
+  codesys: CODESYS,
   pages: meta,
   pinned,
 };

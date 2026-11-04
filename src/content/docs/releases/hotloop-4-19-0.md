@@ -11,35 +11,49 @@ sidebar:
 ---
 
 :::caution[On main, next release]
-This page was written from `main` at 4d5da2f. These notes are for a release that is not out. HotLoop core 4.18.11 is the latest one you can install.
+This page was written from `main` at 3e371c8. These notes are for a release that is not out. HotLoop core 4.18.11 is the latest one you can install.
 :::
 
-A value you write to a scaled tag now goes to the device the way you meant it. That is the one thing in 4.19.0 you need to read before you touch a running plant,
-because it changes what lands in a register, and a plant that worked around the old behavior has to stop. A Kafka event stream and OPC UA PubSub over UADP come with it, both new, neither changing anything that runs today.
+Two things in 4.19.0 change what an existing plant does, so read these before you touch a running one. Agents over MCP can write now, and the MCP endpoint always has a token. And a value you write to a scaled tag finally lands in the register the way you meant it, which means anyone who worked around the old behavior has to stop. Everything after those two is new, or a fix.
 
-## MCP ships on, with writes
+The full notes are in the README:
+What changed in 4.19.0.
 
-- **Agents can write now, where an operator could.** MCP is on in every HotLoop product and reads and writes. `allowMcpWrites` defaults to true in the code and in all three charts. A deployment that has `allowWrites` on and never set `allowMcpWrites` gets agent writes after this upgrade, through the same gate as the screen: the user's permissions, the tag's writable mark and its range all still apply.
-- **`allowWrites` did not change.** It stays off by default and still decides whether anything can write, the UI and agents alike.
-- **A deployment that saved `allowMcpWrites: false` stays off**, including one installed from the App Store, which stores every answer. Change it if you want agents to write.
-- **The MCP endpoint is never open.** A HotLoop started with no `HOTLOOP_MCP_TOKEN` (a Quadlet unit, a bare binary) makes a token at its first start and keeps it in its database. A call without it is a `401`. `hotloop mcp-token` prints it. The charts already set one.
+## MCP is on, it writes, and it always has a token
+
+- **Agents can write now, where an operator could.** MCP is on in every HotLoop product and it reads and writes. `allowMcpWrites` defaults to true in the code and in all three charts. A deployment that has `allowWrites` on and never set `allowMcpWrites` gets agent writes after this upgrade, through the same gate as the screen: the user's permissions, the tag's writable mark and its range all still apply.
+- **`allowWrites` did not change.** It stays off by default and it still decides whether anything can write, the UI and agents alike. If it is off, nothing writes, MCP included.
+- **A deployment that saved `allowMcpWrites: false` stays off.** That includes one installed from the App Store, which stores every answer. Flip it if you want agents to write.
+- **The endpoint is never open.** The charts always set an MCP token. A HotLoop started without `HOTLOOP_MCP_TOKEN` (a Quadlet unit, a bare binary) used to serve `/mcp` to anybody who could reach the port and only logged a warning. It now makes a 24 byte token at its first start and keeps it in its database, so every replica and every restore carries the same one. A call without the token is a `401`. A token you configured is never replaced.
+- **To get the token on a bare or Quadlet install:** `hotloop mcp-token` prints it. If you have an agent pointed at `/mcp` on one of those installs with no token, it stops working at this upgrade until you give it that token. That is on purpose.
+- **Who made the call.** A static token says which client called, never which person. With the OIDC settings on, a Vord login or a Fireball Hub assertion on `/mcp` makes the audit name the person (`mcp:pat@example.com`), and an optional write role narrows writes per caller on top of the switches above. It is off unless you set it, and the token keeps working beside it. docs/MCP.md has the setup.
 
 ### Writes to a scaled tag
 
 - **What was wrong.** A tag with a scale, say 0.1 on a temperature register that holds tenths of a degree, shows you the engineering value: the register says 555 and the screen says 55.5. Writing went the other way without the same care. Type 55.5 for the setpoint and HotLoop put 55 in the register, which then read back as 5.5. It was the same on every screen, through the API, from an automation, a script, a recipe, a loop and over MCP, because they all go through the same write gate. The audit row said 55.5 the whole time, so nothing looked wrong in the log.
 - **What changes.** The number you write is in the tag's own units, the same as the number you read. HotLoop takes the scale and the offset back off before it sends: 55.5 on a tag scaled by 0.1 puts 555 in the register, and it reads back as 55.5. A tag with no scale and no offset is not touched at all. Bits, coils, strings and Sparkplug and MQTT writes of a flag are not scaled either.
 - **If you worked around it, stop.** If anyone has been typing raw counts into a scaled tag to get the right number, typing 555 to get 55.5, that now sends 5550 and reads back as 555. Type the engineering value. Look at your scaled tags before you upgrade: any tag with a scale other than 1, or an offset, that somebody writes to by hand, from an automation or from a recipe is worth a look. Recipes and automations that wrote counts need their numbers changed to engineering values in the same step as the upgrade.
-- **A value the register cannot hold is refused.** After the scale is taken off, a count that does not fit the register, 7000 on a `uint16` scaled by 0.1, is refused with a plain message that names the count and the register, and nothing is sent. It used to wrap quietly: 70000 on a 16-bit register went out as 4464. That goes for Modbus, S7, EtherNet/IP and OPC UA integer types.
-- **A recipe with a value that does not fit is refused whole.** Before its first write, every target is checked, so a recipe never half-applies and then refuses. For Modbus, S7 and EtherNet/IP the check knows each tag's register type from its address. For OPC UA, which is the path to a CODESYS runtime, it uses the type the tag's last reading arrived as. A tag that has never been read since HotLoop started has no type to check against yet, so a recipe that targets it is refused at that tag's own write, after the targets before it were written, and the application records which. Reading it once, which the poll does within a second of connecting, closes that.
-- **A fraction of a count is cut off.** A register holds whole counts, so 12.34 on a tenth-scaled register holds 12.3, as it always did.
+- **A value the register cannot hold is refused.** After the scale is taken off, a count that does not fit the register, 7000 on a `uint16` scaled by 0.1, is refused with a plain message that names the count and the register, and nothing is sent. It used to wrap quietly: 70000 on a 16 bit register went out as 4464. That goes for Modbus, S7, EtherNet/IP and OPC UA integer types.
+- **A recipe with a value that does not fit is refused whole.** Before its first write, every target is checked, so a recipe never half applies and then refuses. For Modbus, S7 and EtherNet/IP the check knows each tag's register type from its address. For OPC UA, which is the path to a CODESYS runtime, it uses the type the tag's last reading arrived as. A tag that has never been read since HotLoop started has no type to check against yet, so a recipe that targets it is refused at that tag's own write, after the targets before it were written, and the application records which. Reading it once, which the poll does within a second of connecting, closes that.
+- **A fraction of a count is cut off.** A register holds whole counts, so 12.34 on a tenth scaled register holds 12.3, as it always did.
 - **What did not change.** The range check on a tag and the audit row use the number you typed. The write gate, the permissions and the refusal rules are the same.
+
+### A store install signs you in as yourself
+
+The chart made a random admin password in a Secret the tenant can't read, so a store install landed on a login with no way through. With the dashboard's public key configured, a request carrying a valid signed assertion for this tenant and this Service signs that person in, makes their user the first time, keeps their role in step with what the dashboard sent, and the audit trail names them. A bad, expired, wrong tenant or wrong app assertion is refused, and local login is untouched. It is off unless a key is set, and the three product charts take the key from the store. docs/AUTH.md has the settings.
+
+### CODESYS, by the names the programmer gave the variables
+
+HotLoop reads and writes a CODESYS PLC through the runtime's own OPC UA server, the way CODESYS documents: the application's Symbol Configuration, published under the PLCopen IEC 61131-3 model. Discovery lists what the application exports with the types and the access the programmer gave them, walking into arrays and structures, and a tag is an IEC symbol that is found under whatever the project calls its PLC and application. A restart, a download or a lost link reads bad with the reason and comes back with no hands. I proved it against a real 4.22.0.0 runtime in the lab running my own program, with a write the PLC's own logic answers, and against a second program of over a hundred thousand variables, read in 2.4 seconds. It has not been run on a physical controller.
+
+This touches a driver plants run, so plainly: the OPC UA driver asked for 200 nodes a request and never read what the server allows. A CODESYS runtime publishes OperationLimits of 100 and refuses more, and the driver answered by declaring every discovered tag a float and by reading none of the tags of a device with more than a hundred. Requests are now cut to the limits the server publishes at connect, and halved when a server that publishes none says too many. A data type that is a subtype of a standard one (a CODESYS STRING, BYTE or TIME) is followed up to the standard type, so it is typed and written as that. Every OPC UA device gets this, not only CODESYS ones.
 
 ### A Kafka event stream
 
 - **What it is.** HotLoop can send its readings and its system log to any broker that speaks the Kafka API: Apache Kafka, Redpanda, and the rest of that family. It is a new kind of historian target, under Settings, Historian targets, so it has the queue, the catch-up from HotLoop's own history and the status those have. Readings go to one topic and the system log (alarms, devices going up and down, changes) to another, as JSON.
 - **TLS and SASL.** SCRAM-SHA-256, SCRAM-SHA-512 and PLAIN (PLAIN only over TLS), with your own CA if the broker's certificate isn't from a public one. Client certificates, Kerberos and OAuth logins are not supported yet.
 - **It is at least once.** A reading can arrive twice after an outage, because the catch-up overlaps what already went out on purpose. `deviceId`, `tag` and `ts` name a duplicate. Events are the live feed and have no history to catch up from, so one produced while the broker is away is lost, and the target's status counts it.
-- **A broker that vanishes mid-write.** The target goes down within 25 seconds and the readings in that write are owed, instead of staying "up" with its queue overflowing.
+- **A broker that vanishes mid write.** The target goes down within 25 seconds and the readings in that write are owed, instead of staying up with its queue overflowing.
 - **A topic made a moment ago.** The first look at a topic that was just made, by you or by the target's own last try, waits for it to exist and have a leader instead of reporting the target down.
 - **What it costs.** About 5 MiB on the binary of every product with a database. The Edge Relay has no historian targets and doesn't carry it. The client is franz-go, credited in `NOTICE`.
 - **Upgrading.** Migration 0026 adds an `options` column to the historian targets, empty for every target that exists. Nothing changes for them. HISTORIAN-TARGETS.md has the record formats and what is and isn't proven.
@@ -50,3 +64,28 @@ because it changes what lands in a register, and a plant that worked around the 
 - **Publishing.** Edge and Gateway can publish the tags a layout names as UADP, off until `HOTLOOP_UADP_PUBLISH_ENABLED` is set. Key frames when values change and keep alives when they don't. A bad tag is published as its status, never as its last value.
 - **Not yet.** Message security (signed or encrypted messages) is refused by name, as are chunked messages, discovery, events and array fields. Delta frames are read but not sent.
 - **What it was proven against.** open62541 1.5.10, an independent OPC UA stack, in both directions in the lab. It has not been run against a CODESYS, Siemens or Beckhoff publisher or across a router. PROTOCOLS.md has the setup and the limits.
+
+### Images, and a second set of screens
+
+- **amd64 only, this once.** The 4.19.0 images are built for amd64. The version tag lists amd64 alone, and `stable` and `latest` carry the new amd64 image beside the arm64 and arm/v7 images they already had, which are the previous release's. An arm box that follows `stable` keeps pulling and keeps running what it ran. The next release builds every architecture again and is a version bump with nothing else in it.
+- **The new screens are at `/next`.** A rebuilt web UI is in every image behind the old one, which is still what you get at `/`. Try it at `/next` on any install; nothing about the default changes.
+
+### Fixes
+
+- **A pin on the board no longer wipes the board.** The page only read the board when the board screen opened, so a reload on the tags screen held an empty list and the first pin replaced the saved board with that one tag. The page reads the board at start now, a pin refuses until it has, and a save carries the board's `rev`, so the server answers `409` to a save over a board that changed since it was read. The `rev` is optional in the API: leave it out and the save is not checked.
+- **A stalled OPC UA subscription is noticed.** The library keeps its keep alives to itself, so a stopped publish loop looked like a quiet plant and served its last values as good. After ten publishing intervals of quiet (thirty seconds at least) the driver reads the nodes once, compares them with what it holds, and falls back to reads if any differ.
+- **A PLC that goes silent with its socket open is down, not degraded.** Modbus, S7 and EtherNet/IP kept their last values until TCP gave up, because the poll returned before it judged the session. They judge now. No S7 or CIP server is on the wire in the lab yet, and the roadmap says so.
+- **A credential typed into a URL or free text is encrypted at rest.** Every screen already hid `mqtt://user:pass@host` and `?token=` from people, but the database and the backups held them as typed. A string that carries one, by the same test redaction hides it by, is sealed whole and comes back exactly as written, so the driver still gets the URL it was given. A key turned on later seals what was stored before, and a restore asks for the key when only an address needs it.
+- **Every time the API writes is UTC.** A plant set to New York spelled `-04:00` where one on UTC spelled `Z`, across about thirty fields: `created_at`, `updated_at`, an alarm's `raisedAt`, an event's time, a device's `lastPoll`, a tag's timestamp, a logbook entry, a report's next run. They read the same on both now. If you parse these in a script that expected your local offset, it now gets `Z`.
+- **Monthly partitions were skipped on the 31st.** The history and logbook tables made their next partition with a month added to today, and on the 31st that skipped a month, so a month's rows sat in the default partition. They start from the first of the month now.
+- **The UniFi event log is ordered by when the event happened,** not by when the frame got here, so a replay after a reconnect stops sitting on top.
+- **A switch's faceplate fits a phone.** Eight ports were wider than a 390 pixel screen and the page scrolled sideways by 113 pixels. The ports are tight tiles now, with the PoE watts in the port's detail, and a faceplate that still outgrows its card scrolls inside it.
+- **A phone with no session and no connection gets the sign-in screen and the reason** instead of an empty app, and reloads when HotLoop answers.
+- **A rollback is one command.** The chart index merges into the live one instead of being rebuilt from the release's own charts, so an older version still resolves.
+
+### Upgrading from 4.18.11
+
+- Read the first two sections above before you do anything on a running plant.
+- Migration 0026 is the only one. It is additive and every existing row keeps working.
+- A bare binary or Quadlet install gets an MCP token at its first start. `hotloop mcp-token` prints it.
+- `helm upgrade` as usual. Quadlet units follow `:stable` and need nothing. `helm rollback` to 4.18.11 is fine for this release: the database is already PostgreSQL 17 and nothing here changes it.
