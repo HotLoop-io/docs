@@ -173,7 +173,7 @@ export default defineConfig({
           ],
         },
         {
-          label: 'HotLoop Transmitter (not released)',
+          label: 'HotLoop Transmitter',
           collapsed: true,
           items: [
             { slug: 'transmitter/overview', label: 'Overview' },
@@ -183,7 +183,7 @@ export default defineConfig({
             { slug: 'transmitter/timing', label: 'What it adds to the task' },
             { slug: 'transmitter/proof', label: 'What was run' },
             { slug: 'transmitter/roadmap', label: 'Roadmap' },
-            { slug: 'releases/transmitter-1-0-0', label: 'Release notes (draft)' },
+            { slug: 'releases/transmitter-1-0-0', label: 'Release notes' },
           ],
         },
         {

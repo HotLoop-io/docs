@@ -3,10 +3,6 @@ title: "HotLoop Transmitter API"
 description: "Every input, output and method of the HotLoop Transmitter publisher function block."
 ---
 
-:::caution[Not released]
-HotLoop Transmitter has no release yet. This page describes the library as built on `main` of HotLoop-io/hotloop-transmitter and run on the CODESYS Control for Linux SL 4.22.0.0 runtime in a container. It has not run on a physical controller.
-:::
-
 Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 
 ## Inputs

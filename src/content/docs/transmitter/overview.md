@@ -3,10 +3,6 @@ title: "HotLoop Transmitter"
 description: "A CODESYS library, written in Structured Text over SysSocket UDP, that publishes PLC values as OPC UA PubSub (UADP) with no other library and no configurator."
 ---
 
-:::caution[Not released]
-HotLoop Transmitter has no release yet. This page describes the library as built on `main` of HotLoop-io/hotloop-transmitter and run on the CODESYS Control for Linux SL 4.22.0.0 runtime in a container. It has not run on a physical controller.
-:::
-
 HotLoop Transmitter puts a PLC's values on the network as OPC UA PubSub, the way Part 14 of the OPC UA spec says to,
 from a library you drop into the CODESYS project. It is a transmitter in the instrument-loop sense: the part that
 puts the process value on the wire so something else can read it.
@@ -27,8 +23,8 @@ verifier) are Go.
 
 ## Use it
 
-1. Install `HotLoopTransmitter-<version>.library` into the CODESYS library repository (Tools, Library Repository,
-   Install), then add it to the project's Library Manager. `docs/INSTALL.md` has the details.
+1. Install `HotLoopTransmitter-1.0.0.library` into the CODESYS library repository (Tools, Library Repository,
+   Install), then add it to the project's Library Manager. The [install page](/transmitter/install/) has the download and the details.
 2. Declare a publisher, add the variables you want to publish once at start, and call it every cycle:
 
 ```iecst
@@ -54,19 +50,24 @@ pub.bEnable := TRUE;
 pub();
 ```
 
-`docs/API.md` lists every input, output and method. `docs/WIRE-FORMAT.md` is the packet, byte by byte, with the
+The [API page](/transmitter/api/) lists every input, output and method. The [wire format page](/transmitter/wire-format/) is the packet, byte by byte, with the
 sections of the spec that define each byte.
 
 ## What it will and won't do to your scan
 
 * It never blocks. The socket is non-blocking and the message is built in a fixed buffer.
 * The cost of a call is the cost of building one message, and it is only paid on the cycles where a message goes
-  out. The measured numbers are in `docs/TIMING.md`.
+  out. The measured numbers are on the [timing page](/transmitter/timing/).
 * A socket error, a bad address or an oversized field list never faults the application. The block reports an
   `eState` and an `eError`, counts the failure, and the program keeps scanning.
 * It does not fragment. A message is at most 1472 bytes. A field list that does not fit puts the block in
   `ConfigError` and sends nothing.
 
-The wire format is in [What goes on the wire](/transmitter/wire-format/), every input and method is in the [API](/transmitter/api/), and what was run is in [What was run](/transmitter/proof/).
+## Tested against
 
-HotLoop Transmitter is under the HotLoop Business Source License 1.1, like every HotLoop product.
+The CODESYS Control for Linux SL 4.22.0.0 runtime, in a container. The [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) say what
+was run and what was read back. Not run on physical hardware.
+
+## License
+
+HotLoop's Business Source License 1.1, the same as every HotLoop product. The [license page](https://hotloop.io/license/) has the text.

@@ -3,14 +3,10 @@ title: "Install HotLoop Transmitter"
 description: "Install the library into the CODESYS library repository, add it to a project, and what to do when the block reports an error."
 ---
 
-:::caution[Not released]
-HotLoop Transmitter has no release yet. This page describes the library as built on `main` of HotLoop-io/hotloop-transmitter and run on the CODESYS Control for Linux SL 4.22.0.0 runtime in a container. It has not run on a physical controller.
-:::
-
 You need a CODESYS development system, 3.5 SP22 or later, and a runtime whose target has the SysSocket component,
 which the CODESYS Control runtimes for Linux SL have.
 
-1. Download `HotLoopTransmitter-<version>.library` from the release.
+1. Download `HotLoopTransmitter-1.0.0.library` from https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library, and check it against `SHA256SUMS` in the same folder (`sha256sum -c SHA256SUMS`).
 2. In the CODESYS IDE: Tools, Library Repository, Install, pick the file. It is now in the repository under the
    company HotLoop.
 3. In your project, open the Library Manager of the application, Add Library, and pick HotLoop Transmitter.
@@ -20,9 +16,9 @@ which the CODESYS Control runtimes for Linux SL have.
    network's switches must carry the group.
 
 The `.compiled-library` file is the same library without its source. Install that one instead if you do not want the
-Structured Text visible in the Library Manager.
+Structured Text visible in the Library Manager. It is in the same folder, as `HotLoopTransmitter-1.0.0.compiled-library`.
 
-To check what arrives, `test/capture` in this repository is a small Go program that listens on a port or joins a
+To check what arrives, any UDP listener on the destination port works. The lab used a small Go program that listens on a port or joins a
 multicast group and prints each datagram as a line of JSON with its hex.
 
 ## If the block reports an error

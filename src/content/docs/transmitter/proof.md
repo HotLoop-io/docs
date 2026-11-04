@@ -3,11 +3,7 @@ title: "What was run"
 description: "What the library was built with, run on, and read back by, and the one place two readers disagree."
 ---
 
-:::caution[Not released]
-HotLoop Transmitter has no release yet. This page describes the library as built on `main` of HotLoop-io/hotloop-transmitter and run on the CODESYS Control for Linux SL 4.22.0.0 runtime in a container. It has not run on a physical controller.
-:::
-
-Everything below ran on 2026-11-01 on The Beast, from `test/run.sh`. The raw outputs are in the codex at `work/out/hotloop/transmitter/evidence/2026-11-01/`. Nothing here ran on a physical controller.
+Everything below ran on The Beast on 2026-11-04, from `test/run.sh all` and `test/core/run.sh`, on the library that is in `dist/1.0.0/`. Nothing here ran on a physical controller.
 
 ## The build
 
@@ -24,13 +20,12 @@ The example application has two publishers, both to a capture listener on a Podm
 
 | Reader | What it is | Variant | RawData |
 |---|---|---|---|
-| `test/verify` | a decoder written from OPC 10000-14 and 10000-6 alone, which also reads the same variables from the runtime's OPC UA server and compares them | every field equal to the PLC's, no gap in the NetworkMessage and DataSetMessage sequence numbers over 117 to 119 messages | the same |
+| `test/verify` | a decoder written from OPC 10000-14 and 10000-6 alone, which also reads the same variables from the runtime's OPC UA server and compares them | every field equal to the PLC's, no gap in the NetworkMessage and DataSetMessage sequence numbers over the capture | the same |
 | open62541 1.4.9 | an independent PubSub implementation, built from its release tarball (sha256 `8735e61391cde0d84e6347a4293d2400b6a72838fb44513caf22d70dfca3a0cf`), run as a subscriber with a DataSet metadata of the 17 fields | all 15 values checked equal, including the string, both arrays and the TIME | the 11 numeric scalars equal. Its RawData reader reads one scalar per field and bounds its buffer by the fields' in-memory sizes (`DataSetReader_processRaw`, `src/pubsub/ua_pubsub_reader.c`), so it cannot read a RawData string longer than a few characters or any RawData array |
-| A second Go decoder | the UADP decoder in our own receiver code, at commit 79157e7a of that repository | 118 of 118 messages decoded, every value correct | refused: `trailing_bytes: 52 bytes after the last RawData field are not padding` |
+| HotLoop core's UADP subscriber | the driver in HotLoop at commit 343b7636, which is the code HotLoop core 4.19.2 ships, `internal/driver/uadp.go`, run by `test/core/run.sh` against a live runtime and told the RawData layout in its DataSet types | 21 values checked equal, including the string, the TIME and elements 0, 1, 124 and 249 of the 250 REAL array and all four of the INT array, and both counters advancing between two reads 3 seconds apart | the same 21 values and the same two counters. 62 key frames received, none refused |
+| A second Go decoder | the UADP decoder in our own receiver code, at commit f640c324 of that repository, run on the 222 captured datagrams with the layout of the 17 fields | all 111 messages decoded, every checked value correct | all 111 messages decoded, every checked value correct, the arrays with their Int32 length and padding |
 
 Wireshark 4.4.7's `tshark` (Alpine package) was tried on a capture and dissects UDP port 4840 as plain data: its OPC UA dissector is for the TCP protocol, so it was not usable as a UADP decoder.
-
-HotLoop core's UADP subscribe (agent HK, bead 5a8ca6) has no code in its branch yet (`git grep -il uadp` over `hk/kafka-uadp` found no Go file), so it was not run.
 
 ## RawData arrays and strings
 
@@ -41,7 +36,7 @@ This library writes an Int32 element count before each RawData array, and a stri
 * The spec text it implements: OPC 10000-14 7.2.4.5.11 ("handled like a Structure DataType", padding "to the maximum size indicated by ArrayDimensions or MaxStringLength") with OPC 10000-6 5.2.5 ("One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value").
 * open62541 1.4.9 does not read RawData arrays at all, so it neither agrees nor disagrees.
 
-The second Go decoder above reads a RawData array as back-to-back elements, with no count, so it refuses this library's RawData with `trailing_bytes`. By the reference stack that decoder is the one that is wrong. It is tracked in the codex as a bead and is not changed here. Variant has no such question and is the default.
+HotLoop core's subscriber and the second Go decoder both read the RawData arrays this way, with the length and the padding, and both decode this library's RawData.
 
 One difference from the reference stack: where it throws when a string is longer than MaxStringLength, this library cuts it at a character boundary, because a PLC task has nowhere to throw to.
 

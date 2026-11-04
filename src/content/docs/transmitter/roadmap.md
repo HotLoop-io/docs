@@ -3,10 +3,6 @@ title: "Transmitter roadmap"
 description: "What HotLoop Transmitter has built, what is next, and what is deliberately not planned."
 ---
 
-:::caution[Not released]
-HotLoop Transmitter has no release yet. This page describes the library as built on `main` of HotLoop-io/hotloop-transmitter and run on the CODESYS Control for Linux SL 4.22.0.0 runtime in a container. It has not run on a physical controller.
-:::
-
 What is in the box today, what is next, and what is deliberately not planned. A line moves to "Shipped" only
 when it has run on the real 4.22.0.0 runtime and a receiver has read it.
 

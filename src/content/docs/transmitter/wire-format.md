@@ -3,10 +3,6 @@ title: "What goes on the wire"
 description: "The NetworkMessage and DataSetMessage HotLoop Transmitter sends, byte by byte, with the OPC 10000-14 and 10000-6 sections that define each one."
 ---
 
-:::caution[Not released]
-HotLoop Transmitter has no release yet. This page describes the library as built on `main` of HotLoop-io/hotloop-transmitter and run on the CODESYS Control for Linux SL 4.22.0.0 runtime in a container. It has not run on a physical controller.
-:::
-
 Every byte below comes from OPC 10000-14 (Part 14, PubSub) version 1.05 and OPC 10000-6 (Part 6, mappings),
 read at reference.opcfoundation.org on 2026-10-31. The section numbers are the ones to open when a byte looks wrong.
 Nothing here was learned by looking at another vendor's packets.

@@ -497,7 +497,7 @@ ${rows('cascade')}
 
 ## HotLoop Transmitter
 
-- [HotLoop Transmitter 1.0.0 release notes](/releases/transmitter-1-0-0/) (draft, not released yet)
+- [HotLoop Transmitter 1.0.0 release notes](/releases/transmitter-1-0-0/)
 `);
 }
 

@@ -17,10 +17,11 @@ The provisioner reads it again at every pass, so a newer profile reaches a runni
 |---|---|
 | `revision` | A whole number from 1. The screen and the alarms are replaced only when this is higher than the revision that made them. |
 | `device` | `id`, `name`, `options` (the connector's options, such as `browseRoot`, `arrayElements`, and `browseMaxNodes`), and `points`, the variable names HotLoop keeps from the PLC. |
+| `devices` | Optional. A list of devices of any protocol HotLoop speaks, beside `device` or instead of it. See below. |
 | `alarms` | HotLoop alarm definitions, each with an `id`. |
 | `dashboard` | One HotLoop screen, with an `id`. A [dashboard](/iot/dashboards/) is a list of cards. |
 
-One profile makes one device and one screen.
+One profile makes one screen, and the one `device` it names, plus any `devices` it lists.
 
 ## An example
 
@@ -50,6 +51,17 @@ This is the profile behind the screenshots on the [overview](/codesys/overview/)
 ```
 
 A card's `tag` is the device id, a slash, and the point's name. The card types, the alarm conditions, and the rest of a screen's keys are the same as in HotLoop's [dashboards](/iot/dashboards/) and [the HTTP API](/iot/api/).
+
+## A list of devices
+
+A profile can also carry `devices`, a list of devices of any protocol HotLoop speaks, beside `device` or instead of it. Each entry is the body of HotLoop's `POST /api/devices` (`id`, `name`, `protocol`, `address`, `enabled`, `pollIntervalMs`, `timeoutMs` and `config`, the protocol's own block) with its `tags`, the descriptors of `POST /api/devices/{id}/import` (`name`, `address`, `dataType`, and optionally `unit`, `description`, `deviceClass`). That covers OPC UA PubSub (UADP) listeners with their RawData `dataSets`, an OPC UA client, and several devices in one profile. At every pass:
+
+- A device HotLoop lacks is made, and one it has is left alone, so a person's edit stays, until the profile's `revision` is higher than the one that made the device (the device's description carries the marker), when the profile's definition replaces it.
+- Every tag of the profile that the device lacks is imported, in one request per device, read-only.
+- None of it waits on the node's OPC UA server. A listener only listens, and a runtime that is down or restarting holds nothing else back. The single `device` still reads the runtime, and a pass with it down says so and tries again.
+- With `devices` absent the profile works exactly as before, and with both present both apply.
+
+A listener that has to hear its node's own multicast, a PLC runtime on the same box publishing to a group over the loopback, needs the pod on the node's network: set `hotloop-edge.hostNetwork: true` and `"interface": "127.0.0.1"` in the device's options. It is off by default, and [the 4.19.2 notes](/releases/hotloop-4-19-2/) say what it means for the pod.
 
 ## What the provisioner does with it
 
