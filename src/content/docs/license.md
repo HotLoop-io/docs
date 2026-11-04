@@ -14,7 +14,7 @@ Parameters
 
 Licensor: HotLoop LLC
 
-Licensed Work: HotLoop IoT, HotLoop Edge, HotLoop Gateway, HotLoop Edge Relay, HotLoop Flow and HotLoop Cascade, in the version of each that you received. The Licensed Work is (c) 2026 HotLoop LLC.
+Licensed Work: HotLoop IoT, HotLoop Edge, HotLoop Gateway, HotLoop Edge Relay, HotLoop Flow, HotLoop Cascade, and HotLoop Transmitter, in the version of each that you received. The Licensed Work is (c) 2026 HotLoop LLC.
 
 Additional Use Grant: You may make production use of the Licensed Work in these three ways, and only these three.
 
