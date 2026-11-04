@@ -6,6 +6,11 @@ description: "What HotLoop Transmitter has built, what is next, and what is deli
 What is in the box today, what is next, and what is deliberately not planned. A line moves to "Shipped" only
 when it has run on the real 4.22.0.0 runtime and a receiver has read it.
 
+## Shipped in 1.1.0
+
+* DataSetMessage and NetworkMessage timestamps from the PLC's real-time clock, on by default, `bTimestamp` switches them off.
+* The library as a CODESYS `.package`, installed through the CODESYS Installer.
+
 ## Shipped in 1.0.0
 
 * One publisher block, `FB_HLTX_Publisher`: one NetworkMessage per publishing interval, one DataSetMessage, a Data
@@ -20,7 +25,7 @@ when it has run on the real 4.22.0.0 runtime and a receiver has read it.
 
 ## Next
 
-* DataSetMessage and NetworkMessage timestamps, from the runtime's real-time clock.
+* Sub-second timestamps. The 1.1.0 stamp is the real-time clock's whole seconds.
 * Several DataSetMessages in one NetworkMessage (the Sizes array), so one datagram can carry more than one writer.
 * Data Delta Frames and KeepAlive messages, to cut the bytes of a mostly steady dataset.
 * WSTRING fields.

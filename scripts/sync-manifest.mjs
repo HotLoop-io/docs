@@ -219,7 +219,7 @@ Object.assign(SLUG_RULES, {
          ['Edge Relay', 'HotLoop core', 'edge-relay/overview', 'edge-relay/install', 'releases/#hotloop-core', 'roadmap'],
          ['Flow', 'Flow', 'flow/overview', 'flow/install', 'releases/#hotloop-flow', 'flow/roadmap'],
          ['Cascade', 'Cascade', 'cascade/overview', 'cascade/running', 'releases/#hotloop-cascade', 'cascade/roadmap'],
-         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-0-0', 'transmitter/roadmap']]
+         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-1-0', 'transmitter/roadmap']]
         .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
       + '\n\nThe table that follows compares the four core products.'],
   ],

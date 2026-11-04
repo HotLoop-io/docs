@@ -12,7 +12,8 @@ configurator. You add the library, call one function block once per cycle, and a
 publishing interval to a unicast address or a multicast group.
 
 What that means for you: a PLC that has no PubSub library can still feed anything that subscribes to OPC UA PubSub,
-including HotLoop itself, with a few lines of Structured Text.
+including HotLoop itself, with a few lines of Structured Text. Every message carries a timestamp from the PLC's clock
+unless you switch it off with `bTimestamp`.
 
 ## Why this is Structured Text and not Go
 
@@ -23,8 +24,8 @@ verifier) are Go.
 
 ## Use it
 
-1. Install `HotLoopTransmitter-1.0.0.library` into the CODESYS library repository (Tools, Library Repository,
-   Install), then add it to the project's Library Manager. The [install page](/transmitter/install/) has the download and the details.
+1. Install `HotLoopTransmitter-1.1.0.library` into the CODESYS library repository (Tools, Library Repository,
+   Install), or install `HotLoopTransmitter-1.1.0.package` with the CODESYS Installer, then add it to the project's Library Manager. The [install page](/transmitter/install/) has the downloads and the details.
 2. Declare a publisher, add the variables you want to publish once at start, and call it every cycle:
 
 ```iecst
@@ -57,7 +58,9 @@ sections of the spec that define each byte.
 
 * It never blocks. The socket is non-blocking and the message is built in a fixed buffer.
 * The cost of a call is the cost of building one message, and it is only paid on the cycles where a message goes
-  out. The measured numbers are on the [timing page](/transmitter/timing/).
+  out. Measured on a 20 ms task with two publishers and timestamps on: about 9.6 us added per cycle on average, 10 to
+  100 us on the cycles that send, and the longest cycle in the run 81 us. A busy host has stretched a single send to
+  milliseconds. The measured numbers and their limits are in the [timing page](/transmitter/timing/).
 * A socket error, a bad address or an oversized field list never faults the application. The block reports an
   `eState` and an `eError`, counts the failure, and the program keeps scanning.
 * It does not fragment. A message is at most 1472 bytes. A field list that does not fit puts the block in
@@ -65,7 +68,7 @@ sections of the spec that define each byte.
 
 ## Tested against
 
-The CODESYS Control for Linux SL 4.22.0.0 runtime, in a container. The [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) say what
+The CODESYS Control for Linux SL 4.22.0.0 runtime, in a container. See the [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) for what
 was run and what was read back. Not run on physical hardware.
 
 ## License
