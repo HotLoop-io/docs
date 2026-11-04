@@ -73,6 +73,12 @@
       "name": "HotLoop Cascade",
       "repo": "cascade",
       "tagline": "The plant talking to everything else."
+    },
+    {
+      "id": "transmitter",
+      "name": "HotLoop Transmitter",
+      "repo": null,
+      "tagline": "OPC UA PubSub from inside the PLC."
     }
   ],
   "pages": [
@@ -421,7 +427,7 @@
       "slug": "products",
       "product": "shared",
       "group": "Lineup",
-      "title": "HotLoop products: six on three release lines",
+      "title": "HotLoop products: seven on four release lines",
       "label": null,
       "status": "changed",
       "repo": "hotloop",

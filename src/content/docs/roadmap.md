@@ -25,7 +25,7 @@ Every line of it is ours. Nothing is embedded, bridged or forked, so when
 something breaks at 3 AM there's one codebase to read and nobody else's bug to
 wait on.
 
-HotLoop is six products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring and Cascade for workflows. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow and Cascade keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a> and <a href="/cascade/roadmap/">the Cascade roadmap</a>.
+HotLoop is seven products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, and Transmitter for putting a PLC's values on the wire. This roadmap is for HotLoop core, the four products that come out of one codebase. See [Products](#products). Flow, Cascade, and Transmitter keep their own, in <a href="/flow/roadmap/">the Flow roadmap</a>, <a href="/cascade/roadmap/">the Cascade roadmap</a>, and <a href="/transmitter/roadmap/">the Transmitter roadmap</a>.
 
 ## Products
 

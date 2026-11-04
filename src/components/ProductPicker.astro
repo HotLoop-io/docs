@@ -1,5 +1,5 @@
 ---
-// The family map: six products on three release lines, each with the same five things
+// The family map: seven products on four release lines, each with the same five things
 // (docs, install, release notes, roadmap, and its version). Versions and release state
 // come from src/data/sync.json, which the sync writes, so this can't disagree with the pages.
 import sync from '../data/sync.json';
@@ -7,6 +7,8 @@ import sync from '../data/sync.json';
 const hot = sync.repos.hotloop.release;
 const flow = sync.repos.flow.release;
 const cascade = sync.repos.cascade.release;
+// Transmitter 1.0.0 shipped 2026-11-04 (HotLoop-io/hotloop-transmitter v1.0.0). Change this when the next one does.
+const transmitter = { version: '1.0.0' };
 
 const latest = (prefix: string) =>
   sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
@@ -15,8 +17,9 @@ const lines = [
   { id: 'core', label: 'HotLoop core', version: hot.version, note: 'One codebase, one version. IoT to Edge to Gateway is the path a site grows along, and Edge Relay is the headless forwarder beside them.', notes: `/${latest('releases/hotloop-')}/`, roadmap: '/roadmap/', ids: ['iot', 'edge', 'gateway', 'edge-relay'] },
   { id: 'flow', label: 'Flow', version: flow.version, note: 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/flow-')}/`, roadmap: '/flow/roadmap/', ids: ['flow'] },
   { id: 'cascade', label: 'Cascade', version: cascade.version, note: cascade.prerelease ? 'Pre-release. Its own release line, running next to HotLoop.' : 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/cascade-')}/`, roadmap: '/cascade/roadmap/', ids: ['cascade'] },
+  { id: 'transmitter', label: 'Transmitter', version: transmitter.version, note: 'Its own release line, running next to HotLoop.', notes: `/releases/transmitter-${transmitter.version.replace(/\./g, '-')}/`, roadmap: '/transmitter/roadmap/', ids: ['transmitter'] },
 ];
-const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/' };
+const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/', transmitter: '/transmitter/install/' };
 ---
 
 <div class="map">
