@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
+      "ref": "4d5da2f",
       "sha": "4d5da2f216e276bba9587f9aa5e3343bad13258f",
       "release": {
         "tag": "v4.18.11",
@@ -27,7 +27,7 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "437c21c21c4d9f1efa97cce5a38e17385009333f",
+      "sha": "1f8ad0c3abb13f37f6d4fe3c6c2f1dd97b3794a3",
       "release": {
         "tag": "v1.0.2",
         "version": "1.0.2",
@@ -781,7 +781,7 @@
       "group": "Start here",
       "title": "Where Cascade stands",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -803,7 +803,7 @@
       "group": "Use it",
       "title": "Running Cascade",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
