@@ -8,15 +8,18 @@ read at reference.opcfoundation.org on 2026-10-31. The section numbers are the o
 Nothing here was learned by looking at another vendor's packets.
 
 One publisher block sends one NetworkMessage per publishing interval. A NetworkMessage carries one DataSetMessage,
-a Data Key Frame, so every message holds every field. All multi-byte values are little endian, which is how OPC UA
-binary is defined; the block writes them byte by byte, so the host's byte order does not matter.
+a Data Key Frame, so every message holds every field. Since 1.1.0 each message carries a timestamp from the PLC's
+clock, in both the NetworkMessage and the DataSetMessage, unless `bTimestamp` is FALSE, in which case the bytes are
+exactly 1.0.0's. The tables show both: the rows marked stamped are there only when the timestamp is on.
+
+All multi-byte values are little endian, which is how OPC UA binary is defined; the block writes them byte by byte, so the host's byte order does not matter.
 
 ## NetworkMessage (Part 14, 7.2.4.4.2)
 
 | Bytes | Value | Meaning |
 |---|---|---|
 | 1 | `F1` | UADPVersion 1 in bits 0 to 3. UADPFlags in bits 4 to 7: PublisherId (bit 4), GroupHeader (bit 5), PayloadHeader (bit 6) and ExtendedFlags1 (bit 7) all present |
-| 1 | `01` | ExtendedFlags1: PublisherId type 001 = UInt16. No DataSetClassId, no security header, no timestamp, no ExtendedFlags2 |
+| 1 | `21` stamped, `01` unstamped | ExtendedFlags1: PublisherId type 001 = UInt16 in bits 0 to 2, Timestamp (bit 5) when stamped. No DataSetClassId, no security header, no PicoSeconds, no ExtendedFlags2 |
 | 2 | PublisherId | `uiPublisherId` |
 | 1 | `0F` | GroupFlags: WriterGroupId, GroupVersion, NetworkMessageNumber and SequenceNumber present |
 | 2 | WriterGroupId | `uiWriterGroupId` |
@@ -25,6 +28,7 @@ binary is defined; the block writes them byte by byte, so the host's byte order 
 | 2 | SequenceNumber | counts messages sent, wraps at 65535 |
 | 1 | Count | always 1 (payload header, 7.2.4.5.2) |
 | 2 | DataSetWriterId | `uiDataSetWriterId` |
+| 8 | Timestamp, stamped only | the NetworkMessage Timestamp (7.2.4.4.2), a DateTime (Part 6, 5.2.2.5): 100 ns ticks since 1601-01-01 00:00:00 UTC as an Int64. It comes after the payload header and before the DataSetMessage |
 
 Because Count is 1, the payload has no Sizes array. The block does not send chunked messages, discovery messages,
 promoted fields or a security header, and a receiver that requires one of those is not served by this version.
@@ -33,12 +37,21 @@ promoted fields or a security header, and a receiver that requires one of those 
 
 | Bytes | Value | Meaning |
 |---|---|---|
-| 1 | `69` Variant, `6B` RawData | DataSetFlags1: valid (bit 0), field encoding (bits 1 and 2: 00 Variant, 01 RawData), sequence number (bit 3), ConfigurationVersion major (bit 5) and minor (bit 6). Status, DataSetFlags2 and timestamps are absent, so the type is the default, a Data Key Frame |
+| 1 | `69` Variant, `6B` RawData; stamped `E9` and `EB` | DataSetFlags1: valid (bit 0), field encoding (bits 1 and 2: 00 Variant, 01 RawData), sequence number (bit 3), ConfigurationVersion major (bit 5) and minor (bit 6), and DataSetFlags2 (bit 7) when stamped. Status is absent. Unstamped, DataSetFlags2 is absent too and the type is the default, a Data Key Frame |
+| 1 | `10`, stamped only | DataSetFlags2: message type 0 (Data Key Frame) in bits 0 to 3, Timestamp (bit 4) |
 | 2 | DataSetMessage sequence number | counts messages sent, wraps at 65535 |
+| 8 | Timestamp, stamped only | the DataSetMessage Timestamp (7.2.4.5.4), the same DateTime as the NetworkMessage's, after the sequence number |
 | 4 | ConfigurationVersion major | `udiConfigMajor` |
 | 4 | ConfigurationVersion minor | `udiConfigMinor` |
 | 2 | FieldCount | Variant only. Omitted for RawData (7.2.4.5.5) |
 | ... | the fields | in the order they were added |
+
+## The timestamp
+
+The block reads the PLC's real-time clock once per message with `SysTimeRtcGet` (the SysTimeRtc system library, which the runtime provides), which is whole seconds since 1970-01-01 UTC, and writes `(seconds + 11644473600) * 10000000` as the DateTime. Both timestamps in a message are that one value. Two things follow from it:
+
+* The resolution is one second. A receiver sees the same timestamp on every message inside a second, and it is up to a second behind the instant the message was built. Sub-second stamps are on the roadmap.
+* The time is only as right as the PLC's clock. A controller with an unset clock stamps its message 1970. When the clock cannot be read (`diLastClockResult` is not 0) the message goes out unstamped, which Part 14 allows, rather than not at all.
 
 Bump `udiConfigMajor` whenever the field list changes. A receiver that keeps a layout keyed on the version can then
 refuse a message built for a different list instead of decoding it wrong.
@@ -83,7 +96,7 @@ fields are "handled like a Structure DataType", so each value is encoded as a St
   because the field cannot grow. A receiver's field metadata must carry the same MaxStringLength and an
   ArrayDimensions entry for each array.
 
-This is the reading of the OPC Foundation's own reference stack. In UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` lines 389 to 403 say a string is "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", and that for an array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` at lines 593 to 648 implements it, and `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` asserts it. `docs/PROOF.md` has the rest.
+This is the reading of the OPC Foundation's own reference stack. In UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` lines 389 to 403 say a string is "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", and that for an array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` at lines 593 to 648 implements it, and `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` asserts it. The [proof page](/transmitter/proof/) has the rest.
 
 ## Size
 

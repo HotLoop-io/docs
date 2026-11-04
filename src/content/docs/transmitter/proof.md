@@ -3,6 +3,10 @@ title: "What was run"
 description: "What the library was built with, run on, and read back by, and the one place two readers disagree."
 ---
 
+This page is the 1.0.0 run. The 1.1.0 run, with timestamps and the `.package`, is in the [1.1.0 release notes](/releases/transmitter-1-1-0/). It used the same lab, plus
+`test/verify -timestamps`, `test/open62541/decode.c` (open62541's own header decoders reading the Timestamps),
+`test/core/run.sh` with timestamps, and `test/package.sh`.
+
 Everything below ran on The Beast on 2026-11-04, from `test/run.sh all` and `test/core/run.sh`, on the library that is in `dist/1.0.0/`. Nothing here ran on a physical controller.
 
 ## The build

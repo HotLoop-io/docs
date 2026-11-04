@@ -21,6 +21,7 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` or `RawData`. Change it while disabled |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion in the group header |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | DataSet ConfigurationVersion. Bump the major whenever the field list changes |
+| `bTimestamp` | BOOL | TRUE | stamp every message with the PLC clock, in the NetworkMessage and the DataSetMessage (whole seconds, see `WIRE-FORMAT.md`). FALSE sends the 1.0.0 bytes, 17 bytes shorter |
 | `tRetry` | TIME | T#2S | how long to wait before reopening the socket after ten sends in a row failed |
 
 ## Outputs
@@ -35,6 +36,8 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `udiSkipped` | UDINT | publish slots missed because the task ran late |
 | `uiMessageSize` | UINT | bytes in the last message |
 | `diLastSocketResult` | UDINT | the last runtime error code from a socket call, 0 is fine |
+| `diLastClockResult` | UDINT | the last result of reading the PLC clock for a timestamp, 0 is fine. When it is not 0 the message goes out unstamped |
+| `diLastClockResult` | UDINT | the last result of reading the PLC clock for a timestamp, 0 is fine. When it is not 0 the message goes out unstamped |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microseconds spent in the last call of the block, and the longest since enable or `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | the longest time spent building one message, and in the send call itself, since enable or `Clear()` |
 

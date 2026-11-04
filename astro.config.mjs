@@ -172,7 +172,8 @@ export default defineConfig({
             { slug: 'transmitter/timing', label: 'What it adds to the task' },
             { slug: 'transmitter/proof', label: 'What was run' },
             { slug: 'transmitter/roadmap', label: 'Roadmap' },
-            { slug: 'releases/transmitter-1-0-0', label: 'Release notes' },
+            { slug: 'releases/transmitter-1-1-0', label: 'Release notes 1.1.0' },
+            { slug: 'releases/transmitter-1-0-0', label: 'Release notes 1.0.0' },
           ],
         },
         {
