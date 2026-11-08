@@ -1,16 +1,34 @@
 ---
-reviewed: hotloop=4.18.11
+reviewed: hotloop=4.19.8
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
-description: "From 4.18.10 the database moves to PostgreSQL 17 by itself, which needs disk and a backup. From 4.17.0 it is a plain helm upgrade. Older, you go in hops."
+description: "From 4.18.11 it is a helm upgrade, but agents can write now and scaled tags change. From 4.18.10 the database moves to PostgreSQL 17. Older, you go in hops."
 sidebar:
   label: "Upgrading"
 ---
 
-Four ways onto {{hotloop}}, and they are nothing alike. From 4.18.10 the database engine changes under you, and you want to know that before it happens. From 4.17.0 it's a plain `helm upgrade`, with a couple of defaults that moved. From 4.16.0 you go through 4.17.0 first, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 and 4.17.0 on the way. The release notes cover one hop at a time, and none of them covers jumping over a release, so this page doesn't promise that one works. Find the one that's yours and read all of it before you touch a running plant.
+Five ways onto {{hotloop}}, and they are nothing alike. From 4.18.11 it is a plain `helm upgrade`, but two things change what a running plant does, so read them first. From 4.18.10 the database engine changes under you, and you want to know that before it happens. From 4.17.0 it's a plain `helm upgrade`, with a couple of defaults that moved. From 4.16.0 you go through 4.17.0 first, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 and 4.17.0 on the way. The release notes cover one hop at a time, and none of them covers jumping over a release, so this page doesn't promise that one works. Find the one that's yours and read all of it before you touch a running plant.
 
 :::note[Older charts are fetched by URL]
-The chart repository's index lists only the latest chart, {{hotloop}}, so `hotloop/hotloop --version 4.17.0` won't resolve. The older chart tarballs are still served, and the commands below for 4.16.0 and 4.17.0 name the chart by its URL instead, like `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`.
+The chart repository's index keeps the Gateway's charts back to 4.16.0, so `hotloop/hotloop --version 4.17.0` resolves, and the tarballs are served by URL too. The commands below for 4.16.0 and 4.17.0 name the chart by its URL, like `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`, and that works either way. IoT and Edge start at 4.18.10.
 :::
+
+## Upgrading from 4.18.11
+
+Why bother: agents over MCP can write now, a value you write to a scaled tag lands in the register the way you meant it, a CODESYS runtime is read by the names its programmer gave the variables, HotLoop can send readings and the system log to a Kafka broker, OPC UA PubSub over UADP works in both directions, and a store install signs you in as yourself. [The 4.19.4 release notes](/releases/hotloop-4-19-4/) have the whole list, [4.19.5](/releases/hotloop-4-19-5/) is the multi-arch build of it, and [4.19.8](/releases/hotloop-4-19-8/) is the one to install, with a Logbook fix and tag pickers that search the whole plant. 4.19.0 to 4.19.3, 4.19.6 and 4.19.7 were tagged and never published, so none of them exists to upgrade from.
+
+```bash
+helm repo update
+helm upgrade hotloop hotloop/hotloop --version {{hotloop}} \
+  --namespace hotloop --reset-then-reuse-values
+```
+
+The same for `hotloop-edge`, `hotloop-iot` and `hotloop-edge-relay`. The database is already PostgreSQL 17 from 4.18.11, and nothing here changes it, so `helm rollback` to 4.18.11 is fine.
+
+- **Agents can write.** `allowMcpWrites` is on by default in the code and in all three charts. A deployment that has `allowWrites` on and never set `allowMcpWrites` gets agent writes at this upgrade, through the same gate as the screen. A deployment that saved `allowMcpWrites: false` stays off. If you want agents read-only, set it `false` before you upgrade.
+- **The MCP endpoint always has a token.** A bare binary or a Quadlet unit that never set one makes its own at first start and keeps it in its database. `hotloop mcp-token` prints it, and an agent pointed at `/mcp` with no token stops working until you give it that one.
+- **Scaled tags.** Write 55.5 to a tag scaled by 0.1 and 555 lands in the register, where 55 used to. If anyone typed raw counts to work around it, that now sends ten times too much. Look at every tag with a scale or an offset that somebody writes by hand, from an automation or from a recipe, and change those numbers to engineering values in the same step as the upgrade.
+- **Times are `Z`.** Every time the API writes is UTC. A script that parsed your local offset now gets `Z`.
+- **One migration,** `0026`, adds an `options` column to the historian targets, empty for every target that exists.
 
 ## Upgrading from 4.18.10
 

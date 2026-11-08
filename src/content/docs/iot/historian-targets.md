@@ -5,10 +5,6 @@ description: "Write every reading HotLoop keeps out to the plant's own PostgreSQ
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop keeps its own history, and it isn't going anywhere. But a plant
 already has a database. IT backs it up, patches it, points Power BI at it and
 answers for it in an audit, and they are not adopting ours to get a trend.

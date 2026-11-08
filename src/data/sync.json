@@ -2,14 +2,14 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "4d5da2f",
-      "sha": "4d5da2f216e276bba9587f9aa5e3343bad13258f",
+      "ref": "origin/main",
+      "sha": "27882ead1244ee52e1390c10c46fa00f79ebc3bf",
       "release": {
-        "tag": "v4.18.11",
-        "version": "4.18.11",
+        "tag": "v4.19.8",
+        "version": "4.19.8",
         "prerelease": false,
-        "publishedAt": "2026-10-30T03:26:10Z",
-        "sha": "b4386b08212ec8246dae254c620eba0c6aee08df"
+        "publishedAt": "2026-11-08T12:54:20Z",
+        "sha": "27882ead1244ee52e1390c10c46fa00f79ebc3bf"
       }
     },
     "flow": {
@@ -110,7 +110,7 @@
       "group": "The base",
       "title": "Helpers",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/HELPERS.md",
       "release": false
@@ -165,7 +165,7 @@
       "group": "Automation",
       "title": "Scripts",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/SCRIPTS.md",
       "release": false
@@ -176,7 +176,7 @@
       "group": "Automation",
       "title": "Recipes",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/RECIPES.md",
       "release": false
@@ -187,7 +187,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -209,7 +209,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -220,7 +220,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -242,7 +242,7 @@
       "group": "Devices and data",
       "title": "MQTT discovery",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DISCOVERY.md",
       "release": false
@@ -264,7 +264,7 @@
       "group": "Devices and data",
       "title": "UniFi Network",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/UNIFI.md",
       "release": false
@@ -275,7 +275,7 @@
       "group": "Devices and data",
       "title": "Integrations",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/INTEGRATIONS.md",
       "release": false
@@ -286,7 +286,7 @@
       "group": "Devices and data",
       "title": "Historian targets",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/HISTORIAN-TARGETS.md",
       "release": false
@@ -297,7 +297,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -308,7 +308,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -330,7 +330,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -374,7 +374,7 @@
       "group": "What the Gateway adds",
       "title": "Scheduled reports",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/REPORTS.md",
       "release": false
@@ -396,7 +396,7 @@
       "group": "Install",
       "title": "k3s and Helm",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DEPLOYMENT.md",
       "release": false
@@ -407,7 +407,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -418,7 +418,7 @@
       "group": "Install",
       "title": "The :stable auto-update",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -429,7 +429,7 @@
       "group": "Lineup",
       "title": "HotLoop products: seven on four release lines",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PRODUCTS.md",
       "release": false
@@ -440,7 +440,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -941,14 +941,36 @@
       "release": true
     },
     {
-      "slug": "releases/hotloop-4-19-0",
+      "slug": "releases/hotloop-4-19-4",
       "product": "releases",
       "group": "HotLoop core",
-      "title": "HotLoop core 4.19.0 release notes",
-      "label": "4.19.0",
-      "status": "next",
+      "title": "HotLoop core 4.19.4 release notes",
+      "label": "4.19.4",
+      "status": "released",
       "repo": "hotloop",
-      "source": "docs/releases/4.19.0.md",
+      "source": "docs/releases/4.19.4.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-19-5",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.19.5 release notes",
+      "label": "4.19.5",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.19.5.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-19-8",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.19.8 release notes",
+      "label": "4.19.8",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.19.8.md",
       "release": true
     },
     {

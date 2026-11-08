@@ -5,10 +5,6 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -432,7 +428,8 @@ back up and patch, and they are not adopting ours to get a trend.
 - [ ] Against a CODESYS publisher
 - [ ] Message security (signed and encrypted NetworkMessages)
 - [ ] Delta frames from the publisher; DataSetMetaData and discovery messages
-      so a subscriber can name the fields; array and structure fields; events
+      so a subscriber can name the fields; array and structure fields in what
+      the publisher sends, and structure fields in what the subscriber reads; events
 - [ ] Against a Siemens or Beckhoff publisher, and over a router (multicast
       routing and the TTL)
 

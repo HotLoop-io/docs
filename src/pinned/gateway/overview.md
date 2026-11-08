@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.18.11
+reviewed: hotloop=4.19.8
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: ten native protocols, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
@@ -7,7 +7,7 @@ sidebar:
 ---
 
 :::note[{{hotloop}} is out]
-The release where HotLoop stops being one image. [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/) all ship from this tag, each with its own image and chart. The Gateway keeps `ghcr.io/hotloop-io/hotloop:{{hotloop}}` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repo is still private. [Install it](/gateway/install/). On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
+Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. This build is amd64 only, and the arm images on `:stable` are 4.19.5's until the next release builds every architecture. The Gateway keeps `ghcr.io/hotloop-io/hotloop:{{hotloop}}` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repo is still private. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
 :::
 
 HotLoop Gateway reads your plant. It polls PLCs and servers in their own protocols, keeps every reading and its quality in a historian, raises ISA-18.2 alarms that can page a phone, runs automations against all of it, and hands the whole plant to agents over MCP. A site runs one chart, the Gateway and its database, instead of a historian, an alarm server, a rules engine, and a pile of glue, each one breaking on its own damn schedule.
@@ -26,6 +26,8 @@ The ground floor, in {{hotloop}} and in every release back to 4.16.0:
 - [Protocols](/iot/protocols/) says exactly how far each driver has been proven, including the two that have never touched a physical PLC.
 - [Automations](/iot/automations/) covers triggers, conditions, and actions, and why a rule is compiled when you save it instead of when it fires at 3 AM.
 - [Model Context Protocol](/iot/mcp/) is the Gateway as an MCP server and client, and how one Gateway reads every site.
+
+New in 4.19.4, and not in 4.18.11: agents write through the same gate as the screen (MCP is on in every product, and the endpoint always has a token), a value written to a scaled tag lands in the register the way you meant it, a CODESYS runtime is read by the names in its Symbol Configuration, a Kafka event stream joins the historian targets, OPC UA PubSub over UADP subscribes and publishes, and `hostNetwork` is a chart setting. 4.19.5 is its multi-arch build, and 4.19.8 adds a Logbook fix and tag pickers that search the whole plant. [The release notes](/releases/hotloop-4-19-4/) say what each one buys you, and what it costs.
 
 New in 4.18.11, and not in 4.18.10: the database is PostgreSQL 17 with an upgrade that runs itself, SNMP and BACnet/IP through one integrations flow, kiosk sign-in with a lockout, alarm escalation, and a UI that installs on a phone. [The release notes](/releases/hotloop-4-18-11/) say what each one buys you, and what it costs.
 
@@ -67,6 +69,9 @@ All four are installable today, all {{hotloop}}. The relay is its own image and 
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
 
+- [4.19.8](/releases/hotloop-4-19-8/): the Logbook's Older entries button keeps its page, and every tag picker searches the whole plant. It carries 4.19.6's and 4.19.7's changes too, because neither was published.
+- [4.19.5](/releases/hotloop-4-19-5/): the multi-arch build of 4.19.4, with nothing else in it.
+- [4.19.4](/releases/hotloop-4-19-4/): agent writes and a token on every MCP endpoint, scaled writes that land right, CODESYS by symbol name, a Kafka event stream, OPC UA PubSub over UADP, and `hostNetwork`. There is no 4.19.0 to 4.19.3, and the notes say why.
 - [4.18.11](/releases/hotloop-4-18-11/): PostgreSQL 17 with an upgrade that runs itself (read this one before you upgrade a running plant), SNMP and BACnet/IP through one integrations flow, kiosk sign-in with a lockout, alarm escalation, and a UI that installs on a phone.
 - [4.18.10](/releases/hotloop-4-18-10/): the four-product lineup, a choice of database, MQTT and network discovery, historian targets, and boxes that update themselves. There is no 4.18.0 to 4.18.9, and the notes say why.
 - [4.17.0](/releases/hotloop-4-17-0/): recipes, scripts, blueprints, helpers, the logbook, and UniFi Network, read-only.

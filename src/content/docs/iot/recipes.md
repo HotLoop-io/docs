@@ -5,10 +5,6 @@ description: "A product grade's setpoints applied in one go: checked whole, refu
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A recipe is a set of values that go out to the plant together. Grade A's zone
 temperatures, line speed and die gap. The changeover to the 500 ml bottle. The
 night setback. Every plant has these, and every plant has a laminated sheet

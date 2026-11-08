@@ -5,10 +5,6 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet
 dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the
 actor recorded against a write came from a header the proxy set, spoofable by

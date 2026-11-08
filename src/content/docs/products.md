@@ -5,10 +5,6 @@ description: "Seven products on four release lines, what each core product has, 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop is seven products for the plant floor: four that grow with a site (IoT, Edge, Gateway, and Edge Relay), plus Flow for wiring, Cascade for workflows, and Transmitter for putting a PLC's values on the wire.
 
 They ship on four release lines. **HotLoop core** is IoT, Edge, Gateway, and Edge Relay: four products, one codebase, one tag. Every core release ships all four in lockstep, same version, each with its own image, its own Helm chart and its own

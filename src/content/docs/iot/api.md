@@ -5,10 +5,6 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -738,7 +734,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.19.0"
+  "version": "4.19.8"
 }
 ```
 
@@ -788,7 +784,7 @@ A device is one connection over one protocol. What goes in `config` and
 
 ### `GET /api/devices`
 
-Every device, with its live connection state. Credentials are `[redacted]`.
+Every device, with its live connection state. Credentials are `[redacted]`. `?q=` keeps the devices whose id, name, address or protocol holds the text (case-insensitive), `?limit=` (1 to 5000, anything else is `400`) the first of them; with either, `X-Total-Count` is how many matched.
 
 ```json
 [{"id":"tank-farm","name":"Tank farm","protocol":"mqtt","address":"base-mqtt:1883","enabled":true,
@@ -1393,9 +1389,13 @@ it still exist: ignore or delete those first, or switch the broker off with
 
 | Query | <span class="sr-only">Details</span> |
 |---|---|
-| `device` | Every tag on one device. When set, `q` and `limit` are ignored |
-| `q` | Search: a case-insensitive substring of the device id, tag name or description |
-| `limit` | Default 500, at most 1000 |
+| `device` | Only this device's tags. With no `limit` it answers every one of them |
+| `q` | Search: a case-insensitive substring of the device id, tag name or description. Works with `device` |
+| `limit` | A whole number from 1 to 5000. Default 500 with no `device`. Anything else, 5001 included, is `400`: it is refused, never answered with fewer (up to 4.19.5 any limit over 1000 was quietly turned into 200) |
+| `writable` | `true` for only the tags marked writable (what the write pickers offer) |
+| `offset` | Where the page starts, zero or more. Tags are ordered by device, then name |
+
+The answer's `X-Total-Count` header is how many tags match in all, so a client pages with `offset` until it has them and knows it did. An empty answer is `[]`.
 
 ```json
 [{"id":5,"deviceId":"tank-farm","name":"level_sp","address":"mqtt:docs-api-example/level_sp","dataType":"float","unit":"%","enabled":true,"writable":true,"maxValue":95,"hasRange":true,"scale":1,"createdAt":"2026-09-27T20:21:39.405164Z","updatedAt":"2026-09-27T20:21:39.405164Z"}]
@@ -1609,6 +1609,7 @@ Every entity, orphans included.
 | `domain` | `sensor`, `switch`, `motor`... |
 | `device` | Entities on one device |
 | `orphaned` | `true` for only orphans, `false` for none |
+| `q`, `limit` | Search: a case-insensitive substring of the entity id, name or device id, and at most `limit` (1 to 5000, anything else is `400`, never cut quietly) of them ordered by entity id. `X-Total-Count` is how many matched. Left out, the list is whole |
 
 ```json
 [{"id":5,"entity_id":"switch.tank_farm_pump","unique_id":"tag-control:tank-farm/pump","domain":"switch","platform":"tag","name":"pump","device_id":"tank-farm","options":{},"disabled":false,"hidden":false,"created_at":"2026-09-27T20:21:39.153197Z","updated_at":"2026-09-27T20:21:39.153197Z","bindings":[{"role":"command","device_id":"tank-farm","tag_name":"pump"},{"role":"state","device_id":"tank-farm","tag_name":"pump"}],"equipment_id":null,"area_id":4,"labels":[]}]
@@ -1854,7 +1855,7 @@ under it. See [EQUIPMENT.md](/iot/equipment/).
 ### `GET /api/equipment`
 
 Every node, ordered by id, each with its `path` of names from the root.
-`?level=area` filters.
+`?level=area` filters. `?q=` keeps the nodes whose path holds the text (case-insensitive), `?limit=` (1 to 5000, anything else is `400`) the first of them; with either, `X-Total-Count` is how many matched.
 
 ```json
 [{"id":4,"parent_id":1,"level":"area","name":"Utilities","created_at":"2026-09-27T20:21:01.637319Z","updated_at":"2026-09-27T20:21:01.637319Z","path":["Demo Plant","Utilities"]}]
@@ -3068,7 +3069,7 @@ Then, as things happen:
 
 | Event | Data | When |
 |---|---|---|
-| `values` | An array of readings, the `GET /api/values` shape, newest per tag | Every 250 ms, if anything changed. Coalesced: a plant making five thousand readings a second must not push five thousand messages a second at a browser that repaints sixty times |
+| `values` | An array of readings, the `GET /api/values` shape, newest per tag, **only the tags whose reading changed** | Every 250 ms, if any did. A tag whose value, text, unit, quality and reason are the same as the last one sent is left out, and sent again once it has gone 30 seconds unsent, so a steady value's `timestamp` is never more than that old. A driver reads every tag on every poll; 4.19.5 sent them all every time (about 150 KB four times a second for a tester's 2232 tags) and a page on a slow link fell minutes behind |
 | `entities` | `{"changed": [states], "removed": [entity_ids]}` | Every 250 ms, if any entity state changed. `removed` is an entity disabled, deleted or renamed away from |
 | `alarm` | `{"alarm": {...}, "event": "shelved"}`, the alarm and what happened to it (`raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`) | Immediately: alarm transitions are rare and each one matters |
 | `device` | `{"deviceId":"tank-farm","state":"connected"}` | Immediately: the screen should go red when a device drops, not at the next flush |
@@ -3083,9 +3084,13 @@ data: {"deviceId":"tank-farm","state":"connected"}
 ```
 
 A comment line (`: heartbeat 2026-09-27T20:35:00Z`) every 20 seconds keeps
-proxies from closing an idle connection. A client that cannot keep up misses
-`values` and `entities` updates rather than stalling everyone else; the next
-one carries current values, so nothing is lost for long. The response sets
+proxies from closing an idle connection. Each open page is paced on its own: its
+writer rests as long as its last send took (at most five seconds), and what
+arrives meanwhile is held per tag and per entity, newest only, so a page on a
+slow link stays a send or two behind the plant, never minutes, loses nothing,
+and takes nothing from the other pages. The stream is gzip-compressed when the
+request says `Accept-Encoding: gzip` (a browser does), which takes a tester's
+first picture from about 326 KB to about 11 KB on the wire. The response sets
 `X-Accel-Buffering: no`, because a buffering proxy turns a live feed into a
 very slow download.
 
