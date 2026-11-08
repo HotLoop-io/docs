@@ -153,7 +153,8 @@ export const PAGES = [
 
 // Release notes are every file in docs/releases, found on the ref, not listed here.
 export const RELEASE_NOTES = [
-  { repo: 'hotloop', dir: 'docs/releases', slugPrefix: 'releases/hotloop-', label: 'HotLoop core' },
+  // 4.19.6 and 4.19.7 were tagged and never published (4.19.8's notes say why and carry both), so they get no page. A note for a release that does not exist is a claim that it does.
+  { repo: 'hotloop', dir: 'docs/releases', slugPrefix: 'releases/hotloop-', label: 'HotLoop core', skip: ['4.19.6', '4.19.7'] },
   { repo: 'flow', dir: 'docs/releases', slugPrefix: 'releases/flow-', label: 'HotLoop Flow' },
   // 0.1.0 was tagged and never published anything, so it gets no page. A note for a release that does not exist is a claim that it does.
   { repo: 'cascade', dir: 'docs/release-notes', slugPrefix: 'releases/cascade-', label: 'HotLoop Cascade', skip: ['0.1.0'] },

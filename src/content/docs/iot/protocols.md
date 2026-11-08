@@ -5,10 +5,6 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -577,8 +573,10 @@ listens for unicast. A tag's address is `<DataSetWriterId>/<field index>`, the
 field's position in the publisher's DataSet counting from 0: `1000/3` is the
 fourth field writer 1000 publishes. UADP carries no field names (they live in a
 DataSetMetaData the publisher serves some other way, or not at all), so the
-position is what a datagram can say. Browse lists the fields that have been
-heard, with their types.
+position is what a datagram can say. A field that is an array is read one
+element at a time: `1000/3[17]` is the eighteenth value of the array that is
+the fourth field. Browse lists the fields that have been heard, with their
+types, and an array as its elements (the first 1000 of them).
 
 ```json
 {"publisherId":"2234","writerGroupId":100,"interface":"eth0","timeoutMs":30000,
@@ -587,11 +585,25 @@ heard, with their types.
 
 - `publisherId` and `writerGroupId` keep a device to one publisher and group
   when several share an address. Empty and zero take everything.
-- `interface` is the network card a multicast group is joined on. A machine with
-  more than one needs it.
+- The group, the port and the card are all the device's: nothing is fixed in
+  HotLoop. `udp://239.192.0.1:4850` with `"interface":"eth0"` joins that group
+  on that card, and `udp://127.0.0.1:4842` listens for one publisher on the same
+  machine. Several devices can listen on different groups and ports at once.
+- `interface` is the network card a multicast group is joined on, by name
+  (`eth0`, `lo`) or by one of its IPv4 addresses (`127.0.0.1`). A machine with
+  more than one card needs it. A publisher on the same machine that sends to a
+  group over loopback (`IP_MULTICAST_IF` 127.0.0.1, TTL 0, loopback on, no route)
+  is heard by a device with `"interface":"lo"` or `"127.0.0.1"`; with no
+  interface named and no route, the join fails with `no such device` and says so.
 - `dataSets` is only for RawData, which carries no types on the wire: the
   publisher's field types, in order, so the bytes can be read. Variant and
-  DataValue messages carry their own.
+  DataValue messages carry their own. Each entry is a type name (`"Float"`), and
+  can also say how a block of values is laid out: `"Float*250"` is 250 fields
+  one after another with no length in front, which is how a PLC that sends a
+  block of REALs as separate fields writes it; `"Float[250]"` is one array field
+  of at most 250 values, written as the OPC Foundation stack writes a RawData
+  array (an Int32 count, the values, and zero padding up to 250 of them); and
+  `"String(40)"` is a String padded to 40 bytes, alone or as `"String(40)[4]"`.
 - Key frames replace a DataSet's fields; delta frames change the ones they
   name; keep alives prove the publisher is alive. A lost message (a gap in the
   sequence numbers) marks that DataSetWriter's tags **uncertain** until its next
@@ -605,8 +617,12 @@ heard, with their types.
 - The reading's time is the publisher's, from the field, the DataSetMessage or
   the NetworkMessage, when it is set and not more than a minute ahead of this
   clock, and the time it arrived otherwise.
+- Arrays are read in Variant and DataValue messages (an Int32 count and the
+  values, OPC 10000-6 5.2.2.16; a multi-dimensional one comes flat, row by
+  row) and, with a layout, in RawData. A count the datagram cannot hold is
+  refused before anything is made for it.
 - Read-only. Message security (signed or encrypted NetworkMessages), chunked
-  messages, discovery messages, events, and array or structure fields are not
+  messages, discovery messages, events, and structure fields are not
   supported; a datagram with any of them is refused, counted by reason, and
   never guessed at.
 
@@ -650,7 +666,9 @@ things about open62541 itself, found doing it: its subscriber discards keep
 alive messages ("Only keyframes are supported") though a keep alive is a valid
 DataSetMessage, and its RawData publisher sends one message and then stops with
 `BadInternalError`. HotLoop's publisher is read correctly by its subscriber all
-the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go receiver written elsewhere were read for interoperability and share no code with this.
+the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go
+receiver written elsewhere were read for interoperability and share no code
+with this.
 ### CODESYS
 
 A PLC that runs a CODESYS Control runtime (Linux SL, ARM64, Raspberry Pi, Windows,

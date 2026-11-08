@@ -1,12 +1,12 @@
 ---
-reviewed: hotloop=4.18.11
+reviewed: hotloop=4.19.8
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Gateway {{hotloop}} ships as a container image for amd64 and arm64, about 37 MB on amd64 and 35 MB on arm64, and a Helm chart. Both pull with no login. It keeps the names it shipped under through 4.17.0, image `ghcr.io/hotloop-io/hotloop` and chart `hotloop`, so nobody running it has to change a thing. Already running an older release? Don't install over it. [Upgrading](/gateway/upgrading/) has the path from 4.17.0, which is a plain `helm upgrade`, and the paths from 4.16.0 and 4.3.1, which go in hops.
+HotLoop Gateway {{hotloop}} ships as a container image for amd64 (the arm64 image on `:stable` is 4.19.5's, the last build of every architecture, and the next release builds both again), about 37 MB on amd64 and 35 MB on arm64, and a Helm chart. Both pull with no login. It keeps the names it shipped under through 4.17.0, image `ghcr.io/hotloop-io/hotloop` and chart `hotloop`, so nobody running it has to change a thing. Already running an older release? Don't install over it. [Upgrading](/gateway/upgrading/) has the path from 4.17.0, which is a plain `helm upgrade`, and the paths from 4.16.0 and 4.3.1, which go in hops.
 
 Two ways to run it for real: the Helm chart on any Kubernetes, k3s included, and Podman Quadlet on a box that isn't in a cluster, below. There's no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 
@@ -57,7 +57,7 @@ Put these in a values file and install with `-f`. Don't lean on `--set` for anyt
 | `global.timezone` | `America/New_York` | Schedules, reports and shift changes run on it. It has to be a real zone name (`America/Chicago`, not `CST`), because a timezone that won't load stops startup instead of quietly running on UTC. |
 | `publicUrl` | empty | The address a phone on the plant Wi-Fi reaches HotLoop at. Without it, notifications have no link back and ntfy gets no Acknowledge button. |
 | `safety.allowWrites` | `false` | The master switch. Off, nothing writes to a machine, from anywhere. Turn it on once the deployment has been reviewed. |
-| `safety.allowMcpWrites` | `false` | Lets agents write through the same gate. It narrows the master switch and never goes around it. Set it without `safety.allowWrites` and the Gateway refuses to start. |
+| `safety.allowMcpWrites` | `true` | Lets agents write through the same gate, on since 4.19.4. It follows the master switch: with `safety.allowWrites` off, nothing writes, agents included. Set it `false` and agents can still read the whole plant and never write. The charts always set an MCP token, so `/mcp` is never open. |
 | `database.postgresql.persistence.size` | `20Gi` | Your history lives here. Size it for your tag count and `historian.retentionDays` (90). |
 | `logbook.retentionDays` | `90` | Days of entity state changes the [logbook](/iot/logbook/) keeps. `0` keeps everything until the volume fills, and the Gateway warns you about it at start. |
 | `secretKey.existingSecret` | empty | A Secret you manage holding the device password key. Leave it empty and the chart makes one. Set it if you render the chart with `helm template`. |

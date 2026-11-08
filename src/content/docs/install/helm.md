@@ -5,10 +5,6 @@ description: "Deploy any HotLoop chart on k3s or any Kubernetes: the values wort
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The chart deploys two workloads: the gateway (a Deployment, it holds no durable
 state of its own) and TimescaleDB (a StatefulSet with a volume). That is the
 default. `database.type` picks another database: plain PostgreSQL, or SQLite,
@@ -204,6 +200,21 @@ Narrow ingress to the dashboard's namespace once it is known. Egress is
 deliberately unrestricted: this app exists to reach equipment at addresses
 nobody can enumerate in advance, and an egress policy that silently blocks a
 poll looks like a broken driver rather than a firewall rule.
+
+### Hardware: USB radios, serial adapters, and Bluetooth
+
+From 4.19.7 every HotLoop chart (Gateway, IoT, Edge and the Edge Relay) ships with the access hardware needs, on, so a plain install from the App Store or from helm sees what is plugged into the node with no hand edit, on the pod network. It is the `hardware:` block in `values.yaml`: three switches that default on, and one opt-in that defaults off:
+
+| Value | Default | What it does |
+|---|---|---|
+| `hardware.privileged` | `true` | The app container runs privileged (`privileged: true`, `allowPrivilegeEscalation: true`) and as root (`runAsUser: 0`, `runAsNonRoot: false`, no capability drop). Root because a USB serial node is `root:dialout 0660` and BlueZ's D-Bus policy lets root and the `bluetooth` group in; a container user in neither opens nothing. The root filesystem stays read-only, and the init container and the bundled database keep their own non-root, all-capabilities-dropped context. |
+| `hardware.usbDevices.enabled` | `true` | The node's `/dev` (`hardware.usbDevices.hostPath`) is mounted at `/dev`: USB serial adapters (`/dev/ttyUSB*`, `/dev/ttyACM*`, `/dev/serial/by-id/*`), including one plugged in after the pod started. A privileged container is only handed the devices that existed when it started; the mount is what makes a replugged stick appear. |
+| `hardware.bluetooth.enabled` | `true` | The node's D-Bus directory (`hardware.bluetooth.dbusPath`, `/run/dbus`, which holds `system_bus_socket`) is mounted at the same path, so a client reaches the node's BlueZ. It is created empty on a node with no D-Bus, so the pod still starts there. |
+| `hardware.bluetooth.hostNetwork` | `false` | The opt-in, off by default, for what needs the node's network: kernel Bluetooth sockets (HCI, L2CAP) exist only in the node's network namespace, so a client that opens one directly, and discovery that listens on the node's own network (mDNS, SSDP, a radio's multicast), need it. A client that goes through BlueZ's D-Bus API needs only the mounted socket and works from the pod network. On, the pod runs on the node's network with the consequences under [Networking](#networking). |
+
+What HotLoop does with it today: nothing yet. HotLoop has no Bluetooth, Z-Wave or USB serial code of its own (Zigbee comes through a Zigbee2MQTT bridge over MQTT, see [BROKER.md](/iot/broker/)); this is the access a feature, or a sidecar that reads a radio, needs, in place before it is asked for.
+
+What it costs, on purpose and decided: the pod is root on the node (privileged, with the node's `/dev`), and the NetworkPolicy chart default stays on for what it covers. The pod stays on the pod network. Turn any part off with `--set hardware.privileged=false --set hardware.usbDevices.enabled=false --set hardware.bluetooth.enabled=false`; with all three off the render is, line for line, the pod 4.19.6 rendered (non-root, every capability dropped, read-only root, pod network). For what needs the node's network, set `hardware.bluetooth.hostNetwork=true` (or `hostNetwork=true`): the page then answers on every address of the node at `service.targetPort`, one HotLoop per node per port, a NetworkPolicy does not apply to the pod, and `nodeSelector` pins it to the node whose radio it should see.
 
 ### Edge deployments
 

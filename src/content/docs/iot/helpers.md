@@ -5,10 +5,6 @@ description: "The values a plant's people own, like a batch target or which shif
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 4d5da2f, and it differs from the copy in HotLoop core 4.18.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A helper is a value the plant's people own rather than a PLC. "Line 2 is in
 changeover." "Today's batch target is 1,250 kg." "B shift is on." "Twelve
 parts scrapped since the last reset." "The purge has nine minutes left." None of
