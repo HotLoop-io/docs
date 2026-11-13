@@ -18,4 +18,6 @@
     text-transform: uppercase; color: var(--hl-ink-soft);
     border: 1px solid var(--hl-border); border-radius: var(--hl-r-pill); padding: 0.15em 0.7em;
   }
+  /* On the narrowest phones the DOCS tag would push the header buttons under the menu button. */
+  @media (max-width: 23.99rem) { .docs-tag { display: none; } }
 </style>
