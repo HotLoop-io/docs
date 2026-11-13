@@ -153,3 +153,12 @@ nav.sidebar a { border-radius: var(--hl-r-pill); }
 
 /* The next-release and written-against-main boxes read as the site's notices. */
 .starlight-aside { border-radius: var(--hl-r-card); }
+
+/* Phone: the menu button, the search button and every sidebar row are at least 44px
+   tall, so a thumb lands on the one it meant. */
+@media (max-width: 49.99rem) {
+  .sl-menu-button { width: 44px; height: 44px; }
+  button[data-open-modal] { min-width: 44px; min-height: 44px; }
+  nav.sidebar :is(a, summary) { min-height: 44px; display: flex; align-items: center; }
+  nav.sidebar summary { justify-content: space-between; }
+}
