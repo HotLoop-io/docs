@@ -39,7 +39,7 @@ All of it on The Beast, on the files below, against CODESYS Control for Linux SL
   reading and not an invented one; it does not test a controller whose clock is wrong.
 * open62541 1.4.9 reads the NetworkMessage and DataSetMessage Timestamp of all 113 messages of each writer with its
   own header decoders, and decodes the values as it did for 1.0.0.
-* HotLoop core's subscriber (from its main branch, not in a core release yet) reads both publishers against a live runtime: 21 values each, both counters
+* HotLoop core's subscriber (from its main branch when this was run, and in HotLoop core 4.19.4 and every release after it) reads both publishers against a live runtime: 21 values each, both counters
   advancing, nothing refused. Every reading carries the publisher's whole-second timestamp as its time, and the
   timestamp moved with the PLC clock over a 3 second wait.
 * The `.package` installs through `PackageManagerCLI --install`, the library appears in the System repository (it was

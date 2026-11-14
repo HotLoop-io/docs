@@ -5,7 +5,7 @@ description: "The first release of HotLoop Transmitter: a CODESYS library that p
 
 First release. A CODESYS library, written in Structured Text over SysSocket UDP, that puts your PLC's values on the
 wire as OPC UA PubSub (Part 14, UADP). You add the library, declare one function block, add the variables you want
-out, and call it once per cycle. Anything that subscribes to OPC UA PubSub can read it, HotLoop core's main branch included.
+out, and call it once per cycle. Anything that subscribes to OPC UA PubSub can read it, HotLoop core included, from 4.19.4 on.
 
 What that means for you: a PLC with no PubSub library can now feed a PubSub subscriber with about fifteen lines of
 Structured Text, and nothing else gets installed on the controller.
@@ -33,7 +33,7 @@ All of it on The Beast, on the files below, against CODESYS Control for Linux SL
   reports over its own OPC UA server, with no gap in the sequence numbers.
 * open62541 1.4.9 decodes the Variant message in full and the RawData scalars. It cannot read a RawData array or a
   long RawData string at all, which is its limit and not the library's.
-* HotLoop core's subscriber (from its main branch, not in a release yet) reads both publishers, including the string, the TIME, both arrays and
+* HotLoop core's subscriber (from its main branch when this was run, and in HotLoop core 4.19.4 and every release after it) reads both publishers, including the string, the TIME, both arrays and
   two counters that move between reads, and refuses nothing.
 * A second Go decoder reads all 222 captured datagrams.
 * Cost on a 20 ms task, two publishers: about 10.6 us added per cycle on average. A cycle that sends costs 10 to

@@ -12,7 +12,7 @@ Node 22.12 or newer is required, and `.nvmrc` pins the version CI uses.
 
 ## What is here
 
-One section per product: HotLoop IoT, Edge, Gateway, Edge Relay, Flow and Cascade, plus the shared pages (install, k3s and Helm, Podman Quadlet, the `:stable` auto-update, release notes, the roadmap). A bigger product carries everything the smaller one has, so its sidebar section links to those pages instead of copying them. Every page says what it has actually been run against, because a doc that rounds up is how somebody finds out at commissioning.
+One section per product: HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter, plus the shared pages (install, k3s and Helm, Podman Quadlet, the `:stable` auto-update, release notes, the roadmap). A bigger product carries everything the smaller one has, so its sidebar section links to those pages instead of copying them. Every page says what it has actually been run against, because a doc that rounds up is how somebody finds out at commissioning.
 
 The look is hotloop.io's. `src/styles/tokens.css` is a vendored copy of `brand/tokens.css` in HotLoop-io/HotLoop-io, fonts are the same self-hosted Inter and JetBrains Mono, and the header and footer are the website's, in `src/components`. CI fails the build if the tokens drift from the canonical file.
 

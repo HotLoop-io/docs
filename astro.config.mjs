@@ -162,6 +162,19 @@ export default defineConfig({
           items: grouped('cascade'),
         },
         {
+          label: 'HotLoop for CODESYS',
+          collapsed: true,
+          items: [
+            { slug: 'codesys/overview', label: 'Overview' },
+            { slug: 'codesys/install', label: 'Install' },
+            { slug: 'codesys/profile', label: 'The profile' },
+            { slug: 'codesys/where-it-stands', label: 'Where it stands' },
+            { slug: 'codesys/roadmap', label: 'Roadmap' },
+            { slug: 'releases/codesys-0-3-1', label: 'Release notes 0.3.1' },
+            { slug: 'releases/codesys-0-3-0', label: 'Release notes 0.3.0' },
+          ],
+        },
+        {
           label: 'HotLoop Transmitter',
           collapsed: true,
           items: [
@@ -184,6 +197,7 @@ export default defineConfig({
             { label: 'HotLoop core', collapsed: true, items: hlRelease.sort(relSort).map(page) },
             { label: 'HotLoop Flow', collapsed: true, items: flowRelease.sort(relSort).map(page) },
             { label: 'HotLoop Cascade', collapsed: true, items: cascadeRelease.sort(relSort).map(page) },
+            { label: 'HotLoop for CODESYS', collapsed: true, items: [{ slug: 'releases/codesys-0-3-1', label: '0.3.1' }, { slug: 'releases/codesys-0-3-0', label: '0.3.0' }] },
           ],
         },
         { slug: 'roadmap', label: 'HotLoop roadmap' },

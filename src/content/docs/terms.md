@@ -7,7 +7,7 @@ editUrl: false
 
 The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site. The canonical copy is [on GitHub](https://github.com/HotLoop-io/HotLoop-io/blob/main/TERMS.md).
 
-HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, and Transmitter. HotLoop LLC.
+HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. HotLoop LLC.
 
 Last updated: November 4, 2026. Effective: October 19, 2026.
 
@@ -19,7 +19,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 1.2 "You" means the person or organization that accepts these terms.
 
-1.3 "HotLoop" or "the Software" means HotLoop IoT, HotLoop Edge, HotLoop Gateway, HotLoop Edge Relay, HotLoop Flow, HotLoop Cascade, and HotLoop Transmitter, in every form we distribute: release binaries, container images, Helm charts, Podman Quadlet units, configuration and documentation.
+1.3 "HotLoop" or "the Software" means HotLoop IoT, HotLoop Edge, HotLoop Gateway, HotLoop Edge Relay, HotLoop Flow, HotLoop Cascade, HotLoop for CODESYS, and HotLoop Transmitter, in every form we distribute: release binaries, container images, Helm charts, Podman Quadlet units, configuration and documentation.
 
 1.4 "Sites" means hotloop.io, docs.hotloop.io, and our GitHub organization, repositories and Discussions.
 
