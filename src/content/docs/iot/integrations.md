@@ -5,6 +5,10 @@ description: "Point HotLoop at a device you know the address of, look at the rea
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 90d51ed, and it differs from the copy in HotLoop core 4.19.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 An integration is how you point HotLoop at a kind of device you know the
 address of, answer a few questions, see what is actually on it, and keep the
 points you want. It makes the device and its tags. Entities follow from the tags
@@ -105,6 +109,13 @@ Configuration) by the names the programmer wrote, with their types and whether
 each can be written. It suggests the application's own variables, not the
 elements of its buffers, and says in its notes how many arrays it listed in
 part. A PLC with nothing exported is told how to export something.
+
+A CODESYS device is read once a second, which is how often the driver asks the
+runtime's OPC UA server to look at each variable, so a screen is about a second
+behind the PLC and no more. The runtime's own default is five seconds, which is
+slow for a screen: a pump starts and the page says so five seconds later. Change
+the device's poll interval, or its `samplingIntervalMs`, to ask for more; the
+floor every device is held to and the server's OperationLimits still apply.
 
 Set up with `"dashboard": true` in the request and the points you keep also get
 a dashboard named for the device: a heading, a trend of the numbers that move,

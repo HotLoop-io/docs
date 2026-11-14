@@ -5,7 +5,7 @@ description: "What shipped in every HotLoop core, Flow, Cascade and Transmitter 
 editUrl: false
 ---
 
-Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is 4.19.8, the latest Flow release is 2.8.1, and the latest Cascade release is 1.0.2.
+Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is 4.19.10, the latest Flow release is 2.8.1, and the latest Cascade release is 1.0.2.
 
 ## HotLoop core
 
