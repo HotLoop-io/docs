@@ -3,19 +3,19 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "27882ead1244ee52e1390c10c46fa00f79ebc3bf",
+      "sha": "90d51ed0040bae8e8a3ce2ae601ac98c880093e7",
       "release": {
-        "tag": "v4.19.8",
-        "version": "4.19.8",
+        "tag": "v4.19.10",
+        "version": "4.19.10",
         "prerelease": false,
-        "publishedAt": "2026-11-08T12:54:20Z",
-        "sha": "27882ead1244ee52e1390c10c46fa00f79ebc3bf"
+        "publishedAt": "2026-11-11T03:31:36Z",
+        "sha": "ab6149d2c3e3f9352e49c72479bac5cdeaea268b"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "dd6a815f9dffd31420f6fd954808011e37b23d09",
+      "sha": "824073fd4f9a1fada4368aadf961b06c5aa55f12",
       "release": {
         "tag": "v2.8.1",
         "version": "2.8.1",
@@ -187,7 +187,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -275,7 +275,7 @@
       "group": "Devices and data",
       "title": "Integrations",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/INTEGRATIONS.md",
       "release": false
@@ -330,7 +330,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false

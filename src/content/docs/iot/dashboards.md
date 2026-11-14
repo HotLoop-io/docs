@@ -5,6 +5,10 @@ description: "Pages of cards built per role or per screen: gauges, trends, entit
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 90d51ed, and it differs from the copy in HotLoop core 4.19.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
 sitting where the zones are. Build as many as the plant needs, give each to the
@@ -113,6 +117,8 @@ should hear that and not the person pressing it.
 | `markdown` | Text: headings, lists, bold, italic, code, http(s) links | `text` | 4 x 2 |
 | `camera` | A snapshot that refreshes, or a motion JPEG stream | `url`, `stream`, `refreshSec` | 6 x 4 |
 | `map` | A floor plan with live tags placed on it | `image`, `markers` | 6 x 5 |
+| `setpoint` | A number entered for one tag, with limits, a unit and a confirm, and what the device reports back | `tag`, `label`, `min`, `max`, `step`, `unit`, `decimals`, `confirm` | 3 x 3 |
+| `symbols` | A picture of a machine: symbols placed by pixel on a background, drawn from their tags | `image`, `width`, `height`, `symbols` | 8 x 5 |
 
 Things worth knowing about the ones that aren't obvious:
 
@@ -191,9 +197,52 @@ Things worth knowing about the ones that aren't obvious:
   they stay where they were put at any size. This is a floor plan, not a street
   map: a tile map needs a tile server on the internet, and a plant's panel PC
   usually can't reach one.
+- **`setpoint`** is for a number somebody types: a temperature, a speed, a
+  level. The field knows the tag's unit (or the card's `unit`) and its limits:
+  `min` and `max` together, or the tag's own range when the card gives none. A
+  card can only narrow the tag's range, never widen it, because the write gate
+  refuses a value outside the tag's range whatever a card says; a card that
+  offers more is refused when the dashboard is saved, and so is a card on a tag
+  that holds text or a switch (use a `button` for those). Outside the limits, off
+  the `step`, or not a number, the entry says so under the field and **Set** stays
+  off. **Set** asks first, with the current value and a reason for the audit
+  trail, unless the card was built with `confirm` off and Settings does not
+  override it, then it goes through `POST /api/write`: the master write switch,
+  the tag's writable flag, the role's permission and the audit row are the same as
+  for every other write. The card then waits for the device's reading to show the
+  value and watches it for two seconds more, and says what the device holds:
+  "Read back 70 C from the device: it is the value sent"; or, if the PLC took the
+  write and brought it back to its own limit, "The device took 70 C and then
+  changed it to 60 C"; or, if the reading never showed it, "The device reports
+  60 C, not 70 C". The "in the device now" line is the live reading all the time,
+  so it also shows a PLC program overwriting the value later. While the device has no good reading (a PLC that is
+  off or unreachable) the field and Set are off and the card says the device is not
+  answering, because a write could only be refused.
+- **`symbols`** is a picture of a machine. `width` and `height` are the page's
+  own size in pixels (800 by 450 if left out), `image` is an optional background
+  (an http(s) address, or a picture uploaded into the card, the same as `map`),
+  and `symbols` is a list of things placed by pixel from the top left corner:
+  `{"id": "p1", "type": "pump", "x": 120, "y": 300, "tag": "plc/bPumpRun"}`. The page is drawn as
+  one scaled picture, so every symbol keeps its place at any card size and on a
+  phone. The types are `pump`, `motor` and `fan` (they turn while the tag is
+  on), `valve` (open or shut), `tank` (filled between `min` and `max`, or the
+  tag's range, or 0 to 100), `heater` and `lamp` (lit while on), `pipe` (what is
+  in it moves while its optional tag is on), `readout` (the number, with `unit`
+  and `decimals`) and `label` (fixed text). `invert` reads a tag the other way up, and a lamp's `tone` (`ok`, `warn`,
+  `bad` or `info`) is the color it lights in: a run lamp is green and a fault
+  lamp is red, and the tag says only when it is lit.
+  A symbol says its state in words as well as in color (a caption and a title),
+  is drawn red or warm when its tag is in an alarm or has returned from one, and
+  is faded with "no reading" when the tag has no good reading. Motion stops when
+  the person has asked their system for less of it. The symbols are drawn by
+  HotLoop for HotLoop; none is borrowed. A symbol with a tag opens that tag when
+  it is clicked, like a pin on a floor plan. It commands nothing: put a `setpoint`
+  or a `button` card beside it for that. In the builder a symbol is picked up and
+  moved with the pointer, or with the arrow keys (Shift moves ten pixels), or
+  given its pixels by number.
 - **`markdown`** is built into DOM nodes and never into HTML, so nothing typed
   into it can become markup or a script.
-- **`gauge`, `value`, `map`** show "not on this gateway any more" if their tag
+- **`gauge`, `value`, `map`, `setpoint`** show "not on this gateway any more" if their tag
   is deleted after the dashboard was saved, instead of a dial that never moves.
 
 ## The wall board
