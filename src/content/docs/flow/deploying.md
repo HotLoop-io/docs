@@ -70,7 +70,7 @@ To choose your own instead:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.8.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.9.1 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -122,6 +122,26 @@ Distroless nonroot as uid 65532, read-only root filesystem, no privilege
 escalation, `RuntimeDefault` seccomp, every capability dropped. Discovery
 included: `scan` only makes TCP connections, which need no capability, and
 finishes the handshake instead of leaving half-open connections on a PLC.
+
+One value adds a capability, and only when you set it: `bindToInterface.netRaw`.
+A node can bind its connections to one network interface (`SO_BINDTODEVICE`), for
+a box whose port carries a VLAN for each machine with the same subnet on all of
+them. On Linux 5.7 and later that takes no capability and the value stays
+`false`. On an older kernel it takes `CAP_NET_RAW`: set it to `true` and the pod
+adds that one capability, with every other one still dropped. The pod also has to
+see the host's interfaces, which is `network.mode: host`. How a tab picks its
+interface is in node-red-types.md.
+
+### Plants with a VLAN for each machine
+
+One box, one port, a VLAN for each dryer, every VLAN the same `192.168.1.0/24`
+with the same device addresses. Run one Flow with `network.mode: host`, give each
+dryer's tab the environment variable `FLOW_NETWORK_INTERFACE` (`enp2s0.14`,
+`enp2s0.15` and so on), and every client on that tab reaches only its own VLAN.
+With Podman and Quadlet, `Network=host`, and `AddCapability=NET_RAW` only on a
+kernel older than 5.7. The details, the order a node picks its interface in, and
+what was proven are in
+node-red-types.md.
 
 ### Signing in from the EmberCORE dashboard
 
@@ -191,7 +211,7 @@ so the unit can be copied around, committed and reviewed without carrying
 anything that matters.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.8.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.9.1 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -210,7 +230,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.8.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.9.1
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -271,9 +291,9 @@ To try it, not to run a line on:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.8.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.9.1 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.8.1
+  ghcr.io/hotloop-io/hotloop-flow:2.9.1
 ```
 
 Then open <http://localhost:1880>. That credential secret is new every time you

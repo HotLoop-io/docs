@@ -1,12 +1,12 @@
 ---
-reviewed: flow=2.8.1
+reviewed: flow=2.9.1
 title: "Install HotLoop Flow with Podman or Helm"
 description: "Run HotLoop Flow {{flow}} with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, a 45.64 MB image on amd64 and an arm64 build as well, plus a Helm chart and source you can build yourself. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
+HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an amd64 image that measured 45.64 MB as Podman reports it on 2.8.0, plus a Helm chart and source you can build yourself. 2.9.0 and 2.9.1 are amd64 first, with the arm64 build following in 2.9.2, so a Pi or an arm64 box stays on 2.8.1 until then. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands. And it refuses to run without a credential secret, which encrypts every broker and database password stored with your flows. Every path below sets both.
 
@@ -120,6 +120,12 @@ The chart has three network modes:
 :::note[Where the chart has been run]
 The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, upgrades, and a deploy from the EmberNet App Store through Fleet. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, but have not been run on a cluster.
 :::
+
+## One VLAN per tab
+
+2.9.0 lets a tab, a subflow or a single node bind its connections to a network interface, so one Flow can keep a tab for each machine on a box whose one port carries a VLAN for each, even when every VLAN has the same subnet and the same device addresses. The tab way is the `FLOW_NETWORK_INTERFACE` environment variable on the tab, and every client node on it inherits it. 2.9.1 adds the same field to the `modbus-server` node, so two servers can listen on the same address and port, one per VLAN.
+
+The pod has to see the VLAN interface, so run it with the host's network: `network.mode: host` in the chart, or `Network=host` in a Quadlet unit. Binding a socket to an interface needs no capability on Linux 5.7 and later. On an older kernel it needs `CAP_NET_RAW`, and the chart value `bindToInterface.netRaw` (default `false`) adds that one capability and nothing else. It was proven in a lab of two network namespaces that share `192.168.1.0/24`, and nothing ran on a plant's own network.
 
 ## From the EmberNet App Store
 

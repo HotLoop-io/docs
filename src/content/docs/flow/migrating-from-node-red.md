@@ -69,7 +69,7 @@ id actually is and which kind the setting wants. The editor only offers you the
 right kind, so this only comes from a hand edit or a pasted id, which is
 exactly where it bites.
 
-By compatibility level the 79 message node types are 12 full, 21 partial, 14 deliberately
+By compatibility level the 108 message node types are 12 full, 50 partial, 14 deliberately
 divergent, and 32 of Flow's own. Every node declares how it relates to
 Node-RED's node of the same name, and **a test fails the build if a node claims
 partial compatibility without stating in writing what is missing.** A node
@@ -84,12 +84,19 @@ recipient on a fan-out gets its own copy, the `exec` node has an allowlist and n
 shell, the file nodes are scoped, and everything listed under
 [Back-pressure, visibly](/flow/back-pressure/) has a ceiling.
 
-**Node-RED community nodes do not work here.** They are npm packages that need
-Node.js. There is no future version of this where they suddenly do, and I am not going to
-imply otherwise to make a table look nicer. That is the trade you make for the
-footprint and the sandbox, stated plainly so you can decide against it. Signed
-WASM plugins are Flow's answer to that, and they run today: see
-[docs/plugins.md](/flow/plugins/).
+**Most Node-RED community nodes do not run here.** They are npm packages that need
+Node.js, and there is no future version of this where a package that needs Node
+suddenly does. That is the trade you make for the footprint and the sandbox,
+stated plainly so you can decide against it. Signed WASM plugins are Flow's
+answer for what you write yourself: see [docs/plugins.md](/flow/plugins/).
+
+The community nodes a plant leans on are another matter. Flow runs the Node-RED
+Modbus, dashboard, PostgreSQL and e-mail types natively, in Go, under
+their own type names, so a flow that uses them loads and runs unchanged, and so
+do the `Buffer` and `setInterval` that the function nodes around them call. What
+runs, what differs and what was proven is docs/node-red-types.md.
+Any other community node in a flow fails by itself with its type named, and the
+rest of the flow starts.
 
 JSONata used to top the list of what an imported flow trips over. It runs now:
 every `jsonata`-typed property evaluates, with Node-RED's `$flowContext`,

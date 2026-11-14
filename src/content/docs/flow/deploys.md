@@ -317,5 +317,5 @@ refuses waits and catches up when it stops refusing, and a deploy with a git
 server that takes ten seconds to say no returns in milliseconds.
 
 It's pure Go (go-git), so the binary stays static. It costs about 3.8 MB of
-binary, which is why it's measured and not assumed, and why the 40 MiB ceiling
+binary, which is why it's measured and not assumed, and why the 42 MiB ceiling
 in CI still has room.
