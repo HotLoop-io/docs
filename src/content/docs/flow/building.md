@@ -13,7 +13,7 @@ CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o hotloop-flow ./cmd/hotloop-
 
 Static, no cgo, runs on distroless. goja is pure Go, and so is wazero, which runs
 the plugins, and that is the only reason that sentence is true. CI fails
-the build if the binary exceeds 40MiB or turns out to be dynamically linked,
+the build if the binary exceeds 42MiB or turns out to be dynamically linked,
 because both of those are things you discover on a plant floor otherwise.
 
 The race detector needs cgo, so run it where a C compiler exists:
@@ -40,7 +40,7 @@ formatting, so that one is on you.
 What CI does check, beyond vet and the race detector, is the set of things I have
 personally been burned by: that `go mod tidy` is committed, that the sandbox
 tests genuinely ran rather than silently skipping, that the editor bundle is
-actually inside the binary, that the binary is under 40MiB and statically linked,
+actually inside the binary, that the binary is under 42MiB and statically linked,
 a 60-second fuzz run against the property expression parser, a 30-second one
 proving a flow never differs from itself, a rollback against a real broker that
 refuses anonymous clients, and the editor clicked through in a real browser, every node dialog included.
