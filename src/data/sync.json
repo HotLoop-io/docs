@@ -75,12 +75,23 @@
       "tagline": "The plant talking to everything else."
     },
     {
+      "id": "codesys",
+      "name": "HotLoop for CODESYS",
+      "repo": null,
+      "tagline": "Screens and alarms for a CODESYS PLC, beside the runtime."
+    },
+    {
       "id": "transmitter",
       "name": "HotLoop Transmitter",
       "repo": null,
       "tagline": "OPC UA PubSub from inside the PLC."
     }
   ],
+  "codesys": {
+    "version": "0.3.1",
+    "needsCore": "4.19.4",
+    "chartRepo": "https://hotloop.io/hotloop-codesys/"
+  },
   "pages": [
     {
       "slug": "iot/entities",
@@ -427,7 +438,7 @@
       "slug": "products",
       "product": "shared",
       "group": "Lineup",
-      "title": "HotLoop products: seven on four release lines",
+      "title": "HotLoop products: eight on five release lines",
       "label": null,
       "status": "released",
       "repo": "hotloop",
@@ -1141,6 +1152,11 @@
   ],
   "pinned": [
     "business.md",
+    "codesys/install.md",
+    "codesys/overview.md",
+    "codesys/profile.md",
+    "codesys/roadmap.md",
+    "codesys/where-it-stands.md",
     "edge/install.md",
     "edge/overview.md",
     "edge-relay/install.md",
@@ -1151,6 +1167,8 @@
     "gateway/upgrading.md",
     "install/index.md",
     "iot/install.md",
-    "iot/overview.md"
+    "iot/overview.md",
+    "releases/codesys-0-3-0.md",
+    "releases/codesys-0-3-1.md"
   ]
 }

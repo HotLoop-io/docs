@@ -5,7 +5,7 @@ import { defineRouteMiddleware } from '@astrojs/starlight/route-data';
 // their own line (HotLoop core, Flow, Cascade), so the pager stays inside it, newest first, the
 // same order the sidebar shows. The newest and oldest page of a line don't link out to another
 // product: the newest of HotLoop core keeps its link back to All releases, and the rest have none.
-const line = (id: string) => /^releases\/(hotloop|flow|cascade)-/.exec(id)?.[1];
+const line = (id: string) => /^releases\/(hotloop|flow|cascade|codesys)-/.exec(id)?.[1];
 
 export const onRequest = defineRouteMiddleware((context) => {
   const route = context.locals.starlightRoute;

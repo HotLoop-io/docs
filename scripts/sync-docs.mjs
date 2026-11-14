@@ -37,7 +37,7 @@ import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
 import { oxfordHeadings } from './oxford.mjs';
 import { scan } from './forbidden.mjs';
-import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS } from './sync-manifest.mjs';
+import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS, CODESYS } from './sync-manifest.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT = join(ROOT, 'src/content/docs');
@@ -467,7 +467,7 @@ for (const [slug, p] of mainPages) {
     .sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))
     .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (on main, next release)' : ''}`)
     .join('\n');
-  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade and Transmitter release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
+  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade, HotLoop for CODESYS and Transmitter release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
   out.set('releases/index.md', `${fm}
 Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
 
@@ -484,6 +484,11 @@ ${rows('flow')}
 ## HotLoop Cascade
 
 ${rows('cascade')}
+
+## HotLoop for CODESYS
+
+- [HotLoop for CODESYS 0.3.1 release notes](/releases/codesys-0-3-1/)
+- [HotLoop for CODESYS 0.3.0 release notes](/releases/codesys-0-3-0/)
 
 ## HotLoop Transmitter
 
@@ -507,6 +512,8 @@ if (existsSync(PINNED)) {
       t = t.replace(rv[0], '');
     }
     t = t.replace(/\{\{(hotloop|flow|cascade)\}\}/g, (_, r) => releases[r].version).replace(/\{\{LICENSE_URL\}\}/g, licenseUrl());
+    // HotLoop for CODESYS has no release of core to read, so its tokens come from the manifest.
+    t = t.replace(/\{\{codesysNeeds\}\}/g, CODESYS.needsCore).replace(/\{\{codesysChartRepo\}\}/g, CODESYS.chartRepo).replace(/\{\{codesys\}\}/g, CODESYS.version);
     // A Go template like `{{.Digest}}` in a unit file is content. An unfilled token is {{word}}.
     if (/\{\{\s*[A-Za-z_]\w*\s*\}\}/.test(t)) fail(`${rel}: an unfilled {{token}}`);
     t = t.replace(/^---\n/, `---\n${MARK}\n`).replace(/^(---\n[^]*?\n)(---\n)/, (m, a, b) => (/editUrl:/.test(a) ? m : a + 'editUrl: false\n' + b));
@@ -519,6 +526,7 @@ if (existsSync(PINNED)) {
 const sync = {
   repos: Object.fromEntries(Object.keys(REPOS).map((r) => [r, { slug: REPOS[r].slug, ref: refs[r], sha: shas[r], release: releases[r] }])),
   products: PRODUCTS,
+  codesys: CODESYS,
   pages: meta,
   pinned,
 };
