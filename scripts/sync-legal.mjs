@@ -7,7 +7,7 @@
 //                                    fail if a committed page differs from what the file renders
 //
 // A page is only written when the file is the new one. LICENSE.md has to be HotLoop's
-// Business Source License, and until it is, the old text stays off this site. In check
+// EmberNet Source License, and until it is, the old text stays off this site. In check
 // mode a missing committed page is fine for the same reason, and a stale one is not.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -20,8 +20,8 @@ const PAGES = {
   license: {
     out: 'license.md',
     title: 'License',
-    description: "HotLoop's Business Source License 1.1, the text every HotLoop product is under, mirrored from the canonical copy in the HotLoop-io organization.",
-    isNew: (t) => /Business Source License/i.test(t),
+    description: "HotLoop's EmberNet Source License 1.0, the text every HotLoop product is under, mirrored from the canonical copy in the HotLoop-io organization.",
+    isNew: (t) => /EmberNet Source License/i.test(t),
     canonical: 'https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md',
     lead: 'Every HotLoop product is under this license. The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site.',
   },
