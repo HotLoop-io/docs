@@ -8,20 +8,20 @@
         "tag": "v4.20.0",
         "version": "4.20.0",
         "prerelease": false,
-        "publishedAt": "2026-11-15T18:44:40Z",
+        "publishedAt": null,
         "sha": "46c773b18575992b135e54e9351273195f3c60ef"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "f23a6f73ca086cd5e73249617a7c222d4f055d5b",
+      "sha": "b1d875c40c50e5d304a45018a802d15b055b4f24",
       "release": {
-        "tag": "v2.11.0",
-        "version": "2.11.0",
+        "tag": "v2.11.1",
+        "version": "2.11.1",
         "prerelease": false,
-        "publishedAt": "2026-11-15T18:18:14Z",
-        "sha": "07ad9f98be7cfea58090d4b76b5178c3aa2c58f6"
+        "publishedAt": "2026-11-15T20:09:42Z",
+        "sha": "62f6edeaf694894aaae30a04faaaeb0dfb4e315f"
       }
     },
     "cascade": {
@@ -462,7 +462,7 @@
       "group": "Start here",
       "title": "HotLoop Flow",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -770,7 +770,7 @@
       "group": "Project",
       "title": "Flow roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -1081,6 +1081,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.11.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-11-1",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.11.1 release notes",
+      "label": "2.11.1",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.11.1.md",
       "release": true
     },
     {
