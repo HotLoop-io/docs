@@ -5,10 +5,6 @@ description: "Build or run HotLoop Flow, set the admin account and credential se
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 62d3dc3, and it differs from the copy in HotLoop Flow 2.10.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 From source:
 
 ```bash
@@ -34,10 +30,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.10.1
+  ghcr.io/hotloop-io/hotloop-flow:2.10.2
 ```
 
-Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.10.1
+Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.10.2
 hash-password -password 'something-long'`. The image is distroless nonroot with
 no shell in it, so there is nothing to `exec` into and nothing for anybody who
 gets code execution to pivot with.
