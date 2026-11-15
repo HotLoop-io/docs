@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.19.11
+reviewed: hotloop=4.20.0
 title: "HotLoop Edge Relay overview"
 description: "A headless Sparkplug B edge node. It polls with the Gateway's drivers, forwards upstream, and buffers to disk when the link drops. No database, no UI."
 sidebar:

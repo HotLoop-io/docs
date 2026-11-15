@@ -5,14 +5,7 @@ description: "What shipped in HotLoop core 4.20.0, what changed on upgrade, and 
 editUrl: false
 sidebar:
   label: "4.20.0"
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 46c773b. These notes are for a release that is not out. HotLoop core 4.19.11 is the latest one you can install.
-:::
 
 The new web UI is the one at `/` now, and an agent can change everything it can read through MCP. There are no migrations, and a plain `helm upgrade` or the Quadlet auto-update takes it. The previous release, [4.19.11](/releases/hotloop-4-19-11/), is the last one whose default screens were the old ones.
 

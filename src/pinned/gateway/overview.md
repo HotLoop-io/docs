@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.19.11
+reviewed: hotloop=4.20.0
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: ten native protocols, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
@@ -69,6 +69,7 @@ All four are installable today, all {{hotloop}}. The relay is its own image and 
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
 
+- 4.20.0 ([notes on hotloop.io](https://hotloop.io/releases/core/)): the new web UI is the page at `/` and the old one is gone, with the same screens and controls, HotLoop's colors, the screens grouped Operate, Plant, Build and System, and a bar of five on a phone. MCP can change everything it can read: 128 tools, sixty-four that change configuration and thirty-seven for the administrator's own functions, each one route of the API run through its own handler with that route's permission, a required reason and the agent in the audit line, behind `allowMcpWrites`. This build is amd64 only, and the next release builds the arm images.
 - 4.19.11 ([notes on hotloop.io](https://hotloop.io/releases/core/)): the setpoint and symbol page dashboard cards, a write to a CODESYS or OPC UA tag read back from the PLC, a CODESYS device read once a second, alarms imported from a CODESYS project, the UniFi screens drawing a trace before the number beside it, and a Kafka or Redpanda target that says why a broker refuses writes. This build is amd64 only, and the next release is the one small bump that builds the arm images.
 - 4.19.10 ([notes on hotloop.io](https://hotloop.io/releases/core/)): the multi-arch build of 4.19.8, with no change to the product. There is no 4.19.9, its release run failed in the lab before anything shipped.
 - [4.19.8](/releases/hotloop-4-19-8/): the Logbook's Older entries button keeps its page, and every tag picker searches the whole plant. It carries 4.19.6's and 4.19.7's changes too, because neither was published.
