@@ -5,10 +5,6 @@ description: "Point HotLoop at a device you know the address of, look at the rea
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 90d51ed, and it differs from the copy in HotLoop core 4.19.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 An integration is how you point HotLoop at a kind of device you know the
 address of, answer a few questions, see what is actually on it, and keep the
 points you want. It makes the device and its tags. Entities follow from the tags

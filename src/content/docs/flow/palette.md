@@ -5,7 +5,7 @@ description: "Every node type Flow ships, labeled full, partial, divergent or Fl
 editUrl: false
 ---
 
-**108 node types for messages, and 28 more for FlowLab diagrams.**
+**108 node types for messages, and 35 more for FlowLab diagrams.**
 
 | Category | Nodes |
 |---|---|

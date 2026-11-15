@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.19.10
+reviewed: hotloop=4.19.11
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: ten native protocols, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
@@ -7,7 +7,7 @@ sidebar:
 ---
 
 :::note[{{hotloop}} is out]
-Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. The Gateway is built for amd64 and arm64, and the other three for amd64, arm64 and arm/v7, so every box pulls its own. The Gateway keeps `ghcr.io/hotloop-io/hotloop:{{hotloop}}` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repo is still private. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
+Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. The Gateway is built for amd64 and arm64, and the other three for amd64, arm64 and arm/v7, so every box pulls its own. 4.19.11 is the amd64 run of the two a release makes, so the arm images are 4.19.10's until the next release builds them again. The Gateway keeps `ghcr.io/hotloop-io/hotloop:{{hotloop}}` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. The source repo is still private. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
 :::
 
 HotLoop Gateway reads your plant. It polls PLCs and servers in their own protocols, keeps every reading and its quality in a historian, raises ISA-18.2 alarms that can page a phone, runs automations against all of it, and hands the whole plant to agents over MCP. A site runs one chart, the Gateway and its database, instead of a historian, an alarm server, a rules engine, and a pile of glue, each one breaking on its own damn schedule.
@@ -69,6 +69,7 @@ All four are installable today, all {{hotloop}}. The relay is its own image and 
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
 
+- 4.19.11 ([notes on hotloop.io](https://hotloop.io/releases/core/)): the setpoint and symbol page dashboard cards, a write to a CODESYS or OPC UA tag read back from the PLC, a CODESYS device read once a second, alarms imported from a CODESYS project, the UniFi screens drawing a trace before the number beside it, and a Kafka or Redpanda target that says why a broker refuses writes. This build is amd64 only, and the next release is the one small bump that builds the arm images.
 - 4.19.10 ([notes on hotloop.io](https://hotloop.io/releases/core/)): the multi-arch build of 4.19.8, with no change to the product. There is no 4.19.9, its release run failed in the lab before anything shipped.
 - [4.19.8](/releases/hotloop-4-19-8/): the Logbook's Older entries button keeps its page, and every tag picker searches the whole plant. It carries 4.19.6's and 4.19.7's changes too, because neither was published.
 - [4.19.5](/releases/hotloop-4-19-5/): the multi-arch build of 4.19.4, with nothing else in it.

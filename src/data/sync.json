@@ -3,25 +3,25 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "90d51ed0040bae8e8a3ce2ae601ac98c880093e7",
+      "sha": "c619d2f94bba5150fa587dc6370050d234a1d148",
       "release": {
-        "tag": "v4.19.10",
-        "version": "4.19.10",
+        "tag": "v4.19.11",
+        "version": "4.19.11",
         "prerelease": false,
-        "publishedAt": "2026-11-11T03:31:36Z",
-        "sha": "ab6149d2c3e3f9352e49c72479bac5cdeaea268b"
+        "publishedAt": "2026-11-15T04:03:47Z",
+        "sha": "927a001a1acdf53df2f779e610dba7dd363d7b4b"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "9b893de0cd3a95406761bf171bb7d9c2660c38c0",
+      "sha": "62d3dc3b3a3dbaff8db83a47d3fad8cdcd3e540e",
       "release": {
-        "tag": "v2.9.1",
-        "version": "2.9.1",
+        "tag": "v2.10.0",
+        "version": "2.10.0",
         "prerelease": false,
-        "publishedAt": "2026-11-14T18:24:04Z",
-        "sha": "9b893de0cd3a95406761bf171bb7d9c2660c38c0"
+        "publishedAt": "2026-11-15T09:03:25Z",
+        "sha": "51873f87b2e0c0189ca56728a162c28e50cfde0d"
       }
     },
     "cascade": {
@@ -165,7 +165,7 @@
       "group": "Automation",
       "title": "Blueprints",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BLUEPRINTS.md",
       "release": false
@@ -198,7 +198,7 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
       "release": false
@@ -220,7 +220,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -286,7 +286,7 @@
       "group": "Devices and data",
       "title": "Integrations",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/INTEGRATIONS.md",
       "release": false
@@ -341,7 +341,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -451,7 +451,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -462,7 +462,7 @@
       "group": "Start here",
       "title": "HotLoop Flow",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -484,7 +484,7 @@
       "group": "Start here",
       "title": "Quick start",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -715,7 +715,7 @@
       "group": "Run it",
       "title": "Deploying Flow",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/deploying.md",
       "release": false
@@ -952,6 +952,28 @@
       "release": true
     },
     {
+      "slug": "releases/hotloop-4-19-10",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.19.10 release notes",
+      "label": "4.19.10",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.19.10.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-19-11",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.19.11 release notes",
+      "label": "4.19.11",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.19.11.md",
+      "release": true
+    },
+    {
       "slug": "releases/hotloop-4-19-4",
       "product": "releases",
       "group": "HotLoop core",
@@ -993,6 +1015,28 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.1.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-10-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.10.0 release notes",
+      "label": "2.10.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.10.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-10-1",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.10.1 release notes",
+      "label": "2.10.1",
+      "status": "next",
+      "repo": "flow",
+      "source": "docs/releases/2.10.1.md",
       "release": true
     },
     {

@@ -5,10 +5,6 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 90d51ed, and it differs from the copy in HotLoop core 4.19.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -423,6 +419,7 @@ see [Not in this product](#not-in-this-product).
 | `PUT` | `/api/devices/{id}/labels` | `equipment.write` | all |
 | `GET` | `/api/alarms` | `alarms.read` | all |
 | `POST` | `/api/alarms` | `alarms.write` | all |
+| `POST` | `/api/alarms/import/codesys` | `alarms.write` | all |
 | `DELETE` | `/api/alarms/{id}` | `alarms.write` | all |
 | `POST` | `/api/alarms/{id}/ack` | `alarms.ack` | all |
 | `POST` | `/api/alarms/{id}/shelve` | `alarms.ack` | all |
@@ -738,7 +735,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.19.8"
+  "version": "4.19.11"
 }
 ```
 
@@ -1990,6 +1987,35 @@ sentence is rounded. `{limit}` is the limit as you typed it.
 Answers the definition; the engine reloads and the alarm entity is made before
 the answer. `400` on a failed validation (`"alarm x: priority must be 1-4, got
 9"`).
+
+### `POST /api/alarms/import/codesys`
+
+Reads the file the CODESYS IDE's Export Alarms writes (an alarm group export,
+`.csv`) from the request body, as the IDE wrote it (UTF-16 with a byte order
+mark) or as UTF-8. `?deviceId=` is the PLC's device and is required.
+`?application=` is the application name its tags sit under, `Application` when
+left out: the export names a variable from its GVL (`GVL_Alarm.bPumpFault`) and
+the tag is `Application.GVL_Alarm.bPumpFault`. `?defaultPriority=` (1 to 4) is
+the priority of an alarm whose class is not one of Error, Warning or Info.
+Without `?apply=true` nothing is saved: the answer says what would come across.
+
+Digital alarms compared with `= TRUE` or `= FALSE` become `true` and `false`,
+UpperLimit with `>` becomes `hi`, LowerLimit with `<` becomes `lo`, the message
+and the on and off delays (an IEC time such as `T#5s`) carry over, and Error is
+priority 2, Warning 3, Info 4. Anything else the IDE can write is not read
+and comes back in `skipped` with its row and why, because the layout is not
+documented by CODESYS and only what a real export has shown is read.
+`warnings` lists what carried over only in part (a class that is not known,
+latching, a higher priority alarm).
+
+```json
+{"applied": false, "version": "2.0.0.0",
+ "alarms": [{"id":"codesys-GVL_Alarm.rTemp-hi","name":"Temperature high","deviceId":"plc1","tagName":"Application.GVL_Alarm.rTemp","condition":"hi","limit":90,"priority":3,"enabled":true,"message":"Temperature high"}],
+ "skipped": [{"row":5,"id":"3","reason":"the observation type \"Deviation\" has not been seen in an export, so it is not read"}],
+ "warnings": []}
+```
+
+`404` for an unknown device, `400` for a file that is not an alarm group export.
 
 ### `DELETE /api/alarms/{id}`
 

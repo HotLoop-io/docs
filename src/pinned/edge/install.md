@@ -1,12 +1,12 @@
 ---
-reviewed: hotloop=4.19.10
+reviewed: hotloop=4.19.11
 title: "Install HotLoop Edge {{hotloop}}"
 description: "Install HotLoop Edge {{hotloop}} on k3s with Helm or on an industrial PC with Podman Quadlet, then turn on the OPC UA server and Sparkplug publishing."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Edge first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`, built for amd64, arm64 and arm/v7 (4.19.10 is the multi-arch build of 4.19.8), and the chart is `hotloop-edge` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
+HotLoop Edge first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`, an amd64 build (4.19.11 is the amd64 run of the two a release makes; 4.19.10 is the last build for amd64, arm64 and arm/v7, and `stable` keeps the arm images it holds until the next release builds them again), and the chart is `hotloop-edge` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 
 A cluster gets Helm. An industrial PC or a Pi with no cluster gets Podman Quadlet. The database is a choice you make once: TimescaleDB (the default), plain PostgreSQL or a SQLite file with no database container at all.
 

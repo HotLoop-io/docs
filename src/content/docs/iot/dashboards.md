@@ -5,10 +5,6 @@ description: "Pages of cards built per role or per screen: gauges, trends, entit
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 90d51ed, and it differs from the copy in HotLoop core 4.19.10, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
 sitting where the zones are. Build as many as the plant needs, give each to the

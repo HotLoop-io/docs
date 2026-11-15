@@ -62,6 +62,7 @@ The same things are an API for scripts and CI:
 |---|---|
 | `GET /diagrams`, `GET /diagrams/{id}` | What is deployed, the panel, the last value on every wire. |
 | `POST /diagrams/{id}/run`, `/stop`, `/debug` | Needs `diagram.run`. Each is in the audit log with who. |
+| `POST /diagrams/{id}/sub` | Send `{flows, nodes, name}` and get the flow file back with those nodes made into a sub-diagram. Reads and computes only; nothing is saved or deployed. |
 | `PUT /diagrams/{id}/controls/{node}` | Set a control. Checked against its kind, range and choices. |
 | `PUT /diagrams/{id}/breakpoints`, `/probes` | Keys are a node id, `wire:<wire key>` or `diagram:<tab>`. |
 
@@ -76,8 +77,10 @@ Events for a run go out on the same socket as the editor's, as `diagram/<id>/nod
 | `dia-wait` | Waits, then passes its input on. |
 | `dia-bundle`, `dia-field`, `dia-array` | Records and arrays. |
 | `dia-while`, `dia-for` | Loops. The body is a diagram of its own, named by its tab. Carried values start from a wire or from Start values and come out as they were on the last pass. A for loop takes a count or an array. A while loop runs at least once. |
+| `dia-case` | Case structure. The value on `selector` picks one body to run, and only that body runs. A boolean picks `true` or `false`, a number picks the case of that value however it is written, and a string or an enum picks the case of that name. Cases are a JSON object of case name to diagram, and a value no case names runs the default. With no default the node puts an error on its error wire, and deploy warns that there is no default (a boolean with both cases is exempt). Every body must send out each result under the same name, and a body that does not is a problem at deploy. `case` out says which case ran. |
 | `dia-body-in`, `dia-body-out` | The two ends of a body. `iter` is the pass number. `stop` ends a while loop. A carried value's name sends it round. |
 | `dia-serial-open`, `dia-serial-read`, `dia-serial-write` | A serial port. Reads end at a terminator or a byte count. |
+| `dia-instr-open`, `dia-instr-query`, `dia-scpi-parse` | A test instrument by address. See Instruments below. |
 | `dia-parse-reading`, `dia-stable` | Take a number and unit out of a line, and say whether the last few agree. |
 | `dia-log-text` | Appends a record as a row of a text file, with a time column. |
 | `dia-daq-read` | Reads samples from a data acquisition task on NI hardware, through NI's gRPC Device Server. See Data acquisition below. |
@@ -158,6 +161,25 @@ value arrives with none.
 ### A target that goes down
 
 A durable `dia-mqtt-out` sends straight to the broker while it answers. When it doesn't, the message is committed to Flow's durable store before the node finishes, and a pump delivers the queue, oldest first, when the link is back. Anything put in while others wait goes behind them, so nothing overtakes. Delivery from the queue is at least once: a message whose send timed out because the client had not noticed the link was gone can still be delivered when the client reconnects, so it can arrive twice, once for each send that timed out. The queue lives in the same store and under the same disk quota as a durable wire, and it drains after a restart with no run and no browser. Without durable, a message the broker misses is an error on the error wire.
+
+### Instruments
+
+`dia-instr-open` takes an address: `10.0.0.5:5025` for a LAN instrument on a raw socket,
+`serial:///dev/ttyUSB0?baud=19200&data=8&parity=E&stop=1` for a serial one, or a bare
+`/dev/ttyUSB0` or `COM3` for 9600 8N1. The run closes the session when it ends. If the
+link drops, the next query opens it again and the drop is counted on the session.
+
+`dia-instr-query` writes a command and the terminator, then reads the reply. Pick text
+(a line, out of `reply`), none (a plain write), or block, which reads a `#41024...`
+binary block and puts the samples out of `samples` as an array, as int8, uint8, int16,
+uint16, int32, float32 or float64, big or little endian. An indefinite `#0` block ends
+at the first line end. A reply that does not come in time is a timeout on the error
+wire naming the address.
+
+`dia-scpi-parse` reads a text reply as a list of numbers, one number, an identity
+(`*IDN?` into manufacturer, model, serial and firmware), or a status byte (`*STB?` or
+`*ESR?`) into the names of its set bits. The parsers are pure functions in
+`internal/diagram/scpi` with tests.
 
 ### Serial
 
@@ -240,3 +262,29 @@ collection and the scheduler can delay a node by milliseconds, so a node can't p
 a deadline. Work that has to meet one belongs in a PLC or a runtime built for it. The
 timing of samples from a data acquisition device is not affected by any of this: the
 device's own clock does it, and Flow only moves the data.
+
+## The error list in CI
+
+`hotloop-flow test` and the deploy gate run the editor's check on every diagram in the flow file. A diagram that cannot run is listed as `--- DIAGRAM: <diagram>: <node> input <port>: <reason>` and fails the file even when every test passes; the JUnit report carries each one as an error of type `diagram`. A warning, such as a case structure with no default, is listed and does not fail.
+
+## Waveforms
+
+A waveform is a block of evenly spaced samples that knows when it started and how far apart they are, as a record on the wire: `{"type": "waveform", "t0": "2026-11-14T12:00:00Z", "dt": 0.001, "y": [...], "attrs": {"unit_string": "V"}}`. `dia-wave` builds one from an array (the step from `dt`, else `rate`, else its setting; the start from `t0`, else the moment it runs) and `dia-wave-parts` takes one apart, including how long it spans. A waveform holds at most `maxSamples` samples (1,048,576 by default); the rest are cut off and counted on `dropped`. The analysis nodes accept a waveform where they take an array and use its step. `dia-log-tdms` writes a waveform column as a channel with `wf_start_time`, `wf_increment`, `wf_samples` and the attributes as channel properties.
+
+## Sub-diagrams
+
+`dia-sub` is a diagram used as a node: its inputs and outputs are the connector, each input a `dia-body-in` of that name in its body and each output a `dia-body-out`. An input is required unless its name ends in `?` (optional) or `~` (recommended: it runs without it and deploy warns when it is not wired). Select nodes and make a sub-diagram from them (`POST /diagrams/{id}/sub`) and the nodes move into a new body tab, a `dia-sub` takes their place, and the connector is worked out from the wires that cross the edge of the selection: an input for each source output that feeds the selection, an output for each selected output that feeds the nodes outside. The wires outside are reconnected, so a run gives the answers it gave before.
+
+## Shared record types
+
+A record type is named once, on a diagram tab's settings under `types`, and every `dia-bundle` or `dia-field` that sets `shape` to its name is checked against that one definition:
+
+```json
+{"types": {"Reading": {"fields": {"pressure": "number", "ok": "boolean", "state": {"enum": ["idle", "run"]}}}}}
+```
+
+A field is `number`, `integer`, `boolean`, `string`, `timestamp`, `array`, `waveform`, `record:Name` (another shared type) or an enum. Rename a field in the definition and every bundle that still uses the old name is a problem at the next deploy, in the same error list as an unwired input, naming the node and the field. A bundle holds each value to its field's kind when it runs, and the error wire carries a value that does not fit. `Set.Schema` gives the same type as JSON Schema, which is what typed wires check.
+
+## Rotation and retention
+
+`dia-log-text` and `dia-log-tdms` can start a new file when the live one reaches `rotateMB` megabytes or `rotateHours` hours, and keep only the newest `keep` finished files. The finished file takes the log's name with the time it was closed before the extension (`bench.csv` becomes `bench-20261114T120000Z.csv`) and the log goes on in `bench.csv`, with a new header, or the file properties written again for TDMS. Retention deletes only files that match that pattern, never the live log and never a file that merely sits beside it. The age counts from when a run first writes to the file. The text log opens in a spreadsheet and the TDMS log is the binary format for big data.
