@@ -5,6 +5,10 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at c619d2f, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -685,6 +689,18 @@ Found in code review and in the PRs so far. Each one is real, checked against
       alike (off by default); a user's permissions, a tag's writable mark and its
       range apply to an agent as they do to the screen. The docs no longer tell
       anybody to run a read-only agent. Fixed, see [MCP.md](/iot/mcp/#writing)
+- [x] **MCP could read most of what it could not change.** Twenty-seven tools
+      commanded equipment, ran scripts and applied recipes, and a blueprint could
+      be previewed but never made into a rule, an alarm could be acknowledged but
+      not shelved, and no device, tag, helper, rule, script, recipe, dashboard or
+      UniFi network could be made or changed at all. Sixty-four tools now do, and
+      thirty-seven more reach the administrator's own functions (users, settings,
+      backups, escalation, historian targets, broker logins, the fleet, reports),
+      each one route of the API run through its own handler with the permission
+      that route asks for, a reason, and the agent in the log. The write switches
+      are the deployment's and have no route, so the settings route refuses them
+      for an agent as it does for a screen. Fixed, see
+      [MCP.md](/iot/mcp/#changing-configuration)
 - [x] The MCP endpoint was open to anybody who could reach the port when no
       `HOTLOOP_MCP_TOKEN` was set (every chart sets one; a bare binary or a
       Quadlet unit didn't), and the process only said so in its log. It makes a
@@ -700,6 +716,25 @@ Found in code review and in the PRs so far. Each one is real, checked against
       does outgrow its card it scrolls inside it. A browser test hands the page's
       own faceplate code eight ports at 390px: 113px wider before, the page
       exactly the window after. Fixed
+
+- [x] **A UniFi screen could draw a number older than the trace beside it.** The
+      old screen's Overview and a port's detail on both screens asked for the
+      number and then for its trace, so a reading that landed in between sat in
+      the trace and not in the number ("5 ms" beside a line ending at 6). They ask
+      for the traces first. Proved in a browser: the old order fails the
+      test, the new one passes it, and the old one fails it again. Fixed
+- [x] **A Kafka or Redpanda target whose broker refused writes for lack of disk
+      said only "records have timed out".** After a timeout the target asks the
+      broker why once, with a produce that carries no records, and says its
+      answer (Redpanda below its free-space threshold: `KAFKA_STORAGE_ERROR`,
+      the disk under the broker). The readings were never lost: they are owed and
+      sent when the broker takes writes again. Proved against Redpanda with its
+      threshold set above its disk, and against a working Redpanda and Apache
+      Kafka to say nothing. Fixed
+- [x] `TestATagIsAddressedByItsSymbolAndReadAndWritten` failed under load: it
+      waited for four of its five reads and asserted the fifth, a monitored item
+      of its own that the server sends on its own turn. It waits for all of them.
+      Fixed
 
 ## Not verified yet
 

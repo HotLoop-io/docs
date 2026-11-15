@@ -5,6 +5,10 @@ description: "Flow on Kubernetes with Helm, on a box with Podman and Quadlet, or
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 62d3dc3, and it differs from the copy in HotLoop Flow 2.10.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Three ways in, all from the same image, `ghcr.io/hotloop-io/hotloop-flow`, built
 for amd64 and arm64:
 
@@ -70,7 +74,7 @@ To choose your own instead:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.9.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.10.1 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -99,6 +103,13 @@ Presets, not raw numbers. `resources.preset` is `small` (the default), `medium`,
 Idle, the process holds about 16.6 MiB resident (method and command in
 [docs/bench/](/flow/benchmarks/#memory)), so `small` schedules on an edge node with
 64Mi to spare.
+
+Flow reads the container's memory limit at start and asks the Go runtime to keep
+its heap under 85% of it, so the collector works harder as the heap nears the
+limit instead of letting it double and being killed. The log says so at boot
+(`memory limit for the collector`). Set `GOMEMLIMIT` yourself and that wins. The
+limit has to leave room for what is live: a flow file of about 13,000 nodes holds
+roughly 800 MiB, so size a plant that big at 3Gi or more with `custom`.
 
 ### Network modes
 
@@ -211,7 +222,7 @@ so the unit can be copied around, committed and reviewed without carrying
 anything that matters.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.9.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.10.1 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -230,7 +241,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.9.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.10.1
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -291,9 +302,9 @@ To try it, not to run a line on:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.9.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.10.1 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.9.1
+  ghcr.io/hotloop-io/hotloop-flow:2.10.1
 ```
 
 Then open <http://localhost:1880>. That credential secret is new every time you

@@ -5,6 +5,10 @@ description: "Let an agent read the whole plant and touch only what you armed, t
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at c619d2f, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The gateway speaks MCP in both directions: agents can read and drive the plant,
 and an automation rule can call a tool somewhere else.
 
@@ -82,8 +86,8 @@ token never widens it. `HOTLOOP_MCP_OIDC_WRITE_ROLE` narrows them per caller:
 `hotloop:hotloop.write` means the Vord client role `hotloop.write` on client
 `hotloop` (`resource_access.hotloop.roles`), a bare name means a realm role, and
 a Hub assertion must carry the role's name in `abilities`. A caller without it
-can read but `write_tag`, `call_service`, `run_script`, `apply_recipe` and
-`trigger_automation` refuse. The static token is not limited by it.
+can read but `write_tag`, `call_service`, `run_script`, `apply_recipe`,
+`trigger_automation` and every tool that changes configuration refuse. The static token is not limited by it.
 
 ### Over stdio
 
@@ -111,7 +115,7 @@ corrupt the protocol stream.
 
 ## Tools
 
-Twenty-seven of them.
+One hundred and twenty-eight of them: twenty-seven that read the plant and command it, sixty-four that change its configuration ([below](#changing-configuration)) and thirty-seven for administration ([below](#administration)).
 
 | Tool | Does |
 |---|---|
@@ -267,14 +271,254 @@ if it fired right now, every write put to the gate's checks. The inputs are
 checked exactly as the screen checks them: out of range is refused, not
 adjusted.
 
-An agent cannot make the rule. There is no tool for it, on purpose. A rule is
-a standing order to command equipment every time its trigger fires, for
-months after the conversation that suggested it is over, and whether a plant
-has one is a person's call, made on the Blueprints screen with their name on
-it. So an agent can do the useful part (find the blueprint, work out the
-inputs, show what the rule would do) and hand the decision over. The preview
-stores nothing and writes nothing, so it is answered whether or not writes are
-on.
+`instantiate_blueprint` makes the rule, through the route the Blueprints screen
+uses: the same checks, and the rule lands in the logbook with the agent as who
+made it. A rule is a standing order to command equipment every time its trigger
+fires, so an agent looks first: `preview_blueprint` stores nothing and writes
+nothing, and is answered whether or not writes are on. Every write the made rule
+goes on to make meets the write gate, as for a rule a person made. See
+[Changing configuration](#changing-configuration).
+
+## Changing configuration
+
+Everything an agent can read, it can change. The tools above that read the plant
+have counterparts that change it, sixty-four of them, and none of them is a
+second implementation: each is one route of the REST API, and a call is run
+through that route's own handler. The validation, the permission check, the
+runtime reload and the audit line are the route's, with the agent as the actor
+(`mcp:<client>`, or `mcp:<email>` with a Vord login), so a device with no driver,
+a rule that does not compile, a blueprint input out of range or a tag the
+discovered device has not been accepted for are refused in the words the screen
+shows, and nothing was changed.
+
+Each takes the route's path values by name (`id`, `device`, `name`...), `body`,
+the same JSON the API takes ([API.md](/iot/api/) has every body), and a **required**
+`reason`. The reason is recorded as a `config` line in the system log next to the
+route's own, against the thing changed.
+
+```
+> save_tag reason="the setpoint, writable between 0 and 100" body={"deviceId":"press-01",
+    "name":"Setpoint","address":"holding:5:uint16","dataType":"int16","enabled":true,
+    "writable":true,"hasRange":true,"minValue":0,"maxValue":100}
+save_tag done.
+{ ...the tag as stored... }
+```
+
+What stands in front of them is what stands in front of `write_tag`, less the
+master switch, because the screens do not need it to change configuration either:
+
+1. `HOTLOOP_ALLOW_MCP_WRITES`, on by default, must be on.
+2. A caller with `HOTLOOP_MCP_OIDC_WRITE_ROLE` set must hold it.
+3. The call carries one permission, the one its route asks for (the third column
+   below), and nothing else. A route answers an agent as it answers a person
+   without that permission, and a test holds every row of the table to a real
+   route and the permission that route asks for.
+4. A reason.
+
+Commanding equipment is still `write_tag`, `call_service`, `run_script`,
+`apply_recipe` and `trigger_automation` with `HOTLOOP_ALLOW_WRITES` on and the
+tag's writable mark and range to meet. Making a tag writable, a rule, a script or
+a recipe is configuration: it commands nothing until it is used, and what it
+commands then goes through the gate.
+
+The administrator's own functions are tools too, under [Administration](#administration)
+below. Accepting a discovered device is here, as it is on the screen; the points
+on it still have to be armed for writing one at a time.
+
+The tools exist in `--mcp-stdio` as well: the process builds the same API server,
+and never opens its port.
+
+**Devices and tags**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `save_device` | `POST /api/devices` | `devices.write` |
+| `delete_device` | `DELETE /api/devices/{id}` | `devices.write` |
+| `set_device_enabled` | `POST /api/devices/{id}/enabled` | `devices.write` |
+| `import_device_tags` | `POST /api/devices/{id}/import` | `tags.write` |
+| `save_tag` | `POST /api/tags` | `tags.write` |
+| `delete_tag` | `DELETE /api/tags/{device}/{name}` | `tags.write` |
+| `set_device_labels` | `PUT /api/devices/{id}/labels` | `equipment.write` |
+| `set_device_network` | `PUT /api/devices/{id}/network` | `devices.write` |
+| `clear_device_network` | `DELETE /api/devices/{id}/network` | `devices.write` |
+
+**Discovery and brokers**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `accept_discovered_device` | `POST /api/discovery/{source}/{key}/accept` | `devices.write` |
+| `ignore_discovered_device` | `POST /api/discovery/{source}/{key}/ignore` | `devices.write` |
+| `unignore_discovered_device` | `POST /api/discovery/{source}/{key}/unignore` | `devices.write` |
+| `apply_discovery_review` | `POST /api/discovery/{source}/{key}/review/apply` | `devices.write` |
+| `reject_discovery_review` | `POST /api/discovery/{source}/{key}/review/reject` | `devices.write` |
+| `accept_network_find` | `POST /api/network-discovery/{key}/accept` | `devices.write` |
+| `ignore_network_find` | `POST /api/network-discovery/{key}/ignore` | `devices.write` |
+| `unignore_network_find` | `POST /api/network-discovery/{key}/unignore` | `devices.write` |
+| `probe_network` | `POST /api/network-discovery/probe` | `devices.write` |
+| `create_mqtt_broker` | `POST /api/mqtt/brokers` | `devices.write` |
+| `update_mqtt_broker` | `PUT /api/mqtt/brokers/{id}` | `devices.write` |
+| `delete_mqtt_broker` | `DELETE /api/mqtt/brokers/{id}` | `devices.write` |
+| `probe_integration` | `POST /api/integrations/{id}/probe` | `devices.write` |
+| `setup_integration` | `POST /api/integrations/{id}/setup` | `devices.write` |
+
+**UniFi**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `mark_unifi_network_ot` | `PUT /api/unifi/{id}/networks/{network}` | `devices.write` |
+| `accept_unifi_known_device` | `PUT /api/unifi/{id}/networks/{network}/known/{mac}` | `devices.write` |
+| `forget_unifi_known_device` | `DELETE /api/unifi/{id}/networks/{network}/known/{mac}` | `devices.write` |
+| `accept_all_unifi_known_devices` | `POST /api/unifi/{id}/networks/{network}/accept-all` | `devices.write` |
+| `create_unifi_starter_alarms` | `POST /api/unifi/{id}/starter-alarms` | `alarms.write` |
+
+**Entities, helpers, equipment, labels**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `create_entity` | `POST /api/entities` | `entities.write` |
+| `update_entity` | `PUT /api/entities/{entity_id}` | `entities.write` |
+| `delete_entity` | `DELETE /api/entities/{entity_id}` | `entities.write` |
+| `create_helper` | `POST /api/helpers` | `entities.write` |
+| `update_helper` | `PUT /api/helpers/{entity_id}` | `entities.write` |
+| `delete_helper` | `DELETE /api/helpers/{entity_id}` | `entities.write` |
+| `create_equipment` | `POST /api/equipment` | `equipment.write` |
+| `update_equipment` | `PUT /api/equipment/{id}` | `equipment.write` |
+| `delete_equipment` | `DELETE /api/equipment/{id}` | `equipment.write` |
+| `create_label` | `POST /api/labels` | `equipment.write` |
+| `update_label` | `PUT /api/labels/{label_id}` | `equipment.write` |
+| `delete_label` | `DELETE /api/labels/{label_id}` | `equipment.write` |
+
+**Alarms**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `save_alarm` | `POST /api/alarms` | `alarms.write` |
+| `delete_alarm` | `DELETE /api/alarms/{id}` | `alarms.write` |
+| `shelve_alarm` | `POST /api/alarms/{id}/shelve` | `alarms.ack` |
+| `unshelve_alarm` | `POST /api/alarms/{id}/unshelve` | `alarms.ack` |
+
+**Automations and blueprints**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `save_automation` | `POST /api/automations` | `automations.write` |
+| `delete_automation` | `DELETE /api/automations/{id}` | `automations.write` |
+| `set_automation_enabled` | `POST /api/automations/{id}/enabled` | `automations.write` |
+| `upgrade_blueprint_automation` | `POST /api/automations/{id}/blueprint-upgrade` | `blueprints.apply` |
+| `instantiate_blueprint` | `POST /api/blueprints/{id}/instantiate` | `blueprints.apply` |
+| `create_blueprint` | `POST /api/blueprints` | `blueprints.write` |
+| `update_blueprint` | `PUT /api/blueprints/{id}` | `blueprints.write` |
+| `delete_blueprint` | `DELETE /api/blueprints/{id}` | `blueprints.write` |
+
+**Scripts and recipes**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `create_script` | `POST /api/scripts` | `scripts.write` |
+| `update_script` | `PUT /api/scripts/{id}` | `scripts.write` |
+| `delete_script` | `DELETE /api/scripts/{id}` | `scripts.write` |
+| `stop_script` | `POST /api/scripts/{id}/stop` | `scripts.run` |
+| `create_recipe` | `POST /api/recipes` | `recipes.write` |
+| `capture_recipe` | `POST /api/recipes/capture` | `recipes.write` |
+| `update_recipe` | `PUT /api/recipes/{id}` | `recipes.write` |
+| `delete_recipe` | `DELETE /api/recipes/{id}` | `recipes.write` |
+
+**Dashboards and the board**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `create_dashboard` | `POST /api/dashboards` | `dashboards.write` |
+| `update_dashboard` | `PUT /api/dashboards/{id}` | `dashboards.write` |
+| `delete_dashboard` | `DELETE /api/dashboards/{id}` | `dashboards.write` |
+| `save_board` | `PUT /api/board` | `board.write` |
+
+### Administration
+
+User accounts, settings, backups, the escalation policy, the historian targets,
+the broker logins, the fleet of edge relays and scheduled reports are the
+administrator's, and they are tools as well: thirty-seven of them, the same
+pattern as the rest. Each is one route run through its own handler with the
+permission that route asks for (`users.manage`, `settings.write`, `backup.run`,
+`fleet.restart`...), a reason for every change and the agent in the audit line.
+A route that refuses refuses an agent in the same words. The reads (the `list_`
+and `get_` tools) need no reason and no write switch, and still need the
+caller's write role when one is set, because the permission they carry is an
+administrator's. The fleet and report tools exist only in a product that has the
+feature.
+
+Two things are the routes' own and worth knowing before relying on a tool:
+
+- **The write switches have no route.** `safety.allowWrites` and
+  `safety.allowMcpWrites` are the deployment's (`HOTLOOP_ALLOW_WRITES`,
+  `HOTLOOP_ALLOW_MCP_WRITES`), and `PUT /api/settings` refuses them as set by the
+  deployment. So `save_settings` changes what the Settings screen can change and
+  answers that refusal for the switches, in those words. An agent cannot turn on
+  the switch its own writes wait on.
+- **A user's password goes through the call.** `create_user`, `reset_user_password`
+  and the PIN tools take a secret in their arguments, as the API does. The audit
+  line names the change and the reason and never the secret.
+
+**User accounts**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `list_users` | `GET /api/users` | `users.manage` |
+| `create_user` | `POST /api/users` | `users.manage` |
+| `update_user` | `PUT /api/users/{username}` | `users.manage` |
+| `delete_user` | `DELETE /api/users/{username}` | `users.manage` |
+| `reset_user_password` | `POST /api/users/{username}/password` | `users.manage` |
+| `unlock_user` | `DELETE /api/users/{username}/lockout` | `users.manage` |
+| `set_user_pin` | `PUT /api/users/{username}/pin` | `users.manage` |
+| `clear_user_pin` | `DELETE /api/users/{username}/pin` | `users.manage` |
+
+**Settings, backups, notifications**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `get_settings` | `GET /api/settings` | `settings.read` |
+| `save_settings` | `PUT /api/settings` | `settings.write` |
+| `list_backups` | `GET /api/backup` | `backup.read` |
+| `run_backup` | `POST /api/backup` | `backup.run` |
+| `get_escalation` | `GET /api/notify/escalation` | `notify.escalation` |
+| `save_escalation` | `PUT /api/notify/escalation` | `notify.escalation` |
+| `send_test_notification` | `POST /api/notify/test` | `notify.test` |
+
+**Historian targets and broker logins**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `list_historian_targets` | `GET /api/historian/targets` | `settings.read` |
+| `create_historian_target` | `POST /api/historian/targets` | `settings.write` |
+| `update_historian_target` | `PUT /api/historian/targets/{id}` | `settings.write` |
+| `delete_historian_target` | `DELETE /api/historian/targets/{id}` | `settings.write` |
+| `list_broker_logins` | `GET /api/broker/logins` | `users.manage` |
+| `create_broker_login` | `POST /api/broker/logins` | `users.manage` |
+| `update_broker_login` | `PUT /api/broker/logins/{name}` | `users.manage` |
+| `delete_broker_login` | `DELETE /api/broker/logins/{name}` | `users.manage` |
+
+**The fleet of edge relays (Gateway)**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `list_fleet` | `GET /api/fleet` | `fleet.read` |
+| `register_relay` | `POST /api/fleet` | `fleet.write` |
+| `delete_relay` | `DELETE /api/fleet/{id}` | `fleet.write` |
+| `rebirth_relay` | `POST /api/fleet/{id}/rebirth` | `fleet.rebirth` |
+| `restart_relay` | `POST /api/fleet/{id}/restart` | `fleet.restart` |
+| `update_relay` | `POST /api/fleet/{id}/update` | `fleet.update` |
+| `set_relay_config` | `POST /api/fleet/{id}/config` | `fleet.config` |
+| `clear_relay_config` | `DELETE /api/fleet/{id}/config` | `fleet.config` |
+
+**Scheduled reports (Gateway)**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `list_reports` | `GET /api/reports` | `reports.read` |
+| `get_report` | `GET /api/reports/{id}` | `reports.read` |
+| `create_report` | `POST /api/reports` | `reports.write` |
+| `update_report` | `PUT /api/reports/{id}` | `reports.write` |
+| `delete_report` | `DELETE /api/reports/{id}` | `reports.write` |
+| `run_report` | `POST /api/reports/{id}/run` | `reports.run` |
 
 ## Resources
 
@@ -310,7 +554,8 @@ deliberately declined. It is not a protocol error to be retried.
 
 ## Writing
 
-MCP reads and writes. `write_tag` moves real equipment, so the same things stand
+MCP reads and writes: it commands equipment, and it changes configuration
+([above](#changing-configuration)). `write_tag` moves real equipment, so the same things stand
 between a tool call and a machine that stand between an operator's click and one:
 
 1. `HOTLOOP_ALLOW_WRITES`, the master switch for the whole deployment, must be

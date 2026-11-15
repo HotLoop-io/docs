@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.19.10
+reviewed: hotloop=4.19.11
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
 description: "From 4.18.11 it is a helm upgrade, but agents can write now and scaled tags change. From 4.18.10 the database moves to PostgreSQL 17. Older, you go in hops."
 sidebar:

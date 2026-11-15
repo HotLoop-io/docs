@@ -5,6 +5,10 @@ description: "Write a rule once with blanks and fill it in per pump. Each rule k
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at c619d2f, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A blueprint is a rule written once with blanks in it. "When *this motor* has
 been running longer than *this long*, say so, and stop it if *I ask you to*."
 Somebody who knows what the rule should do writes it one time. Everybody
@@ -198,11 +202,13 @@ rules. Delete those first. A built-in blueprint can't be edited or deleted.
 
 ## Agents
 
-An agent gets `list_blueprints` and `preview_blueprint`: it can find the
-right blueprint, work out the inputs, and show what the rule would do. It
-can't make the rule. That's on purpose. A rule is a standing order to command
-equipment every time its trigger fires, for months after the conversation
-that suggested it is over, and whether a plant has one is a person's call.
+An agent gets `list_blueprints`, `preview_blueprint` and `instantiate_blueprint`
+(and `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` and
+`delete_blueprint`): it finds the right blueprint, works out the inputs, shows
+what the rule would do, and makes it, through the route the screen uses, with the
+same input checks and the agent's name against it in the logbook. A rule is a
+standing order to command equipment every time its trigger fires, so the preview
+comes first, and every write the rule goes on to make meets the write gate.
 See [MCP.md](/iot/mcp/#blueprints).
 
 ## Where it all goes
