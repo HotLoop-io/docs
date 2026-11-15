@@ -33,7 +33,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 3.1 The Software is licensed under the EmberNet Source License 1.0, the text of which is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
 
-3.2 In plain words, and subject to the license text: home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is unrestricted. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license.
+3.2 In plain words, and subject to the license text: home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is unrestricted, and a systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license.
 
 3.3 The license applies to each version separately. Each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, the license governs it.
 
