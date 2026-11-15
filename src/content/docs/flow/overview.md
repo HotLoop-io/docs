@@ -5,10 +5,6 @@ description: "A visual flow engine for the plant floor in one Go binary, with a 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 62d3dc3, and it differs from the copy in HotLoop Flow 2.10.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 **Wire the plant. Review it like code.**
 
 HotLoop Flow is a visual flow engine for the plant floor, written in Go. You wire
@@ -44,7 +40,7 @@ What that means on a bad night:
 It runs your existing flows unchanged, too. That's [further down](/flow/migrating-from-node-red/),
 because it's a feature, not the point.
 
-Current release is `2.10.1`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.10.1`
+Current release is `2.10.2`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.10.2`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. About
 104,000 lines of Go, a little under 40 percent of it tests, 108 node types for messages and 35 for FlowLab diagrams, and the race
