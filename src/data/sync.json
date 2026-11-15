@@ -3,19 +3,19 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "46c773b18575992b135e54e9351273195f3c60ef",
+      "sha": "9ab417b40e4f1cdfd7df3a9eb59179c6898cc09e",
       "release": {
-        "tag": "v4.19.11",
-        "version": "4.19.11",
+        "tag": "v4.20.0",
+        "version": "4.20.0",
         "prerelease": false,
-        "publishedAt": "2026-11-15T04:03:47Z",
-        "sha": "927a001a1acdf53df2f779e610dba7dd363d7b4b"
+        "publishedAt": "2026-11-15T18:44:40Z",
+        "sha": "46c773b18575992b135e54e9351273195f3c60ef"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "07ad9f98be7cfea58090d4b76b5178c3aa2c58f6",
+      "sha": "f23a6f73ca086cd5e73249617a7c222d4f055d5b",
       "release": {
         "tag": "v2.11.0",
         "version": "2.11.0",
@@ -165,7 +165,7 @@
       "group": "Automation",
       "title": "Blueprints",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BLUEPRINTS.md",
       "release": false
@@ -220,7 +220,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -451,7 +451,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -616,7 +616,7 @@
       "group": "Nodes",
       "title": "FlowLab",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/diagrams.md",
       "release": false
@@ -1012,9 +1012,20 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.20.0 release notes",
       "label": "4.20.0",
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.20.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-20-1",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.20.1 release notes",
+      "label": "4.20.1",
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/releases/4.20.1.md",
       "release": true
     },
     {
