@@ -81,4 +81,4 @@ Each release has its own notes, and the notes are where the detail lives, so it 
 
 ## License
 
-HotLoop Gateway is under HotLoop's Business Source License 1.1, like every HotLoop product. Home and lab use is free, business use is free through [EmberNet](https://embernet.ai/), and each version converts to GPL-3.0 after four years. There are no license keys and nothing unlocks at runtime. [The License page]({{LICENSE_URL}}) has the text, and [Using HotLoop in a business](/business/) covers both ways to run it at work.
+HotLoop Gateway is under HotLoop's EmberNet Source License 1.0, like every HotLoop product. Home and lab use is free, business use run through [EmberNet](https://embernet.ai/) is unrestricted, and each version converts to AGPL-3.0 after four years. There are no license keys and nothing unlocks at runtime. [The License page]({{LICENSE_URL}}) has the text, and [Using HotLoop in a business](/business/) covers both ways to run it at work.

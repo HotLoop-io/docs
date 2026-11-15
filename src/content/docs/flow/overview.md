@@ -45,7 +45,7 @@ for amd64 (arm64 follows in 2.11.1), the Helm repo is `https://hotloop.io/hotloo
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. About
 104,000 lines of Go, a little under 40 percent of it tests, 108 node types for messages and 37 for FlowLab diagrams, and the race
 detector comes back clean on every package. Home and lab use is free, so is use by schools, nonprofits and government, and
-business use is free through EmberNet, under HotLoop's Business Source License.
+use through EmberNet, business use included, is unrestricted, under HotLoop's EmberNet Source License.
 
 ## The numbers
 

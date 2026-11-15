@@ -73,4 +73,4 @@ was run and what was read back. Not run on physical hardware.
 
 ## License
 
-HotLoop's Business Source License 1.1, the same as every HotLoop product. The [license page](https://hotloop.io/license/) has the text.
+HotLoop's EmberNet Source License 1.0, the same as every HotLoop product. The [license page](https://hotloop.io/license/) has the text.

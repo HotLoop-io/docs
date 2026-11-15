@@ -106,4 +106,4 @@ The Edge Quadlet units are generated from the Gateway's, which were run for real
 
 ## License
 
-HotLoop Edge is under HotLoop's Business Source License 1.1. Home and lab use is free, and business use is free through EmberNet. See [the License page](/license/) and [Using HotLoop in a business](/business/).
+HotLoop Edge is under HotLoop's EmberNet Source License 1.0. Home and lab use is free, and business use run through EmberNet is unrestricted. See [the License page](/license/) and [Using HotLoop in a business](/business/).
