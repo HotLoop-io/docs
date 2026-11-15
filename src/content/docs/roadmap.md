@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at c619d2f, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 46c773b, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
@@ -819,12 +819,10 @@ delayed for it.
 
 ### Where it stands
 
-Started, and in the image. The new UI is built from `web/` (Astro, Svelte islands,
-static files embedded in the one binary, no Node on the box) and is served beside
-the old one at `/next/` on every install. The old UI is still what `/` serves, and
-nothing a person reaches today changed. Set `HOTLOOP_UI=new` and `/` serves the new
-UI instead, which is how it is lived with, and tested, at the address it will have
-once it is the default.
+Done, and the default. The web UI is built from `web/` (Astro, Svelte islands, static
+files embedded in the one binary, no Node on the box) and is what `/` serves on every
+install. The old UI and its templates are gone; `/next` redirects to the root for
+anyone who bookmarked it.
 
 - [x] The design pass: canonical HotLoop tokens, the official mark, four groups of
       screens (Operate, Plant, Build, System) with a rail on a desk and a five-tab
@@ -832,7 +830,6 @@ once it is the default.
 - [x] The phone app in the new UI: installable, keeps the page and the last
       answers, opens offline marked as old, refuses to send anything, and a first
       visit with no connection says so on the sign-in screen
-- [ ] Every screen at parity, proved in a browser against the old one. Each lands
-      when it has been driven in a real browser, and the release notes say which
-- [ ] The 31 browser test files passing against the new UI unchanged, then the new
-      UI becomes the default and `assets/` goes
+- [x] Every screen at parity, proved in a browser against the old one
+- [x] The browser tests passing against the new UI unchanged, then the new UI became
+      the default and `assets/` went

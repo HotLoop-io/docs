@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Written against main]
-This page follows `main` at c619d2f, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+This page follows `main` at 46c773b, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 A blueprint is a rule written once with blanks in it. "When *this motor* has
