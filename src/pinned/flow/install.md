@@ -1,12 +1,12 @@
 ---
-reviewed: flow=2.10.2
+reviewed: flow=2.11.0
 title: "Install HotLoop Flow with Podman or Helm"
 description: "Run HotLoop Flow {{flow}} with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an amd64 and arm64 image (the amd64 one measured 45.64 MB as Podman reports it on 2.8.0), plus a Helm chart and source you can build yourself. 2.9.0, 2.9.1 and 2.10.0 are amd64 only, and 2.10.2 is the first release since 2.8.1 built for amd64 and arm64 (2.10.1 has a chart but no image, so never pin it), so a Pi or an arm64 box stays on 2.8.1 until 2.10.2. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
+HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an amd64 image (it measured 45.64 MB as Podman reports it on 2.8.0), plus a Helm chart and source you can build yourself. 2.9.0, 2.9.1, 2.10.0 and 2.11.0 are amd64 only, with the arm64 build following in 2.11.1, and 2.10.2 is the last release built for amd64 and arm64 (2.10.1 has a chart but no image, so never pin it), so a Pi or an arm64 box runs 2.10.2 until 2.11.1. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands. And it refuses to run without a credential secret, which encrypts every broker and database password stored with your flows. Every path below sets both.
 

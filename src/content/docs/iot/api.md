@@ -5,6 +5,10 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 46c773b, and it differs from the copy in HotLoop core 4.19.11, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -503,8 +507,6 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/sw.js` | none | all |
 | `GET` | `/next` | none | all |
 | `GET` | `/next/` | none | all |
-| `GET` | `/next/manifest.webmanifest` | none | all |
-| `GET` | `/static/` | none | all |
 | any | `/` | none | all |
 
 ## Health
@@ -735,7 +737,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.19.11"
+  "version": "4.20.0"
 }
 ```
 
@@ -3171,14 +3173,6 @@ instructions.
 
 ## The UI
 
-### `GET /static/`
-
-The stylesheet, scripts and icon, straight out of the binary, cacheable but
-revalidated so a redeployed pod never serves a stale script to a page that is
-still open. The page itself does not need them (it carries its own inline);
-they are here for anything that wants them separately. No session: they are
-the same for everyone.
-
 ### `GET /manifest.webmanifest`
 
 The web app manifest that lets a phone install the UI as an app: the product and
@@ -3199,32 +3193,20 @@ keeps or queues a write. The running version is in it, so each release gets a pa
 cache of its own. `Cache-Control: no-cache`; no session. Only a browser in a secure
 context (https, or `localhost`) runs it.
 
-### `GET /next`
+### `GET /next` and `GET /next/`
 
-A redirect to `/next/`.
-
-### `GET /next/`
-
-The new web UI, beside the old one, which is still what `/` serves. It is built from
-`web/` into the binary: a page, its scripts, styles and fonts, a service worker and
-the installable app's icons, every URL in them relative to the page so it runs at the
-root of a host, under a path or behind a proxy. The server fills in the title and one
-data block, `<script type="application/json" id="iiot">`, with what only it knows:
-the plant, the site, the product, the features, the write policy and the timezone.
-No session: the page is the sign-in form until you sign in. A path under it that is
-not one of its files is a `404`, and a binary built without the UI says so in plain
-text and how to build it. With `HOTLOOP_UI=new` the same UI is served at `/` instead of
-the old one, and `/sw.js` and `/manifest.webmanifest` are its own.
-
-### `GET /next/manifest.webmanifest`
-
-The same manifest as `/manifest.webmanifest`, for the new UI at `/next/`.
+Where the UI lived while the old one was the default. Both are a `301` to the root,
+so a bookmark made then still lands.
 
 ### `/`
 
-The single page, with its stylesheet and scripts inline so it renders the same
-at the root of a host, under a path, or inside the EmberNet dashboard's iframe.
-Gzipped when the browser asks. `GET` and `HEAD` only; any other method is `405`.
-Any other path that no route matches lands here and gets a `404`, because
-serving the page for a typo would make it look like a working screen. No
-session: the page is the login form until you log in.
+The web UI, built from `web/` into the binary: a page, its scripts, styles and fonts,
+a service worker and the installable app's icons, every URL in them relative to the
+page so it runs at the root of a host, under a path, behind a proxy or inside the
+EmberNet dashboard's iframe. The server fills in the title and one data block,
+`<script type="application/json" id="iiot">`, with what only it knows: the plant, the
+site, the product, the features, the write policy and the timezone. `GET` and `HEAD`
+only; any other method is `405`. A path that is not one of its files is a `404`,
+because serving the page for a typo would make it look like a working screen, and a
+binary built without the UI says so in plain text and how to build it. No session: the
+page is the login form until you log in.

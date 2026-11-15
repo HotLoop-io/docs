@@ -5,10 +5,6 @@ description: "Run a tab as a diagram for test benches and data loggers: nodes ru
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at f56c397, and it differs from the copy in HotLoop Flow 2.10.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 FlowLab is the part of Flow for test benches and data loggers, and a diagram is its unit: the other way Flow runs a tab. In a flow, a message goes through a node
 and any input wakes it. In a diagram, each node runs once per run, when every input
 that has a wire holds a value. Two nodes with no wire between them run at the same
@@ -296,3 +292,31 @@ A field is `number`, `integer`, `boolean`, `string`, `timestamp`, `array`, `wave
 ## Editing a case structure and picking a diagram
 
 A case structure's cases are rows of a case name and a diagram picker, with a second picker for the default case, and the property that names the diagram a loop or a sub-diagram runs is a picker too. The pickers list the FlowLab diagrams of the flow file and store the tab's id; a name written by hand in an older flow file is shown as that tab and saved as its id, which the runtime reads the same way. The stored values are the same JSON as before (`cases` is an object of case name to diagram), so a flow file edited in the dialog and one edited by hand are the same file.
+
+## Making a sub-diagram in the editor
+
+With nodes selected on a diagram, the bar's **Selection to sub-diagram** asks for a name, calls `POST /diagrams/{id}/sub` with the flow file the editor holds, and loads the answer as one undoable edit: the nodes move to a tab of their own and a sub-diagram node takes their place, with its inputs and outputs worked out from the wires that cross the selection. Nothing is saved until it is deployed.
+
+## Tidy layout
+
+The tab bar's **Tidy layout** lays out the nodes on view so data reads left to right and no wire runs through a node. A node's column is the longest chain of wires leading to it. A wire that skips columns gets a lane through them, nodes within a column are ordered to untangle the crossings, and then each long wire is checked along the curve it is actually drawn with against the nodes in the columns it crosses, and a node in the way is moved clear. The block keeps its top left corner, and the whole thing is one undoable edit. A loop in the wiring has its closing wire left out of the ranking, so it runs backward instead of making the layout loop.
+
+## Wire names
+
+A wire of a diagram is named at its middle, by the output it comes from (`sum`, `result`, `iterations`), beside its type when either end declares one, and hovering it still shows the last value it carried.
+
+## Zoom
+
+The canvas zooms from 5 percent to 400 percent about the pointer, and reads its zoom as `data-zoom` on the canvas.
+
+## Setting a panel object by name
+
+`dia-panel-set` changes one property of a control or an indicator while the diagram runs, by the object's label (or its id): `visible` and `enabled` take true or false, `color` takes red, amber, green, blue, gray or default, `label` takes text, and `min` and `max` take a number for a number control. A disabled control refuses what an operator sets, a hidden object is not drawn, and the panel an operator has open follows. A name that matches no object, or more than one, is a problem at deploy when it is typed on the node and an error on the wire when it is wired in, and a run starts from the panel as it was designed.
+
+## Symbols
+
+Every FlowLab node type is drawn with a symbol of our own at the middle of its body (a plus for math, a sigma for statistics, a sine for a waveform, a plug for a serial port), beside its text label. They are plain strokes drawn in `web/src/lib/symbols.ts`, not an icon font or anyone's artwork, and a test fails when a diagram node type names an icon that is not drawn.
+
+## Writing to equipment: the write gate
+
+A diagram commands equipment one way: `dia-hotloop-write`. It sends its value to a tag in HotLoop (`device/tag`, set on the node or wired in) through HotLoop's write gate, which decides in its own order that writes are switched on, that the tag is armed and that the value is in range. Flow never writes to a machine itself. HotLoop records every attempt, refused or not, with the reason `flow:<diagram>/<node id>`, so its audit trail names the diagram and the node. A refusal is an error on the node's error wire with the gate's own reason (code 5006), and so is a HotLoop that cannot be reached; in both cases the write does not happen, and the node refuses to deploy without a HotLoop selected. The raw serial and instrument nodes talk to bench instruments (meters, supplies, loads), which have no tag in HotLoop; equipment on a plant's network is written through this node.
