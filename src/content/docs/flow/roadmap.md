@@ -5,6 +5,10 @@ description: "The phases of Flow, what is done and what is next, including the e
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at b1d875c, and it differs from the copy in HotLoop Flow 2.11.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -361,8 +365,8 @@ answers, because the reasons are what stops somebody reopening them.
 Decided 2026-10-03:
 
 - **Industrial nodes get built in Flow,** on the same open source libraries the
-  HotLoop drivers use. HotLoop's drivers stay HotLoop's. Flow keeps its own license, which was a different one when this was decided and is HotLoop's EmberNet Source License 1.0
-  from 2.2.0 on.
+  HotLoop drivers use. HotLoop's drivers stay HotLoop's. Flow keeps its own license, which was a different one when this was decided and is HotLoop's EmberNet Source License 1.0,
+  which replaced the Business Source License 1.1 it carried from 2.2.0.
 - **Flow stays its own product and is never embedded in HotLoop.** It runs next
   to HotLoop and talks to HotLoop's API from the outside, which is what the
   Phase 5 HotLoop nodes do, and that's the whole relationship.
