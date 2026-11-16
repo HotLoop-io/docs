@@ -151,16 +151,17 @@ export const PAGES = [
   // ---- HotLoop Cascade ----
   { product: 'cascade', group: 'Start here', slug: 'cascade/overview', repo: 'cascade', file: 'README.md', intro: true, sections: ["What it won't do"], title: 'HotLoop Cascade', description: 'Workflows that get the plant talking to everything else, checkpointed so a retry is a database row, in one static Go binary.' },
   { product: 'cascade', group: 'Start here', slug: 'cascade/status', repo: 'cascade', file: 'README.md', sections: ['Where it stands'], title: 'Where Cascade stands', description: 'Cascade is released: what is in it, what is not in it yet, and where the image and chart live.' },
-  { product: 'cascade', group: 'Use it', slug: 'cascade/editor', repo: 'cascade', file: 'README.md', sections: ['The editor'], title: 'The editor', description: 'The editor is built into the Cascade binary: folders, a canvas with run to here and pinned output, runs drawn step by step, and settings for roles and sign-in.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/editor', repo: 'cascade', file: 'README.md', sections: ['The editor'], title: 'The editor', description: 'The editor is built into the Cascade binary: folders, a canvas with run to here, runs drawn step by step, credentials, projects, users, the audit log, settings.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/running', repo: 'cascade', file: 'README.md', sections: ['Running it'], title: 'Running Cascade', description: 'Run Cascade with Podman Quadlet or Helm on k3s, on SQLite or Postgres, with the health check the units and the chart probes use.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/importing', repo: 'cascade', file: 'README.md', sections: ['Bringing a workflow in'], title: 'Bringing a workflow in', description: 'Import an existing workflow into Cascade, what maps across and what the importer tells you it could not carry.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/observability', repo: 'cascade', file: 'README.md', sections: ['Watching it'], title: 'Watching it', description: 'Health, readiness, Prometheus metrics and traces for every run and step, so a stuck job shows up on a graph and not in a complaint.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/mcp', repo: 'cascade', file: 'docs/MCP.md', title: 'The MCP server', description: 'Cascade has an MCP server that reads and writes: 79 tools, each an API route run through its own handler, with its permission, a reason and an audit row.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/file-steps', repo: 'cascade', file: 'README.md', sections: ['The file steps'], title: 'The file steps', description: 'The steps that read, write, list and move files, build CSV or Excel, and read a PDF, all fenced to one directory and off until you set it.' },
   { product: 'cascade', group: 'Identity', slug: 'cascade/identity', repo: 'cascade', file: 'docs/IDENTITY.md', title: 'Identity and access', description: 'Custom roles, sign-in with LDAP, Active Directory and SAML, and SCIM provisioning, all in every Cascade with no paid tier.' },
   { product: 'cascade', group: 'Governance', slug: 'cascade/governance', repo: 'cascade', file: 'docs/GOVERNANCE.md', title: 'Governing a Cascade instance', description: 'Variables, folders, annotated runs, redaction, insights, outside secrets and log streaming, for a plant with a growing pile of workflows.' },
   { product: 'cascade', group: 'Install', slug: 'cascade/quadlet', repo: 'cascade', file: 'deploy/quadlet/README.md', title: 'Cascade with Podman Quadlet', description: 'Run Cascade as systemd services with Podman Quadlet, on SQLite or with Postgres and a separate worker, with an update window you control.' },
   { product: 'cascade', group: 'Install', slug: 'cascade/building', repo: 'cascade', file: 'README.md', sections: ['Building'], title: 'Building Cascade', description: 'Build the Cascade binary and image from source, and run the vet and race test suite against real services.' },
-  { product: 'cascade', group: 'Project', slug: 'cascade/roadmap', repo: 'cascade', file: 'docs/ROADMAP.md', title: 'Cascade roadmap', description: 'What Cascade has built and what comes after the first release, phase by phase, and what each phase has to prove first.' },
+  { product: 'cascade', group: 'Project', slug: 'cascade/roadmap', repo: 'cascade', file: 'docs/ROADMAP.md', title: 'Cascade roadmap', description: 'What Cascade has built, what each release shipped, and what is not built and not scheduled.' },
 ];
 
 // Release notes are every file in docs/releases, found on the ref, not listed here.
@@ -185,7 +186,7 @@ export const SKIPPED_SECTIONS = {
     ],
   },
   cascade: {
-    'README.md': ['License'],
+    'README.md': ['License', 'MCP'], // MCP is its own page, from docs/MCP.md
   },
 };
 
