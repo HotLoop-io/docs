@@ -26,14 +26,14 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "v1.1.0",
-      "sha": "f3b20c28a79d771d9d4a5cc6df395f96462be8e3",
+      "ref": "v1.1.1",
+      "sha": "f7dab2da2d38ad776c37074f599d63662d3f04b1",
       "release": {
-        "tag": "v1.1.0",
-        "version": "1.1.0",
+        "tag": "v1.1.1",
+        "version": "1.1.1",
         "prerelease": false,
-        "publishedAt": "2026-11-16T07:13:37Z",
-        "sha": "20f31397d55873b7ad469c504f699bc5daf224f5"
+        "publishedAt": "2026-11-16T08:07:21Z",
+        "sha": "111059c817ff56ff2fca1cf150703327d93da328"
       }
     }
   },
@@ -1312,6 +1312,17 @@
       "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/1.1.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-1-1-1",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 1.1.1 release notes",
+      "label": "1.1.1",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/1.1.1.md",
       "release": true
     }
   ],
