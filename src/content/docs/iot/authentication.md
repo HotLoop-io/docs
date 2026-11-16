@@ -257,9 +257,9 @@ listed one by one shows as `custom` with how many, and Edit keeps the list unles
 you pick a role, which replaces it. The same things over the REST API:
 
 A password is 8 to 72 bytes: 72 is bcrypt's own limit, and one longer is refused
-with that said. A password over 64 bytes works here and cannot sign in over OPC
-UA, which is the OPC UA library's limit (see
-[OPCUA-SERVER.md](/edge/opc-ua-server/#who-may-log-in)).
+with that said. It works the same over OPC UA (see
+[OPCUA-SERVER.md](/edge/opc-ua-server/#who-may-log-in)); in earlier releases a password over
+64 bytes could sign in here and not there.
 
 ```sh
 # List
