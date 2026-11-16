@@ -468,12 +468,21 @@ for (const [slug, p] of mainPages) {
     .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (on main, next release)' : ''}`)
     .join('\n');
   const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade, HotLoop for CODESYS and Transmitter release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
+  // One page for HotLoop core. IoT, Edge, Gateway and Edge Relay ship from one tag, so each of their
+  // sections links here and nowhere else for release notes. The per-version pages stay where they are.
+  out.set('releases/core.md', ['---', MARK, 'title: "HotLoop core release notes"', 'description: "One set of release notes for HotLoop IoT, Edge, Gateway and Edge Relay, which ship from one tag on one version, newest release first."', 'sidebar:', '  label: "All core releases"', 'editUrl: false', '---', ''].join('\n') + `
+HotLoop IoT, Edge, Gateway and Edge Relay are one codebase and release together from one tag, so there is one set of release notes for all four, and this is it. The latest is ${releases.hotloop.version}. The same notes are on [hotloop.io](https://hotloop.io/releases/core/), with the date each one went out. Flow, Cascade, HotLoop for CODESYS and Transmitter have their own, on the [release notes index](/releases/).
+
+Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed.
+
+${rows('hotloop')}
+`);
   out.set('releases/index.md', `${fm}
 Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
 
 ## HotLoop core
 
-IoT, Edge, Gateway and Edge Relay release together from one tag, so they share these notes.
+IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [one set of release notes](/releases/core/).
 
 ${rows('hotloop')}
 
