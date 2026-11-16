@@ -5,10 +5,6 @@ description: "Run a tab as a diagram for test benches and data loggers: nodes ru
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 928bf26, and it differs from the copy in HotLoop Flow 2.12.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 FlowLab is the part of Flow for test benches and data loggers, and a diagram is its unit: the other way Flow runs a tab. In a flow, a message goes through a node
 and any input wakes it. In a diagram, each node runs once per run, when every input
 that has a wire holds a value. Two nodes with no wire between them run at the same
@@ -254,7 +250,7 @@ stand-in does.
 indicators and charts, signed in the same way as the editor. It is built to be used
 with a thumb: nothing on it is smaller than a finger. A chart keeps its last 1,024
 points unless you change it, and says how many it has let go of. A graph replaces its
-data with each array. An XY chart plots x against y and keeps history too.
+data with each array. An XY chart plots x against y and keeps history too. An intensity chart takes a grid, an array of rows of numbers that are all the same length (up to 512 by 512), and draws each value as a color from the smallest to the largest in it, replacing the picture with each grid; a flat array or a ragged grid is an error on the node's error wire.
 
 Several people can watch one run. Setting a control from the browser needs
 `diagram.run`, is checked on the server, and is written to the audit log.
@@ -300,6 +296,29 @@ collection and the scheduler can delay a node by milliseconds, so a node can't p
 a deadline. Work that has to meet one belongs in a PLC or a runtime built for it. The
 timing of samples from a data acquisition device is not affected by any of this: the
 device's own clock does it, and Flow only moves the data.
+
+## Tests of a diagram
+
+A flow test file can hold a test of a diagram beside the message tests. It sets the diagram's
+controls, runs it once with the real diagram engine, and says what its indicators hold:
+
+```yaml
+tests:
+  - name: weighs and flags a heavy load
+    diagram:
+      name: Scale logger          # the diagram's name or id
+      controls: {Limit: 10}       # by label or id, checked like an operator's entry
+      expect:
+        Weight: 12.5              # a number matches to within a millionth
+        Heavy: true
+        Reading: {min: 12, max: 13}
+```
+
+A control the diagram does not have, a value it refuses, an indicator that is not one, a name
+two things share, and a diagram that cannot run are errors with the reason. A diagram with a
+node that would reach outside the test (a serial port, an instrument, a data acquisition device,
+MQTT out, a HotLoop write, a log file) is refused, because a diagram test has no stand-in for
+them. A scripted serial device, to test a cable pull or a run of garbage frames, is not built.
 
 ## The error list in CI
 
