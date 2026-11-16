@@ -1328,23 +1328,31 @@
   ],
   "pinned": [
     "business.md",
+    "cascade/embernet.md",
+    "codesys/embernet.md",
     "codesys/install.md",
     "codesys/overview.md",
     "codesys/profile.md",
     "codesys/roadmap.md",
     "codesys/where-it-stands.md",
+    "edge/embernet.md",
     "edge/install.md",
     "edge/overview.md",
+    "edge-relay/embernet.md",
     "edge-relay/install.md",
     "edge-relay/overview.md",
+    "flow/embernet.md",
     "flow/install.md",
+    "gateway/embernet.md",
     "gateway/install.md",
     "gateway/overview.md",
     "gateway/upgrading.md",
     "install/index.md",
+    "iot/embernet.md",
     "iot/install.md",
     "iot/overview.md",
     "releases/codesys-0-3-0.md",
-    "releases/codesys-0-3-1.md"
+    "releases/codesys-0-3-1.md",
+    "transmitter/embernet.md"
   ]
 }
