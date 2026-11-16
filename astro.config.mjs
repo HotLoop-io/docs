@@ -123,12 +123,12 @@ export default defineConfig({
         {
           label: 'HotLoop IoT',
           collapsed: true,
-          items: [...iotItems(), { slug: 'iot/embernet', label: 'On the EmberNet docs' }],
+          items: [...iotItems(), { slug: 'releases/core', label: 'Release notes (HotLoop core)' }, { slug: 'iot/embernet', label: 'On the EmberNet docs' }],
         },
         {
           label: 'HotLoop Edge',
           collapsed: true,
-          items: [...edgeItems(), { slug: 'edge/embernet', label: 'On the EmberNet docs' }, included('HotLoop IoT', iotItems())],
+          items: [...edgeItems(), { slug: 'releases/core', label: 'Release notes (HotLoop core)' }, { slug: 'edge/embernet', label: 'On the EmberNet docs' }, included('HotLoop IoT', iotItems())],
         },
         {
           label: 'HotLoop Gateway',
@@ -139,6 +139,7 @@ export default defineConfig({
             { slug: 'gateway/upgrading', label: 'Upgrading' },
             { slug: 'gateway/write-gate', label: 'The write gate' },
             ...pages('gateway').map(page),
+            { slug: 'releases/core', label: 'Release notes (HotLoop core)' },
             { slug: 'gateway/embernet', label: 'On the EmberNet docs' },
             included('HotLoop Edge', [...edgeItems(), included('HotLoop IoT', iotItems())]),
           ],
@@ -150,6 +151,7 @@ export default defineConfig({
             { slug: 'edge-relay/overview', label: 'Overview' },
             { slug: 'edge-relay/install', label: 'Install' },
             ...pages('edge-relay').map(page),
+            { slug: 'releases/core', label: 'Release notes (HotLoop core)' },
             { slug: 'edge-relay/embernet', label: 'On the EmberNet docs' },
           ],
         },
@@ -198,7 +200,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { slug: 'releases', label: 'All releases' },
-            { label: 'HotLoop core', collapsed: true, items: hlRelease.sort(relSort).map(page) },
+            { label: 'HotLoop core', collapsed: true, items: [{ slug: 'releases/core', label: 'All core releases' }, ...hlRelease.sort(relSort).map(page)] },
             { label: 'HotLoop Flow', collapsed: true, items: flowRelease.sort(relSort).map(page) },
             { label: 'HotLoop Cascade', collapsed: true, items: cascadeRelease.sort(relSort).map(page) },
             { label: 'HotLoop for CODESYS', collapsed: true, items: [{ slug: 'releases/codesys-0-3-1', label: '0.3.1' }, { slug: 'releases/codesys-0-3-0', label: '0.3.0' }] },
