@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
+      "ref": "df5ab857",
       "sha": "df5ab8576c6f2345ee36bb658c19929cc116fda6",
       "release": {
         "tag": "v4.21.1",
@@ -14,14 +14,14 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "928bf26829c253223fd43f85969017ccdc1e4e0e",
-      "sha": "928bf26829c253223fd43f85969017ccdc1e4e0e",
+      "ref": "v2.13.0",
+      "sha": "a9b8c4ec4be85fb040d9ef2a8ea59ab8d84013a2",
       "release": {
-        "tag": "v2.12.1",
-        "version": "2.12.1",
+        "tag": "v2.13.0",
+        "version": "2.13.0",
         "prerelease": false,
-        "publishedAt": "2026-11-16T06:05:23Z",
-        "sha": "a63babbc6b9df914e55a5a94c1d8a196b1278b98"
+        "publishedAt": "2026-11-16T19:51:52Z",
+        "sha": "cb13a9c3a8f0f0ef6bb2e987cd5404e3463ad961"
       }
     },
     "cascade": {
@@ -616,7 +616,7 @@
       "group": "Nodes",
       "title": "FlowLab",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/diagrams.md",
       "release": false
@@ -1158,6 +1158,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.12.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-13-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.13.0 release notes",
+      "label": "2.13.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.13.0.md",
       "release": true
     },
     {
