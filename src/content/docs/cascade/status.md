@@ -5,14 +5,10 @@ description: "Cascade is released: what is in it, what is not in it yet, and whe
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 1f8ad0c, and it differs from the copy in HotLoop Cascade 1.0.2, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
-1.0.2 is the release out today, and 1.0.1 and 1.0.0 are the two before it. 1.0.0 is the first
-with the identity and governance work, each piece tried against the real server it
-talks to: SAML (against Keycloak), LDAP and Active Directory (OpenLDAP and a Samba
-domain controller), SCIM (against scim2-tester), custom roles, external secrets
+1.1.0 is the release out today, and 1.0.2, 1.0.1 and 1.0.0 are the three before it. 1.0.0
+is the first with the identity and governance work, each piece tried against the real
+server it talks to: SAML (against Keycloak), LDAP and Active Directory (OpenLDAP and a
+Samba domain controller), SCIM (against scim2-tester), custom roles, external secrets
 (OpenBao), log streaming (a syslog server and Loki), variables, folders, insights,
 execution annotations, redaction policies, and S3 and Azure blob stores (Garage and
 Azurite). It also has a new editor, so every one of those has a screen. 1.0.1 fixes
@@ -20,12 +16,16 @@ one mistake in sign-in: when the database could not be read, Cascade answered "n
 signed in" and cleared the cookie, so a short outage signed everyone out and could
 turn a good second factor into a wrong code. Now it says to try again and keeps the
 session. 1.0.2 lets a workflow sign and verify with an HMAC key kept as a credential,
-and lets a public form on another website call a webhook from the browser. Nothing
-migrates between 1.0.0 and 1.0.2.
+and lets a public form on another website call a webhook from the browser. 1.1.0 adds
+the MCP server, and the screens the editor was missing: credentials, projects, users,
+the audit log, settings and your account, with sign-in now the editor's own page.
+Nothing migrates between 1.0.0 and 1.1.0.
 
-What isn't here yet (Git source control and environments, more connectors, AI steps
-and an MCP server) is in `docs/ROADMAP.md`.
+What isn't here yet (Git source control and environments, more connectors, and AI
+steps) is in `docs/ROADMAP.md`.
 
 The repository is private. The image and the chart are public and pull with no
-login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `1.0.2`,
-`1.0`, `1`, `latest` and `stable`, for amd64 and arm64.
+login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `1.1.0`,
+`1.1`, `1`, `latest` and `stable`. 1.1.0 is amd64 only: multi-arch ships in its own
+run, so `stable`, `latest` and the short tags keep the arm64 image they already had
+until the release after it.

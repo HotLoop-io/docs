@@ -26,14 +26,14 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "v1.0.2",
-      "sha": "0e0400723eaa2a049b31ca8d00c0f75c90dd54d7",
+      "ref": "v1.1.0",
+      "sha": "f3b20c28a79d771d9d4a5cc6df395f96462be8e3",
       "release": {
-        "tag": "v1.0.2",
-        "version": "1.0.2",
+        "tag": "v1.1.0",
+        "version": "1.1.0",
         "prerelease": false,
-        "publishedAt": "2026-11-02T01:09:18Z",
-        "sha": "437c21c21c4d9f1efa97cce5a38e17385009333f"
+        "publishedAt": "2026-11-16T07:13:37Z",
+        "sha": "20f31397d55873b7ad469c504f699bc5daf224f5"
       }
     }
   },
@@ -842,6 +842,17 @@
       "release": false
     },
     {
+      "slug": "cascade/mcp",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "The MCP server",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/MCP.md",
+      "release": false
+    },
+    {
       "slug": "cascade/file-steps",
       "product": "cascade",
       "group": "Use it",
@@ -1290,6 +1301,17 @@
       "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/1.0.2.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-1-1-0",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 1.1.0 release notes",
+      "label": "1.1.0",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/1.1.0.md",
       "release": true
     }
   ],
