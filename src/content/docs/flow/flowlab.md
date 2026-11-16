@@ -5,6 +5,10 @@ description: "Run a tab as a diagram for test benches and data loggers: nodes ru
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 928bf26, and it differs from the copy in HotLoop Flow 2.12.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 FlowLab is the part of Flow for test benches and data loggers, and a diagram is its unit: the other way Flow runs a tab. In a flow, a message goes through a node
 and any input wakes it. In a diagram, each node runs once per run, when every input
 that has a wire holds a value. Two nodes with no wire between them run at the same
@@ -185,7 +189,7 @@ wire naming the address.
 
 A port that goes away, such as a pulled cable or an unplugged adapter, is a fault on
 the read's error wire. The next read tries to open it again, once a second, and counts
-the loss and the return. Flow control lines are not offered.
+the loss and the return. A port has flow control, none, hardware (RTS and CTS) or software (XON and XOFF), on Linux, set on the terminal itself; a pseudo terminal shows the setting arrived, and what the lines do on a real adapter has not been shown.
 
 ### Data acquisition
 
