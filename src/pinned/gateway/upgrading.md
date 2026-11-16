@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.20.0
+reviewed: hotloop=4.21.1
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
 description: "From 4.18.11 it is a helm upgrade, but agents can write now and scaled tags change. From 4.18.10 the database moves to PostgreSQL 17. Older, you go in hops."
 sidebar:
@@ -7,6 +7,10 @@ sidebar:
 ---
 
 Five ways onto {{hotloop}}, and they are nothing alike. From 4.18.11 it is a plain `helm upgrade`, but two things change what a running plant does, so read them first. From 4.18.10 the database engine changes under you, and you want to know that before it happens. From 4.17.0 it's a plain `helm upgrade`, with a couple of defaults that moved. From 4.16.0 you go through 4.17.0 first, and afterwards a new Secret is as much a part of your plant's data as the database is. From 4.3.1 it's a renamed chart that a plain `helm upgrade` can't touch, and you go through 4.16.0 and 4.17.0 on the way. The release notes cover one hop at a time, and none of them covers jumping over a release, so this page doesn't promise that one works. Find the one that's yours and read all of it before you touch a running plant.
+
+:::caution[Coming from 4.20.2 or earlier: an OPC UA client on Basic256 stops connecting]
+4.21.0 turned `Basic128Rsa15` and `Basic256` off by default, on upgrades as well as new installs. The server no longer lists them and refuses a client that asks for one by name. Check whether any OPC UA client of yours (Ignition's connection shows it) speaks nothing newer than `Basic256`, and move it to `Basic256Sha256`. If it can't move, `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` (chart `opcuaServer.allowDeprecatedPolicies: true`) brings the two back, and the server says so at start. 4.21.0 also adds migration 0027, a new table, so the upgrade is otherwise a plain `helm upgrade`. The release check started 4.20.2 on the migrated schema and it ran, so the table is not a reason a rollback is unsafe.
+:::
 
 :::note[Older charts are fetched by URL]
 The chart repository's index keeps the Gateway's charts back to 4.16.0, so `hotloop/hotloop --version 4.17.0` resolves, and the tarballs are served by URL too. The commands below for 4.16.0 and 4.17.0 name the chart by its URL, like `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`, and that works either way. IoT and Edge start at 4.18.10.

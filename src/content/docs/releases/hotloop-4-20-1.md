@@ -5,14 +5,7 @@ description: "What shipped in HotLoop core 4.20.1, what changed on upgrade, and 
 editUrl: false
 sidebar:
   label: "4.20.1"
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[On main, next release]
-This page was written from `main` at 9ab417b. These notes are for a release that is not out. HotLoop core 4.20.0 is the latest one you can install.
-:::
 
 This is the multi-arch build of [4.20.0](/releases/hotloop-4-20-0/). The product code is the same as 4.20.0's: the new web UI at `/` and the MCP tools that change configuration. 4.20.0 was the amd64 build, and `stable` kept the arm images it already held.
 

@@ -5,10 +5,6 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9ab417b, and it differs from the copy in HotLoop core 4.20.0, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -335,6 +331,11 @@ see [Not in this product](#not-in-this-product).
 | `DELETE` | `/api/users/{username}/lockout` | `users.manage` | all |
 | `PUT` | `/api/users/{username}/pin` | `users.manage` | all |
 | `DELETE` | `/api/users/{username}/pin` | `users.manage` | all |
+| `GET` | `/api/opcua/certificates` | `users.manage` | all |
+| `GET` | `/api/users/{username}/certificates` | `users.manage` | all |
+| `POST` | `/api/users/{username}/certificates` | `users.manage` | all |
+| `POST` | `/api/users/{username}/certificates/{thumbprint}/revoke` | `users.manage` | all |
+| `DELETE` | `/api/users/{username}/certificates/{thumbprint}` | `users.manage` | all |
 | `GET` | `/api/status` | `status.read` | all |
 | `GET` | `/api/protocols` | `status.read` | all |
 | `GET` | `/api/diagnostics` | `status.read` | all |
@@ -707,6 +708,48 @@ signed in at. Its password, and its sessions on its own computer, are untouched.
 `{"status":"PIN cleared","username":"olga","hasPin":false}`. `404` for an unknown
 user.
 
+### `GET /api/opcua/certificates`
+
+Every X.509 certificate attached to a user for signing in to the OPC UA server
+(see [OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)), newest first:
+`{"serverAcceptsCertificates":false,"certificates":[...]}`. Each has `thumbprint`
+(SHA-256 of the DER form, lower case hex), `username`, `label`, `subject`,
+`notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` and `revokedBy` once
+revoked, `lastUsed` once used, and `state`: `active`, `revoked`, `expired` or
+`not yet valid`. Only an active certificate signs anyone in.
+`serverAcceptsCertificates` is whether the OPC UA server is on and has
+`HOTLOOP_OPCUA_SERVER_ALLOW_X509` set; certificates are kept either way. Only the
+public certificate is ever stored or sent.
+
+### `GET /api/users/{username}/certificates`
+
+The same list for one user. `404` for an unknown user.
+
+### `POST /api/users/{username}/certificates`
+
+Attaches a certificate to a user. `{"certificate": "<PEM text or base64 of the DER bytes>", "label": "Olga's laptop"}`;
+the label is optional. Answers `201` with the certificate as listed. The
+certificate must be RSA with a key of at least 2048 bits and must not have
+expired. `400` says which of those it is, and for something that is not a
+certificate: a private key is refused by name and never kept or echoed, and so
+is a chain. `404` for an unknown user. `409` when the certificate is already
+attached, to this user or another: one certificate is one person. The change is
+in the logbook with who made it.
+
+### `POST /api/users/{username}/certificates/{thumbprint}/revoke`
+
+Revokes a certificate. It can no longer sign in, a session open with it ends
+within the permission cache's 10 seconds, and later attempts are refused and
+logged as revoked. It stays listed as `revoked` with who did it and when, and
+revoking it again keeps the first record. `{thumbprint}` is the SHA-256 as
+listed; colons, spaces and capitals are accepted. `404` when the certificate is
+not this user's.
+
+### `DELETE /api/users/{username}/certificates/{thumbprint}`
+
+Forgets a certificate. Attaching it again makes it work again. `404` when it is
+not this user's. Deleting the user deletes its certificates.
+
 ## Status and diagnostics
 
 ### `GET /api/status`
@@ -737,7 +780,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.20.1"
+  "version": "4.21.1"
 }
 ```
 
@@ -2002,11 +2045,16 @@ the priority of an alarm whose class is not one of Error, Warning or Info.
 Without `?apply=true` nothing is saved: the answer says what would come across.
 
 Digital alarms compared with `= TRUE` or `= FALSE` become `true` and `false`,
-UpperLimit with `>` becomes `hi`, LowerLimit with `<` becomes `lo`, the message
+UpperLimit with `>` becomes `hi`, LowerLimit with `<` becomes `lo`, an Outside range alarm
+(`OutOfArea`, with both operators `<`) becomes two alarms, a `lo` at the lower limit and a
+`hi` at the upper one, the message
 and the on and off delays (an IEC time such as `T#5s`) carry over, and Error is
 priority 2, Warning 3, Info 4. Anything else the IDE can write is not read
 and comes back in `skipped` with its row and why, because the layout is not
-documented by CODESYS and only what a real export has shown is read.
+documented by CODESYS and only what a real export has shown is read. That includes
+the rest of what the IDE offers: Inside the range (`ForbiddenArea`) is true only between
+two limits and an alarm here has one, Change has no documented duration, and Event and
+Alarm (API) are raised by the PLC program and have no variable to watch.
 `warnings` lists what carried over only in part (a class that is not known,
 latching, a higher priority alarm).
 

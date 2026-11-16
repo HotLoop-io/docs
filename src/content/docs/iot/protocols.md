@@ -170,6 +170,7 @@ echoes the policy id that endpoint listed.
 | `securityMode` | `None` | `None`, `Sign`, or `SignAndEncrypt`. Left out with a `securityPolicy` other than `None`, it is `SignAndEncrypt`. |
 | `securityPolicy` | the best the server offers for the mode | `None`, `Basic256Sha256`, `Aes128_Sha256_RsaOaep`, or `Aes256_Sha256_RsaPss`. `Basic128Rsa15` and `Basic256` are refused. |
 | `username`, `password` | anonymous | User name authentication. |
+| `userCertificate`, `userPrivateKey` | none | X.509 user authentication: the session signs in as whoever the server maps this certificate to, with no password. Both PEM, set together. The key is RSA (the OPC UA library signs with RSA only; an EC key is refused with that said) and is a secret like the password: sealed at rest, redacted from every API answer, never logged. The certificate is the user's, not the client application certificate in `certFile`. With a `username` also set, the certificate is used. Against HotLoop's own server the certificate has to be attached to a user first ([OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)). |
 | `allowInsecureCredentials` | `false` | Allows a password to be sent over an unsecured channel (`securityMode` `None`), or when nothing encrypts it. |
 | `certFile`, `keyFile` | generated | This client's application certificate and its RSA key, for a secured mode. Set both or neither. |
 | `pkiDir` | `HOTLOOP_OPCUA_CLIENT_PKI_DIR` (`/data/opcua-client-pki`) | Where the generated certificate and the `trusted/` and `rejected/` stores live. |
@@ -508,9 +509,10 @@ how it turns away a certificate. Also not tested or not supported:
   unsecured channel.
 - `Aes256_Sha256_RsaPss` against a server other than HotLoop's own, where it
   failed, as above.
-- Whether a server's own password limits apply: HotLoop's own server, for one,
-  cannot log in a user whose password is longer than 64 bytes over OPC UA (the
-  library refuses it, see [OPCUA-SERVER.md](/edge/opc-ua-server/)).
+- Whether a server's own password limits apply. HotLoop's own server accepts
+  passwords up to 72 bytes; in earlier releases one over 64 bytes could not
+  sign in over OPC UA (see [OPCUA-SERVER.md](/edge/opc-ua-server/)). Another server may
+  have its own limit.
 
 #### Ignition 8.3
 

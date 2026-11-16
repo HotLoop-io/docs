@@ -1,12 +1,12 @@
 ---
-reviewed: hotloop=4.20.0
+reviewed: hotloop=4.21.1
 title: "Install HotLoop IoT {{hotloop}}"
 description: "Install HotLoop IoT {{hotloop}} on k3s with Helm, or on a Pi or small PC as systemd services with Podman Quadlet, on PostgreSQL, or a SQLite file."
 sidebar:
   label: "Install"
 ---
 
-HotLoop IoT first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, built for amd64, arm64 and arm/v7 (4.20.0 is the amd64 run of the two a release makes, so the arm images are 4.19.10's until the next release builds them again), and the chart is `hotloop-iot` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
+HotLoop IoT first shipped in 4.18.10. The image is `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, built for amd64, arm64 and arm/v7, and the chart is `hotloop-iot` in the same Helm repository as the rest of the lineup. Both pull with no login. There is no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 
 Two ways in. A cluster gets Helm. A Pi, a NUC, or a small industrial PC with no cluster gets Podman Quadlet. Either way the database is a choice you make once: PostgreSQL 17 (the default), or a SQLite file with no database container at all.
 

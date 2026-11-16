@@ -111,7 +111,7 @@ corrupt the protocol stream.
 
 ## Tools
 
-One hundred and twenty-eight of them: twenty-seven that read the plant and command it, sixty-four that change its configuration ([below](#changing-configuration)) and thirty-seven for administration ([below](#administration)).
+One hundred and thirty-three of them: twenty-seven that read the plant and command it, sixty-four that change its configuration ([below](#changing-configuration)) and forty-two for administration ([below](#administration)).
 
 | Tool | Does |
 |---|---|
@@ -432,7 +432,7 @@ and never opens its port.
 
 User accounts, settings, backups, the escalation policy, the historian targets,
 the broker logins, the fleet of edge relays and scheduled reports are the
-administrator's, and they are tools as well: thirty-seven of them, the same
+administrator's, and they are tools as well: forty-two of them, the same
 pattern as the rest. Each is one route run through its own handler with the
 permission that route asks for (`users.manage`, `settings.write`, `backup.run`,
 `fleet.restart`...), a reason for every change and the agent in the audit line.
@@ -466,6 +466,11 @@ Two things are the routes' own and worth knowing before relying on a tool:
 | `unlock_user` | `DELETE /api/users/{username}/lockout` | `users.manage` |
 | `set_user_pin` | `PUT /api/users/{username}/pin` | `users.manage` |
 | `clear_user_pin` | `DELETE /api/users/{username}/pin` | `users.manage` |
+| `list_opcua_certificates` | `GET /api/opcua/certificates` | `users.manage` |
+| `list_user_certificates` | `GET /api/users/{username}/certificates` | `users.manage` |
+| `add_user_certificate` | `POST /api/users/{username}/certificates` | `users.manage` |
+| `revoke_user_certificate` | `POST /api/users/{username}/certificates/{thumbprint}/revoke` | `users.manage` |
+| `delete_user_certificate` | `DELETE /api/users/{username}/certificates/{thumbprint}` | `users.manage` |
 
 **Settings, backups, notifications**
 

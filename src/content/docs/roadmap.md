@@ -607,17 +607,26 @@ Found in code review and in the PRs so far. Each one is real, checked against
       ahead of the plant's own. Discover tags leaves it out now. Set
       `browseServerNodes` on the device to get it back, or point `browseRoot` at
       `i=2253` to look inside it on purpose. Fixed
-- [ ] OPC UA X.509 user tokens, client and server
-- [ ] Our OPC UA server always offers the deprecated `Basic128Rsa15` and `Basic256`
-      policies (library limit, needs an upstream fix or a fork)
-- [ ] OPC UA passwords over 64 bytes can't log in to our server (library limit).
-      Checked, and it can't be fixed from our side: `awcullen/opcua` v1.4.0
-      refuses a token whose length is over 96 (password plus a 32-byte nonce)
-      before it calls us, in three places, and exposes no option for it. It
-      needs a change in the library or a fork, and no upstream issue exists yet.
-      Documented with the lines in [OPCUA-SERVER.md](/edge/opc-ua-server/), and a
-      test pins the 64 and 65 byte edge so a library upgrade can't move it
-      unnoticed
+- [x] OPC UA X.509 user tokens, client and server. A certificate an admin
+      attaches to a user (Settings, the API, MCP) signs a client in to our OPC UA
+      server as that user, with that user's permissions; revoking works, and
+      every sign-in and refusal is in the logbook. Off until
+      `HOTLOOP_OPCUA_SERVER_ALLOW_X509` is set. The device driver signs in the
+      same way with `userCertificate` and `userPrivateKey` (RSA, the key sealed
+      like a password). Tested against gopcua, python asyncua, and HotLoop's own
+      driver against HotLoop's own server. A trusted CA with a name rule is not
+      built; see [OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)
+- [x] Our OPC UA server always offered the deprecated `Basic128Rsa15` and
+      `Basic256` policies. Off by default now, with
+      `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` to turn them back on for a
+      legacy client; with it off they are not listed and a channel that asks for
+      one is refused. Fixed in a copy of the library
+- [x] OPC UA passwords over 64 bytes couldn't log in to our server.
+      `awcullen/opcua` v1.4.0 refused a token whose length was over 96 (password
+      plus a 32-byte nonce) in three places and had no option for it. The copy of
+      the library in `third_party/awcullen-opcua` takes the cap out, and the
+      tests pin 64, 65, 70 and 72 byte passwords, and a wrong 600 byte one.
+      Both library changes are offered upstream from HotLoop-io/opcua
 - [x] The chart pins TimescaleDB 2.29.1; 2.30.1 is out. Bumped, tests run on
       the same version, and an existing install's extension is now actually
       updated on start instead of staying on the old version forever
@@ -664,10 +673,21 @@ Found in code review and in the PRs so far. Each one is real, checked against
       Modbus does. Proved through the poll loop with a read that blocks until the
       deadline (it fails with the old return and passes with the fix, and a PLC
       that answers some blocks stays up), not on the wire. Fixed
-- [ ] The S7comm and EtherNet/IP silent-device tests above drive the poll loop,
-      not a socket. Proving them the way Modbus was proven needs an in-process S7
-      server (COTP and the S7 read) and a CIP server (RegisterSession, forward
-      open and the multi-service read) that go quiet on command
+- [x] The S7comm and EtherNet/IP silent-device tests above drove the poll loop,
+      not a socket. They run on one now: the tests start an in-process S7 server
+      (ISO-on-TCP connect, communication setup, read variable) and a CIP server
+      (RegisterSession, forward open, a connected read, and the multiple service
+      read), each of which answers from a table and goes quiet on command, and
+      the drivers poll them over TCP. A silent PLC is down inside a poll plus
+      twice its timeout, one that answers some blocks stays up, and the revert of
+      the earlier fix fails them. Fixed
+- [x] **An EtherNet/IP device with two or more tags in a batch panicked its
+      poll.** The driver read a batch through the library's `ReadMulti`, which
+      takes a struct of tagged fields or a map, and given a tag name it panics in
+      reflect before anything is sent. It never showed because no test ran a
+      batch against a server. The batch goes through `ReadList` now, and a
+      controller that does not answer is no longer asked again tag by tag, which
+      held the poll for a timeout per tag. Fixed
 - [x] **A Pin from a page opened onto Tags saved a board of one tag over the real
       board.** The page only read the board when the Board screen opened, so a
       reload at `#tags` held an empty list and the first Pin replaced the plant's
@@ -690,7 +710,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       be previewed but never made into a rule, an alarm could be acknowledged but
       not shelved, and no device, tag, helper, rule, script, recipe, dashboard or
       UniFi network could be made or changed at all. Sixty-four tools now do, and
-      thirty-seven more reach the administrator's own functions (users, settings,
+      forty-two more reach the administrator's own functions (users, settings,
       backups, escalation, historian targets, broker logins, the fleet, reports),
       each one route of the API run through its own handler with the permission
       that route asks for, a reason, and the agent in the log. The write switches

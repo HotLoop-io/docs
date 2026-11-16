@@ -148,7 +148,7 @@ after every table its own foreign keys point to):
 devices → tags → tag_latest → alarm_definitions → alarm_state →
 alarm_events → automations → automation_runs → blueprints → scripts → script_runs →
 recipes → recipe_versions → recipe_applications → events → write_audit →
-settings → users → sessions → fleet_members → report_definitions →
+settings → users → sessions → user_certificates → fleet_members → report_definitions →
 report_runs → entity_state_log → tag_history
 ```
 

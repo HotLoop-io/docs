@@ -207,14 +207,28 @@ Even with it on, a user name and password still travels inside an encrypted
 token (the token policy is `Basic256Sha256`, never None), though every value a
 client then reads is unprotected.
 
-**Known limitation: deprecated policies cannot be turned off.**
-`github.com/awcullen/opcua` builds its endpoint list itself and offers, in
-addition to `Basic256Sha256` and the `Aes128_Sha256_RsaOaep` and
-`Aes256_Sha256_RsaPss` policies, the deprecated `Basic128Rsa15` and `Basic256`
-in both modes. There is no option to remove them, and this package does not
-fork the library to do so. A client only uses them if it chooses to; a network
-policy cannot filter them out either, since the choice is made inside the
-protocol. If your standards forbid them, this server does not meet them yet.
+**The deprecated policies are off by default.** The OPC Foundation has
+deprecated `Basic128Rsa15` (RSA with PKCS#1 v1.5 padding) and `Basic256`
+(SHA-1). In earlier releases the library this server is built on offered both in every
+endpoint list with no way to remove them. The server now runs on a copy of it
+(`third_party/awcullen-opcua`, see its `HOTLOOP_PATCH.txt`) that can, and
+`HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` (chart: `opcuaServer.allowDeprecatedPolicies`,
+default `false`) decides:
+
+- **Off (the default, new installs and upgrades).** Neither policy is in any
+  endpoint a client is told about, and a client that opens a secure channel with
+  one anyway is refused when the channel opens, before any session or login.
+  Clients on `Basic256Sha256`, `Aes128_Sha256_RsaOaep` or `Aes256_Sha256_RsaPss`
+  are not affected.
+- **On.** Both are offered in Sign and SignAndEncrypt again, for a legacy client
+  that speaks nothing newer, with a warning at start. Turn it on only until that
+  client is updated.
+
+A client that stopped connecting after the upgrade and is on one of those two
+policies shows the channel being refused; set the setting, or move the client to
+`Basic256Sha256`. `TestDeprecatedPolicies` proves both ways with a client that
+does not discover endpoints first: refused with the setting off, connected and
+reading with it on.
 
 ### Server certificate
 
@@ -309,7 +323,9 @@ client next reconnects. A lookup that fails counts as "no".
 
 **Anonymous sessions are off** (`HOTLOOP_OPCUA_SERVER_ALLOW_ANONYMOUS`) and no
 anonymous token is offered unless opted into, with a startup warning. X.509 user
-identity tokens are out of scope and not offered. If HotLoop's own
+identity tokens are off too, and are offered when
+`HOTLOOP_OPCUA_SERVER_ALLOW_X509` is set (see
+[X.509 user certificates](#x509-user-certificates)). If HotLoop's own
 authentication is off (`HOTLOOP_AUTH_INSECURE`) there are no users to log in as,
 and the server refuses to start unless anonymous access is opted into.
 
@@ -325,29 +341,90 @@ session object for as long as the session lives. It is memory only and never
 logged, but a heap dump of a running Gateway would contain the passwords of
 the users currently connected.
 
-**Limit: passwords longer than 64 bytes cannot log in over OPC UA.** HotLoop,
-like bcrypt, accepts up to 72. A user with a 65-72 byte password can log in to
-the web UI and not to this server (`BadIdentityTokenRejected`). Give an account
-that needs OPC UA a password of 64 bytes or fewer.
+**Passwords of any length HotLoop accepts, up to 72 bytes (bcrypt's limit), log
+in.** In earlier releases a password of 65 to 72 bytes could sign in to the web UI and
+not here (`BadIdentityTokenRejected`). The cause was in `github.com/awcullen/opcua`
+v1.4.0, the latest release, `server/server_service_set.go` lines 603, 663 and 723
+(one per token encryption algorithm): it decrypts the user name token, reads the
+4-byte length the client puts in front of the password, and refused the session
+when that length was under 32 or over 96. The length counts the password plus
+the 32-byte server nonce, so the password topped out at 64 bytes. Nothing in RSA
+or the specification asks for that: the token is encrypted in as many blocks as
+it needs and the decoder already reads them all. The check now is that the
+length is at least 32 and no more than the bytes that were actually decrypted,
+which is what the check was there to guarantee, since it sizes the buffer made
+next. A length claiming more than arrived is still refused, so a client cannot
+make the server allocate what it did not send. Upstream `main` (checked
+2026-11-16) still has the cap; the change is offered upstream as a pull request
+from HotLoop-io/opcua. `TestAuthentication` covers 64, 65 and 70 bytes, wrong
+passwords of 65 to 600 bytes (refused as wrong passwords), and the web UI's
+limit of 72.
 
-I can't fix this from HotLoop's side, and here is why. The refusal happens
-inside the library, before it asks HotLoop to check anything, so HotLoop never
-sees the login and its log has no line for it. In `github.com/awcullen/opcua`
-v1.4.0 (the latest release), `server/server_service_set.go` decrypts the
-password, reads the length the client put in front of it, and rejects the
-session when that length is under 32 or over 96 (lines 603, 663 and 723, one
-per security policy). The length counts the password plus the 32-byte server
-nonce, so the password tops out at 64 bytes. The endpoints and their token
-policies are built inside the library too (`buildEndpointDescriptions` in
-`server/server.go`) and there is no option to change either, so the only fix is
-a change to the library: raise that 96 (nothing in RSA forces it, a 2048-bit
-key carries more than that per block), or ship a fork. Searching that
-repository's issues and pull requests for the password limit, `64 bytes` and
-`plainLength` turns up nothing; its open #57 and #62 are about a different
-decrypt bug (the buffer size when the key has a leading zero byte). No issue is
-filed for this one yet. `TestAuthentication` pins the edge at 64 and 65 bytes so the
-day a library upgrade moves it, the test fails and this paragraph gets
-rewritten.
+### X.509 user certificates
+
+A client can sign in with a certificate instead of a password. Off by default:
+set `HOTLOOP_OPCUA_SERVER_ALLOW_X509=true` (chart `opcuaServer.allowX509`), and
+the server offers the Certificate user token on its secured endpoints and says
+so at start. Without it no endpoint offers one and a certificate login is refused.
+
+**How a certificate maps to a user.** An admin attaches the certificate to a
+HotLoop user: Settings, OPC UA certificates, Attach a certificate (or the API,
+`POST /api/users/{username}/certificates`, or the `add_user_certificate` MCP
+tool). The registry keeps the public certificate, its SHA-256 thumbprint, who
+attached it and when, whether it is revoked, and when it last signed in. A
+client that presents it and proves it holds the private key signs in **as that
+user**. Nothing else is configured and nothing about the certificate itself is
+trusted: the common name is not looked at, there is no CA to operate, and a
+certificate nobody attached does nothing.
+
+**What the token carries.** A client may send its certificate followed by the
+ones that issued it; the first is the certificate that was attached, and the
+rest are ignored.
+
+**Proof of the key.** The library checks the token's signature over the server
+certificate and the session nonce, which only the holder of the private key can
+make; a certificate presented with a signature from another key is refused.
+
+**What it may do.** Exactly what the user may do. The sign-in needs the user to
+be enabled and to hold `tags.read` and `values.read`, the same pair as a
+password login, and the session is checked every 10 seconds like one: a user who
+is disabled or loses the permission loses a live certificate session within that
+interval. It is read-only like every session here; a certificate session cannot
+write whatever the user's role.
+
+**Refused, with a reason in the log.** A certificate that is not registered, is
+revoked, has expired, is not valid yet, or whose user is gone, disabled or
+without the permission gets `BadUserAccessDenied`, the same answer for all of
+them, so a client learns nothing about which. The reason goes to the process log
+and the audit trail.
+
+**Revoking.** Revoke it on the same screen (or `POST .../{thumbprint}/revoke`).
+It stops signing in at once and a session open with it ends within 10 seconds. A
+revoked certificate stays listed, with who revoked it and when, so a refused
+login reads "revoked" and not "unknown"; delete it to forget it. Backups carry
+the registry, revocations included.
+
+**Audit.** Every certificate sign-in is a logbook entry (category auth) naming
+the user, the certificate's thumbprint and subject, and the client application.
+Every refusal is one too, with the reason. A client retrying the same refusal
+writes one entry a minute for that certificate and reason, not one a try; every
+refusal is still in the process log. Attaching, revoking and deleting a
+certificate are entries with who did it. The private key is never in any of
+them, and HotLoop never has one: only public certificates are sent or stored.
+
+**Not the application trust list.** A client application certificate in
+`<PKI_DIR>/trusted/` lets the client open a secure channel; it is not a login. A
+user certificate is a different object: a person's, attached to a user. One
+certificate can serve as both on the client side, but the server treats them as
+two acts.
+
+**HotLoop's own client** signs in this way too: see `userCertificate` and
+`userPrivateKey` in [PROTOCOLS.md](/iot/protocols/#opc-ua).
+
+Not built: a certificate authority that is trusted to vouch for client
+certificates and a name rule that maps them to users. The registry covers a
+plant that attaches its client certificates one at a time; a CA would be an
+addition to it, not a replacement.
 
 ### Server diagnostics are removed
 
@@ -395,7 +472,9 @@ With UaExpert or any other client:
 
 1. Add the server with that URL and choose `Basic256Sha256` / `Sign & Encrypt`.
 2. Choose *Username*, and log in with a HotLoop user that has `tags.read` and
-   `values.read`.
+   `values.read`; or, with `HOTLOOP_OPCUA_SERVER_ALLOW_X509` on, choose
+   *Certificate*, and give the user certificate and its key that an admin
+   attached to a user.
 3. The first connection is refused because the server does not yet trust the
    client's certificate. Find it in `<PKI_DIR>/rejected/` (on the PKI volume in
    a cluster), move it to `trusted/`, and connect again.
@@ -524,9 +603,11 @@ The same, as files or through the REST API (which is how the lab does it):
   `Bad_NotWritable`. Ignition's own OPC UA server, asked to write the same tag,
   passes on only a generic `Bad` (0x80000000). The Ignition tag's value does not
   change.
-- **The deprecated policies work, which is the point to note.** Ignition offers
-  `Basic128Rsa15` and `Basic256`, HotLoop cannot turn them off (see
-  [Transport](#transport)), and Ignition connects with them. Choose
+- **The deprecated policies work only when they are turned on.** Ignition
+  offers `Basic128Rsa15` and `Basic256`. HotLoop does not offer them unless
+  `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` is set (see
+  [Transport](#transport)); with it set, Ignition connects with them, which is
+  how this was measured, and the lab script in `test/ignition` sets it. Choose
   `Basic256Sha256` or one of the `Aes` policies in the connection.
 - **The trial.** An unlicensed 8.3 gateway runs for two hours and then stops
   executing until the trial is reset in the Gateway web UI. Tags go stale when it
@@ -534,7 +615,10 @@ The same, as files or through the REST API (which is how the lab does it):
 
 ### Policy matrix
 
-Each row is a fresh session with that policy and mode, reading live values:
+Each row is a fresh session with that policy and mode, reading live values. The
+two deprecated rows were measured with `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES`
+on; with it off, as it is by default, those two policies are not offered and a
+channel that asks for one is refused:
 
 | Policy | SignAndEncrypt | Sign |
 |---|---|---|
@@ -563,6 +647,8 @@ server.
 | `HOTLOOP_OPCUA_SERVER_ALLOW_INSECURE` | `false` | Offer SecurityPolicy None. Warned about at startup |
 | `HOTLOOP_OPCUA_SERVER_ALLOW_ANONYMOUS` | `false` | Accept sessions with no identity. Warned about at startup |
 | `HOTLOOP_OPCUA_SERVER_TRUST_ALL_CLIENT_CERTS` | `false` | Skip client-certificate approval. Warned about at startup |
+| `HOTLOOP_OPCUA_SERVER_ALLOW_X509` | `false` | Offer the Certificate user token: a client signs in with a certificate attached to a user ([X.509 user certificates](#x509-user-certificates)). Noted at startup |
+| `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` | `false` | Offer the deprecated `Basic128Rsa15` and `Basic256` policies for a legacy client ([Transport](#transport)). Warned about at startup |
 | `HOTLOOP_OPCUA_SERVER_MAX_SESSIONS` | `20` | 0 = unlimited |
 | `HOTLOOP_OPCUA_SERVER_MAX_SUBSCRIPTIONS` | `200` | 0 = unlimited |
 | `HOTLOOP_OPCUA_SERVER_RECONCILE_INTERVAL` | `30s` | The safety-net reconcile period |
@@ -587,7 +673,14 @@ and must then list the port itself. `opcuaServer.tls.existingSecret` supplies a
 ## Dependency
 
 `github.com/awcullen/opcua` v1.4.0 (MIT), the only Go OPC UA library found that
-ships a real server package. Choices worth knowing:
+ships a real server package, built from a copy in `third_party/awcullen-opcua`
+(go.mod replaces the module with it, the way it does for the MQTT broker). The
+copy is v1.4.0 minus its tests and cmd directory, with two changes to the
+server: the 64-byte password cap is gone and the deprecated policies can be
+disabled (`HOTLOOP_PATCH.txt` says what and where). Its LICENSE is kept. Both
+changes are offered upstream as pull requests from HotLoop-io/opcua; when
+upstream ships them, delete the copy and the `replace` line. Choices worth
+knowing:
 
 - **v1.4.0, the latest tag (December 2024), not master.** Master has newer
   commits (through February 2026), but the difference is a `DeleteNode` API
@@ -611,7 +704,9 @@ ships a real server package. Choices worth knowing:
 
 ### What was found in the library
 
-Beyond issue 57 above (worked around) and the deprecated policies (documented):
+Beyond issue 57 above (worked around), the 64-byte password cap and the
+deprecated policies (both changed in the copy of the library HotLoop builds on,
+see `third_party/awcullen-opcua/HOTLOOP_PATCH.txt`):
 
 - **A data race in `Server.Close`**, found by the race detector, not by
   reading. `Close` writes the shutdown reason and the seconds-till-shutdown
@@ -665,7 +760,9 @@ registers, the real driver, runtime and cache polling it, a real
 TimescaleDB holding real users with real bcrypt hashes, and nothing is mocked.
 
 Tested, with a `gopcua` client over `Basic256Sha256` / `SignAndEncrypt` and a
-user name and password:
+user name and password (the X.509 sign-in, the long passwords and the policy
+switch have their own tests: `x509_test.go`, `driver_x509_test.go` and
+`security_test.go`, and an independent client in `test/opcua-clients`):
 
 - browsing the address space (device objects, tag variables, properties);
 - reading a tag and asserting value, declared data type, status, source and
@@ -699,4 +796,4 @@ security policy it offers, including the `Aes*` and the deprecated ones. See
 Foundation-certified client or the OPC UA compliance test tool. Also not
 verified: CA-issued client certificates and CRLs; behavior with thousands of tags or hundreds of
 subscriptions; IPv6; and any client that expects features this server does not
-implement (history, events, methods, writes, X.509 user tokens).
+implement (history, events, methods, writes).

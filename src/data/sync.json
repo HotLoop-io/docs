@@ -3,18 +3,18 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "44622453e52fc902739ba5e015bdb39f895ad1c2",
+      "sha": "df5ab8576c6f2345ee36bb658c19929cc116fda6",
       "release": {
-        "tag": "v4.20.0",
-        "version": "4.20.0",
+        "tag": "v4.21.1",
+        "version": "4.21.1",
         "prerelease": false,
-        "publishedAt": null,
-        "sha": "46c773b18575992b135e54e9351273195f3c60ef"
+        "publishedAt": "2026-11-16T15:56:50Z",
+        "sha": "0307eae3b60727d1fd7ee09fa6c9e21cc29af877"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "origin/main",
+      "ref": "928bf26829c253223fd43f85969017ccdc1e4e0e",
       "sha": "928bf26829c253223fd43f85969017ccdc1e4e0e",
       "release": {
         "tag": "v2.12.1",
@@ -341,7 +341,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -451,7 +451,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -1034,9 +1034,42 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.20.1 release notes",
       "label": "4.20.1",
-      "status": "next",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.20.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-20-2",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.20.2 release notes",
+      "label": "4.20.2",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.20.2.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-21-0",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.21.0 release notes",
+      "label": "4.21.0",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.21.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-21-1",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.21.1 release notes",
+      "label": "4.21.1",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.21.1.md",
       "release": true
     },
     {
