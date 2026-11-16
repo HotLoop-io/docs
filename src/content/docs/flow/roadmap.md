@@ -5,10 +5,6 @@ description: "The phases of Flow, what is done and what is next, including the e
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at b1d875c, and it differs from the copy in HotLoop Flow 2.11.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
