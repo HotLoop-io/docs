@@ -71,9 +71,9 @@ Where you get it:
 
 - **Entity service calls**: `POST /api/services/{domain}/{service}?dry_run=true`. It answers 200 with the verdict: each write it would make as `would_write`, or the first that would be refused as `not_sent`, with the reason word for word. A request that couldn't even be planned (no such entity, a service the domain doesn't take, bad data) answers with the same status the real call would. `dry_run` takes `true` or `false` and nothing else, and `yes` is a 400, because a guess the wrong way turns a question into a command.
 - **The command prompt** asks while you type and shows "Would be refused: ..." before anybody confirms.
-- **Scripts**, new in 4.17.0: `POST /api/scripts/{id}/run?dry_run=true`, **Check first** in the run drawer, or MCP's `run_script` with `dryRun`. Every step is walked against the plant as it is right now, and the first write that would be refused ends the walk in the gate's words. See [Scripts](/gateway/scripts/).
-- **Recipes**, new in 4.17.0: every target is put to these checks before the first value goes out, and one bad value refuses the whole recipe with nothing written. `POST /api/recipes/{id}/validate` and MCP's `validate_recipe` ask without applying. See [Recipes](/gateway/recipes/).
-- **Blueprints**, new in 4.17.0: **Check first** shows what the rule would do if it fired right now, every write put to these checks, before the rule exists. See [Blueprints](/gateway/blueprints/).
+- **Scripts**, new in 4.17.0: `POST /api/scripts/{id}/run?dry_run=true`, **Check first** in the run drawer, or MCP's `run_script` with `dryRun`. Every step is walked against the plant as it is right now, and the first write that would be refused ends the walk in the gate's words. See [Scripts](/iot/scripts/).
+- **Recipes**, new in 4.17.0: every target is put to these checks before the first value goes out, and one bad value refuses the whole recipe with nothing written. `POST /api/recipes/{id}/validate` and MCP's `validate_recipe` ask without applying. See [Recipes](/iot/recipes/).
+- **Blueprints**, new in 4.17.0: **Check first** shows what the rule would do if it fired right now, every write put to these checks, before the rule exists. See [Blueprints](/iot/blueprints/).
 
 A clean dry run is advice, not a promise. The gate still decides at the real write, because a device can drop, or somebody can disarm a tag, between your question and your command.
 
@@ -85,10 +85,10 @@ In 4.16.0 the dry run's verdict lands about a quarter second after you stop typi
 
 - **The screens and `POST /api/write`.** The actor is the logged-in username, not a header anyone could set.
 - **Entity services**, `POST /api/services/{domain}/{service}`. `switch.turn_on` on `switch.press_01_pump` is a tag write through this gate, audited against the entity with its entity_id, the service and a call id. A button's press is two writes under one call id. A user without `values.write` isn't stopped at the door here: the missing permission is handed to the gate as the caller's own check, so a denied entity call is audited against the entity, with the value that was asked for, like any other refusal, and still answers 403.
-- **Automations** write as `automation:<rule-id>`. A rule gets no more privilege than a person. See [Automations](/gateway/automations/).
+- **Automations** write as `automation:<rule-id>`. A rule gets no more privilege than a person. See [Automations](/iot/automations/).
 - **Scripts**, new in 4.17.0, write as `script:<id>` and keep the source of whoever started them, so a script an agent kicks off hits the agent switch exactly like the agent's own `write_tag` would.
 - **Recipes**, new in 4.17.0, write every target under one call id, so `GET /api/writes?call=<id>` is the whole application in the audit trail.
-- **Agents** write as `mcp:<client name>`. `write_tag` and `call_service` hit the same checks an operator does, and both refuse to run without a stated reason, which goes in the system log beside the write. An audit row nobody can explain six months later is just a timestamp with a guilty conscience. `trigger_automation` refuses outright while agent writes are off, and so do `run_script` and `apply_recipe`, because a rule, a script or a recipe can command equipment and would otherwise be a way around the switch. See [Model Context Protocol](/gateway/mcp/).
+- **Agents** write as `mcp:<client name>`. `write_tag` and `call_service` hit the same checks an operator does, and both refuse to run without a stated reason, which goes in the system log beside the write. An audit row nobody can explain six months later is just a timestamp with a guilty conscience. `trigger_automation` refuses outright while agent writes are off, and so do `run_script` and `apply_recipe`, because a rule, a script or a recipe can command equipment and would otherwise be a way around the switch. See [Model Context Protocol](/iot/mcp/).
 
 ## Why writes default to off
 
