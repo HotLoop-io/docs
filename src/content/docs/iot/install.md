@@ -116,4 +116,4 @@ IoT's SQLite Quadlet unit was run under systemd, rootless, from the committed fi
 
 ## License
 
-HotLoop IoT is under HotLoop's EmberNet Source License 1.0. Home and lab use is free, and business use run through EmberNet is unrestricted. See [the License page](/license/) and [Using HotLoop in a business](/business/).
+HotLoop IoT is under HotLoop's Free Use License 1.0. It is free to use and it is not open source. Home and lab use is free, and business use is free through EmberNet. See [the License page](/license/) and [Using HotLoop in a business](/business/).

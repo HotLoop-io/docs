@@ -9,7 +9,7 @@ The text below is mirrored from the canonical copy and is what decides things, s
 
 HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. HotLoop LLC.
 
-Last updated: November 4, 2026. Effective: October 19, 2026.
+Last updated: November 17, 2026. Effective: October 19, 2026.
 
 These terms apply to everyone who downloads, installs or uses HotLoop. They explain what you can do with it, what we do for you, and what happens if something goes wrong. By downloading, installing or using HotLoop, or by using our websites, you agree to them. If you accept for an organization, you confirm you can bind it.
 
@@ -31,11 +31,11 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 3. The license is the license
 
-3.1 The Software is licensed under the EmberNet Source License 1.0, the text of which is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
+3.1 The Software is licensed under the HotLoop Free Use License 1.0, except HotLoop Flow, which is licensed under the EmberNet Source License 1.0. The text of both is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
 
-3.2 In plain words, and subject to the license text: home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is unrestricted, and a systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license.
+3.2 In plain words, and subject to the license text: HotLoop is free to use, and it is not open source. Home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is free, and hosting HotLoop for your customers is allowed only through EmberNet. A systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license. Under the HotLoop Free Use License you get the binaries, images and charts we publish and not the source, and you may not modify them or redistribute them. HotLoop Flow is source-available under the EmberNet Source License, and it is not OSI open source.
 
-3.3 The license applies to each version separately. Each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, the license governs it.
+3.3 The license applies to each version separately, and each product moves to the HotLoop Free Use License at its next release. A version released under the EmberNet Source License stays under it, and under it each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, that license governs it. A version released under the HotLoop Free Use License never converts to an open source license.
 
 3.4 Business use, and the schools, nonprofits and government bodies that are free of it, mean what the license says they mean. If you are not sure which side your use falls on, ask us before you deploy.
 
@@ -50,7 +50,8 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 - (c) try to get into the Sites, our accounts or other people's systems without permission;
 - (d) disrupt the Sites, GitHub Discussions, or the registries and servers we distribute from;
 - (e) overload the Sites or our release channels with scripted or automated requests beyond ordinary use;
-- (f) impersonate anyone, or misstate your connection to HotLoop.
+- (f) impersonate anyone, or misstate your connection to HotLoop;
+- (g) reverse engineer, decompile or disassemble HotLoop, except to the extent that the law gives you that right despite these terms.
 
 4.3 We may remove content from the Sites, and block accounts from our repositories and Discussions, for serious or repeated breach of these terms.
 
@@ -70,7 +71,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 6.4 Only the version-tagged releases we publish are releases. A copy from anywhere else, including a build someone else made, comes under the license but is not something we support.
 
-6.5 Source for HotLoop Flow is public at github.com/HotLoop-io/hotloop-flow. Where the source for another product is not published, the license still covers the binaries, images and charts we distribute.
+6.5 Source for HotLoop Flow is public at github.com/HotLoop-io/hotloop-flow. The other products are distributed as binaries, images and charts, and the license gives no right to their source, to modify them or to redistribute them.
 
 ## 7. Your data and telemetry
 
