@@ -7,8 +7,25 @@ import { defineRouteMiddleware } from '@astrojs/starlight/route-data';
 // product: the newest of HotLoop core keeps its link back to All releases, and the rest have none.
 const line = (id: string) => /^releases\/(hotloop|flow|cascade|codesys)-/.exec(id)?.[1];
 
+// Starlight writes og:title, og:description, twitter:card and twitter:image for every page but not
+// twitter:title or twitter:description, so a share card fell back to the Open Graph tags. Copy the two
+// from the Open Graph tags Starlight already built from the page's own title and description, so the
+// text is the same on every page, and add them only when the page does not carry its own.
+const meta = (route: { head: { tag: string; attrs?: Record<string, string | number | boolean | undefined> }[] }, key: string, value: string) =>
+  route.head.find((h) => h.tag === 'meta' && h.attrs?.[key] === value);
+
+function twitterCard(route: Parameters<Parameters<typeof defineRouteMiddleware>[0]>[0]['locals']['starlightRoute']) {
+  for (const name of ['title', 'description']) {
+    const og = meta(route, 'property', `og:${name}`);
+    const content = og?.attrs?.content;
+    if (typeof content !== 'string' || meta(route, 'name', `twitter:${name}`)) continue;
+    route.head.push({ tag: 'meta', attrs: { name: `twitter:${name}`, content } });
+  }
+}
+
 export const onRequest = defineRouteMiddleware((context) => {
   const route = context.locals.starlightRoute;
+  twitterCard(route);
   const own = line(route.id);
   if (!own) return;
   const { pagination } = route;
