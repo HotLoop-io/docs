@@ -203,6 +203,13 @@ export const SLUG_RULES = {
 };
 
 Object.assign(SLUG_RULES, {
+  // The queue behind "backfilled, not a hole" is bounded, and the overview sentence did not say so. Say how long the default holds at a stated rate.
+  'edge/overview': [
+    [ws('so the historian upstream gets the outage backfilled and not a hole.'), 'so the historian upstream gets the outage backfilled and not a hole, as long as the outage fits the queue. The queue is 64 MiB by default: about 55 minutes at 100 readings a second, about two and three quarter minutes at 2,000. Past it the oldest readings go first, every one counted, and `edgePublish.queueMaxBytes` raises it.'],
+  ],
+  'edge-relay/overview': [
+    [ws('so the historian upstream ends up with the outage backfilled, not a hole in it.'), 'so the historian upstream ends up with the outage backfilled, not a hole in it, as long as the outage fits the queue, which is capped at 64 MiB by default.'],
+  ],
   // The sync refuses the license name on purpose. These sentences are about libraries Flow links, not about a HotLoop product, so they say permissive and keep the facts.
   'flow/plugins': [
     [ws('both MIT or Apache-2.0, compiled into'), 'both permissively licensed, compiled into'],
