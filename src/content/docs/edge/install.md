@@ -44,7 +44,7 @@ Both are off by default, because opening a listener or an uplink on a plant netw
 
 **The OPC UA server** is `opcuaServer.enabled: true`, on port 4840. Set `opcuaServer.endpointHost` to the name a client reaches the box at, so the certificate matches it. [The OPC UA server](/edge/opc-ua-server/) has the security model, and it is read-only.
 
-**Sparkplug publishing** is `edgePublish.enabled: true`, with `edgePublish.broker` and `edgePublish.group` required. Set `edgePublish.node` too, or the node id is the release name. The forward queue lives on a 1 Gi volume, `edgePublish.queueMaxBytes` defaults to 64 MiB (about two and three quarter minutes at 2,000 readings a second, at about 180 bytes a reading), and past it the oldest readings are dropped and counted. `0` is unbounded, and a long enough outage then fills the volume. Edge publishing needs `replicaCount` 1, and the chart refuses to render otherwise. [Edge publish and store-and-forward](/edge/edge-publish/) has what it does when the uplink dies.
+**Sparkplug publishing** is `edgePublish.enabled: true`, with `edgePublish.broker` and `edgePublish.group` required. Set `edgePublish.node` too, or the node id is the release name. The forward queue lives on a 1 Gi volume, `edgePublish.queueMaxBytes` defaults to 64 MiB (about 248,000 readings: about two minutes at 2,000 readings a second, at about 240 bytes a reading), and past it the oldest readings are dropped and counted. `0` is unbounded, and a long enough outage then fills the volume. Edge publishing needs `replicaCount` 1, and the chart refuses to render otherwise. [Edge publish and store-and-forward](/edge/edge-publish/) has what it does when the uplink dies.
 
 ### What to set before a real plant sees it
 

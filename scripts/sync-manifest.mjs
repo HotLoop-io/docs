@@ -203,11 +203,29 @@ export const SLUG_RULES = {
 };
 
 Object.assign(SLUG_RULES, {
+  // Measured on node-011, 2026-11-17: the 64 MiB Edge queue holds about 248,000 readings (about 240 bytes each, nine-character tag names), and Flow's 256 MiB quota holds about 360,000 119-byte readings. The older 2.75 minute and 180 byte figures do not hold at 4.21.1.
+  'edge/edge-publish': [
+    [ws("and the default is 64 MiB, about two and three quarter minutes of outage at 2,000 readings a second (the rig below runs it there)."), "and the default is 64 MiB, about 248,000 readings: about two minutes of outage at 2,000 readings a second (the rig below runs it there), and about 41 minutes at 100."],
+    [ws("At that load a 64 MiB queue holds about two and three quarter minutes of outage. Size the bound from your own rate: about 180 bytes a reading on disk."), "At that load a 64 MiB queue holds about two minutes of outage, about 248,000 readings. Size the bound from your own rate: about 240 bytes a reading in the queue with short tag names, measured on 4.21.1."],
+  ],
+  'edge/install': [
+    [ws("(about two and three quarter minutes at 2,000 readings a second, at about 180 bytes a reading)"), "(about 248,000 readings: about two minutes at 2,000 readings a second, at about 240 bytes a reading)"],
+  ],
+  'edge-relay/install': [
+    [ws("That is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate, about 180 bytes a reading, and keep it"), "That is about 248,000 readings, about two minutes at 2,000 readings a second, so size it from your own rate, about 240 bytes a reading with short tag names (measured on the same queue in Edge 4.21.1), and keep it"],
+  ],
+  'gateway/upgrading': [
+    [ws("64 MiB is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate (about 180 bytes a reading),"), "64 MiB is about 248,000 readings, about two minutes at 2,000 readings a second, so size it from your own rate (about 240 bytes a reading),"],
+  ],
+  'flow/durable-state': [
+    [ws("A historian going down for an hour shouldn't cost you an hour of readings, and a counter in a flow"), "A historian going down for an hour shouldn't cost you an hour of readings, as long as the outage fits the disk quota (256 MiB by default: about an hour at 100 readings a second for a 120-byte reading, measured on 2.13.1), and a counter in a flow"],
+  ],
   // The queue behind "backfilled, not a hole" is bounded, and the overview sentence did not say so. Say how long the default holds at a stated rate.
   'edge/overview': [
-    [ws('so the historian upstream gets the outage backfilled and not a hole.'), 'so the historian upstream gets the outage backfilled and not a hole, as long as the outage fits the queue. The queue is 64 MiB by default: about 55 minutes at 100 readings a second, about two and three quarter minutes at 2,000. Past it the oldest readings go first, every one counted, and `edgePublish.queueMaxBytes` raises it.'],
+    [ws('so the historian upstream gets the outage backfilled and not a hole.'), 'so the historian upstream gets the outage backfilled and not a hole, as long as the outage fits the queue. The queue is 64 MiB by default, about 248,000 readings: about 41 minutes at 100 readings a second, about two minutes at 2,000. Past it the oldest readings go first, every one counted, and `edgePublish.queueMaxBytes` raises it.'],
   ],
   'edge-relay/overview': [
+    [ws("That is about two and three quarter minutes at 2,000 readings a second, so size it from your own rate, about 180 bytes a reading."), "That is about 248,000 readings, about two minutes at 2,000 readings a second, so size it from your own rate, about 240 bytes a reading with short tag names (measured on the same queue in Edge 4.21.1)."],
     [ws('so the historian upstream ends up with the outage backfilled, not a hole in it.'), 'so the historian upstream ends up with the outage backfilled, not a hole in it, as long as the outage fits the queue, which is capped at 64 MiB by default.'],
   ],
   // The sync refuses the license name on purpose. These sentences are about libraries Flow links, not about a HotLoop product, so they say permissive and keep the facts.
