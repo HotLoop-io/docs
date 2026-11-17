@@ -11,7 +11,7 @@ what the person behind its key can do and nothing past that. There is no read
 only mode to find your way round, because a server an agent can look at and not
 touch is a status page, and you already have one of those.
 
-79 tools, and every one of them is a route of the REST API. A call doesn't go
+83 tools, and every one of them is a route of the REST API. A call doesn't go
 beside the route, it goes through it: the route's own handler checks the
 permission, validates the body, makes the change and writes the audit row. Nothing
 was copied into the MCP server to drift, and nothing was left out of it to skip.
@@ -137,6 +137,7 @@ gives any tool's schema, so the first call is right.
 | `create_workflow` | `POST /api/v1/workflows` | `workflow.create` | write |
 | `save_workflow` | `PUT /api/v1/workflows/{workflow}` | `workflow.update` | write |
 | `delete_workflow` | `DELETE /api/v1/workflows/{workflow}` | `workflow.delete` | write |
+| `listen_workflow` | `POST /api/v1/workflows/{workflow}/listen` | `workflow.execute` | write |
 | `activate_workflow` | `POST /api/v1/workflows/{workflow}/activate` | `workflow.activate` | write |
 | `deactivate_workflow` | `POST /api/v1/workflows/{workflow}/deactivate` | `workflow.activate` | write |
 | `run_workflow` | `POST /api/v1/workflows/{workflow}/run` | `workflow.execute` | write |
@@ -171,6 +172,7 @@ gives any tool's schema, so the first call is right.
 | `list_credential_types` | `GET /api/v1/credential-types` | any signed in key | read |
 | `list_credentials` | `GET /api/v1/credentials` | `credential.list` | read |
 | `get_credential` | `GET /api/v1/credentials/{credential}` | `credential.read` | read |
+| `start_oauth` | `POST /api/v1/credentials/{credential}/oauth/start` | `credential.update` | write |
 | `create_credential` | `POST /api/v1/credentials` | `credential.create` | write |
 | `update_credential` | `PATCH /api/v1/credentials/{credential}` | `credential.update` | write |
 | `delete_credential` | `DELETE /api/v1/credentials/{credential}` | `credential.delete` | write |
@@ -187,6 +189,8 @@ gives any tool's schema, so the first call is right.
 | `test_secret_provider` | `POST /api/v1/secret-providers/{provider}/test` | `secrets.manage` | write |
 | `list_log_destinations` | `GET /api/v1/log-destinations` | `logstream.manage` | read |
 | `test_log_destination` | `POST /api/v1/log-destinations/{destination}/test` | `logstream.manage` | write |
+| `list_keys` | `GET /api/v1/api-keys` | any signed in key | read |
+| `revoke_key` | `DELETE /api/v1/api-keys/{key}` | any signed in key | write |
 | `list_scim_tokens` | `GET /api/v1/scim-tokens` | `scim.manage` | read |
 | `revoke_scim_token` | `DELETE /api/v1/scim-tokens/{token}` | `scim.manage` | write |
 | `list_users` | `GET /api/v1/users` | `user.manage` | read |
@@ -200,15 +204,17 @@ gives any tool's schema, so the first call is right.
 
 ## Left out on purpose
 
-These routes turn a key away themselves, because they want a person signed in:
-making API keys and service account keys, SCIM tokens, external secret providers
-and log destinations (making, changing and deleting them), and a person's own
-password. A key that could mint keys, or change where the audit log is sent, is a
-leaked key that can keep itself alive, so the REST API refuses it and the MCP
-server doesn't pretend otherwise. Listing the log destinations, the secret
-providers and the SCIM tokens is here, and so are revoking a SCIM token and
-testing a provider or a destination. Those are done in the editor, by a person.
+Ten routes turn a key away themselves, because they want a person signed in, and
+the MCP server doesn't pretend otherwise: making an API key, making a service
+account key, making a SCIM token, adding, changing and deleting an external
+secret provider, adding, changing and deleting a log destination, and a person's
+own password. A key that could mint keys, or change where the audit log is sent,
+is a leaked key that can keep itself alive. Each of those is one tool that would
+only ever answer "not allowed", so none is offered. Everything beside them is a
+tool: listing the log destinations, the secret providers and the SCIM tokens,
+revoking a SCIM token, testing a provider or a destination, listing and revoking
+keys, opening a workflow's test webhook, and starting an OAuth2 sign-in, which
+hands back the address a person then opens. A key can revoke itself, which is
+what a leaked key's holder should be able to do first.
 
-Also not tools: the OAuth sign-in for a credential and a workflow's test webhook,
-which are for a person at the canvas, and `/api/v1/openapi.json`, which
-`describe_tool_body` covers for the bodies.
+`/api/v1/openapi.json` is not a tool: `describe_tool_body` gives the bodies.

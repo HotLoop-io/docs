@@ -57,5 +57,10 @@ Users makes people and turns them off, and the audit log is read, filtered and
 checked for tampering there. Sign-in is the same editor, at `/login`, and keeps
 single sign-on, directory sign-in, passkeys and recovery codes.
 
+![Credentials, with the secret never shown](/synced/cascade/docs/screenshots/credentials.png)
+![Projects, and who is in one](/synced/cascade/docs/screenshots/projects.png)
+![The audit log, and the check that it is intact](/synced/cascade/docs/screenshots/audit.png)
+![Your account and its API keys](/synced/cascade/docs/screenshots/account.png)
+
 So what it means for you: everything Cascade can do is something you can do from
 this screen, on a plant box with no internet, without a line of curl.
