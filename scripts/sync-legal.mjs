@@ -20,7 +20,7 @@ const PAGES = {
   license: {
     out: 'license.md',
     title: 'License',
-    description: "HotLoop's Free Use License 1.0 and the EmberNet Source License 1.0, the two licenses every HotLoop product is under, mirrored from the canonical copy in the HotLoop-io organization.",
+    description: "The HotLoop Free Use License 1.0 and the EmberNet Source License 1.0, the two licenses HotLoop products are under, mirrored from the HotLoop-io organization.",
     isNew: (t) => /HotLoop Free Use License/i.test(t),
     canonical: 'https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md',
     lead: 'Every HotLoop product is under one of the two licenses below, and Flow is the only one under the EmberNet Source License. The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site.',
