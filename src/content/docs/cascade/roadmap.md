@@ -47,6 +47,16 @@ every earlier release: what is tested is in `RELEASE_CHECKLIST.md`, which upgrad
 from the last release by hand. A promise goes here when I can keep it, and not
 before.
 
+## 1.2.0, the MCP server's last four tools
+
+Built. The MCP server had four routes left out that a key may call: listing and
+revoking your own keys, opening a workflow's test webhook, and starting an OAuth2
+sign-in. They are tools now, 83 in all, each through its route, so the same
+permission checks as the editor apply. The ten routes that want a person signed
+in (making keys, SCIM tokens, secret providers and log destinations, and your own
+password) stay out, because a key that could make them could keep itself alive;
+`docs/MCP.md` says which and why.
+
 ## 1.1.0, MCP and the missing screens
 
 Built, and this is the release. The MCP server at `/mcp`: 79 tools, each one a
