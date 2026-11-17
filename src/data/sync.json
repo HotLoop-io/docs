@@ -14,14 +14,14 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "v2.13.1",
-      "sha": "663894200cf5dddbce0cea23c33ce1c6678d4f30",
+      "ref": "v2.14.0",
+      "sha": "b171839e77f131c4db0a3c7df37cb0b8d92dcebd",
       "release": {
-        "tag": "v2.13.1",
-        "version": "2.13.1",
+        "tag": "v2.14.0",
+        "version": "2.14.0",
         "prerelease": false,
-        "publishedAt": "2026-11-16T20:33:20Z",
-        "sha": "3f44b4d4ea4222afd45d769079937f3941cce4ba"
+        "publishedAt": null,
+        "sha": "357205bdd98379972cc66cc2cb2b05960cebf75d"
       }
     },
     "cascade": {
@@ -1180,6 +1180,17 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.13.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-14-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.14.0 release notes",
+      "label": "2.14.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.14.0.md",
       "release": true
     },
     {
