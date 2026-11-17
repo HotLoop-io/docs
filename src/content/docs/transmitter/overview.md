@@ -73,4 +73,4 @@ was run and what was read back. Not run on physical hardware.
 
 ## License
 
-HotLoop's EmberNet Source License 1.0, the same as every HotLoop product. The [license page](https://hotloop.io/license/) has the text.
+HotLoop's Free Use License 1.0, the same as every HotLoop product except Flow. It is free to use and it is not open source, and its section 5 lets you build the library into your own PLC projects and deliver or sell the compiled result, never the library itself. The [license page](https://hotloop.io/license/) has the text.
