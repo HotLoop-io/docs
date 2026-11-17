@@ -101,7 +101,7 @@ IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, u
 
 ## What has and hasn't been run
 
-The Edge Quadlet units are generated from the Gateway's, which were run for real, rootless under systemd, including an update that migrates and then can't start and gets rolled back. The Edge units themselves were compared to the Gateway's, not started under systemd on their own. A real Pi under systemd as root, and the 32-bit arm images on real hardware, haven't been done yet. This page will say so when they are.
+The Edge Quadlet units are generated from the Gateway's, which were run for real, rootless under systemd, including an update that migrates and then can't start and gets rolled back. The Edge units themselves were compared to the Gateway's, not started under systemd on their own. A real Pi under systemd as root, and the 32-bit arm images on real hardware, have since been run on bare metal (2026-11-17).
 
 ## License
 

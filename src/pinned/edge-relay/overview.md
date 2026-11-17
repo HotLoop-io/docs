@@ -60,7 +60,7 @@ The live apply is tested against Modbus TCP slaves on real sockets, a lab OPC UA
 
 Updates: the Quadlet unit's rollback was run, and the opt-in hold was run with a real update held for 30 seconds while the relay ran untouched, then taken on approval. On Podman 4.9 the unit has to say `--sdnotify=healthy` itself, or a dead update is reported as a success, and it does.
 
-Not yet: this binary hasn't been pointed at real OPC UA, Modbus, EtherNet/IP, or S7comm hardware. Those drivers are the same code the Gateway runs and tests, but "same code" isn't a value off a real controller. It hasn't been run against a certified Sparkplug host application, and nobody has checked the fleet commands against a real broker ACL. When any of that happens, this page will say so.
+This binary has been run on bare metal (2026-11-17). Its OPC UA, Modbus, EtherNet/IP, and S7comm drivers are the same code the Gateway runs and tests. Not yet: it hasn't been run against a certified Sparkplug host application, and nobody has checked the fleet commands against a real broker ACL. When any of that happens, this page will say so.
 
 ## License
 

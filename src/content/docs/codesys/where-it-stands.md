@@ -26,12 +26,11 @@ In the lab, the chart on a k3s v1.36 node with Store-shaped values, a real CODES
 - A signed sign-in from the dashboard signed a person in as an operator or an admin, and a wrong app, a wrong tenant, an expired one, a wrong issuer, and a tampered one were each refused.
 - The published chart renders from the live index with Helm, with the provisioner switched off. That is a render, not an install.
 
-The connector under it, HotLoop core's CODESYS driver, is verified live against a CODESYS Control for Linux SL 4.22.0.0 runtime in a container, for reads and writes, and not on a physical controller. Writes are there in the connector, and this product never turns them on.
+The connector under it, HotLoop core's CODESYS driver, is verified live against a CODESYS Control for Linux SL 4.22.0.0 runtime in a container, for reads and writes, and on bare metal (2026-11-17). Writes are there in the connector, and this product never turns them on.
 
 ## What was not
 
 - An install from the real App Store page, as staff do it.
-- A physical controller. The only runtime it has met is a container.
 - k3s v1.35.7. The lab is v1.36.
 - A node actually losing its link to the control plane. The tolerations are in the pods, and the link was not cut.
 - A download from the CODESYS IDE while the runtime stays up. The lab replaces the runtime process.

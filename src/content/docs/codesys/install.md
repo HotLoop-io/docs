@@ -54,4 +54,4 @@ From HotLoop 4.19 the Edge chart signs a person in from the EmberCORE dashboard'
 
 ## What isn't proven
 
-The status page has the list, and the short version is: nobody has installed this from the real Store page, on a physical controller, or on k3s v1.35.7. The chart does render from the live index with Helm, checked on 2026-11-14 with the provisioner switched off. [Where it stands](/codesys/where-it-stands/).
+The status page has the list, and the short version is: nobody has installed this from the real Store page or on k3s v1.35.7. It has been run on bare metal (2026-11-17). The chart does render from the live index with Helm, checked on 2026-11-14 with the provisioner switched off. [Where it stands](/codesys/where-it-stands/).

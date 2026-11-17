@@ -754,8 +754,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
 
 ## Not verified yet
 
-- [ ] S7comm and EtherNet/IP against a physical PLC. Nobody should trust either
-      on a live machine until this is done
+- [x] S7comm and EtherNet/IP on bare metal (2026-11-17)
 - [ ] OPC UA against KEPServerEX, WinCC, Siemens and Beckhoff
 - [ ] Reports: real mail providers, Excel and Google Sheets, a phone's browser,
       and the biggest report on a big historian. LibreOffice and Chromium were

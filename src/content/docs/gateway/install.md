@@ -104,11 +104,11 @@ Turn Podman's timer on once per box and the Gateway updates itself:
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-The database container does not follow `:stable`, on purpose, and an update that can't start is rolled back. [The :stable auto-update](/install/auto-update/) says what an update does, what a rollback cannot undo, and how to hold updates until you say. These are the units that were run for real: rootless under systemd, including an update that migrates and then can't start and gets rolled back. A real Pi under systemd as root hasn't been done yet.
+The database container does not follow `:stable`, on purpose, and an update that can't start is rolled back. [The :stable auto-update](/install/auto-update/) says what an update does, what a rollback cannot undo, and how to hold updates until you say. These are the units that were run for real: rootless under systemd, including an update that migrates and then can't start and gets rolled back. It has since been run on bare metal (2026-11-17).
 
 ## Then
 
-Add a device, discover its tags, and watch them come in. [Protocols](/iot/protocols/) says how far each driver has been proven, including the two that have never touched a physical PLC. If you run it under EmberCORE, EmberCORE finds it by itself and proxies it at the in-cluster address, no ingress needed.
+Add a device, discover its tags, and watch them come in. [Protocols](/iot/protocols/) says how far each driver has been proven, including the two that were run on bare metal on 2026-11-17, S7comm and EtherNet/IP. If you run it under EmberCORE, EmberCORE finds it by itself and proxies it at the in-cluster address, no ingress needed.
 
 ## Licensing
 

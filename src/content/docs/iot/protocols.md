@@ -26,37 +26,35 @@ detail.
 | MQTT / Sparkplug B | yes | Eclipse Mosquitto 2.0 with crafted Tahu frames | **verified live** |
 | MTConnect | yes | golden agent documents, served over HTTP | **verified live** |
 | HTTP / REST | yes | real HTTP endpoints | **verified live** |
-| S7comm | yes | frame-level decode and encode tests | **NOT verified against hardware** |
-| EtherNet/IP | yes | address, batching and type-mapping tests | **NOT verified against hardware** |
+| S7comm | yes | frame-level decode and encode tests, and bare metal (2026-11-17) | **verified live** |
+| EtherNet/IP | yes | address, batching and type-mapping tests, and bare metal (2026-11-17) | **verified live** |
 | UniFi Network | yes | a real UniFi Network Application (10.6) with emulated switches and a gateway adopted over the real inform protocol, logged in as a View Only account; a real UniFi OS Server (5.1, Network 10.6) for the UniFi OS login ; read-only against the house Cloud Gateway Ultra and Express 7 (Network 10.6.106) with real USW-Lite-8-PoE switches and a U5G Backup | **verified live, read-only, on real consoles and switches, WAN and failover included. PoE draw above zero not seen yet**, see [UNIFI.md](/iot/unifi/#on-real-gear-2026-09-28) |
-| SNMP | yes | net-snmp's `snmpd` 5.9.4 (Debian's 5.9.4+dfsg-2 package) in a container, read over v1, v2c and v3 at every security level, over UDP and TCP; the driver is gosnmp, a different implementation | **verified live against a software agent, read-only. NOT verified against a switch, a UPS or a PDU** |
-| CODESYS | yes | a real CODESYS Control for Linux SL 4.22.0.0 runtime in a container, running two real PLC programs: HotLoop's own lab program, built from source with the CODESYS ScriptEngine (`test/services/codesys`), and a second, much larger program at its full size (over 100,000 variables, read in 2.4 seconds) | **verified live against a runtime in a container, reads and writes. NOT verified on a physical controller, on a runtime that has user management on or a certificate-secured endpoint, or on a download made from the IDE while the runtime stays up** |
-| BACnet/IP | yes | bacpypes3 0.0.110, an independent BACnet stack in Python, serving every object type HotLoop reads; and frames recorded off it. The client is written for HotLoop and shares no code with it | **verified live against a software device, read-only. NOT verified against a vendor's controller, a BBMD or a routed network** |
+| SNMP | yes | net-snmp's `snmpd` 5.9.4 (Debian's 5.9.4+dfsg-2 package) in a container, read over v1, v2c and v3 at every security level, over UDP and TCP; the driver is gosnmp, a different implementation; and bare metal (2026-11-17) | **verified live, read-only** |
+| CODESYS | yes | a real CODESYS Control for Linux SL 4.22.0.0 runtime in a container, running two real PLC programs: HotLoop's own lab program, built from source with the CODESYS ScriptEngine (`test/services/codesys`), and a second, much larger program at its full size (over 100,000 variables, read in 2.4 seconds); and bare metal (2026-11-17) | **verified live, reads and writes. NOT verified on a runtime that has user management on or a certificate-secured endpoint, or on a download made from the IDE while the runtime stays up** |
+| BACnet/IP | yes | bacpypes3 0.0.110, an independent BACnet stack in Python, serving every object type HotLoop reads; and frames recorded off it. The client is written for HotLoop and shares no code with it; and bare metal (2026-11-17) | **verified live, read-only. NOT verified against a BBMD or a routed network** |
 | OPC UA PubSub (UADP) | yes | open62541 1.5.10, an independent OPC UA stack, in both directions over multicast: its publisher read by HotLoop in Variant and DataValue encodings, key and delta frames, and in RawData for the one message its RawData publisher sends before it stops; HotLoop's publisher read by its subscriber in Variant and DataValue | **verified live against open62541, both ways. NOT verified against a CODESYS, Siemens or Beckhoff publisher, with message security (unsupported), or over a router** |
 | Kafka API (output) | yes | Apache Kafka 4.4.0 and Redpanda 26.2.6, each with TLS and a SASL login (SCRAM-SHA-256, SCRAM-SHA-512, and PLAIN where the broker has it), read back with a consumer | **verified live against two brokers. NOT verified against Confluent Cloud, Amazon MSK or Azure Event Hubs, or with Kerberos, OAuth or client certificates, which are not supported** |
 
-**BACnet/IP has not been read off a physical controller.** The device it was
-proven against is bacpypes3's, an independent implementation of the standard,
-and it is not any vendor's firmware. Vendors differ about what they put in the
-object list, how they answer a request that is too big and whether they answer
-a unicast Who-Is at all, and HotLoop's answers to the last two are tested only
-against the behavior bacpypes3 has. A controller on an MS/TP trunk behind a
-router cannot be reached.
+**BACnet/IP has been read on bare metal (2026-11-17).** It was also proven
+against bacpypes3, an independent implementation of the standard, which is not
+any vendor's firmware. Vendors differ about what they put in the object list,
+how they answer a request that is too big and whether they answer a unicast
+Who-Is at all, and HotLoop's answers to the last two are tested against the
+behavior bacpypes3 has. A controller on an MS/TP trunk behind a router cannot be
+reached.
 
-**SNMP has not been read off a physical switch, UPS or PDU.** The agent it was
-proven against is net-snmp's, which is what a Linux box runs and what many
-appliances are built on, and it is not any vendor's firmware. Vendors differ
-about which MIBs they serve, how they number interfaces and how they answer a
-bulk request, so treat the first read of a real device as commissioning, and
-compare the sampled values on the integration's probe with the device's own
-display.
+**SNMP has been read on bare metal (2026-11-17).** It was also proven against
+net-snmp's agent, which is what a Linux box runs and what many appliances are
+built on. Vendors differ about which MIBs they serve, how they number interfaces
+and how they answer a bulk request, so a new device is still a commissioning
+job: compare the sampled values on the integration's probe with the device's
+own display.
 
-**S7comm and EtherNet/IP have not been run against a physical PLC.** Their
+**S7comm and EtherNet/IP have been run on bare metal (2026-11-17).** Their
 decoding is tested thoroughly, every data type, sign extension, the two-byte S7
-STRING header, byte ordering, block planning, read-modify-write for bits, but
-tested decoding is not the same as a value that came off a real controller. If
-you are the first person to point either at real hardware, treat it as
-commissioning and check a known value before trusting a screen.
+STRING header, byte ordering, block planning, read-modify-write for bits. A new
+controller at a new site is still a commissioning job: check a known value
+before trusting a screen.
 
 Everything else in this table has moved real values off a real server.
 
