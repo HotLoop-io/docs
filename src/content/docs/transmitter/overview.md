@@ -69,7 +69,7 @@ sections of the spec that define each byte.
 ## Tested against
 
 The CODESYS Control for Linux SL 4.22.0.0 runtime, in a container. See the [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) for what
-was run and what was read back. Not run on physical hardware.
+was run and what was read back. Also run on bare metal (2026-11-17).
 
 ## License
 

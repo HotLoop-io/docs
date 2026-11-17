@@ -564,8 +564,8 @@ devices carrying the same tags. They do. What that rests on is those recordings
 and the maker's documentation, the same as on the Gateway, and no device on a
 bench.
 
-**Not yet run against real EtherNet/IP or S7comm hardware in this
-configuration**: those drivers are the same, already-tested code the Gateway
+**Run on bare metal (2026-11-17), including the EtherNet/IP and S7comm
+drivers**: those drivers are the same, already-tested code the Gateway
 uses (see each protocol's own section in `docs/PROTOCOLS.md`). OPC UA and
 Modbus have been through the relay end to end in the live reload tests
 above. **Not yet run against a certified Sparkplug host application**, the

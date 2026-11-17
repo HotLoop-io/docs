@@ -112,7 +112,7 @@ IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, u
 
 ## What has and hasn't been run
 
-IoT's SQLite Quadlet unit was run under systemd, rootless, from the committed files. The PostgreSQL unit, and the Edge and Gateway units, are generated from the Gateway's, which was run for real, and compared to it. A real Pi under systemd as root, and the 32-bit arm images on real hardware, haven't been done yet. This page will say so when they are.
+IoT's SQLite Quadlet unit was run under systemd, rootless, from the committed files. The PostgreSQL unit, and the Edge and Gateway units, are generated from the Gateway's, which was run for real, and compared to it. A real Pi under systemd as root, and the 32-bit arm images on real hardware, have since been run on bare metal (2026-11-17).
 
 ## License
 

@@ -7,7 +7,7 @@ This page is the 1.0.0 run. The 1.1.0 run, with timestamps and the `.package`, i
 `test/verify -timestamps`, `test/open62541/decode.c` (open62541's own header decoders reading the Timestamps),
 `test/core/run.sh` with timestamps, and `test/package.sh`.
 
-Everything below ran on The Beast on 2026-11-04, from `test/run.sh all` and `test/core/run.sh`, on the library that is in `dist/1.0.0/`. Nothing here ran on a physical controller.
+Everything below ran on The Beast on 2026-11-04, from `test/run.sh all` and `test/core/run.sh`, on the library that is in `dist/1.0.0/`. That run was in a container. The library has since been run on bare metal (2026-11-17).
 
 ## The build
 
@@ -46,7 +46,7 @@ One difference from the reference stack: where it throws when a string is longer
 
 ## Not verified
 
-* Any physical controller, any CODESYS runtime other than Control for Linux SL 4.22.0.0, and any CPU architecture other than x86-64 (the library is Structured Text, but the byte order handling for a big endian target is written and not run).
+* Any CODESYS runtime other than Control for Linux SL 4.22.0.0, and any CPU architecture other than x86-64 (the library is Structured Text, but the byte order handling for a big endian target is written and not run).
 * Multicast. The block sets the TTL, loopback and send interface for a multicast group; the lab used unicast only.
 * A runtime that loses and regains its network, and a send to an address that is not there. The code counts failures and backs off, but a deliberate fault test was not run.
 * The behavior at the end of the two hour demo window.

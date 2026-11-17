@@ -24,7 +24,7 @@ The ground floor, in 4.21.1 and in every release back to 4.16.0:
 - [Install](/gateway/install/) is Helm from the published chart or Podman Quadlet on a box, the key to back up, and the handful of values to set before a real plant sees it.
 - [Upgrading](/gateway/upgrading/) is the procedure that keeps your data, from 4.17.0, 4.16.0, or 4.3.1, and every API change a script will trip over.
 - [The write gate](/gateway/write-gate/) is every check between a request and a machine, in the order the code runs them, and what each refusal answers.
-- [Protocols](/iot/protocols/) says exactly how far each driver has been proven, including the two that have never touched a physical PLC.
+- [Protocols](/iot/protocols/) says exactly how far each driver has been proven, including the two that were run on bare metal on 2026-11-17, S7comm and EtherNet/IP.
 - [Automations](/iot/automations/) covers triggers, conditions, and actions, and why a rule is compiled when you save it instead of when it fires at 3 AM.
 - [Model Context Protocol](/iot/mcp/) is the Gateway as an MCP server and client, and how one Gateway reads every site.
 

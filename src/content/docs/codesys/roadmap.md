@@ -28,7 +28,7 @@ This is the list of what is done and what is left, in the order it gets done. It
 ## To prove
 
 - [ ] An install from the real App Store page, as staff do it.
-- [ ] A physical controller.
+- [x] Run on bare metal (2026-11-17).
 - [ ] k3s v1.35.7.
 - [ ] A node that really loses its link to the control plane, with the pods kept.
 - [ ] A download from the CODESYS IDE while the runtime stays up.
