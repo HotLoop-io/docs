@@ -126,9 +126,7 @@ node does when the link stops confirming is move memory to the disk. The one
 case this design does not cover is the process dying with the link up, and it
 is not covered on purpose.
 
-`HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES` bounds the outage queue, and the default
-is 64 MiB, about two and three quarter minutes of outage at 2,000 readings a
-second (the rig below runs it there). Past it the oldest readings go first and
+`HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES` bounds the outage queue, and the default is 64 MiB, about 248,000 readings: about two minutes of outage at 2,000 readings a second (the rig below runs it there), and about 41 minutes at 100. Past it the oldest readings go first and
 are counted. Set it to 0 and the queue is unbounded: the process warns about
 that at startup, because a very long outage on an unbounded queue fills the
 volume instead of dropping old readings the way the historian's own in-memory
@@ -266,8 +264,7 @@ given up" above. The five minute cut before that fix had the node sitting in
 a dead connection for the whole outage and then sending a stale chunk ahead
 of the new session's birth; 100 readings arrived out of order.
 
-At that load a 64 MiB queue holds about two and three quarter minutes of
-outage. Size the bound from your own rate: about 180 bytes a reading on disk.
+At that load a 64 MiB queue holds about two minutes of outage, about 248,000 readings. Size the bound from your own rate: about 240 bytes a reading in the queue with short tag names, measured on 4.21.1.
 The replay is no longer a limit: it runs at more than a hundred times the
 rate readings arrive.
 
