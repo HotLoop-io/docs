@@ -2,8 +2,8 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "df5ab857",
-      "sha": "df5ab8576c6f2345ee36bb658c19929cc116fda6",
+      "ref": "origin/main",
+      "sha": "9373d09abea72c316f04bac2b48da866898a3b85",
       "release": {
         "tag": "v4.21.1",
         "version": "4.21.1",
@@ -14,25 +14,25 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "v2.14.1",
-      "sha": "fe9289e1c0beeced1e12aeb15ee051ff0b0f49cd",
+      "ref": "origin/main",
+      "sha": "46da8527fa923f90e831b117c46d310ad67e9cff",
       "release": {
         "tag": "v2.14.1",
         "version": "2.14.1",
         "prerelease": false,
-        "publishedAt": null,
+        "publishedAt": "2026-11-17T08:58:48Z",
         "sha": "79f801ffa2a45488b8845474f011c41c1ea896b8"
       }
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "v1.2.1",
-      "sha": "43535142cad5dfd472b6dfc0eb43b55a7417a4c1",
+      "ref": "origin/main",
+      "sha": "da0a62d2934088902e9a52c16c8eb85b442cfcaa",
       "release": {
         "tag": "v1.2.1",
         "version": "1.2.1",
         "prerelease": false,
-        "publishedAt": null,
+        "publishedAt": "2026-11-17T05:43:50Z",
         "sha": "5424c93707790f6aea86f6339033c077e3e3c058"
       }
     }
@@ -231,7 +231,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -341,7 +341,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -396,7 +396,7 @@
       "group": "Reference",
       "title": "Edge Relay reference",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/EDGE-RELAY.md",
       "release": false
@@ -451,7 +451,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -528,7 +528,7 @@
       "group": "How it runs",
       "title": "Durable state, measured",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/durable/README.md",
       "release": false
@@ -737,7 +737,7 @@
       "group": "Project",
       "title": "Where Flow stands",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false

@@ -5,6 +5,10 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -2043,6 +2047,8 @@ left out: the export names a variable from its GVL (`GVL_Alarm.bPumpFault`) and
 the tag is `Application.GVL_Alarm.bPumpFault`. `?defaultPriority=` (1 to 4) is
 the priority of an alarm whose class is not one of Error, Warning or Info.
 Without `?apply=true` nothing is saved: the answer says what would come across.
+
+The Alarms screen has this as Import from CODESYS (admin only): pick the device, name the application, choose the file, read the preview, then import.
 
 Digital alarms compared with `= TRUE` or `= FALSE` become `true` and `false`,
 UpperLimit with `>` becomes `hi`, LowerLimit with `<` becomes `lo`, an Outside range alarm

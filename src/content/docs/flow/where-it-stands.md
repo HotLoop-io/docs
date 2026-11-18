@@ -5,6 +5,10 @@ description: "What has been proven against real equipment, what has not, and wha
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 46da852, and it differs from the copy in HotLoop Flow 2.14.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 **It runs.** It starts, serves the API and the editor, loads flows off the
 volume, moves messages, and comes back after a restart with its flows and
 credentials and context. The chart deploys it in all three network modes and the

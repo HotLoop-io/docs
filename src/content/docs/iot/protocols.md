@@ -5,6 +5,10 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -583,12 +587,26 @@ types, and an array as its elements (the first 1000 of them).
  "dataSets":[{"writerId":62541,"types":["Float","UInt16","Boolean","Int32","Double"]}]}
 ```
 
-- `publisherId` and `writerGroupId` keep a device to one publisher and group
-  when several share an address. Empty and zero take everything.
+- `publisherId` and `writerGroupId` keep a device to one publisher and group.
+  Empty and zero take everything. They are how several devices share one
+  address: a publisher that sends two WriterGroups to `udp://:4840` is two
+  devices there, one with `"writerGroupId":1` and one with `"writerGroupId":2`.
+- Devices can share an address and port. HotLoop opens one socket for it (one
+  join, for a multicast group on one card) and hands every datagram to every
+  device on it. Each device then applies its own `publisherId`, `writerGroupId`
+  and `dataSets`, so each sees its publisher's whole stream and none is split
+  between devices. The socket closes when the last device on it is removed or
+  stopped, and the next one to start opens it again. Devices are matched on the
+  address as written: `udp://:4840`, `udp://0.0.0.0:4840` and `udp://[::]:4840`
+  are three addresses to HotLoop, and whether they can coexist is up to the
+  operating system, as it always was. A multicast group joined on two different
+  cards is two sockets. Nothing changes for a device that is alone on its
+  address.
 - The group, the port and the card are all the device's: nothing is fixed in
   HotLoop. `udp://239.192.0.1:4850` with `"interface":"eth0"` joins that group
   on that card, and `udp://127.0.0.1:4842` listens for one publisher on the same
-  machine. Several devices can listen on different groups and ports at once.
+  machine. Several devices can listen on different groups and ports at once, or
+  on the same one.
 - `interface` is the network card a multicast group is joined on, by name
   (`eth0`, `lo`) or by one of its IPv4 addresses (`127.0.0.1`). A machine with
   more than one card needs it. A publisher on the same machine that sends to a
