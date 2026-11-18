@@ -9,7 +9,7 @@ The text below is mirrored from the canonical copy and is what decides things, s
 
 HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. HotLoop LLC.
 
-Last updated: November 17, 2026. Effective: October 19, 2026.
+Last updated: November 18, 2026. Effective: October 19, 2026.
 
 These terms apply to everyone who downloads, installs or uses HotLoop. They explain what you can do with it, what we do for you, and what happens if something goes wrong. By downloading, installing or using HotLoop, or by using our websites, you agree to them. If you accept for an organization, you confirm you can bind it.
 
@@ -35,7 +35,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 3.2 In plain words, and subject to the license text: HotLoop is free to use, and it is not open source. Home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is free, and hosting HotLoop for your customers is allowed only through EmberNet. A systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license. Under the HotLoop Free Use License you get the binaries, images and charts we publish and not the source, and you may not modify them or redistribute them. HotLoop Flow is source-available under the EmberNet Source License, and it is not OSI open source.
 
-3.3 The license applies to each version separately, and each product moves to the HotLoop Free Use License at its next release. A version released under the EmberNet Source License stays under it, and under it each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, that license governs it. A version released under the HotLoop Free Use License never converts to an open source license.
+3.3 Every HotLoop product is under the HotLoop Free Use License 1.0, except HotLoop Flow, which is under the EmberNet Source License 1.0. The license applies to each version separately, and a version published before the move to the HotLoop Free Use License keeps the license it came with. A version released under the EmberNet Source License stays under it, and under it each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, that license governs it. A version released under the HotLoop Free Use License never converts to an open source license.
 
 3.4 Business use, and the schools, nonprofits and government bodies that are free of it, mean what the license says they mean. If you are not sure which side your use falls on, ask us before you deploy.
 
