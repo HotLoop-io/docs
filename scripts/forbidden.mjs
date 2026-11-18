@@ -16,6 +16,7 @@ export const FORBIDDEN = [
   [/`[^`\n]*\b(?:internal|cmd|testdata)\/[^`\n]*`|`test\/[^`\n]*`|\.\/internal\b|\bthird_party\b/, 'our source tree'],
   [/\bgo (?:test|vet)\b|\bgolangci|-race\b|\bTest[A-Z][a-z]+[A-Z][A-Za-z0-9]*\b/, 'our test code'],
   [/\b(?:gopcua|awcullen|asyncua|bacpypes3?|gosnmp|snmpd|pymodbus|open62541|opc-plc|libplctag|wazero|bbolt|pysparkplug)\b|\bgoja\b|\bpaho\b/i, 'a library or test peer underneath'],
+  [/\bnet-snmp\b|\bPlaywright\b/, 'a library or test peer underneath'],
   [/\b(?:release run|Test job|hosted runner|the runner|release workflow|release\.yml|BUILD_ONLY|image-publish\.yml|mirror-image\.sh)\b/, 'our release pipeline'],
   [/\b(?:test lab|Podman lab|our lab|my lab|the house cluster|the house consoles?|the house gear)\b|\bthe lab(?:'s)? (?:controller|bench|fleet|site|program)\b/i, 'our test lab'],
   [/\bContainerfile|\bDockerfile|\bthis repo(?:sitory)?\b/, 'our build files'],

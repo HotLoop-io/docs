@@ -134,7 +134,7 @@ What changed in 4.18.11.
 - HotLoop never sends a SET, because a SET can
   change a switch. There is no default community, since `public` is how a plant's
   switches get read by whoever asks. The community and the v3 passphrases are
-  stored encrypted like every other device secret. Proven against net-snmp's
+  stored encrypted like every other device secret. Proven against an SNMP agent's
   agent in testing at every v3 security level.
 - **BACnet/IP, read-only.** Building controllers and meters on the IP network:
   objects, units and status flags, with a device behind a router said to be

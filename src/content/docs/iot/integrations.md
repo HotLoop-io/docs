@@ -53,7 +53,7 @@ questions follow the version: v2c asks for a community, v3 asks for a user and
 only the passphrases its security level needs. There is no default community.
 
 The probe walks the system group, the interface tables, host resources, the
-load table and net-snmp's extend outputs, the objects HotLoop can name, and
+load table and an SNMP agent's extend outputs, the objects HotLoop can name, and
 shows each with what the agent said it holds right now. It **suggests** the
 ones a person pointing at a new device wants: the device's name, location and
 uptime (shown in seconds, not the agent's hundredths), each interface's

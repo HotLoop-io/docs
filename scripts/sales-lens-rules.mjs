@@ -36,6 +36,9 @@ export const GLOBAL = [
   { cut: /\bthird_party\b|\bCGO_ENABLED\b|\bContainerfile|\bDockerfile|\bdocker-publish|\bthis repo(?:sitory)?\b|\b[a-z_]+\.go\b|\bmain\.go\b|\b(?:gopcua|awcullen|asyncua|bacpypes3?|gosnmp|snmpd|pymodbus|open62541|opc-plc|OPC PLC|Pallets Jinja2|libplctag|nptdms|otel\/opentelemetry-collector)\b/ },
   { sub: [/ in the lab\b/g, ' in testing'] },
   { sub: [/\/iot\/unifi\/#(?:clients-)?on-real-gear-[0-9-]+/g, '/iot/unifi/'] },
+  { sub: [/\bnet-snmp's\b/g, "an SNMP agent's"] },
+  { sub: [/\bnet-snmp\b/g, 'an SNMP agent'] },
+  { cut: /\bPlaywright\b/ },
   // Our test lab and the house gear it borrows.
   { cut: /\b(?:test lab|lab controller|lab bench|lab site|lab fleet|lab's|our lab|my lab|Podman lab)\b|\bhouse (?:Cloud|Express|PoE|consoles?|gear|policy)|\bthe house\b|\bNothing in the house|\bThe lab\b/ },
   // The names of the parts inside, said by what they do.
@@ -245,6 +248,9 @@ It was Emberwire, and \`v0.1.0\` is still where it was, at \`ghcr.io/embernet-ai
 const PROVEN = 'It has been run against real devices and real servers, and on bare metal on 2026-11-17.';
 
 export const PAGE = {
+  'releases/hotloop-4-19-8': [
+    { drop: /^- The cause is unknown\. It never happened again in 8 contention runs/ },
+  ],
   'releases/flow-2-10-2': [
     { drop: /^[-*] Root now keeps its login in its own place/ },
   ],
