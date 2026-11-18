@@ -34,7 +34,7 @@ HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what i
 
 **Plant nodes**
 - Modbus TCP read and write, OPC UA read, write and subscribe, S7 read and write, EtherNet/IP read and write, and Sparkplug B as an edge node and as a host. Flow can talk to what `scan` finds now.
-- Sparkplug does the births, the will, `bdSeq`, rebirth requests and commands the spec asks for. I checked it against pysparkplug in both directions, edge node and host.
+- Sparkplug does the births, the will, `bdSeq`, rebirth requests and commands the spec asks for. I checked it against an independent Sparkplug implementation in both directions, edge node and host.
 - A silent device fails the request inside the timeout and the next message reconnects. An OPC UA subscription notices it dropped, says so once, and picks itself back up.
 
 **The editor**

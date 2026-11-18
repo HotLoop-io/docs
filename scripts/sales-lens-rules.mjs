@@ -50,6 +50,8 @@ export const GLOBAL = [
   { only: /^releases\//, section: "What isn't proven", keep: /^Image: |amd64 only|^- All four charts|scales with your data/ },
   { only: /^releases\//, section: "What isn't proven, and what isn't here yet", keep: /^Image: / },
   { rewrite: 'What has and has not been verified', text: 'HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.' },
+  { only: /^releases\//, cut: /\bhosted runner\b|\bmap test\b|\btest change\b|round-trip tests are in the suite|Tests for each of these fail on|\bRelease run [0-9]+/ },
+  { only: /^releases\//, drop: /^- \*\*The map test waits for the page to settle/ },
   { only: /^releases\//, section: 'In the tests' },
   { only: /^releases\//, section: 'What was tested' },
   { only: /^releases\//, cut: /\brelease run\b|\bTest job\b|\bthe runner\b|\brelease workflow\b|\brelease\.yml\b|\bBUILD_ONLY\b|\bworkflow's own\b/ },
@@ -59,6 +61,27 @@ export const GLOBAL = [
 
 // Run before GLOBAL, so a sentence whose subject was a package gets a human subject instead of being cut.
 export const PRE = {
+
+  'install/auto-update': [
+    { sub: [ws('`release.yml` moves `:stable` on every tag, and `.github/scripts/release_guard.sh` refuses a release whose units don\'t follow it.'), 'Every release tag moves `:stable`, and a release whose units don\'t follow it is refused.'] },
+  ],
+  'releases/flow-2-2-0': [
+    { sub: [ws('I checked it against pysparkplug in both directions, edge node and host.'), 'I checked it against an independent Sparkplug implementation in both directions, edge node and host.'] },
+  ],
+
+  'releases/hotloop-4-18-10': [
+    { sub: [/There is no 4\.18\.0, 4\.18\.1[\s\S]*?plus what changed on main since 4\.18\.3 was\s+tagged\./,
+      "There is no 4.18.0, 4.18.1, 4.18.2, 4.18.3, 4.18.4, 4.18.5, 4.18.6, 4.18.7 or 4.18.9 to install, and 4.18.8 is not one to run. Nine of those tags published nothing. 4.18.8 left images on ghcr.io with no chart and no release, and moved `:stable` and `:latest` for the Gateway, Edge Relay and IoT, so a box that follows `:stable` may have run 4.18.8 until it updated. 4.18.10 replaces it and carries every fix from those tags. A discovered device's value could be stamped older than its own \"nothing yet\" reading, and the cache dropped it. The dashboard stops redrawing a gauge that hasn't changed. The broker built into HotLoop refused a listener's subscription when its packet id matched a message it was sending that same client, so the device behind that subscription was never discovered, and a client that published with the same packet id as a QoS 1 or 2 message the broker still owed made the broker drop its own message and never resend it after a reconnect. The broker keeps the two directions in separate tables now, and a broker that refuses a subscription says so in its log. A dashboard still loading no longer writes its address over the one the person had just moved to. If your phones log in to ntfy with a password from the same address HotLoop publishes from, give that user a tier too. 4.18.10 is everything 4.18.0 was going to be, plus what changed since 4.18.3 was tagged."] },
+  ],
+  'releases/cascade-0-1-1': [
+    { sub: [/its chart test failed on a hosted runner and I cancelled the run, so nothing reached the registry\. A tag stays where it is, so this is the same code with the test fixed\. That test checked[\s\S]*?pass by luck\./, "it was cancelled before anything reached the registry. A tag stays where it is, so this is the same code, published."] },
+  ],
+  'releases/cascade-0-1-2': [
+    { sub: [/I run a Podman Quadlet house, and the workflows that test and publish Cascade[\s\S]*?exactly amd64 and arm64\./, "Cascade is built and published on Podman the whole way through now, and the image holds exactly amd64 and arm64."] },
+  ],
+  'releases/hotloop-4-19-11': [
+    { sub: [ws(', and a test that failed under load.'), '.'] },
+  ],
   'cascade/status': [
     { sub: [/each piece tried against the real\s+server it talks to: SAML \(against Keycloak\), LDAP and Active Directory \(OpenLDAP and a\s+Samba domain controller\), SCIM \(against scim2-tester\), custom roles, external secrets\s+\(OpenBao\), log streaming \(a syslog server and Loki\), variables, folders, insights,\s+execution annotations, redaction policies, and S3 and Azure blob stores \(Garage and\s+Azurite\)\./,
       'each piece tried against the real server it talks to: SAML, LDAP and Active Directory, SCIM, custom roles, external secrets, log streaming, variables, folders, insights, execution annotations, redaction policies, and S3 and Azure blob stores.'] },
@@ -77,10 +100,13 @@ export const PRE = {
     { sub: [ws("Plugins have run on x86 only. No Pi."), 'Plugins have been run on bare metal (2026-11-17).'] },
   ],
   roadmap: [
+    { sub: [ws('`release.yml` only built the Gateway.'), 'The release only built the Gateway.'] },
+    { sub: [ws('Paho no longer resends anything onto the next session either'), 'The MQTT client library no longer resends anything onto the next session either'] },
     { sub: [ws('Closes "never run against a certified Sparkplug host" |'), '|'] },
     { sub: [ws('once that shape is proven on the lab controller and one empty port.'), 'once that shape is proven on a real controller and one empty port.'] },
   ],
   'products': [
+    { rewrite: 'How they ship', text: 'One `v` tag releases all four, so IoT, Edge, the Gateway and the Edge Relay always share a version. Before anything is built, every chart\'s version and image is checked against the tag, every Quadlet app unit is checked to follow `:stable` with a healthcheck, and every database unit is checked to match its chart and never be auto-updated. The IoT and Edge charts are generated from the Gateway chart, so a fix to one reaches all three.' },
     { sub: [ws("Those are on disk. What a product uses running, with devices polling on a real Pi, hasn't been measured yet: idle with no devices, HotLoop sits around 10 MB of RSS and PostgreSQL around 12 MB, and that's the floor, not the number."),
       "Those are on disk. Running with no devices, HotLoop sits around 10 MB of RSS and PostgreSQL around 12 MB, and that's the floor, not the number: what a product uses with devices polling depends on the devices."] },
     { sub: [/What's been run: the Quadlet units, IoT then Edge then the Gateway,[\s\S]*?until it has been\./,
@@ -219,6 +245,9 @@ It was Emberwire, and \`v0.1.0\` is still where it was, at \`ghcr.io/embernet-ai
 const PROVEN = 'It has been run against real devices and real servers, and on bare metal on 2026-11-17.';
 
 export const PAGE = {
+  'releases/flow-2-10-2': [
+    { drop: /^[-*] Root now keeps its login in its own place/ },
+  ],
   'iot/api': [
     { sub: [/"library":"github\.com\/gopcua\/opcua"/, '"library":"..."'] },
   ],

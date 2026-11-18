@@ -12,8 +12,6 @@ Two fixes on top of [4.20.1](/releases/hotloop-4-20-1/), and the license. This i
 - **EtherNet/IP with more than one tag in a batch.** The driver asked the library's `ReadMulti` for a batch, which takes a struct of tagged fields or a map, and a plain tag name makes it panic in reflect before a byte goes out. So any EtherNet/IP device with two or more tags in a batch (batches are twenty by default) panicked its poll. Nobody saw it in a test because no test ever put a batch against a server. Now the tests run an EtherNet/IP server and an S7 server in the process, the drivers read them over TCP, and the batch goes through `ReadList`. A controller that goes quiet with its socket open is down within a poll plus its timeout, as it was meant to be, and is no longer asked again tag by tag, which held the poll for one timeout per tag. S7comm and EtherNet/IP are still not proven against a physical PLC.
 - **`version` is a word.** `podman run ghcr.io/hotloop-io/hotloop:4.20.1 version` died with "database password is not set", because only `--version` was handled before the configuration was read. `version` prints the version with an empty environment now, for the Gateway, Edge and IoT, and for the Edge Relay.
 
-The map test in the UniFi browser suite now notices a click the browser never delivered and presses again. That is a test change and nothing in the product.
-
 - No migrations, no new secrets, no API changes. A plain `helm upgrade` or the Quadlet auto-update takes it.
 - All four charts (`hotloop`, `hotloop-iot`, `hotloop-edge`, `hotloop-edge-relay`) are at 4.20.2, with every earlier version still in the index.
 - This build is amd64 only, and `stable` keeps the arm images it holds. The next release is one small version bump that builds the arm images.

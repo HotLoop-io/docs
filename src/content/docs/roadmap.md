@@ -421,7 +421,7 @@ verified against the current stable release (8.3.9 as of September 2026; Ignitio
 
 ## HotLoop Edge Relay
 
-- [x] **Actually release the image.** `release.yml` only built the Gateway.
+- [x] **Actually release the image.** The release only built the Gateway.
       Now a release also pushes `ghcr.io/hotloop-io/hotloop-edge-relay`
       (amd64 and arm64) and publishes `hotloop-edge-relay` to the same Helm
       repo, and refuses a tag the relay chart doesn't match. The first real
@@ -563,7 +563,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       broker answers a request sent behind it, which on one ordered
       connection proves it read everything ahead of it. A QoS 0 write into a
       dead link is a test now: without that confirmation all 30 readings left
-      the disk. Paho no longer resends anything onto the next session either,
+      the disk. The MQTT client library no longer resends anything onto the next session either,
       because the edge publisher does its own reconnecting on a clean one
 - The driver now falls
       back to polled reads when a new subscription stays silent. Fixed

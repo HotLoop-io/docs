@@ -11,7 +11,7 @@ sidebar:
 
 0.1.2 is a build fix and nothing else. The code is the same as 0.1.1, and so is everything you run: the chart, the Quadlet units, the settings, the database.
 
-I run a Podman Quadlet house, and the workflows that test and publish Cascade still reached for a Docker engine to start the test services, to log in to the registry and to load the image into k3s. They run on Podman the whole way through now, and the test scripts no longer offer Docker as a switch. The image was already built with Podman. It still is, one platform at a time now, and the release reads the manifest list back and refuses to push unless it holds exactly amd64 and arm64.
+Cascade is built and published on Podman the whole way through now, and the image holds exactly amd64 and arm64.
 
 ## Upgrading from 0.1.1
 

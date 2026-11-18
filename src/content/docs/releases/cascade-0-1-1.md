@@ -9,7 +9,7 @@ sidebar:
 
 ## What this is
 
-0.1.1 is the first release that isn't a candidate. There was a 0.1.0 tag and it never published anything: its chart test failed on a hosted runner and I cancelled the run, so nothing reached the registry. A tag stays where it is, so this is the same code with the test fixed. That test checked the upgrade by listing pods while the old ones were still stopping, which a quiet laptop never shows. It waits for the rollout to finish and the old pods to go now, and I run it with the old pods frozen so it can't pass by luck.
+0.1.1 is the first release that isn't a candidate. There was a 0.1.0 tag and it never published anything: it was cancelled before anything reached the registry. A tag stays where it is, so this is the same code, published.
 
 What it is: the workflow engine I wanted on a plant floor. One static Go binary, SQLite on one box or Postgres with workers when you need more, and the editor baked into the binary so there is nothing else to run.
 

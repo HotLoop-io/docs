@@ -16,54 +16,7 @@ follow `:stable` and roll a bad update back on their own. Coming from 4.17.0 the
 Gateway is a plain `helm upgrade`. Read "Upgrading from 4.17.0" below before you
 touch a running plant, because a couple of defaults moved.
 
-There is no 4.18.0, 4.18.1, 4.18.2, 4.18.3, 4.18.4, 4.18.5, 4.18.6, 4.18.7 or 4.18.9 to install, and 4.18.8
-is not one to run. I tagged all ten. Nine of them published nothing, no image, no
-chart and no release. 4.18.8 passed every test and then I cancelled its run by
-mistake while it was publishing, so it left images on ghcr.io with no chart and no
-release (more on that below). InfluxDB 3's token file went in readable by root alone, which
-Docker leaves it as and Podman quietly hands to the container's user. The port 465 test had no
-relay to run against, so it skipped, and a skip fails the release. Two reloads
-of the runtime at once could race on a worker, and reloads take turns now. The job clears
-the toolchains it never uses before it pulls anything now, and prints where the
-disk went whether it passes or not. So the rehearsal of the release stopped being a quiet box. What it turned up is fixed here: a discovered device's
-value could be stamped older than its own "nothing yet" reading and the cache
-dropped it, which is a bug in the product and not in the test, the dashboard
-stops redrawing a gauge that hasn't changed, and the test Chrome runs without
-its GPU, because software GL was eating both CPUs. The suite makes it first now. The seventh,
-4.18.6, ran every test and lost one: ntfy refused an alarm notification that
-carried the right token. That's a race inside ntfy itself. It files a request
-under its sender's address and briefly forgets who the sender is while it
-checks a password, so a token publish that lands beside a password request from
-the same address reads as nobody, and the lockdown turns it away. HotLoop sent
-the right thing. The test ntfy gives its user its own lane now, and if your
-phones log in to ntfy with a password from the same address HotLoop publishes
-from, give that user a tier too. The eighth,
-4.18.7, lost the one test that had been flaky all week, and it was a real bug.
-The broker built into HotLoop checked a client's SUBSCRIBE packet id against
-the messages it was sending that same client. MQTT numbers those two apart and
-both start at 1, so a listener that subscribed while it was being sent QoS 1
-traffic got refused, the client library called the refusal a grant, and the
-device behind that subscription was never discovered. The check is gone, a
-raw packet test proves it, and a broker that refuses a subscription is logged
-now instead of shrugged off. The ninth,
-4.18.8, passed every test. I cancelled its run by hand, because the same broker
-had the mirror image of that bug and I wanted both fixes in one release, and I
-thought it was still testing. It wasn't. It was publishing. By then the Gateway,
-Edge Relay, IoT and Edge images were already pushed as 4.18.8, and the Gateway,
-Edge Relay and IoT ones had moved `:stable` and `:latest` with them. No chart and
-no release followed, and 4.18.10 replaces it, so a box that follows `:stable` may
-have run 4.18.8 until it updated. The mirror image was this: when a client
-published with the same packet
-id as a QoS 1 or 2 message the broker still owed it, the broker threw its own
-message away and never resent it after a reconnect. The broker keeps the two
-directions in separate tables now, with a test for each QoS, and that fix is
-in this release. The tenth,
-4.18.9, lost one browser test to a real bug: a dashboard still loading wrote
-its address over the one the person had just moved to, so a reload put them
-back on the dashboard they had left. A dashboard only takes the address now if
-nobody has moved it since it started loading. 4.18.10
-is everything 4.18.0 was going to be, plus what changed on main since 4.18.3 was
-tagged.
+There is no 4.18.0, 4.18.1, 4.18.2, 4.18.3, 4.18.4, 4.18.5, 4.18.6, 4.18.7 or 4.18.9 to install, and 4.18.8 is not one to run. Nine of those tags published nothing. 4.18.8 left images on ghcr.io with no chart and no release, and moved `:stable` and `:latest` for the Gateway, Edge Relay and IoT, so a box that follows `:stable` may have run 4.18.8 until it updated. 4.18.10 replaces it and carries every fix from those tags. A discovered device's value could be stamped older than its own "nothing yet" reading, and the cache dropped it. The dashboard stops redrawing a gauge that hasn't changed. The broker built into HotLoop refused a listener's subscription when its packet id matched a message it was sending that same client, so the device behind that subscription was never discovered, and a client that published with the same packet id as a QoS 1 or 2 message the broker still owed made the broker drop its own message and never resend it after a reconnect. The broker keeps the two directions in separate tables now, and a broker that refuses a subscription says so in its log. A dashboard still loading no longer writes its address over the one the person had just moved to. If your phones log in to ntfy with a password from the same address HotLoop publishes from, give that user a tier too. 4.18.10 is everything 4.18.0 was going to be, plus what changed since 4.18.3 was tagged.
 
 The full notes are in the README:
 What changed in 4.18.10.
