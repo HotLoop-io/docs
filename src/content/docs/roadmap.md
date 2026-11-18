@@ -5,6 +5,10 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
+:::note[Written against main]
+This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -204,7 +208,7 @@ This is where "better and cooler" has to be obvious from across the room.
       until a deployment gives it both. Tested against real avahi, MiniDLNA
       and udhcpc; not yet against real devices on the bench. See
       [NETWORK-DISCOVERY.md](/iot/network-discovery/)
-- [x] CODESYS, the PLC's variables by the names the programmer gave them, through the runtime's own OPC UA server: discovery of what the application exports, reads and writes, a first dashboard from the setup, and a reconnect with no hands after a restart or a download. Proven against a 4.22.0.0 runtime in a container running HotLoop's lab program and a second, much larger program; not on a physical controller. See [CODESYS](/iot/protocols/#codesys)
+- [x] CODESYS, the PLC's variables by the names the programmer gave them, through the runtime's own OPC UA server: discovery of what the application exports, reads and writes, a first dashboard from the setup, and a reconnect with no hands after a restart or a download. Proven against a 4.22.0.0 runtime in a container running HotLoop's lab program and a second, much larger program, and on bare metal (2026-11-17). See [CODESYS](/iot/protocols/#codesys)
 - [ ] BACnet, SNMP, ONVIF cameras, Shelly native
 - [ ] **Firmata**, for Arduinos on USB. Verified on real boards only: Arduinos
       and a few other Firmata devices are on the way to the bench, and a
