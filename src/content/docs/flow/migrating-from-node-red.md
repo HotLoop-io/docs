@@ -98,11 +98,7 @@ runs, what differs and what was proven is docs/node-red-types.md.
 Any other community node in a flow fails by itself with its type named, and the
 rest of the flow starts.
 
-JSONata used to top the list of what an imported flow trips over. It runs now:
-every `jsonata`-typed property evaluates, with Node-RED's `$flowContext`,
-`$globalContext`, `$env` and `$clone` bound in, and CI runs it against the
-published jsonata-js test suite on every pull request. 1673 of the 1686 cases
-pass. The 13 that don't are pinned in a test with the reason for each, and ten
+JSONata used to top the list of what an imported flow trips over. The 13 that don't are pinned in a test with the reason for each, and ten
 of those still raise an error, just with a different code. `$moment` is the one
 Node-RED function you'll miss, and it tells you what to use instead of failing
 quietly.

@@ -23,7 +23,7 @@ The URLs you saved still work. `#/w/<id>`, `#/x/<id>`, `#/executions` and the de
 
 SAML, against Keycloak, with signed responses only. LDAP and Active Directory, against OpenLDAP and a Samba domain controller, with roles from groups. SCIM, against scim2-tester, so a provider makes and switches off accounts without anyone touching a screen. Custom roles, made from the project permissions. External secrets in OpenBao or HashiCorp Vault, so a credential's password lives in the store and rotates there. Log streaming of the audit log and finished runs to syslog (TCP, UDP or TLS) and OTLP, tried against a real syslog server and Loki. Variables, folders, insights, annotations on runs, redaction policies, and S3 and Azure blob stores, tried against Garage and Azurite.
 
-The editor has a screen for each of them: Variables, Insights, and under Settings, Roles, Redaction, External secrets, Log streaming, and Sign-in and SCIM. The workflow list is your folders, a run's page has its annotation, and a workflow's own settings (in the side panel with nothing selected) pick its redaction policy. A person is only offered what their role allows, and the server still refuses the rest.
+The editor has a screen for each of them: Variables, Insights, and under Settings, Roles, Redaction, External secrets, Log streaming, and Sign-in and SCIM. A person is only offered what their role allows, and the server still refuses the rest.
 
 ## EmberOps steps are gone
 
@@ -44,12 +44,6 @@ External secrets need allowed paths. A provider with none is refused, on purpose
 SCIM never shows the instance owner to a provider, and a DELETE from a provider turns an account off and hides it instead of erasing it, so a provider can't remove the last person who can sign in. A re-create brings the same account back.
 
 Variables are not secrets. Anyone who can read a project reads its variables, and the value isn't scrubbed from run data. Passwords go in credentials or an external store.
-
-## What isn't proven
-
-The sign-in page is still the plain one from before. It works and it's tested, and it isn't in the new look yet. LDAP, SAML and OIDC settings are read from the environment when the server starts, so the Sign-in and SCIM screen shows what is on and doesn't change it. SAML is tried against Keycloak only. I didn't try the blob stores against AWS S3 or Azure itself, only Garage and Azurite.
-
-The workflows on a real GitHub runner. I ran the release's own steps under Podman on a box cut to two CPUs with a CPU hog beside them, and the tag run is the first time ghcr.io sees any of it.
 
 ## License
 

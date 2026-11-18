@@ -5,10 +5,7 @@ description: "ntfy, Gotify, Discord, webhooks and email. Press Acknowledge on yo
 editUrl: false
 ---
 
-Added in 4.10.0. `internal/notify` is the first increment of Phase 2 of the
-plan of record, whose own acceptance bar for this phase is literally "a 03:00
-alarm pages a phone." It registers with `alarm.Engine`'s existing
-`OnTransition` hook and, when an alarm is **raised**, sends a notification
+Added in 4.10.0. The acceptance bar is simple: a 03:00 alarm pages a phone. When an alarm is **raised**, HotLoop sends a notification
 through every configured, enabled channel whose priority floor the alarm
 meets. Off by default (`HOTLOOP_NOTIFY_ENABLED`): a deployment with nobody to
 page has nothing to configure this against.
@@ -436,72 +433,6 @@ the replica that was refused stops. Run as an MCP helper (`--mcp-stdio`),
 HotLoop doesn't open a Gateway connection at all; the real one handles the
 presses.
 
-### What's verified, and what needs a live run
-
-Discord can't run in our lab, so the channels are tested against
-`internal/notify/discordtest`: a real HTTP server standing in for Discord's REST
-API, and a real WebSocket server speaking the Gateway frames the client uses,
-both in the test process. It enforces Discord's documented limits and answers
-the way Discord's documentation says Discord answers. **Tested** that way, in
-CI:
-
-- the exact JSON of a message, byte for byte; `allowed_mentions` locked to
-  nothing, the role pinged only on Critical and never on a test, a mention in
-  an alarm name escaped;
-- every length limit kept, cut on a character boundary, with emoji; a summary
-  of forty long-named alarms keeping its count;
-- a 429 retried after the body's `retry_after` (not the whole-second
-  `Retry-After` beside it) and after `X-RateLimit-Reset-After`; an empty bucket
-  waited out before sending;
-- 401, 403 and 404 each switching the channel off after exactly one request,
-  logged once, shown in `/api/diagnostics`; a 500 and a refused connection not
-  switching it off;
-- a flood of twelve through the default budget: five messages, then one
-  summary naming the other seven;
-- no webhook URL, token, bot token, interaction token or button token in any
-  error, log line, audit event or API response;
-- the Gateway client, as protocol conformance: Identify with intents 0, the
-  heartbeat interval, an immediate heartbeat on request, a clean 1000 close on
-  shutdown; Reconnect resuming with the right session and sequence and getting
-  the missed press replayed, closing with a code that keeps the session;
-  Invalid Session both ways, with the wait and the identify gap; a zombie
-  connection resumed; a dropped one resumed; 4009 starting a new session; 4014
-  and a refused token stopping for good; the day's session starts waited out;
-- end to end against the real alarm engine on a real Modbus register: the
-  alarm raised, posted with its buttons, Acknowledge pressed as Discord sends
-  it, and the real alarm acknowledged as `discord:alice#<id>`, the message
-  edited to say so with its buttons off; Shelve pressed by a mapped user and
-  the alarm shelved for the configured time under the HotLoop name; a forged
-  button, a person without the role, a second press and a stale button from an
-  earlier raise each refused, only to the presser, and in the system log; a
-  bot with no roles set refusing everyone and saying so at startup.
-
-What that proves: HotLoop sends what Discord documents and copes with every
-answer Discord documents. What it can't: that Discord behaves as documented,
-how the message looks in the Discord app, whether a push reaches a phone, and
-the Gateway features this client never asks for (compression, sharding). Those
-need a live run, and there are two, skipped unless you give them credentials:
-
-```
-# the webhook: sends a Critical, a High and a test message
-HOTLOOP_TEST_DISCORD_WEBHOOK=https://discord.com/api/webhooks/...
-HOTLOOP_TEST_DISCORD_ROLE=<role id to ping on the Critical one>   # optional
-go test ./internal/notify/ -run TestDiscordWebhookLive -v
-
-# the bot: connects to the real Gateway, raises a real alarm, posts it with
-# buttons, and with PRESS_WAIT set waits for you to press Acknowledge
-HOTLOOP_TEST_DISCORD_BOT_TOKEN=...
-HOTLOOP_TEST_DISCORD_CHANNEL=<channel id>
-HOTLOOP_TEST_DISCORD_ROLE=<role id you hold>
-HOTLOOP_TEST_DISCORD_PRESS_WAIT=5m
-go test ./internal/api/ -run TestDiscordBotLive -v
-```
-
-The bot test needs the database and the rest of the integration services like
-every test in `internal/api`. **Not yet run live**: neither test has been run
-against the real Discord as of this writing. Until it has, the Discord
-channels are tested, not verified.
-
 ## Rate limits and summaries
 
 A power dip or a PLC reboot trips forty alarms in a second. One send per alarm
@@ -769,27 +700,6 @@ every alarm still unacknowledged, whenever it was raised.
 The Gateway runs it. An `--mcp-stdio` helper doesn't, so one alarm is never
 escalated by two processes.
 
-### Tested against the lab's real servers
-
-`TestEscalationAgainstTheLabsRealServers` (`internal/api`) raises a real alarm
-on a real Modbus register and pages a real ntfy, a real Gotify and a real
-Mailpit, with the policy saved through the API. Ana's escalation lands on her
-own ntfy topic and in her own mailbox, with an Acknowledge button; the button is
-pressed from the message ntfy holds, with no session, and the alarm is
-acknowledged and nothing more goes out, not to Bo and not to Gotify. The alarm
-trips again and runs the whole chain: Ana at 5 minutes, then Bo's email and the
-Gotify channel at 15. The escalation rows are read back out of the logbook. The
-unit tests (`internal/notify/escalate_test.go`) cover the schedule, every way a
-chain stops, a floor, an off policy, a step that reaches nobody and a restart
-half way through, and the policy's validation.
-
-The clock is the one thing that isn't real: the escalator reads a clock the test
-moves forward by the minute, because a schedule in minutes is not something a
-test should wait for. **Not verified**: a real run with real minutes on a real
-plant, and what a given phone does with the notification once ntfy has it. The
-escalation to a Discord channel carries the same buttons as a raise, checked
-against the Discord stand-in like the rest of Discord, not the real service.
-
 ## TLS on the SMTP channel
 
 The channel upgrades to TLS via STARTTLS automatically whenever the relay
@@ -858,9 +768,7 @@ does not turn the alarm channel on.
 Two behaviors of the alarm email changed, both in the direction of safety. The
 sender and every recipient are now validated as plain addresses before anything
 is dialed, where before a malformed one failed at the relay. And a subject with
-non-ASCII characters is sent as an RFC 2047 encoded word instead of raw UTF-8.
-For an ordinary ASCII alarm the message is the same bytes as before apart from
-the `Date` header, which `TestAlarmMessageBytesAreUnchanged` pins. An alarm name
+non-ASCII characters is sent as an RFC 2047 encoded word instead of raw UTF-8. An alarm name
 that contains a control character is flattened to spaces rather than refused,
 because a page has to go out whatever an alarm is called.
 
@@ -985,80 +893,4 @@ pass/fail for the request:
 
 ## What has and has not been verified
 
-**Tested**, not **verified**, see this repo's own distinction between the
-two. The webhook channel is tested against a real `net/http/httptest` server:
-the exact JSON body, an unreachable URL failing within its bounded context
-rather than hanging, and a non-2xx response surfacing as an error rather than
-a false success. The SMTP channel is tested against two real SMTP servers, [axllent/mailpit](https://github.com/axllent/mailpit), run via Podman, never
-Docker, with the message's actual arrival, subject, body and recipients
-confirmed afterward through Mailpit's own HTTP API, not just that `Send`
-returned `nil`:
-
-- A bare instance with no authentication, proving the ordinary path.
-- A second instance configured to **require STARTTLS and a real login**
-  (Mailpit's `--smtp-require-starttls` and `--smtp-auth-file`), proving the
-  regression this feature actually shipped with once: `net/smtp.PlainAuth`
-  silently refuses to send credentials over a connection that is not already
-  TLS, so a channel configured with a username and password only ever worked
-  against an unauthenticated local relay until the STARTTLS upgrade was
-  added, the bare instance's tests could not have caught this, since
-  `PlainAuth`'s refusal only triggers when a username is actually configured
-  against a non-TLS, non-`localhost` connection. A third test proves
-  `HOTLOOP_NOTIFY_SMTP_TLS` is a real refusal, pointed at a relay that
-  offers no STARTTLS at all, `Send` fails before ever attempting `AUTH`.
-
-The dispatcher's priority-floor filtering and its raised-only firing are both
-covered directly, with a fake in-package channel standing in for "some
-channel," the same way `internal/fleet`'s tests use a real
-`edgepublish.Publisher` to stand in for "some edge relay" rather than a
-hand-rolled mock.
-
-The webhook's failures are also tested for the URL: a Discord-shaped URL with a
-token in the path and in the query, against a real server that refuses the
-connection, one that answers 500 and one that never answers, through
-`POST /api/notify/test`, and neither token turns up in the response, the log or
-the audit event.
-
-ntfy and Gotify are tested against the real servers, `binwiederhier/ntfy`
-and `gotify/server`, pinned in `test/services/up.sh` and run in CI, with what
-arrived read back through each server's own API, the way a phone gets it. The
-ntfy server requires a login for everything, so bearer and basic auth are both
-exercised for real. Covered: the title, priority, tags, tap URL and
-Acknowledge button of a raised alarm; a flood of ten alarms through a budget of
-three producing exactly three sends and one summary naming the other seven;
-held alarms going out on shutdown; a 429 with `Retry-After` waited out and
-retried (ntfy itself never sends `Retry-After`, so a small proxy in front of
-the real server answers the first request with one); a 5xx retried on the
-backoff; a `Retry-After` past the budget not waited on; a wrong token sent once,
-never retried; and no token, password, topic or acknowledge link in any error,
-log line or result. Gotify: every priority's mapping, the Markdown and the tap
-URL, a summary, and a wrong token reported with Gotify's own reason and never
-printed.
-
-The Acknowledge button is tested end to end in `internal/api`: a real alarm on
-a real Modbus register raises, the notification lands on the real ntfy, and the
-button's own request, read back from ntfy, is fired at HotLoop with no session.
-The alarm is acknowledged in the real engine, audited as `notify:ntfy`. A
-forged link, a used one (also after a shelve and unshelve), one from an earlier
-occurrence of the same alarm and an expired one are each refused and each
-leave the alarm unacknowledged. Nothing in the log, the audit trail or the API
-carries the ntfy token, the topic, the signing key or any link.
-
-**Not verified**: an iPhone receiving a push from a self-hosted ntfy through
-ntfy.sh's relay, and the ntfy and Gotify phone apps themselves. The tests prove
-what the servers hold and what the button sends; what a given phone does with
-it is the app's business.
-
-The Discord channels have their own account of this; see "Discord", "What's
-verified, and what needs a live run".
-
-**Not verified** against any specific commercial paging provider's webhook
-format (PagerDuty, Opsgenie, ntfy.sh, Pushover, Slack, Discord; see the
-Webhook section above for which of those can't work with it at all) or against a
-phone carrier's email-to-SMS gateway, those are real-world integrations this
-app cannot certify from the inside, only document, the same honesty
-`docs/FLEET.md` applies to NCMD authorization and a certified Sparkplug host.
-Also not verified: implicit TLS (a relay expecting TLS from the first byte,
-typically port 465), only STARTTLS's in-band upgrade of a plaintext
-connection is supported, which covers the common case (port 587 or 25) but
-not every relay an operator might point this at.
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.

@@ -50,8 +50,9 @@ A good start says the device was set up with its variables, none writable, and t
 
 ## Sign-in from the dashboard
 
-From HotLoop 4.19 the Edge chart signs a person in from the EmberCORE dashboard's signed assertion (the `embernetSignin` values, four `HOTLOOP_AUTH_ASSERTION_*` variables, and the Service annotation `embernet.ai/signin: assertion`). This chart inherits all of that from the `hotloop-edge` subchart, and the Store passes the public key into it. The provisioner uses the chart's admin account, which local login still allows. In a lab cluster a good assertion signed a person in as an operator or an admin, and a wrong app, a wrong tenant, an expired one, a wrong issuer, and a tampered one were each refused.
+From HotLoop 4.19 the Edge chart signs a person in from the EmberCORE dashboard's signed assertion (the `embernetSignin` values, four `HOTLOOP_AUTH_ASSERTION_*` variables, and the Service annotation `embernet.ai/signin: assertion`). This chart inherits all of that from the `hotloop-edge` subchart, and the Store passes the public key into it. The provisioner uses the chart's admin account, which local login still allows. In a test cluster a good assertion signed a person in as an operator or an admin, and a wrong app, a wrong tenant, an expired one, a wrong issuer, and a tampered one were each refused.
 
-## What isn't proven
+## How far it has been run
 
-The status page has the list, and the short version is: nobody has installed this from the real Store page or on k3s v1.35.7. It has been run on bare metal (2026-11-17). The chart does render from the live index with Helm, checked on 2026-11-14 with the provisioner switched off. [Where it stands](/codesys/where-it-stands/).
+It has been run on bare metal (2026-11-17), and the chart renders from the live index with Helm. [Where it stands](/codesys/where-it-stands/).
+

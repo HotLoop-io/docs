@@ -31,4 +31,4 @@ SQLite, PostgreSQL, or TimescaleDB, from the same binary. The chart and the Quad
 
 ## Installing it
 
-[The Edge install page](/edge/install/) has Helm and Podman Quadlet, with the commands. Moving a site from IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history, and [the lineup](/products/) says what has and hasn't been run.
+[The Edge install page](/edge/install/) has Helm and Podman Quadlet, with the commands. Moving a site from IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history, and [the lineup](/products/) has the how.

@@ -5,9 +5,7 @@ description: "The entity registry every automation, helper, script and screen is
 editUrl: false
 ---
 
-`internal/entity` is the entity registry and the engine that computes entity
-state. It is the first piece of Phase 1 in [ROADMAP.md](/roadmap/): the
-foundation every automation, helper, script and screen in HotLoop is built on.
+The entity registry and the engine that computes entity state are the foundation every automation, helper, script and screen in HotLoop is built on.
 
 ## Why entities, when we already have tags
 
@@ -476,17 +474,11 @@ the entity, the service and the call id on it, `succeeded` false and the reason
 starting `refused:`. That includes a user without `values.write`. The API does
 not just answer 403 and forget it: it sends the call to the gate marked denied,
 the gate refuses it before anything is written, and the refusal is on the
-entity's record with the value that was asked for. A write straight to a tag
-through `POST /api/write` behaves exactly as it always did, byte for byte;
-`TestPostWriteIsByteIdenticalToBeforeEntityServices` holds it there.
+entity's record with the value that was asked for.
 
-Nothing in `internal/entity` can reach a device any other way. It does not
-import a driver, and `TestOnlyTheGateCallsWorkerWrite` type-checks the runtime
-and fails the build if anything but `Manager.Write` calls the worker's write,
-or anything but that calls a driver's. It matches the shape of a device write,
+It matches the shape of a device write,
 not a name, so a bypass through a new wrapper or an interface declared on the
-spot is caught too. `TestGateGuardCatchesABypass` plants each of those in a
-copy of the package to prove the guard can fail.
+spot is caught too.
 
 ### What a call answers
 
@@ -591,11 +583,7 @@ would. A user without the permission gets the same 403.
 
 A dry run writes nothing, opens no audit row, puts nothing in the system log
 and spends no call id: nothing was attempted, so there is nothing to account
-for. `TestCheckWriteCannotReachTheDeviceOrTheAudit` walks every function the
-gate's dry run can reach and fails if the device write, the audit or the log is
-among them; `TestCheckAnswersExactlyWhatTheCallWould` runs each refusal a plant
-relies on as a dry run and then for real against a Modbus device and holds the
-two to the same words.
+for.
 
 It says what would happen **right now**. Between the dry run and the real call
 the device can drop and somebody can disarm the tag; the real call is checked
@@ -883,10 +871,7 @@ service is writes through the gate, each tag armed by a person first.
 | `image` | `image` or `url` | any | read: a held picture as for a camera, or a link (`url`, http or https only, never fetched) |
 | | `start_mowing`, `pause`, `dock` | bool | written: a press each, by the service of the same name |
 
-A lock, a fan, a siren, a notifier, an update, a tracker, a thermostat, a
-humidifier, a water heater, an alarm panel, a vacuum and a mower are one table in
-the code (model/things_table.go): which role is the state and what each
-service writes. The state is the state role's reading (on or off for a bool),
+The state is the state role's reading (on or off for a bool),
 `unknown` when it can't be read, and every other role that can be read is an
 attribute under its own name: a fan's `percentage`, `preset_mode`,
 `oscillating` and `direction`. `toggle` goes by the feedback and is refused
@@ -979,7 +964,7 @@ engine.
 
 ### Platforms with a provider
 
-Alarm entities are the first **provider** platform (`internal/entity/provider.go`):
+Alarm entities are the first **provider** platform:
 entities whose source of truth is somewhere other than a tag. A provider says
 which entities its platform has right now, renders their state, runs their
 services and answers their dry runs; the registry derives, orphans and
@@ -987,29 +972,25 @@ re-adopts its entities by `unique_id` exactly as it does a tag's, the state
 engine recomputes them on the provider's own events and on its once-a-second
 tick, and a service call on one goes to the provider instead of being planned
 into tag writes. A provider that writes a tag still writes it through the gate.
-The domains and the services each takes are one table
-(`model.DomainSpec`), so a platform's new domains are registered in a file of
-their own without touching the ones here, which `TestBuiltInDomainsAreUnchanged`
-holds byte for byte.
 
-Helpers are the second (`internal/helper`): `input_boolean`, `input_number`,
+Helpers are the second: `input_boolean`, `input_number`,
 `input_select`, `input_text`, `input_counter`, `timer` and `schedule`, values
 the plant's people own rather than a PLC, kept by HotLoop and set with
 `helpers.write`. They write no tag. See [HELPERS.md](/iot/helpers/).
 
-Scripts are the third (`internal/automation`): every script is a `script`
+Scripts are the third: every script is a `script`
 entity, `script.<id>`, on while a run of it is going in any process and off
 when none is. `turn_on` runs it with the service data as its fields,
 `turn_off` stops it, both with `scripts.run`. Deleting a script orphans its
 entity, like deleting an alarm definition. See [SCRIPTS.md](/iot/scripts/).
 
-Recipes are the fourth (`internal/recipe`): every recipe is a `scene` entity,
+Recipes are the fourth: every recipe is a `scene` entity,
 `scene.<id>`, whose state is when it last wrote to the plant and whose
 attributes say how its newest application went. `turn_on` applies it, with
 `recipes.apply` and the recipe's own permission when it names one. Deleting a
 recipe orphans its entity. See [RECIPES.md](/iot/recipes/).
 
-The sun is the fifth (`internal/sun`): `binary_sensor.sun_up`,
+The sun is the fifth: `binary_sensor.sun_up`,
 `sensor.sun_elevation` and `sensor.sun_azimuth`, worked out every second from
 the site's latitude and longitude, on the box. They read and take no services.
 A site with no location has none, and ones left over from when it had one read
@@ -1139,7 +1120,7 @@ registry decides, and its refusal is shown as it wrote it.
 
 ## Backup and restore
 
-`entities` and `entity_bindings` are in the backup (`internal/backup.Tables`),
+`entities` and `entity_bindings` are in the backup,
 entity_id, customizations and all. That includes composites, every role and
 every option, which matters more for them than for anything else: a tag's
 entity could be rebuilt from its tag, but nothing can rebuild a composite

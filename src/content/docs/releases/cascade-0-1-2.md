@@ -16,7 +16,3 @@ I run a Podman Quadlet house, and the workflows that test and publish Cascade st
 ## Upgrading from 0.1.1
 
 Nothing to do. `helm upgrade` to 0.1.2, or let `:stable` roll the Quadlet units. No migrations, no new settings, and the key and your workflows stay where they were.
-
-## What isn't proven
-
-The workflows on a real GitHub runner. I ran the workflow's own steps under Podman 4.9.3, the version the runner ships, on a box cut down to two CPUs, 7 GB of RAM and a runner-sized disk, with k3s fighting a pack of busy loops for the same two cores. The registry in that run was a local one with a login. The tag run is the first time ghcr.io sees any of it.

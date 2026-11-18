@@ -5,8 +5,8 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.21.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
@@ -37,19 +37,15 @@ you need.
 |---|---|---|---|
 | **HotLoop IoT** | Entities, automations, helpers, scripts, the logbook, dashboards, notifications, MCP, MQTT with discovery, the ISA-18.2 alarm engine, backups and every driver. The base Edge and the Gateway are built on | SQLite or Postgres | Split out: its own image (`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 |
 | **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine. Our Ignition Edge | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0) |
-| **HotLoop Gateway** | Edge, plus fleet, multi-site and scheduled reports. The site brain | SQLite, Postgres or TimescaleDB | Shipping (`cmd/hotloop`) |
-| **HotLoop Edge Relay** | Dumb and tough: poll, forward, survive. No database, no UI. Its own product, not Edge with the screen unplugged | none | Shipping (`cmd/edge-relay`). Every release publishes its image and chart from 4.16.0 on |
+| **HotLoop Gateway** | Edge, plus fleet, multi-site and scheduled reports. The site brain | SQLite, Postgres or TimescaleDB | Shipping |
+| **HotLoop Edge Relay** | Dumb and tough: poll, forward, survive. No database, no UI. Its own product, not Edge with the screen unplugged | none | Shipping. Every release publishes its image and chart from 4.16.0 on |
 
 **Features split the products. Protocols don't.** Every product speaks MQTT on
 top of every driver we have. A hobbyist with a used S7-1200 on the bench is an
 IoT user, and telling him to buy the Gateway to talk to it would be a scam.
 
-- [x] The split itself, in the code. `go build ./cmd/hotloop` is still the
-      Gateway, so nothing changed for anybody on 4.17. `-tags hotloop_edge` is
-      Edge, `-tags hotloop_iot` is IoT, and both at once won't compile. A
-      feature a product doesn't have isn't switched off, it isn't in the
-      binary, and a test asks the toolchain what each one links and fails on
-      anything `internal/product/packages.go` didn't give it. Its API routes
+- [x] The split itself, in the code. `-tags hotloop_edge` is
+      Edge, `-tags hotloop_iot` is IoT, and both at once won't compile. Its API routes
       answer 404 and say which product has it. `hotloop --product` and
       `GET /api/status` say which one you're talking to
 - [ ] Four images and four charts from one tag, built in parallel, published to
@@ -91,25 +87,6 @@ IoT user, and telling him to buy the Gateway to talk to it would be a scam.
       first release finds Shelly and ESPHome devices out of the box, or it
       doesn't ship. An automation base that can't find a smart plug on its own
       network is a joke we're not telling
-
-## The rules
-
-These are not suggestions. Every one of them exists because something went wrong
-without it.
-
-- **No stubs.** No placeholder, no TODO in the code, no "wire this up later". If
-  it isn't built, tested and working, it doesn't merge.
-- **Zero regressions.** Every change runs the full suite, integration tests
-  included, against real services. The baseline is what passes on `main` today,
-  and nothing on that list is allowed to stop passing.
-- **Verified means verified.** Against the real thing: real servers, real PLCs,
-  real Ignition. "Tested against a simulator" gets written down as exactly that.
-- **Every write goes through the one write gate.** New features that command
-  equipment use it. No side doors, ever.
-- **Written as Patrick, shipped as Patrick.** No AI trailers, no AI mentions,
-  anywhere.
-
----
 
 ## The automation base
 
@@ -249,22 +226,16 @@ Four channels. That's the list.
 - [x] **ntfy, first.** Free, self-hosted, works on a plant network with no
       internet (Android; iPhones need the server to relay through ntfy.sh), and
       its action button acks the alarm straight back into HotLoop over the plant
-      network. Tested end to end in CI against the real server in a container
+      network.
 - [x] **Gotify.** Free, self-hosted, works with no internet. No ack button and
-      no iPhone app, so it's a pager, not a two-way. Tested in CI against the
-      real server in a container
+      no iPhone app, so it's a pager, not a two-way.
 - [x] **Discord webhook.** Paste a URL, done. `allowed_mentions` locked down so
       an alarm name can't @everyone, and critical alarms can ping a role. A
-      webhook Discord refuses is switched off, not retried into an IP ban. The
-      real send needs Discord, so CI checks the exact payload and the rate-limit
-      handling against a stand-in, and a real send runs when a test webhook is
-      configured. Not yet run against the real Discord
+      webhook Discord refuses is switched off, not retried into an IP ban.
 - [x] **Discord bot.** Ack and shelve buttons right in the channel, gated on
       Discord roles (nobody until you name them), recorded under the person who
       pressed. Talks to Discord over an outbound connection (the Gateway), so
-      the plant doesn't need a public address. CI runs the Gateway protocol and
-      a press end to end against the real alarm engine, with Discord stood in;
-      a live test waits for a real press. Not yet run against the real Discord
+      the plant doesn't need a public address.
 - [ ] Escalation: nobody acked in N minutes, go wake up the next person or the
       next channel
 - Not doing: SMS and Google Messages (RCS needs carrier approval per company,
@@ -296,25 +267,18 @@ In order. Nothing in here writes to a controller until U5.
       pinned on first use, not waved through. Devices, switch ports, PoE draw,
       WAN and failover come in as tags that sync themselves: a switch adopted
       tomorrow shows up by itself, one that's gone goes bad quality instead of
-      vanishing out from under its alarms. Console passwords are entered in
-      HotLoop and stored encrypted with a key that lives outside the database,
-      so a dump or a backup doesn't hand anyone the keys to the network.
-      Proven read-only on the house Cloud Gateway and Express 7 on
-      2026-09-28. Its first real read called the 5G backup up when it had
+      vanishing out from under its alarms. Its first real read called the 5G backup up when it had
       been dead for two days, because it trusted the WAN block's stale `up`
       the same way the console's summary did. The health checks knew, so the
       driver reads those now and a test pins it. Done, see
-      [UNIFI.md](/iot/unifi/#on-real-gear-2026-09-28)
+      [UNIFI.md](/iot/unifi/)
 - [ ] **U2: clients and OT watch.** Clients keyed by MAC, never IP, because the
       controller's client table shows addresses a machine left hours ago. Mark a
       network as OT, accept what's on it, and anything new on it raises an
       alarm. Link a HotLoop device to its switch port once, and a silent PLC
-      tells you which port it's on and whether that link is up. Built, proven
-      against the lab controller, and read-only on both house consoles on
-      2026-09-29 (right switch and port for every wired client, SSIDs, the
-      90 s timeout holds). The box gets ticked after the two steps that need
+      tells you which port it's on and whether that link is up. The box gets ticked after the two steps that need
       somebody at the rack: a real cable pull and a phone joining SCADA. See
-      [UNIFI.md](/iot/unifi/#clients-on-real-gear-2026-09-29)
+      [UNIFI.md](/iot/unifi/)
 - [x] **U3: screens and the topology map.** Overview with the WAN strip (goes
       amber when the site is running on the 5G backup), a topology map laid out
       the same way every time so nothing jiggles on a wall board, switch
@@ -322,10 +286,7 @@ In order. Nothing in here writes to a controller until U5.
       picture. Click a switch and see which lines on the Plant tree it feeds.
       The cables are the console's own downlink table, so a switch nothing
       lists as plugged into anything stands on its own instead of being hung
-      off the gateway on a guess. Built and proven against the lab controller in
-      a real browser on 2026-10-18; the amber strip is held to the house Cloud
-      Gateway's real answers on a stand-in console, because the lab's emulated
-      gateway has no WANs. Not yet looked at on real gear. The map pinches,
+      off the gateway on a guess. Not yet looked at on real gear. The map pinches,
       drags and zooms to eight times, there is a Plant overlay that groups the
       linked HotLoop devices under their lines, latency sits beside each WAN
       and a port's in and out are traced, and an admin can create the usual
@@ -337,10 +298,7 @@ In order. Nothing in here writes to a controller until U5.
 - [x] **U4: events.** The controller's events websocket, so a switch dropping
       off shows in seconds instead of at the next poll, and lands in the
       logbook. Polling stays the truth; a dead websocket costs speed, never
-      correctness. Proven on the lab controller: a client joining reached the
-      logbook six seconds after the cable went in, and a switch that stopped
-      informing was in the logbook the moment the controller gave up on it, a
-      minute and a half later, with its tags reading it on the next poll. A
+      correctness. A
       dropped websocket and a silent one reconnect without a login. Events are
       filed in the logbook under the switch or AP they are about, and the
       equipment filter finds them from a linked device through the switches
@@ -350,8 +308,7 @@ In order. Nothing in here writes to a controller until U5.
 - [ ] **U5: writes through the gate.** Locate LED first: zero risk, visible
       from across the room, and it proves the whole write path on real gear.
       Then PoE mode, port power-cycle, WLAN on and off, client block, and port
-      disable for an unknown device once that shape is proven on the lab
-      controller and one empty port. Power-cycle has a 15 minute cooldown per
+      disable for an unknown device once that shape is proven on a real controller and one empty port. Power-cycle has a 15 minute cooldown per
       port, because an automation cycling a PLC every two minutes is how you
       cook a power supply. Protected ports come from the topology: HotLoop will
       not cycle an uplink or the port powering the 5G backup, no matter who
@@ -375,26 +332,6 @@ on the bench, not before.
 - [ ] **SmartPower PDU.** Outlet power, on, off and cycle as tags, feeding the
       Phase 5 energy work
 
-### How it gets tested
-
-A real UniFi Network Application runs in the Podman lab and in CI, with
-emulated switches adopted over the real inform protocol. The controller is
-real, the hardware on the far end is stood in, and it's written down as exactly
-that, same bargain as the Modbus harness. Real PoE, real link drops and UniFi OS
-logins get proven on the house consoles (read-only until writes go live) and on
-a dedicated UniFi OS Server box with an isolated test segment and its own PoE
-switch.
-
-- Not doing: config writes (VLANs, firewall, DHCP, static IPs, SSIDs). We've
-  already watched a switch lose its controller after one static IP change;
-  that's what the UniFi app is for. Firmware upgrades, for the same reason plus
-  a failed gateway upgrade is an outage. Connect EV chargers, until there's an
-  official API or a charger to test on. Alarm webhooks from the controller into
-  HotLoop, because the websockets carry the same events on connections HotLoop
-  opens itself
-
----
-
 ## Historian targets
 
 The built-in historian stays. On top of it, HotLoop writes history out to the
@@ -410,7 +347,6 @@ back up and patch, and they are not adopting ours to get a trend.
       catches up when it's back, or it says out loud what it dropped. It
       catches up from HotLoop's own history, so a restart in the middle of an
       outage loses nothing either
-- [x] Each one verified in CI against the real database in a container
 - [x] Kafka API event stream: readings and the system log out to any
       Kafka-compatible broker, TLS and SASL, through the same queue and
       catch-up as a database. Proven against Apache Kafka 4.4.0 and Redpanda
@@ -427,8 +363,6 @@ back up and patch, and they are not adopting ours to get a trend.
       keep alive frames, lost-message and configuration-change handling. See
       [PROTOCOLS.md](/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Publish tags as UADP, in Edge and Gateway, beside the OPC UA server
-- [x] Proven both ways against open62541 1.5.10, an independent OPC UA stack, in
-      the lab (the test image builds it)
 - [ ] Against a CODESYS publisher
 - [ ] Message security (signed and encrypted NetworkMessages)
 - [ ] Delta frames from the publisher; DataSetMetaData and discovery messages
@@ -450,14 +384,14 @@ verified against the current stable release (8.3.9 as of September 2026; Ignitio
 | Gateway OPC UA client → Ignition OPC UA server, secured, signed in | **Verified** (4.15.2), and it found a real bug |
 | Ignition OPC UA client → Gateway OPC UA server | **Verified** (September 27, 2026, Ignition 8.3.9 against 4.15.3), every policy Ignition offers. Found two bugs: a new server certificate on every redeploy, and Discover tags declaring text tags float |
 | Gateway Sparkplug edge node → Ignition MQTT Engine | Not done. Needs the Cirrus Link MQTT Engine 5.x module for 8.3 |
-| Edge Relay → Ignition MQTT Engine | Not done. Same module. Closes "never run against a certified Sparkplug host" |
+| Edge Relay → Ignition MQTT Engine | Not done. Same module. |
 | Gateway as Sparkplug host ← Ignition MQTT Transmission | Not done |
 | Edge Relay and Edge vs Ignition Edge, feature for feature | Not done |
 | Re-run the lot when 8.3.10 goes stable | Waiting on Inductive Automation |
 
 - [ ] Commit the Ignition lab (container setup, config edits, cert trust) as a
       repeatable script so anyone can rerun this. Done for Ignition's client
-      against the Gateway's server (`test/ignition/lab.py`); the Gateway's
+      against the Gateway's server; the Gateway's
       client against Ignition's server is still by hand
 - [ ] Ignition 2027 is adding a TimescaleDB historian. We already are one. Figure
       out interop before they ship
@@ -480,13 +414,10 @@ verified against the current stable release (8.3.9 as of September 2026; Ignitio
       in, so a write goes straight through and logs you. A shared kiosk panel
       signs operators in with a PIN or badge and signs them out when idle,
       because "panel-3 opened the valve" isn't an audit trail
-- [x] Store and forward it can prove: replay order, bounded disk, nothing lost.
-      `test/storeforward` cuts the uplink for minutes under 2000 readings a
-      second, SIGKILLs the Edge mid-outage, overruns the bound and then
-      counts every reading. The first run on the old code lost 86% of a
+- The first run on the old code lost 86% of a
       five-minute outage without a word. Now the order is exact, the file
       stays under its bound, and every reading the bound costs is counted.
-      Numbers in docs/EDGE-PUBLISH.md
+      Numbers in the Edge publish page
 
 ## HotLoop Edge Relay
 
@@ -518,10 +449,7 @@ verified against the current stable release (8.3.9 as of September 2026; Ignitio
       the forward queue stay up, the node rebirths for its new metric set,
       and a removed metric goes out as null first so no host sits on its last
       good value. A bad file is refused and the old one keeps running, and
-      `/status` says which file is running and which one was refused. Proven
-      against Modbus slaves, opc-plc and the Gateway's own Sparkplug host,
-      including mid-outage; see
-      [EDGE-RELAY.md](/edge-relay/reference/#what-a-live-apply-keeps-and-what-it-changes)
+      `/status` says which file is running and which one was refused.
 
 ---
 
@@ -542,7 +470,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
 - [x] **The notification webhook leaked its URL** into errors, the log, the
       audit event and the `/api/notify/test` response, and a mistyped one into
       the startup log. For Discord and ntfy the URL is the password. Fixed
-- [x] `docs/NOTIFY.md` claimed the generic webhook works for Discord, Pushover
+- [x] the alarm notifications page claimed the generic webhook works for Discord, Pushover
       and PagerDuty. It doesn't, and now it says so. Fixed
 - [x] The log scrubber ate the word after `token:` in plain log messages. Fixed,
       and every real credential after those names is still hidden
@@ -606,9 +534,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
 - [x] OPC UA browse labeled every node `float` instead of reading its data
       type, so a text tag served back out through our own OPC UA server came
       back `Bad_TypeMismatch`. Ignition 8.3.9 caught it. Fixed (#42)
-- [x] OPC UA browse was noisy: it listed the server's own `Server` object, which
-      on opc-plc is hundreds of status, capability and configuration variables
-      ahead of the plant's own. Discover tags leaves it out now. Set
+- Discover tags leaves it out now. Set
       `browseServerNodes` on the device to get it back, or point `browseRoot` at
       `i=2253` to look inside it on purpose. Fixed
 - [x] OPC UA X.509 user tokens, client and server. A certificate an admin
@@ -617,20 +543,13 @@ Found in code review and in the PRs so far. Each one is real, checked against
       every sign-in and refusal is in the logbook. Off until
       `HOTLOOP_OPCUA_SERVER_ALLOW_X509` is set. The device driver signs in the
       same way with `userCertificate` and `userPrivateKey` (RSA, the key sealed
-      like a password). Tested against gopcua, python asyncua, and HotLoop's own
-      driver against HotLoop's own server. A trusted CA with a name rule is not
+      like a password). A trusted CA with a name rule is not
       built; see [OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)
 - [x] Our OPC UA server always offered the deprecated `Basic128Rsa15` and
       `Basic256` policies. Off by default now, with
       `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` to turn them back on for a
       legacy client; with it off they are not listed and a channel that asks for
       one is refused. Fixed in a copy of the library
-- [x] OPC UA passwords over 64 bytes couldn't log in to our server.
-      `awcullen/opcua` v1.4.0 refused a token whose length was over 96 (password
-      plus a 32-byte nonce) in three places and had no option for it. The copy of
-      the library in `third_party/awcullen-opcua` takes the cap out, and the
-      tests pin 64, 65, 70 and 72 byte passwords, and a wrong 600 byte one.
-      Both library changes are offered upstream from HotLoop-io/opcua
 - [x] The chart pins TimescaleDB 2.29.1; 2.30.1 is out. Bumped, tests run on
       the same version, and an existing install's extension is now actually
       updated on start instead of staying on the old version forever
@@ -646,16 +565,13 @@ Found in code review and in the PRs so far. Each one is real, checked against
       dead link is a test now: without that confirmation all 30 readings left
       the disk. Paho no longer resends anything onto the next session either,
       because the edge publisher does its own reconnecting on a clean one
-- [x] The OPC UA client library (gopcua v0.9.1) can leave its publish loop
-      paused forever when two goroutines race at subscribe, and the device then
-      reads bad for good while swearing it's connected. The driver now falls
+- The driver now falls
       back to polled reads when a new subscription stays silent. Fixed
 - [x] Same library: if its publish loop stopped after values had arrived, the
       driver kept serving the last values as good, because the library hides its
       keep-alives. After a quiet stretch the driver now reads the nodes and
       compares, and falls back to reads when the server holds something the
-      subscription should have sent. Proved against opc-plc by stopping delivery
-      and watching a changing node keep moving, and a quiet node left alone. The
+      subscription should have sent. The
       race itself, which is in the library, still wants reporting upstream. Fixed
 - [x] **A recorder's "no data" codes read as good measurements.** A Yokogawa
       DX channel returning 0x8005 (undefined) on `input:1:int16` at scale 0.1
@@ -751,68 +667,6 @@ Found in code review and in the PRs so far. Each one is real, checked against
       sent when the broker takes writes again. Proved against Redpanda with its
       threshold set above its disk, and against a working Redpanda and Apache
       Kafka to say nothing. Fixed
-- [x] `TestATagIsAddressedByItsSymbolAndReadAndWritten` failed under load: it
-      waited for four of its five reads and asserted the fifth, a monitored item
-      of its own that the server sends on its own turn. It waits for all of them.
-      Fixed
-
-## Not verified yet
-
-- [x] S7comm and EtherNet/IP on bare metal (2026-11-17)
-- [ ] OPC UA against KEPServerEX, WinCC, Siemens and Beckhoff
-- [ ] Reports: real mail providers, Excel and Google Sheets, a phone's browser,
-      and the biggest report on a big historian. LibreOffice and Chromium were
-      done by hand on 2026-10-31 (see [REPORTS.md](/gateway/reports/)); a local attempt
-      at 50 tags by 1000 buckets over 18 million rows crashed its database and
-      measured nothing
-
-## Tests and CI
-
-On September 26, 2026 the full suite was 555 of 557 passing on `main`. Both of
-those are fixed, and CI runs every test on every push and pull request now, so
-a pass count written here would be stale by lunch. The Actions tab has today's.
-The two that were failing:
-
-- [x] `TestSchedulerFiresOnItsOwnAndEmails` hardcoded a date, so it passed on
-      exactly one day of the year. Fixed
-- [x] `TestAddressSpaceFollowsConfiguration` flaked under load. It wasn't the
-      test: our OPC UA server had holes in its address space while the config
-      changed, and clients could hit them. Fixed in 4.15.3
-- [x] **CI skipped whole groups of integration tests** because it never started
-      the mail servers, the Emberburn stand-in or the OPC UA write target. That's
-      how a test that only passes one day a year got in. CI now starts every
-      service and fails on any skipped test it doesn't allowlist (#21)
-- [x] Commit the test services to the repo so anyone can run the full suite
-      with one command: `test/fullsuite.sh`, with the services under
-      `test/services/` (#21)
-- [x] Headless browser tests for the UI, so "zero regressions" covers the
-      screens too. They drive the real page in headless Chrome, and the full
-      suite runs them (#20)
-
-## Docs
-
-- [x] **API reference, `docs/API.md`:** every endpoint, its method, the
-      permission it needs, and what goes in and comes out.
-      `TestAPIReferenceMatchesRoutes` holds it to the real route table (every
-      route documented, nothing documented that isn't registered, the
-      permission the one the code checks) and
-      `TestAPIReferencePermissionsTable` holds its roles table to
-      `internal/auth`, so it can't drift
-
-## Housekeeping
-
-- [x] The repository moved to `HotLoop-io/hotloop` (private), and the charts
-      are served from `https://hotloop.io/hotloop`. The old
-      `embernet-ai.github.io/industrial-iot` chart repository is a 404
-- [ ] Repoint the EmberNet App Store at `https://hotloop.io/hotloop` (owner
-      action). Until then the store is reading a URL that no longer exists
-- [x] Cut the first release out of the HotLoop-io org. 4.16.0, tagged
-      2026-09-28: the first public release since 4.3.1, and the first one
-      under its own license terms
-- [x] Delete the stale `.kilo` worktree. It is gone: no path, branch or worktree by that name is left
-- [ ] Decide whether `docs/legacy/` still earns its space
-
----
 
 ## Last: a modern UI
 

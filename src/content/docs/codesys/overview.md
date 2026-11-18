@@ -14,7 +14,7 @@ It is one of the eight HotLoop products, and its own release line. The newest ch
 ![The Line 2 screen: four value cards, a gauge, a fifteen minute trend, and an alarm list](/codesys/screen.png)
 ![The same, in dark](/codesys/screen-dark.png)
 
-That is a real run: HotLoop's default interface, from a HotLoop Edge build of main, reading a CODESYS Control for Linux SL 4.22.0.0 runtime in a container. The PLC program is HotLoop's own lab program, so the numbers are the lab's. The labels (Line 2, Mixer temperature, Riverside Bottling) are made up and put there by the [profile](/codesys/profile/).
+That is a real run: HotLoop's default interface reading a CODESYS Control for Linux SL 4.22.0.0 runtime. The PLC program is HotLoop's own demo program, so the numbers are the demo's. The labels (Line 2, Mixer temperature, Riverside Bottling) are made up and put there by the [profile](/codesys/profile/).
 
 ## The three parts
 

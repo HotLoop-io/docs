@@ -29,10 +29,10 @@ the tag editor, the same as a tag from any other source.
 
 | Integration | Protocol | Verified against |
 |---|---|---|
-| OPC UA server (`opcua`) | [OPC UA](/iot/protocols/#opc-ua) | Microsoft's opc-plc 2.12.48 |
-| SNMP device (`snmp`) | [SNMP](/iot/protocols/#snmp) | net-snmp's `snmpd` 5.9.4, v1, v2c and v3 |
-| BACnet/IP device (`bacnet`) | [BACnet/IP](/iot/protocols/#bacnetip) | bacpypes3 0.0.110, an independent BACnet stack |
-| CODESYS PLC (`codesys`) | [CODESYS](/iot/protocols/#codesys) | CODESYS Control for Linux SL 4.22.0.0, running HotLoop's lab program and a second, much larger program |
+| OPC UA server (`opcua`) | [OPC UA](/iot/protocols/#opc-ua) | A real OPC UA server |
+| SNMP device (`snmp`) | [SNMP](/iot/protocols/#snmp) | A real SNMP agent, v1, v2c and v3 |
+| BACnet/IP device (`bacnet`) | [BACnet/IP](/iot/protocols/#bacnetip) | An independent BACnet stack |
+| CODESYS PLC (`codesys`) | [CODESYS](/iot/protocols/#codesys) | CODESYS Control for Linux SL 4.22.0.0, running two real PLC programs, one much larger |
 
 More are added on this framework as they can be proven against a real server.
 
@@ -190,9 +190,6 @@ Every product carries them. The routes are in [API.md](/iot/api/#integrations).
 
 ## Adding one
 
-An integration is a Go type in `internal/integration` with three methods and a
-`Register` call in its `init`:
-
 * `Info()` says what it is: id, name, the driver's protocol, how to ask for
   the address, and the questions;
 * `Configure()` turns checked answers into an address and the driver's own
@@ -205,7 +202,5 @@ no label, a choice with no choices, a default that isn't a valid answer, or a
 `showWhen` that names a question that isn't there. A test also holds every
 integration to a protocol with a driver compiled in.
 
-An integration doesn't get merged until a test has had it talk to a real
-server for that protocol, running in the test lab (`test/services/up.sh`).
 Where there is no real server to run, there is no integration, and the
 [roadmap](/roadmap/) says which ones are waiting on hardware.

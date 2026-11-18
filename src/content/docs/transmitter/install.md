@@ -24,8 +24,8 @@ Since 1.1.0 the release also has `HotLoopTransmitter-1.1.0.package`, at https://
 The `.compiled-library` file is the same library without its source. Install that one instead if you do not want the
 Structured Text visible in the Library Manager. It is in the same folder, as `HotLoopTransmitter-1.1.0.compiled-library`.
 
-To check what arrives, any UDP listener on the destination port works. The lab used a small Go program that listens on a port or joins a
-multicast group and prints each datagram as a line of JSON with its hex.
+To check what arrives, any UDP listener on the destination port works. A small Go program that listens on a port or joins a
+multicast group and prints each datagram as a line of JSON with its hex works well.
 
 ## If the block reports an error
 

@@ -55,7 +55,7 @@ sign-in. They are tools now, 83 in all, each through its route, so the same
 permission checks as the editor apply. The ten routes that want a person signed
 in (making keys, SCIM tokens, secret providers and log destinations, and your own
 password) stay out, because a key that could make them could keep itself alive;
-`docs/MCP.md` says which and why.
+the MCP page says which and why.
 
 ## 1.1.0, MCP and the missing screens
 
@@ -64,23 +64,19 @@ route of the REST API, so the route's own handler checks the permission, validat
 the body, makes the change and writes the audit row. It ships on, with read and
 write, like every MCP in the HotLoop family, and the two switches for it are the
 deployment's own (`HOTLOOP_CASCADE_MCP`, `HOTLOOP_CASCADE_MCP_WRITES`), which no
-tool and no route can change. `docs/MCP.md` has every tool and what it asks for.
+tool and no route can change. the MCP page has every tool and what it asks for.
 
 And the screens the editor was missing: Credentials, Projects (members and
 service accounts), Users, the audit log, Settings and an Account page with API
 keys, each with the same permissions as the API and tried in a real browser as
 every role. The sign-in page is the editor's now, in its colors and type, and not
-the old Go page. The lab's MQTT broker starts on a host with its own AppArmor
-profile for it, which it didn't before.
+the old Go page.
 
 ## Not built: environments and scale
 
 Built from this phase: the webhook role (its own Deployment in the split shape
 of the chart), a concurrency limit per workflow, and many mains against one
-database. The schedule needs no leader for that: a slot is fired by a
-compare-and-swap in the transaction that queues the run, so two mains that both
-see it due fire it once, and `TestManyMainsFireEverySlotExactlyOnce` holds it to
-that. What I have not done is the test I set for this phase, killing a main
+database. What I have not done is the test I set for this phase, killing a main
 during a minute-level schedule and finding no duplicate and no missed run over an
 hour.
 

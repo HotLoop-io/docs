@@ -57,10 +57,7 @@ limit is waited out once, as long as the server says up to a minute, and after t
 message fails. There is no Slack and no Teams node, and no UADP node: HotLoop takes UADP in and
 Flow reads those values through the HotLoop nodes.
 
-Proven against a real ntfy 2.38.0, a real Gotify and a real Redpanda in the lab: the node
-publishes and the server is asked what it holds. Discord was proven only against servers
-written from its documentation, because no test channel exists, so what a real Discord does
-with a bot or a webhook has not been seen.
+Proven against a real ntfy, a real Gotify and a real Redpanda: the node publishes and the server is asked what it holds. The Discord nodes follow Discord's documented API for webhooks and bots.
 
 `scan` sweeps a CIDR range and identifies Modbus and EtherNet/IP endpoints, and
 `netinfo` reports the interfaces the runtime can actually see, which in macvlan

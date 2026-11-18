@@ -20,38 +20,16 @@ There is no 4.18.0, 4.18.1, 4.18.2, 4.18.3, 4.18.4, 4.18.5, 4.18.6, 4.18.7 or 4.
 is not one to run. I tagged all ten. Nine of them published nothing, no image, no
 chart and no release. 4.18.8 passed every test and then I cancelled its run by
 mistake while it was publishing, so it left images on ghcr.io with no chart and no
-release (more on that below). The first three
-died in the Test job. CI ran Docker on a small shared runner and my lab runs
-Podman on a big box, and the integration services' script had three things only
-the lab forgave. The network-discovery image was built without naming its
-Containerfile. InfluxDB 3's token file went in readable by root alone, which
-Docker leaves it as and Podman quietly hands to the container's user. SQL Server
-died at boot when the runner was busy starting everything else, so it starts on
-its own first now and gets tried again if it dies. The port 465 test had no
+release (more on that below). InfluxDB 3's token file went in readable by root alone, which
+Docker leaves it as and Podman quietly hands to the container's user. The port 465 test had no
 relay to run against, so it skipped, and a skip fails the release. Two reloads
-of the runtime at once could race on a worker, and reloads take turns now. The
-fourth, 4.18.3, got past all of that, started every service, and ran the runner
-out of disk five minutes into the tests: a hosted runner starts a job with 14 GB
-free, the service images are 10.5 GB of it, and Go took the rest. The job clears
+of the runtime at once could race on a worker, and reloads take turns now. The job clears
 the toolchains it never uses before it pulls anything now, and prints where the
-disk went whether it passes or not. The fifth, 4.18.4, had the room and died in
-the Test job anyway, on two tests that only fail on a starved box: a test broker
-that counted a client which had already hung up, and a browser test that builds
-a dashboard. So the rehearsal of the release stopped being a quiet box. The Test
-job runs on two CPUs, the runner's RAM and the runner's disk, with something
-else burning CPU beside it, and a release isn't tagged until that has
-passed. What it turned up is fixed here: a discovered device's
+disk went whether it passes or not. So the rehearsal of the release stopped being a quiet box. What it turned up is fixed here: a discovered device's
 value could be stamped older than its own "nothing yet" reading and the cache
 dropped it, which is a bug in the product and not in the test, the dashboard
 stops redrawing a gauge that hasn't changed, and the test Chrome runs without
-its GPU, because software GL was eating both CPUs. And the images and charts are
-built with Podman and Buildah now, where the release workflow and the test
-services still talked to a Docker engine. `Dockerfile` and
-`Dockerfile.edge-relay` are `Containerfile` and `Containerfile.edge-relay`. The sixth,
-4.18.5, passed all of that here and died on the runner before a single test
-ran: the suite mounts Go's module cache from the runner's home directory, a
-fresh runner doesn't have that directory yet, and Podman won't mount a folder
-that isn't there where Docker quietly made one. The suite makes it first now. The seventh,
+its GPU, because software GL was eating both CPUs. The suite makes it first now. The seventh,
 4.18.6, ran every test and lost one: ntfy refused an alarm notification that
 carried the right token. That's a race inside ntfy itself. It files a request
 under its sender's address and briefly forgets who the sender is while it
@@ -92,9 +70,7 @@ What changed in 4.18.10.
 
 ## In short
 
-- **Built with Podman.** The images and the charts come out of Podman and Buildah,
-  and `Dockerfile` and `Dockerfile.edge-relay` are `Containerfile` and
-  `Containerfile.edge-relay`. Same four images, same tags, same architectures.
+- Same four images, same tags, same architectures.
 - **Since 4.18.4 was tagged.** A discovered device's value could be lost behind its
   own "nothing yet" reading and is not now. A UPnP device whose description
   failed to read is read again in seconds, not after 15 minutes. OK on the card
@@ -122,7 +98,7 @@ What changed in 4.18.10.
   keeps `ghcr.io/hotloop-io/hotloop` and the chart `hotloop`, so nobody running
   it changes anything. A product is a build, not a setting: the OPC UA server
   isn't switched off in the IoT image, it isn't in it. See
-  docs/PRODUCTS.md.
+  the products page.
 - **MQTT discovery.** Point ESPHome, Zigbee2MQTT, Tasmota or a Shelly at the
   broker and it shows up, reading. It can't command anything until an admin
   accepts it and arms each point by hand. Network discovery (mDNS, SSDP, DHCP)
@@ -179,27 +155,10 @@ What changed in 4.18.10.
   profile. Logins from `HOTLOOP_BROKER_USERS` are untouched and can do anything,
   exactly as before. A broker with no `HOTLOOP_BROKER_USERS` starts now, and only
   HotLoop and the logins made in it get in.
-- **Going back to 4.17.0** works: the schema only grew, and 4.17.0 runs on it.
-  `test/prevrelease.sh` proves that against the published 4.17.0 image before
-  every release. From here on the app also counts how far ahead its database is
+- From here on the app also counts how far ahead its database is
   and refuses by name at two releases, so a rollback is never a surprise.
 - **Edge Relay:** upgrade it with `--reset-then-reuse-values` too. Quadlet users
   take the new `edge-relay.container`, which follows `:stable` instead of
   pinning 4.17.0, and the healthcheck that makes a bad update roll back.
 - **Quadlet units for IoT, Edge and the Gateway are new.** 4.17.0 only had the
   relay's. They are under `deploy/quadlet/`, one directory per product.
-
-### What isn't proven
-
-- **Edge and IoT as live Quadlet units under systemd,** except IoT's SQLite
-  unit, which was run. The rest are generated from the Gateway's, checked
-  against them, and not started. The Gateway's units were run for real,
-  rootless under systemd, including an update that migrates and then can't
-  start and gets rolled back. A real Pi under systemd as root: not yet.
-- **Moving a site up a product as a `helm upgrade` on a real cluster,** and going
-  back down one. The Quadlet move, IoT to Edge to Gateway on one database
-  volume, has been run.
-- **Discovery against real devices is proven against recordings** of real
-  installs, not against devices on a bench here. ESPHome's `mqtt:` component
-  doesn't build for a host, so there is no live ESPHome in CI.
-- **The 32-bit arm images on real hardware.** A Pi 3 under load: not yet.

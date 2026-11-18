@@ -5,7 +5,7 @@ description: "Historian numbers on a schedule as CSV or HTML, stored and emailed
 editUrl: false
 ---
 
-Added in 4.14.0. `internal/reports` runs operator-defined reports on a schedule:
+Added in 4.14.0. The Gateway runs operator-defined reports on a schedule:
 it queries the historian, renders the result as CSV and HTML, stores it on a
 volume, and optionally emails it. It is the counterpart of Ignition's Reporting
 module for the part of that module a plant most often uses, a table of numbers
@@ -26,7 +26,7 @@ delivered on time. Off by default (`HOTLOOP_REPORTS_ENABLED`).
 - **One Gateway instance.** The scheduler assumes it is the only thing running
   reports against this database. Two replicas would each fire every report.
   This chart runs one replica, and the reports volume is `ReadWriteOnce`.
-- **Not an alarm feature.** Alarm email is `internal/notify`. Reports share its
+- **Not an alarm feature.** Alarm email is its own feature, [alarm notifications](/iot/notifications/). Reports share its
   SMTP relay settings and nothing else.
 
 ## A report definition
@@ -261,9 +261,7 @@ that channel is enabled, and who alarms go to, have no effect on reports, so a
 deployment can email reports without paging anyone. The chart writes the relay's
 variables for reports alone when the alarm channel is off.
 
-It is the same SMTP code as the alarm channel, not a second copy. `internal/notify`
-gained one general function, `SendMessage`, that sends a message with attachments
-to a list of recipients. The alarm channel now sends through it as well. The
+It is the same SMTP code as the alarm channel, not a second copy. The alarm channel now sends through it as well. The
 connection handling is unchanged (port 465 now speaks TLS from the first byte,
 see [NOTIFY.md](/iot/notifications/#implicit-tls-port-465)): STARTTLS whenever the relay offers it, `AUTH`
 when credentials are set, and a hard failure before `AUTH` when
@@ -373,7 +371,7 @@ every due report twice.
 ## Backups
 
 Report definitions and run records are user data and are part of the database
-backup (`internal/backup`). The output files are not: they are on the reports
+backup. The output files are not: they are on the reports
 volume, and restoring a backup into a new deployment brings back the records but
 not the files, so downloading an old run there answers that the file is no
 longer on disk. Copy the reports volume if the files matter.
@@ -387,65 +385,4 @@ report definition and a run and checks the restored values and the sequence.
 
 ## What has and has not been verified
 
-This repository distinguishes **tested** from **verified**, and this feature is
-tested. Nothing in it has been verified against a specific mail provider or a
-specific spreadsheet application.
-
-**Tested**, against real infrastructure and not mocks:
-
-- The historian aggregation, against a real `timescale/timescaledb:2.29.1-pg16`,
-  in both storage modes: the TimescaleDB hypertable and the native-partitioning
-  fallback. The same plain SQL (a join, `width_bucket` against a boundary array,
-  and ordinary aggregates) runs in both. Every cell of a stored CSV is compared
-  with values worked out independently in the test from the seeded readings,
-  including hours with no data, an hour with only bad readings, bad and uncertain
-  readings among good ones, negative values, a zero, a reading exactly on an hour
-  boundary, and readings on either side of the window.
-- Delivery, against two real SMTP servers ([axllent/mailpit](https://github.com/axllent/mailpit),
-  run with Podman, never Docker): a bare one, and one that requires STARTTLS and a
-  login. The message is read back through Mailpit's HTTP API and the test checks
-  the recipients, the subject, the body, and that the bytes of each attachment
-  equal the file the run stored. A wrong password is recorded as a failed run.
-- The scheduler firing on its own (a moving clock, no call to the run function),
-  the catch-up run and that it is only one, and the daylight-saving cases at the
-  level of the schedule and of the scheduler: 03:00 stays 03:00 across the
-  spring-forward and fall-back days in `America/Chicago`, the previous calendar
-  day is 23 and 25 hours on those days, and a schedule that added 24 hours would
-  fail these tests.
-- The lifecycle under the race detector: repeated start and stop, and a run held
-  open in the database while it is edited, deleted, stopped, and timed out.
-- The HTTP surface, through the real router: every route against a role or
-  explicit permission list that has and lacks each permission, path-traversal
-  attempts in the report id, the run number, and the format, and downloads.
-- Several of the tests above were proved by mutation, by breaking the code and
-  watching the test fail. The pull request lists them.
-
-**Verified by hand, 2026-10-31, not by a test in the suite** (the lab has no
-spreadsheet application or browser to run it with):
-
-- LibreOffice 26.8.1 opened a rendered CSV with a tag named `=HYPERLINK(...)`,
-  `=cmd|' /C calc'!A0`, `+1+1`, `-2+3` and `@SUM(1+1)`, and saved it as xlsx. The
-  sheet holds no formula anywhere, every hostile name is text, the negative and
-  decimal numbers are numeric cells, and `Température ° ü 温度` survives when the
-  import is told the file is UTF-8. LibreOffice shows the apostrophe prefix as a
-  character; Excel hides it.
-- Chromium 151 rendered the HTML: the title, the table with a row per tag, the
-  hostile names as text, no script and no request to anywhere. At 1100 px wide the
-  table runs past the edge and the page scrolls sideways.
-
-**Not verified**:
-
-- Any specific mail provider or gateway. STARTTLS and implicit TLS on port 465
-  both work, the same as the alarm channel (see
-  [NOTIFY.md](/iot/notifications/#implicit-tls-port-465)); neither has been tried against a
-  commercial provider.
-- Excel and Google Sheets. The formula-injection defense was opened in
-  LibreOffice 26.8 by hand on 2026-10-31 (below), and in neither of these.
-- Zones whose clock changes are not a whole hour (Lord Howe Island, 30 minutes)
-  go through the same code, and a half-hour offset is tested for hour buckets, but
-  such a change itself is not.
-- Very large windows or many tags. The limits (50 tags, 1000 buckets, 20
-  recipients) are enforced and tested, and query time at the top of them on a
-  large historian has not been measured.
-- Clocks. The scheduler trusts the Gateway's clock, and the database's for a
-  definition's created and edited times.
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.

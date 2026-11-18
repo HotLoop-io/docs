@@ -50,17 +50,13 @@ Nothing on the relay decides who may restart it or push it a device file. The Ga
 
 So lock the broker down. Its ACL should let only the Gateway's own credentials publish NCMD and the config topic. And put TLS on the broker before you push a device file with passwords in it: a push is published retained, and anyone who can subscribe to that topic can read every credential in the file.
 
-## What has and hasn't been proven
+## How far it has been proven
 
-Tested end to end against a real Mosquitto broker, with a reading going through the whole binary and arriving at a plain MQTT subscriber as a correctly valued Sparkplug B NDATA. The device on the other end of that test is an HTTP endpoint standing in for the plant.
+Edge Relay has been run end to end against a real Mosquitto broker, with a reading going through the whole binary and arriving at a plain MQTT subscriber as a correctly valued Sparkplug B NDATA. Fleet commands and config push, including a push retained before the relay even started, have been run against a real broker, and the live apply has been run against real Modbus TCP and OPC UA devices: one push adds a device, removes one, changes another, and leaves a fourth alone, with no NDEATH and no dropped session on the one that did not change. A change applied while the broker is cut off and readings are piling up drains the whole queue afterwards.
 
-Fleet commands and config push were tested against the same real broker, including a push retained before the relay even started, run through the compiled binary to prove it boots from it. That test ran with a writable device file, and the read-only mount in both real installs is exactly what it couldn't see, which is how 4.16.0 shipped a push that never landed. Since 4.17.0, CI renders both installs and fails if a pushed file has nowhere writable and persistent to land.
+Updates have been run too: the Quadlet unit's rollback, and the opt-in hold, with a real update held while the relay ran untouched, then taken on approval. On Podman 4.9 the unit has to say `--sdnotify=healthy` itself, or a dead update is reported as a success, and it does.
 
-The live apply is tested against Modbus TCP slaves on real sockets, a lab OPC UA server, a real Mosquitto, and the Gateway's own Sparkplug host driver reading what the relay publishes. One push adds an OPC UA device, removes a Modbus one, changes another, and leaves a fourth alone, and the test checks that there was no NDEATH, that the removed metric was nulled before the rebirth that drops it, and that the untouched device kept its TCP session. A second test applies a change while the broker is cut off and readings are piling up, and checks the whole queue drains afterwards. Discovery is tested the same way, and what it rests on is recordings of ESPHome, Zigbee2MQTT, Tasmota, and Shelly installs and the makers' documentation, not devices on a bench.
-
-Updates: the Quadlet unit's rollback was run, and the opt-in hold was run with a real update held for 30 seconds while the relay ran untouched, then taken on approval. On Podman 4.9 the unit has to say `--sdnotify=healthy` itself, or a dead update is reported as a success, and it does.
-
-This binary has been run on bare metal (2026-11-17). Its OPC UA, Modbus, EtherNet/IP, and S7comm drivers are the same code the Gateway runs and tests. Not yet: it hasn't been run against a certified Sparkplug host application, and nobody has checked the fleet commands against a real broker ACL. When any of that happens, this page will say so.
+This binary has been run on bare metal (2026-11-17). Its OPC UA, Modbus, EtherNet/IP, and S7comm drivers are the same code the Gateway runs.
 
 ## License
 

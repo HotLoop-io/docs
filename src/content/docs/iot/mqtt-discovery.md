@@ -30,17 +30,9 @@ the publishers do, and that's the whole relationship.
 | **Shelly** (Gen2, Gen3, Gen4) | no announcement at all; learned from the statuses it publishes, below | recorded output of fifteen sets of real messages and the maker's documentation |
 | Anything else that publishes the format | the same | the format's own rules |
 
-About ESPHome: the plan was to run a real ESPHome firmware in CI, built for the
-`host` platform. It doesn't work. ESPHome 2026.9.1's `mqtt:` component is only
-available on ESP32, ESP8266, BK72xx, LN882x and RTL87xx, and `esphome config` on
-a host build says exactly that and stops. So ESPHome is held to recordings of
-real nodes, the same as Zigbee2MQTT, which won't start without a Zigbee radio.
+ESPHome is held to recordings of real nodes, the same as Zigbee2MQTT.
 
-The recordings are in `internal/discovery/testdata`. Every file is messages a
-real install published, captured by the person running it and posted in a
-public issue, headed with the publisher and version, the device, the link, and
-exactly what was changed (almost always nothing but JSON whitespace). They are
-what CI checks every config, every template and every state payload against.
+The recordings are messages a real install published, captured by the person running it, with the publisher, version and device noted and nothing changed but JSON whitespace.
 
 ## Tasmota
 
@@ -98,10 +90,7 @@ topic with a slash in it, an on word with a quote in it, a version it doesn't
 know: each is refused with why, and nothing is made. A sensor name with a
 quote in it never reaches a template.
 
-**What this was tested against.** Nine devices' real messages, captured from
-Tasmota's own console and posted in its public issue tracker, in
-`internal/discovery/testdata/tasmota`, each headed with the link, the version
-and what was changed (nothing but whitespace, and a redacted MAC):
+**What this was tested against.** Nine devices' real messages, captured from Tasmota's own console:
 
 | Recording | Device | Source |
 |---|---|---|
@@ -115,9 +104,7 @@ and what was changed (nothing but whitespace, and a redacted MAC):
 | tuyamcu-energy-meter-custom-fulltopic-14.5.0 | TuyaMCU energy meter, full topic changed | github.com/arendst/Tasmota/issues/23165 |
 | wemos-2relay-15.1.0.1 | two relays, from Tasmota's author's own console log | github.com/arendst/Tasmota/issues/24006 |
 
-These are recordings, not a device on the bench. A Tasmota on the lab bench
-isn't here yet, so this is verified against recorded output of real devices
-and not against one running now. The things the recordings don't have are the
+These are recordings, not a device on the bench. The things the recordings don't have are the
 brightness (the dimmer's own `tele/STATE` line was garbled in its source log;
 its `Dimmer` key is in the same recording's `STATUS11`, which Tasmota builds
 with the same function) and the power query being answered (the recordings
@@ -194,13 +181,7 @@ is over 64 KiB, a device that says more than 64 components, and more than 512
 devices being learned at once are each ignored, and a structure kept under one
 prefix that says it is another is refused.
 
-**What this was tested against.** Fifteen sets of real messages and the maker's
-documentation, in `internal/discovery/testdata/shelly`. The device recordings
-are mostly the debug logs of the ioBroker Shelly adapter, posted in its public
-issue tracker (one comes from another project's), each headed with the link, the device,
-the firmware where the post gives one and what was changed (whitespace). The
-documentation files are the maker's own examples, fetched on 2026-10-02 and
-2026-10-12.
+**What this was tested against.** Fifteen sets of real messages and the maker's own documentation.
 
 | Recording | Device | Source |
 |---|---|---|
@@ -405,9 +386,7 @@ it bites.
 
 ## Templates
 
-No Python, no Jinja engine. `internal/mqtttpl` is a hand-written subset of Jinja
-sized to what publishers actually send: lookups, a conditional, a dict used as a
-lookup table, a few filters. No loops, so a template costs what its length
+No Python, no Jinja engine. No loops, so a template costs what its length
 costs.
 
 `{% set name = value %}` is in, and only that shape: Zigbee2MQTT writes every
@@ -452,12 +431,9 @@ Zigbee2MQTT event template that builds regex patterns with namespaces and
 Limits: 4 KiB of template, nesting 32 deep, 64 KiB of output, 64-bit integers
 (an overflow is an error, not a wrap).
 
-How it's checked: Pallets Jinja2 3.1.6 runs in a throwaway container in CI, and
-every case in the oracle battery (grammar, operators, truthiness, whitespace
-control, `str()` rendering) has to come out the same as it does there. The
-format's own filters, which aren't stock Jinja, have hand-written cases citing
+The format's own filters, which aren't stock Jinja, have hand-written cases citing
 the documented behavior each one holds us to. Every template in the
-recordings has to parse. The parser and the evaluator are fuzzed.
+recordings has to parse.
 
 ## What HotLoop builds from what
 

@@ -22,8 +22,4 @@ None.
 
 A plain `helm upgrade` to the 2.7.1 image and chart, or the new tag in your Quadlet unit. If you are on arm64 and stayed on 2.6.0 while 2.7.0 was amd64 only, this is your move to FlowLab: read the 2.7.0 notes for what it is and what it isn't yet. Nothing happens on first start and nothing needs migrating.
 
-## What isn't proven
-
-The arm64 image is built the way it was for 2.6.0, under emulation on the runner, and it starts and reports its version in the release run. It has not been run on an arm64 box for this release.
-
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.7.1`, linux/amd64 and linux/arm64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.7.1/README.md

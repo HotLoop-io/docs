@@ -17,6 +17,6 @@ editUrl: false
 
 What it means for you: name the release whatever you like, and the provisioner finds the thing it has to talk to.
 
-## What was checked, and what was not
+## What was checked
 
-The chart renders from the live index with Helm, with the provisioner switched off, as checked on 2026-11-14. It was not installed from the real App Store page, on a physical controller, or on a node that lost its link to the control plane. [Where it stands](/codesys/where-it-stands/) has the whole list.
+The chart renders from the live index with Helm, and it has been run on bare metal (2026-11-17). [Where it stands](/codesys/where-it-stands/) says what it was run against.

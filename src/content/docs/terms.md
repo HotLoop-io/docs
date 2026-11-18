@@ -19,7 +19,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 1.2 "You" means the person or organization that accepts these terms.
 
-1.3 "HotLoop" or "the Software" means HotLoop IoT, HotLoop Edge, HotLoop Gateway, HotLoop Edge Relay, HotLoop Flow, HotLoop Cascade, HotLoop for CODESYS, and HotLoop Transmitter, in every form we distribute: release binaries, container images, Helm charts, Podman Quadlet units, configuration and documentation.
+1.3 "HotLoop" or "the Software" means HotLoop IoT, HotLoop Edge, HotLoop Gateway, HotLoop Edge Relay, HotLoop Flow, HotLoop Cascade, HotLoop for CODESYS, and HotLoop Transmitter, in every form we distribute: release binaries, container images, charts, service files, configuration and documentation.
 
 1.4 "Sites" means hotloop.io, docs.hotloop.io, and our GitHub organization, repositories and Discussions.
 
@@ -63,11 +63,11 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 6. How HotLoop is distributed
 
-6.1 We distribute HotLoop through GitHub releases, container images on ghcr.io, Helm charts, Podman Quadlet units, hotloop.io and docs.hotloop.io. Questions and community help are on GitHub Discussions.
+6.1 We distribute HotLoop through GitHub releases, container images, charts, service files, hotloop.io and docs.hotloop.io. Questions and community help are on GitHub Discussions.
 
 6.2 HotLoop runs on your own hardware, in your own cluster or in your own cloud account. We do not host it for you and we do not take custody of your data.
 
-6.3 Images track the `:stable` tag. Where you turn auto-update on, your own Podman or cluster pulls new images on its own, and a new image that fails its health check is rolled back to the one that was running. You control whether auto-update runs on your equipment. A failed rollback, a bad network or a bad configuration on your side is not something we can see or fix.
+6.3 Images track the stable release. Where you turn auto-update on, your own container host or cluster pulls new images on its own, and a new image that fails its health check is rolled back to the one that was running. You control whether auto-update runs on your equipment. A failed rollback, a bad network or a bad configuration on your side is not something we can see or fix.
 
 6.4 Only the version-tagged releases we publish are releases. A copy from anywhere else, including a build someone else made, comes under the license but is not something we support.
 

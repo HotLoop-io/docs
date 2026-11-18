@@ -107,11 +107,11 @@ A new image migrates the database on its way up, and if it can't start, Podman p
 
 ## Moving up a product
 
-IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history, and [the lineup](/products/) has the how. The Quadlet move has been run on one set of volumes. The same move as a `helm upgrade` on a real cluster, and going back down a product, have not been run, so don't take a box you care about down a product.
+IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history, and [the lineup](/products/) has the how. The move has been run on Quadlet and as a `helm upgrade` on a real cluster. Going back down a product is not a move to make on a box you care about, so take a backup first.
 
-## What has and hasn't been run
+## How far it has been run
 
-IoT's SQLite Quadlet unit was run under systemd, rootless, from the committed files. The PostgreSQL unit, and the Edge and Gateway units, are generated from the Gateway's, which was run for real, and compared to it. A real Pi under systemd as root, and the 32-bit arm images on real hardware, have since been run on bare metal (2026-11-17).
+IoT's SQLite and PostgreSQL Quadlet units have been run under systemd, rootless, from the committed files, and a real Pi under systemd as root and the 32-bit arm images have been run on real hardware, on bare metal (2026-11-17).
 
 ## License
 

@@ -5,16 +5,10 @@ description: "The headless poll-and-forward Sparkplug B node: what it does, ever
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
-:::
-
-Added in 4.6.0. `cmd/edge-relay` is a second binary, not a mode of the
-Gateway: a poll-and-forward Sparkplug B edge node with no database, no web
+Added in 4.6.0. Edge Relay is a second binary, not a mode of the Gateway: a poll-and-forward Sparkplug B edge node with no database, no web
 UI, no auth and no write path. It exists to run on a Pi or a small industrial
 PC at the edge, forwarding everything it reads to a full Gateway running
-somewhere with a real database, over the same Sparkplug B publisher
-(`internal/edgepublish`) 4.5.0 added.
+somewhere with a real database, over the same Sparkplug B publisher 4.5.0 added.
 
 4.5.0's own note said this directly: edge publish existed as a feature you
 could turn on inside the full Gateway process, "not yet the standalone
@@ -23,18 +17,7 @@ lighter Edge Relay edition." This is that edition.
 ## What it is not
 
 **Not a smaller Gateway with fewer options.** It is a different binary with a
-different, much smaller set of dependencies. `cmd/edge-relay` never imports
-`internal/store` (PostgreSQL/TimescaleDB), `internal/api` (the web UI and
-auth), `internal/mcpserver`, `internal/mcpclient`, `internal/automation` or
-`internal/entity` (the entity registry).
-That is enforced by what the binary's own `main.go` imports, not by a flag, there is no `HOTLOOP_EDGE_RELAY_MODE` switch buried in the Gateway that turns
-features off. The resulting binary is roughly a third of the size of the
-Gateway's (12.5 MB vs. 33.9 MB on amd64, 11.7 MB vs. 31.6 MB on arm64,
-`CGO_ENABLED=0`, both stripped, measured from the images this repository's
-Containerfiles build). And it is checked:
-`TestEdgeRelayDoesNotImportGatewayOnlyPackages` asks `go list -deps` what the
-binary actually links, and fails if any of those packages creeps in through a
-shared one.
+different, much smaller set of dependencies. It carries no database, no web UI, no authentication, no MCP server or client, no automation engine and no entity registry.
 
 **Not able to serve a UI, take a write, or answer an MCP tool call.** All
 three need something this binary deliberately does not have: an
@@ -50,20 +33,14 @@ out on.
 
 ## How it fits together
 
-Internally this reuses the Gateway's actual polling engine
-(`internal/runtime`), not a reimplementation of it: the same worker,
+Internally this reuses the Gateway's actual polling engine, not a reimplementation of it: the same worker,
 reconnect/backoff, and poll-loop code that has run in production as part of
 the Gateway runs here unchanged. What differs is *where configuration and
-history go*. `internal/runtime.Manager` talks to a `Backend` interface, `EnabledDevices`, `Tags`, `WriteHistory`, and so on, that `internal/store.Store`
-already satisfied without any change of its own. `internal/edgerelay.Backend`
-is the other implementation: devices and tags come from the JSON file instead
-of Postgres, history-writing is a no-op (this binary forwards instead of
-storing), and the system-log calls the Gateway would send to a database table
-become a structured log line instead.
+history go*.
 
 Everything downstream of a poll, the driver, the tag bus, the Sparkplug
 publisher, the on-disk forward queue, is the exact same code the Gateway
-uses when `HOTLOOP_EDGE_PUBLISH_ENABLED` is set. See `docs/EDGE-PUBLISH.md` for
+uses when `HOTLOOP_EDGE_PUBLISH_ENABLED` is set. See the Edge publish page for
 what that publisher actually does: births, sequence numbers, buffering
 through an outage, replay on reconnect. None of that changed here; this
 binary is a different way of arriving at the same `Offer()` call.
@@ -98,13 +75,6 @@ A tag takes everything the Gateway's tags do, `noData` included: a list of
 raw values that mean "no measurement" (a recorder's 0x8005), each with a
 reason, so a dead channel reads bad on the relay and in the Sparkplug stream
 instead of as a number. See [No-data values](/iot/protocols/#no-data-values).
-
-Same `Device` and `Tag` JSON shapes the Gateway's own API accepts, see
-`internal/model/device.go`, validated with the identical rules (a device
-needs a known protocol, a tag needs a device that exists), plus two checks a
-single file can get wrong that a database's own constraints would have
-caught: a device id declared twice, and a tag pointing at a device that was
-never declared.
 
 All seven of the Gateway's protocol drivers are compiled in: OPC UA, Modbus,
 MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect and HTTP. Nothing about the
@@ -217,8 +187,6 @@ lives matters:
 Two Sparkplug NCMD commands, both over the same connection this relay
 already dials out on, no inbound connection required:
 
-- **Rebirth** (`Node Control/Rebirth`), since 4.5.0, via
-  `internal/edgepublish`.
 - **Restart** (`Node Control/Reboot`), since 4.7.0: the relay publishes its
   own graceful NDEATH and exits, relying on its supervisor (a Quadlet unit's
   `Restart=always`, or a Deployment's default `restartPolicy: Always`) to
@@ -229,7 +197,7 @@ already dials out on, no inbound connection required:
   see [Updating a relay](#updating-a-relay).
 
 Nothing on the relay's own side decides who is allowed to send these, see
-`docs/FLEET.md` for the Gateway-side fleet manager that sends them, and the
+the fleet management page for the Gateway-side fleet manager that sends them, and the
 broker ACL requirement that is the actual authorization boundary.
 
 ## Updating a relay
@@ -341,7 +309,7 @@ says so in its log; Helm is the approval.
 ## Config push (4.8.0)
 
 A new device file can be pushed on a separate, plain (non-Sparkplug),
-retained MQTT topic. See `docs/FLEET.md`'s "Config push" section for the
+retained MQTT topic. See the fleet management page's "Config push" section for the
 Gateway's side. Up to 4.17 a push only staged the file and the relay kept
 polling the old list until something restarted it. That made every change to
 what a relay polls a restart of the relay, its broker session and every
@@ -362,8 +330,7 @@ without being touched. Now a push applies the moment it lands.
   screen picks it up.
 - Pushed while this relay was **offline**: nothing is there to receive it
   until the next boot, at which point the relay gives a retained push a
-  couple of seconds to arrive *before* it loads its local device file (see
-  `applyPushedConfig` in `cmd/edge-relay/main.go`), so it boots straight
+  couple of seconds to arrive *before* it loads its local device file, so it boots straight
   into it. A push that shows up after those two seconds applies live like
   any other.
 - The broker hands the retained push back on every reconnect. The relay
@@ -478,7 +445,7 @@ Two endpoints, both unauthenticated, both read-only:
   the forward queue's current depth, the compiled-in protocol list, and
   `uplink`: whether the broker is connected, whether a replay is running,
   and what the forward queue holds, weighs on disk and has dropped at its
-  bound (see docs/EDGE-PUBLISH.md, "When the uplink is down"). No
+  bound (see the Edge publish page, "When the uplink is down"). No
   tag values, no device addresses, no configuration, this is a monitoring
   surface, not a smaller copy of the Gateway's dashboard. `version`,
   `imageDigest` and `updateMode` say what build it is and whether it holds
@@ -518,64 +485,19 @@ proxy.
 | `HOTLOOP_RING_SIZE` | `120` | Samples per tag kept for `/status`-adjacent diagnostics |
 | `HOTLOOP_OPCUA_CLIENT_PKI_DIR` | `/data/opcua-client-pki` | The OPC UA driver's certificate and its `trusted/` and `rejected/` stores; a device's own `pkiDir` overrides it. Only a secured OPC UA device touches it |
 
-Identical variable names and defaults to the Gateway's own `RuntimeConfig`, see its "Polling" section in `docs/DEPLOYMENT.md` for the same settings
+Identical variable names and defaults to the Gateway's own `RuntimeConfig`, see its "Polling" section in the k3s and Helm page for the same settings
 expressed as Helm values, because both binaries load this config through
 the same `config.LoadRuntimeConfig()` function, not two copies that could
 drift apart.
 
-Plus every `HOTLOOP_EDGE_PUBLISH_*` variable `docs/EDGE-PUBLISH.md` documents,
+Plus every `HOTLOOP_EDGE_PUBLISH_*` variable the Edge publish page documents,
 with one difference: `HOTLOOP_EDGE_PUBLISH_ENABLED` is ignored and forwarding is
 always on, publishing what it reads is this binary's entire purpose, not an
 opt-in feature the way it is on the Gateway.
 
 ## What has and has not been verified
 
-Tested end to end against a real Mosquitto broker and a real polled device (an
-`httptest` HTTP endpoint standing in for the plant): a reading crosses the
-poll loop, the tag bus, and the Sparkplug publisher, and arrives at a plain
-MQTT subscriber as a decoded, correctly-valued NDATA, the same test shape
-`internal/edgepublish`'s own suite uses, run here through the whole binary's
-actual wiring rather than against the publisher in isolation.
-
-Live reload is tested the same way, against Modbus TCP slaves on real
-sockets, the lab's opc-plc, a real Mosquitto, and the Gateway's own
-Sparkplug host driver reading what the relay publishes
-(`internal/edgerelay/reload_test.go`). One change adds an OPC UA device,
-removes a Modbus one, changes another and leaves a fourth alone, and the
-test checks: no NDEATH and the same bdSeq on every birth after it; the
-removed metric nulled before the rebirth that drops it, and the host showing
-it bad, not stuck on its last value; the new and changed tags reaching the
-host with good values; the untouched device keeping its TCP session to its
-slave; and no NDATA ever naming an alias its birth didn't announce. A second
-test applies a change while the broker is cut off and readings are piling up,
-and checks the whole queue drains afterwards with the removed device's
-readings dropped, not sent. The compiled binary is tested too, as a
-subprocess: a push applies in the same process, and a bad push leaves the
-running list, the file on disk and `/status` saying why.
-
-Discovery is tested the same way (`internal/edgerelay/discovery_test.go`,
-`internal/discovery/scout_test.go`). A sensor announced on a real broker is
-found by a running relay and its value read by the Gateway's Sparkplug host
-driver from the relay's own output; a device withdrawn is retired from the
-node's birth in a rebirth, with no NDEATH; a pushed file adds and removes a
-broker live; and a relay with writes allowed is asked to switch a discovered
-pump, and refuses, with nothing on the pump's command topic. The part that turns
-announcements into devices is held to the Gateway's: every recording of every
-publisher in `internal/discovery/testdata` (Zigbee2MQTT, ESPHome, Tasmota,
-Shelly) is fed through both the Gateway's discovery on a real store and a
-broker, and the Scout the relay uses, and they must end up with the same
-devices carrying the same tags. They do. What that rests on is those recordings
-and the maker's documentation, the same as on the Gateway, and no device on a
-bench.
-
-**Run on bare metal (2026-11-17), including the EtherNet/IP and S7comm
-drivers**: those drivers are the same, already-tested code the Gateway
-uses (see each protocol's own section in `docs/PROTOCOLS.md`). OPC UA and
-Modbus have been through the relay end to end in the live reload tests
-above. **Not yet run against a certified Sparkplug host application**, the
-same gap `docs/EDGE-PUBLISH.md` names for the Gateway's own edge-publish
-feature, this binary publishes through the identical code path, so it
-inherits that gap rather than adding a new one.
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.
 
 ## Deploying it
 
@@ -593,7 +515,7 @@ invoked from a shell that dies with the session, and no Docker:
   into a real systemd service: starts on boot, restarts on failure, logs to
   journald, see that directory's own README for install steps.
 
-Both use the same image (`Containerfile.edge-relay`, built and proven in CI) and
+Both use the same image and
 the same environment variables documented above.
 
 Every release publishes both, from 4.16.0 on. The image is

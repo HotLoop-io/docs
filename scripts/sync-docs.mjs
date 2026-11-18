@@ -37,6 +37,8 @@ import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
 import { oxfordHeadings } from './oxford.mjs';
 import { scan } from './forbidden.mjs';
+import { applyLens } from './sales-lens.mjs';
+import { GLOBAL as LENS_GLOBAL, PAGE as LENS_PAGE, PRE as LENS_PRE } from './sales-lens-rules.mjs';
 import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS, CODESYS } from './sync-manifest.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -398,6 +400,7 @@ function transform(page) {
     return t;
   });
   body = levelHeadings(body);
+  body = applyLens(e.slug, body, LENS_GLOBAL, LENS_PAGE[e.slug], false, LENS_PRE[e.slug]);
   // Words that may not survive on the site.
   const banned = [[/Home Assistant/i, 'Home Assistant'], [/Apache[- ]?2/i, 'Apache-2.0']];
   for (const [re, name] of banned) if (re.test(body)) fail(`${e.slug}: "${name}" survived the rules. Add a rule in scripts/sync-manifest.mjs.`);
@@ -411,32 +414,31 @@ const norm = (s) => s.replace(/\s+/g, ' ').trim();
 // rewrite (a British spelling, a comparison the site never carries) is the same page whether the
 // source still has the old word or has been fixed at the source, so a spelling fix in main is not
 // "newer than what you have installed".
-function settled(body) {
+function settled(body, slug) {
   let t = body;
   for (const [re, to] of GLOBAL_RULES) t = t.replace(re, typeof to === 'function' ? to : to.replace('{{LICENSE_URL}}', licenseUrl()));
   t = withMasked(t, (u) => { for (const [re, to] of AMERICAN) u = u.replace(re, to); return u; });
-  return norm(t);
+  return norm(applyLens(slug, t, LENS_GLOBAL, LENS_PAGE[slug], true, LENS_PRE[slug]));
 }
 function status(slug) {
   const r = relPages.get(slug);
   const m = mainPages.get(slug);
   if (!r) return 'next';
-  return settled(r.body) === settled(m.body) ? 'released' : 'changed';
+  return settled(r.body, slug) === settled(m.body, slug) ? 'released' : 'changed';
 }
 
 function banner(slug, st, entry) {
   const rel = releases[entry.repo];
   const name = REPOS[entry.repo].releaseName;
-  const sha = shas[entry.repo].slice(0, 7);
   const extra = entry.bannerExtra ? `\n\n${entry.bannerExtra}` : '';
   if (st === 'next') {
     const what = entry.release
-      ? `These notes are for a release that is not out. ${name} ${rel.version} is the latest one you can install.`
-      : `${name} ${rel.version} is the latest release${rel.prerelease ? ' (a pre-release)' : ''}, and it does not have what this page describes. An install from ${rel.version} will not match this page.`;
-    return `:::caution[On main, next release]\nThis page was written from \`main\` at ${sha}. ${what}${extra}\n:::\n\n`;
+      ? `These notes are for a release that is not out yet. ${name} ${rel.version} is the latest one you can install.`
+      : `${name} ${rel.version} is the latest release${rel.prerelease ? ' (a pre-release)' : ''}, and it does not have what this page describes yet. An install from ${rel.version} will not match this page.`;
+    return `:::caution[Coming in the next release]\n${what}${extra}\n:::\n\n`;
   }
   if (st === 'changed') {
-    return `:::note[Written against main]\nThis page follows \`main\` at ${sha}, and it differs from the copy in ${name} ${rel.version}, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.${extra}\n:::\n\n`;
+    return `:::note[Covers what is coming]\nThis page also covers a few things that are newer than ${name} ${rel.version}, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.${extra}\n:::\n\n`;
   }
   return extra ? `:::note\n${extra.trim()}\n:::\n\n` : '';
 }
@@ -465,20 +467,20 @@ for (const [slug, p] of mainPages) {
   const rows = (label) => meta
     .filter((m) => m.release && mainPages.get(m.slug).entry.repo === label)
     .sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))
-    .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (on main, next release)' : ''}`)
+    .map((m) => `- [${m.title}](/${m.slug}/)${m.status === 'next' ? ' (coming in the next release)' : ''}`)
     .join('\n');
-  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade, HotLoop for CODESYS and Transmitter release, and what is on main waiting for the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
+  const fm = ['---', MARK, 'title: "Release notes"', 'description: "What shipped in every HotLoop core, Flow, Cascade, HotLoop for CODESYS and Transmitter release, and what is coming in the next one, newest first."', 'editUrl: false', '---', ''].join('\n');
   // One page for HotLoop core. IoT, Edge, Gateway and Edge Relay ship from one tag, so each of their
   // sections links here and nowhere else for release notes. The per-version pages stay where they are.
   out.set('releases/core.md', ['---', MARK, 'title: "HotLoop core release notes"', 'description: "One set of release notes for HotLoop IoT, Edge, Gateway and Edge Relay, which ship from one tag on one version, newest release first."', 'sidebar:', '  label: "All core releases"', 'editUrl: false', '---', ''].join('\n') + `
 HotLoop IoT, Edge, Gateway and Edge Relay are one codebase and release together from one tag, so there is one set of release notes for all four, and this is it. The latest is ${releases.hotloop.version}. The same notes are on [hotloop.io](https://hotloop.io/releases/core/), with the date each one went out. Flow, Cascade, HotLoop for CODESYS and Transmitter have their own, on the [release notes index](/releases/).
 
-Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed.
+Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed.
 
 ${rows('hotloop')}
 `);
   out.set('releases/index.md', `${fm}
-Every release has its own page, written the day it shipped. A note marked "on main, next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
+Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is ${releases.hotloop.version}, the latest Flow release is ${releases.flow.version}, and the latest Cascade release is ${releases.cascade.version}.
 
 ## HotLoop core
 

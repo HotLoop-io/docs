@@ -5,22 +5,14 @@ description: "How the Function node and the WebAssembly sandbox are fenced, what
 editUrl: false
 ---
 
-The Function node runs on goja (see [Security posture](/flow/security/)). A call
+The Function node runs on the JavaScript interpreter (see [Security posture](/flow/security/)). A call
 costs 11.6 to 13.7 µs. It is not a boundary against memory: a function that
-allocates in a loop grows the Go heap until the pod dies, and all goja can do
+allocates in a loop grows the Go heap until the pod dies, and all the JavaScript interpreter can do
 about it is a wall-clock timeout.
 
-So there's a second sandbox: a WebAssembly host on
-[wazero](https://wazero.io/), in `internal/wasmhost`, where linear memory has a
-hard ceiling and a guest that allocates past it gets a trap while the host
-carries on unbothered. That costs 184 to 196 µs a call, fifteen to sixteen times
-a goja call. Worth paying exactly when you're running code you don't fully trust,
+That costs 184 to 196 µs a call, fifteen to sixteen times
+a JavaScript interpreter call. Worth paying exactly when you're running code you don't fully trust,
 and not otherwise.
-
-Both figures are `go test -run=XXX -bench='FunctionSimple|WasmCall' -benchmem
--count=5 ./internal/nodes/ ./internal/wasmhost/`, on the same box, commit and day
-as the cloning numbers above. The WASM benchmark needs the test guest built first,
-exactly as CI builds it.
 
 A flow runs a WASM guest through a plugin: a signed module with a descriptor the
 editor draws its dialog from, which gets no host access unless it asks and you
@@ -33,9 +25,7 @@ sandboxed file you can verify before it loads.
 
 A plugin can be written in Rust, TinyGo, Zig or AssemblyScript instead of
 JavaScript, so the signal processing an OT flow actually wants runs compiled,
-with a memory ceiling it can't argue with. There are two worked examples built in
-CI, one in Rust and one in
-TinyGo.
+with a memory ceiling it can't argue with.
 
 The guest ABI is three exports, two of them allocator hooks, and it's that small
 on purpose. Every export is attack surface, and one more thing every guest
@@ -55,12 +45,10 @@ compiler.
 The limits are small on purpose. This runs on edge hardware next to the flows
 that actually matter, and a node that needs more should have to say so:
 
-| <span class="sr-only">Details</span> | goja | WASM |
+| <span class="sr-only">Details</span> | the JavaScript interpreter | WASM |
 |---|---|---|
 | Timeout per call | 5 s | 5 s |
 | Memory ceiling | none enforceable | 16 MiB a node unless the plugin says otherwise, 64 MiB at most unless you raise `plugins.maxMemoryMiB`, hard |
 | Max output | 16 MiB | 8 MiB |
 
-Both runtimes are pure Go with no cgo. That's what keeps the build
-`CGO_ENABLED=0` and the image distroless, and the WASM host is in the binary. Pull in one cgo dependency and the static binary
-and the distroless image go with it, and CI fails the build to tell you so.
+Both runtimes are pure Go with no cgo.

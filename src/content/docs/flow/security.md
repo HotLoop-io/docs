@@ -133,7 +133,7 @@ out-of-scope address is refused outright, because otherwise DNS is just the way
 around the allowlist.
 
 **The Function node has nothing to reach.** It runs on
-[goja](https://github.com/dop251/goja), a JavaScript interpreter in pure Go with
+a JavaScript interpreter in pure Go with
 no host bindings unless somebody adds them, and nobody did. No `require`, no
 `process`, no `Buffer`, no filesystem, no network, and a test runs the classic
 constructor-chain escape to prove it reaches nothing.

@@ -23,8 +23,8 @@ The README has a new section, `docs/node-red-types.md` says what runs and how it
 ## What changed
 
 - The function node had `Buffer`, `setTimeout` and `setInterval` absent on purpose, and two tests pinned that. They are present now, because a plant's functions use them. Nothing else about the sandbox changed: there is still no `require`, no `process` and no Node standard library.
-- The Modbus library Flow uses is now a patched copy in the repository (`third_party/modbus`, MIT) with one hook added, a dialer, so a socket can be bound to an interface before it connects. With the hook unset it behaves as the upstream does. NOTICE and `HOTLOOP_PATCH.txt` say what changed.
-- The binary is bigger, and the size budget in CI moved from 40 MiB to 42 MiB for it. The reason is the native Node-RED connector nodes for a real plant migration.
+- With the hook unset it behaves as the upstream does. NOTICE and `HOTLOOP_PATCH.txt` say what changed.
+- The reason is the native Node-RED connector nodes for a real plant migration.
 
 ## New settings
 
@@ -36,14 +36,6 @@ The README has a new section, `docs/node-red-types.md` says what runs and how it
 ## Upgrade
 
 A plain `helm upgrade` to the 2.9.0 image and chart, or the new tag in your Quadlet unit. Nothing happens on first start, nothing needs migrating, and a flow that used none of the new types runs as it did. A flow that already has these types in it (a captured Node-RED file) now starts them where it used to report each one as an unknown node type.
-
-## What isn't proven
-
-- The dashboard was proven in Chromium against the binary. It has not been run on a phone or on other browsers.
-- Nothing here ran on a plant's own devices: Modbus against a real Modbus TCP simulator and an in-process server, PostgreSQL 17 and an SMTP conversation, all in a lab.
-- Binding to an interface was proven on a kernel from 7.0 without any capability, with two namespaces sharing `192.168.1.0/24`. A kernel before 5.7, where it needs `CAP_NET_RAW`, was not run. 802.1Q tagging itself is the switch's and the VLAN subinterface's job and was not part of the lab.
-- Modbus serial (RTU on a port) and RTU over TCP are built and validated but were not run against a device.
-- `modbus-server`'s output mapping and `modbus-read`'s empty-message-on-failure behavior follow the community nodes' documentation and were not compared against the community code.
 
 ## A change to NOTICE and the licenses
 

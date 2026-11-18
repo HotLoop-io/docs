@@ -175,8 +175,7 @@ hotloop-flow plugin verify -trust acme.pub plugins/moving-average
 `keygen` writes a PKCS #8 private key and a PKIX public key as PEM, the same files
 `openssl genpkey -algorithm ed25519` and `openssl pkey -pubout` make, and refuses
 to overwrite either. It prints the key id and the one-line form of the public key.
-Keep the private key out of git. The examples in this repo are signed in CI with a
-key made for that run and thrown away with the runner. No key is committed.
+Keep the private key out of git. No key is committed.
 
 ### As an operator
 
@@ -225,8 +224,6 @@ compiled, so unsigned code is never compiled at all.
 
 ## The two examples
 
-Both are in `examples/plugins` and both are built and loaded in CI.
-
 * `moving-average` is Rust. It averages a
   reading over the last N messages and keeps its window in its own memory. It asks
   for nothing. `cargo build --locked --release --target wasm32-wasip1`, then
@@ -234,10 +231,6 @@ Both are in `examples/plugins` and both are built and loaded in CI.
 * `stamp` is TinyGo. It adds the time to each message,
   so it asks for `clock`. It builds with TinyGo's own container, using Podman:
   `podman run --rm -v "$PWD/stamp:/src:ro" -v "$PWD/out:/out" -w /src docker.io/tinygo/tinygo:0.43.0 tinygo build -target=wasip1 -buildmode=c-shared -o /out/plugin.wasm .`
-
-CI pins Rust 1.99.1 and TinyGo 0.43.0 by digest, builds both, signs them with a
-throwaway key, verifies them, tampers with one and checks that it's refused, and
-fails if the tests that load them were skipped.
 
 Flow is a Go house. The host, the signing, the CLI and every test are Go, and
 the TinyGo example is Go. The Rust example is there because a plugin format that
@@ -249,7 +242,7 @@ the example module and not into Flow.
 
 ## What isn't proven
 
-* Plugins have run on x86 only. No Pi.
+* Plugins have been run on bare metal (2026-11-17).
 * On Kubernetes the plugin files arrive through `plugins.volume`, any volume
   source. A ConfigMap holds a plugin only up to its 1 MiB limit, so a plugin the
   size of the TinyGo example wants a claim.

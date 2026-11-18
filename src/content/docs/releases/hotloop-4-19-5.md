@@ -14,4 +14,4 @@ This is the multi-arch build of [4.19.4](/releases/hotloop-4-19-4/) and nothing 
 Read [4.19.4's notes](/releases/hotloop-4-19-4/) for everything that changed since the last published release.
 
 - All four charts (`hotloop`, `hotloop-iot`, `hotloop-edge`, `hotloop-edge-relay`) are at 4.19.5, with every earlier version still in the index.
-- `release.yml` builds every platform again (`BUILD_ONLY` is empty). The next release that carries changes sets it back to `linux/amd64`.
+- The next release that carries changes sets it back to `linux/amd64`.

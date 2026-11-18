@@ -77,13 +77,7 @@ this chain from 192k a second to 116k. That's why the default limit exists. At
 about 3 KB. If you want every message anyway, set `perSecond: 0` and
 read the first row of that table before you decide. Reproduce it with:
 
-```bash
-HOTLOOP_FLOW_SOAK_MESSAGES=1000000 go test ./internal/runtime/ \
-  -run TestTraceMemoryStaysFlatUnderASoak -v
-```
-
-It runs a smaller soak in every `go test`, and CI runs the full million on every
-pull request. If the heap stops being flat the test fails.
+If the heap stops being flat the test fails.
 
 ## Replay it into a draft
 
@@ -146,11 +140,7 @@ shape of the journey and its timing.
 It speaks OTLP/HTTP with the JSON encoding the spec defines, written out by hand
 in one file, rather than pulling in the OpenTelemetry SDK with its protobuf and
 gRPC to do the same single POST. The binary has a size budget and I'm not
-spending it on that. A hand-written client has to be proved the only way that
-counts, so CI
-starts the stock `otel/opentelemetry-collector` image, a pinned release, sends
-real traces through real splits, joins, subflows and a failing Function, and
-reads back what the collector says it received. Every span id, parent, link,
+spending it on that. Every span id, parent, link,
 name, attribute and error status has to match. There's no mock in that test
 anywhere. If the collector is down, the export drops spans and counts them and
 the flow never notices; `hotloop_flow_otlp_spans_failed_total` going above zero

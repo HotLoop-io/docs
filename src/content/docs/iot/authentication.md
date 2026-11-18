@@ -84,9 +84,7 @@ operator role" or "exactly these permissions," never both, so there is one
 place to look to know what somebody can do.
 
 Permission strings are `resource.action`, `tags.write`, `alarms.ack`, or a
-resource wildcard, `tags.*`, or the global wildcard `*`. The full list a
-built-in role can grant lives in `internal/auth/auth.go`, next to the roles
-themselves, so it cannot drift from what the code actually checks.
+resource wildcard, `tags.*`, or the global wildcard `*`.
 
 ## Kiosk panels: PIN or badge, and an idle sign-out
 
@@ -538,7 +536,6 @@ ends at the next request the dashboard stops signing.
 - **No lockout for a PIN or badge typed on its own,** only for a password and a
   PIN with its user name; see
   [The lockout](#the-lockout-after-wrong-passwords-and-pins). The timing-safe
-  comparison in `handleLogin` (see `dummyPasswordHash` in
-  `internal/api/auth.go`) stops username enumeration by response time. A
+  comparison in `handleLogin` stops username enumeration by response time. A
   NetworkPolicy or an upstream proxy is still worth having in front of the login
   endpoint.

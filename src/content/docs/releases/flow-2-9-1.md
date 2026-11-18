@@ -15,7 +15,7 @@ HotLoop Flow 2.9.1 lets the `modbus-server` node listen on one VLAN's interface,
 
 ## What changed
 
-- The patched Modbus library copy in `third_party/modbus` has one more hook, a listener, next to the dialer from 2.9.0. Unset, it behaves as the upstream does. NOTICE and `HOTLOOP_PATCH.txt` say what changed.
+- Unset, it behaves as the upstream does. NOTICE and `HOTLOOP_PATCH.txt` say what changed.
 
 ## New settings
 
@@ -24,9 +24,5 @@ None beyond the **Network interface** field on `modbus-server`. The chart value 
 ## Upgrade
 
 A plain `helm upgrade` to the 2.9.1 image and chart, or the new tag in your Quadlet unit. Nothing happens on first start and nothing needs migrating. A flow that sets no interface behaves exactly as it did on 2.9.0.
-
-## What isn't proven
-
-It was proven on The Beast in a lab of two network namespaces that share `192.168.1.0/24`, with a Modbus client in each reading its own server for 20 rounds with no crosstalk, and the same two servers unbound colliding. A kernel before 5.7, where binding needs `CAP_NET_RAW`, was not run, and nothing ran on a plant's own network.
 
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.9.1`, linux/amd64 first, with arm64 following in 2.9.2. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.9.1/README.md

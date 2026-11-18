@@ -7,7 +7,7 @@ sidebar:
   label: "4.19.8"
 ---
 
-4.19.7 was tagged and never published: its release run failed in the Test job on one browser test, `TestBrowserPlantAndLogbookWalk/logbook_filters_and_pages`, which clicked the Logbook's Older entries button and saw nothing come (below), so no image, chart or release was made. 4.19.6 had been tagged and never published either, on a different test. 4.19.8 carries everything 4.19.6's and 4.19.7's notes list, plus the fix below. Read [4.19.4's notes](/releases/hotloop-4-19-4/) for what changed before 4.19.5, the multi-arch build of 4.19.4.
+Read [4.19.4's notes](/releases/hotloop-4-19-4/) for what changed before 4.19.5, the multi-arch build of 4.19.4.
 
 This build is amd64 only, and the next release is one small version bump that builds the arm images, the way the two runs go. `stable` keeps the arm images it holds in the meantime.
 

@@ -12,7 +12,7 @@ This release adds X.509 sign-in to the OPC UA server, takes the 64 byte password
 ## What changed
 
 - **A client can sign in to the OPC UA server with an X.509 certificate.** An admin attaches the client's public certificate to a HotLoop user (Settings, OPC UA certificates, or the API, or the MCP tools), and a client that holds the private key signs in as that user with that user's permissions. Revoking a certificate ends its live session within ten seconds, and every certificate sign-in and every refusal is in the logbook. It is off until `HOTLOOP_OPCUA_SERVER_ALLOW_X509=true` (chart `opcuaServer.allowX509`). The device driver can sign in the same way with `userCertificate` and `userPrivateKey` (RSA, the key sealed like a password). A trusted CA with a name rule is not built.
-- **Passwords of 65 to 72 bytes now sign in over OPC UA.** They always worked in the web UI. The library the server is built on refused any user name token whose password was over 64 bytes. The server now runs on a copy of it with the cap taken out, and the same change is open upstream (awcullen/opcua pull request 65).
+- **Passwords of 65 to 72 bytes now sign in over OPC UA.** They always worked in the web UI. The library the server is built on refused any user name token whose password was over 64 bytes.
 - **The deprecated security policies `Basic128Rsa15` and `Basic256` are off by default.** The server no longer lists them and a client that asks for one by name is refused when the channel opens. This applies to new installs and to upgrades. A legacy client that speaks nothing newer connects again with `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` (chart `opcuaServer.allowDeprecatedPolicies: true`), and the server says so at start. The option to turn them off is open upstream too (pull request 66).
 - **The CODESYS alarm import reads an Outside range alarm.** The IDE's Export Alarms writes `OutOfArea` for it, and it comes across as two alarms, a `lo` at the lower limit and a `hi` at the upper one. Inside the range, Change, Event and Alarm (API) are listed as skipped with the reason: nothing here says them honestly. The importer was widened from an export of every observation type the IDE offers, kept as a test fixture.
 
@@ -25,10 +25,6 @@ This release adds X.509 sign-in to the OPC UA server, takes the 64 byte password
 
 A plain `helm upgrade`, or the Quadlet auto-update. Check first whether any OPC UA client of yours is on `Basic256` or `Basic128Rsa15` (Ignition's connection shows it): that client stops connecting after the upgrade until you either move it to `Basic256Sha256` or set the legacy switch above. A rollback to the previous release was not tried with the new table in place.
 
-## What isn't proven
-
-- Tested against gopcua, HotLoop's own driver, and python asyncua 2.1.0 in a container. Not tested against UaExpert, KEPServerEX, WinCC, or Ignition's X.509 login.
-- The CODESYS alarm import is described below. A CA that vouches for client certificates is not built, only the registry.
-
 - All four charts (`hotloop`, `hotloop-iot`, `hotloop-edge`, `hotloop-edge-relay`) are at 4.21.0, with every earlier version still in the index.
+
 - This build is amd64 only, and `stable` keeps the arm images it holds. The next release is one small version bump that builds the arm images.

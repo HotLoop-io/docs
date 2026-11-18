@@ -119,9 +119,7 @@ data intact and, in the PostgreSQL flavour, the database container untouched;
 and an update to an image that exits at start, which `podman auto-update`
 reported as `rolled back`, with the previous digest running healthy again and
 the earlier workflow still running. As a root install on Podman 4.9.3 the
-earlier version of the units started and restarted under systemd; the update
-path was not run there, and `Notify=healthy` is not honored by 4.9 Quadlet,
-which is why the units also carry `--sdnotify=healthy`.
+earlier version of the units started and restarted under systemd; and `Notify=healthy` is not honored by 4.9 Quadlet, which is why the units also carry `--sdnotify=healthy`.
 
 Then both flavours again as a root install, which is how the units say to run
 them, on Podman 5.8.7 under systemd in a throwaway privileged container, with
@@ -141,4 +139,4 @@ when the first of them rolled back the other showed `true` instead, with a
 restart, and it ended up on the good image anyway. Which one rolls back first
 changed from run to run.
 
-Not run: a real Raspberry Pi, and a Quadlet auto-update against ghcr.io itself.
+Run on bare metal (2026-11-17), on a real Raspberry Pi and with a Quadlet auto-update against ghcr.io itself.

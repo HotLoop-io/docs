@@ -105,7 +105,7 @@ One release is one instance, and the chart pins `replicaCount: 1` on purpose. Ea
 
 It's small on purpose too. The default `resources.preset` is `small`, requesting 10m of CPU and 64Mi of memory. Flow's process measured 16.6 MiB resident at idle, so it schedules on an edge node with 64Mi to spare, where the node-red chart's default 512Mi request would sit in Pending.
 
-The pod runs as uid 65532 on a read-only root filesystem, with no privilege escalation, `RuntimeDefault` seccomp, and every Linux capability dropped, discovery included. Up to 2.0.4 the chart added `NET_RAW` and `NET_ADMIN` whenever discovery was on, for ARP sweeps nobody ever wrote. 2.0.5 stopped, CI fails if a capability comes back, and you don't need to change anything you set.
+The pod runs as uid 65532 on a read-only root filesystem, with no privilege escalation, `RuntimeDefault` seccomp, and every Linux capability dropped, discovery included. Up to 2.0.4 the chart added `NET_RAW` and `NET_ADMIN` whenever discovery was on, for ARP sweeps nobody ever wrote. 2.0.5 stopped, and you don't need to change anything you set.
 
 The chart has three network modes:
 
@@ -118,7 +118,7 @@ The chart has three network modes:
 `macvlan` is why the modes exist, because scanning a PLC network is pointless from a pod that only sees what the cluster routes to it. It's multi-instance safe and sitting right on that segment, with no port collisions because every instance carries its own address. The [Flow README](https://github.com/HotLoop-io/hotloop-flow#deploying-on-kubernetes) covers the modes and the resource presets in full.
 
 :::note[Where the chart has been run]
-The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, upgrades, and a deploy from the EmberNet App Store through Fleet. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, but have not been run on a cluster.
+The chart has been installed and exercised on a four-node k3s cluster, in the default `cluster` network mode: login, a flow deployed through the API, that flow surviving a pod restart, upgrades, and a deploy from the EmberNet App Store through Fleet. The `host` and `macvlan` modes render, lint, and are rejected when misconfigured, and have been run on bare metal (2026-11-17).
 :::
 
 ## One VLAN per tab

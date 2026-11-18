@@ -189,10 +189,7 @@ On a pod you run yourself, mount the PEM and set `HOTLOOP_FLOW_ASSERTION_PUBLIC_
 | `metrics.serviceMonitor.enabled` | off | Prometheus Operator scraping. |
 | `ingress.enabled` | off | If you want it reachable from outside the cluster. |
 
-Every `trace.*`, `store.*`, `history.*`, `audit.*` and `tests.*` value has to land in the field of the same name in
-`config.yaml`, and CI proves it: it renders the chart, takes the config out of the
-ConfigMap and loads it with the binary's own loader, which refuses keys it doesn't
-know. A default render has to equal the binary's own defaults too. I got tired of
+A default render has to equal the binary's own defaults too. I got tired of
 settings that say one thing in `values.yaml` and do another in the process.
 
 The Service listens on 8080 and forwards to the binary's 1880. Everything else is
