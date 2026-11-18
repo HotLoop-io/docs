@@ -786,7 +786,7 @@ binary and a Helm install can't) and is left out otherwise.
 Every protocol the Gateway knows, and whether this build has its driver.
 
 ```json
-[{"id":"opcua","name":"OPC UA","description":"The universal one. ...","transport":"opc.tcp binary","defaultPort":4840,"writable":true,"browsable":true,"deviceTypes":["plc","cnc","robot","ipc","hmi","historian","gateway"],"library":"github.com/gopcua/opcua","available":true}]
+[{"id":"opcua","name":"OPC UA","description":"The universal one. ...","transport":"opc.tcp binary","defaultPort":4840,"writable":true,"browsable":true,"deviceTypes":["plc","cnc","robot","ipc","hmi","historian","gateway"],"library":"...","available":true}]
 ```
 
 ### `GET /api/diagnostics`

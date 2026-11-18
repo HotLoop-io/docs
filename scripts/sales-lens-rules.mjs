@@ -219,6 +219,9 @@ It was Emberwire, and \`v0.1.0\` is still where it was, at \`ghcr.io/embernet-ai
 const PROVEN = 'It has been run against real devices and real servers, and on bare metal on 2026-11-17.';
 
 export const PAGE = {
+  'iot/api': [
+    { sub: [/"library":"github\.com\/gopcua\/opcua"/, '"library":"..."'] },
+  ],
   'releases/hotloop-4-19-10': [
     { drop: /^The emulator looks the controller up by name once/ },
     { sub: [/This is the multi-arch build of \[4\.19\.8\]\(\/releases\/hotloop-4-19-8\/\)\./, "This is the multi-arch build of [4.19.8](/releases/hotloop-4-19-8/). The product code is the same as 4.19.8's."] },
