@@ -7,7 +7,7 @@ sidebar:
   label: "4.19.11"
 ---
 
-The HMI dashboard cards and the CODESYS work that landed after [4.19.8](/releases/hotloop-4-19-8/), two fixes found in earlier releases, and a test that failed under load. There are no migrations, and the one API change is a new route (below). A plain `helm upgrade` or the Quadlet auto-update takes it, and the previous release runs on the same database.
+The HMI dashboard cards and the CODESYS work that landed after [4.19.8](/releases/hotloop-4-19-8/), two fixes found in earlier releases. There are no migrations, and the one API change is a new route (below). A plain `helm upgrade` or the Quadlet auto-update takes it, and the previous release runs on the same database.
 
 This build is amd64 only, and the next release is one small version bump that builds the arm images, the way the two runs go. `stable` keeps the arm images it holds in the meantime. [4.19.10](/releases/hotloop-4-19-10/) is the last multi-arch build, and [4.19.8](/releases/hotloop-4-19-8/) lists everything that changed since the one before it.
 

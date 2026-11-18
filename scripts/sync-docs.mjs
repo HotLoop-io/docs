@@ -498,6 +498,10 @@ ${rows('cascade')}
 
 ## HotLoop for CODESYS
 
+- [HotLoop for CODESYS 0.3.5 release notes](/releases/codesys-0-3-5/)
+- [HotLoop for CODESYS 0.3.4 release notes](/releases/codesys-0-3-4/)
+- [HotLoop for CODESYS 0.3.3 release notes](/releases/codesys-0-3-3/)
+- [HotLoop for CODESYS 0.3.2 release notes](/releases/codesys-0-3-2/)
 - [HotLoop for CODESYS 0.3.1 release notes](/releases/codesys-0-3-1/)
 - [HotLoop for CODESYS 0.3.0 release notes](/releases/codesys-0-3-0/)
 

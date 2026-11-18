@@ -904,7 +904,7 @@ Device options (`config`):
 | `transport` | `udp` (default) or `tcp` |
 | `retries` | How many times a request that got no answer is sent again, 0 to 10. Default 1 |
 | `maxRepetitions` | Rows per GETBULK in a walk. Default 10, which the smallest agents answer |
-| `browseRoots` | OIDs to walk when discovering points. Default: system, the interface tables, host resources, the load table and net-snmp's extend outputs |
+| `browseRoots` | OIDs to walk when discovering points. Default: system, the interface tables, host resources, the load table and an SNMP agent's extend outputs |
 | `browseMaxNodes` | Where a browse stops. Default 2000 |
 
 The address is `host` or `host:port`, port 161 by default.
@@ -920,7 +920,7 @@ time before trying the same credentials again.
 MIB's, as in `sysName`, `ifOperStatus.2`, `ifHCInOctets.2`, `laLoad.1`, or the
 OID as `oid.1.3.6.1...` for one it doesn't know. The names, and the OIDs, types
 and units behind them, come from the MIBs that define them: SNMPv2-MIB (RFC
-3418), IF-MIB (RFC 2863), HOST-RESOURCES-MIB (RFC 2790) and net-snmp's UCD-SNMP-MIB
+3418), IF-MIB (RFC 2863), HOST-RESOURCES-MIB (RFC 2790) and an SNMP agent's UCD-SNMP-MIB
 and NET-SNMP-EXTEND-MIB. Everything else the agent has still reads;
 add it as a tag by OID.
 

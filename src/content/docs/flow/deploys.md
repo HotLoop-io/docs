@@ -228,8 +228,7 @@ looking at disappear.
 All of it is clicked through in a real browser on every pull request, against the
 real binary with the editor embedded. That includes every node dialog the runtime
 offers: the list comes from `GET /nodes`, so a node added next month is in the
-test next month without anyone remembering to add it. Playwright is a dev
-dependency of `web/e2e` only and never reaches the bundle. Writing those tests
+test next month without anyone remembering to add it. Writing those tests
 found two things that had never worked in Chromium: double-clicking a node to open
 its dialog, and dragging a wire onto a node. The canvas holds the pointer for the
 whole drag, so the event's target was always the canvas and a wire let go over a

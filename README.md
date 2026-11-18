@@ -1,47 +1,36 @@
 # docs.hotloop.io
 
-Source for [docs.hotloop.io](https://docs.hotloop.io), built with [Astro](https://astro.build) and [Starlight](https://starlight.astro.build), and published to GitHub Pages by a workflow on every push to `main`.
+Source for [docs.hotloop.io](https://docs.hotloop.io), the documentation for every HotLoop product, built with [Astro](https://astro.build) and [Starlight](https://starlight.astro.build) and published to GitHub Pages on every push to `main`.
 
 ```
 npm install
 npm run dev       # http://localhost:4321
-npm run build     # generates the social card and icons, builds to dist/, then audits it
+npm run build     # builds to dist/, then audits it
 ```
 
-Node 22.12 or newer is required, and `.nvmrc` pins the version CI uses.
+Node 22.12 or newer is required, and `.nvmrc` pins the version the build uses.
 
 ## What is here
 
-One section per product: HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter, plus the shared pages (install, k3s and Helm, Podman Quadlet, the `:stable` auto-update, release notes, the roadmap). A bigger product carries everything the smaller one has, so its sidebar section links to those pages instead of copying them. Every page says what it has actually been run against, because a doc that rounds up is how somebody finds out at commissioning.
+One section per product: HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter, plus the shared pages (install, k3s and Helm, Podman Quadlet, the `:stable` auto-update, release notes, the roadmap, the license and the terms). A bigger product carries everything the smaller one has, so its sidebar section links to those pages instead of copying them.
 
-The look is hotloop.io's. `src/styles/tokens.css` is a vendored copy of `brand/tokens.css` in HotLoop-io/HotLoop-io, fonts are the same self-hosted Inter and JetBrains Mono, and the header and footer are the website's, in `src/components`. CI fails the build if the tokens drift from the canonical file.
+The pages teach a buyer and a new user how to install, set up and use each product, and say how far each one has been proven. The look is hotloop.io's, with the same fonts, colors, header and footer.
 
-## Where the pages come from
+## How the pages are kept
 
-Two of the source repos are private, so a Pages build here can't read them, and no token lives in this repo. A script runs on a machine that has the clones, reads files straight out of git at a ref, and writes the result into this repo to be committed.
+Most pages are generated from the products' own documentation by `scripts/sync-docs.mjs`, which a maintainer runs and whose result is committed, so a generated page is edited at its source or in the sync's rules and never by hand. A generated page says so in its front matter. The hand-written pages live in `src/pinned/` and in `src/content/docs/`.
 
-```
-node scripts/sync-docs.mjs \
-  --hotloop ~/Documents/GitHub/industrial-iot \
-  --flow    ~/Documents/GitHub/hotloop-flow \
-  --cascade ~/Documents/GitHub/hotloop-cascade \
-  --legal   ~/Documents/GitHub/HotLoop-io
-npm run build
-```
+- `scripts/sync-manifest.mjs` says which source becomes which page, with its title and description.
+- `scripts/sales-lens.mjs` and `scripts/sales-lens-rules.mjs` keep the pages a sales document: they take out our source tree, our test rig and CI, the libraries underneath, and the mechanics of running the roadmap, and keep what a customer installs, sets, opens or calls. `scripts/forbidden.mjs` fails the sync and the build if any of that comes back.
+- `src/data/sync.json` is what the sync writes about itself, and the sidebar and the landing page read it.
+- The License and Terms pages are the canonical text from the HotLoop-io organization, wrapped in a title and never edited here.
 
-- **`scripts/sync-manifest.mjs`** says which source file or README section becomes which page, with its title and description. A README section that no page claims and no skip entry names stops the sync, so a new section never goes missing quietly.
-- **`scripts/sync-docs.mjs`** syncs from `origin/main` after a fetch, finds each repo's latest release with `gh release list`, and compares every page against that release. A page that isn't in the release gets a **Next release** badge and a "Coming in the next release" box. A page that is but differs gets a "Covers what is coming" note. Neither names a branch or a commit. Nothing is claimed for an installed version without the release to check it against. It also applies the house style (no em or en dashes, American spelling), rewrites links between docs, drops links into private repos, copies every image a synced README references out of the repo into `public/synced/<repo>/<path>` and points the page at the copy (an external image URL stays as it is, and an image that is not in the repo stops the sync), and refuses to finish if the words Home Assistant or Apache-2.0 survive. `--check` writes nothing and fails if the committed pages or the copied images differ from a fresh sync, a missing or stale image included.
-- **`scripts/sales-lens.mjs` and `scripts/sales-lens-rules.mjs`** are the sales lens. The docs are read by a buyer and by a new user, so every page the sync writes goes through the rules, which take out our source tree, our test rig and CI, the libraries underneath, and the mechanics of how the roadmap is run, and keep what a customer installs, sets, opens or calls. A page rule has to match its source or the sync stops, and `SALES_LENS_LOG=<file>` writes everything the lens removed so a person reads the list.
-- **`src/pinned/`** holds the hand-written pages that name a release (the install pages, the overviews, upgrading). The sync fills in `{{hotloop}}`, `{{flow}}` and `{{cascade}}` with the latest release version. Each says which release it was last read against in a `reviewed:` line, and when a newer release is out the sync stops until somebody reads the page against it and bumps the line.
-- **`src/data/sync.json`** is what the sync writes about itself: the refs and shas it read, the release it compared to, and every page's status. The sidebar and the landing page read it.
-- **The License and Terms pages** are the canonical `LICENSE.md` and `TERMS.md` in HotLoop-io/HotLoop-io, wrapped in a title by `scripts/sync-legal.mjs`. They're only written when that file is the new text, and CI fails if a committed page is stale.
-
-`public/synced/` is generated the same way, and the next sync deletes any image no page references. A generated page carries `# generated by scripts/sync-docs.mjs` in its front matter and the next sync deletes any it no longer produces. Edit the source repo, the manifest or the rules, never a generated page.
+`npm run sync -- --check` writes nothing and fails if the committed pages differ from a fresh sync.
 
 ## When a release ships
 
-Each product repo's release checklist has a "sync docs.hotloop.io" step that points here. In short: run the sync, read what it changed, build, open a PR, merge on green, and watch the one Pages deploy. Then curl a page that moved and check it serves the new version.
+Each product's release checklist has a step that points here: run the sync, read what it changed, build, open a pull request, merge on green, and watch the one Pages deploy. Then open a page that moved and check it serves the new version.
 
 ## Writing
 
-Every page lands the plane: what the thing is, why it matters, and what it means for the person reading, with the real numbers and the real incident where there is one. The voice is Patrick's, blunt and a little unhinged, and the reference tables stay exact. No em-dashes as connectors, Oxford commas, American spelling. The house style is in the [brand standard](https://github.com/HotLoop-io/HotLoop-io/blob/main/brand/BRAND.md).
+Every page lands the plane: what the thing is, why it matters, and what it means for the person reading, with the real numbers and the real incident where there is one. The voice is Patrick's, blunt and a little unhinged, and the reference tables stay exact. No em dashes as connectors, Oxford commas, American spelling. The house style is in the [brand standard](https://github.com/HotLoop-io/HotLoop-io/blob/main/brand/BRAND.md).

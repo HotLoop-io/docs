@@ -8,9 +8,7 @@ editUrl: false
 Every box tracks `:stable` and Podman updates it. That is the rule for all four
 products, and it is why no unit here pins a release number: a box pinned to
 `4.17.0` is exactly as old as the day somebody installed it, and nobody goes
-back to a plant floor to bump a tag. `release.yml` moves `:stable` on every
-tag, and `.github/scripts/release_guard.sh` refuses a release whose units
-don't follow it.
+back to a plant floor to bump a tag. Every release tag moves `:stable`, and a release whose units don't follow it is refused.
 
 Turn the timer on once per box:
 

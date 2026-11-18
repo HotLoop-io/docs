@@ -15,7 +15,7 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "46da8527fa923f90e831b117c46d310ad67e9cff",
+      "sha": "257ae7781bd3598792a43c69b3c6b857889680de",
       "release": {
         "tag": "v2.14.1",
         "version": "2.14.1",
@@ -88,8 +88,8 @@
     }
   ],
   "codesys": {
-    "version": "0.3.1",
-    "needsCore": "4.19.4",
+    "version": "0.3.5",
+    "needsCore": "4.20.2",
     "chartRepo": "https://hotloop.io/hotloop-codesys/"
   },
   "pages": [
@@ -1452,6 +1452,10 @@
     "iot/overview.md",
     "releases/codesys-0-3-0.md",
     "releases/codesys-0-3-1.md",
+    "releases/codesys-0-3-2.md",
+    "releases/codesys-0-3-3.md",
+    "releases/codesys-0-3-4.md",
+    "releases/codesys-0-3-5.md",
     "transmitter/embernet.md"
   ]
 }

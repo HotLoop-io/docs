@@ -19,7 +19,6 @@ I added it because a drop-oldest wire failed to drain once in a few thousand tes
 
 - The license text shipped in the image spells EmberNet the way the canonical copy does. Three lines, spelling only.
 - The README's pictures are plain images, light then dark, so they show on docs.hotloop.io.
-- The Playwright wire tests wait for a wire to stop moving before they click it.
 
 ## New settings
 

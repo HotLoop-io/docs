@@ -17,8 +17,6 @@ When the database blinked, Cascade read "I couldn't look that up" as "that isn't
 
 The second factor had the same problem. During an outage, a good authenticator code, recovery code or passkey was answered as a wrong code, which can lock a person out of their own account. Those steps answer 503 for a store or server error now and keep 401 only for a real refusal: a wrong code, a failed passkey, an expired request. Passkey sign-in also no longer reads a failing user lookup as "no account has that passkey".
 
-Tests for each of these fail on 1.0.0 and pass on 1.0.1.
-
 ## Upgrading, and going back
 
 No migrations. `helm upgrade` to 1.0.1, or let `:stable` roll the Quadlet units. Because nothing in the database changes, putting 1.0.0 back is safe. A backup before any update is still the right habit.

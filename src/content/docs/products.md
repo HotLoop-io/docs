@@ -22,7 +22,7 @@ PLC on your bench. Features split them. Protocols don't.
 | **HotLoop Edge Relay** | HotLoop core | <a href="/edge-relay/overview/">Docs</a> | <a href="/edge-relay/install/">Install</a> | <a href="/releases/#hotloop-core">Notes</a> | <a href="/roadmap/">Roadmap</a> |
 | **HotLoop Flow** | Flow | <a href="/flow/overview/">Docs</a> | <a href="/flow/install/">Install</a> | <a href="/releases/#hotloop-flow">Notes</a> | <a href="/flow/roadmap/">Roadmap</a> |
 | **HotLoop Cascade** | Cascade | <a href="/cascade/overview/">Docs</a> | <a href="/cascade/running/">Install</a> | <a href="/releases/#hotloop-cascade">Notes</a> | <a href="/cascade/roadmap/">Roadmap</a> |
-| **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/codesys/overview/">Docs</a> | <a href="/codesys/install/">Install</a> | <a href="/releases/codesys-0-3-1/">Notes</a> | <a href="/codesys/roadmap/">Roadmap</a> |
+| **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/codesys/overview/">Docs</a> | <a href="/codesys/install/">Install</a> | <a href="/releases/codesys-0-3-5/">Notes</a> | <a href="/codesys/roadmap/">Roadmap</a> |
 | **HotLoop Transmitter** | Transmitter | <a href="/transmitter/overview/">Docs</a> | <a href="/transmitter/install/">Install</a> | <a href="/releases/transmitter-1-1-0/">Notes</a> | <a href="/transmitter/roadmap/">Roadmap</a> |
 
 The table that follows compares the four core products.
@@ -167,17 +167,4 @@ off the box. The move has been run on Quadlet, IoT then Edge then the Gateway on
 
 ## How they ship
 
-One `v` tag releases all four. RELEASE_CHECKLIST.md
-has the steps; the short version:
-
-- `.github/scripts/release_guard.sh X.Y.Z` checks every chart's version, every
-  chart's image, that every Quadlet app unit follows `:stable` with a healthcheck, and every database unit matches its chart and is never auto-updated, that the IoT
-  and Edge charts match their generator, and renders every chart the way a hand
-  install and the App Store deploy it. `release.yml` runs it before anything
-  builds, and it runs the same on a laptop.
-- `charts/hotloop-iot` and `charts/hotloop-edge` are generated from
-  `charts/hotloop` by `.github/scripts/make_product_charts.py` and committed.
-  Edit the Gateway chart, rerun it, commit all three. A part of a template
-  only some products have sits between `product:` and `end product` marker
-  comments; the generator keeps or drops it per product and refuses a
-  template that reads a setting its product doesn't have.
+One `v` tag releases all four, so IoT, Edge, the Gateway and the Edge Relay always share a version. Before anything is built, every chart's version and image is checked against the tag, every Quadlet app unit is checked to follow `:stable` with a healthcheck, and every database unit is checked to match its chart and never be auto-updated. The IoT and Edge charts are generated from the Gateway chart, so a fix to one reaches all three.
