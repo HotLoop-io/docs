@@ -29,6 +29,17 @@ helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n 
 
 Name the Secret `<release>-profile`, or change what the chart looks for with `profile.existingSecret` (the Secret) and `profile.key` (the key, `profile.json` by default). To pin the install to the runtime's node, set `nodeSelector`. For HotLoop alone with no profile, to set up by hand, install with `--set provisioner.enabled=false`.
 
+## With a runtime on the node's network
+
+A runtime installed from its chart with `network.hostNetwork=true` holds host port 8080 for WebVisu, so HotLoop's page cannot also listen on 8080 there. The chart has HotLoop's page listen on 8090 inside the pod and keeps the Service on 8080, so the App Store tile and the provisioner reach it as before. Install with the host network on for both:
+
+```bash
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+  --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
+```
+
+HotLoop's OPC UA PubSub listeners bind a UDP port exclusively, so two listeners on one port cannot both connect. The provisioner refuses a profile that asks for it, and says why.
+
 ## What installing does
 
 1. HotLoop Edge starts on that node with SQLite on the node's local-path storage. No database pod, one replica, and the update strategy is `Recreate`.

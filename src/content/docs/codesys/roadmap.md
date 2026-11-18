@@ -20,10 +20,10 @@ This is the list of what is done and what is left, in the order it gets done. It
 
 ## Shipped
 
-- [x] HotLoop 4.19.4, the release the chart wraps.
-- [x] The chart published at `https://hotloop.io/hotloop-codesys/`, 0.3.1 the newest.
+- [x] HotLoop 4.20.2, the release the chart wraps.
+- [x] The chart published at `https://hotloop.io/hotloop-codesys/`, 0.3.5 the newest.
 - [x] The provisioner image public, so it pulls with no login.
-- [x] [Release notes](/releases/codesys-0-3-1/) for both charts.
+- [x] [Release notes](/releases/codesys-0-3-5/) for every chart, 0.3.0 to 0.3.5.
 
 ## Proven on bare metal
 
