@@ -63,12 +63,7 @@ failed one left. That is safe, and it is held safe three ways
 
 - **Migrations only add.** A table, a column with a default, an index. Never a
   drop, a rename or a type change, so the previous release finds everything it
-  knew where it was and never looks at what was added. A test
-  (`TestMigrationsAreAdditive`) fails the build on one that doesn't.
-- **The previous release is run on it before a release ships.**
-  `test/prevrelease.sh` migrates a database with the new code, then starts the
-  last published image on it and runs login, devices, tags, a write through the
-  gate and history. It is a step in the release checklist.
+  knew where it was and never looks at what was added.
 - **An app refuses a schema it can't be trusted on.** The database records
   which release applied each migration. A rolled-back release one step behind
   starts, and says so in its log. One two or more releases behind does not

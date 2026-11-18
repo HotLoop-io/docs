@@ -8,10 +8,6 @@ editUrl: false
 Generated from the node registry. Do not edit by hand, change the
 `Compatibility` field on the node's descriptor and regenerate:
 
-```
-HOTLOOP_FLOW_UPDATE_DOCS=1 go test ./internal/nodes/
-```
-
 A node that is partially compatible and silent about how is worse than one
 that is obviously absent: the flow appears to work and quietly does the wrong
 thing. Every entry below has to say what is missing, and a test fails the
@@ -39,9 +35,7 @@ named, and the rest of the flow starts.
 Every property typed `jsonata` is evaluated, by gnata, a pure Go JSONata 2.x,
 with Node-RED's own functions bound in: `$flowContext`, `$globalContext`, `$env`,
 `$clone`, and the legacy form that names `msg`. Against the published jsonata-js
-2.2.2 test suite it passes 1673 of 1686 cases. The 13 it misses are listed in
-`internal/jsonata/suite_test.go`, and ten of those still raise an error, just
-with a different code or token than jsonata-js gives.
+2.2.2 test suite it passes 1673 of 1686 cases.
 
 Three differences from Node-RED. `$moment` is refused with an error naming
 `$fromMillis` and `$toMillis`, because moment.js isn't reimplemented here. A
@@ -123,7 +117,7 @@ stopped with D1012 instead of stalling the node's whole queue.
 | `change` | partial | set, change, delete and move are supported for msg, flow and global targets, including JSONata-typed values. The deep copy option is ignored: a value set from another property is shared with it, as it is in Node-RED with the option off. Ignored properties: `dc`. |
 | `delay` | divergent | All six modes are implemented, fixed, variable, random, rate limit, per-topic queue and timed release, along with msg.reset, msg.flush and the second output for dropped messages. Two deliberate differences: the queue is bounded, and past the limit a message is refused to a Catch node rather than held, because Node-RED's unbounded queue turns a source faster than the drain into an OOM-kill with no explanation; and messages still held when the flow stops are released rather than discarded. |
 | `exec` | divergent | The three outputs, both buffered and streaming modes, the timeout and the appended message property all behave as Node-RED's do. Two things do not, and neither is negotiable. There is no shell: the command line is split on quoting rules only, and an unquoted shell metacharacter is refused rather than run, so one allowed command cannot become an arbitrary one. And the node is disabled until an operator names the commands a flow may run. Node-RED's exec node runs anything, and Node-RED starts with no authentication by default; a vendor shipping that default became CVE-2025-41656 (Pilz IndustrialPI 4, VDE-2025-045), unauthenticated command execution on the device. Output is capped per stream; a command that exceeds it is killed and reported rather than being allowed to fill the heap. A command that forks children of its own may leave them behind when it is killed. |
-| `function` | partial | Runs on goja, a JavaScript interpreter written in Go, rather than Node's vm module. The language is ES2023; the Node standard library is not present. require() and npm modules do not work and cannot be made to without embedding Node. There is always a CPU time limit, which Node-RED leaves optional and off, and it applies to every timer callback too. setTimeout, setInterval and their clear functions work, on the node's clock, and every one is cleared when the flow stops or is redeployed. Buffer is there (alloc, from, concat, the read and write methods for integers and floats in both byte orders, slice, toString and toJSON). A byte slice in a message arrives as a byte array, so wrap it with Buffer.from. Ignored properties: `libs`, `require`. |
+| `function` | partial | Runs on the JavaScript interpreter, a JavaScript interpreter written in Go, rather than Node's vm module. The language is ES2023; the Node standard library is not present. require() and npm modules do not work and cannot be made to without embedding Node. There is always a CPU time limit, which Node-RED leaves optional and off, and it applies to every timer callback too. setTimeout, setInterval and their clear functions work, on the node's clock, and every one is cleared when the flow stops or is redeployed. Buffer is there (alloc, from, concat, the read and write methods for integers and floats in both byte orders, slice, toString and toJSON). A byte slice in a message arrives as a byte array, so wrap it with Buffer.from. Ignored properties: `libs`, `require`. |
 | `range` | full | n/a |
 | `rbe` | partial | Block-unless-changed and deadband modes are supported. Narrowband modes are not implemented in this build. |
 | `switch` | partial | Every comparison rule is supported, including a JSONata expression rule, which sees $I and $N for a message that is part of a sequence. The sequence rules head, tail and index are not implemented, and a rule using one fails every message with an unknown operator error. Ignored properties: `head`, `tail`, `index`. |

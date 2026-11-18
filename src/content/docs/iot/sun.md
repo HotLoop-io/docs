@@ -92,12 +92,7 @@ solar calculator (gml.noaa.gov/grad/solcalc), which are Jean Meeus's
 solar noon reads the equation of time around midnight UT rather than at noon,
 worth seconds, and kept so we match NOAA to the second).
 
-`internal/sun/testdata` holds the sunrise, sunset and solar noon tables NOAA's
-calculator published for 2026 at six places, every cell copied as printed:
-Cleveland and Austin (both sides of a daylight saving change), London (on the
-meridian), Sydney (southern hemisphere), Quito (on the equator) and Utqiagvik,
-north of the Arctic Circle, with two months of polar night and nearly three of
-midnight sun. The test reads all 4,380 sunrise and sunset cells and holds every
+The test reads all 4,380 sunrise and sunset cells and holds every
 crossing to the minute NOAA printed, plus two seconds, and every one of the
 2,190 noons to within a second.
 About 97 percent round to exactly the same minute; the rest are a second or so

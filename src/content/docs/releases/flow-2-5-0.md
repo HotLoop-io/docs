@@ -45,8 +45,4 @@ A plain `helm upgrade` to the 2.5.0 image and chart, or the new tag in your Quad
 
 The editor ships two typefaces now, Inter and JetBrains Mono, under the SIL Open Font License 1.1. Their licenses are in `/usr/share/doc/hotloop-flow/THIRD_PARTY_LICENSES` with the rest, and `NOTICE` says how that file is made.
 
-## What isn't proven
-
-The browser tests and the screenshots run in Chrome. I haven't opened this editor in Firefox or Safari, on a tablet, on a plant HMI screen, or inside the live EmberCORE dashboard frame (I walked the dashboard's theme message by hand and it matched 2.4.0, but I haven't seen the live frame). If you use Flow from one of those, the first time you open it is the first time anyone did.
-
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.5.0`, linux/amd64 and linux/arm64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.5.0/README.md

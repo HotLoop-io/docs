@@ -119,7 +119,7 @@ flows or change them, so Flow serves 29 tools of its own at the same `/mcp`,
 beside the flows' tools. They read and they write. Seven are about the flows, in
 the table below, and the rest are the admin API's other routes: the settings, the
 palette, the audit log, deployment detail and diffs, the export, the flow tests,
-the message traces, the runtime's numbers and a second-factor reset. `docs/MCP.md`
+the message traces, the runtime's numbers and a second-factor reset. the MCP page
 has every tool, its route and its permission, and the few routes that are not
 tools and why.
 
@@ -197,8 +197,7 @@ image): it listed all 27 of its tools, called `get_plant_status`, `list_devices`
 and `get_states` and used the answers, was refused with a wrong token and with
 none, got HotLoop's own error for a tool that doesn't exist and for a write MCP
 isn't allowed to make, and a Flow tool called by the Inspector ran a flow that
-called HotLoop's MCP and answered with what it said. CI starts that HotLoop and
-runs all of it, and fails if any of it skips.
+called HotLoop's MCP and answered with what it said.
 
 **Not done:** OAuth (a bearer token is the only way in, either direction),
 stdio servers, resources, prompts, sampling, elicitation and progress

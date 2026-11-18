@@ -17,4 +17,3 @@ The map test in the UniFi browser suite now notices a click the browser never de
 - No migrations, no new secrets, no API changes. A plain `helm upgrade` or the Quadlet auto-update takes it.
 - All four charts (`hotloop`, `hotloop-iot`, `hotloop-edge`, `hotloop-edge-relay`) are at 4.20.2, with every earlier version still in the index.
 - This build is amd64 only, and `stable` keeps the arm images it holds. The next release is one small version bump that builds the arm images.
-- Not proven: S7comm and EtherNet/IP against a physical PLC, as before.

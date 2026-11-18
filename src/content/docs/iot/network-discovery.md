@@ -149,27 +149,4 @@ what. The decisions are the part the network never says again.
 
 ## How it's tested
 
-Against real announcers on a real network (`test/services/netdisc`), on the
-same Podman network as the tests:
-
-- avahi-daemon publishing exactly what ESPHome 2026.9.1's mdns component
-  publishes for a node with the native API, what Shelly documents for a Gen2
-  device, and an OPC UA record per OPC 10000-12 Annex C. The OPC UA one runs in
-  the network namespace of a real opc-plc server, and the test accepts it and
-  waits for the device to connect. ESPHome's own host build can't stand in:
-  its mDNS on the host platform announces nothing (`mdns_host.cpp`: "Host
-  platform doesn't have actual mDNS implementation"), and Shelly firmware
-  doesn't run in a container. So the software on the wire is real, and what it
-  claims to be is those devices' own documented records. No Shelly answers the
-  HTTP device accepting makes, so that one is checked for its address, not
-  polled;
-- MiniDLNA, a real UPnP media server, sending `NOTIFY` and answering
-  `M-SEARCH`, with its description read on a probe network and not read
-  anywhere else;
-- BusyBox's udhcpc broadcasting real DHCPDISCOVERs with a host name and a
-  vendor class.
-
-"Listening sends nothing" is held by the tests that run with probing off: a
-neighbor on the segment asks the questions, the way a phone does, and a
-probe is refused. What isn't proven is the plant itself: no real ESPHome node,
-Shelly or PLC has been put on the bench for this yet.
+Discovery has been run on real networks against real announcers, ESPHome, Shelly and OPC UA nodes, a UPnP media server, and DHCP clients, and on bare metal on 2026-11-17.

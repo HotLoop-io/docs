@@ -20,7 +20,7 @@ An agent signs in with an API key and gets what that key's holder could do, cut 
 - A tool that changes something wants a `reason`, and the audit log keeps it next to the change, with the key and the name the client gave itself.
 - A credential's secret never comes back, to anyone. A credential made over MCP has its secrets sealed as they arrive.
 - `HOTLOOP_CASCADE_MCP` and `HOTLOOP_CASCADE_MCP_WRITES` are the deployment's switches, both on by default. No tool and no API route can change them, so an agent that can edit the instance's settings still can't turn writes back on.
-- The routes that turn a key away themselves (making API keys, SCIM tokens, secret providers and log destinations) are not tools, because a key that could make keys is a leaked key that keeps itself alive. `docs/MCP.md` lists them with every tool and the permission it asks for.
+- The routes that turn a key away themselves (making API keys, SCIM tokens, secret providers and log destinations) are not tools, because a key that could make keys is a leaked key that keeps itself alive. the MCP page lists them with every tool and the permission it asks for.
 
 ## The screens
 
@@ -36,16 +36,6 @@ Sign-in is the editor's own page now, at `/login`, in the editor's colors, light
 ## amd64 only, and why
 
 This release builds amd64 only. Multi-arch ships in its own run, so the release after this one is a single small version bump that builds both. Until then `stable`, `latest` and the short tags list this amd64 image beside the arm64 image they already pointed at, so a box on arm still pulls. The version tag, `1.1.0`, is amd64 alone.
-
-## What was tested
-
-The full local suite (`test/run.sh`) ran clean on The Beast on 18e774a: vet, every Go package with the race detector, and the editor's browser tests in a real Chrome, 40 packages and every spec, against the real services. Every one of the 79 tools is called through a real MCP session over HTTP with an API key, as the key's owner, as a viewer, and with a key scoped to exactly the permission the tool says it needs and then with every permission but that one, and the refusals are asserted. The browser specs run each new screen as the roles that may use it and the ones that may not, and the API's answer to each is asserted beside the page's. Every screen the editor had before was counted for six roles before and after, line by line, and nothing is gone.
-
-The release workflow's own push and check steps for an amd64 only release were run against a throwaway registry holding a multi-arch `stable`: the version tag listed amd64 alone, and `stable`, `latest`, `1.1` and `1` listed the new amd64 image beside the same arm64 image as before.
-
-The chart ran on a real k3s in both shapes (install, a workflow run, `/metrics`, an upgrade that keeps the key and the workflow, an uninstall that keeps the key), again on a starved box with k3s on two cores beside two busy containers, and again with the old pods held Terminating through the upgrade, all on the image built from 2587d59.
-
-Not run: the Quadlet units on a real Podman host. They are unchanged from 1.0.2.
 
 ## Upgrading, and going back
 

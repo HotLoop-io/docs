@@ -22,8 +22,4 @@ None.
 
 A plain `helm upgrade` to the 2.8.1 image and chart, or the new tag in your Quadlet unit. If you are on arm64 and stayed on 2.7.1 while 2.8.0 was amd64 only, this is your move to the analysis nodes, the data acquisition node, the durable MQTT output and the TDMS log: read the 2.8.0 notes for what they are and what isn't proven. Nothing happens on first start and nothing needs migrating.
 
-## What isn't proven
-
-The arm64 image is built the way it was for 2.7.1, under emulation on the runner, and it starts and reports its version in the release run. It has not been run on an arm64 box for this release.
-
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.8.1`, linux/amd64 and linux/arm64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.8.1/README.md

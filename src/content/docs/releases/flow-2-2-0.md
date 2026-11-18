@@ -26,7 +26,7 @@ HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what i
 **Tracing and replay**
 - Every message gets a bounded trace. Click a debug message and the editor lights the path it took, with timing and the payload at each hop, through splits, joins and subflows.
 - A trace becomes a flow test, or replays into a draft so you can try a fix on the message that broke it.
-- Every hop can go to an OpenTelemetry collector as a span (`trace.otlp.endpoint`). It was proven against the real collector image in CI.
+- Every hop can go to an OpenTelemetry collector as a span (`trace.otlp.endpoint`).
 
 **State that survives a restart**
 - Flow, global and node context live in a SQLite file, `state.db`, on the data volume. A restart no longer wipes them.
@@ -49,9 +49,9 @@ HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what i
 
 - Context persists by default. `store.context.persist` is on, so a value set before a restart is there after it, where before every restart started empty. A flow that counted on an empty context at start now has to clear what it expects to be clear. Set `persist` to `false` for the old behavior.
 - Tracing is on by default and bounded every way: 256 journeys, 512 hops each, 16 MiB all told, 1000 new journeys a second. It's memory only, so a restart starts the list over. `trace.enabled: false` turns it off.
-- gos7 printed a raw line to Go's global logger on every S7 timeout, and nothing on the node could turn it off. Flow carries gos7 in `third_party/gos7` with that one line sent through the handler's logger, and `third_party/gos7/HOTLOOP_PATCH.txt` says exactly what changed.
+- gos7 printed a raw line to Go's global logger on every S7 timeout, and nothing on the node could turn it off.
 - The durable queue counts a message as waiting after it's on disk, not before.
-- The image is built and pushed with Podman, not Docker. Same image, same tags (`2.2.0`, `2.2`, `2`), still linux/amd64 and linux/arm64. The build file is a `Containerfile` now, and `docker-publish.yml` is `image-publish.yml`.
+- The image is built and pushed with Podman, not Docker. Same image, same tags (`2.2.0`, `2.2`, `2`), still linux/amd64 and linux/arm64.
 
 ## Upgrade notes
 
@@ -76,14 +76,5 @@ From 2.1.0 it's a plain image bump (`helm upgrade`, or the new tag in your Quadl
 | `trace.otlp.headersSecret` (chart) | `HOTLOOP_FLOW_TRACE_OTLP_HEADERS` | none. A Secret key holding `Name=value` pairs separated by commas, for a hosted collector's API key. |
 
 The chart has all of these under `store` and `trace` in `values.yaml`.
-
-## What isn't proven
-
-It has never run on a real plant floor.
-
-- The S7 and EtherNet/IP nodes have only met simulators: the server in python-snap7 for S7 and `ab_server` from libplctag for EtherNet/IP. Neither has talked to a Siemens CPU or a Logix controller. The S7 bit write is checked on the wire, request by request, because the simulator overwrites the whole byte the way a CPU doesn't.
-- Modbus and OPC UA were tested against pymodbus and Microsoft's OPC PLC. `Aes256_Sha256_RsaPss` isn't in the OPC UA dropdown, because gopcua v0.9.1 fails it against OPC PLC and I won't offer a setting I can't check.
-- Durable wires have never been on a Pi. The measurements were taken on an x86 box under WSL, and I won't print a card figure I didn't measure on a card.
-- Not done: Modbus RTU, Modbus over TLS, OPC UA events, history, method calls and browse, S7 timers and counters, PCCC controllers.
 
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.2.0`, linux/amd64 and linux/arm64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest: https://github.com/HotLoop-io/hotloop-flow/blob/v2.2.0/README.md

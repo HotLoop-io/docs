@@ -34,18 +34,6 @@ This build is amd64 only, and the next release is one small version bump that bu
 
 A plain `helm upgrade`, or the Quadlet auto-update. There are no migrations and nothing to configure. The first load fetches the new page and the service worker replaces the old one's cache, so a phone that had the app installed shows the new screens on its next open. Nothing can be undone by upgrading, and a rollback to 4.19.11 is safe because nothing in the database changed.
 
-## In the tests
-
-- **The CODESYS model server in the driver tests no longer starts on a port another test took.** It found a free port by listening and closing, and started the server on it a moment later; with every package running at once another test's listener could have the port by then, the server's bind error was thrown away, and the readiness check was answered by that listener. The first connect read a connection reset, and 4.19.11's gate saw it once. The bind error is kept, the check counts only while this server is still running, and a lost port is picked again. A test holds the first port with a listener that drops connections: it fails without the change.
-- The browser tests drive the new UI at the root, and the tests that reached into the old UI's own scripts now use what the new one shows.
-
-## What isn't proven
-
-- The screens were compared old against new in a real browser (Chromium) with a seeded plant, as the viewer, the operator, and the administrator, and the 137 browser tests of the full suite drive them. No plant has lived with the new UI as its default yet; at `/next` it was in every install since 4.19.4. No other browser engine was driven.
-- The UniFi screens against a real console, and the UniFi OS lab, are not in the suite's allowlisted runs; the lab controller covers them.
-- The MCP tools are tested against the real routes and their permissions, row by row. They have not been driven by a live agent against a plant over a Vord login.
-- This build is amd64 only. The arm images are the follow-up's.
-
 ## Known
 
 - Nothing new. What is still open under Broken or missing in the [roadmap](/roadmap/): OPC UA X.509 user tokens, the deprecated `Basic128Rsa15` and `Basic256` policies our OPC UA server offers and passwords over 64 bytes (both the library's), and S7comm and EtherNet/IP silent-device tests against real devices.

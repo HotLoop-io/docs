@@ -5,8 +5,8 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.21.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
@@ -14,12 +14,7 @@ it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
 same permissions.
 
-This file is checked against the code. `TestAPIReferenceMatchesRoutes` in
-`internal/api` reads every route the server registers and fails the build if one
-is missing from the [endpoint index](#endpoint-index), if the index lists one
-that does not exist, or if the permission written here is not the one the code
-checks. `TestAPIReferencePermissionsTable` does the same for the
-[permissions table](#permissions) against `internal/auth`. So the list of routes
+This file is checked against the code. So the list of routes
 and who may call them is not a description of the API as it once was. The
 request and response shapes below were taken from a running Gateway; the tests
 do not check those, so if you change a handler, change its section here too.
@@ -300,9 +295,7 @@ The line is the same everywhere: an operator runs the plant (writes values,
 acknowledges alarms, triggers automations, nudges a relay), and only an admin
 changes what the plant is configured to be, or does something to the outside
 world on the Gateway's behalf (restarting a relay, pushing its config, sending
-a test page, defining a report that emails plant data somewhere). Why each one
-sits where it does is in the route comments in `internal/api/api.go` and in
-[AUTH.md](/iot/authentication/#roles).
+a test page, defining a report that emails plant data somewhere).
 
 ## Endpoint index
 

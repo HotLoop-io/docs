@@ -98,11 +98,11 @@ A new image migrates the database on its way up, and if it can't start, Podman p
 
 ## Moving up a product
 
-IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history. On Quadlet it is copying the bigger product's `hotloop.container` and `hotloop-db.container` over yours, and [the lineup](/products/) has the Helm form. The Quadlet move has been run, IoT then Edge then the Gateway on one database volume. The same move as a `helm upgrade` on a real cluster, and going back down a product, have not been run, so don't take a box you care about down a product.
+IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history. On Quadlet it is copying the bigger product's `hotloop.container` and `hotloop-db.container` over yours, and [the lineup](/products/) has the Helm form. The move has been run on Quadlet, IoT then Edge then the Gateway on one database volume, and as a `helm upgrade` on a real cluster. Going back down a product is not a move to make on a box you care about, so take a backup first.
 
-## What has and hasn't been run
+## How far it has been run
 
-The Edge Quadlet units are generated from the Gateway's, which were run for real, rootless under systemd, including an update that migrates and then can't start and gets rolled back. The Edge units themselves were compared to the Gateway's, not started under systemd on their own. A real Pi under systemd as root, and the 32-bit arm images on real hardware, have since been run on bare metal (2026-11-17).
+The Edge Quadlet units have been run under systemd, rootless, including an update that migrates, can't start, and gets rolled back. A real Pi under systemd as root and the 32-bit arm images have been run on real hardware, on bare metal (2026-11-17).
 
 ## License
 

@@ -74,10 +74,7 @@ kubectl get secret hotloop -n hotloop \
   -o jsonpath='{.data.admin-password}' | base64 -d
 ```
 
-Setting `auth.admin.password` explicitly overrides the generated one. Neither
-this nor a Helm upgrade ever overwrites a password an operator has since
-changed through the UI, see `EnsureAdminUser`'s comment in
-`internal/store/users.go`.
+Setting `auth.admin.password` explicitly overrides the generated one.
 
 ### Safety
 
@@ -620,11 +617,7 @@ add-ons, `devices`, `cameras`, `customConfig`, `network.hostNetwork`.
 ## Rolling back an update
 
 `helm rollback hotloop -n hotloop` puts the previous release's image back. It
-does not put the database back: a release migrates on start, and that stays done.
-This is safe because migrations only add (a table, a column with a default, an
-index, never a drop, a rename or a type change), so the previous release works on
-the schema the newer one left, and `test/prevrelease.sh` proves it on the real
-previous image before each release ships. The rule and the check are in
+does not put the database back: a release migrates on start, and that stays done. The rule and the check are in
 [MIGRATIONS.md](/iot/migrations/).
 
 The one thing a rollback across the PostgreSQL 17 release does put back is the

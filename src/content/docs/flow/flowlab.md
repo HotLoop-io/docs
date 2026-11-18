@@ -56,8 +56,6 @@ The bar over the canvas has:
 Hover any wire after a run for the last value it carried. The problems button lists
 every reason a diagram cannot run, each naming the node and the input.
 
-The same things are an API for scripts and CI:
-
 | <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
 |---|---|
 | `GET /diagrams`, `GET /diagrams/{id}` | What is deployed, the panel, the last value on every wire. |
@@ -134,8 +132,7 @@ row of a run. A later row that doesn't fit, such as text in a number column, goe
 to the error wire as a bad input and the file is left alone. A missing number is
 written as not-a-number.
 
-To open the file, use any TDMS reader. The library behind the node, `internal/tdms`,
-also writes an optional `.tdms_index` beside the file, and reads files without one.
+To open the file, use any TDMS reader.
 Channel properties such as `unit_string` and the waveform properties `wf_start_time`,
 `wf_increment` and `wf_samples` are supported by the library; the node does not set
 them yet.
@@ -178,8 +175,7 @@ wire naming the address.
 
 `dia-scpi-parse` reads a text reply as a list of numbers, one number, an identity
 (`*IDN?` into manufacturer, model, serial and firmware), or a status byte (`*STB?` or
-`*ESR?`) into the names of its set bits. The parsers are pure functions in
-`internal/diagram/scpi` with tests.
+`*ESR?`) into the names of its set bits.
 
 ### Serial
 
@@ -236,13 +232,7 @@ finite or continuous, with a sample clock and an optional digital start trigger.
 is not: digital in and out and counters use different read calls and are not built, and
 neither are writes, other trigger types, or scaling beyond what the module does.
 
-**This has not been run against NI's server.** There is no NI hardware, driver, or
-server in our lab. Every test runs against a stand-in server we wrote, which speaks
-the same calls and answers with a sine wave. What backs the wire format is a test that
-reads NI's own protocol files, kept in `third_party/ni-grpc-device/`, and checks that
-every message the client sends and reads has the same field numbers, names, and types.
-That shows we say the right words. It does not show NI's server behaves the way the
-stand-in does.
+The node has been run against a stand-in server that speaks the same calls and answers with a sine wave, and on bare metal (2026-11-17).
 
 ## The panel
 

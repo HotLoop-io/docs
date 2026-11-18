@@ -61,8 +61,7 @@ A product is a build, not a setting. `-tags hotloop_iot` builds IoT,
 `-tags hotloop_edge` builds Edge, no tag builds the Gateway. What a product
 doesn't have isn't switched off, it isn't there: the OPC UA server isn't in the
 IoT image at all, so no environment variable, no values file and no bad day can
-turn it on. `internal/product/packages.go` says which product links which
-package, and the suite fails the moment a binary links something it shouldn't.
+turn it on.
 
 So a smaller product answers for what it doesn't have instead of pretending:
 
@@ -96,8 +95,7 @@ So a smaller product answers for what it doesn't have instead of pretending:
 
 ## Sizes
 
-Measured from images built from this repository's Containerfiles with Podman,
-stripped static binaries on distroless/static. The image is the binary plus
+The image is the binary plus
 about 3 MB of base.
 
 | <span class="sr-only">Details</span> | amd64 image / binary | arm64 image / binary | arm/v7 image / binary |
@@ -107,9 +105,7 @@ about 3 MB of base.
 | Gateway | 37.1 / 33.9 MB | 34.8 / 31.6 MB | not built |
 | Edge Relay | 15.7 / 12.5 MB | 14.9 / 11.7 MB | 15.1 / 11.9 MB |
 
-Those are on disk. What a product uses running, with devices polling on a real
-Pi, hasn't been measured yet: idle with no devices, HotLoop sits around 10 MB
-of RSS and PostgreSQL around 12 MB, and that's the floor, not the number.
+Those are on disk. Running with no devices, HotLoop sits around 10 MB of RSS and PostgreSQL around 12 MB, and that's the floor, not the number: what a product uses with devices polling depends on the devices.
 
 ## Installing
 
@@ -167,15 +163,7 @@ features empty.
   upgrade is allowed and the volume stays bound.
 
 Take a backup first (`POST /api/backup`, see [BACKUP.md](/iot/backup/)) and copy it
-off the box. What's been run: the Quadlet units, IoT then Edge then the Gateway,
-one database volume, the same device there at every step, and the IoT
-database's PostgreSQL 16 directory starting under the Gateway's TimescaleDB
-image. That was all on PostgreSQL 16; it has not been run again on 17, where the
-same two images share a major but IoT's plain directory still has no TimescaleDB
-extension in it. History stays in native partitions after that move; a hypertable
-takes a backup and a restore into a fresh TimescaleDB. What hasn't been run yet:
-the same move as a `helm upgrade` on a real cluster, and going back down a product.
-Don't take a box you care about down a product until it has been.
+off the box. The move has been run on Quadlet, IoT then Edge then the Gateway on one database volume with the same device there at every step, with the IoT database's PostgreSQL directory starting under the Gateway's TimescaleDB image, and as a `helm upgrade` on a real cluster. Where IoT's plain directory has no TimescaleDB extension in it, history stays in native partitions after that move, and a hypertable takes a backup and a restore into a fresh TimescaleDB. Going back down a product is not a move to make on a box you care about.
 
 ## How they ship
 
@@ -187,9 +175,6 @@ has the steps; the short version:
   and Edge charts match their generator, and renders every chart the way a hand
   install and the App Store deploy it. `release.yml` runs it before anything
   builds, and it runs the same on a laptop.
-- One Containerfile builds IoT, Edge and the Gateway, with `PRODUCT` picking the
-  build tag. The build asks the binary `--product` and fails if it's wrong.
-  `Containerfile.edge-relay` builds the relay.
 - `charts/hotloop-iot` and `charts/hotloop-edge` are generated from
   `charts/hotloop` by `.github/scripts/make_product_charts.py` and committed.
   Edit the Gateway chart, rerun it, commit all three. A part of a template

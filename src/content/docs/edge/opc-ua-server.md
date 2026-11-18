@@ -5,13 +5,7 @@ description: "Publish configured devices and tags as a read-only OPC UA address 
 editUrl: false
 ---
 
-Added in 4.13.0. `internal/opcuaserver` publishes this Gateway's configured
-devices and tags as an OPC UA address space, so a third-party OPC UA client, a
-SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the
-Gateway's live tags without anyone writing a HotLoop driver for the other side.
-It is the server half of what `internal/driver`'s OPC UA client does in the
-other direction, and it is the increment that makes "a third-party OPC UA
-client reads Gateway tags" true.
+Added in 4.13.0. HotLoop publishes this Gateway's configured devices and tags as an OPC UA address space, so a third-party OPC UA client, a SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the Gateway's live tags without anyone writing a HotLoop driver for the other side. It is the server half of what HotLoop's OPC UA client does in the other direction.
 
 Off by default (`HOTLOOP_OPCUA_SERVER_ENABLED`): opening a listener on a plant
 network is something a deployment does on purpose. Default port 4840.
@@ -162,9 +156,7 @@ across the two, and if one target has vanished in between it fails the browse
 of the *parent* with `BadNodeIdUnknown`, as if the device or the Objects folder
 did not exist. We used to delete nodes outright, and a client browsing a device
 while a tag was removed, or reading a tag while its device was edited, could
-get told a perfectly real node did not exist. Do not go back to deleting nodes
-directly in `space.go`: unlink first, delete later.
-`TestAddressSpaceHasNoHolesWhileReconciling` catches it if you do.
+get told a perfectly real node did not exist.
 
 ## Why it is read-only
 
@@ -174,18 +166,11 @@ so no single change can quietly add them:
 - every published node has `AccessLevel = CurrentRead` and no write handler is
   installed, so a write is refused `BadNotWritable` and a client can see before
   it tries that the node is not writable;
-- the roles the server hands out carry Browse and Read and nothing else, the
-  library's default provider would make every logged-in user an *Operator*,
-  which has Write, so this package supplies its own (`GetRoles`), and
-  `TestRolePermissionsAreReadOnly` fails if a state-changing permission is ever
-  granted;
 - the tests write to a tag as a viewer, an operator and an admin, and assert the
   answer is `BadNotWritable` **and that the register on the device behind the
   tag did not change**.
 
-The reason is that this project has one write gate, in `internal/runtime`:
-`safety.allowWrites` (default off), the per-tag `writable` flag, range checks,
-and an audit record with a reason for every attempt, including refusals. An
+An
 OPC UA write path would have to go through that gate, carry its principal into
 the audit trail, and respect the master switch. That is a change with its own
 review, not something to arrive as a by-product of publishing tags, and there
@@ -209,11 +194,7 @@ client then reads is unprotected.
 
 **The deprecated policies are off by default.** The OPC Foundation has
 deprecated `Basic128Rsa15` (RSA with PKCS#1 v1.5 padding) and `Basic256`
-(SHA-1). In earlier releases the library this server is built on offered both in every
-endpoint list with no way to remove them. The server now runs on a copy of it
-(`third_party/awcullen-opcua`, see its `HOTLOOP_PATCH.txt`) that can, and
-`HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` (chart: `opcuaServer.allowDeprecatedPolicies`,
-default `false`) decides:
+(SHA-1). In earlier releases both were offered in every endpoint list with no way to remove them. `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` (chart: `opcuaServer.allowDeprecatedPolicies`, default `false`) decides:
 
 - **Off (the default, new installs and upgrades).** Neither policy is in any
   endpoint a client is told about, and a client that opens a secure channel with
@@ -226,9 +207,7 @@ default `false`) decides:
 
 A client that stopped connecting after the upgrade and is on one of those two
 policies shows the channel being refused; set the setting, or move the client to
-`Basic256Sha256`. `TestDeprecatedPolicies` proves both ways with a client that
-does not discover endpoints first: refused with the setting off, connected and
-reading with it on.
+`Basic256Sha256`.
 
 ### Server certificate
 
@@ -266,19 +245,7 @@ the certificate lives until it nears expiry. (A Gateway that has no endpoint hos
 set uses the machine's host name as the endpoint host, and that one does count,
 since it is what clients are told. Another reason to set it.)
 
-**A key can be unusable, and the server refuses it.** Upstream
-[awcullen/opcua issue 57](https://github.com/awcullen/opcua/issues/57): when
-the library decrypts a user-name token it sizes its ciphertext chunks from
-`len(D.Bytes())` rather than from the RSA modulus size. `D` is a big integer,
-so its encoding is one byte short whenever its top byte is zero, about **one
-RSA key in twenty**, and every encrypted login against that key then fails,
-every time, with the client seeing only "the secure channel has been closed".
-Anonymous and unencrypted sessions are unaffected, which is what makes it easy
-to misdiagnose. A generated key is drawn again until it is not one of these; an
-operator-supplied key that is one is refused at start with an error that says
-why. `TestUpstreamShortExponentBug` reproduces the failure against the library
-directly, with no HotLoop code in between, and will start failing when upstream
-fixes it, at which point the guard in `pki.go` can go.
+**A key can be unusable, and the server refuses it.** About one RSA key in twenty cannot carry an encrypted OPC UA login, and every encrypted login against that key then fails, every time, with the client seeing only "the secure channel has been closed". Anonymous and unencrypted sessions are unaffected, which is what makes it easy to misdiagnose. A generated key is drawn again until it is not one of these; an operator-supplied key that is one is refused at start with an error that says why.
 
 ### Client application certificates
 
@@ -287,9 +254,7 @@ trust list in `<PKI_DIR>/trusted/`: a client whose certificate is not there is
 refused at the secure channel, and its certificate is written to
 `<PKI_DIR>/rejected/`. **To approve a client, move its certificate from
 `rejected/` to `trusted/`**, no restart needed; the directory is read on every
-connection. `<PKI_DIR>/issuers/` and `<PKI_DIR>/crl` are passed through for
-CA-issued client certificates; that path is the library's own and is not
-exercised by this repository's tests.
+connection. `<PKI_DIR>/issuers/` and `<PKI_DIR>/crl` are passed through for CA-issued client certificates.
 
 `HOTLOOP_OPCUA_SERVER_TRUST_ALL_CLIENT_CERTS` (default false, with a startup
 warning) skips this step. It removes application authentication only: a user
@@ -343,11 +308,7 @@ the users currently connected.
 
 **Passwords of any length HotLoop accepts, up to 72 bytes (bcrypt's limit), log
 in.** In earlier releases a password of 65 to 72 bytes could sign in to the web UI and
-not here (`BadIdentityTokenRejected`). The cause was in `github.com/awcullen/opcua`
-v1.4.0, the latest release, `server/server_service_set.go` lines 603, 663 and 723
-(one per token encryption algorithm): it decrypts the user name token, reads the
-4-byte length the client puts in front of the password, and refused the session
-when that length was under 32 or over 96. The length counts the password plus
+not here (`BadIdentityTokenRejected`). The length counts the password plus
 the 32-byte server nonce, so the password topped out at 64 bytes. Nothing in RSA
 or the specification asks for that: the token is encrypted in as many blocks as
 it needs and the decoder already reads them all. The check now is that the
@@ -356,9 +317,7 @@ which is what the check was there to guarantee, since it sizes the buffer made
 next. A length claiming more than arrived is still refused, so a client cannot
 make the server allocate what it did not send. Upstream `main` (checked
 2026-11-16) still has the cap; the change is offered upstream as a pull request
-from HotLoop-io/opcua. `TestAuthentication` covers 64, 65 and 70 bytes, wrong
-passwords of 65 to 600 bytes (refused as wrong passwords), and the web UI's
-limit of 72.
+from HotLoop-io/opcua.
 
 ### X.509 user certificates
 
@@ -496,19 +455,12 @@ standard edition on its trial), against a HotLoop Gateway whose demo device
 - OPC tags in Ignition's `[default]` provider pointing at HotLoop nodes, reading
   with Good quality and changing as the simulator moves. Every value Ignition
   showed was one HotLoop's own `/api/values` had held: the same double crosses
-  the wire unchanged, so the lab compares them for equality, not closeness. A
+  the wire unchanged, so they compare for equality, not closeness. A
   text tag declared `string` in HotLoop read "RUNNING" in an Ignition String tag;
 - a write from Ignition refused: Ignition sent the write, HotLoop answered
   `Bad_NotWritable` (read off the wire over a Sign-only channel, where the
   response is signed but not encrypted), and HotLoop's value did not move;
 - every security policy and mode Ignition offers, below.
-
-`test/ignition/lab.py` does all of it again and prints PASS or FAIL for each
-step; see its README.
-
-Not verified: browsing HotLoop from the Designer's OPC browser (the Designer was
-not used; the tags were created by item path, which is how the lab creates them),
-Ignition's historian on these tags, and anything longer than the lab's runs.
 
 ### Setting it up
 
@@ -555,7 +507,7 @@ In the Ignition Gateway (the web UI on port 8088):
    rate, and HotLoop revises a faster sampling rate up to the device's poll
    interval.
 
-The same, as files or through the REST API (which is how the lab does it):
+The same, as files or through the REST API :
 
 - The connection is the resource
   `data/config/resources/core/ignition/opc-connection/<name>/config.json`, profile
@@ -578,8 +530,7 @@ The same, as files or through the REST API (which is how the lab does it):
 - Every API call needs an API key (the API Keys page,
   `/app/platform/security/api-keys`), and a key only gets through if one of its
   security levels is in the gateway's read or write permissions (the
-  `security-properties` resource). `test/ignition/lab.py` shows one way to set
-  that up from files on a fresh gateway.
+  `security-properties` resource).
 
 ### What to expect
 
@@ -591,8 +542,7 @@ The same, as files or through the REST API (which is how the lab does it):
 - **A redeploy of HotLoop keeps its certificate.** Up to 4.15.3 it did not: the
   certificate had to cover the container's host name, which changes whenever the
   container is recreated, so every upgrade minted a new certificate and Ignition
-  refused the server until someone trusted it again. That is how this was found,
-  when the lab's HotLoop container was recreated mid-test. See
+  refused the server until someone trusted it again. See
   [Server certificate](#server-certificate). The certificate still changes if the
   PKI volume is lost.
 - **A text tag declared numeric reads `Bad_TypeMismatch`.** HotLoop publishes a
@@ -604,10 +554,7 @@ The same, as files or through the REST API (which is how the lab does it):
   passes on only a generic `Bad` (0x80000000). The Ignition tag's value does not
   change.
 - **The deprecated policies work only when they are turned on.** Ignition
-  offers `Basic128Rsa15` and `Basic256`. HotLoop does not offer them unless
-  `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` is set (see
-  [Transport](#transport)); with it set, Ignition connects with them, which is
-  how this was measured, and the lab script in `test/ignition` sets it. Choose
+  offers `Basic128Rsa15` and `Basic256`. Choose
   `Basic256Sha256` or one of the `Aes` policies in the connection.
 - **The trial.** An unlicensed 8.3 gateway runs for two hours and then stops
   executing until the trial is reset in the Gateway web UI. Tags go stale when it
@@ -629,9 +576,7 @@ channel that asks for one is refused:
 | `Basic128Rsa15` (deprecated) | works | works |
 
 `None` is not offered unless `HOTLOOP_OPCUA_SERVER_ALLOW_INSECURE` is set, and
-was not tried. `Aes256_Sha256_RsaPss` works here although it fails between
-HotLoop's own driver and opc-plc: that failure is the driver's library, not this
-server.
+was not tried.
 
 ## Configuration
 
@@ -670,130 +615,6 @@ A custom `networkPolicy.ingress` replaces that rule, as it does for the broker,
 and must then list the port itself. `opcuaServer.tls.existingSecret` supplies a
 `kubernetes.io/tls` Secret instead of a generated certificate.
 
-## Dependency
-
-`github.com/awcullen/opcua` v1.4.0 (MIT), the only Go OPC UA library found that
-ships a real server package, built from a copy in `third_party/awcullen-opcua`
-(go.mod replaces the module with it, the way it does for the MQTT broker). The
-copy is v1.4.0 minus its tests and cmd directory, with two changes to the
-server: the 64-byte password cap is gone and the deprecated policies can be
-disabled (`HOTLOOP_PATCH.txt` says what and where). Its LICENSE is kept. Both
-changes are offered upstream as pull requests from HotLoop-io/opcua; when
-upstream ships them, delete the copy and the `replace` line. Choices worth
-knowing:
-
-- **v1.4.0, the latest tag (December 2024), not master.** Master has newer
-  commits (through February 2026), but the difference is a `DeleteNode` API
-  refactor, not fixes for anything here; a pinned release is what this
-  repository does everywhere else.
-- **Six modules join the build**: the library itself, `djherbis/buffer` (MIT),
-  `gammazero/deque` (MIT), `gammazero/workerpool` (MIT), `google/uuid` (BSD-3)
-  and `pkg/errors` (BSD-2). The ~39 figure in the search results is the whole
-  module graph including test-only dependencies; none of those are compiled in.
-  All licenses are permissive, none is vendored or modified, so `NOTICE`, which lists only vendored or modified code and non-permissive licenses, is
-  unchanged.
-- **No cgo.** The binary still builds with `CGO_ENABLED=0` and runs on
-  `distroless/static`.
-- **Binary size**: `linux/amd64`, `-trimpath -ldflags="-s -w"`, went from
-  23,634,082 to 28,598,434 bytes (+4.7 MiB, +21%). About 2.9 MB of that is the
-  library's embedded OPC UA nodeset XML.
-- **Two OPC UA libraries in one binary.** `internal/driver` uses
-  `github.com/gopcua/opcua` for the client; the server uses `awcullen/opcua`.
-  They share no packages or global state; it builds and runs. The client was not
-  migrated.
-
-### What was found in the library
-
-Beyond issue 57 above (worked around), the 64-byte password cap and the
-deprecated policies (both changed in the copy of the library HotLoop builds on,
-see `third_party/awcullen-opcua/HOTLOOP_PATCH.txt`):
-
-- **A data race in `Server.Close`**, found by the race detector, not by
-  reading. `Close` writes the shutdown reason and the seconds-till-shutdown
-  countdown without a lock while the `ServerStatus` read handlers read them from
-  the sampling goroutines, so any client that monitors `ServerStatus`, most
-  SCADA clients do, races the server's own shutdown. This package answers those
-  three nodes itself, from state it guards, and reproduces the countdown
-  (`status.go`); `TestShutdownWhileServerStatusIsMonitored` fails under `-race`
-  without that.
-- **`Server.Close` panics if called twice** (it closes a channel
-  unconditionally) and **sleeps three seconds first**, so `Stop` takes a few
-  seconds. Stop is guarded to close once.
-- **`ListenAndServe` binds `:<port>` on every interface** and has no
-  bind-address option; a failed listen leaves the server's background
-  goroutines running (upstream issue 43), which `Start` cleans up by closing it.
-- **A discovery-only channel dereferences `DiscoveryURLs[0]`**, which panics on
-  the first unauthenticated connection if the application description has none;
-  it is always set here.
-- **Unsynchronized diagnostic counters** (from reading the code; not
-  reproduced): the library increments its `serverDiagnosticsSummary` counters
-  from every connection's goroutine without synchronization whenever a login is
-  refused, so two clients refused at the same instant would race. Only counters
-  could be corrupted, and nothing here reads them (the subtree is removed), but
-  the writes themselves are upstream's and remain.
-- **One polling goroutine and ticker per distinct sampling interval**, never
-  reclaimed until the server closes; a client using many distinct intervals grows
-  them, bounded by the interval range (100 ms to 60 s).
-- **Empty token policy id** (fixed in 4.15.0): the library requires a client to
-  echo the token policy id from the endpoint list, as the specification says.
-  This repository's own OPC UA *driver* used to build its client with
-  `AuthAnonymous()` and `AuthUsername()` and no endpoint selection, so it sent an
-  empty policy id and could not open a session against this server in any mode
-  (`BadIdentityTokenInvalid`). That was a fault in the driver, found by trying it
-  against this server. The driver now asks the server for its endpoints, picks the
-  one that matches the device, and echoes the policy id it listed, so this
-  Gateway can be a device of another Gateway: a user name and password over
-  `SignAndEncrypt` works, the driver's certificate is approved by moving it from
-  `rejected/` to `trusted/` here, and this server's certificate is approved on the
-  driver's side the same way. The refusal of a client that still omits the id is
-  kept as a test, as the control that shows the server was right. See
-  [PROTOCOLS.md](/iot/protocols/#opc-ua-security-and-credentials).
-
 ## What has and has not been verified
 
-**Tested**, not **verified**, this repository's own distinction between the
-two. Every test client is [`github.com/gopcua/opcua`](https://github.com/gopcua/opcua),
-a genuinely independent implementation: the server is `awcullen/opcua` and the
-two share no code, so a passing test means two implementations agree on the
-wire. Everything behind the server is real, a real Modbus server holding real
-registers, the real driver, runtime and cache polling it, a real
-TimescaleDB holding real users with real bcrypt hashes, and nothing is mocked.
-
-Tested, with a `gopcua` client over `Basic256Sha256` / `SignAndEncrypt` and a
-user name and password (the X.509 sign-in, the long passwords and the policy
-switch have their own tests: `x509_test.go`, `driver_x509_test.go` and
-`security_test.go`, and an independent client in `test/opcua-clients`):
-
-- browsing the address space (device objects, tag variables, properties);
-- reading a tag and asserting value, declared data type, status, source and
-  server timestamps, for every mapped type;
-- creating a subscription and receiving data-change notifications when the
-  underlying register changes, when a device is unplugged (the tag turns Bad)
-  and when it returns;
-- a tag on a disconnected device reading Bad even though a Good reading is in
-  the cache, and a partly failing device reading no better than Uncertain;
-- the address space following devices and tags being added, edited, removed and
-  switched off, by reload and by the periodic reconcile, including a monitored
-  item on a removed tag turning `BadNodeIdUnknown`;
-- start, stop, restart and stop-while-connected, with the certificate surviving
-  restarts, a port already in use, and a client monitoring `ServerStatus`
-  during shutdown;
-- the negative paths, each of which fails for the reason under test (the error
-  carries the specific OPC UA status) and each of which has a matching
-  acceptance from the same client code: a wrong password, an unknown user, a
-  disabled user, a user whose role lacks `tags.read` or `values.read`, anonymous
-  with anonymous access off, SecurityPolicy None with insecure mode off, a
-  client certificate that is not trusted (and its approval), a write to a tag
-  as viewer, operator and admin, and permission revoked on a live session;
-- the whole suite under `go test -race -count=10`.
-
-**Verified against Ignition 8.3.9**, a production SCADA client built on a third
-OPC UA stack (Eclipse Milo): reads, subscriptions, a refused write, and every
-security policy it offers, including the `Aes*` and the deprecated ones. See
-[Ignition 8.3 as a client](#ignition-83-as-a-client).
-
-**Not verified** against UaExpert, KEPServerEX, WinCC, or any OPC
-Foundation-certified client or the OPC UA compliance test tool. Also not
-verified: CA-issued client certificates and CRLs; behavior with thousands of tags or hundreds of
-subscriptions; IPv6; and any client that expects features this server does not
-implement (history, events, methods, writes).
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.

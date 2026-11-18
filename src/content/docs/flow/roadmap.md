@@ -45,7 +45,7 @@ time.
 
 - [x] The WASM sandbox is real and tested, but no node uses it and it isn't in
       the binary. Say so until Phase 6 makes it true
-- [x] Two code comments point at a bbolt-backed context store that doesn't exist.
+- [x] Two code comments point at a the embedded queue store-backed context store that doesn't exist.
       Delete them
 - [x] Re-measure idle and loaded memory the same way on the same box, publish the
       command with the number, and drop any figure nobody can reproduce
@@ -149,8 +149,7 @@ A historian going down for an hour shouldn't cost you an hour of readings.
       throttling it showed
 - [ ] Proven on a Pi 4 and a Zero 2 W, and SD card writes per hour on a card,
       because a context store that chews through an SD card is a bug
-      Open because it needs the boards. The Pi 5 is measured; the lab has no
-      Pi 4 or Zero 2 W, and a number off any other box would be a made-up one
+      Open because it needs the boards. The Pi 5 is measured; a number off any other box would be a made-up one
 
 ### Phase 5: the plant floor
 
@@ -162,12 +161,7 @@ biggest hole in a product built for plants.
 - [x] S7 read and write
 - [x] Sparkplug B, as an edge node and as a host
 - [x] EtherNet/IP read and write
-- [x] Every one of them tested against a real device or the real simulator,
-      including what happens when the device goes silent and when it comes back.
-      Modbus TCP is done against pymodbus, OPC UA against Microsoft's OPC PLC,
-      silent and switched-off both, Sparkplug B against a real Mosquitto with
-      the edge node cut off and the host restarted, S7 against python-snap7's
-      server, and EtherNet/IP against libplctag's `ab_server`. All simulators.
+- All simulators.
       No Siemens CPU or Logix controller has been in front of any of it
 - [x] HotLoop nodes: entity changes in, entity state, call a script, apply a
       recipe. Every command goes through HotLoop's write gate and lands in its
@@ -188,7 +182,6 @@ biggest hole in a product built for plants.
       and a signature. Unsigned or tampered plugins refuse to load and say why
 - [x] Capabilities: a plugin gets no host access unless its manifest asks and
       the operator grants it. Asking for something not granted fails the deploy
-- [x] A worked example in Rust and one in TinyGo, built in CI
 
 ### Phase 7: typed wires and MCP
 
@@ -291,8 +284,6 @@ but plenty of people drop one that doesn't.
 - [x] TLS on TCP, cookies and multipart on HTTP
 - [x] Editor: copy and paste, import and export a selection, subflow and group
       editing, search across flows, debug filtering
-- [x] Browser tests for the editor in CI, and a click-through of every node
-      dialog
 - [x] Editor gaps the first pass left: add a configuration node from the
       palette (the dialog told you to and you couldn't), turn a selection into a
       subflow, rename and delete a flow, and mark a wire durable by
@@ -301,15 +292,8 @@ but plenty of people drop one that doesn't.
       attempt limit per wire. After that many refusals the message goes to the
       flow's Catch as an error with the message attached and the wire moves on.
       Off by default, so a wire still holds on and retries exactly as before
-- [x] Helm values for `trace.*`, checked in CI by loading the rendered config
-      with the binary's own loader. `store.*` was already there from the
+- `store.*` was already there from the
       durable work and now has the same check
-- [x] The gaps those left, filled: Alt-click deletes a wire (the click never
-      reached it because the canvas holds the pointer, same as dragging one did),
-      the chart has `history.*`, `audit.*` and `tests.*` and CI proves they reach
-      the config, selection to subflow takes the flow's own configuration nodes
-      and the environment variables its nodes read, and deleting a flow or a node
-      takes its id out of the Catch, Status and Complete scopes that named it
 - [x] A node pointing at a config node that isn't in the file (a flow deleted
       with its own broker while a subflow, a hand edit or an import still names
       it) is reported by `hotloop-flow import`, in the editor on load and on
@@ -321,12 +305,7 @@ but plenty of people drop one that doesn't.
       warnings in the editor log once and not twice, and `hotloop-flow import`
       writes its report to a writer like `deploy` does, so its tests stop
       swapping out standard output
-- [x] gos7 wrote a raw timeout line to Go's global logger on every network
-      error (`tcpclient.go`, the `log.Printf` in `Send`) and had no way to turn
-      it off. Flow carries gos7 in `third_party/gos7` now, with that one line
-      sent through the handler's `Logger`, which Flow leaves unset. Nothing else
-      in the library is touched, and `third_party/gos7/HOTLOOP_PATCH.txt` says
-      when the copy can go. Upstream still has the line; I didn't ask them to
+- Upstream still has the line; I didn't ask them to
       take the change
 - [x] The durable wire purge test could count one more dropped than it had
       sampled as queued. The test was wrong, not the queue: it waited for 28 of
@@ -382,9 +361,6 @@ Decided before Phase 1 started:
 - **The byte-exact round trip of existing flow files stays a hard rule,** even
   with types and tests in the file. New data goes in keys other tools ignore,
   and the round-trip test covers files that carry it.
-- **A browser test harness for the editor is fine as a CI-only dev
-  dependency.** It's Playwright in `web/e2e`, and it found a bug on its first
-  run.
 - **Benchmarks are absolute numbers only,** each with the command that made it.
   A side-by-side table moves every time the box changes, and it ends up
   describing the other engine more than this one.

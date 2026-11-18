@@ -12,4 +12,3 @@ This is the multi-arch build of [4.21.0](/releases/hotloop-4-21-0/). The product
 4.21.1 builds the full set: the Gateway for amd64 and arm64, and Edge, IoT and the Edge Relay for amd64, arm64 and arm/v7. Read [4.21.0's notes](/releases/hotloop-4-21-0/) for everything that changed since 4.20.2, including that `Basic128Rsa15` and `Basic256` are off on upgrades too.
 
 - All four charts (`hotloop`, `hotloop-iot`, `hotloop-edge`, `hotloop-edge-relay`) are at 4.21.1, with every earlier version still in the index.
-- `release.yml` builds every platform (`BUILD_ONLY` is empty), and the image steps of `ci.yml` build every platform again. The next release that carries changes sets `BUILD_ONLY` back to `linux/amd64`.

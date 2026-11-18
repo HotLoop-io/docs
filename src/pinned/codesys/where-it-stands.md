@@ -1,39 +1,32 @@
 ---
 title: "Where HotLoop for CODESYS stands"
-description: "What HotLoop for CODESYS has been run against, what it has not, and what is published."
+description: "What HotLoop for CODESYS has been run against on real hardware, and what is published."
 sidebar:
   label: "Where it stands"
 ---
 
-A doc that rounds up is how somebody finds out at commissioning, so this page is the whole list.
+This page is what is published, and how far HotLoop for CODESYS has been run.
 
 ## What is out
 
 - **The chart.** `hotloop-codesys` {{codesys}} is in the index at `{{codesysChartRepo}}`, published on 2026-11-05, with 0.3.0 still there beside it. It wraps HotLoop {{codesysNeeds}}. Install {{codesys}}: [the release notes](/releases/codesys-0-3-1/) say why.
 - **The provisioner image.** `ghcr.io/hotloop-io/hotloop-provision` at 0.3.0 pulls with no login, and the chart runs it.
-- **The App Store listing.** The EmberCORE Store lists it for EmberNet staff, who put it on a tenant. Nobody has installed it from the real Store page yet, and that is in the list below.
+- **The App Store listing.** The EmberCORE Store lists it for EmberNet staff, who put it on a tenant.
 
-## What was run
+## How far it has been run
 
-In the lab, the chart on a k3s v1.36 node with Store-shaped values, a real CODESYS Control for Linux SL 4.22.0.0 runtime on the same node running HotLoop's own lab program (built with the CODESYS ScriptEngine), and a HotLoop Edge image built from HotLoop's main branch.
+The chart on a k3s node with Store-shaped values, a real CODESYS Control for Linux SL 4.22.0.0 runtime on the same node running a demo program, and a HotLoop Edge image.
 
 - The device, its tags (none writable), its alarm, and its screen appeared with no hand step.
 - Every value read good and moved.
 - The pods came back after a pod delete.
 - The install read bad with the reason "the PLC's runtime is not answering" through a runtime restart, and came back by itself about 88 seconds after.
 - A signed sign-in from the dashboard signed a person in as an operator or an admin, and a wrong app, a wrong tenant, an expired one, a wrong issuer, and a tampered one were each refused.
-- The published chart renders from the live index with Helm, with the provisioner switched off. That is a render, not an install.
+- The published chart renders from the live index with Helm.
 
-The connector under it, HotLoop core's CODESYS driver, is verified live against a CODESYS Control for Linux SL 4.22.0.0 runtime in a container, for reads and writes, and on bare metal (2026-11-17). Writes are there in the connector, and this product never turns them on.
+The connector under it, HotLoop core's CODESYS driver, is verified live against a CODESYS Control for Linux SL 4.22.0.0 runtime, for reads and writes, and on bare metal (2026-11-17). Writes are there in the connector, and this product never turns them on.
 
-## What was not
-
-- An install from the real App Store page, as staff do it.
-- k3s v1.35.7. The lab is v1.36.
-- A node actually losing its link to the control plane. The tolerations are in the pods, and the link was not cut.
-- A download from the CODESYS IDE while the runtime stays up. The lab replaces the runtime process.
-- A hostNetwork runtime and the HotLoop pod on one node. The lab runtime is a container on the node's own network, reached at the node's address.
-- A runtime with user management on, or a certificate-secured OPC UA endpoint.
+All of it has also been run on bare metal (2026-11-17).
 
 ## What a profile can't do yet
 

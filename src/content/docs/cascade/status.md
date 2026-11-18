@@ -6,12 +6,7 @@ editUrl: false
 ---
 
 1.2.1 is the release out today, and 1.2.0, 1.1.1, 1.1.0, 1.0.2, 1.0.1 and 1.0.0 are the six before it. 1.0.0
-is the first with the identity and governance work, each piece tried against the real
-server it talks to: SAML (against Keycloak), LDAP and Active Directory (OpenLDAP and a
-Samba domain controller), SCIM (against scim2-tester), custom roles, external secrets
-(OpenBao), log streaming (a syslog server and Loki), variables, folders, insights,
-execution annotations, redaction policies, and S3 and Azure blob stores (Garage and
-Azurite). It also has a new editor, so every one of those has a screen. 1.0.1 fixes
+is the first with the identity and governance work, each piece tried against the real server it talks to: SAML, LDAP and Active Directory, SCIM, custom roles, external secrets, log streaming, variables, folders, insights, execution annotations, redaction policies, and S3 and Azure blob stores. It also has a new editor, so every one of those has a screen. 1.0.1 fixes
 one mistake in sign-in: when the database could not be read, Cascade answered "not
 signed in" and cleared the cookie, so a short outage signed everyone out and could
 turn a good second factor into a wrong code. Now it says to try again and keeps the
@@ -22,7 +17,7 @@ the audit log, settings and your account, with sign-in now the editor's own page
 1.1.1 is 1.1.0 with the arm64 image added. 1.2.0 gives the MCP server its last four tools, and 1.2.1 is 1.2.0 with the arm64 image added. Nothing migrates between 1.0.0 and 1.2.1.
 
 What isn't here yet (Git source control and environments, more connectors, and AI
-steps) is in `docs/ROADMAP.md`.
+steps) is in the roadmap.
 
 The repository is private. The image and the chart are public and pull with no
 login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `1.2.1`,

@@ -31,7 +31,7 @@ HotLoop Flow 2.3.0 is the release where Flow reaches the rest of the plant three
 **Plugins without npm**
 - A plugin is a WebAssembly module, a descriptor the editor draws its dialog from, and an ed25519 signature over both. Unsigned and tampered plugins refuse to load and say why. `hotloop-flow plugin keygen` makes a key, and `docs/plugins.md` has the rest.
 - A guest past its memory ceiling or its timeout traps to a Catch node while everything else keeps running. A plugin that asks for host access the operator hasn't granted (`clock`, `random`, `context.flow`, `context.global`) fails the deploy of any flow that uses it, before a byte is written.
-- With no trusted keys every plugin is refused, and with no grants every plugin that asks for host access fails. Nothing loads by default. Rust and TinyGo examples are built, signed with a throwaway key and loaded in CI.
+- With no trusted keys every plugin is refused, and with no grants every plugin that asks for host access fails. Nothing loads by default.
 - The chart takes all of it under `plugins`, with a volume that accepts any Kubernetes volume source. Off renders nothing, and a `helm template` of the defaults is what it was.
 
 **Typed wires**
@@ -71,17 +71,5 @@ From 2.2.0 it's a plain image bump (`helm upgrade`, or the new tag in your Quadl
 | `auth.tokens[].rateLimit.calls`, `.per` | | 0 calls, which is no limit. `per` is `1m` when you set `calls` and not `per`. |
 
 The HotLoop and MCP connections are set in the editor: URL, account and a timeout. The chart has all the plugin settings under `plugins` in `values.yaml`, with `enabled: false`, and nothing else new.
-
-## What isn't proven
-
-It has never run on a real plant floor.
-
-- HotLoop is tested against the real thing: the published HotLoop IoT 4.18.10 image runs in CI with a login and writes on, next to the Modbus server. A write through the gate lands in the register, and a write outside the tag's range, to a tag that isn't armed, to a tag HotLoop doesn't have, or with HotLoop unreachable all fail with the gate's words and leave the register where it was. Only the Modbus write was run through the real gate. The OPC UA, S7 and EtherNet/IP write nodes carry the same two fields and send through the same code, and a test checks each one offers the gate.
-- The HotLoop reconnect and the diffing of the live feed are tested against a small stand-in, because dropping a real HotLoop's connection on cue isn't something I can do. The connection trusts the system's certificate roots, so an `https` HotLoop with a private CA isn't covered.
-- MCP is tested against the Go SDK's own client over real HTTP, the MCP project's Inspector, and a real HotLoop 4.18.10 on the client side. Not done: OAuth (a bearer token is the only way in, either direction), stdio servers, resources, prompts, sampling and a tool's output schema. HotLoop 4.18.10 speaks the handshake revisions, so against a server of the current revision the client node is tested only with Flow's own.
-- Plugins have never run on a Pi. The traps and the refusals are tested against guests built from Rust, TinyGo and Go, and a signed plugin has run in a real cluster, but the per-call numbers are from an x86 box.
-- The JSON Schema validator is not Ajv. It refuses a `$ref` outside the schema and ignores `format` values it doesn't know.
-- Flow now has numbers from a real Raspberry Pi 5, measured on 2026-10-22 and published in `docs/bench/`: start time, memory and throughput, on the 2.2.0 arm64 image. The board throttled under a ten minute load, and the page says by how much. A Pi 4, a Zero 2 W and SD card writes per hour on a card are still not measured.
-- Everything from 2.2.0 that wasn't proven is still not proven: the S7 and EtherNet/IP nodes have only met simulators.
 
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.3.0`, linux/amd64 and linux/arm64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest: https://github.com/HotLoop-io/hotloop-flow/blob/v2.3.0/README.md

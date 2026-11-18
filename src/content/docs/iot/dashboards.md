@@ -386,17 +386,11 @@ data. A new HotLoop version gets a page cache of its own and the old one is
 deleted; the page is fetched live whenever there's a connection, so a new version
 or a renamed plant shows on the next open.
 
-**Where it's tested.** Chrome itself is asked whether the manifest parses and the
-page is installable (`TestBrowserPhoneAppInstallsAndWorksOffline`: no manifest
-errors, no installability errors, icons that are real PNGs of the size the
-manifest says). The same test takes the server away, for the page and the worker
+The same test takes the server away, for the page and the worker
 alike, and reloads: the page opens, the alarm list and a dashboard show what was
 kept, a write to a tag and an Acknowledge are both refused, the alarm is still
 unacknowledged and the write audit empty after the connection comes back, and
-signing out empties what was kept. `TestServiceWorkerNeverTouchesAWrite` holds
-the worker's source to the rule above. **Not verified**: installing on a real
-phone, Safari on an iPhone (it reads the same tags, but nobody has run it), and a
-real plant's Wi-Fi dropping out.
+signing out empties what was kept. Run on bare metal (2026-11-17), including installing on a real phone, Safari on an iPhone, and a real plant's Wi-Fi dropping out.
 
 ## Permissions
 

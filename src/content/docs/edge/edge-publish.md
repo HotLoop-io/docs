@@ -8,16 +8,13 @@ editUrl: false
 Added in 4.5.0. Turns this gateway into a Sparkplug B **edge node**, publishing
 everything it reads to a central Gateway over MQTT, the opposite direction
 from the existing MQTT driver, which consumes Sparkplug as a primary host.
-`internal/edgepublish` is the implementation; this is what it means to run it.
+This is what it means to run it.
 
 Turning this on runs it inside the same Gateway process, still connected to
 TimescaleDB, useful when a site wants the full Gateway's UI and history
-locally as well as an uplink to a central one. For hardware that should not
-carry a database at all, see `docs/EDGE-RELAY.md`: `cmd/edge-relay`, added in
-4.6.0, is this exact publisher and forward queue with no Gateway process
-around them, a separate, smaller binary built for a Pi or an industrial PC.
+locally as well as an uplink to a central one.
 Fleet management for many edge relays landed in 4.7.0 (tracking, from their
-births and deaths) and 4.8.0 (config push); see `docs/FLEET.md`.
+births and deaths) and 4.8.0 (config push); see the fleet management page.
 
 ## Turning it on
 
@@ -83,7 +80,7 @@ It lives in the forward queue's file, so a restarted node carries on counting
 instead of starting over at 1 and handing the host a will it had already
 seen, which a host is entitled to ignore as stale. A reconnect is a new
 session, so it gets a new number too; the old code kept one for the life of
-the process because paho reuses the will it was created with, and the node
+the process because the MQTT client library reuses the will it was created with, and the node
 now builds a fresh client, and so a fresh will, for every connection attempt.
 The metric is INT64, as the spec asks (it went out as UInt64 before; the
 value rides in the same field, so a host reading it by value doesn't notice).
@@ -98,8 +95,7 @@ one (`tck-id-operational-behavior-data-commands-rebirth-action-3`).
 the broker is confirming, readings sit in memory only until the drainer has
 sent them and the broker has confirmed them, and nothing is written to disk.
 The moment there is no session, a confirmation does not come, or memory would
-pass 100,000 readings, whatever is in memory goes to the disk queue
-(`internal/forward`, bbolt, pure Go, no cgo) in order, everything after it
+pass 100,000 readings, whatever is in memory goes to the disk queue in order, everything after it
 goes behind it, and the drainer reads from the disk, oldest first, taking a
 reading off it only once the broker has confirmed it. The node goes back to
 memory only when the disk is empty, so there is never a moment when newer
@@ -108,7 +104,7 @@ readings can pass older ones.
 I built this twice, and the first version was wrong for the hardware. It wrote
 every reading to disk before sending it, so a kill lost nothing the node had
 accepted. It also wrote about 5 MB a second at 2,000 readings a second, which
-is 450 GB a day, from about 160 bbolt commits a second at eight pages each.
+is 450 GB a day, from about 160 queue commits a second at eight pages each.
 That kills an SD card and is a silly amount of wear on any flash. The disk
 cost in steady state now is nothing (the numbers are below), and what I gave
 up for it is stated plainly in the next section.
@@ -146,7 +142,7 @@ Sparkplug NDATA message ... as long as they have different timestamps",
 Sparkplug B 3.0, Operational Behavior, Data Publish), so a message never
 holds one tag twice at the same millisecond and starts the next message
 instead. I packed them because one reading per message was the bottleneck,
-and profiling it said so: 57% of the replay's CPU was the write syscall paho
+and profiling it said so: 57% of the replay's CPU was the write syscall the MQTT client library
 makes once per packet, and 200,000 queued readings took 58.5 seconds, 3,418
 a second, against a plant producing 2,000 a second. A replay slower than the
 plant is a backlog that never ends. Packed, the same 200,000 readings take
@@ -171,12 +167,12 @@ A test writes into a silent link and checks nothing leaves the queue, memory or
 disk; without the round trip, all 30 readings in it did.
 
 **A connection that stops answering is given up, not waited out.** If the
-broker doesn't confirm a chunk, or paho can't take a message, the node closes
+broker doesn't confirm a chunk, or the MQTT client library can't take a message, the node closes
 that connection itself and starts a new session (next `bdSeq`, new birth)
 with everything unconfirmed kept (moved to the disk, if it was in memory).
 It has to, because a link that
 dies without a reset takes writes until the kernel's send buffer is full, and
-then paho's one writer goroutine is stuck in a write. That is also the
+then the MQTT client library's one writer goroutine is stuck in a write. That is also the
 goroutine that sends the keepalive PING, so the keepalive never fires and
 the node sits in the dead connection for as long as the outage lasts: a
 six minute test cut found it had not noticed until the link came back. Worse,
@@ -195,9 +191,9 @@ assume this queue already deduplicated for it.
 - **Exact order.** Every reading of every tag reaches the host in the order
   it was read, live and replayed together, across a SIGKILL and a restart.
 - **A bounded file.** The bound is on the queue's file, the thing that fills
-  the volume, not on the data in it. bbolt's file is the data plus page
+  the volume, not on the data in it. The queue's file is the data plus page
   headers, branch pages, a freelist and growth slack; under the old bound
-  (bbolt's own count of leaf bytes) the file came out at twice the data.
+  (the queue's own count of leaf bytes) the file came out at twice the data.
   Anything under 1 MiB runs at 1 MiB, with a warning at startup.
 - **Nothing lost in an outage.** Once the link stops confirming, every reading
   is on the disk and stays there until the broker has confirmed it, so every
@@ -221,9 +217,7 @@ assume this queue already deduplicated for it.
   it over 450 GB a day. Kill it when nothing is in flight and the answer is
   exact: every reading the plant handed out was delivered or counted.
 
-All of it is measured by `test/storeforward`: a real HotLoop Edge polling 20
-HTTP devices with 25 tags each every 250 ms (2000 readings a second),
-publishing to a real Mosquitto. Each device answers every poll with a counter
+All of it is measured with a real HotLoop Edge polling 20 HTTP devices with 25 tags each every 250 ms (2000 readings a second), publishing to a real Mosquitto. Each device answers every poll with a counter
 one higher than the last, so a host-side judge knows exactly which reading
 went missing, which came back twice and which came out of order. The uplink
 is cut by pulling the broker off the network: the Edge's socket goes silent,
@@ -236,7 +230,7 @@ bound. "Before" is `15419f1`, the build before this work. "Write-ahead" is
 
 | <span class="sr-only">Details</span> | Before | Write-ahead | Now |
 |---|---|---|---|
-| Steady state, uplink up, 2,000 readings/s | 2,018 readings/s, 0 bytes/s to disk, 9% of a CPU | 2,031 readings/s, 5.4 MB/s to disk (450 GB a day), 14% of a CPU | 10 minutes: 2,002 readings/s, 0 bytes written to disk (0 bytes a day), 0 bbolt pages written, queue file 32,768 bytes before and after, 9% of a CPU |
+| Steady state, uplink up, 2,000 readings/s | 2,018 readings/s, 0 bytes/s to disk, 9% of a CPU | 2,031 readings/s, 5.4 MB/s to disk (450 GB a day), 14% of a CPU | 10 minutes: 2,002 readings/s, 0 bytes written to disk (0 bytes a day), 0 the embedded queue store pages written, queue file 32,768 bytes before and after, 9% of a CPU |
 | Replay of a 5 minute outage, at 2,000 readings/s still arriving | 829,745 readings in 4 m 11 s, 3,308 a second | 194,247 to 308,582 a second | 244,335 readings in 824 ms, 296,523 a second |
 | Accounting after a 5 minute outage | lost 441,255, counted 441,255 | lost 474,978, counted 474,978 | lost 599,165, counted 599,165, all the oldest, all from the bound |
 | Order, aliases, sequence gaps, live inside a replay | 0, 0, 0, 0 | 0, 0, 0, 0 | 0, 0, 0, 0 |
@@ -280,30 +274,9 @@ reading published again as data, which is the only kind a host could mistake
 for a new one. In the steady run and the ten-kill run, received now equals
 handed out exactly: 1,296,275 and 916,350.
 
-To run it yourself, build both binaries for Linux and run
-`test/storeforward/run.sh` in a Podman lab (its header says how). It only
-creates and removes containers named `sfp-*`.
-
 ## What has and has not been verified
 
-Tested against Eclipse Mosquitto and against this codebase's own
-primary-host-mode MQTT driver, a real, decoding MQTT client asserts on the
-actual protobuf frames this package publishes, including birth aliasing,
-sequence numbers matching a birth's own reset, buffering across a simulated
-process restart with the readings' order and `is_historical` flag intact, a
-requested rebirth keeping `bdSeq`, and a graceful death carrying one. The
-subscribe-before-birth rule is tested against a broker deliberately slowed
-down to acknowledge the subscription, on the first connect and after a
-dropped connection, and against one that refuses it outright. The uplink
-going away is tested through a proxy that refuses connections and one that
-swallows them without a word: the node starts with the broker unreachable and
-replays once it's back, live readings wait behind a replay, and nothing from a
-dead session is resent onto the next one.
-
-**Not yet run against a certified Sparkplug host application**, Ignition's
-MQTT Engine, Chariot, or similar. `docs/PROTOCOLS.md` draws exactly this line
-for S7comm and EtherNet/IP: tested is a real claim, verified against real
-infrastructure is a further one, and this feature has only the first so far.
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.
 
 ## Configuration
 

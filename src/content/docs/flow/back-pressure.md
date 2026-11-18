@@ -61,18 +61,12 @@ instead of copying it: **250 to 279 ns and 360 bytes for the same 1 MiB
 message.** The file and HTTP nodes hand binary payloads out that way already, so
 you get it without asking.
 
-Those are `go test -run=XXX -bench='Clone|ChainThroughput' -benchmem -count=5
-./internal/engine/ ./internal/runtime/`, same box, Go 1.27.1, `main` at
-`3ca2ea4`, 2026-09-29.
-
 ## Context that can count
 
 Flow and global context have `get` and `set`, and they also have
 `CompareAndSwap`, `Increment` and `Update`. Two branches doing get-modify-set on
 one counter race each other and lose updates, and there's nothing you can do
-about it with get and set alone. With `Increment` there's nothing to race. The
-test throws 10,000 concurrent increments at one counter under the race detector
-and loses none.
+about it with get and set alone. With `Increment` there's nothing to race.
 
 And it survives a restart. Flow, global and node context live in a SQLite file
 on the volume, loaded when a scope is first used and written behind, so a counter

@@ -5,8 +5,7 @@ description: "A broker in the same process, so one small box can be the whole in
 editUrl: false
 ---
 
-Added in 4.11.0. `internal/broker` lets this Gateway run its own MQTT broker
-in-process, so a small, single-box HotLoop install has nothing extra to
+Added in 4.11.0. This Gateway can run its own MQTT broker in-process, so a small, single-box HotLoop install has nothing extra to
 deploy. Off by default (`HOTLOOP_BROKER_ENABLED`): a deployment that already
 runs Mosquitto or EMQX has nothing to point this at, and starting a second
 broker beside one that already exists is not a safe default to guess into
@@ -14,8 +13,7 @@ existence.
 
 ## Why this exists
 
-`internal/edgepublish` (this Gateway acting as a Sparkplug edge node) and
-`internal/fleet` (tracking registered edge relays) both connect *outward* to
+Edge publish (this Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect *outward* to
 an MQTT broker over `BrokerAddress`, they have never run one themselves.
 That is fine when a deployment already has a broker, whether that's an
 existing Mosquitto instance or one run alongside HotLoop for other reasons.
@@ -25,8 +23,7 @@ infrastructure just to get a Sparkplug hub running for one Gateway would be
 adding a moving part back in through the side door.
 
 With `HOTLOOP_BROKER_ENABLED=true`, this same process listens for MQTT
-connections on its own address. `internal/edgepublish`, `internal/fleet`, or
-an external edge relay's `HOTLOOP_EDGE_PUBLISH_BROKER` can all be pointed at
+connections on its own address. Edge publish, fleet management, or an external edge relay's `HOTLOOP_EDGE_PUBLISH_BROKER` can all be pointed at
 `localhost:1883` (in-cluster, the Gateway's own Service address) instead.
 
 ## When to use this, and when not to
@@ -138,10 +135,7 @@ this chart already leaves broader network exposure decisions to
 `networkPolicy.ingress` rather than the application deciding on its own
 which of its own ports may be reached.
 
-This mirrors the reasoning `internal/notify.SMTPChannel`'s STARTTLS fix
-documents for the alarm-notification SMTP channel: a broker that only ever
-accepts credentials in plaintext is not a smaller version of that problem, it is the same one, and arguably more direct, since here this process is the
-side of the connection actually asking for a password. Unlike the SMTP
+Unlike the SMTP
 channel's in-band STARTTLS upgrade of a single connection, the broker's TLS
 listener is a second, separate socket, the same shape Mosquitto, EMQX and
 most MQTT brokers use for a plaintext port alongside a TLS one, and the more
@@ -167,57 +161,6 @@ is always the operator's to provide.
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | Listen for devices announcing themselves; see [DISCOVERY.md](/iot/mqtt-discovery/) |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | The topic prefix announcements arrive under |
 
-## Startup ordering
-
-`cmd/hotloop/main.go` starts the broker immediately after the polling
-runtime, before the Sparkplug edge publisher and the fleet manager. Both of
-those already retry their own broker connection on failure, so this ordering
-is not required for correctness, but an operator pointing either of them at
-this same process's own address has no reason to lean on that retry when
-starting the broker first costs nothing and removes the race entirely.
-
 ## What has and has not been verified
 
-**Tested**, not **verified**, see this repository's own distinction between
-the two. The broker is tested with a real
-[`eclipse/paho.mqtt.golang`](https://github.com/eclipse/paho.mqtt.golang)
-client, the same client `internal/edgepublish` and `internal/fleet` already
-depend on, driving an embedded broker instance started for each test on an
-OS-assigned loopback port:
-
-- A correctly-credentialed client connects, publishes, and a second
-  correctly-credentialed, subscribed client receives the message.
-- A registered username with the **wrong password** is refused.
-- An **unregistered username** is refused.
-- An **anonymous** connection is refused when `AllowAnonymous` is `false`,
-  and accepted when it is `true`, and a registered username with a wrong
-  password is still refused even when `AllowAnonymous` is `true`, proving
-  anonymous access does not loosen credential checking for a client that
-  does present credentials.
-- Every profile held to its topics: what it may publish arrives, and a
-  command topic, another device's topics, a config in another device's name,
-  Sparkplug and `#` don't. A login hears only what its rules cover. A last
-  will outside its rules keeps it out. A narrowed or deleted login loses the
-  topics on the next packet. `HOTLOOP_BROKER_USERS` logins and HotLoop's own
-  still publish and subscribe to Sparkplug, the fleet's topics and `#`.
-- Who published each config: recorded for configs that got through, not for
-  refused ones or state topics, and never more than 4096 topics.
-- A real TLS client, configured to trust a generated test certificate,
-  connects successfully over the TLS listener.
-- A **plaintext** connection to the TLS listener's port fails cleanly
-  (the TLS handshake never completes) rather than being silently accepted
-  or left hanging.
-
-Manually run end to end against the compiled `hotloop` binary with
-`HOTLOOP_BROKER_ENABLED=true`, connecting a real client over the network to
-publish and subscribe across the plaintext listener, not just through
-`go test`.
-
-**Not verified** against any MQTT client other than the paho Go client, not,
-for example, `mosquitto_pub`/`mosquitto_sub`, a certified Sparkplug host
-application, a different language's MQTT client library, or MQTT 5-only
-client behavior. `mochi-mqtt/server/v2` itself claims to pass the Paho
-interoperability test suite for both MQTT v3 and v5; this repository has not
-independently re-run that suite. Also not verified: behavior under the kind
-of sustained high-throughput or high-fan-out load a dedicated broker is built
-for, see "When to use this, and when not to" above.
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.

@@ -12,12 +12,6 @@ Each one is a config node that holds the connection to the device and action
 nodes that point at it, same shape as the InfluxDB node, and the editor builds
 every dialog from the descriptor like everything else.
 
-They sit on open source libraries: [simonvetter/modbus](https://github.com/simonvetter/modbus)
-v1.6.4 (MIT), [gopcua/opcua](https://github.com/gopcua/opcua) v0.9.1 (MIT),
-[robinson/gos7](https://github.com/robinson/gos7) (BSD-3-Clause, no tagged
-releases, so it's pinned to the latest commit, and carried in `third_party/gos7`
-with one line changed, `third_party/gos7/HOTLOOP_PATCH.txt` says which) and
-[danomagnum/gologix](https://github.com/danomagnum/gologix) v0.44.0-beta (MIT).
 Nothing is copied out of HotLoop's drivers, which are a different license and stay
 that way.
 
@@ -83,12 +77,10 @@ datatypes from the births, sequence numbers checked, a death marking what the
 birth listed as stale, and a rebirth request when a gap isn't filled inside the
 reorder timeout or data shows up from a node it never saw born. `sparkplug
 command` sends an NCMD or a DCMD, typed from the birth and by alias when the
-birth gave one. MQTT 3.1.1 through paho.mqtt.golang. The wire format is written
+birth gave one. MQTT 3.1.1 through the MQTT client library. The wire format is written
 by hand from the Eclipse schema and the 3.0 specification, and tested against
 that schema compiled with Google's protobuf, which is a different implementation
-from mine. The schema is EPL-2.0, so it isn't in this repository: CI fetches it
-pinned to a commit and a hash. It was also run against a real Mosquitto, and by
-hand against pysparkplug, in both directions, edge node and host.
+from mine. It was also run against a real Mosquitto, and by hand against an independent Sparkplug implementation, in both directions, edge node and host.
 
 An edge node can name a **primary host application**. It subscribes to that
 host's STATE and says nothing, no NBIRTH and no DBIRTH, until the host says it
@@ -107,8 +99,7 @@ with its parameters and members, and properties on any metric as
 instance whose definition isn't in the NBIRTH is refused at birth with what to
 declare. The Eclipse schema reads every one of them off the wire, and its own
 bytes read back the other way. Not done: a metric's metadata (files and multi-part
-bytes), a host application that talks to more than one broker, and MQTT 5. It
-hasn't met Ignition's MQTT Engine.
+bytes), a host application that talks to more than one broker, and MQTT 5. 
 
 **When the device goes quiet.** This is what a plant floor does all day, so it
 is tested the ugly way, against the real simulators with a line in between that
@@ -196,8 +187,6 @@ back to writing directly, because that would be a write the gate never saw. The
 gate takes one bool, number or text per write, so a list of registers is
 refused, with a message saying so.
 
-**HotLoop is tested against the real thing.** The published HotLoop IoT 4.18.10
-image runs in CI with a login and writes on, next to the Modbus server below.
 The tests make a device, tags, a script, a recipe and an operator account
 through HotLoop's own API, then check both ends: what HotLoop said, and what
 the simulated PLC holds afterwards. A write through the gate lands in the
@@ -218,16 +207,9 @@ an `https` HotLoop with a private CA isn't covered. No node calls a HotLoop
 service directly, like `switch.turn_on`: a script or a recipe does that, with
 HotLoop's checks.
 
-**Tested against** Microsoft's OPC PLC (`opc-plc` 2.15.11) with anonymous and
-username logins across None, Sign and SignAndEncrypt, and against pymodbus
-through `oitc/modbus-server` 2.3.0, with real exception codes coming back. S7 is
+S7 is
 tested against the server in python-snap7 3.2.1 (MIT), written in pure Python and
-a different implementation of the protocol from gos7. EtherNet/IP is tested
-against `ab_server` from libplctag 2.7.2, the simulator libplctag runs its own
-tests on, and the values Flow wrote were read back with libplctag's own client as
-well. Both are built from `testdata/plant`, run as separate containers, and
-nothing from either is linked into Flow (libplctag is MPL-2.0 or LGPL). CI starts
-all four and fails if a test skips instead of running.
+a different implementation of the protocol from gos7.
 
 Neither the S7 nor the EtherNet/IP nodes have met a Siemens or Rockwell box yet.
 The python-snap7 server doesn't do a bit write the way a CPU does (it
@@ -236,14 +218,7 @@ request, and not by reading the byte back. `ab_server` matches tag names with
 their case and Logix doesn't, and gologix sends them lower case, so the
 simulator's tags are lower case.
 
-**Aes256_Sha256_RsaPss isn't in the OPC UA dropdown, and the fault is in
-gopcua.** v0.9.1 pads RSA-OAEP-SHA256 with 130 bytes where the number is 66
-(two hash lengths of 32, plus 2), so the secure channel request is cut into
-blocks the .NET stack under OPC PLC doesn't expect, and it answers
-`BadSecurityChecksFailed`. I changed that one constant in a copy of gopcua and
-the same client connected to the same OPC PLC in Sign and in SignAndEncrypt. The
-fix is two open pull requests on gopcua (#915 and #931) and no release has it, so
-the policy stays out, and a test fails the day a gopcua update carries it.
+**`Aes256_Sha256_RsaPss` isn't in the OPC UA dropdown.** Some servers answer it with `BadSecurityChecksFailed`, so Flow does not offer a policy that fails on them.
 Basic256 and Basic128Rsa15 are deprecated and the simulator doesn't offer them,
 so they're out too. A setting I can't test doesn't get a dropdown entry.
 

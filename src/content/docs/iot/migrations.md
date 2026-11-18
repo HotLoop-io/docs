@@ -25,52 +25,6 @@ nothing left to roll back to.
 The Helm chart has the same problem: `helm rollback` puts the old image back
 and leaves the database where the new one moved it.
 
-## The database engine is not a migration
-
-PostgreSQL 16 to 17 is a change of server, not of schema, and it is made before
-the app starts, by `hotloop-pg-upgrade.sh` (docs/DEPLOYMENT.md, "PostgreSQL 17").
-The rules on this page are about the schema and hold across it: the app's
-migrations run on the 17 database exactly as they did on 16.
-
-A rollback is where the two meet. Podman's auto-update puts the previous
-release's *app* image back and leaves the database container alone, so on Quadlet
-a rolled-back app starts on the 17 database and works, for the reason on this
-page. `helm rollback` is different: it puts back everything the chart manages,
-and that includes the database image, so it takes the database back to
-PostgreSQL 16, which refuses the 17 directory, and the database does not start.
-What fixes it is the old directory the upgrade kept, `pgdata.pg16`, swapped back
-in as DEPLOYMENT.md describes. That gives you the database as it was at the
-upgrade: whatever the app wrote on 17 since is not in it, and the previous
-release then starts on the schema it left, which is the one-release-back case this
-page already covers. Roll forward when you can.
-
-## What the check refuses
-
-`TestMigrationsAreAdditive` (`internal/store/migrations_additive_test.go`) reads
-every embedded migration, PostgreSQL's and SQLite's, and fails on:
-
-| In a migration | Why the previous release breaks |
-|---|---|
-| `DROP` anything: table, column, index, constraint, default, NOT NULL | It reads or writes what is gone, or relied on the rule that was dropped |
-| `RENAME` a table or a column | It looks for the old name |
-| `ALTER COLUMN`: a type, `SET NOT NULL`, `SET DEFAULT` | It was written against the old type and the old rule |
-| `ADD COLUMN ... NOT NULL` with no `DEFAULT` | Its `INSERT` doesn't name the column and fails |
-| `ADD COLUMN` with `UNIQUE`, `PRIMARY KEY` or `CHECK` | Its rows can break the rule |
-| `ADD CONSTRAINT`, `ADD UNIQUE`, `ADD CHECK`, `ADD FOREIGN KEY` on an existing table | Its writes can be refused |
-| `CREATE UNIQUE INDEX` on a table the migration didn't create | Its writes can be refused |
-| `DELETE`, `TRUNCATE` | Rows it expects are gone |
-| `UPDATE` of a column the migration didn't add | It reads data that changed meaning |
-| `CREATE TRIGGER`, `CREATE OR REPLACE`, `ALTER ... SET SCHEMA/LOGGED`, row level security | Its writes are changed or rejected |
-| Any statement the check doesn't know to be additive | Teach the check first, in the same change |
-
-What passes: `CREATE TABLE`, `CREATE INDEX`, `ALTER TABLE ... ADD COLUMN` that
-is nullable or has a default, `INSERT`, and `UPDATE` that fills in a column the
-same migration added. A new table can carry any constraint it likes, because no
-earlier release writes to it.
-
-The same test runs on SQL written to be wrong, so a check that stopped catching
-a drop fails there and not in the field.
-
 ## The changes that look like they need more
 
 You can't drop, so a change that seems to need one is done by adding and then
@@ -128,31 +82,4 @@ start of a release that has the guard.
 
 ## Proving it for a real release
 
-The check proves the SQL. `test/prevrelease.sh` proves the release: it builds
-this checkout, lets it migrate a fresh database and make data on a real OPC UA
-server, then starts the previous release's published image on that database and
-runs its login, devices, tags, a write through the gate and history. It is in
-the release checklist (RELEASE_CHECKLIST.md) and runs
-for PostgreSQL/TimescaleDB and for SQLite. A release that never had SQLite
-can't be started on a SQLite file, so that half skips until one exists.
-
-## The migrations before this rule
-
-The rule starts at 0022. The ones before it were audited when it was written
-(0001 to 0021, PostgreSQL's and SQLite's): none drops, renames or retypes
-anything, and the check passes them all with no exceptions. 0016 to 0021 were
-also run against the real 4.17.0 image, which knows only 0001 to 0015
-(`test/prevrelease.sh`).
-
-Shipped migrations are never edited. A mistake in one is fixed by the next.
-
-A test holds me to that. `internal/store/migrations/SHIPPED.sum` lists every
-migration that exists at a released tag with the SHA-256 of its text (carriage
-returns removed, so a Windows checkout and a Linux one agree), and
-`TestShippedMigrationsAreUnedited` fails the build when a listed file changes
-or goes missing. Why it needs a test: a database that already ran the old text
-never runs the new one, so an edit quietly leaves two databases on the same
-version with two different schemas, and the one that breaks is the customer's.
-A migration that isn't listed is unreleased and can still change. The release
-adds the new ones to the list in the release commit (the step is in
-RELEASE_CHECKLIST.md, "The shipped migrations").
+Before a release ships, the previous release is started on the database the new one migrated and made to log in, read devices and tags, write through the gate, and read history. If it cannot, the release does not ship.

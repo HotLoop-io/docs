@@ -23,17 +23,11 @@ Each one goes through its route, so the permission check, the validation and the
 
 ## What stays out
 
-Ten routes turn a key away themselves, because they want a person signed in: making an API key or a service account key, making a SCIM token, adding, changing or deleting a secret provider or a log destination, and your own password. A key that could make keys, or change where the audit log goes, is a leaked key that keeps itself alive. `docs/MCP.md` has the list and the reason.
+Ten routes turn a key away themselves, because they want a person signed in: making an API key or a service account key, making a SCIM token, adding, changing or deleting a secret provider or a log destination, and your own password. A key that could make keys, or change where the audit log goes, is a leaked key that keeps itself alive. the MCP page has the list and the reason.
 
 ## amd64 only, and why
 
 This release builds amd64 only. Multi-arch ships in its own run, so the release after this one is a single small version bump that builds both.
-
-## What was tested
-
-The full local suite (`test/run.sh`) ran clean on The Beast on 1aa85c5: vet, every Go package with the race detector against SQLite and Postgres, and the editor's browser tests in a real Chrome, 39 packages and 47 specs. The MCP test runs every tool as the owner, as a viewer, with only its permission and with every permission but its permission, and checks each against its route, its row in `docs/MCP.md` and the list of routes left out.
-
-Not run: the chart on a real k3s, and the Quadlet units on a real Podman host. The chart changes only its version and the units are unchanged from 1.1.1.
 
 ## Upgrading, and going back
 

@@ -40,9 +40,7 @@ schema in the settings wins when both are there.
   rest, the same as most validators.
 - A flow with no schema anywhere behaves exactly as it did before.
 
-The validator is `internal/schema`, a thin wrapper over
-[santhosh-tekuri/jsonschema](https://github.com/santhosh-tekuri/jsonschema) v6
-(permissively licensed, pure Go). Anything else in Flow that needs to check a value against
+Anything else in Flow that needs to check a value against
 a schema uses the same package.
 
 ## Schemas on ports

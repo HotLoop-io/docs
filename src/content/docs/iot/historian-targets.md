@@ -385,34 +385,4 @@ HotLoop speaks the Kafka API through
 
 ## How it's tested
 
-Against the real database, in a container (`test/services/up.sh` starts it),
-with HotLoop's real built-in historian on the other side. The outage is a real
-one: the target is reached through a TCP relay in the test that gets cut,
-plugged back in, or left connected to nothing that answers. The tests prove,
-for every kind:
-
-- the target holds exactly what HotLoop's own history does, deadband and all,
-  and writing everything twice adds nothing;
-- a cut while the plant keeps reading, far past the queue, ends with the
-  target holding exactly what HotLoop holds, and the system log saying down,
-  back, what was dropped and what was caught up;
-- a restart while it's down, clean or a crash, catches up on the next start;
-- a target that hangs holds up neither the poll path nor the built-in
-  historian nor a shutdown;
-- what's past retention is named in the log, and the rest still goes.
-
-And for each SQL database: a table somebody else made left alone, one refused
-reading not taking its batch with it, a login with the insert grant alone being
-enough, and a login without it being down rather than refusing, until the
-grant lands and everything with it. MySQL and MariaDB add tag names that
-differ only in case, and a unique index somebody else added.
-PostgreSQL adds the hypertable on TimescaleDB, and SQL Server a table in a
-schema and a tag name too long for its key. The Kafka target is run against both Apache Kafka and Redpanda, each with TLS
-(a CA made for the run) and a SASL login: every login mechanism the broker
-offers, a wrong password being down and not refusing, a certificate from an
-unknown CA being down, one oversize reading refused without its batch, the
-system log arriving on its topic, and the broker being cut and coming back.
-Each is read back with a consumer. InfluxDB is run in both versions:
-a wrong token being down and not refusing, a missing bucket and a missing
-organization being down, a field somebody else typed differently being
-refused, and every character line protocol has to escape.
+Every kind of target has been run against the real database or broker, through an outage that was cut and restored for real: the target ends up holding exactly what HotLoop holds, a restart while it is down catches up on the next start, and a target that hangs holds up neither polling nor the built-in historian.

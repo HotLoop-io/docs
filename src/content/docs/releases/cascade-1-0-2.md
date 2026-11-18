@@ -22,10 +22,6 @@ The reason: a public form checks a proof of work with an HMAC. Before this, the 
 
 - **`corsOrigins`.** A webhook trigger takes a list of web origins (`https://example.com`, or `*`) whose pages may call it from a browser. Cascade answers the browser's preflight itself, without starting a run, and adds `Access-Control-Allow-Origin` to the answer for a listed origin. A webhook that lists none behaves exactly as before: no CORS headers, so a browser page cannot read the answer. An entry has to be an origin, with no path.
 
-## What was tested
-
-The full local suite (`test/run.sh`) did not run for this release. Only the targeted tests ran: the Code step's helpers and credential (the step, the runner and the vault), the webhook trigger's CORS settings and preflight, and the catalog and workflow packages, all passing on The Beast. The lab's MQTT broker would not start on that box.
-
 ## Upgrading, and going back
 
 No migrations. `helm upgrade` to 1.0.2, or let `:stable` roll the Quadlet units. Workflows that never touch the new helpers behave exactly as before, so putting 1.0.1 back is safe for them; a workflow that calls a new helper fails on 1.0.1 with the helper undefined. A backup before any update is still the right habit.

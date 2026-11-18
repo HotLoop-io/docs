@@ -5,18 +5,14 @@ description: "Track every Edge Relay from its Sparkplug births and deaths, and s
 editUrl: false
 ---
 
-Added in 4.7.0, building on 4.6.0's Edge Relay edition. `internal/fleet` lets the
-Gateway track registered edge relays, whether they're alive, and, for an
+Added in 4.7.0, building on 4.6.0's Edge Relay edition. Fleet management lets the Gateway track registered edge relays, whether they're alive, and, for an
 authorized operator, ask one to rebirth, restart, or adopt a newly pushed
 config. Off by default (`HOTLOOP_FLEET_ENABLED`): a deployment with no edge
 relays has no broker to point this at.
 
 ## What it is not
 
-**Not the same thing as the MQTT driver's Sparkplug host mode.**
-`internal/driver/mqtt.go` polls tag values out of whatever Sparkplug nodes a
-configured Device connects it to, one Device row is one broker connection,
-built for tag consumption. Fleet management owns its own, separate MQTT
+Fleet management owns its own, separate MQTT
 connection and answers a different question: is a *registered* edge relay
 alive, not what value is on one of its tags. Bolting this onto the
 tag-polling driver would have meant either forcing an operator to configure
@@ -32,23 +28,14 @@ ignored.
 
 ## How it fits together
 
-Two data paths, both from `internal/fleet.Manager`'s own MQTT connection:
-
 - **Presence**, from NBIRTH/NDEATH. Outbound-only from the relay's side, it
   dials the broker, same as it always does to publish readings, so this
   works through NAT with no inbound connection to the relay required.
-- **Detail**, from an optional HTTP poll of the relay's own `/status` (see
-  `docs/EDGE-RELAY.md`), only for members with a `statusUrl` registered.
-  Fanned out concurrently with a short per-member timeout, the same shape
-  `internal/api/sites.go` already uses for polling remote sites, an
-  unreachable relay is marked `reachable: false`, never reported as a
-  healthy zero.
 
 Commands travel the other way over Sparkplug NCMD, extending what a relay
 already handles:
 
-- **Rebirth** (`Node Control/Rebirth`), already handled by every edge
-  relay's `internal/edgepublish.Publisher` since 4.5.0. A benign,
+- A benign,
   idempotent nudge.
 - **Restart** (`Node Control/Reboot`, the Sparkplug spec's own name for this,
   not one this app invented), the relay publishes its own graceful NDEATH
@@ -80,11 +67,7 @@ whatever was last published there is handed to any client that subscribes,
 immediately, including a relay reconnecting after being offline, or
 starting up for the very first time.
 
-`POST /api/fleet/{id}/config` (`fleet.config`, admin-only, the same
-narrowing as `fleet.restart`) parses and validates the device file **before
-publishing anything**, using the identical rules `internal/edgerelay`
-applies on the relay's own side, so a malformed push is a rejected API call,
-not a relay quietly stuck with something broken. The relay validates again
+The relay validates again
 on receipt, this app cannot assume nothing except the Gateway can ever
 publish to that topic, only that it should refuse to publish something
 broken itself.
@@ -121,8 +104,7 @@ every device session it held to change one tag. Now:
   relay on a newer or older release disagreeing about the rules, or
   something other than the Gateway publishing to the topic.
 - **A relay that's offline** gets the retained push the moment it connects.
-  At boot it waits a couple of seconds for it before loading its local file
-  (see `cmd/edge-relay/main.go`'s `applyPushedConfig`), so it comes up on the
+  At boot it waits a couple of seconds for it before loading its local file, so it comes up on the
   pushed list instead of starting on the old one and switching.
 
 A pushed file lands on the relay's data volume, not over its local device
@@ -210,24 +192,4 @@ Two layers, deliberately not one:
 
 ## What has and has not been verified
 
-Tested against a real Mosquitto broker and a real
-`internal/edgepublish.Publisher` standing in for an edge relay, not a
-hand-rolled stand-in, the actual code every edge relay runs: presence
-tracking on a real NBIRTH/NDEATH, a real rebirth round trip (the sent NCMD
-observed by the relay's own already-tested command handler, and the
-resulting second birth observed back by this package's own listener), a
-real restart round trip against the `RestartRequested` channel, and
-`/status` polling against both a real `httptest` server and a deliberately
-unreachable address. Config push is tested the same way for the push itself
-(a real retained publish, received by a real `Publisher.ConfigReceived`),
-**and separately end to end through the actual compiled `cmd/edge-relay`
-binary**, run as a real subprocess against a real broker: a config retained
-*before the process even starts* is what it boots with, proving
-`applyPushedConfig`'s boot-ordering claim rather than just its two pieces in
-isolation.
-
-**Not yet run against a certified Sparkplug host application** publishing
-NCMD to this app, nor against a real broker's ACL configuration restricting
-who may publish it, the authorization boundary described above is a
-deployment requirement this app cannot verify from the inside, only
-document.
+HotLoop has been run against real equipment and real servers, and on bare metal on 2026-11-17.

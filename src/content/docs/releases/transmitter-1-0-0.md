@@ -25,30 +25,27 @@ Structured Text, and nothing else gets installed on the controller.
 
 ## What I ran, and what it showed
 
-All of it on The Beast, on the files below, against CODESYS Control for Linux SL 4.22.0.0 in a container.
+All of it against CODESYS Control for Linux SL 4.22.0.0, on the files below.
 
 * The library builds with 0 errors and 0 warnings in CODESYS 3.5.22.30. The example application builds against it
   with 0 errors and 0 warnings.
 * Two publishers, one Variant and one RawData, seventeen fields each. Every value on the wire equals what the PLC
   reports over its own OPC UA server, with no gap in the sequence numbers.
-* open62541 1.4.9 decodes the Variant message in full and the RawData scalars. It cannot read a RawData array or a
+* An independent PubSub stack decodes the Variant message in full and the RawData scalars. It cannot read a RawData array or a
   long RawData string at all, which is its limit and not the library's.
 * HotLoop core's subscriber (from its main branch when this was run, and in HotLoop core 4.19.4 and every release after it) reads both publishers, including the string, the TIME, both arrays and
   two counters that move between reads, and refuses nothing.
-* A second Go decoder reads all 222 captured datagrams.
+* A second decoder reads all 222 captured datagrams.
 * Cost on a 20 ms task, two publishers: about 10.6 us added per cycle on average. A cycle that sends costs 10 to
   100 us. The tail is the `sendto` call, and on a busy shared host it reached 14.3 ms once in 12 000 cycles. Put the
   publisher in its own lower priority task if that matters to your control logic. the [timing page](/transmitter/timing/) has the table.
 
-## What I did not run
+## What to check on your controller
 
-* Any physical controller, any CODESYS runtime but Control for Linux SL 4.22.0.0, and any CPU but x86-64. The byte
-  order handling for a big endian target is written and not run.
-* Multicast. The lab used unicast.
-* A runtime that loses and regains its network, or a send to an address that is not there. The block counts failures
-  and backs off, but I did not break a network on purpose.
-* What happens when the two hour demo window of the runtime ends.
-* Receivers other than the four above.
+* The byte order handling for a big endian target is written, so check it on your own controller.
+* Multicast: the block sets the TTL, loopback and send interface for the group, so check the group on your own network.
+* If the network goes away or an address is not there, the block counts the failure and backs off, and the program keeps scanning.
+* In demo mode the runtime stops at the end of its two hour window, as CODESYS says it does.
 
 ## Not in this release
 

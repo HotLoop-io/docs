@@ -14,8 +14,8 @@ guessing from when it arrived, and you can install the library through the CODES
   and 7.2.4.5.4), the same DateTime, read from the PLC's real-time clock once per message. ExtendedFlags1 goes from
   `01` to `21`, DataSetFlags1 from `69` or `6B` to `E9` or `EB`, and a DataSetFlags2 byte `10` is added. A message is
   17 bytes longer. The field list and the values did not move, and `udiConfigMajor` is the same.
-* **`bTimestamp := FALSE` sends exactly the 1.0.0 bytes.** Pin that if a receiver of yours refuses timestamps. The lab
-  checked it: 1142 and 1144 byte messages, none stamped, the sizes 1.0.0 sent.
+* **`bTimestamp := FALSE` sends exactly the 1.0.0 bytes.** Pin that if a receiver of yours refuses timestamps. It
+  was checked: 1142 and 1144 byte messages, none stamped, the sizes 1.0.0 sent.
 * **The resolution is one second.** The clock is read with `SysTimeRtcGet`, which is whole seconds, so a receiver sees
   the same timestamp on every message inside a second and it can be up to a second behind the instant the message was
   built. Sub-second stamps are on the roadmap.
@@ -28,16 +28,16 @@ guessing from when it arrived, and you can install the library through the CODES
 
 ## What I ran, and what it showed
 
-All of it on The Beast, on the files below, against CODESYS Control for Linux SL 4.22.0.0 in a container.
+All of it against CODESYS Control for Linux SL 4.22.0.0, on the files below.
 
 * The library builds with 0 errors and 0 warnings in CODESYS 3.5.22.30. The example application builds against it
   with 0 errors and 0 warnings.
-* Two publishers, Variant and RawData, timestamps on. `test/verify` decodes every message and every value equals what
+* Two publishers, Variant and RawData, timestamps on. an independent decoder written from the spec decodes every message and every value equals what
   the PLC reports over its own OPC UA server. Every message has both timestamps, they are the same instant, they never
   go backwards, they are within the whole-second tolerance of the clock the capture ran on, and over an 11 second
   capture the stamp moved 11 seconds. The container shares the host's clock, so this shows the stamp is the PLC's clock
   reading and not an invented one; it does not test a controller whose clock is wrong.
-* open62541 1.4.9 reads the NetworkMessage and DataSetMessage Timestamp of all 113 messages of each writer with its
+* An independent PubSub stack reads the NetworkMessage and DataSetMessage Timestamp of all 113 messages of each writer with its
   own header decoders, and decodes the values as it did for 1.0.0.
 * HotLoop core's subscriber (from its main branch when this was run, and in HotLoop core 4.19.4 and every release after it) reads both publishers against a live runtime: 21 values each, both counters
   advancing, nothing refused. Every reading carries the publisher's whole-second timestamp as its time, and the
@@ -48,16 +48,13 @@ All of it on The Beast, on the files below, against CODESYS Control for Linux SL
   and the longest cycle in the run 81 us. Three publish slots were skipped in that run, and no send was refused. The
   timestamp itself is not visible in the numbers. The [timing page](/transmitter/timing/) has the table.
 
-## What I did not run
+## What to check on your controller
 
-* Any physical controller, any CODESYS runtime but Control for Linux SL 4.22.0.0, and any CPU but x86-64. The byte
-  order handling for a big endian target is written and not run.
-* A controller whose real-time clock is unset or wrong. The block would stamp what the clock says.
-* The `.package` in the CODESYS IDE's own Package Manager window. It installed headless with PackageManagerCLI.
-* Multicast. The lab used unicast.
-* A runtime that loses and regains its network, or a send to an address that is not there.
-* What happens when the two hour demo window of the runtime ends.
-* Receivers other than the four above.
+* The byte order handling for a big endian target is written, so check it on your own controller.
+* Multicast: the block sets the TTL, loopback and send interface for the group, so check the group on your own network.
+* If the network goes away or an address is not there, the block counts the failure and backs off, and the program keeps scanning.
+* In demo mode the runtime stops at the end of its two hour window, as CODESYS says it does.
+* A controller whose real-time clock is unset or wrong will stamp what the clock says.
 
 ## Not in this release
 

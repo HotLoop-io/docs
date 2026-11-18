@@ -7,11 +7,9 @@ sidebar:
   label: "4.19.10"
 ---
 
-This is the multi-arch build of [4.19.8](/releases/hotloop-4-19-8/). The product code is the same as 4.19.8's. 4.19.9 was tagged for this and never published: its release run failed in the Test job before anything went out, so `stable` still lists the 4.19.8 amd64 images beside the older arm ones.
-
-What failed was the test lab, not HotLoop. The lab starts a UniFi controller and an emulator of four switches that adopt themselves into it. The emulator looks the controller up by name once, when it starts, and exits if that one lookup gets no answer. On the runner the name server missed it, the emulator exited, nothing started it again, and the lab waited fifteen minutes for four devices that were never going to adopt. `test/services/up.sh` now starts the emulator again whenever it has exited, for up to two minutes, before it waits on the devices (`test/services/unifi/emu_ensure.sh`).
+This is the multi-arch build of [4.19.8](/releases/hotloop-4-19-8/). The product code is the same as 4.19.8's.
 
 4.19.10 builds the full set: the Gateway for amd64 and arm64, and Edge, IoT and the Edge Relay for amd64, arm64 and arm/v7. Read [4.19.8's notes](/releases/hotloop-4-19-8/) for everything that changed since the last multi-arch release.
 
 - All four charts (`hotloop`, `hotloop-iot`, `hotloop-edge`, `hotloop-edge-relay`) are at 4.19.10, with every earlier version still in the index.
-- `release.yml` builds every platform (`BUILD_ONLY` is empty). The next release that carries changes sets it back to `linux/amd64`.
+- The next release that carries changes sets it back to `linux/amd64`.

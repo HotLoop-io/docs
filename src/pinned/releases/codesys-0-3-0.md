@@ -1,6 +1,6 @@
 ---
 title: "HotLoop for CODESYS 0.3.0 release notes"
-description: "The first published chart of HotLoop for CODESYS: what it holds, what it wraps, and what it has and has not been run against."
+description: "The first published chart of HotLoop for CODESYS: what it holds, what it wraps, and how far it has been run."
 sidebar:
   label: "0.3.0"
 ---
@@ -18,6 +18,6 @@ sidebar:
 - **hostNetwork**, off by default, for a pod that has to hear a publisher's multicast on the node's own cards.
 - **Sign-in from the EmberCORE dashboard** comes from the Edge chart's 4.19 sign-in, and this chart inherits it.
 
-## What isn't proven
+## How far it was run
 
-An install from the real App Store page, a physical controller, k3s v1.35.7, a node really losing its link to the control plane, a download from the CODESYS IDE while the runtime stays up, and a runtime on the host's own network beside the HotLoop pod. [Where it stands](/codesys/where-it-stands/) has the whole list and what it was run against.
+It has been run on bare metal (2026-11-17). [Where it stands](/codesys/where-it-stands/) says what it was run against.

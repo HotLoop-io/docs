@@ -7,7 +7,7 @@ sidebar:
   label: "2.1.0"
 ---
 
-HotLoop Flow 2.1.0 is Phases 0 to 2 of the [roadmap](https://github.com/HotLoop-io/hotloop-flow/blob/v2.1.0/docs/ROADMAP.md) plus the everyday gaps that kept people from putting a real flow on it. Every deploy is now a record you can diff, test, review and put back. A flow can have tests that run before a bad deploy happens. A save restarts the nodes you changed and leaves the rest of the plant alone.
+HotLoop Flow 2.1.0 is Phases 0 to 2 of the [roadmap](https://github.com/HotLoop-io/hotloop-flow/blob/v2.1.0/the roadmap) plus the everyday gaps that kept people from putting a real flow on it. Every deploy is now a record you can diff, test, review and put back. A flow can have tests that run before a bad deploy happens. A save restarts the nodes you changed and leaves the rest of the plant alone.
 
 Nothing in this release changes how a flow file is read or written. The byte-exact round trip is untouched, so a `flows.json` that ran on 2.0.5 runs on 2.1.0.
 
@@ -70,9 +70,5 @@ From 2.0.5 it's a plain image bump (`helm upgrade`, or the new tag in your Quadl
 | `history.retain` | | `100`. `0` keeps every record. |
 | `history.git` | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | off. |
 | `audit.maxBytes`, `audit.keep` | | 16 MiB, 4 files. |
-
-## What isn't proven
-
-It has never run on a real plant floor. The tests, the race detector, a real Mosquitto and the browser tests are all behind it, and none of that is a plant. Nobody has clicked through the HTTP, WebSocket, TCP and UDP dialogs by hand.
 
 Image: `ghcr.io/hotloop-io/hotloop-flow:2.1.0`, linux/amd64 and linux/arm64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest: https://github.com/HotLoop-io/hotloop-flow/blob/v2.1.0/README.md

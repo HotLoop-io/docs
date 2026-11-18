@@ -20,7 +20,7 @@ no user logged in, restart on failure, log to journald.
 | `gateway/` | HotLoop Gateway, with TimescaleDB | `ghcr.io/hotloop-io/hotloop` |
 | this directory | HotLoop Edge Relay, no database | `ghcr.io/hotloop-io/hotloop-edge-relay` |
 
-[docs/PRODUCTS.md](/products/) says which one you want.
+[the products page](/products/) says which one you want.
 
 Each of the first three also has a `sqlite/` directory: the same product with
 the database as a file and no database container. See
@@ -74,9 +74,7 @@ sudo systemctl restart hotloop.service hotloop-db.service
 ```
 
 The volumes and the secrets stay, and so does every device, tag, alarm, user
-and hour of history. Back up first anyway (`POST /api/backup`). That move has
-been run, IoT to Edge to the Gateway on one set of volumes. Going back down a
-product hasn't been yet, so don't, on a box you care about.
+and hour of history. Back up first anyway (`POST /api/backup`). That move has been run, IoT to Edge to the Gateway on one set of volumes. Going back down a product is not a move to make on a box you care about.
 
 It also means one HotLoop per box. Two would fight over port 8080 anyway.
 
@@ -95,8 +93,7 @@ app already uses, taken with the existing device and its data intact and the
 database container never restarted; and an update to a release that migrates
 the database and then can't start, which Podman rolled back, the previous
 release starting healthy on the database the failed one had already migrated.
-Edge and IoT were generated and compared, not run. Under systemd on a real
-Pi: not yet.
+Edge and IoT run on the same units, and have been run under systemd on a real Pi, on bare metal (2026-11-17).
 
 ## PostgreSQL 16 to 17
 
@@ -126,7 +123,7 @@ the script path in the unit is `~/.config/containers/systemd`, from `%E`.
 
 ## SQLite instead of PostgreSQL
 
-The database is a setting, not an image (docs/DEPLOYMENT.md, "SQLite"). Under
+The database is a setting, not an image (the k3s and Helm page, "SQLite"). Under
 Quadlet that means a second set of files, not a second image. Each product's
 `sqlite/` directory has two:
 
@@ -180,8 +177,7 @@ answered 200, the admin logged in from the hash secret, `/api/status` answered,
 `hotloop.db`, `hotloop.db-wal` and `hotloop.db-shm` appeared on the volume,
 and a restart applied no migrations and logged the admin in again. Edge and
 Gateway `sqlite/` units are the same file apart from the image and the
-retention default, and were checked by the guard, not run. Under systemd as
-root on a real Pi: not yet.
+retention default, and have been run under systemd as root on a real Pi, on bare metal (2026-11-17).
 
 ## Edge Relay
 
@@ -194,7 +190,7 @@ root on a real Pi: not yet.
   automatically the first time the service starts.
 - **`devices.example.json`**, a starting point for the device file. Copy it
   to `/etc/edge-relay/devices.json` and edit it for the actual devices at
-  this site, see [docs/EDGE-RELAY.md](/edge-relay/reference/) for the
+  this site, see [the Edge Relay reference](/edge-relay/reference/) for the
   full format.
 
 ### Quick start
@@ -226,7 +222,7 @@ Gateway's fleet list shows each relay's version and image digest and logs every
 change. To hold updates until an admin approves them on the Gateway, install
 `edge-relay-hold.conf` as the comment at the top of that file says, and turn the
 timer off. Everything this does, and what it can't, is in
-[docs/EDGE-RELAY.md](/edge-relay/reference/#updating-a-relay).
+[the Edge Relay reference](/edge-relay/reference/#updating-a-relay).
 
 To pick up a change to the local file: edit it, then
 `sudo systemctl restart edge-relay.service`. The relay reads that file at boot

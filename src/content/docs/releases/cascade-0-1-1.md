@@ -43,4 +43,4 @@ Cascade is under HotLoop's Business Source License 1.1 (`BUSL-1.1`), same as the
 
 ## What's not here yet
 
-SAML, LDAP, SCIM, environments, the HA scheduler with leases, more connectors, AI steps. That's 0.2.0 and on, and it's all in `docs/ROADMAP.md`.
+SAML, LDAP, SCIM, environments, the HA scheduler with leases, more connectors, AI steps. That's 0.2.0 and on, and it's all in the roadmap.

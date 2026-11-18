@@ -31,7 +31,7 @@ What changed in 4.17.0.
   which switch port it's on and whether the link is up, and a stranger on a
   network marked OT raises an alarm. Proven read-only on real consoles.
   **Not proven yet:** a real cable pull on a watched device and a phone joining
-  a network marked OT. Those two alarms are proven in the lab and nowhere else
+  a network marked OT. Those two alarms are proven in testing and nowhere else
   until somebody does both at the rack.
 - **Device passwords are encrypted** in the database and in backups, with a
   key the chart generates into `<release>-secret-key` and keeps.

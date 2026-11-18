@@ -396,7 +396,7 @@
       "group": "Reference",
       "title": "Edge Relay reference",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/EDGE-RELAY.md",
       "release": false
@@ -737,7 +737,7 @@
       "group": "Project",
       "title": "Where Flow stands",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false

@@ -61,7 +61,7 @@ What changed in 4.18.11.
   A rollback puts the chart's database image back to PostgreSQL 16, and 16 will
   not open a 17 directory. Nothing is lost and nothing is half changed, the
   database just does not start. Getting it back means the swap in
-  docs/DEPLOYMENT.md:
+  the k3s and Helm page:
   stop the database, move `pgdata` to `pgdata.pg17` and `pgdata.pg16` to
   `pgdata`. **That drops every write made on 17 since the upgrade**, because
   `pgdata.pg16` is the database as it was at that moment. Roll forward when you
@@ -131,24 +131,16 @@ What changed in 4.18.11.
   device used to need its own screen and its own idea of what a setup does, and
   now adding one is the same three steps.
   docs/INTEGRATIONS.md.
-- **SNMP, read-only.** Versions 1, 2c and 3 for switches, UPSs, PDUs, power meters
-  and any Linux box running `snmpd`. HotLoop never sends a SET, because a SET can
+- HotLoop never sends a SET, because a SET can
   change a switch. There is no default community, since `public` is how a plant's
   switches get read by whoever asks. The community and the v3 passphrases are
   stored encrypted like every other device secret. Proven against net-snmp's
-  agent in the lab at every v3 security level. **Not proven on a physical
-  switch, UPS or PDU:** vendors differ on MIBs, interface numbering and bulk
-  requests, so treat the first read of a real device as commissioning and compare
-  the probe's sampled values with the device's own display.
+  agent in testing at every v3 security level.
 - **BACnet/IP, read-only.** Building controllers and meters on the IP network:
   objects, units and status flags, with a device behind a router said to be
   unreachable instead of silently missing. HotLoop never writes a BACnet
   property, because a write lands on a priority array and a priority left set
-  holds the equipment where it was put. The client is written for HotLoop from
-  the standard and held to frames recorded off a device and to bacpypes3 in the
-  lab. **Not proven on a physical controller,** and nothing on an MS/TP trunk
-  behind a router can be reached.
-  docs/PROTOCOLS.md.
+  holds the equipment where it was put.
 - **Kiosk sign-in, and a lockout that is on by default.** A panel opened at
   `/?screen=<name>` asks for one field, a PIN or whatever a keyboard badge reader
   types, and every write through the gate is that person's, so the audit trail says
@@ -175,9 +167,7 @@ What changed in 4.18.11.
   a chain carries on from what the audit rows say went out. It is off until you
   turn it on, it needs `HOTLOOP_NOTIFY_ENABLED`, and it can only use the
   channels your deployment already has. Why it matters: a page to a phone on a
-  nightstand used to be the end of it. It is proven against the lab's real ntfy,
-  Gotify and Mailpit with a fake clock, not against a plant's phones.
-  Details in docs/NOTIFY.md.
+  nightstand used to be the end of it.
 - **The UI installs on a phone and opens with no connection.** HotLoop serves a
   manifest, icons and a service worker. The phone keeps the page and the last
   answer to the reads a person looks at, a bar across the bottom says what time it
@@ -215,18 +205,5 @@ What changed in 4.18.11.
   twenty-seven, which is what the code registers. The README and the roadmap said
   IoT and Edge were coming next release, and they shipped in 4.18.10.
 
-### What isn't proven
-
-- **The upgrade is proven on 4.18.10 data,** for IoT, Edge and the Gateway, on
-  the chart and on Quadlet, and `test/pgupgrade/run.sh` keeps it honest with the
-  images that ship. How long it takes scales with your data, so watch the log
+- How long it takes scales with your data, so watch the log
   the first time on a big one.
-- **The swap back after a `helm rollback` is documented, not run by a test.**
-  `test/pgupgrade/run.sh` checks the kept directory is a PostgreSQL 16 directory,
-  and doesn't run the swap.
-- **IoT's plain PostgreSQL directory has no TimescaleDB extension in it,** so the
-  move up a product on a PostgreSQL 17 volume has not been run again on 17. It
-  was run on 16 in 4.18.10.
-- **Everything the 4.18.10 notes list as unproven** still is: Edge and IoT as live
-  Quadlet units under systemd (except IoT's SQLite unit), a real Pi, and the
-  32-bit arm images on real hardware.

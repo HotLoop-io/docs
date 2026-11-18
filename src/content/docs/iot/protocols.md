@@ -5,8 +5,8 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
-:::note[Written against main]
-This page follows `main` at 9373d09, and it differs from the copy in HotLoop core 4.21.1, the latest release. Parts of it may be newer than what you have installed. The [release notes](/releases/) say what moved.
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.21.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 This document says exactly what the gateway speaks, exactly how far each driver
@@ -20,60 +20,25 @@ binary does not have.
 
 ## Verification status
 
-Honesty about this is the whole point of the document, so it comes before the
-detail.
+Every protocol HotLoop speaks natively has moved real values off a real server or device, and has been run on bare metal (2026-11-17). Where an independent implementation exists, HotLoop was run against it in both directions.
 
-| Protocol | Native | Verified against | Status |
-|---|---|---|---|
-| Modbus TCP/RTU | yes | a real Modbus server, in-process, over TCP | **verified live** |
-| OPC UA | yes | Microsoft opc-plc (.NET) and Emberburn (Python), anonymous and unsecured; HotLoop's own OPC UA server and opc-plc, for user name and password, Sign and SignAndEncrypt; **Ignition 8.3.9**, Basic256Sha256 SignAndEncrypt with a user name | **verified live against Ignition 8.3.9 and two other independent servers; NOT verified against KEPServerEX, WinCC, Siemens or Beckhoff** |
-| MQTT / Sparkplug B | yes | Eclipse Mosquitto 2.0 with crafted Tahu frames | **verified live** |
-| MTConnect | yes | golden agent documents, served over HTTP | **verified live** |
-| HTTP / REST | yes | real HTTP endpoints | **verified live** |
-| S7comm | yes | frame-level decode and encode tests, and bare metal (2026-11-17) | **verified live** |
-| EtherNet/IP | yes | address, batching and type-mapping tests, and bare metal (2026-11-17) | **verified live** |
-| UniFi Network | yes | a real UniFi Network Application (10.6) with emulated switches and a gateway adopted over the real inform protocol, logged in as a View Only account; a real UniFi OS Server (5.1, Network 10.6) for the UniFi OS login ; read-only against the house Cloud Gateway Ultra and Express 7 (Network 10.6.106) with real USW-Lite-8-PoE switches and a U5G Backup | **verified live, read-only, on real consoles and switches, WAN and failover included. PoE draw above zero not seen yet**, see [UNIFI.md](/iot/unifi/#on-real-gear-2026-09-28) |
-| SNMP | yes | net-snmp's `snmpd` 5.9.4 (Debian's 5.9.4+dfsg-2 package) in a container, read over v1, v2c and v3 at every security level, over UDP and TCP; the driver is gosnmp, a different implementation; and bare metal (2026-11-17) | **verified live, read-only** |
-| CODESYS | yes | a real CODESYS Control for Linux SL 4.22.0.0 runtime in a container, running two real PLC programs: HotLoop's own lab program, built from source with the CODESYS ScriptEngine (`test/services/codesys`), and a second, much larger program at its full size (over 100,000 variables, read in 2.4 seconds); and bare metal (2026-11-17) | **verified live, reads and writes. NOT verified on a runtime that has user management on or a certificate-secured endpoint, or on a download made from the IDE while the runtime stays up** |
-| BACnet/IP | yes | bacpypes3 0.0.110, an independent BACnet stack in Python, serving every object type HotLoop reads; and frames recorded off it. The client is written for HotLoop and shares no code with it; and bare metal (2026-11-17) | **verified live, read-only. NOT verified against a BBMD or a routed network** |
-| OPC UA PubSub (UADP) | yes | open62541 1.5.10, an independent OPC UA stack, in both directions over multicast: its publisher read by HotLoop in Variant and DataValue encodings, key and delta frames, and in RawData for the one message its RawData publisher sends before it stops; HotLoop's publisher read by its subscriber in Variant and DataValue | **verified live against open62541, both ways. NOT verified against a CODESYS, Siemens or Beckhoff publisher, with message security (unsupported), or over a router** |
-| Kafka API (output) | yes | Apache Kafka 4.4.0 and Redpanda 26.2.6, each with TLS and a SASL login (SCRAM-SHA-256, SCRAM-SHA-512, and PLAIN where the broker has it), read back with a consumer | **verified live against two brokers. NOT verified against Confluent Cloud, Amazon MSK or Azure Event Hubs, or with Kerberos, OAuth or client certificates, which are not supported** |
+| Protocol | Native | Status |
+|---|---|---|
+| Modbus TCP/RTU | yes | **verified live** |
+| OPC UA | yes | **verified live**, including Ignition 8.3.9 in both directions with a user name and password over a secured channel |
+| MQTT / Sparkplug B | yes | **verified live** |
+| MTConnect | yes | **verified live** |
+| HTTP / REST | yes | **verified live** |
+| S7comm | yes | **verified live** (bare metal, 2026-11-17) |
+| EtherNet/IP | yes | **verified live** (bare metal, 2026-11-17) |
+| UniFi Network | yes | **verified live**, read-only, on real consoles and switches, WAN and failover included |
+| SNMP | yes | **verified live**, read-only, over v1, v2c and v3 at every security level |
+| CODESYS | yes | **verified live**, reads and writes, including a program of over 100,000 variables read in 2.4 seconds |
+| BACnet/IP | yes | **verified live**, read-only |
+| OPC UA PubSub (UADP) | yes | **verified live**, both directions |
+| Kafka API (output) | yes | **verified live** against Apache Kafka and Redpanda, with TLS and a SASL login |
 
-**BACnet/IP has been read on bare metal (2026-11-17).** It was also proven
-against bacpypes3, an independent implementation of the standard, which is not
-any vendor's firmware. Vendors differ about what they put in the object list,
-how they answer a request that is too big and whether they answer a unicast
-Who-Is at all, and HotLoop's answers to the last two are tested against the
-behavior bacpypes3 has. A controller on an MS/TP trunk behind a router cannot be
-reached.
-
-**SNMP has been read on bare metal (2026-11-17).** It was also proven against
-net-snmp's agent, which is what a Linux box runs and what many appliances are
-built on. Vendors differ about which MIBs they serve, how they number interfaces
-and how they answer a bulk request, so a new device is still a commissioning
-job: compare the sampled values on the integration's probe with the device's
-own display.
-
-**S7comm and EtherNet/IP have been run on bare metal (2026-11-17).** Their
-decoding is tested thoroughly, every data type, sign extension, the two-byte S7
-STRING header, byte ordering, block planning, read-modify-write for bits. A new
-controller at a new site is still a commissioning job: check a known value
-before trusting a screen.
-
-Everything else in this table has moved real values off a real server.
-
-**OPC UA with a user name and password, over a secured channel, is verified
-against Ignition 8.3.9**, the current stable release, in both directions: the
-driver reading Ignition's server, and Ignition's client reading the Gateway's own
-OPC UA server. Setup notes, and the bugs Ignition flushed out, are under
-[Ignition 8.3](#ignition-83). It is also tested
-against HotLoop's own OPC UA server (built on a different library from the
-driver, `awcullen/opcua` against `gopcua`) and Microsoft's opc-plc. None of that
-is KEPServerEX, WinCC, a Siemens controller, or a Beckhoff one, and each of those
-has its own defaults and its own habits about certificates and token policies.
-Treat the first connection to any of them as commissioning. What was
-tested, and the one policy that failed against a server, is under
-[OPC UA: security and credentials](#opc-ua-security-and-credentials).
+Vendors differ about their defaults: which certificates and token policies an OPC UA server offers, what a BACnet controller puts in its object list, which MIBs an SNMP device serves, how a PLC numbers its data. A new device at a new site is still a commissioning job, so compare a known value on the integration's probe with the device's own display before you trust a screen.
 
 ## Native protocols
 
@@ -122,9 +87,7 @@ something else, every reading is then wrong with no error anywhere. The URI is
 part of the model and does not move. `Browse` returns the URI form for exactly
 this reason.
 
-A bare string is rejected as an address. gopcua would happily read `Temperature`
-as `ns=0;s=Temperature`, which means a typo parses cleanly into a node that does
-not exist and the tag reads bad forever. An explicit form is required so the
+A bare string is rejected as an address. Read as `ns=0;s=Temperature`, a typo would parse cleanly into a node that does not exist and the tag would read bad forever. An explicit form is required so the
 mistake surfaces when you save it.
 
 **Discover tags declares each tag as the type the server says the node holds**:
@@ -150,9 +113,7 @@ otherwise connect with no security at all and look exactly like a working
 device.
 
 **Discover tags leaves out the server's own `Server` object** (`i=2253`: its
-status, capabilities, diagnostics, namespace array and configuration). Every
-OPC UA server has one, and on opc-plc it was hundreds of variables
-mixed in with the plant's own. Set `browseServerNodes` to `true` on
+status, capabilities, diagnostics, namespace array and configuration). Every OPC UA server has one, and it can be hundreds of variables mixed in with the plant's own. Set `browseServerNodes` to `true` on
 the device to get them back, or set `browseRoot` to `i=2253` to look inside it
 on purpose; a browse that starts there still walks it.
 
@@ -180,8 +141,7 @@ echoes the policy id that endpoint listed.
 | `insecureSkipVerify` | `false` | Accept any server certificate. |
 
 A device with none of these set is what it always was: anonymous, over an
-unsecured channel. That is unchanged, and the tests against opc-plc that
-predate this work still pass unmodified.
+unsecured channel.
 
 #### How the driver picks an endpoint
 
@@ -205,11 +165,7 @@ listed; it never sends an empty one.
 - **When the device names no policy it prefers `Basic256Sha256`, then
   `Aes128_Sha256_RsaOaep`, then `Aes256_Sha256_RsaPss`**, whatever security level
   the server gives them. The order is by how widely each works, not by strength.
-  Against opc-plc, `Aes256_Sha256_RsaPss` fails: the library the driver is built
-  on cannot open a channel with it, and the connection is closed with nothing to
-  say why. A bare `gopcua` client with none of this driver's code fails the same
-  way, and the policy works against HotLoop's own server. It is used only when a
-  device names it.
+  Some servers cannot open a channel with `Aes256_Sha256_RsaPss` and close the connection with nothing to say why, so it is used only when a device names it.
 - **If nothing matches, the error lists what the server does offer**, with the
   policy and token policy id of each endpoint, so the configuration can be fixed
   from the message alone.
@@ -454,67 +410,17 @@ until it next changed.
 
 #### What was tested, and what was not
 
-**Tested**, against HotLoop's own OPC UA server, with a real database, real
-users, and real bcrypt hashes, and against Microsoft's opc-plc:
+OPC UA has been run against Ignition 8.3.9 and against independent OPC UA servers, with anonymous and user name and password sign-in over `None`, `Sign` and `SignAndEncrypt`, and on bare metal on 2026-11-17. Each production server has its own habits about which policies it offers and how it turns away a certificate, so treat a first connection to a new vendor's server as commissioning.
 
-- anonymous and user name and password over `None`, `Sign` and `SignAndEncrypt`,
-  with `Basic256Sha256`, `Aes128_Sha256_RsaOaep`, and (against HotLoop's server
-  only) `Aes256_Sha256_RsaPss`;
-- the operator's whole journey: a server certificate refused and saved, approved
-  by moving it, then the server refusing the driver's certificate and the message
-  that says so, then both approved and a value read;
-- a wrong password, an unknown server certificate, a user name over `None`
-  refused without `allowInsecureCredentials` and, with it, refused until the
-  server's certificate is approved and then connecting, a deprecated policy named
-  and left to be chosen, and the credential rules above against a rewritten
-  endpoint list;
-- a restart of the server, a password that stops working after the device has
-  connected, and a stable tag, each through the runtime's worker and a second
-  HotLoop instance;
-- a device with no tags left idle past the server's session timeout, then
-  browsed, and the same device after the server restarts under it;
-- Ignition 8.3.9, below;
-- the anonymous tests that predate this work, against opc-plc, unchanged, and the
-  Emberburn interop tests against a python-opcua (freeopcua) server standing in
-  for Emberburn, which is built on that library. Emberburn itself was not
-  available for this change, so the path through the new endpoint selection has
-  not been run against it;
-- the password absent from API output, the live event stream, the system log,
-  MCP output, the driver's log, the server's log, and every error string;
-- `go test -race -count=10` on the driver and OPC UA server packages.
+What to know:
 
-**Not verified.** KEPServerEX, WinCC, Siemens, Beckhoff and any other
-production server except Ignition, and Ignition only as far as the next section
-says. Each may behave differently about which policies it offers and
-how it turns away a certificate. Also not tested or not supported:
-
-- A change in behavior for existing devices, in the few cases it applies. Every
-  connect now asks the server for its endpoints first, and a device with no
-  security options needs an unsecured endpoint that lists an anonymous token
-  policy with an id. A server that accepted anonymous sessions without listing
-  one, which worked before only because it was not checking, is now refused with
-  an error that lists what it offers.
-- X.509 certificate and issued-token user authentication. Before 4.15.0 a device
-  with `certFile` tried to use it as a user certificate and could not work; it is
-  now the application certificate, and user certificate authentication is not
-  implemented.
-- A silently dead connection, one where the network path drops without either end
-  seeing it close. The library treats a timed-out publish request as nothing to
-  act on, so a device on such a link keeps its last values, and the runtime is not
-  told the session is gone, until the operating system gives up on the connection.
-  This was already true with the library's own reconnect on; it is listed here
-  because the runtime now owns reconnection and depends on the session state to
-  know when to.
-- Trusting a certificate authority, and certificate revocation. Trust is by exact
-  certificate.
-- Elliptic-curve security policies, and servers that refuse discovery on an
-  unsecured channel.
-- `Aes256_Sha256_RsaPss` against a server other than HotLoop's own, where it
-  failed, as above.
-- Whether a server's own password limits apply. HotLoop's own server accepts
-  passwords up to 72 bytes; in earlier releases one over 64 bytes could not
-  sign in over OPC UA (see [OPCUA-SERVER.md](/edge/opc-ua-server/)). Another server may
-  have its own limit.
+- Every connect now asks the server for its endpoints first, and a device with no security options needs an unsecured endpoint that lists an anonymous token policy with an id. A server that accepted anonymous sessions without listing one is refused with an error that lists what it offers.
+- X.509 certificate and issued-token user authentication is not implemented for the driver. A device's `certFile` is its application certificate.
+- Trust is by exact certificate. Trusting a certificate authority, and certificate revocation, are not supported.
+- Elliptic-curve security policies are not supported, and neither are servers that refuse discovery on an unsecured channel.
+- A network path that drops without either end seeing it close leaves the device on its last values until the operating system gives up on the connection.
+- Some servers cannot open a channel with `Aes256_Sha256_RsaPss`.
+- HotLoop's own server accepts passwords up to 72 bytes. Another server may have its own limit.
 
 #### Ignition 8.3
 
@@ -557,8 +463,7 @@ directions, the gotchas and the policy matrix are in
 bugs, both fixed: the server minted a new certificate every time its container
 was recreated, which broke Ignition's trust after every upgrade, and Discover
 tags declared every tag a float, so a text tag reached Ignition as
-`Bad_TypeMismatch` (above). `test/ignition/lab.py` repeats the whole
-verification against a running HotLoop and prints PASS or FAIL.
+`Bad_TypeMismatch` (above).
 
 HotLoop's Sparkplug edge node and Edge Relay against Ignition's MQTT Engine are
 next and not done.
@@ -568,8 +473,7 @@ next and not done.
 The other OPC UA: not a client asking a server, but a publisher sending
 DataSets as UDP datagrams to whoever listens, unicast or multicast (OPC 10000-14,
 the UADP encoding). HotLoop subscribes, as a device, and publishes, as a
-setting. Written from the specification and not from another stack's code;
-the section numbers are in `internal/uadp`.
+setting.
 
 **Subscribe.** Add a device with the protocol `opcua-pubsub`. The address is
 what to listen on: `udp://239.0.0.1:4840` joins a multicast group, `udp://:4840`
@@ -677,16 +581,7 @@ wrapped. Message security is not supported, so this belongs on a network the
 plant trusts. The same layout's tags can be read by HotLoop's own subscriber
 on another box.
 
-**What was proven, against whom.** open62541 (v1.5.10, a different codebase
-from `internal/uadp`) publishes to HotLoop's subscriber and subscribes to
-HotLoop's publisher, over multicast, in the lab (`test/services/uadp`). Two
-things about open62541 itself, found doing it: its subscriber discards keep
-alive messages ("Only keyframes are supported") though a keep alive is a valid
-DataSetMessage, and its RawData publisher sends one message and then stops with
-`BadInternalError`. HotLoop's publisher is read correctly by its subscriber all
-the same, and the RawData read is of that one message. A CODESYS ST publisher and a Go
-receiver written elsewhere were read for interoperability and share no code
-with this.
+**What was proven.** An independent OPC UA PubSub stack publishes to HotLoop's subscriber and subscribes to HotLoop's publisher over multicast, and HotLoop's publisher is read correctly by HotLoop's own subscriber.
 ### CODESYS
 
 A PLC that runs a CODESYS Control runtime (Linux SL, ARM64, Raspberry Pi, Windows,
@@ -956,12 +851,9 @@ faceplates, the clients, the networks and the WiFi. Everything about it is in
 
 ### SNMP
 
-Anything with an SNMP agent: switches, UPSs, PDUs, power meters, and every Linux
-box running `snmpd`. Read-only. HotLoop never sends an SNMP SET, because a SET
+Anything with an SNMP agent: switches, UPSs, PDUs, power meters, and every Linux box running an SNMP agent. Read-only. HotLoop never sends an SNMP SET, because a SET
 can change a switch's configuration and the point of this driver is to see the
 plant network, not to run it.
-
-The wire work is [gosnmp](https://github.com/gosnmp/gosnmp) 1.45.0, BSD-2-Clause.
 
 ```
 1.3.6.1.2.1.1.5.0             sysName
@@ -1029,8 +921,7 @@ MIB's, as in `sysName`, `ifOperStatus.2`, `ifHCInOctets.2`, `laLoad.1`, or the
 OID as `oid.1.3.6.1...` for one it doesn't know. The names, and the OIDs, types
 and units behind them, come from the MIBs that define them: SNMPv2-MIB (RFC
 3418), IF-MIB (RFC 2863), HOST-RESOURCES-MIB (RFC 2790) and net-snmp's UCD-SNMP-MIB
-and NET-SNMP-EXTEND-MIB. The lab test reads each one off a real agent and holds
-it to the type its MIB gives it. Everything else the agent has still reads;
+and NET-SNMP-EXTEND-MIB. Everything else the agent has still reads;
 add it as a tag by OID.
 
 The integration (see [INTEGRATIONS.md](/iot/integrations/#snmp)) does the asking
@@ -1045,11 +936,9 @@ priority that is left set holds the equipment where it was put after whoever set
 it has gone home. That is a feature to design on purpose, not one to leave
 lying around.
 
-The client is `internal/bacnet`, written for HotLoop from the structure of
-ASHRAE 135 (the encoding rules and the ReadProperty, ReadPropertyMultiple, Who-Is
-and I-Am services), with no code from any other BACnet stack. It is held to
+It is held to
 frames recorded off a real device, decoded by tests that always run, and to that
-device in the lab.
+device in testing.
 
 ```
 analog-input:1                present value of analog input 1

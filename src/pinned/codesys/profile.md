@@ -33,7 +33,7 @@ What that means for you: a PubSub listener, such as one fed by [HotLoop Transmit
 
 ## An example
 
-This is the profile behind the screenshots on the [overview](/codesys/overview/), against HotLoop's lab program. `GVL_Demo` is the lab program's variable list, and the labels are made up.
+This is the profile behind the screenshots on the [overview](/codesys/overview/), against HotLoop's demo program. `GVL_Demo` is the demo program's variable list, and the labels are made up.
 
 ```json
 {

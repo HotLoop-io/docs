@@ -90,8 +90,7 @@ Same answer everywhere, from one engine package:
   then `git difftool -t hotloop-flow`.
 
 A flow diffed against itself is no change at all, for any document the parser
-accepts. CI fuzzes that on every pull request, because a diff that invents a
-change is worse than no diff.
+accepts.
 
 ## Put it back
 
@@ -111,7 +110,7 @@ byte for byte, so it's the same revision it was then.
 node you deleted returns with its broker password instead of returning and
 failing to log in. That's tested against a real Mosquitto that refuses anonymous
 clients: delete the subscriber, deploy, roll back, and it logs in again and
-messages flow. CI runs that broker on every pull request.
+messages flow.
 
 It refuses three ways, before anything is written. A stale
 `HotLoop-Flow-Deployment-Rev` gets the same 409 a deploy would, because a
@@ -317,6 +316,4 @@ refuses waits and catches up when it stops refusing, and a deploy with a git
 server that takes ten seconds to say no returns in milliseconds.
 
 It's pure Go (go-git), so the binary stays static. It costs about 3.8 MB of
-binary, which is why it's measured and not assumed. The ceiling in CI is 46 MiB,
-moved up from 42 in 2.13.0 for Kafka out, and the binary is 48,083,106 bytes,
-about 150 KB under it.
+binary, which is why it's measured and not assumed.
