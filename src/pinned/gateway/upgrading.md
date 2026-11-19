@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.21.1
+reviewed: hotloop=4.22.0
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
 description: "From 4.18.11 it is a helm upgrade, but agents can write now and scaled tags change. From 4.18.10 the database moves to PostgreSQL 17. Older, you go in hops."
 sidebar:
@@ -10,6 +10,10 @@ Five ways onto {{hotloop}}, and they are nothing alike. From 4.18.11 it is a pla
 
 :::caution[Coming from 4.20.2 or earlier: an OPC UA client on Basic256 stops connecting]
 4.21.0 turned `Basic128Rsa15` and `Basic256` off by default, on upgrades as well as new installs. The server no longer lists them and refuses a client that asks for one by name. Check whether any OPC UA client of yours (Ignition's connection shows it) speaks nothing newer than `Basic256`, and move it to `Basic256Sha256`. If it can't move, `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` (chart `opcuaServer.allowDeprecatedPolicies: true`) brings the two back, and the server says so at start. 4.21.0 also adds migration 0027, a new table, so the upgrade is otherwise a plain `helm upgrade`. The release check started 4.20.2 on the migrated schema and it ran, so the table is not a reason a rollback is unsafe.
+:::
+
+:::note[On arm64, wait for the multi-arch build]
+4.22.0 is built for amd64. A Gateway on arm64 stays on 4.21.1 until the next version adds the arm64 image.
 :::
 
 :::note[Older charts are fetched by URL]

@@ -5,7 +5,12 @@ description: "The entity registry every automation, helper, script and screen is
 editUrl: false
 ---
 
-The entity registry and the engine that computes entity state are the foundation every automation, helper, script and screen in HotLoop is built on.
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+The entity registry and the engine that computes entity state are the
+foundation every automation, helper, script and screen in HotLoop is built on.
 
 ## Why entities, when we already have tags
 

@@ -7,6 +7,10 @@ sidebar:
   label: "2.5.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop Flow 2.5.0 is a new editor. Same flows, same engine, same shortcuts, and it finally looks like it belongs next to the rest of HotLoop instead of like it came from a different company. If you wire plants for a living, what you get is a screen that fits what you actually do all day: put the thing on the canvas, deploy it, and watch it run.
 
 ## What's new
@@ -27,11 +31,11 @@ HotLoop Flow 2.5.0 is a new editor. Same flows, same engine, same shortcuts, and
 
 ## What changed
 
-Nothing about your flows. A flow file loads and saves byte for byte, exactly as before. Wiring, dragging, undo, copy and paste, Ctrl+Enter, Escape, nudging with the arrow keys, zoom, marquee select and dragging from the palette all work the way they did, and every one of the 60 browser tests passes without a line of them touched. I also walked every screen and dialog on 2.4.0 and on this build against the same plant flow, 48 states, and nothing went missing.
+Nothing about your flows. A flow file loads and saves byte for byte, exactly as before. Wiring, dragging, undo, copy and paste, Ctrl+Enter, Escape, nudging with the arrow keys, zoom, marquee select and dragging from the palette all work the way they did, and every one of the 60 browser tests passes without a line of them touched. We also walked every screen and dialog on 2.4.0 and on this build against the same plant flow, 48 states, and nothing went missing.
 
 Things that look different on purpose: the debug and runtime panels moved to the dock, the Tests panel's empty message now says "debug dock" because that's where the log is, a trace and a review are drawn in blue and the status colors, the theme button says Dark or Light, and Search shows its shortcut.
 
-**One thing is slower, and I'd rather say so than have you find it.** The page is blank for a moment until the editor has loaded, where the old one painted its frame first. I measured it with the browser cache off, from sign-in page request to the form on screen. On this machine it's about 12 ms more. Over a 20 Mbps link it's about 100 ms more (230 ms became 335 ms), and over a 1.6 Mbps link with 150 ms of latency it's about half a second more (1.46 s became 1.96 s). On a plant LAN it's a few milliseconds. On a bad link you'll see a white page for a beat, and then the editor. It's a one time cost per page load, not per click.
+**One thing is slower, and we'd rather say so than have you find it.** The page is blank for a moment until the editor has loaded, where the old one painted its frame first. We measured it with the browser cache off, from sign-in page request to the form on screen. On this machine it's about 12 ms more. Over a 20 Mbps link it's about 100 ms more (230 ms became 335 ms), and over a 1.6 Mbps link with 150 ms of latency it's about half a second more (1.46 s became 1.96 s). On a plant LAN it's a few milliseconds. On a bad link you'll see a white page for a beat, and then the editor. It's a one time cost per page load, not per click.
 
 ## New settings
 

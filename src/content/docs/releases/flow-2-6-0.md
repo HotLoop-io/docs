@@ -7,13 +7,17 @@ sidebar:
   label: "2.6.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop Flow 2.6.0 gives a durable wire a way to tell you it has stopped delivering. Nothing about how your flows run changes. If you run durable wires on a plant line, what you get is a counter you can alert on for the one failure that used to look like a quiet queue.
 
 ## What's new
 
 **A stuck durable wire is counted and described.** A durable wire's pump now notices when the wire says messages are waiting and the queue holds nothing it can read, and it is still that way after a short recheck. It adds one to `hotloop_flow_durable_wire_stranded_total{wire=...}` and writes one warning to the runtime log, once per kind of fault, with the wire's counters next to what its table holds: how far the pump got, the depth, the rows on disk, what is in flight, and how many were appended, delivered and dropped. On a healthy wire the counter is zero and stays zero, so any value above zero is worth a page.
 
-I added it because a drop-oldest wire failed to drain once in a few thousand test runs and I could not catch why. This release is the instrument, not a fix. If it ever fires on your line, the log line is what I need.
+We added it because a drop-oldest wire failed to drain once in a few thousand test runs and we could not catch why. This release is the instrument, not a fix. If it ever fires on your line, the log line is what we need.
 
 ## What changed
 

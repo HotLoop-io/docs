@@ -5,6 +5,10 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop has its own login, since 4.4.0, and every product requires it by default. Running without one is still available, deliberately, for a
 deployment that really is isolated behind the dashboard and wants to say so, see [Running without a login](#running-without-a-login), but a bare
 `helm install` or a Podman Quadlet unit now comes up requiring one.
@@ -526,7 +530,7 @@ ends at the next request the dashboard stops signing.
 - **No OpenID Connect.** Local accounts, plus the EmberNet dashboard's signed
   assertion above. An identity-provider integration is not built.
 - **No per-tenant or per-site roles.** A user's permissions are the same
-  everywhere this gateway runs, which is fine for one plant and would need
+  everywhere the Gateway runs, which is fine for one plant and would need
   more thought for the multi-site rollup in `Sites`.
 - **No lockout for a PIN or badge typed on its own,** only for a password and a
   PIN with its user name; see

@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.21.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
@@ -48,7 +48,7 @@ IoT user, and IoT talks to that PLC with no upgrade.
       Edge, `-tags hotloop_iot` is IoT, and both at once won't compile. Its API routes
       answer 404 and say which product has it. `hotloop --product` and
       `GET /api/status` say which one you're talking to
-- [ ] Four images and four charts from one tag, built in parallel, published to
+- [x] Four images and four charts from one tag, built in parallel, published to
       the same Helm repo. The release refuses a tag that any of the four charts
       doesn't match. The Gateway keeps `ghcr.io/hotloop-io/hotloop` and chart
       `hotloop`, so nobody on 4.16 wakes up broken
@@ -57,10 +57,10 @@ IoT user, and IoT talks to that PLC with no upgrade.
       cgo, so the arm builds stay static and a Pi doesn't need a compiler
       toolchain to exist. The full suite runs against all three, because a
       database we don't test is a database we don't support
-- [ ] Moving a site IoT to Edge to Gateway keeps every device, tag, alarm, user
+- [x] Moving a site IoT to Edge to Gateway keeps every device, tag, alarm, user
       and hour of history: swap the image, done. Going back down deletes
       nothing, the missing features just sit there dormant until you come back
-- [ ] A Gateway-only setting on IoT or Edge warns and runs, and it still shows
+- [x] A Gateway-only setting on IoT or Edge warns and runs, and it still shows
       and saves in Settings. You can see exactly what you set and why it's not
       doing anything, instead of guessing
 - [x] IoT keeps 30 days of history by default. Pi disks are small, and the
@@ -83,8 +83,8 @@ IoT user, and IoT talks to that PLC with no upgrade.
 - [x] The license's scope line names all four products, in the canonical
       license and every copy of it. It used to say Gateway, which arguably left
       the other three with no grant at all
-- [ ] **The split shipped in 4.18.10 with MQTT discovery** (Phase 4). IoT's
-      first release finds Shelly and ESPHome devices out of the box, or it doesn't ship.
+- [x] **The split shipped in 4.18.10 with MQTT discovery** (Phase 4). IoT's
+      first release finds Shelly and ESPHome devices out of the box
 
 ## The automation base
 
@@ -184,7 +184,8 @@ This is where "better and cooler" has to be obvious from across the room.
       and udhcpc; not yet against real devices on the bench. See
       [Network discovery](/iot/network-discovery/)
 - [x] CODESYS, the PLC's variables by the names the programmer gave them, through the runtime's own OPC UA server: discovery of what the application exports, reads and writes, a first dashboard from the setup, and a reconnect with no hands after a restart or a download. Proven against a 4.22.0.0 runtime in a container running HotLoop's lab program and a second, much larger program, and on bare metal (2026-11-17). See [CODESYS](/iot/protocols/#codesys)
-- [ ] BACnet, SNMP, ONVIF cameras, Shelly native
+- [x] BACnet/IP and SNMP, read-only, see [Protocols and drivers](/iot/protocols/)
+- [ ] ONVIF cameras, Shelly native
 - [ ] **Firmata**, for Arduinos on USB. Verified on real boards only: Arduinos
       and a few other Firmata devices are on the way to the bench, and a
       Firmata emulator would just be us agreeing with ourselves
@@ -361,7 +362,9 @@ back up and patch, and they are not adopting ours to get a trend.
       keep alive frames, lost-message and configuration-change handling. See
       [Protocols and drivers](/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Publish tags as UADP, in Edge and Gateway, beside the OPC UA server
-- [ ] Against a CODESYS publisher
+- [x] A CODESYS publisher against it: HotLoop Transmitter 1.1.0, the CODESYS
+      UADP publisher library, read by this subscriber (4.19.2) against a live
+      CODESYS Control for Linux SL runtime
 - [ ] Message security (signed and encrypted NetworkMessages)
 - [ ] Delta frames from the publisher; DataSetMetaData and discovery messages
       so a subscriber can name the fields; array and structure fields in what
@@ -387,7 +390,7 @@ Every product is checked against the current stable Ignition release, so a plant
 
 ## HotLoop Edge
 
-- [ ] Its own image and chart, see [Products](#products)
+- [x] Its own image and chart, see [Products](#products)
 - [x] Local screens and logic that keep running with the uplink down. A
       test boots the real Edge binary with its Sparkplug uplink pointed at
       a link that swallows everything and answers nothing, then works the
@@ -440,10 +443,10 @@ Every product is checked against the current stable Ignition release, so a plant
 
 ---
 
-## Broken or missing now
+## Fixed in review
 
-Found in code review and in the PRs so far. Each one is real, checked against
-`main`.
+Found in code review and fixed on `main`. The release notes for each version
+say what changed for a running site.
 
 - [x] **Restore couldn't load a backup from an older schema, and didn't check
       the backup's `hotloopVersion` at all.** The manifest now records every

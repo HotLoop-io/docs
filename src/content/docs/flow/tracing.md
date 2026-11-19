@@ -5,11 +5,15 @@ description: "Click a debug message and see where it went, replay it into a draf
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A value goes wrong at 2 AM and the debug sidebar tells you the value. It does
 not tell you which of the nine nodes it went through changed it, how long the
 slow one sat on it, or what it looked like going in. You find that out by
 sprinkling Debug nodes through the flow, deploying, waiting for it to happen
-again, and taking them out. I've done that on a live line. Never again.
+again, and taking them out.
 
 So every message that enters the flow gets a trace. Every debug message in the
 sidebar has a **Trace** button, and one click lights the path that message took
@@ -42,7 +46,7 @@ the wire.
 This runs on the line it's watching, so every direction is bounded, and the
 limits are `trace:` in the [configuration](/flow/configuration/):
 
-| <span class="sr-only">Details</span> | Default |
+| Limit | Default |
 |---|---|
 | Traces kept, newest | 256 |
 | Hops one trace keeps, so a loop can't write itself down forever | 512 |
@@ -63,7 +67,7 @@ The soak: **a million messages through five nodes, 2026-10-18**, same machine as
 [the numbers above](/flow/overview/#the-numbers). Heap after a forced GC, sampled every hundred
 thousand messages:
 
-| <span class="sr-only">Details</span> | Heap, every checkpoint | Messages a second |
+| Tracing | Heap, every checkpoint | Messages a second |
 |---|---|---|
 | Tracing off | **1.3 MiB** | 192,596 |
 | Tracing every message (`perSecond: 0`) | **2.7 MiB** | 115,770 |
@@ -139,7 +143,7 @@ shape of the journey and its timing.
 
 It speaks OTLP/HTTP with the JSON encoding the spec defines, written out by hand
 in one file, rather than pulling in the OpenTelemetry SDK with its protobuf and
-gRPC to do the same single POST. The binary has a size budget and I'm not
+gRPC to do the same single POST. The binary has a size budget and we're not
 spending it on that. Every span id, parent, link,
 name, attribute and error status has to match. There's no mock in that test
 anywhere. If the collector is down, the export drops spans and counts them and

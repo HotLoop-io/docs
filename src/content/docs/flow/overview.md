@@ -5,6 +5,10 @@ description: "A visual flow engine for the plant floor in one Go binary, with a 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 **Wire the plant. Review it like code.**
 
 HotLoop Flow is a visual flow engine for the plant floor, written in Go. You wire
@@ -43,13 +47,13 @@ because it's a feature, not the point.
 Current release is `2.14.1`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.14.1`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [Deploying Flow](/flow/deploying/) has Kubernetes, Podman and Quadlet. It has 117 node types for messages and 37 for FlowLab diagrams. Home and lab use is free, so is use by schools, nonprofits and government, and
-use through EmberNet, business use included, is unrestricted, under the HotLoop Source License Agreement.
+use through EmberNet, business use included, is unrestricted, under HotLoop's EmberNet Source License.
 
 ## The numbers
 
 Absolute numbers only, so you can check them on your own hardware. Three runs each, and the range is what's printed.
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| Measure | Result |
 |---|---|
 | Binary, linux/amd64, static | **41.7 MB** |
 | Image, amd64 | **45.64 MB** |
@@ -72,7 +76,7 @@ The same flow and the same commands, 2026-10-22, on a Raspberry Pi 5 Model B
 its clock capped at 2.0 GHz, running the published `2.2.0` arm64 image as a pod
 with nothing else on the node but cluster DaemonSets. Three runs, range printed.
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| Measure | Result |
 |---|---|
 | Start to answering its first request | **0.10 to 0.46 s** |
 | RSS, idle | **88.0 to 88.3 MiB** |

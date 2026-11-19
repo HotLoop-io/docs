@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.21.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
@@ -777,7 +777,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.21.1"
+  "version": "4.22.0"
 }
 ```
 
@@ -1605,7 +1605,7 @@ poll, so a tag that has held still has nothing in the window to draw. With
 the last reading before `from`, for each tag whose last reading before it was
 good and had a number in it. A tag whose last reading was bad or uncertain, that
 has no earlier reading, or that is text, has no entry, because what it held isn't
-known and I won't hand a chart a guess. The trend card draws from this.
+known and we won't hand a chart a guess. The trend card draws from this.
 
 Raw, newest first:
 
@@ -2021,7 +2021,7 @@ Creates or replaces a definition.
 `{value}` is written the way the value card writes it, unit included: whole
 numbers as they are, two places from 1 up, one from 100 up, four below 1, and
 scientific past ten million or under 0.01 (`8.20 pH`, `212.5 F`, `1.235e+7`).
-I did that because a tag with scale 0.1 and a raw 82 is 8.200000000000001 as a
+We did that because a tag with scale 0.1 and a raw 82 is 8.200000000000001 as a
 float, and the banner used to say so. A text reading is said as it is. The tag
 itself, the writes and the automations still see the exact number; only the
 sentence is rounded. `{limit}` is the limit as you typed it.
@@ -2905,7 +2905,7 @@ that does not exist.
 
 ### `GET /api/sites`
 
-Every site this Gateway federates, asked for its plant status over MCP in
+Every site the Gateway federates, asked for its plant status over MCP in
 parallel, 6 seconds each, so one dead site cannot hold up the rest. The sites
 are the outbound MCP servers in the config. See
 [MCP](/iot/mcp/#federating-sites).

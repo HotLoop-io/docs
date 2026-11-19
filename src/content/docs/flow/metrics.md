@@ -5,6 +5,10 @@ description: "The Prometheus metrics Flow exposes per node, so a backed-up wire 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Prometheus at `/metrics`, per node, with `node` and `type` labels on everything
 per-node. No exporter sidecar, because an edge box does not have room for one and
 you should not need a second container to find out that your inbox is full.
@@ -53,6 +57,6 @@ you should not need a second container to find out that your inbox is full.
 The one to alert on is `hotloop_flow_node_queue_high_water` against
 `hotloop_flow_node_queue_capacity`. High water is the early warning that a flow is
 approaching its ceiling, which arrives before anything is dropped and long before
-anyone is awake. That alert is the whole reason I built the bounded inbox. You
+anyone is awake. That alert is the whole reason we built the bounded inbox. You
 can't report how close you are to a limit that doesn't exist, so the limit had to
 exist first.

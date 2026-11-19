@@ -7,6 +7,10 @@ sidebar:
   label: "4.18.11"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop's database is PostgreSQL 17 from this release, and every install that has
 PostgreSQL 16 data moves on its next upgrade without you running anything. That
 is the one thing in 4.18.11 you need to read before you touch a running plant,
@@ -23,7 +27,7 @@ What changed in 4.18.11.
   PostgreSQL 17.11 for IoT and for `database.type: postgresql`. SQLite installs
   have no PostgreSQL and are not touched. PostgreSQL will not open another major
   version's data directory, so a bare image change would have left every
-  existing box with a database that cannot start. I wasn't willing to ship that.
+  existing box with a database that cannot start. We weren't willing to ship that.
 - **What happens on the first start.** One script, `hotloop-pg-upgrade.sh`, runs
   before the database. On the chart it is two init containers on the database
   pod: the old image hands over its PostgreSQL 16 install and the new image runs
@@ -61,7 +65,7 @@ What changed in 4.18.11.
   A rollback puts the chart's database image back to PostgreSQL 16, and 16 will
   not open a 17 directory. Nothing is lost and nothing is half changed, the
   database just does not start. Getting it back means the swap in
-  the k3s and Helm page:
+  [the k3s and Helm page](/install/helm/#going-back):
   stop the database, move `pgdata` to `pgdata.pg17` and `pgdata.pg16` to
   `pgdata`. **That drops every write made on 17 since the upgrade**, because
   `pgdata.pg16` is the database as it was at that moment. Roll forward when you
@@ -130,7 +134,7 @@ What changed in 4.18.11.
   device behind. OPC UA goes through it first. Why it matters: a new kind of
   device used to need its own screen and its own idea of what a setup does, and
   now adding one is the same three steps.
-  docs/INTEGRATIONS.md.
+  [Integrations](/iot/integrations/).
 - HotLoop never sends a SET, because a SET can
   change a switch. There is no default community, since `public` is how a plant's
   switches get read by whoever asks. The community and the v3 passphrases are
@@ -157,7 +161,7 @@ What changed in 4.18.11.
   no account, so it can't be used to lock the whole panel; the panel waits half a
   second longer per miss, up to 3 seconds, and is never locked. Not built: reading a
   badge from a reader that isn't a keyboard.
-  docs/AUTH.md.
+  [Authentication and users](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out).
 - **Alarm escalation.** An alarm nobody acknowledges now goes to the next
   person. Under Settings an admin edits a policy: people who have an ntfy topic
   or an address of their own, steps that say who is told after how many minutes,
@@ -176,7 +180,7 @@ What changed in 4.18.11.
   only runs over https or `localhost`, so a plant on plain http gets the same UI as
   before. Why it matters: an old page that says it is old beats a blank one when
   the Wi-Fi drops in the one spot you needed it.
-  docs/DASHBOARDS.md.
+  [Dashboards](/iot/dashboards/#on-a-phone).
 - **The live feed stops when its session does.** `GET /api/stream` looked at the
   session once, when it opened, and a stream stays open for hours, so it kept
   sending the plant's live data after a sign out, an expiry, a revoked session

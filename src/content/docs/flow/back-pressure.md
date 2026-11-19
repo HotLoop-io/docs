@@ -5,11 +5,15 @@ description: "A ceiling on every queue, a policy for what happens at the ceiling
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 This is the whole project. The signature failure of a flow engine on an edge box
 is a pod that quietly inflates until the kubelet kills it, and the log it leaves
 explains nothing to whoever is holding the pager. So every place a message or a
 byte can pile up has a ceiling, and every ceiling is a written, documented
-decision in [Node-RED compatibility](/flow/compatibility/), not a cap I picked and
+decision in [Node-RED compatibility](/flow/compatibility/), not a cap we picked and
 never mentioned.
 
 | What can pile up | What stops it |
@@ -72,8 +76,8 @@ And it survives a restart. Flow, global and node context live in a SQLite file
 on the volume, loaded when a scope is first used and written behind, so a counter
 or a latch in a flow is where you left it when the pod comes back. The atomic
 operations are the same code as before. Changes are batched into one write every
-thirty seconds and a value set to what it already was writes nothing, because I
-care what this does to an SD card more than I care about being clever. A clean
+thirty seconds and a value set to what it already was writes nothing, because we
+care what this does to an SD card more than we care about being clever. A clean
 stop writes everything; a `kill -9` loses up to those thirty seconds, and
 `store.context.flushInterval` is the knob. Details, and what it costs a card, are
 in [docs/durable](/flow/durable-state/).

@@ -5,6 +5,10 @@ description: "Run a tab as a diagram for test benches and data loggers: nodes ru
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 FlowLab is the part of Flow for test benches and data loggers, and a diagram is its unit: the other way Flow runs a tab. In a flow, a message goes through a node
 and any input wakes it. In a diagram, each node runs once per run, when every input
 that has a wire holds a value. Two nodes with no wire between them run at the same
@@ -30,7 +34,7 @@ source node says which input of that target each wire lands on, in the same shap
 
 The file loads and saves byte for byte with these keys in it. Settings of the tab:
 
-| Key | <span class="sr-only">Details</span> |
+| Key | What it does |
 |---|---|
 | `autostart` | `true` starts the run when Flow starts and after every deploy, with no browser open. |
 | `role` | `"body"` for a diagram that a loop runs. A body is not run by itself. |
@@ -56,7 +60,7 @@ The bar over the canvas has:
 Hover any wire after a run for the last value it carried. The problems button lists
 every reason a diagram cannot run, each naming the node and the input.
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| Call | What it does |
 |---|---|
 | `GET /diagrams`, `GET /diagrams/{id}` | What is deployed, the panel, the last value on every wire. |
 | `POST /diagrams/{id}/run`, `/stop`, `/debug` | Needs `diagram.run`. Each is in the audit log with who. |
@@ -69,7 +73,7 @@ Events for a run go out on the same socket as the editor's, as `diagram/<id>/nod
 
 ## Nodes
 
-| Node | <span class="sr-only">Details</span> |
+| Node | What it does |
 |---|---|
 | `dia-const`, `dia-math`, `dia-compare`, `dia-logic` | Values and arithmetic. Math works one by one on arrays. |
 | `dia-wait` | Waits, then passes its input on. |
@@ -117,7 +121,7 @@ of the record is a channel in one group, so a record of `pressure`, `ok` and
 as a bool, and anything else as text. A field that holds a list of numbers adds the
 whole list, which is how a block of samples goes in. Settings:
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| Setting | Meaning |
 |---|---|
 | `path` | The file. A file that is already there is appended to, so one run after another builds one file. |
 | `group` | The group the channels go in. |
