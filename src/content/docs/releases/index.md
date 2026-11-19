@@ -29,6 +29,7 @@ IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [
 
 ## HotLoop Flow
 
+- [HotLoop Flow 2.15.1 release notes](/releases/flow-2-15-1/) (coming in the next release)
 - [HotLoop Flow 2.15.0 release notes](/releases/flow-2-15-0/)
 - [HotLoop Flow 2.14.1 release notes](/releases/flow-2-14-1/)
 - [HotLoop Flow 2.14.0 release notes](/releases/flow-2-14-0/)

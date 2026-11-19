@@ -5,6 +5,10 @@ description: "The editor is built into the Cascade binary: folders, a canvas wit
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The editor is baked into the binary, so there is nothing else to run and nothing it
 fetches from anywhere: open the address the server listens on and sign in. It is an
 Astro app with Svelte islands, built to static files at image build time, in the
@@ -64,3 +68,21 @@ single sign-on, directory sign-in, passkeys and recovery codes.
 
 So what it means for you: everything Cascade can do is something you can do from
 this screen, on a plant box with no internet, without a line of curl.
+
+The editor speaks the language of whoever is standing at it. The picker in the
+top bar (and on the sign-in page) lists each language by its own name, remembers
+the pick in that browser, and starts in your browser's language the first time.
+Step titles and their help, credential types, the buttons, the refusals the
+server sends, dates, numbers and durations all come through in the language you
+picked, and Arabic runs right to left, with the workflow canvas still drawn left
+to right like it is for everyone. A language is only offered when every word of
+it is there: `web/src/i18n/check.mjs` fails the build when one is missing a
+line, a placeholder or a plural form, and `web/scripts/i18n-scan.mjs` fails it
+on text typed straight into a screen. The words live in
+`web/src/i18n/locales/<language>/`, and a step type or refusal the server gains
+is checked against them by a Go test.
+A run's own output, and anything a program a step called said, is shown as it
+was recorded.
+
+So what it means for you: your operators read the screen in their own language,
+and a new screen can't ship with a line of English nobody translated.

@@ -5,8 +5,12 @@ description: "Flow on Kubernetes with Helm, on a box with Podman and Quadlet, or
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.15.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Three ways in, all from the same image, `ghcr.io/hotloop-io/hotloop-flow`, built
-for amd64 (arm64 follows in 2.15.1):
+for amd64 and arm64:
 
 | You have | Use |
 |---|---|
@@ -70,7 +74,7 @@ To choose your own instead:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.0 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.1 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -215,7 +219,7 @@ so the unit can be copied around, committed and reviewed without carrying
 anything that matters.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.0 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.1 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -234,7 +238,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.15.0
+Image=ghcr.io/hotloop-io/hotloop-flow:2.15.1
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -295,9 +299,9 @@ To try it, not to run a line on:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.0 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.1 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.15.0
+  ghcr.io/hotloop-io/hotloop-flow:2.15.1
 ```
 
 Then open <http://localhost:1880>. That credential secret is new every time you
