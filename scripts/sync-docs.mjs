@@ -14,7 +14,7 @@
 //   --release <repo>=<tag>   the latest release, to mark what is newer than it. Default:
 //                            the newest release `gh release list` shows for the repo.
 //   --no-fetch               don't `git fetch` first.
-//   --legal <clone>          a clone of HotLoop-io/HotLoop-io. Renders its LICENSE.md and TERMS.md into the
+//   --legal <clone>          a clone of HotLoop-io/HotLoop-io. Renders its TERMS.md into the
 //                            License and Terms pages, once they are the new text. Until then neither page exists.
 //   --check                  write nothing. Exit 1 if what is committed differs from what
 //                            this run would write.
@@ -68,7 +68,7 @@ const legalOut = new Map();
   if (i > -1) {
     const clone = argv[i + 1];
     if (!flag('no-fetch')) execFileSync('git', ['-C', clone, 'fetch', '--quiet', 'origin'], { stdio: 'ignore' });
-    for (const [kind, file, page] of [['license', 'LICENSE.md', 'license.md'], ['terms', 'TERMS.md', 'terms.md']]) {
+    for (const [kind, file, page] of [['terms', 'TERMS.md', 'terms.md']]) {
       let raw = null;
       try { raw = execFileSync('git', ['-C', clone, 'show', `origin/main:${file}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch {}
       if (legalStatus(kind, raw)) legalOut.set(page, renderLegal(kind, raw));
@@ -302,7 +302,8 @@ for (const [repo, files] of Object.entries(SKIPPED_SECTIONS)) {
   }
 }
 
-const licenseUrl = () => (legalOut.has('license.md') || (!argv.includes('--legal') && existsSync(join(CONTENT, 'license.md'))) ? '/license/' : 'https://hotloop.io/license/');
+// The License page is hand-written and always here.
+const licenseUrl = () => (existsSync(join(CONTENT, 'license.md')) ? '/license/' : 'https://hotloop.io/license/');
 
 function slugHref(slug, anchor) { return `/${slug}/${anchor ? '#' + anchor : ''}`; }
 

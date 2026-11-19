@@ -42,8 +42,8 @@ Updates have been run too: the Quadlet unit's rollback, and the opt-in hold, wit
 
 This binary has been run on bare metal (2026-11-17). Its OPC UA, Modbus, EtherNet/IP, and S7comm drivers are the same code the Gateway runs.
 
-Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 ## License
 
-The Edge Relay is under the HotLoop Source License Agreement 1.0, like every HotLoop product. It is free to use and source-available, not OSI open source, and each version converts to AGPL-3.0 or later four years after its release. Home and lab use is free, and business use is free through EmberNet. [The License page](/license/) has the text.
+The Edge Relay is under the HotLoop Source License Agreement 1.0, like every HotLoop product. It is free to use and source-available, not OSI open source, and each version converts to AGPL-3.0 or later four years after its release. Home and lab use is free, and so is use by schools, nonprofits and government bodies for their own operations. [The License page](/license/) has the text.

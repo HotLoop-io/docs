@@ -1,32 +1,30 @@
 ---
 title: Using HotLoop in a business
-description: Two ways to run HotLoop at a business. Sign up for EmberNet free and use HotLoop there free, or have Fireball Industries roll it out and stand behind it.
+description: How the HotLoop license treats business use, what counts as business use, and how to get set up for it.
 sidebar:
   label: Using HotLoop in a business
 ---
 
-Running HotLoop at work? There are two ways to do it, and they aren't either/or. Do it yourself on EmberNet, or have people who do this for a living roll it out for you, or both.
+Running HotLoop at work? Here is how the license treats it and how to get set up.
 
-Every HotLoop product is under the HotLoop Source License Agreement 1.0: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and HotLoop Transmitter. HotLoop is free to use and source-available, not OSI open source, and Flow's source is public. Home and lab use is free. Business use is free through EmberNet, and hosting HotLoop for your customers is allowed only through EmberNet. [The License page](/license/) has the text, and the text wins over anything I write here.
+Every HotLoop product is under the HotLoop Source License Agreement 1.0: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and HotLoop Transmitter. HotLoop is source-available, not OSI open source, and Flow's source is public. Home and lab use is free, and so is use by schools, nonprofits and government bodies for their own operations. [The License page](/license/) has the details, and the full agreement wins over anything written here.
 
 ## What counts as business use
 
 More than people expect, and that's on purpose. If a business or any other for-profit is the one running it, or you're running it for them, treat it as business use. Purely internal use counts. Charging nobody counts. Whether HotLoop is making you money or saving you money doesn't enter into it. Better to know that before you've built a plant's worth of automation on "it's only internal."
 
-## EmberNet
+## Getting set up
 
-EmberNet is the way a business uses HotLoop. Signing up is free, and using HotLoop there is free. There's no license key to paste anywhere, because which product you run is just which image you pulled.
+Email [support@hotloop.io](mailto:support@hotloop.io). Tell us what you want to run, on how many machines, and where, and we'll set you up with the right license for it.
 
-[Sign up at embernet.ai](https://embernet.ai/)
+## Partner platforms
 
-## Have it rolled out for you: Fireball Industries
+HotLoop runs on partner platforms, and EmberNet is one of them. Each product's docs have a page on running it there.
 
-Fireball Industries is HotLoop's master systems integrator. If you'd rather not have your own people learn HotLoop on your own plant floor, on a live line, Fireball designs it, installs it, and supports it. Fireball's engineers handle the controls design, UL 508A control panels, line integration, and the start-up on site, so HotLoop goes in alongside the equipment you already run.
+## Support
 
-Fireball Industries is also where support, SLAs, and warranties come from, not EmberNet. The software itself comes as is, with no warranty, so if your plant needs somebody on the hook when a line goes down at 3 AM, that somebody is Fireball. EmberNet is where business use happens. Fireball Industries is who stands behind it.
-
-[Get a quote from Fireball Industries](https://fireballz.ai/get-a-quote/), or [book a meeting](https://calendar.app.google/AfuJdr9Uq25uowiy9).
+The software comes as is, with no warranty. Community help is on [GitHub Discussions](https://github.com/orgs/HotLoop-io/discussions). If your plant needs somebody on the hook for a rollout, SLAs or a warranty, that comes from the systems integrator you hire.
 
 ## Still not sure?
 
-Ask first. It's a lot cheaper than finding out after a whole setup is built on a wrong guess. Email [support@hotloop.io](mailto:support@hotloop.io) and we'll tell you which side of the line you're on. If it's plainly a business, skip the email and go straight to [EmberNet](https://embernet.ai/).
+Ask first. It's a lot cheaper than finding out after a whole setup is built on a wrong guess. Email [support@hotloop.io](mailto:support@hotloop.io) and we'll tell you which side of the line you're on.

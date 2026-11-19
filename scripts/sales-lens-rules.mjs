@@ -10,6 +10,8 @@ const ws = (s) => new RegExp(s.trim().split(/\s+/).map((w) => w.replace(/[.*+?^$
 
 // Every page. These never have to match.
 export const GLOBAL = [
+  // An example server is named for no real place.
+  { sub: [/\bmacedonia\b/g, 'plant-b'] },
   // A path in a parenthesis, at the end of a thought, is an aside about our source tree.
   { sub: [/\s*\((?:[^()]*?)`(?:internal|cmd|test|testdata|web|deploy)\/[^`]*`[^()]*\)/g, ''] },
   { sub: [/\s*\(`(?:Containerfile|Dockerfile)[^`]*`[^()]*\)/g, ''] },
@@ -417,7 +419,7 @@ What to know:
 // The voice on a buyer's page: no profanity, jokes or insults, "we" and never an unnamed "I", no past failure told for
 // its own sake, no positioning against another vendor's product, and a next step on every product overview. These add to
 // PAGE, so each one has to match like any other page rule, and a source fixed upstream is noticed and the rule dropped.
-const PLANT = "Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.";
+const PLANT = "Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.";
 const VOICE = {
   products: [
     { sub: [ws("Refusing to start a plant over a report nobody can get is stupid, and ignoring it silently is how nobody notices for a month."), 'HotLoop keeps the plant running over a report it cannot produce, and the warning makes sure somebody sees it.'] },

@@ -21,6 +21,6 @@ Where it is on the EmberNet docs:
 - [HotLoop Cascade on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
 - [HotLoop for CODESYS on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
 
-To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 Back to the [HotLoop Gateway overview](/gateway/overview/), or the [HotLoop Gateway page on hotloop.io](https://hotloop.io/gateway/).

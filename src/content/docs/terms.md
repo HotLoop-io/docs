@@ -7,7 +7,7 @@ editUrl: false
 
 The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site. The canonical copy is [on GitHub](https://github.com/HotLoop-io/HotLoop-io/blob/main/TERMS.md).
 
-HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. Fireball Industries LLC.
+HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. HotLoop LLC.
 
 Last updated: November 19, 2026. Effective: October 19, 2026.
 
@@ -15,7 +15,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 1. Who we are
 
-1.1 HotLoop is made by Fireball Industries LLC, an Ohio limited liability company at 1410 Highland Rd #1, Macedonia, OH 44056 ("HotLoop", "we", "us"). Fireball Industries LLC is the only party you contract with.
+1.1 HotLoop is made by HotLoop LLC ("HotLoop", "we", "us"). HotLoop LLC is the only party you contract with.
 
 1.2 "You" means the person or organization that accepts these terms.
 
@@ -97,7 +97,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 9. EmberNet
 
-9.1 EmberNet is the channel business use goes through. It is a separate service with its own terms. Your agreement with EmberNet is between you and EmberNet, and we are not a party to it.
+9.1 EmberNet is a partner platform and the channel business use goes through. It is a separate service with its own terms. Your agreement with EmberNet is between you and EmberNet, and we are not a party to it.
 
 9.2 We do not warrant EmberNet and are not responsible for it.
 
@@ -123,7 +123,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 13.1 If you believe content on one of the Sites infringes your copyright, send a notice to our designated agent. Include: your contact details; the work you say is infringed; where the material is; a statement that you believe in good faith the use is not authorized; a statement that your notice is accurate and, under penalty of perjury, that you are the owner or authorized to act for the owner; and your signature.
 
-13.2 Designated agent: Copyright Agent, Fireball Industries LLC, 1410 Highland Rd #1, Macedonia, OH 44056, support@hotloop.io.
+13.2 Designated agent: Copyright Agent, HotLoop LLC, support@hotloop.io.
 
 13.3 We may remove or disable access to the material and tell the user who posted it. That user may send a counter-notice to the same agent. We may close the accounts of repeat infringers.
 
@@ -165,13 +165,13 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 19. Which document wins
 
-19.1 For what you may do with the Software, the license wins over these terms. For everything else, these terms win over our other published pages. A signed agreement with Fireball Industries LLC wins over both where it says so.
+19.1 For what you may do with the Software, the license wins over these terms. For everything else, these terms win over our other published pages. A signed agreement with HotLoop LLC wins over both where it says so.
 
 ## 20. General
 
 20.1 You may not transfer these terms without our written consent. We may transfer them as part of a merger, reorganization or sale of our business.
 
-20.2 We give notice on the Sites. Send notices to us at Fireball Industries LLC, 1410 Highland Rd #1, Macedonia, OH 44056, support@hotloop.io.
+20.2 We give notice on the Sites. Send notices to us at support@hotloop.io.
 
 20.3 Neither of us is liable for delay caused by events beyond reasonable control.
 

@@ -19,6 +19,6 @@ Where it is on the EmberNet docs:
 
 FUXA reads an Edge over OPC UA, and HotLoop for CODESYS installs it beside a runtime.
 
-To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 Back to the [HotLoop Edge overview](/edge/overview/), or the [HotLoop Edge page on hotloop.io](https://hotloop.io/edge/).
