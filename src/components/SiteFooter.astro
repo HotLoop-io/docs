@@ -1,8 +1,12 @@
 ---
 import sync from '../data/sync.json';
+import { existsSync } from 'node:fs';
 
 const year = new Date().getFullYear();
 const products = sync.products;
+// The License and Terms pages exist only once the canonical text has been synced in.
+const hasLicense = existsSync(new URL('../content/docs/license.md', import.meta.url));
+const hasTerms = existsSync(new URL('../content/docs/terms.md', import.meta.url));
 ---
 
 <footer class="site">
@@ -33,8 +37,8 @@ const products = sync.products;
       <a href="/cascade/roadmap/">Cascade roadmap</a>
       <a href="/codesys/roadmap/">HotLoop for CODESYS roadmap</a>
       <a href="/transmitter/roadmap/">Transmitter roadmap</a>
-      <a href="/license/">License</a>
-      <a href="/terms/">Terms</a>
+      {hasLicense && <a href="/license/">License</a>}
+      {hasTerms && <a href="/terms/">Terms</a>}
     </nav>
 
     <nav aria-label="Community">
@@ -49,10 +53,10 @@ const products = sync.products;
 
   <div class="wrap bottom">
     <p>
-      Every HotLoop product except Flow is under HotLoop's Free Use License 1.0, and Flow is under the EmberNet Source License 1.0. Home and lab use is free, and business use run through <a href="https://embernet.ai">EmberNet</a> is free.
+      Every HotLoop product is under the HotLoop Source License Agreement 1.0. Home and lab use is free, and business use run through <a href="https://embernet.ai">EmberNet</a> is free.
       Official Systems Integrator: <a href="https://fireballz.ai">Fireball Industries</a>.
     </p>
-    <p class="small">&copy; {year} HotLoop</p>
+    <p class="small">&copy; {year} Fireball Industries LLC</p>
   </div>
 </footer>
 

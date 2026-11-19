@@ -61,4 +61,4 @@ This binary has been run on bare metal (2026-11-17). Its OPC UA, Modbus, EtherNe
 
 ## License
 
-The Edge Relay is under HotLoop's Free Use License 1.0, like every HotLoop product except Flow. It is free to use, it is not open source, and it never converts to open source. Home and lab use is free, and business use is free through EmberNet. [The License page](/license/) has the text.
+The Edge Relay is under the HotLoop Source License Agreement 1.0, like every HotLoop product. It is free to use and source-available, not OSI open source, and each version converts to AGPL-3.0 or later four years after its release. Home and lab use is free, and business use is free through EmberNet. [The License page](/license/) has the text.

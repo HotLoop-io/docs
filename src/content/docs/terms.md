@@ -7,15 +7,15 @@ editUrl: false
 
 The text below is mirrored from the canonical copy and is what decides things, so it wins over anything else on this site. The canonical copy is [on GitHub](https://github.com/HotLoop-io/HotLoop-io/blob/main/TERMS.md).
 
-HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. HotLoop LLC.
+HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and Transmitter. Fireball Industries LLC.
 
-Last updated: November 18, 2026. Effective: October 19, 2026.
+Last updated: November 19, 2026. Effective: October 19, 2026.
 
 These terms apply to everyone who downloads, installs or uses HotLoop. They explain what you can do with it, what we do for you, and what happens if something goes wrong. By downloading, installing or using HotLoop, or by using our websites, you agree to them. If you accept for an organization, you confirm you can bind it.
 
 ## 1. Who we are
 
-1.1 HotLoop is made by HotLoop LLC, a limited liability company at 1410 Highland Rd #1, Macedonia, OH 44056 ("HotLoop", "we", "us"). HotLoop LLC is the only party you contract with.
+1.1 HotLoop is made by Fireball Industries LLC, an Ohio limited liability company at 1410 Highland Rd #1, Macedonia, OH 44056 ("HotLoop", "we", "us"). Fireball Industries LLC is the only party you contract with.
 
 1.2 "You" means the person or organization that accepts these terms.
 
@@ -31,11 +31,11 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 3. The license is the license
 
-3.1 The Software is licensed under the HotLoop Free Use License 1.0, except HotLoop Flow, which is licensed under the EmberNet Source License 1.0. The text of both is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
+3.1 The Software is licensed under the HotLoop Source License Agreement 1.0. Its text is [LICENSE.md](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) in HotLoop-io/HotLoop-io. That file is the only copy that counts. These terms do not add to it or take from it. If these terms and the license disagree about what you may do with the Software, the license wins.
 
-3.2 In plain words, and subject to the license text: HotLoop is free to use, and it is not open source. Home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is free, and hosting HotLoop for your customers is allowed only through EmberNet. A systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license. Under the HotLoop Free Use License you get the binaries, images and charts we publish and not the source, and you may not modify them or redistribute them. HotLoop Flow is source-available under the EmberNet Source License, and it is not OSI open source.
+3.2 In plain words, and subject to the license text: HotLoop is free to use, and it is not open source. Home and lab use is free. Use by accredited schools and educational institutions, nonprofit organizations and government bodies is free too, anywhere. Any use that runs through EmberNet, business use included, is free, and hosting HotLoop for your customers is allowed only through EmberNet. A systems integrator may install and operate HotLoop for a customer under either the customer's EmberNet account or its own. Outside EmberNet, hosting HotLoop as a service for other people, reselling it, and embedding it in a product you sell are not granted, and other use needs a commercial license. The HotLoop Source License Agreement is source-available and not OSI open source: you may copy, modify and redistribute what you receive, and production use is allowed in the ways the license lists.
 
-3.3 Every HotLoop product is under the HotLoop Free Use License 1.0, except HotLoop Flow, which is under the EmberNet Source License 1.0. The license applies to each version separately, and a version published before the move to the HotLoop Free Use License keeps the license it came with. A version released under the EmberNet Source License stays under it, and under it each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, that license governs it. A version released under the HotLoop Free Use License never converts to an open source license.
+3.3 Every HotLoop product is under the HotLoop Source License Agreement 1.0. The license applies to each version separately, and a version published before the move to the HotLoop Source License Agreement keeps the license it came with. Under the HotLoop Source License Agreement each version converts to AGPL-3.0 or later four years after that version is first made publicly available. Until then, that license governs it.
 
 3.4 Business use, and the schools, nonprofits and government bodies that are free of it, mean what the license says they mean. If you are not sure which side your use falls on, ask us before you deploy.
 
@@ -71,7 +71,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 6.4 Only the version-tagged releases we publish are releases. A copy from anywhere else, including a build someone else made, comes under the license but is not something we support.
 
-6.5 Source for HotLoop Flow is public at github.com/HotLoop-io/hotloop-flow. The other products are distributed as binaries, images and charts, and the license gives no right to their source, to modify them or to redistribute them.
+6.5 Source for HotLoop Flow is public at github.com/HotLoop-io/hotloop-flow. The other products are distributed as binaries, images and charts, and the license covers what you receive.
 
 ## 7. Your data and telemetry
 
@@ -123,7 +123,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 13.1 If you believe content on one of the Sites infringes your copyright, send a notice to our designated agent. Include: your contact details; the work you say is infringed; where the material is; a statement that you believe in good faith the use is not authorized; a statement that your notice is accurate and, under penalty of perjury, that you are the owner or authorized to act for the owner; and your signature.
 
-13.2 Designated agent: Copyright Agent, HotLoop LLC, 1410 Highland Rd #1, Macedonia, OH 44056, support@hotloop.io.
+13.2 Designated agent: Copyright Agent, Fireball Industries LLC, 1410 Highland Rd #1, Macedonia, OH 44056, support@hotloop.io.
 
 13.3 We may remove or disable access to the material and tell the user who posted it. That user may send a counter-notice to the same agent. We may close the accounts of repeat infringers.
 
@@ -165,13 +165,13 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 19. Which document wins
 
-19.1 For what you may do with the Software, the license wins over these terms. For everything else, these terms win over our other published pages. A signed agreement with HotLoop LLC wins over both where it says so.
+19.1 For what you may do with the Software, the license wins over these terms. For everything else, these terms win over our other published pages. A signed agreement with Fireball Industries LLC wins over both where it says so.
 
 ## 20. General
 
 20.1 You may not transfer these terms without our written consent. We may transfer them as part of a merger, reorganization or sale of our business.
 
-20.2 We give notice on the Sites. Send notices to us at HotLoop LLC, 1410 Highland Rd #1, Macedonia, OH 44056, support@hotloop.io.
+20.2 We give notice on the Sites. Send notices to us at Fireball Industries LLC, 1410 Highland Rd #1, Macedonia, OH 44056, support@hotloop.io.
 
 20.3 Neither of us is liable for delay caused by events beyond reasonable control.
 

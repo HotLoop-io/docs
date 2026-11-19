@@ -73,4 +73,4 @@ was run and what was read back.
 
 ## License
 
-HotLoop's Free Use License 1.0, the same as every HotLoop product except Flow. It is free to use and it is not open source, and its section 5 lets you build the library into your own PLC projects and deliver or sell the compiled result, never the library itself. The [license page](https://hotloop.io/license/) has the text.
+The HotLoop Source License Agreement 1.0, the same as every HotLoop product. It is free to use and source-available, not OSI open source, and its section 5 lets you build the library into your own PLC projects and deliver or sell the compiled result, never the library itself. The [license page](https://hotloop.io/license/) has the text.
