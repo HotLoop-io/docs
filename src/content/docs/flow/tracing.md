@@ -5,10 +5,6 @@ description: "Click a debug message and see where it went, replay it into a draf
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A value goes wrong at 2 AM and the debug sidebar tells you the value. It does
 not tell you which of the nine nodes it went through changed it, how long the
 slow one sat on it, or what it looked like going in. You find that out by

@@ -5,10 +5,6 @@ description: "The Prometheus metrics Flow exposes per node, so a backed-up wire 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Prometheus at `/metrics`, per node, with `node` and `type` labels on everything
 per-node. No exporter sidecar, because an edge box does not have room for one and
 you should not need a second container to find out that your inbox is full.

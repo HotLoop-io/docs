@@ -5,10 +5,6 @@ description: "Every setting Flow reads, its default, its environment override an
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Declarative YAML with environment overrides. You can validate it, diff it,
 template it out of a ConfigMap and reason about it without running it, which is
 everything a config file should let you do and nothing more. Every field below is

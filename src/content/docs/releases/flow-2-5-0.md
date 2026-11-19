@@ -7,10 +7,6 @@ sidebar:
   label: "2.5.0"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop Flow 2.5.0 is a new editor. Same flows, same engine, same shortcuts, and it finally looks like it belongs next to the rest of HotLoop instead of like it came from a different company. If you wire plants for a living, what you get is a screen that fits what you actually do all day: put the thing on the canvas, deploy it, and watch it run.
 
 ## What's new
@@ -23,7 +19,7 @@ HotLoop Flow 2.5.0 is a new editor. Same flows, same engine, same shortcuts, and
 
 **A trace is blue now.** The path a message took is drawn in blue across the canvas, with the time each node spent on it. The review before a deploy marks added, changed, moved and removed nodes in green, amber, blue and red. What that means for you: you can tell a trace from a selection at a glance now, because they stopped sharing a color.
 
-**A sign-in that looks like it's from the same company.** A card, the real logo, and the same fields. Behind the EmberCORE dashboard it still tells you to come in through the dashboard.
+**A sign-in that looks like the rest of HotLoop.** A card, the real logo, and the same fields. Behind the EmberCORE dashboard it still tells you to come in through the dashboard.
 
 **Search shows its shortcut.** The button says Ctrl F, so you don't have to guess.
 

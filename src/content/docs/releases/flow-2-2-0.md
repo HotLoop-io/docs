@@ -7,10 +7,6 @@ sidebar:
   label: "2.2.0"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what it knew when it restarts, and shows you where a message went. It is also the first release under HotLoop's Business Source License, and I'm putting that first because it's the part you have to read.
 
 ## The license changed

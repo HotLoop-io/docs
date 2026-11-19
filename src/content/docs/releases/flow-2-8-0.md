@@ -7,10 +7,6 @@ sidebar:
   label: "2.8.0"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop Flow 2.8.0 adds four things to FlowLab, the diagram tab for test benches and data loggers: analysis nodes, a data acquisition node for NI hardware, an MQTT output that keeps what the broker misses, and a TDMS log. Flows run exactly as they did, a flow file you have today loads and saves byte for byte, and a tab that isn't a diagram doesn't see any of it.
 
 ## What's new

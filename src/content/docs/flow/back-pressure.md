@@ -5,10 +5,6 @@ description: "A ceiling on every queue, a policy for what happens at the ceiling
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 This is the whole project. The signature failure of a flow engine on an edge box
 is a pod that quietly inflates until the kubelet kills it, and the log it leaves
 explains nothing to whoever is holding the pager. So every place a message or a

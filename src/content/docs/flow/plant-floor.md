@@ -5,10 +5,6 @@ description: "Modbus TCP, OPC UA, Sparkplug B and the other nodes that talk to P
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Flow talks to PLCs and brokers in Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B.
 Each one is a config node that holds the connection to the device and action
 nodes that point at it, same shape as the InfluxDB node, and the editor builds

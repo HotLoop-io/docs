@@ -5,10 +5,6 @@ description: "Who, when, why and the exact bytes of every deploy, diffed node by
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 "What changed, who changed it, put it back" is the first thing anybody asks
 after a line stops. Three `.bak` files answer none of it. They don't know who,
 they roll over after three saves, and the one you need is always the fourth.
@@ -161,6 +157,10 @@ gets a reason ("the id a appears twice", "entry 1 has no id") and the dialog
 stays open. A node type this runtime doesn't have comes in gray and dashed, and
 the import tells you which ones, because a silently dropped node is worse than a
 loud one.
+
+A screen is part of that file. The dashboard a flow draws (`ui_tab`, `ui_group`
+and the widgets) is nodes in the flow, so a customer's screens travel with their
+flows through Export and Import, and none of them lives in HotLoop Flow itself.
 
 **Subflows are edited on a canvas of their own.** Press *+ subflow*, and it opens
 with its input and output ports on it. Wire them to the nodes inside like
@@ -319,4 +319,4 @@ refuses waits and catches up when it stops refusing, and a deploy with a git
 server that takes ten seconds to say no returns in milliseconds.
 
 It's pure Go (go-git), so the binary stays static. It costs about 3.8 MB of
-binary, which is why it's measured and not assumed.
+binary, which is why it's measured and not assumed. The binary was 48,083,106 bytes before the catalogs.
