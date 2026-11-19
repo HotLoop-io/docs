@@ -7,6 +7,10 @@ sidebar:
   label: "2.3.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.15.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop Flow 2.3.0 is the release where Flow reaches the rest of the plant three new ways, and catches a wrong-shaped message before it does damage. It talks to HotLoop, an agent can call a flow as a tool over MCP, and a plugin is a signed WebAssembly file and not an npm package. JSON Schema now checks messages on the `json` node, on a node's ports and on the wires in the editor. One change can affect a flow that already runs, and it is the first thing under What changed.
 
 ## What's new
@@ -24,7 +28,7 @@ HotLoop Flow 2.3.0 is the release where Flow reaches the rest of the plant three
 
 **MCP, in both directions**
 - `mcp tool` and `mcp result` serve a flow as a tool. The tool node declares a name, a description and an input schema, Flow serves it at `/mcp`, and the result node sends the flow's answer back. An agent signs in with a session or API token like anyone else, the call runs with that token's permissions, and every call and refusal lands in the audit log under the caller's name. No token, no call.
-- `mcp client`, on an `hotloop-flow-mcp-server` connection, calls a tool on any MCP server, HotLoop's own included, and uses what comes back. It never sends a call twice, because a tool may move equipment and a dropped connection doesn't say whether it ran.
+- `mcp client`, on a `hotloop-flow-mcp-server` connection, calls a tool on any MCP server, HotLoop's own included, and uses what comes back. It never sends a call twice, because a tool may move equipment and a dropped connection doesn't say whether it ran.
 - An API token in `auth.tokens` can carry a `rateLimit` with `calls` and a window, a minute if you leave it out. A call over it never reaches the flow, comes back as a tool error that says when to try again, and writes an `mcp.refused` row with the reason. A token with no `rateLimit` is never throttled.
 - It speaks the current revision of the specification, 2026-07-28, and the handshake revisions back to 2025-11-25, on the same endpoint. A flow that uses none of these nodes never makes an MCP call, and Flow serves no tool it wasn't given.
 

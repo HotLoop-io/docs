@@ -15,7 +15,7 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "a851ea56f728c7d7f2e2ac5b66361893a1e6c284",
+      "sha": "0e8288ecaa6f66ccdfa7ee9823bcf578d99f687d",
       "release": {
         "tag": "v2.15.1",
         "version": "2.15.1",
@@ -649,7 +649,7 @@
       "group": "Run it",
       "title": "MCP, in both directions",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -1254,7 +1254,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.3.0 release notes",
       "label": "2.3.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.3.0.md",
       "release": true
