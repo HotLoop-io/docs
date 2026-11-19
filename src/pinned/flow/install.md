@@ -1,12 +1,12 @@
 ---
-reviewed: flow=2.15.0
+reviewed: flow=2.15.1
 title: "Install HotLoop Flow with Podman or Helm"
 description: "Run HotLoop Flow {{flow}} with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an amd64 image (arm64 follows in 2.15.1, and the `2` tag keeps its arm64 image until then; the amd64 one measured 45.64 MB as Podman reports it on 2.8.0), plus a Helm chart and source you can build yourself. 2.9.0, 2.9.1, 2.10.0, 2.11.0, 2.12.0, 2.13.0 and 2.14.0 are amd64 only, and 2.10.2, 2.11.1, 2.12.1, 2.13.1 and 2.14.1 are built for amd64 and arm64 (2.10.1 has a chart but no image, so never pin it), so a Pi or an arm64 box that was holding at 2.13.1 can move to 2.14.1. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
+HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an image for amd64 and arm64 (the amd64 one measured 45.64 MB as Podman reports it on 2.8.0), plus a Helm chart and source you can build yourself. 2.9.0, 2.9.1, 2.10.0, 2.11.0, 2.12.0, 2.13.0, 2.14.0 and 2.15.0 are amd64 only, and 2.10.2, 2.11.1, 2.12.1, 2.13.1, 2.14.1 and 2.15.1 are built for amd64 and arm64 (2.10.1 has a chart but no image, so never pin it), so a Pi or an arm64 box that was holding at 2.13.1 can move to 2.15.1. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands. And it refuses to run without a credential secret, which encrypts every broker and database password stored with your flows. Every path below sets both.
 

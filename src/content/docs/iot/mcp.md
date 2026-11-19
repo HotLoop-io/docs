@@ -5,6 +5,10 @@ description: "Let an agent read the whole plant and touch only what you armed, t
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The gateway speaks MCP in both directions: agents can read and drive the plant,
 and an automation rule can call a tool somewhere else.
 
@@ -46,7 +50,7 @@ never what it is). Set `HOTLOOP_MCP_TOKEN` to choose your own; with
 own. A client that used to connect to a bare binary with nothing now gets a `401`
 until it sends `Authorization: Bearer <that token>`.
 
-### With a Vord login or a Fireball Hub assertion
+### With a Vord login or a hub assertion
 
 The static token says which client called; it cannot say which person. With
 OIDC set, `/mcp` also takes `Authorization: Bearer <jwt>`, and the verified
@@ -59,7 +63,7 @@ JWT gets in).
 |---|---|---|
 | `HOTLOOP_MCP_OIDC_ISSUER` | `mcp.oidc.issuer` | the Vord realm URL; accepts its access tokens |
 | `HOTLOOP_MCP_OIDC_AUDIENCE` | `mcp.oidc.audience` | the `aud` every token must carry; required with either of these |
-| `HOTLOOP_MCP_OIDC_HUB_JWKS_URL` | `mcp.oidc.hubJwksUrl` | the Fireball Hub's assertion keys; accepts its assertions |
+| `HOTLOOP_MCP_OIDC_HUB_JWKS_URL` | `mcp.oidc.hubJwksUrl` | the identity hub's assertion keys; accepts its assertions |
 | `HOTLOOP_MCP_OIDC_REQUIRED_ROLE` | `mcp.oidc.requiredRole` | a realm role the caller must hold |
 | `HOTLOOP_MCP_OIDC_WRITE_ROLE` | `mcp.oidc.writeRole` | limits writes per caller, see below |
 
@@ -70,7 +74,7 @@ and `nbf` with 30 s of skew, and an `email` (or `preferred_username`) claim.
 Vord puts only `account` in `aud` by default; give the client scope an
 audience mapper for the audience you set.
 
-A Fireball Hub assertion is `typ` `fb-assert+jwt`, EdDSA, `iss` `fireball-hub`,
+A hub assertion is `typ` `fb-assert+jwt`, EdDSA, `iss` `fireball-hub`,
 `aud` the configured audience (the Hub module sends `hotloop`), unexpired, signed
 by a key in the Hub's JWKS. There is no `jti` replay cache: one tool call is
 several HTTP requests (initialize, then the call) carrying the same assertion,
@@ -624,8 +628,8 @@ a gateway at the cloud with the sites as outbound MCP servers, exactly as for th
 `mcp_call` action:
 
 ```
-HOTLOOP_MCP_SERVER_1_NAME=plant-b
-HOTLOOP_MCP_SERVER_1_URL=https://plant-b.example/mcp
+HOTLOOP_MCP_SERVER_1_NAME=akron
+HOTLOOP_MCP_SERVER_1_URL=https://akron.example/mcp
 HOTLOOP_MCP_SERVER_1_TOKEN=…
 HOTLOOP_MCP_SERVER_2_NAME=ashtabula
 HOTLOOP_MCP_SERVER_2_URL=https://ashtabula.example/mcp

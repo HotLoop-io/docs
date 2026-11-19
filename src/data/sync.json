@@ -2,8 +2,8 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "a4cd4b45b921d6554849ad108d55e4bb6f616535",
-      "sha": "a4cd4b45b921d6554849ad108d55e4bb6f616535",
+      "ref": "origin/main",
+      "sha": "c88e3e06511e30d2a074964c160e0f1e7fcd71fb",
       "release": {
         "tag": "v4.22.0",
         "version": "4.22.0",
@@ -14,20 +14,20 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "v2.15.0",
-      "sha": "12e91b939986e30e942aee8b057d23871671ea1e",
+      "ref": "origin/main",
+      "sha": "a851ea56f728c7d7f2e2ac5b66361893a1e6c284",
       "release": {
-        "tag": "v2.15.0",
-        "version": "2.15.0",
+        "tag": "v2.15.1",
+        "version": "2.15.1",
         "prerelease": false,
-        "publishedAt": "2026-11-19T17:35:13Z",
-        "sha": "0f3db9540e6880fcc511e24933f395f37bc6176f"
+        "publishedAt": "2026-11-19T18:23:45Z",
+        "sha": "abab4cc47ce4ceb273e63c7e6648e64a5f44fbd3"
       }
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "1be414162484468cc3f1e0a264b55376de617dfb",
-      "sha": "1be414162484468cc3f1e0a264b55376de617dfb",
+      "ref": "origin/main",
+      "sha": "ce74a6b109425181be436a3cf4bbc2ae5d20d2fd",
       "release": {
         "tag": "v1.2.1",
         "version": "1.2.1",
@@ -220,7 +220,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -803,7 +803,7 @@
       "group": "Use it",
       "title": "The editor",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -1221,9 +1221,20 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.15.0 release notes",
       "label": "2.15.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.15.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-15-1",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.15.1 release notes",
+      "label": "2.15.1",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.15.1.md",
       "release": true
     },
     {

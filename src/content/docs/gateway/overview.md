@@ -68,8 +68,6 @@ All four are installable today, all 4.22.0. The relay is its own image and chart
 
 Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
-Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
-
 ## What changed, release by release
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
