@@ -624,8 +624,8 @@ a gateway at the cloud with the sites as outbound MCP servers, exactly as for th
 `mcp_call` action:
 
 ```
-HOTLOOP_MCP_SERVER_1_NAME=macedonia
-HOTLOOP_MCP_SERVER_1_URL=https://macedonia.example/mcp
+HOTLOOP_MCP_SERVER_1_NAME=plant-b
+HOTLOOP_MCP_SERVER_1_URL=https://plant-b.example/mcp
 HOTLOOP_MCP_SERVER_1_TOKEN=…
 HOTLOOP_MCP_SERVER_2_NAME=ashtabula
 HOTLOOP_MCP_SERVER_2_URL=https://ashtabula.example/mcp

@@ -42,15 +42,13 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main/brand/tokens.css -o "$RUNNER_TEMP/canonical-tokens.css"
           diff -u --strip-trailing-cr "$RUNNER_TEMP/canonical-tokens.css" src/styles/tokens.css
 
-      # The License and Terms pages are the canonical LICENSE.md and TERMS.md, wrapped in a
-      # title. Once either file is the new text, its page has to be committed and current, or
-      # this fails. Until then there is no page, and nothing here to compare.
-      - name: License and Terms pages match the canonical text
+      # The Terms page is the canonical TERMS.md, wrapped in a title. It has to be committed and
+      # current, or this fails. The License page is a hand-written customer page.
+      - name: Terms page matches the canonical text
         run: |
           base=https://raw.githubusercontent.com/HotLoop-io/HotLoop-io/main
-          args="--license $RUNNER_TEMP/LICENSE.md"
-          curl -fsSL "$base/LICENSE.md" -o "$RUNNER_TEMP/LICENSE.md"
-          if curl -fsSL "$base/TERMS.md" -o "$RUNNER_TEMP/TERMS.md"; then args="$args --terms $RUNNER_TEMP/TERMS.md"; fi
+          args=""
+          if curl -fsSL "$base/TERMS.md" -o "$RUNNER_TEMP/TERMS.md"; then args="--terms $RUNNER_TEMP/TERMS.md"; fi
           node scripts/sync-legal.mjs --check $args
 
       # The sync's image rules: where a README image lands, and what it refuses.

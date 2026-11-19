@@ -93,4 +93,4 @@ The [benchmarks page](/flow/benchmarks/#results-on-a-raspberry-pi-5) has the Pi 
 
 The [benchmarks page](/flow/benchmarks/) has the method and the caveats.
 
-Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.

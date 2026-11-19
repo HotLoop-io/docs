@@ -21,6 +21,6 @@ Where it is on the EmberNet docs:
 - [HotLoop Edge Relay on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
 - [HotLoop Cascade on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
 
-To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 Back to the [HotLoop Flow overview](/flow/overview/), or the [HotLoop Flow page on hotloop.io](https://hotloop.io/flow/).

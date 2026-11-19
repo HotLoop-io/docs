@@ -65,7 +65,7 @@ HotLoop is one codebase shipped as four products, all released together from one
 
 All four are installable today, all {{hotloop}}. The relay is its own image and chart, about 15 MB against the Gateway's 37, with no database and no UI. The Gateway's fleet management tracks and commands every registered relay, and it's API only (`/api/fleet`): there's no Fleet screen in the UI.
 
-Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 ## What changed, release by release
 
@@ -87,4 +87,4 @@ Each release has its own notes, and the notes are where the detail lives, so it 
 
 ## License
 
-HotLoop Gateway is under the HotLoop Source License Agreement 1.0, like every HotLoop product. It is free to use and source-available, not OSI open source, and each version converts to AGPL-3.0 or later four years after its release. Home and lab use is free, and business use is free through [EmberNet](https://embernet.ai/). There are no license keys and nothing unlocks at runtime. [The License page](/license/) has the text, and [Using HotLoop in a business](/business/) covers both ways to run it at work.
+HotLoop Gateway is under the HotLoop Source License Agreement 1.0, like every HotLoop product. It is free to use and source-available, not OSI open source, and each version converts to AGPL-3.0 or later four years after its release. Home and lab use is free, and so is use by schools, nonprofits and government bodies for their own operations. There are no license keys and nothing unlocks at runtime. [The License page](/license/) has the text, and [Using HotLoop in a business](/business/) covers both ways to run it at work.

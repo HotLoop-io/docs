@@ -112,4 +112,4 @@ Add a device, discover its tags, and watch them come in. [Protocols](/iot/protoc
 
 ## Licensing
 
-HotLoop Gateway is under the HotLoop Source License Agreement 1.0. It is free to use and source-available, not OSI open source. Home and lab use is free, and business use is free through EmberNet. See [the License page](/license/) and [Using HotLoop in a business](/business/).
+HotLoop Gateway is under the HotLoop Source License Agreement 1.0. It is free to use and source-available, not OSI open source. Home and lab use is free, and so is use by schools, nonprofits and government bodies for their own operations. See [the License page](/license/) and [Using HotLoop in a business](/business/).
