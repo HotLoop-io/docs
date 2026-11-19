@@ -9,7 +9,7 @@ editUrl: false
 
 Running HotLoop at work? There are two ways to do it, and they aren't either/or. Do it yourself on EmberNet, or have people who do this for a living roll it out for you, or both.
 
-Every HotLoop product except Flow is under HotLoop's Free Use License 1.0: IoT, Edge, Gateway, Edge Relay, Cascade, HotLoop for CODESYS, and HotLoop Transmitter. Flow is under the EmberNet Source License 1.0. HotLoop is free to use and it is not open source, apart from Flow's source, which is public. Home and lab use is free. Business use is free through EmberNet, and hosting HotLoop for your customers is allowed only through EmberNet. [The License page](/license/) has the text, and the text wins over anything I write here.
+Every HotLoop product is under the HotLoop Source License Agreement 1.0: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, and HotLoop Transmitter. HotLoop is free to use and source-available, not OSI open source, and Flow's source is public. Home and lab use is free. Business use is free through EmberNet, and hosting HotLoop for your customers is allowed only through EmberNet. [The License page](/license/) has the text, and the text wins over anything I write here.
 
 ## What counts as business use
 
