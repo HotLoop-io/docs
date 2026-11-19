@@ -43,7 +43,7 @@ because it's a feature, not the point.
 Current release is `2.14.1`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.14.1`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
 [docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. It has 117 node types for messages and 37 for FlowLab diagrams. Home and lab use is free, so is use by schools, nonprofits and government, and
-use through EmberNet, business use included, is unrestricted, under HotLoop's EmberNet Source License.
+use through EmberNet, business use included, is unrestricted, under the HotLoop Source License Agreement.
 
 ## The numbers
 
