@@ -39,7 +39,7 @@ const warnings = [];
 const err = (route, msg) => errors.push(`${route}  ${msg}`);
 const warn = (route, msg) => warnings.push(`${route}  ${msg}`);
 
-// No customer name and no unreleased product, anywhere a reader or a search engine can get at it:
+// No unreleased product, and none of our own build inside, anywhere a reader or a search engine can get at it:
 // every text file in dist, the search index (Pagefind's fragments are gzip), and the sources the
 // social cards are drawn from, because the card text is outlined into the PNG and can't be grepped.
 {
