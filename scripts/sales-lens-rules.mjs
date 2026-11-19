@@ -20,20 +20,24 @@ export const GLOBAL = [
   { sub: [/\[`?docs\/DEPLOYMENT\.md`?\]/g, '[the k3s and Helm page]'] },
   { sub: [/\[`?docs\/ROADMAP\.md`?\]/g, '[the roadmap]'] },
   { sub: [/\[`?docs\/MCP\.md`?\]/g, '[the MCP page]'] },
-  { sub: [/`?docs\/EDGE-RELAY\.md`?/g, 'the Edge Relay reference'] },
-  { sub: [/`?docs\/EDGE-PUBLISH\.md`?/g, 'the Edge publish page'] },
-  { sub: [/`?docs\/FLEET\.md`?/g, 'the fleet management page'] },
-  { sub: [/`?docs\/DEPLOYMENT\.md`?/g, 'the k3s and Helm page'] },
-  { sub: [/`?docs\/PRODUCTS\.md`?/g, 'the products page'] },
-  { sub: [/`?docs\/MCP\.md`?/g, 'the MCP page'] },
-  { sub: [/`?docs\/NOTIFY\.md`?/g, 'the alarm notifications page'] },
-  { sub: [/`?docs\/ROADMAP\.md`?/g, 'the roadmap'] },
+  { sub: [/(?<![\w/.-])`?docs\/EDGE-RELAY\.md`?/g, 'the Edge Relay reference'] },
+  { sub: [/(?<![\w/.-])`?docs\/EDGE-PUBLISH\.md`?/g, 'the Edge publish page'] },
+  { sub: [/(?<![\w/.-])`?docs\/FLEET\.md`?/g, 'the fleet management page'] },
+  { sub: [/(?<![\w/.-])`?docs\/DEPLOYMENT\.md`?/g, 'the k3s and Helm page'] },
+  { sub: [/(?<![\w/.-])`?docs\/PRODUCTS\.md`?/g, 'the products page'] },
+  { sub: [/(?<![\w/.-])`?docs\/MCP\.md`?/g, 'the MCP page'] },
+  { sub: [/(?<![\w/.-])`?docs\/NOTIFY\.md`?/g, 'the alarm notifications page'] },
+  { sub: [/(?<![\w/.-])`?docs\/ROADMAP\.md`?/g, 'the roadmap'] },
   // Anything about our source tree, our test rig or our test code.
   { cut: /`[^`\n]*\b(?:internal|cmd|testdata)\/[^`\n]*`|`test\/[^`\n]*`|\.\/internal\b|\bThe Beast\b|\bnode-011\b|\bgo (?:test|vet|mod)\b|\bgolangci|-race\b|[Rr]ace detector|\bgofmt\b|\bTest[A-Z][A-Za-z0-9_]+|\bfuzz/ },
   // Our CI, except where CI is how a customer uses the product (deploy and test flows from a pipeline).
   { cut: /^(?![\s\S]*(?:\b(?:for|any|your|run in) CI\b|\bCI (?:job|system|secret|log)|error list in CI|CI checks for diagrams|Flows as code|JUnit))[\s\S]*\bCI\b/ },
   // Our build files, our repository layout, and the libraries and test peers underneath.
   { cut: /\bthird_party\b|\bCGO_ENABLED\b|\bContainerfile|\bDockerfile|\bdocker-publish|\bthis repo(?:sitory)?\b|\b[a-z_]+\.go\b|\bmain\.go\b|\b(?:gopcua|awcullen|asyncua|bacpypes3?|gosnmp|snmpd|pymodbus|open62541|opc-plc|OPC PLC|Pallets Jinja2|libplctag|nptdms|otel\/opentelemetry-collector)\b/ },
+  // A page name the subs above put at the start of a sentence starts with a capital.
+  { sub: [/(?<!\b(?:e\.g|i\.e|vs|etc))([.!?]\s+)the (MCP page|roadmap|products page|k3s and Helm page|Edge Relay reference|Edge publish page|fleet management page|alarm notifications page)\b/g, (m, a, b) => `${a}The ${b}`] },
+  // A generated reference page's note to its maintainers is for them, not the reader, so it stays in the source as a comment.
+  { sub: [/^(Generated from [^\n]*\. Do not edit by hand[^\n]*(?:\n[^\n]+)*)\n/gm, (m, note) => `<!-- ${note.replace(/\s*\n\s*/g, ' ').replace(/--/g, '-')} -->\n`] },
   { sub: [/ in the lab\b/g, ' in testing'] },
   { sub: [/\/iot\/unifi\/#(?:clients-)?on-real-gear-[0-9-]+/g, '/iot/unifi/'] },
   { sub: [/\bnet-snmp's\b/g, "an SNMP agent's"] },
@@ -47,6 +51,7 @@ export const GLOBAL = [
   { sub: [/\bgoja\b/g, 'the JavaScript interpreter'] },
   { sub: [/a JavaScript interpreter, a JavaScript interpreter in pure Go/g, 'a JavaScript interpreter in pure Go'] },
   { sub: [/\bwazero\b/g, 'the WebAssembly runtime'] },
+  { sub: [/\ba bbolt-backed\b/g, 'an embedded'] },
   { sub: [/\bbbolt\b/g, 'the embedded queue store'] },
   { sub: [/\bpaho(?: Go client|\.mqtt\.golang)?\b/g, 'the MQTT client library'] },
   // How far something has been proven is said once, in a sentence, not as a rig.
@@ -417,3 +422,70 @@ What to know:
     { section: 'The migrations before this rule' },
   ],
 };
+
+// The voice on a buyer's page: no profanity, jokes or insults, "we" and never an unnamed "I", no past failure told for
+// its own sake, no positioning against another vendor's product, and a next step on every product overview. These add to
+// PAGE, so each one has to match like any other page rule, and a source fixed upstream is noticed and the rule dropped.
+const PLANT = "Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.";
+const VOICE = {
+  products: [
+    { sub: [ws("Refusing to start a plant over a report nobody can get is stupid, and ignoring it silently is how nobody notices for a month."), 'HotLoop keeps the plant running over a report it cannot produce, and the warning makes sure somebody sees it.'] },
+  ],
+  roadmap: [
+    { sub: [ws('at the machine. Our Ignition Edge |'), 'at the machine |'] },
+    { sub: [ws('IoT user, and telling him to buy the Gateway to talk to it would be a scam.'), 'IoT user, and IoT talks to that PLC with no upgrade.'] },
+    { sub: [ws("or it doesn't ship. An automation base that can't find a smart plug on its own network is a joke we're not telling"), "or it doesn't ship."] },
+    { rewrite: 'Ignition: verify every product against it', text: `Every product is checked against the current stable Ignition release, so a plant that runs Ignition connects HotLoop to it.
+
+| Connection | Status |
+|---|---|
+| Gateway OPC UA client → Ignition OPC UA server, secured, signed in | **Verified** (4.15.2) |
+| Ignition OPC UA client → Gateway OPC UA server | **Verified** (September 27, 2026, Ignition 8.3.9 against 4.15.3), every policy Ignition offers |
+| Gateway Sparkplug edge node → Ignition MQTT Engine | Next. Needs the Cirrus Link MQTT Engine 5.x module for 8.3 |
+| Edge Relay → Ignition MQTT Engine | Next, with the same module |
+| Gateway as Sparkplug host ← Ignition MQTT Transmission | Next |
+
+---` },
+    { sub: [/^## Ignition: verify every product against it$/m, '## Interoperability with Ignition'] },
+  ],
+  'iot/mqtt-discovery': [
+    { sub: [ws("And it can't command a damn thing."), "And it can't command anything."] },
+  ],
+  'iot/protocols': [
+    { sub: [ws('would add nine more things to get subtly wrong'), 'would add eight more things to get subtly wrong'] },
+    { sub: [ws('The previous version of this product had sixteen protocol files of which fifteen returned `"not implemented"`, while the catalog advertised all sixteen. A test now enforces'), 'A test enforces'] },
+  ],
+  'iot/authentication': [
+    { sub: [ws("Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the actor recorded against a write came from a header the proxy set, spoofable by anything else on the same segment that could reach the port. That is no longer the default. It is still available, deliberately,"),
+      'HotLoop has its own login, since 4.4.0, and every product requires it by default. Running without one is still available, deliberately,'] },
+  ],
+  'cascade/overview': [
+    { sub: [ws('a retry is a row in the database, not a goroutine praying nobody pulls the plug.'), 'a retry is a row in the database.'] },
+    { sub: [ws("Running JavaScript in every field is a remote code execution bug factory, and we're not opening one."), 'Keeping it out of every other field keeps remote code execution out of them.'] },
+    { sub: [ws('opt-in, off by default, and documented down to the field when it lands.'), `opt-in, off by default, and documented down to the field when it lands.
+
+## Where to go next
+
+[Run Cascade](/cascade/running/), run it [with Podman Quadlet](/cascade/quadlet/), or read [the Cascade roadmap](/cascade/roadmap/). ${PLANT}`] },
+  ],
+  'flow/overview': [
+    { sub: [ws('a real InfluxDB that I killed for ten minutes.'), 'a real InfluxDB that was stopped for ten minutes.'] },
+    { sub: [ws('so you can go disagree with me on your own hardware.'), 'so you can check them on your own hardware.'] },
+    { sub: [/\s+It isn't a scheduler\s+benchmark and I won't let anybody quote it as one\./, ''] },
+    { sub: [/\s+The\s+idle RSS is about five times the x86 figure above and I don't know why yet\./, ''] },
+    { sub: [ws('The [benchmarks page](/flow/benchmarks/) has the method and the caveats.'), `The [benchmarks page](/flow/benchmarks/) has the method and the caveats.\n\n${PLANT}`] },
+  ],
+  'flow/plant-floor': [
+    { sub: [ws('`scan` could find a PLC and nothing in the palette could talk to it, which is a funny thing to ship in a product for plants. Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B are in now.'),
+      'Flow talks to PLCs and brokers in Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B.'] },
+  ],
+  'flow/where-it-stands': [
+    { sub: [ws('**Verified against real infrastructure**, not just against my own encoders:'), '**Verified against real infrastructure**:'] },
+    { sub: [ws('The credentials file at least fails like an adult now. 2.0.0 died on it with a JSON parsing error. Since 2.0.1 it names the file,'), 'Since 2.0.1 an old credentials file gets a clear message that names the file,'] },
+  ],
+  'flow/roadmap': [
+    { sub: [ws("**None of this starts until HotLoop's own roadmap is done.** Flow waits its turn. The one exception is Phase 9, FlowLab and its diagrams. I'm building it now because it is a separate pack that sits beside the message runtime and doesn't take anything from HotLoop's own roadmap."),
+      'FlowLab and its diagrams, Phase 9, are being built now, as a separate pack that sits beside the message runtime.'] },
+  ],
+};
+for (const [slug, rules] of Object.entries(VOICE)) PAGE[slug] = [...(PAGE[slug] || []), ...rules];
