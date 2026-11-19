@@ -378,7 +378,7 @@ certificate can serve as both on the client side, but the server treats them as
 two acts.
 
 **HotLoop's own client** signs in this way too: see `userCertificate` and
-`userPrivateKey` in [PROTOCOLS.md](/iot/protocols/#opc-ua).
+`userPrivateKey` in [Protocols and drivers](/iot/protocols/#opc-ua).
 
 Not built: a certificate authority that is trusted to vouch for client
 certificates and a name rule that maps them to users. The registry covers a
@@ -470,7 +470,7 @@ On the HotLoop side, before Ignition:
    Ignition reaches the Gateway by. That name is in every endpoint URL the server
    advertises and in its certificate.
 2. Create a HotLoop user for Ignition with the **viewer** role (an admin does it
-   with `POST /api/users`; see [AUTH.md](/iot/authentication/)). Any role with `tags.read` and
+   with `POST /api/users`; see [Authentication and users](/iot/authentication/)). Any role with `tags.read` and
    `values.read` signs in; nothing more is offered, since the server is
    read-only.
 
@@ -548,7 +548,7 @@ The same, as files or through the REST API :
 - **A text tag declared numeric reads `Bad_TypeMismatch`.** HotLoop publishes a
   tag as the type it is declared, and a `float` tag holding "RUNNING" cannot be a
   Double. Tags created by Discover tags up to 4.15.3 were all declared `float`;
-  see [PROTOCOLS.md](/iot/protocols/#opc-ua). Declare them `string`.
+  see [Protocols and drivers](/iot/protocols/#opc-ua). Declare them `string`.
 - **Writes are refused, and Ignition blurs why.** HotLoop answers
   `Bad_NotWritable`. Ignition's own OPC UA server, asked to write the same tag,
   passes on only a generic `Bad` (0x80000000). The Ignition tag's value does not

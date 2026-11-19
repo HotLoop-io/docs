@@ -36,13 +36,13 @@ you need.
 | Product | What it is | Databases | Where it stands |
 |---|---|---|---|
 | **HotLoop IoT** | Entities, automations, helpers, scripts, the logbook, dashboards, notifications, MCP, MQTT with discovery, the ISA-18.2 alarm engine, backups and every driver. The base Edge and the Gateway are built on | SQLite or Postgres | Split out: its own image (`hotloop-iot`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 |
-| **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine. Our Ignition Edge | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0) |
+| **HotLoop Edge** | IoT, plus the OPC UA server, store and forward upstream, and local screens at the machine | SQLite, Postgres or TimescaleDB | Split out: its own image (`hotloop-edge`, amd64, arm64, arm/v7), chart and Quadlet units, built and published by every tag. Shipped in 4.18.10 (the Gateway runs at the edge and publishes Sparkplug upstream since 4.5.0) |
 | **HotLoop Gateway** | Edge, plus fleet, multi-site and scheduled reports. The site brain | SQLite, Postgres or TimescaleDB | Shipping |
 | **HotLoop Edge Relay** | Dumb and tough: poll, forward, survive. No database, no UI. Its own product, not Edge with the screen unplugged | none | Shipping. Every release publishes its image and chart from 4.16.0 on |
 
 **Features split the products. Protocols don't.** Every product speaks MQTT on
 top of every driver we have. A hobbyist with a used S7-1200 on the bench is an
-IoT user, and telling him to buy the Gateway to talk to it would be a scam.
+IoT user, and IoT talks to that PLC with no upgrade.
 
 - [x] The split itself, in the code. `-tags hotloop_edge` is
       Edge, `-tags hotloop_iot` is IoT, and both at once won't compile. Its API routes
@@ -84,9 +84,7 @@ IoT user, and telling him to buy the Gateway to talk to it would be a scam.
       license and every copy of it. It used to say Gateway, which arguably left
       the other three with no grant at all
 - [ ] **The split shipped in 4.18.10 with MQTT discovery** (Phase 4). IoT's
-      first release finds Shelly and ESPHome devices out of the box, or it
-      doesn't ship. An automation base that can't find a smart plug on its own
-      network is a joke we're not telling
+      first release finds Shelly and ESPHome devices out of the box, or it doesn't ship.
 
 ## The automation base
 
@@ -99,7 +97,7 @@ the Gateway too.
 The foundation. Every automation, helper, script and screen in HotLoop talks
 about entities, so they came first.
 Merged in PRs 1 through 6, after 4.15.3, and first released in 4.16.0. The whole
-thing is in [ENTITIES.md](/iot/entities/) and [EQUIPMENT.md](/iot/equipment/).
+thing is in [Entities](/iot/entities/) and [the equipment tree and labels](/iot/equipment/).
 
 - [x] Entity model: typed domains (sensor, binary sensor, switch, number, select,
       button, text, plus OT ones: valve, motor, PID loop, counter, alarm), a
@@ -119,28 +117,28 @@ thing is in [ENTITIES.md](/iot/entities/) and [EQUIPMENT.md](/iot/equipment/).
       screens
 - [x] A `for:` duration on entity state triggers ("the pump has been off for 5
       minutes"). Shipped in Phase 2 as `forSec` on a `state` trigger; a hold in
-      progress does not survive a restart ([AUTOMATIONS.md](/iot/automations/#holding-a-state-forsec))
+      progress does not survive a restart ([Automations](/iot/automations/#holding-a-state-forsec))
 
 ### Phase 2: helpers, scripts, scenes, logbook
 
 - [x] Helpers: input boolean, number, select, text; timers, counters, schedules.
       On a plant floor these are setpoints and shift schedules. Kept across
       restarts and in backups, timers on the wall clock; see
-      [HELPERS.md](/iot/helpers/)
+      [Helpers](/iot/helpers/)
 - [x] Scripts: named sequences of actions, callable from automations, the UI and
       MCP. Typed fields, run modes, a dry run through the real gate, every write
-      as `script:<id>`, in the logbook and in backups; see [SCRIPTS.md](/iot/scripts/)
+      as `script:<id>`, in the logbook and in backups; see [Scripts](/iot/scripts/)
 - [x] Scenes as **recipes**: capture a set of setpoints, apply them together,
       audited. Checked whole and refused whole, never clamped, written in order
       under one call id and never rolled back, read back from the device,
       immutable versions, applied from the UI, a rule, a script or MCP; see
-      [RECIPES.md](/iot/recipes/)
+      [Recipes](/iot/recipes/)
 - [x] Logbook: one timeline of every state change, write, alarm and automation
-      run, per entity and per area ([LOGBOOK.md](/iot/logbook/))
+      run, per entity and per area ([The logbook](/iot/logbook/))
 - [x] Blueprints: reusable automation templates. Typed inputs refused out of
       range, never clamped; a rule keeps the version it was made from until
       somebody reviews the upgrade and takes it; four built in; see
-      [BLUEPRINTS.md](/iot/blueprints/)
+      [Blueprints](/iot/blueprints/)
 - [x] The automation language: condition, wait and stop steps in a sequence,
       and `forSec` on a state trigger ("on for five minutes")
 
@@ -150,7 +148,7 @@ This is where "better and cooler" has to be obvious from across the room.
 
 - [x] Dashboard builder: cards, drag and drop, as many dashboards as you want.
       Saves name the version they started from, so two people building one
-      page can't overwrite each other unseen; see [DASHBOARDS.md](/iot/dashboards/)
+      page can't overwrite each other unseen; see [Dashboards](/iot/dashboards/)
 - [x] Card set: gauges, numbers, trends, entity lists, write buttons with the
       confirmation, script buttons, alarm lists, markdown, camera, a floor plan
       with live tags on it, recipe pickers and the plant status strip. A card
@@ -172,8 +170,8 @@ This is where "better and cooler" has to be obvious from across the room.
       Relay discovers too, read and forward only. Frigate is not here: its MQTT
       page documents no discovery messages. Everything is verified against
       recordings of real devices, and Tasmota and Shelly also against the
-      makers' documentation, not against a device on the bench. See [DISCOVERY.md](/iot/mqtt-discovery/) and
-      [EDGE-RELAY.md](/edge-relay/reference/#discovery-41810). The four-product split
+      makers' documentation, not against a device on the bench. See [MQTT discovery](/iot/mqtt-discovery/) and
+      [Edge Relay reference](/edge-relay/reference/#discovery-41810). The four-product split
       waited on it
 - [x] Network discovery (mDNS, SSDP, DHCP): devices heard on the plant
       network show up on the Discovered screen with what they are and how
@@ -184,7 +182,7 @@ This is where "better and cooler" has to be obvious from across the room.
       the deployment. DHCP needs host networking and port 67, so it's off
       until a deployment gives it both. Tested against real avahi, MiniDLNA
       and udhcpc; not yet against real devices on the bench. See
-      [NETWORK-DISCOVERY.md](/iot/network-discovery/)
+      [Network discovery](/iot/network-discovery/)
 - [x] CODESYS, the PLC's variables by the names the programmer gave them, through the runtime's own OPC UA server: discovery of what the application exports, reads and writes, a first dashboard from the setup, and a reconnect with no hands after a restart or a download. Proven against a 4.22.0.0 runtime in a container running HotLoop's lab program and a second, much larger program, and on bare metal (2026-11-17). See [CODESYS](/iot/protocols/#codesys)
 - [ ] BACnet, SNMP, ONVIF cameras, Shelly native
 - [ ] **Firmata**, for Arduinos on USB. Verified on real boards only: Arduinos
@@ -196,7 +194,7 @@ This is where "better and cooler" has to be obvious from across the room.
       with an offset. Worked out on the box from the site's latitude and
       longitude with NOAA's equations, no service, and held to every sunrise,
       sunset and noon NOAA published for 2026 at six places from Utqiagvik to
-      Quito. See [SUN.md](/iot/sun/)
+      Quito. See [the sun](/iot/sun/)
 - [ ] Weather. Not from a cloud weather API: HotLoop doesn't phone anybody
       to find out it's raining
 
@@ -211,7 +209,7 @@ This is where "better and cooler" has to be obvious from across the room.
 ## Notifications
 
 Webhook, email, ntfy, Gotify, a Discord webhook and a Discord bot exist, all on
-the same plumbing. See [NOTIFY.md](/iot/notifications/).
+the same plumbing. See [Alarm notifications](/iot/notifications/).
 
 - [x] **Plumbing first:** a rate limiter per channel, coalescing ("7 more alarms
       in the last minute" as one message), and bounded retry that honors
@@ -271,14 +269,14 @@ In order. Nothing in here writes to a controller until U5.
       been dead for two days, because it trusted the WAN block's stale `up`
       the same way the console's summary did. The health checks knew, so the
       driver reads those now and a test pins it. Done, see
-      [UNIFI.md](/iot/unifi/)
+      [UniFi Network](/iot/unifi/)
 - [ ] **U2: clients and OT watch.** Clients keyed by MAC, never IP, because the
       controller's client table shows addresses a machine left hours ago. Mark a
       network as OT, accept what's on it, and anything new on it raises an
       alarm. Link a HotLoop device to its switch port once, and a silent PLC
       tells you which port it's on and whether that link is up. The box gets ticked after the two steps that need
       somebody at the rack: a real cable pull and a phone joining SCADA. See
-      [UNIFI.md](/iot/unifi/)
+      [UniFi Network](/iot/unifi/)
 - [x] **U3: screens and the topology map.** Overview with the WAN strip (goes
       amber when the site is running on the 5G backup), a topology map laid out
       the same way every time so nothing jiggles on a wall board, switch
@@ -294,7 +292,7 @@ In order. Nothing in here writes to a controller until U5.
       limit they give) in one press. Those were proven on 2026-10-19, with
       touch emulated rather than on a screen, and a WAN throughput trace is
       not built: no console field for it has been read from a real gateway. See
-      [UNIFI.md](/iot/unifi/#the-screens)
+      [UniFi Network](/iot/unifi/#the-screens)
 - [x] **U4: events.** The controller's events websocket, so a switch dropping
       off shows in seconds instead of at the next poll, and lands in the
       logbook. Polling stays the truth; a dead websocket costs speed, never
@@ -304,7 +302,7 @@ In order. Nothing in here writes to a controller until U5.
       equipment filter finds them from a linked device through the switches
       that feed it. The agent tools `get_network_topology` and
       `get_network_events` read the map and the events. See
-      [UNIFI.md](/iot/unifi/#events)
+      [UniFi Network](/iot/unifi/#events)
 - [ ] **U5: writes through the gate.** Locate LED first: zero risk, visible
       from across the room, and it proves the whole write path on real gear.
       Then PoE mode, port power-cycle, WLAN on and off, client block, and port
@@ -339,7 +337,7 @@ databases a plant already runs, because the IT department has a SQL Server they
 back up and patch, and they are not adopting ours to get a trend.
 
 - [x] Postgres and TimescaleDB (somebody else's, not the one HotLoop runs on).
-      See [HISTORIAN-TARGETS.md](/iot/historian-targets/)
+      See [Historian targets](/iot/historian-targets/)
 - [x] SQL Server
 - [x] InfluxDB (2 and 3)
 - [x] MySQL and MariaDB
@@ -350,7 +348,7 @@ back up and patch, and they are not adopting ours to get a trend.
 - [x] Kafka API event stream: readings and the system log out to any
       Kafka-compatible broker, TLS and SASL, through the same queue and
       catch-up as a database. Proven against Apache Kafka 4.4.0 and Redpanda
-      26.2.6. See [HISTORIAN-TARGETS.md](/iot/historian-targets/#kafka-api-event-stream).
+      26.2.6. See [Historian targets](/iot/historian-targets/#kafka-api-event-stream).
       Not yet: mutual TLS, Kerberos and OAuth logins, a schema registry, and a
       catch-up for events (they have no history to be sent from)
 
@@ -361,7 +359,7 @@ back up and patch, and they are not adopting ours to get a trend.
 - [x] Subscribe to UADP over UDP, unicast or multicast, as a device
       (`opcua-pubsub`): Variant, DataValue and RawData fields, key, delta and
       keep alive frames, lost-message and configuration-change handling. See
-      [PROTOCOLS.md](/iot/protocols/#opc-ua-pubsub-uadp)
+      [Protocols and drivers](/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Publish tags as UADP, in Edge and Gateway, beside the OPC UA server
 - [ ] Against a CODESYS publisher
 - [ ] Message security (signed and encrypted NetworkMessages)
@@ -373,28 +371,17 @@ back up and patch, and they are not adopting ours to get a trend.
 
 ---
 
-## Ignition: verify every product against it
+## Interoperability with Ignition
 
-We compete with Ignition and we have to play nice with it. Every product gets
-verified against the current stable release (8.3.9 as of September 2026; Ignition
-2027 was previewed at ICC 2026, no ship date).
+Every product is checked against the current stable Ignition release, so a plant that runs Ignition connects HotLoop to it.
 
-| What | Status |
+| Connection | Status |
 |---|---|
-| Gateway OPC UA client → Ignition OPC UA server, secured, signed in | **Verified** (4.15.2), and it found a real bug |
-| Ignition OPC UA client → Gateway OPC UA server | **Verified** (September 27, 2026, Ignition 8.3.9 against 4.15.3), every policy Ignition offers. Found two bugs: a new server certificate on every redeploy, and Discover tags declaring text tags float |
-| Gateway Sparkplug edge node → Ignition MQTT Engine | Not done. Needs the Cirrus Link MQTT Engine 5.x module for 8.3 |
-| Edge Relay → Ignition MQTT Engine | Not done. Same module. |
-| Gateway as Sparkplug host ← Ignition MQTT Transmission | Not done |
-| Edge Relay and Edge vs Ignition Edge, feature for feature | Not done |
-| Re-run the lot when 8.3.10 goes stable | Waiting on Inductive Automation |
-
-- [ ] Commit the Ignition lab (container setup, config edits, cert trust) as a
-      repeatable script so anyone can rerun this. Done for Ignition's client
-      against the Gateway's server; the Gateway's
-      client against Ignition's server is still by hand
-- [ ] Ignition 2027 is adding a TimescaleDB historian. We already are one. Figure
-      out interop before they ship
+| Gateway OPC UA client → Ignition OPC UA server, secured, signed in | **Verified** (4.15.2) |
+| Ignition OPC UA client → Gateway OPC UA server | **Verified** (September 27, 2026, Ignition 8.3.9 against 4.15.3), every policy Ignition offers |
+| Gateway Sparkplug edge node → Ignition MQTT Engine | Next. Needs the Cirrus Link MQTT Engine 5.x module for 8.3 |
+| Edge Relay → Ignition MQTT Engine | Next, with the same module |
+| Gateway as Sparkplug host ← Ignition MQTT Transmission | Next |
 
 ---
 
@@ -440,7 +427,7 @@ verified against the current stable release (8.3.9 as of September 2026; Ignitio
       Gateway can't enforce either on a box it can't reach; Podman's pull
       policy is where signatures belong) and a staged rollout (the rollback
       limits a bad release, and holding sites gives you the order). See
-      [EDGE-RELAY.md](/edge-relay/reference/#updating-a-relay)
+      [Edge Relay reference](/edge-relay/reference/#updating-a-relay)
 - [x] **Live config reload.** A pushed device file used to sit on disk until
       something restarted the relay, which meant dropping its broker session
       and every device session to change one tag. Now it applies the moment
@@ -466,7 +453,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       or one with a column this version dropped, renamed or retyped, before
       loading a row. Backups from before this still restore by position. Tested
       from every schema level there has been. Fixed, see
-      [BACKUP.md](/iot/backup/#restoring-onto-a-different-version)
+      [Backups and restore](/iot/backup/#restoring-onto-a-different-version)
 - [x] **The notification webhook leaked its URL** into errors, the log, the
       audit event and the `/api/notify/test` response, and a mistyped one into
       the startup log. For Discord and ntfy the URL is the password. Fixed
@@ -502,13 +489,13 @@ Found in code review and in the PRs so far. Each one is real, checked against
       Postgres and back, plain partitions to a hypertable and back. Fixed
 - [x] No lockout or rate limit on failed logins. Ten wrong passwords or PINs lock
       the account for five minutes, a panel is slowed instead of locked, and an
-      admin can unlock. Fixed, see [AUTH.md](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins)
+      admin can unlock. Fixed, see [Authentication and users](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins)
 - [x] There was no user management screen, only the API. Settings has a Users
       card now for anyone with `users.manage`: add a user, change a role,
       switch one off, set a new password, delete. The server's own refusals (the
       last enabled admin, your own account) show up in the dialog as they are.
       A password over 72 bytes used to come back from the API as a 500; it is a
-      400 that says the limit. Fixed, see [AUTH.md](/iot/authentication/#managing-users)
+      400 that says the limit. Fixed, see [Authentication and users](/iot/authentication/#managing-users)
 - [x] Edge publishing has no `edgePublish:` block in the Helm chart. It has one
       now: credentials through a Secret, the queue on its own PVC, Recreate
       rollouts, and a default render that didn't change by a byte
@@ -518,19 +505,19 @@ Found in code review and in the PRs so far. Each one is real, checked against
       emails and scheduled reports both. Proved against a real SMTP server with
       a TLS-only listener and against Mailpit with `--smtp-require-tls`; a
       commercial provider's 465 isn't tried. Fixed, see
-      [NOTIFY.md](/iot/notifications/#implicit-tls-port-465)
+      [Alarm notifications](/iot/notifications/#implicit-tls-port-465)
 - [x] Device credentials sat in the database and in backups in the clear. Every
       keyed credential (every `password`, API key headers) is now encrypted with
       a key kept outside the database, the chart generates and keeps one, and a
       restore refuses a backup it can't open unless told the key is gone.
-      Fixed, see [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key)
+      Fixed, see [Backups and restore](/iot/backup/#device-credentials-and-the-secret-key)
 - [x] A credential typed into a device's address or a URL option
       (`mqtt://user:pass@host`, `?token=`) or into free text was stored in the
       clear: every screen hid it, the database and backups didn't. Any string
       that carries one, by the same test redaction hides it by, is sealed whole
       now, the address column included, and a key turned on later seals what
       was stored before it. Fixed, see
-      [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key)
+      [Backups and restore](/iot/backup/#device-credentials-and-the-secret-key)
 - [x] OPC UA browse labeled every node `float` instead of reading its data
       type, so a text tag served back out through our own OPC UA server came
       back `Bad_TypeMismatch`. Ignition 8.3.9 caught it. Fixed (#42)
@@ -544,7 +531,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       `HOTLOOP_OPCUA_SERVER_ALLOW_X509` is set. The device driver signs in the
       same way with `userCertificate` and `userPrivateKey` (RSA, the key sealed
       like a password). A trusted CA with a name rule is not
-      built; see [OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)
+      built; see [the OPC UA server](/edge/opc-ua-server/#x509-user-certificates)
 - [x] Our OPC UA server always offered the deprecated `Basic128Rsa15` and
       `Basic256` policies. Off by default now, with
       `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` to turn them back on for a
@@ -582,7 +569,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       (every integer width, byte and word order, float patterns in hex), and
       every other driver that decodes a number checks the same list. Proven
       against a Modbus server that isn't ours, with all eight DX codes. Fixed,
-      see [PROTOCOLS.md](/iot/protocols/#no-data-values)
+      see [Protocols and drivers](/iot/protocols/#no-data-values)
 - [x] A Modbus device that went silent with its socket open (pulled cable, hung
       PLC) was marked degraded, not down, and its entities sat on their last
       value until TCP gave up. Now it's down within one poll plus twice its
@@ -614,7 +601,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       board with that one tag. The page reads the board when it starts, Pin and
       Unpin refuse until it has, and a save carries the board's `rev`: the server
       refuses a save over a board that has changed since it was read (a `409`), so
-      a stale tab can't do it either. Fixed, see [API.md](/iot/api/#get-apiboard)
+      a stale tab can't do it either. Fixed, see [the HTTP API](/iot/api/#get-apiboard)
 - [x] **MCP shipped with writes off.** The server was on, but `allowMcpWrites`
       defaulted to false in the code and in all three charts, so an agent could
       read the plant and nothing more, and turning it on also meant setting a
@@ -624,7 +611,7 @@ Found in code review and in the PRs so far. Each one is real, checked against
       `allowWrites`, which stays the master switch for the UI, the API and agents
       alike (off by default); a user's permissions, a tag's writable mark and its
       range apply to an agent as they do to the screen. The docs no longer tell
-      anybody to run a read-only agent. Fixed, see [MCP.md](/iot/mcp/#writing)
+      anybody to run a read-only agent. Fixed, see [MCP](/iot/mcp/#writing)
 - [x] **MCP could read most of what it could not change.** Twenty-seven tools
       commanded equipment, ran scripts and applied recipes, and a blueprint could
       be previewed but never made into a rule, an alarm could be acknowledged but
@@ -636,14 +623,14 @@ Found in code review and in the PRs so far. Each one is real, checked against
       that route asks for, a reason, and the agent in the log. The write switches
       are the deployment's and have no route, so the settings route refuses them
       for an agent as it does for a screen. Fixed, see
-      [MCP.md](/iot/mcp/#changing-configuration)
+      [MCP](/iot/mcp/#changing-configuration)
 - [x] The MCP endpoint was open to anybody who could reach the port when no
       `HOTLOOP_MCP_TOKEN` was set (every chart sets one; a bare binary or a
       Quadlet unit didn't), and the process only said so in its log. It makes a
       token at its first start and keeps it in its database, `hotloop mcp-token`
       prints it, and a call without it is a `401`. Proved against the built
       binary: no token 401, a wrong one 401, the right one 200, the same one
-      after a restart. Fixed, see [MCP.md](/iot/mcp/)
+      after a restart. Fixed, see [MCP](/iot/mcp/)
 - [x] **An 8 port switch's faceplate widened the whole page by about 115px on a
       phone.** Each column asked for 54px, so the eight were wider than the
       screen and the top bar and every card slid sideways with them. A port is a

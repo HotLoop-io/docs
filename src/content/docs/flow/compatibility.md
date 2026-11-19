@@ -5,8 +5,7 @@ description: "Every deliberate divergence from Node-RED, node by node, with the 
 editUrl: false
 ---
 
-Generated from the node registry. Do not edit by hand, change the
-`Compatibility` field on the node's descriptor and regenerate:
+<!-- Generated from the node registry. Do not edit by hand, change the `Compatibility` field on the node's descriptor and regenerate: -->
 
 A node that is partially compatible and silent about how is worse than one
 that is obviously absent: the flow appears to work and quietly does the wrong

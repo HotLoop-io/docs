@@ -147,7 +147,7 @@ One hundred and thirty-three of them: twenty-seven that read the plant and comma
 
 An entity is what people call a thing on the plant, `sensor.zone_1_temperature`
 or `switch.conveyor_run`, wrapping one or more tags. See
-[ENTITIES.md](/iot/entities/). For an agent they are usually the better handle:
+[Entities](/iot/entities/). For an agent they are usually the better handle:
 the name means something, and the entity knows what you can do to it.
 
 `list_entities` filters by `domain`, by `equipment` (a node of the equipment
@@ -188,7 +188,7 @@ the UniFi driver's last read, never the console, so an agent asking in a loop
 costs the console nothing. That also means an `--mcp-stdio` helper answers
 that no console is read in its process: it never logs in to one, because the
 Gateway beside it already holds the session. Ask the Gateway's endpoint. See
-[UNIFI.md](/iot/unifi/).
+[UniFi Network](/iot/unifi/).
 
 `get_network_topology` is the map: each switch, access point and gateway under
 the one it is plugged into, with the port on both ends, the link, how many
@@ -207,7 +207,7 @@ switch or access point they were about.
 ### The logbook
 
 `get_logbook` is the timeline `GET /api/logbook` serves (see
-[LOGBOOK.md](/iot/logbook/)): state changes, writes, alarm transitions,
+[The logbook](/iot/logbook/)): state changes, writes, alarm transitions,
 automation runs and configuration changes, newest first. It narrows by
 `entity`, by `equipment` (id, name or path, and everything under it; a name
 that matches two nodes is an error listing both), by `actor` (part of it:
@@ -221,7 +221,7 @@ write gate's lines are not in it twice.
 
 A script is a named sequence of steps somebody wrote once, the CIP cycle or
 the line purge, so an agent runs the plant's own procedure instead of making
-one up. See [SCRIPTS.md](/iot/scripts/). `list_scripts` says what each takes.
+one up. See [Scripts](/iot/scripts/). `list_scripts` says what each takes.
 `run_script` takes `scriptId`, `fields`, a **required** `reason`, and two
 switches:
 
@@ -242,7 +242,7 @@ why.
 
 A recipe is a set of setpoints the plant applies together, a product grade or
 a changeover, so an agent loads the plant's own numbers instead of writing
-them one at a time. See [RECIPES.md](/iot/recipes/). `list_recipes` shows each
+them one at a time. See [Recipes](/iot/recipes/). `list_recipes` shows each
 one's targets in order and the parameters it takes. `validate_recipe` asks
 whether one would apply right now and gives every reason it would not,
 writing nothing. `apply_recipe` takes `recipeId`, `params`, an optional
@@ -260,7 +260,7 @@ granted it, and an agent is not one of them.
 ### Blueprints
 
 A blueprint is a rule written once with typed blanks in it: which motor, how
-long, what limit. See [BLUEPRINTS.md](/iot/blueprints/). `list_blueprints` says
+long, what limit. See [Blueprints](/iot/blueprints/). `list_blueprints` says
 what each one takes. `preview_blueprint` takes `blueprintId`, `automationId`
 and `inputs`, and answers the rule it would make and what that rule would do
 if it fired right now, every write put to the gate's checks. The inputs are
@@ -288,7 +288,7 @@ discovered device has not been accepted for are refused in the words the screen
 shows, and nothing was changed.
 
 Each takes the route's path values by name (`id`, `device`, `name`...), `body`,
-the same JSON the API takes ([API.md](/iot/api/) has every body), and a **required**
+the same JSON the API takes ([The HTTP API](/iot/api/) has every body), and a **required**
 `reason`. The reason is recorded as a `config` line in the system log next to the
 route's own, against the thing changed.
 

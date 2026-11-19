@@ -26,13 +26,13 @@ guessing from when it arrived, and you can install the library through the CODES
 * **The `.package`.** `HotLoopTransmitter-1.1.0.package` was made by CODESYS's own PackageManagerCLI and puts the same
   library into the library repository through the Installer. See the [install page](/transmitter/install/).
 
-## What I ran, and what it showed
+## What we ran, and what it showed
 
 All of it against CODESYS Control for Linux SL 4.22.0.0, on the files below.
 
 * The library builds with 0 errors and 0 warnings in CODESYS 3.5.22.30. The example application builds against it
   with 0 errors and 0 warnings.
-* Two publishers, Variant and RawData, timestamps on. an independent decoder written from the spec decodes every message and every value equals what
+* Two publishers, Variant and RawData, timestamps on. An independent decoder written from the spec decodes every message and every value equals what
   the PLC reports over its own OPC UA server. Every message has both timestamps, they are the same instant, they never
   go backwards, they are within the whole-second tolerance of the clock the capture ran on, and over an 11 second
   capture the stamp moved 11 seconds. The container shares the host's clock, so this shows the stamp is the PLC's clock

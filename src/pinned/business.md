@@ -21,11 +21,11 @@ EmberNet is the way a business uses HotLoop. Signing up is free, and using HotLo
 
 ## Have it rolled out for you: Fireball Industries
 
-Fireball Industries are HotLoop's Official Systems Integrators. If you'd rather not have your own people learn HotLoop on your own plant floor, on a live line, they'll design it, install it, and support it.
+Fireball Industries is HotLoop's master systems integrator. If you'd rather not have your own people learn HotLoop on your own plant floor, on a live line, Fireball designs it, installs it, and supports it. Fireball's engineers handle the controls design, UL 508A control panels, line integration, and the start-up on site, so HotLoop goes in alongside the equipment you already run.
 
-They're also where support, SLAs, and warranties come from, not EmberNet. The software itself comes as is, with no warranty, so if your plant needs somebody on the hook when a line goes down at 3 AM, that somebody is Fireball. EmberNet is where business use happens. Fireball Industries is who stands behind it.
+Fireball Industries is also where support, SLAs, and warranties come from, not EmberNet. The software itself comes as is, with no warranty, so if your plant needs somebody on the hook when a line goes down at 3 AM, that somebody is Fireball. EmberNet is where business use happens. Fireball Industries is who stands behind it.
 
-[Talk to Fireball Industries at fireballz.ai](https://fireballz.ai/)
+[Get a quote from Fireball Industries](https://fireballz.ai/get-a-quote/), or [book a meeting](https://calendar.app.google/AfuJdr9Uq25uowiy9).
 
 ## Still not sure?
 

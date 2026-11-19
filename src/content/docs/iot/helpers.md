@@ -54,7 +54,7 @@ POST /api/helpers
 The `entity_id` is made from the name (`input_number.batch_target`) unless you
 give one. `PUT /api/helpers/{entity_id}` changes its name, icon, unit or
 options; `DELETE /api/helpers/{entity_id}` deletes it and its value. The whole
-API is in [API.md](/iot/api/#helpers).
+API is in [the HTTP API](/iot/api/#helpers).
 
 A change of options that would leave the helper's current value outside them is
 refused: narrowing a range past the value, or removing the choice that is

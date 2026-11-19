@@ -281,7 +281,7 @@ when the network does not.
 ## From a rule, a script, or an agent
 
 A rule or a script applies one with an `apply_recipe` step (see
-[AUTOMATIONS.md](/iot/automations/)):
+[Automations](/iot/automations/)):
 
 ```json
 {"type": "apply_recipe", "params": {"recipeId": "grade_a", "params": {"speed": 250}}}
@@ -297,7 +297,7 @@ Over MCP, `list_recipes` shows every recipe with its targets and parameters,
 `validate_recipe` asks whether one would apply right now, and `apply_recipe`
 applies it, with a **required** reason. An agent's writes carry the source
 `mcp`, so the gate applies to every one of them, and with writes switched off
-(`HOTLOOP_ALLOW_WRITES`) `apply_recipe` is refused before anything is checked. See [MCP.md](/iot/mcp/#recipes).
+(`HOTLOOP_ALLOW_WRITES`) `apply_recipe` is refused before anything is checked. See [MCP](/iot/mcp/#recipes).
 
 ## Its entity
 
@@ -338,11 +338,11 @@ entity.
 Recipes, every version, and every application are in backups, and come back
 exactly as they were. An application the backup caught in the middle comes
 back `applying` and is marked `failed` on the first start, like a crash. See
-[BACKUP.md](/iot/backup/).
+[Backups and restore](/iot/backup/).
 
 ## The API
 
-[API.md](/iot/api/#recipes) has every route. In short:
+[The HTTP API](/iot/api/#recipes) has every route. In short:
 
 | <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
 |---|---|

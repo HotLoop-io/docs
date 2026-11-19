@@ -9,7 +9,7 @@ editUrl: false
 
 HotLoop for CODESYS is HotLoop running on the same node as a CODESYS runtime. It reads the PLC's variables through the runtime's own OPC UA server, puts them on screens that work on a panel PC, a phone, or a wall, raises alarms on them, and keeps the history. Nothing is installed in CODESYS and nothing writes to the PLC. It is the screen you would otherwise build in CODESYS WebVisu, drawn outside the runtime. What that buys you: the operators get a screen without a download to the PLC, and the PLC gets a second set of eyes that doesn't depend on anything else on the node.
 
-It is one of the eight HotLoop products, and its own release line. The newest chart is 0.3.5, published on 2026-11-05. Under it is HotLoop Edge, so everything on the [Edge pages](/edge/overview/) is true here too.
+It is one of the eight HotLoop products, and its own release line. The newest chart is 0.3.5, published on 2026-11-16. Under it is HotLoop Edge, so everything on the [Edge pages](/edge/overview/) is true here too.
 
 ![The Line 2 screen: four value cards, a gauge, a fifteen minute trend, and an alarm list](/codesys/screen.png)
 ![The same, in dark](/codesys/screen-dark.png)
@@ -28,7 +28,7 @@ That is a real run: HotLoop's default interface reading a CODESYS Control for Li
 
 CODESYS documents one way for a third party to read a controller's variables, and it is the runtime's own OPC UA server. The PLC publishes what you want seen with a Symbol Configuration in the IDE, and HotLoop reads those variables by the names the programmer gave them, like `Application.GVL_Line.rTemp`, not by a node id. The Symbol Configuration is the only change to the PLC project. The CODESYS Gateway's channel protocol is not documented for third parties, and this does not speak it.
 
-The reading is HotLoop core's CODESYS connector, which is the OPC UA driver plus what a CODESYS PLC needs on top: discovery of what the application exports, the types it has, arrays and structures walked into one point per field, a reconnect with no hands after a restart or a download, and every request cut to the limits the runtime publishes. The [protocols page](/iot/protocols/) carries the connector's reference from HotLoop 4.19.0 on, and it says what it was verified against and what it was not.
+The reading is HotLoop core's CODESYS connector, which is the OPC UA driver plus what a CODESYS PLC needs on top: discovery of what the application exports, the types it has, arrays and structures walked into one point per field, a reconnect with no hands after a restart or a download, and every request cut to the limits the runtime publishes. The [protocols page](/iot/protocols/) carries the connector's reference from HotLoop 4.19.4 on, and it says what it was verified against and what it was not.
 
 ## What it does by itself
 
@@ -39,8 +39,8 @@ Once HotLoop and the node's own runtime both answer, the provisioner sets up the
 - **It won't write to your PLC.** Every tag the provisioner sets up is read-only, and the profile marks none writable. A person can arm a tag later, and then the [write gate](/gateway/write-gate/) and the PLC's own symbol rights both get a say.
 - **It won't put anything in the runtime.** No library, no task, no agent.
 - **It won't need a database pod.** SQLite on the node's own storage, one replica.
-- **It won't lose its screens to a bad link, in theory.** Both pods tolerate an unreachable or not-ready node with no time limit. The tolerations are in the chart, and the link was never cut on a real node, so [the status page](/codesys/where-it-stands/) lists that as not shown.
+- **It is built to keep its screens through a lost link.** Both pods tolerate an unreachable or not-ready node with no time limit, and the tolerations are in the chart. [Where it stands](/codesys/where-it-stands/) says what has been run on a real node.
 
 ## Where to go next
 
-[Install it](/codesys/install/), read what a [profile](/codesys/profile/) holds, or see [where it stands](/codesys/where-it-stands/) and the [roadmap](/codesys/roadmap/).
+[Install it](/codesys/install/), read what a [profile](/codesys/profile/) holds, or see [where it stands](/codesys/where-it-stands/) and the [roadmap](/codesys/roadmap/). Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.

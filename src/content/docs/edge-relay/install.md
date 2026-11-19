@@ -129,7 +129,7 @@ Save this as `/etc/containers/systemd/edge-relay.container`, and change the brok
 ```ini
 [Unit]
 Description=HotLoop Edge Relay
-Documentation=https://github.com/HotLoop-io/hotloop/blob/main/docs/EDGE-RELAY.md
+Documentation=https://docs.hotloop.io/edge-relay/reference/
 After=network-online.target
 Wants=network-online.target
 

@@ -9,7 +9,7 @@ HotLoop listens to the plant network and tells you what's on it: the ESPHome
 node in the yard, the Shelly on the compressor, the OPC UA server on line 3,
 the UPnP box somebody plugged in and forgot, the thing that just asked for an
 address. Each one shows up on Devices, Discovered, under the devices that
-announced themselves over MQTT ([DISCOVERY.md](/iot/mqtt-discovery/)), with what it
+announced themselves over MQTT ([MQTT discovery](/iot/mqtt-discovery/)), with what it
 is and how HotLoop could talk to it.
 
 Then a person decides. Nothing heard on the network is ever added by itself,

@@ -23,7 +23,7 @@ Each one goes through its route, so the permission check, the validation and the
 
 ## What stays out
 
-Ten routes turn a key away themselves, because they want a person signed in: making an API key or a service account key, making a SCIM token, adding, changing or deleting a secret provider or a log destination, and your own password. A key that could make keys, or change where the audit log goes, is a leaked key that keeps itself alive. the MCP page has the list and the reason.
+Ten routes turn a key away themselves, because they want a person signed in: making an API key or a service account key, making a SCIM token, adding, changing or deleting a secret provider or a log destination, and your own password. A key that could make keys, or change where the audit log goes, is a leaked key that keeps itself alive. The MCP page has the list and the reason.
 
 ## amd64 only, and why
 

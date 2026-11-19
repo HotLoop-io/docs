@@ -263,7 +263,7 @@ variables for reports alone when the alarm channel is off.
 
 It is the same SMTP code as the alarm channel, not a second copy. The alarm channel now sends through it as well. The
 connection handling is unchanged (port 465 now speaks TLS from the first byte,
-see [NOTIFY.md](/iot/notifications/#implicit-tls-port-465)): STARTTLS whenever the relay offers it, `AUTH`
+see [Alarm notifications](/iot/notifications/#implicit-tls-port-465)): STARTTLS whenever the relay offers it, `AUTH`
 when credentials are set, and a hard failure before `AUTH` when
 `HOTLOOP_NOTIFY_SMTP_TLS` is set and the relay does not offer STARTTLS. For an
 ASCII alarm the message is the same bytes as before, apart from the `Date`
@@ -360,7 +360,7 @@ every other route answers with an error naming `HOTLOOP_REPORTS_ENABLED`.
 | `HOTLOOP_REPORTS_RUN_TIMEOUT` | `5m` | Bounds one run: query, render, write, and email |
 | `HOTLOOP_REPORTS_MAX_EMAIL_BYTES` | `10485760` | The most attachment data in one email |
 | `HOTLOOP_TIMEZONE` | `UTC` | The plant timezone. Must be a real zone name, or HotLoop won't start |
-| `HOTLOOP_NOTIFY_SMTP_HOST`, `_PORT`, `_USERNAME`, `_PASSWORD`, `_FROM`, `_TLS`, `_TLS_SKIP_VERIFY` | | The relay reports email through. See [NOTIFY.md](/iot/notifications/) |
+| `HOTLOOP_NOTIFY_SMTP_HOST`, `_PORT`, `_USERNAME`, `_PASSWORD`, `_FROM`, `_TLS`, `_TLS_SKIP_VERIFY` | | The relay reports email through. See [Alarm notifications](/iot/notifications/) |
 
 The chart's `reports` block has `enabled`, `runTimeout`, `maxEmailBytes`, and
 `persistence` (size, storage class, access mode). `notify.smtp` supplies the

@@ -8,10 +8,7 @@ editUrl: false
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
-**None of this starts until HotLoop's own roadmap is done.** Flow waits its turn.
-The one exception is Phase 9, FlowLab and its diagrams. I'm building it now because it is a separate
-pack that sits beside the message runtime and doesn't take anything from HotLoop's
-own roadmap.
+FlowLab and its diagrams, Phase 9, are being built now, as a separate pack that sits beside the message runtime.
 
 ## What Flow is for
 
@@ -45,7 +42,7 @@ time.
 
 - [x] The WASM sandbox is real and tested, but no node uses it and it isn't in
       the binary. Say so until Phase 6 makes it true
-- [x] Two code comments point at a the embedded queue store-backed context store that doesn't exist.
+- [x] Two code comments point at an embedded context store that doesn't exist.
       Delete them
 - [x] Re-measure idle and loaded memory the same way on the same box, publish the
       command with the number, and drop any figure nobody can reproduce
@@ -243,7 +240,7 @@ travels on a wire of its own, a panel an operator can open on a phone, and a
 debugger that can pause a run and show what is on every wire. Existing flows don't
 change, and the flow file still loads and saves byte for byte: a diagram is a tab
 with an `ew_diagram` key, and which input a wire lands on is kept in `ew_in` on the
-node it leaves. [diagrams.md](/flow/flowlab/) has the rest.
+node it leaves. [FlowLab](/flow/flowlab/) has the rest.
 
 - [ ] The scheduler: all wired inputs ready, independent branches in parallel,
       and an `after` wire for order where no data flows

@@ -61,7 +61,7 @@ says `none within a year` instead of being quietly left out.
 
 `dawn`, `sunrise`, `noon`, `sunset` or `dusk`, moved by `offsetSec` (negative is
 before, at most six hours either way). See
-[AUTOMATIONS.md](/iot/automations/#sun-triggers). `binary_sensor.sun_up` works with
+[Automations](/iot/automations/#sun-triggers). `binary_sensor.sun_up` works with
 an ordinary `state` trigger too, and with `states['binary_sensor.sun_up'] ==
 'off'` in a condition, for "only after dark".
 

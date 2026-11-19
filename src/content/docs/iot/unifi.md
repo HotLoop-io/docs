@@ -42,7 +42,7 @@ each console has its own local accounts.
 
 A UniFi device can only be saved when HotLoop has a key to encrypt the password
 with (`HOTLOOP_SECRET_KEY_FILE`, which the chart sets up on its own). See
-[BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key).
+[Backups and restore](/iot/backup/#device-credentials-and-the-secret-key).
 
 | Option | Default | What it does |
 |---|---|---|
@@ -173,7 +173,7 @@ The console's client list lags. So:
 Open a device's drawer. If a UniFi console HotLoop reads lists a client at the
 device's IP, the Network section proposes it; an admin clicks **Link**. No IP
 to go on (a device addressed by name), link it by MAC. Or through the API,
-`PUT /api/devices/{id}/network`, see [API.md](/iot/api/#put-apidevicesidnetwork).
+`PUT /api/devices/{id}/network`, see [the HTTP API](/iot/api/#put-apidevicesidnetwork).
 
 A linked device's client gets tags and an alarm, **"PLC-07 off the network"**,
 priority 1, with a 120 s on-delay so a PLC rebooting doesn't page anybody.
@@ -299,13 +299,13 @@ stays where they put it.
 
 The routes behind it are `GET /api/unifi/consoles`, `.../overview`,
 `.../topology`, `.../devices`, `.../wifi` and `.../events`, documented in
-[API.md](/iot/api/).
+[The HTTP API](/iot/api/).
 
 ### The starter alarms
 
 The alarms a plant wants on its network before anybody has had to think about
 it, made from what the console has now. **Create the usual alarms** on the
-Overview (or `POST /api/unifi/{id}/starter-alarms`, see [API.md](/iot/api/)) makes:
+Overview (or `POST /api/unifi/{id}/starter-alarms`, see [the HTTP API](/iot/api/)) makes:
 
 | Alarm | On | Priority | On-delay |
 |---|---|---|---|

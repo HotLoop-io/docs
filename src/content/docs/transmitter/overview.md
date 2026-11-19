@@ -71,6 +71,8 @@ sections of the spec that define each byte.
 The CODESYS Control for Linux SL 4.22.0.0 runtime, and on bare metal (2026-11-17). See the [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) for what
 was run and what was read back.
 
+Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+
 ## License
 
 HotLoop's Free Use License 1.0, the same as every HotLoop product except Flow. It is free to use and it is not open source, and its section 5 lets you build the library into your own PLC projects and deliver or sell the compiled result, never the library itself. The [license page](https://hotloop.io/license/) has the text.

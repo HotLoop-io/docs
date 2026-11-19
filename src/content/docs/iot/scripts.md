@@ -54,7 +54,7 @@ never had one to begin with.
   `vars.<name>`.
 - **`sequence`** is the automation language, the whole of it: `call_service`,
   `write_tag`, `condition`, `wait`, `stop`, `call_script`, `set_variable`,
-  `delay`, `log_event` and the rest. [AUTOMATIONS.md](/iot/automations/) has
+  `delay`, `log_event` and the rest. [Automations](/iot/automations/) has
   every step.
 - **`mode`** and **`maxRuntimeSec`** are below.
 
@@ -232,11 +232,11 @@ conversation to have that no lock of ours would settle.
 `scripts` and `script_runs` are in every backup and come back on a restore,
 with the history. A run the backup caught in the middle comes back `running`
 and is marked `interrupted by restart` on the first start, like any other.
-See [BACKUP.md](/iot/backup/).
+See [Backups and restore](/iot/backup/).
 
 ## The API
 
-Every route, its permission and its answers are in [API.md](/iot/api/#scripts).
+Every route, its permission and its answers are in [the HTTP API](/iot/api/#scripts).
 
 | Permission | viewer | operator | admin |
 |---|---|---|---|

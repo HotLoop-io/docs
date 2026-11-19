@@ -18,7 +18,7 @@ A flow runs a WASM guest through a plugin: a signed module with a descriptor the
 editor draws its dialog from, which gets no host access unless it asks and you
 say yes. Memory is capped per node, a message gets a timeout, and a guest that
 blows past either traps, lands at a Catch node with the reason, and takes nothing
-else down. All of it is in [docs/plugins.md](/flow/plugins/), including how
+else down. All of it is in [Plugins without npm](/flow/plugins/), including how
 you trust a publisher's key and what the refusals say. What it means for you:
 the thing Node-RED needs npm and a whole Node.js install for, Flow runs as a
 sandboxed file you can verify before it loads.

@@ -22,7 +22,7 @@ What that means on a bad night:
   durable and when the node behind it stops taking messages they go to disk in
   order, and they're still there after a `kill -9`. While it's healthy, nothing is
   written. [Store and forward](/flow/store-and-forward/)
-  was proven against a real InfluxDB that I killed for ten minutes.
+  was proven against a real InfluxDB that was stopped for ten minutes.
 - **Every node runs on its own.** One goroutine per node, so a Function node
   chewing on a big payload costs you a core, not the editor and every other flow
   on the box.
@@ -42,12 +42,12 @@ because it's a feature, not the point.
 
 Current release is `2.14.1`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.14.1`
 for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
-[docs/deploying.md](/flow/deploying/) has Kubernetes, Podman and Quadlet. It has 117 node types for messages and 37 for FlowLab diagrams. Home and lab use is free, so is use by schools, nonprofits and government, and
+[Deploying Flow](/flow/deploying/) has Kubernetes, Podman and Quadlet. It has 117 node types for messages and 37 for FlowLab diagrams. Home and lab use is free, so is use by schools, nonprofits and government, and
 use through EmberNet, business use included, is unrestricted, under HotLoop's EmberNet Source License.
 
 ## The numbers
 
-Absolute numbers only, so you can go disagree with me on your own hardware. Three runs each, and the range is what's printed.
+Absolute numbers only, so you can check them on your own hardware. Three runs each, and the range is what's printed.
 
 | <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
 |---|---|
@@ -61,8 +61,7 @@ Absolute numbers only, so you can go disagree with me on your own hardware. Thre
 | Engine, five-node chain, no I/O | **2.20 to 3.11 µs a message**, 3.9 KB allocated |
 
 Know what these aren't. The HTTP number runs through the whole HTTP stack on
-purpose, because that's what a client of your flow sees. It isn't a scheduler
-benchmark and I won't let anybody quote it as one. And under saturation every
+purpose, because that's what a client of your flow sees. And under saturation every
 runtime queues and queueing owns the tail, which is why p99 wanders more than
 p50 between runs.
 
@@ -85,8 +84,9 @@ with nothing else on the node but cluster DaemonSets. Three runs, range printed.
 
 The last row is the honest one for a box that stays loaded. The board hit its
 soft temperature limit under a minute in, throttled from about two minutes in,
-and sat at 83 to 86 C with the clock at 1.5 to 1.7 GHz for the rest. The
-idle RSS is about five times the x86 figure above and I don't know why yet.
+and sat at 83 to 86 C with the clock at 1.5 to 1.7 GHz for the rest.
 The [benchmarks page](/flow/benchmarks/#results-on-a-raspberry-pi-5) has the Pi run in full.
 
 The [benchmarks page](/flow/benchmarks/) has the method and the caveats.
+
+Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
