@@ -15,6 +15,6 @@ Where it is on the EmberNet docs:
 - [HotLoop Edge on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
 - [HotLoop Edge Relay on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
 
-Its listing is the install page for the App Store.
+To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
 
 Back to the [HotLoop IoT overview](/iot/overview/), or the [HotLoop IoT page on hotloop.io](https://hotloop.io/iot/).

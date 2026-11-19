@@ -119,7 +119,7 @@ flows or change them, so Flow serves 29 tools of its own at the same `/mcp`,
 beside the flows' tools. They read and they write. Seven are about the flows, in
 the table below, and the rest are the admin API's other routes: the settings, the
 palette, the audit log, deployment detail and diffs, the export, the flow tests,
-the message traces, the runtime's numbers and a second-factor reset. the MCP page
+the message traces, the runtime's numbers and a second-factor reset. The MCP page
 has every tool, its route and its permission, and the few routes that are not
 tools and why.
 

@@ -75,7 +75,7 @@ Node-RED's node of the same name, and **a test fails the build if a node claims
 partial compatibility without stating in writing what is missing.** A node
 that is 90% compatible and silent about the other 10% is more dangerous than one
 that is obviously absent, because the first one lets a flow appear to work. The
-full matrix is [docs/compatibility.md](/flow/compatibility/), generated from the
+full matrix is [Node-RED compatibility](/flow/compatibility/), generated from the
 registry rather than maintained by hand, because a hand-maintained compatibility
 document is a lie with a timestamp.
 
@@ -88,7 +88,7 @@ shell, the file nodes are scoped, and everything listed under
 Node.js, and there is no future version of this where a package that needs Node
 suddenly does. That is the trade you make for the footprint and the sandbox,
 stated plainly so you can decide against it. Signed WASM plugins are Flow's
-answer for what you write yourself: see [docs/plugins.md](/flow/plugins/).
+answer for what you write yourself: see [Plugins without npm](/flow/plugins/).
 
 The community nodes a plant leans on are another matter. Flow runs the Node-RED
 Modbus, dashboard, PostgreSQL and e-mail types natively, in Go, under

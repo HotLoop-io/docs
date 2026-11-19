@@ -51,7 +51,7 @@ The `devices.copy` file holds each device's address and protocol configuration a
 they are stored, which includes the credentials the drivers log in with. How
 readable they are depends on the key, below. Since 4.15.1 the API hides every
 device credential from every role, admin included; a backup file is not behind
-the API. See [AUTH.md](/iot/authentication/#where-credentials-are-still-in-the-clear).
+the API. See [Authentication and users](/iot/authentication/#where-credentials-are-still-in-the-clear).
 
 ## Device credentials and the secret key
 
@@ -115,17 +115,17 @@ its monthly partitions exist, so they land in its default partition. The
 logbook's maintenance, when a recording Gateway starts, makes last month's and
 this month's partitions around the rows that belong in them, and deletes older
 rows from the default partition as they pass the retention, so the retention
-reaches every restored row. See [LOGBOOK.md](/iot/logbook/).
+reaches every restored row. See [the logbook](/iot/logbook/).
 
 Scripts come back with their history. A run the backup caught in the middle
 comes back `running`, and the Gateway's first start marks it cancelled,
 `interrupted by restart`, the same as a run a crash cut off: nothing resumes
-a run. See [SCRIPTS.md](/iot/scripts/).
+a run. See [Scripts](/iot/scripts/).
 
 Recipes come back with every version and every application. An application
 the backup caught halfway comes back `applying`, and the Gateway's first start
 marks it `failed`, pointing at its call id in the write audit: nothing resumes
-one, and nothing undoes one. See [RECIPES.md](/iot/recipes/).
+one, and nothing undoes one. See [Recipes](/iot/recipes/).
 
 `schema_migrations` is deliberately excluded: `store.Migrate` rebuilds it,
 and every table's DDL, from the embedded migrations. It is the one entry in

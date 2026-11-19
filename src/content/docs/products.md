@@ -72,8 +72,7 @@ So a smaller product answers for what it doesn't have instead of pretending:
   probing.
 - **A Gateway-only setting** on IoT or Edge (`HOTLOOP_REPORTS_ENABLED=true`
   carried down in an old values file, say) warns at startup and on the Settings
-  screen, and HotLoop runs. Refusing to start a plant over a report nobody can
-  get is stupid, and ignoring it silently is how nobody notices for a month.
+  screen, and HotLoop runs. HotLoop keeps the plant running over a report it cannot produce, and the warning makes sure somebody sees it.
 - **The charts** don't have the setting at all. `charts/hotloop-iot` has no
   `reports`, `opcuaServer` or `edgePublish` block, and `hotloop-edge` has no
   `reports`. Set one anyway and it renders nothing.
@@ -91,7 +90,7 @@ So a smaller product answers for what it doesn't have instead of pretending:
 - **The site: every line, reports mailed on a schedule, edge relays reporting
   in, more than one site on one screen:** Gateway.
 - **A box that should poll and forward and nothing else, with no database to
-  look after:** Edge Relay. See [EDGE-RELAY.md](/edge-relay/reference/).
+  look after:** Edge Relay. See [Edge Relay reference](/edge-relay/reference/).
 
 ## Sizes
 
@@ -138,7 +137,7 @@ For a box that isn't in a cluster. Each product directory under
 `hotloop-db.container` (its database, the same image and version its chart
 runs), `hotloop-db.volume` and `hotloop-data.volume`. The install steps are in
 the header of each `hotloop.container`, and
-[deploy/quadlet/README.md](/install/quadlet/) has the rest.
+[Podman Quadlet](/install/quadlet/) has the rest.
 
 These need Podman 5.0 or newer. Raspberry Pi OS Bookworm ships 4.3,
 which has no Quadlet at all, so a Pi wants Raspberry Pi OS Trixie or newer. The
@@ -162,7 +161,7 @@ features empty.
   labels and name the database's StatefulSet and volume the same, so the
   upgrade is allowed and the volume stays bound.
 
-Take a backup first (`POST /api/backup`, see [BACKUP.md](/iot/backup/)) and copy it
+Take a backup first (`POST /api/backup`, see [Backups and restore](/iot/backup/)) and copy it
 off the box. The move has been run on Quadlet, IoT then Edge then the Gateway on one database volume with the same device there at every step, with the IoT database's PostgreSQL directory starting under the Gateway's TimescaleDB image, and as a `helm upgrade` on a real cluster. Where IoT's plain directory has no TimescaleDB extension in it, history stays in native partitions after that move, and a hypertable takes a backup and a restore into a fresh TimescaleDB. Going back down a product is not a move to make on a box you care about.
 
 ## How they ship

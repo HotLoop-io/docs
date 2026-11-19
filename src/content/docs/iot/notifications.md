@@ -35,7 +35,7 @@ the first time.
 
 ## The channels
 
-Six, and that's the list (see "Notifications" in [ROADMAP.md](/roadmap/) for
+Six, and that's the list (see "Notifications" in [HotLoop roadmap](/roadmap/) for
 what we're not doing and why). Every one needs no vendor SDK and no paid
 account, matching this project's plan of record: cloud integrations are opt-in
 outbound connections an operator configures, never something this app requires
@@ -756,7 +756,7 @@ verified against a commercial provider's 465 endpoint.
 
 Since 4.14.0 the alarm channel sends through `notify.SendMessage`, a general
 function that sends one message, with optional attachments, to a list of
-recipients. Scheduled reports (see [REPORTS.md](/gateway/reports/)) send their CSV and
+recipients. Scheduled reports (see [Scheduled reports](/gateway/reports/)) send their CSV and
 HTML files through the same function and the same relay settings
 (`HOTLOOP_NOTIFY_SMTP_HOST`, `_PORT`, `_USERNAME`, `_PASSWORD`, `_FROM`, `_TLS`,
 `_TLS_SKIP_VERIFY`), so there is one place that dials, upgrades with STARTTLS,

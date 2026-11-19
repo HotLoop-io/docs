@@ -5,9 +5,7 @@ description: "Modbus TCP, OPC UA, Sparkplug B and the other nodes that talk to P
 editUrl: false
 ---
 
-`scan` could find a PLC and nothing in the palette could talk to it, which is a
-funny thing to ship in a product for plants. Modbus TCP, S7, EtherNet/IP, OPC UA
-and Sparkplug B are in now.
+Flow talks to PLCs and brokers in Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B.
 Each one is a config node that holds the connection to the device and action
 nodes that point at it, same shape as the InfluxDB node, and the editor builds
 every dialog from the descriptor like everything else.

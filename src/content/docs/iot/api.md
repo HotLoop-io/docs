@@ -19,11 +19,11 @@ and who may call them is not a description of the API as it once was. The
 request and response shapes below were taken from a running Gateway; the tests
 do not check those, so if you change a handler, change its section here too.
 
-Deeper background lives with each feature: [AUTH.md](/iot/authentication/),
-[ENTITIES.md](/iot/entities/), [EQUIPMENT.md](/iot/equipment/),
-[AUTOMATIONS.md](/iot/automations/), [REPORTS.md](/gateway/reports/),
-[FLEET.md](/gateway/fleet/), [NOTIFY.md](/iot/notifications/), [BACKUP.md](/iot/backup/) and
-[MCP.md](/iot/mcp/). This file is the list; those are the reasons.
+Deeper background lives with each feature: [Authentication and users](/iot/authentication/),
+[Entities](/iot/entities/), [the equipment tree and labels](/iot/equipment/),
+[Automations](/iot/automations/), [Scheduled reports](/gateway/reports/),
+[Fleet management](/gateway/fleet/), [Alarm notifications](/iot/notifications/), [Backups and restore](/iot/backup/) and
+[MCP](/iot/mcp/). This file is the list; those are the reasons.
 
 ## Conventions
 
@@ -67,7 +67,7 @@ write comes from the proxy's `X-EmberNET-User`, `X-Forwarded-User`,
 `X-Auth-Request-User`, `X-Remote-User` or `X-Forwarded-Email` header, or
 `operator` if none is set. That is only reasonable behind a NetworkPolicy that
 lets nothing but the dashboard proxy reach the pod. See
-[AUTH.md](/iot/authentication/#running-without-a-login).
+[Authentication and users](/iot/authentication/#running-without-a-login).
 
 MCP is separate: it has its own bearer token (`HOTLOOP_MCP_TOKEN`) and never
 looks at a session. See [MCP](#mcp).
@@ -153,7 +153,7 @@ the stored value, send a new value to replace it, and send `""` or `null` to
 clear it. A new device cannot be saved with the placeholder, and a save that
 moves the device to a different host with a kept credential is refused, so a
 stored password cannot be walked off to a listener of somebody else's. The full
-rules are in [AUTH.md](/iot/authentication/#device-credentials-are-write-only). The same goes
+rules are in [Authentication and users](/iot/authentication/#device-credentials-are-write-only). The same goes
 for every other credential the Gateway holds: settings show `set` or
 `not set`, diagnostics scrub credentials out of outbound MCP targets, and nothing in this API
 returns a password hash or a session token except the one login hands you.
@@ -537,7 +537,7 @@ An app that cannot reach its historian should not be taking traffic.
 
 ## Authentication
 
-See [AUTH.md](/iot/authentication/) for accounts, roles and the first admin.
+See [Authentication and users](/iot/authentication/) for accounts, roles and the first admin.
 
 ### `POST /api/auth/login`
 
@@ -557,12 +557,12 @@ Also sets the `iiot_session` cookie to the same token. `401`
 disabled account alike, and it takes as long either way: which of the three it
 was is not something to tell a stranger. `429` for an account that has had too
 many wrong passwords or PINs in a row, whatever is sent, with a `Retry-After`
-header; see [AUTH.md](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins).
+header; see [Authentication and users](/iot/authentication/#the-lockout-after-wrong-passwords-and-pins).
 
 ### `POST /api/auth/kiosk`
 
 Sign in at a shared panel with a PIN or a badge, the way
-[AUTH.md](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out) describes. No
+[Authentication and users](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out) describes. No
 session needed, by construction.
 
 | Field | Type | <span class="sr-only">Details</span> |
@@ -708,7 +708,7 @@ user.
 ### `GET /api/opcua/certificates`
 
 Every X.509 certificate attached to a user for signing in to the OPC UA server
-(see [OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)), newest first:
+(see [the OPC UA server](/edge/opc-ua-server/#x509-user-certificates)), newest first:
 `{"serverAcceptsCertificates":false,"certificates":[...]}`. Each has `thumbprint`
 (SHA-256 of the DER form, lower case hex), `username`, `label`, `subject`,
 `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` and `revokedBy` once
@@ -823,7 +823,7 @@ this. The MCP token itself is only ever `tokenSet`.
 ## Devices
 
 A device is one connection over one protocol. What goes in `config` and
-`address` depends on the protocol: see [PROTOCOLS.md](/iot/protocols/).
+`address` depends on the protocol: see [Protocols and drivers](/iot/protocols/).
 
 ### `GET /api/devices`
 
@@ -856,7 +856,7 @@ Creates the device if the `id` is new, replaces it if not. There is no `PUT`.
 | `description` | string | |
 | `pollIntervalMs`, `timeoutMs` | int | 0 takes the runtime default. The poll interval is floored at `HOTLOOP_MIN_POLL_INTERVAL` |
 | `site`, `area`, `line` | string | Places the device on the equipment tree by name, creating nodes as needed |
-| `equipmentId` | int | Places it on a tree node instead; `site`, `area` and `line` then come from the node. See [EQUIPMENT.md](/iot/equipment/) |
+| `equipmentId` | int | Places it on a tree node instead; `site`, `area` and `line` then come from the node. See [the equipment tree and labels](/iot/equipment/) |
 | `config` | object | The protocol's own options. Credentials follow the [write-only rules](#secrets-are-write-only) |
 
 Runtime fields (`state`, `lastPoll`, `tagCount` and so on) are read-only;
@@ -921,7 +921,7 @@ once. Arm the ones you mean with `POST /api/tags`. `404` for an unknown device.
 
 ## UniFi: OT networks, clients, and where a device is on the network
 
-HotLoop's own record about UniFi sites. See [UNIFI.md](/iot/unifi/). `{id}` under
+HotLoop's own record about UniFi sites. See [UniFi Network](/iot/unifi/). `{id}` under
 `/api/unifi` is a UniFi device (one site on one console); `{network}` is the
 console's own ID for a network, as `GET .../networks` gives it; `{mac}` takes
 any usual spelling and is kept lower case with colons.
@@ -1067,7 +1067,7 @@ Each event has the controller's `key` (`EVT_SW_Lost_Contact`), its own `message`
 `severity` (`warning` when the controller flags it as something going wrong) and
 the device, client and port it is about. They are also in the logbook, filed
 under the switch or access point they are about (see
-[UNIFI.md](/iot/unifi/#events)).
+[UniFi Network](/iot/unifi/#events)).
 
 ### `POST /api/unifi/{id}/starter-alarms`
 
@@ -1093,7 +1093,7 @@ network OT and watching a device. `503` until the console has been read once.
 ## MQTT discovery
 
 Devices that announced themselves over MQTT, and what a person decided about
-each. See [DISCOVERY.md](/iot/mqtt-discovery/). Discovery listens on the embedded
+each. See [MQTT discovery](/iot/mqtt-discovery/). Discovery listens on the embedded
 broker when it runs, and on every broker set up under `/api/mqtt/brokers`. With
 neither, `sources` is empty. In an `--mcp-stdio` helper, which never listens,
 `GET /api/discovery` answers `{"running":false,"sources":[],"devices":[]}` and
@@ -1191,7 +1191,7 @@ from.
 ## Broker logins
 
 The embedded broker's logins made in HotLoop, each with the topics it may
-publish and subscribe to. See [BROKER.md](/iot/broker/). A login is a key to the
+publish and subscribe to. See [the embedded MQTT broker](/iot/broker/). A login is a key to the
 whole plant's broker, so these are `users.manage`, an admin's. Nothing here
 ever answers with a password or its hash. Each change goes on the log and holds
 from the client's next publish; nobody has to reconnect.
@@ -1241,7 +1241,7 @@ exist.
 ## Network discovery
 
 Devices heard on the plant network over mDNS, SSDP and DHCP, and what a
-person decided about each. See [NETWORK-DISCOVERY.md](/iot/network-discovery/).
+person decided about each. See [Network discovery](/iot/network-discovery/).
 In an `--mcp-stdio` helper, which never listens, `GET /api/network-discovery`
 answers `{"running":false,"finds":[]}` and every other route `503`.
 
@@ -1315,7 +1315,7 @@ the deployment can.
 
 The config flow for a kind of device a person points HotLoop at: ask what the
 integration needs, look at the real device with the answers, and make the
-device and its tags from what was found. See [INTEGRATIONS.md](/iot/integrations/).
+device and its tags from what was found. See [Integrations](/iot/integrations/).
 
 **Nothing here arms anything.** Every tag a setup makes is read-only. Arming
 one is `POST /api/tags` like every other point.
@@ -1378,7 +1378,7 @@ its read entity. A setup that fails part way leaves no device behind.
 
 Brokers other than HotLoop's own that discovery listens to: a plant's
 Mosquitto, the broker a Zigbee2MQTT box brought along. See
-[DISCOVERY.md](/iot/mqtt-discovery/#other-brokers). Their passwords are sealed with the
+[MQTT discovery](/iot/mqtt-discovery/#other-brokers). Their passwords are sealed with the
 device credential key (`HOTLOOP_SECRET_KEY_FILE`) and never answered with;
 `passwordSet` says whether one is stored, and `passwordProblem` why a stored
 one can't be opened. Every change goes on the log and takes effect at once:
@@ -1459,7 +1459,7 @@ Creates the tag if `deviceId` and `name` are new, replaces it if not.
 | `writable` | bool | **Arms the tag for writing, from every path: UI, automations, entities, MCP.** Left out is `false` |
 | `hasRange`, `minValue`, `maxValue` | bool, number, number | With `hasRange`, a write outside the range is refused (never clamped) |
 | `scale`, `offset` | number | engineering = raw x scale + offset. A scale of 0 is 1 |
-| `noData` | list | Raw values that mean "no measurement", each `{"raw", "reason"}`. `raw` is a string (`"0x8005"`, `"-32763"`) or a bare number, and comes back as a string. A reading whose raw value is on the list is bad quality with that `reason`, checked before `scale` and `offset`. Up to 32 codes. A code that is not a whole number, is listed twice, or can't be the point's type is `400`. See [PROTOCOLS.md](/iot/protocols/#no-data-values) for what to write for each type and the Yokogawa DX example |
+| `noData` | list | Raw values that mean "no measurement", each `{"raw", "reason"}`. `raw` is a string (`"0x8005"`, `"-32763"`) or a bare number, and comes back as a string. A reading whose raw value is on the list is bad quality with that `reason`, checked before `scale` and `offset`. Up to 32 codes. A code that is not a whole number, is listed twice, or can't be the point's type is `400`. See [Protocols and drivers](/iot/protocols/#no-data-values) for what to write for each type and the Yokogawa DX example |
 | `deadband`, `deadbandPercent` | number | Changes smaller than this are not written to history |
 | `deviceClass` | string | The class the tag's entities start with (`power`, `connectivity`, `temperature`...), when it means something for their domain. Taken when the tag is created and ignored on a replace: from then on the entity owns its class, so change it there |
 
@@ -1469,12 +1469,12 @@ created or updated before the answer, so a client can ask for them straight
 away.
 
 A tag on a discovered device nobody has accepted can't be armed: `400`,
-"accept the device first". See [DISCOVERY.md](/iot/mqtt-discovery/#commands).
+"accept the device first". See [MQTT discovery](/iot/mqtt-discovery/#commands).
 
 ### `DELETE /api/tags/{device}/{name}`
 
 `{"deleted":"tank-farm/level"}`, or `404`. The history stays. The tag's
-entities become orphans (see [ENTITIES.md](/iot/entities/#deleted-tags-orphans-and-re-adoption)).
+entities become orphans (see [Entities](/iot/entities/#deleted-tags-orphans-and-re-adoption)).
 
 ## Values, the board, and writes
 
@@ -1641,7 +1641,7 @@ answer a plant can get.
 
 Every tag gets entities without anybody asking; composites (motors, valves,
 loops, counters, selects, buttons) are built from tags by an admin. Snake_case,
-like every entity endpoint. The whole model is in [ENTITIES.md](/iot/entities/).
+like every entity endpoint. The whole model is in [Entities](/iot/entities/).
 
 ### `GET /api/entities`
 
@@ -1682,7 +1682,7 @@ configuration.
 |---|---|---|
 | `entity_id` | string | A rename. The `unique_id` does not move |
 | `name`, `icon`, `device_class`, `state_class`, `unit_of_measurement`, `entity_category` | string | |
-| `options` | object | Per domain; see [ENTITIES.md](/iot/entities/#api) |
+| `options` | object | Per domain; see [Entities](/iot/entities/#api) |
 | `disabled`, `hidden` | bool | A disabled entity has no state and cannot be commanded |
 | `equipment_id` | int or null | Places it on the tree; `null` follows its device again |
 | `labels` | string[] | The whole set |
@@ -1710,7 +1710,7 @@ Creates a composite. The body names the domain and binds tags to its roles:
 Also `entity_id` (else generated from the name), `device_class`,
 `unit_of_measurement`, `icon`, `entity_category` and `options`. Which roles and
 options each domain takes is in
-[ENTITIES.md](/iot/entities/#composite-equipment). Answers `201`
+[Entities](/iot/entities/#composite-equipment). Answers `201`
 `{"entity": {...}, "warnings": [...]}`. `400` for a domain that is not
 created here (a `sensor` comes from its tag, an `alarm` from its definition),
 a missing role or a tag that cannot fill it, `409` for a taken entity_id.
@@ -1759,7 +1759,7 @@ tag writes through the same write gate as `POST /api/write`.
 everything else is the service's data (`value`, `option`, `position`, `mode`,
 `minutes`, `note`). Numbers keep the type they were typed as. The domain in the
 path must be the entity's. Every service and its data is in
-[ENTITIES.md](/iot/entities/#what-each-domain-takes).
+[Entities](/iot/entities/#what-each-domain-takes).
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1819,7 +1819,7 @@ unknown service, data the service does not take, a toggle with no known state)
 answers with the real call's status and error; so does a missing permission.
 `dry_run` is `true` or `false` and nothing else: `yes` is a 400, not a guess,
 because guessing wrong turns a question into a command. See
-[ENTITIES.md](/iot/entities/#asking-first-the-dry-run).
+[Entities](/iot/entities/#asking-first-the-dry-run).
 
 **Why the permission is checked in the handler.** It needs `values.write`, the
 same as writing the tag directly, because that is all it is; an `alarm`
@@ -1845,7 +1845,7 @@ Values the plant's people own rather than a PLC: `input_boolean`,
 `/api/entities` and `/api/states` like any other; these routes are its
 configuration. Its value is set through its services above, with
 `helpers.write`. Every domain, option and service is in
-[HELPERS.md](/iot/helpers/).
+[Helpers](/iot/helpers/).
 
 ### `GET /api/helpers`
 
@@ -1893,7 +1893,7 @@ here.
 The ISA-95 tree (enterprise, site, area, line, cell, unit, equipment) and
 free-form labels. Snake_case. Every role reads; only an admin changes, because
 renaming or moving a node rewrites the site, area and line of every device
-under it. See [EQUIPMENT.md](/iot/equipment/).
+under it. See [the equipment tree and labels](/iot/equipment/).
 
 ### `GET /api/equipment`
 
@@ -2098,12 +2098,12 @@ The alarm audit trail, newest first. `?alarm=` one definition, `?limit=`
 `type` is `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`,
 `unsuppressed`, `escalated` or `escalation-ended`. The last two are written by
 alarm escalation (`actor` is `escalation`), and their `note` says who was told
-and why the chain stopped. See [NOTIFY.md](/iot/notifications/#escalation).
+and why the chain stopped. See [Alarm notifications](/iot/notifications/#escalation).
 
 ## Automations
 
 Triggers, a condition, actions. The rule language is in
-[AUTOMATIONS.md](/iot/automations/).
+[Automations](/iot/automations/).
 
 ### `GET /api/automations`
 
@@ -2210,7 +2210,7 @@ Named sequences of actions, run on demand: from here, from a rule's
 `call_script` step, from MCP's `run_script`, or through the script's entity
 (`script.turn_on`). The sequence is the automation language. Every write a
 step makes goes through the write gate as `script:<id>`, with the source of
-whoever started it. Everything is in [SCRIPTS.md](/iot/scripts/).
+whoever started it. Everything is in [Scripts](/iot/scripts/).
 
 ### `GET /api/scripts`
 
@@ -2319,7 +2319,7 @@ Each one is also an entity, `scene.<id>`.
 A recipe is checked whole before anything goes out and refused whole on any
 reason; its targets then go out in order under one call id, the first that
 fails stops the rest, and nothing is undone; every written value is read back
-from the device. Everything is in [RECIPES.md](/iot/recipes/).
+from the device. Everything is in [Recipes](/iot/recipes/).
 
 A recipe's name, description, equipment node and permission change in place.
 What it writes (`targets`, `params`, `precondition`, `verify_sec`) is a
@@ -2474,7 +2474,7 @@ ordinary rule. The rule keeps the version it was made from; editing the
 blueprint changes no rule, and moving one to a newer version is
 [an upgrade](#post-apiautomationsidblueprint-upgrade) somebody asks for. Every
 write the rule makes goes through the write gate as `automation:<id>`.
-Everything is in [BLUEPRINTS.md](/iot/blueprints/).
+Everything is in [Blueprints](/iot/blueprints/).
 
 ### `GET /api/blueprints`
 
@@ -2551,7 +2551,7 @@ Pages of cards, for the roles and the screens that need them. A dashboard
 commands nothing: a card names a tag, an entity, a script or a recipe, and its
 button writes through [`POST /api/write`](#post-apiwrite) as the person who
 pressed it. The wall board is one of them. Everything is in
-[DASHBOARDS.md](/iot/dashboards/).
+[Dashboards](/iot/dashboards/).
 
 ### `GET /api/dashboards`
 
@@ -2573,7 +2573,7 @@ with every card's size and config in the form that was stored.
 
 A card is `id`, `type`, `title`, `w` (1 to 12 columns), `h` (1 to 8 rows) and a
 `config`. The types and their configs are in
-[DASHBOARDS.md](/iot/dashboards/#the-cards). It is checked before it is stored:
+[Dashboards](/iot/dashboards/#the-cards). It is checked before it is stored:
 
 - a config key the type does not have, a number out of range, a camera or
   floor-plan address with a login or token in it, or more than 60 cards is a
@@ -2631,7 +2631,7 @@ that works, so it says so.
 ## Fleet
 
 Registered edge relays, their live presence over Sparkplug, and commands to
-them. Needs `HOTLOOP_FLEET_ENABLED`. See [FLEET.md](/gateway/fleet/).
+them. Needs `HOTLOOP_FLEET_ENABLED`. See [Fleet management](/gateway/fleet/).
 
 ### `GET /api/fleet`
 
@@ -2676,7 +2676,7 @@ starts whatever image it follows, so it drops its data for the moment that takes
 It only does something to a relay set to `HOTLOOP_EDGE_RELAY_UPDATE_MODE=approve`;
 any other relay logs that it ignored it. The request names no image: there is
 nothing to put one in, which is the point. See
-[EDGE-RELAY.md](/edge-relay/reference/#updating-a-relay).
+[Edge Relay reference](/edge-relay/reference/#updating-a-relay).
 
 ### `POST /api/fleet/{id}/config`
 
@@ -2688,7 +2688,7 @@ device file: ..."` if not). `{"status":"config pushed"}` means the broker took
 it; whether the relay is running it is `config.digest` on that member in
 `GET /api/fleet`, and a file the relay refused shows there as
 `config.rejected`. Admin-only: it changes what the relay polls. See
-[FLEET.md](/gateway/fleet/#config-push).
+[Fleet management](/gateway/fleet/#config-push).
 
 ### `DELETE /api/fleet/{id}/config`
 
@@ -2698,7 +2698,7 @@ to its local device file live. No body. `{"status":"config push cleared"}`,
 `404` for an unknown member, `503` when the Gateway isn't connected to the
 broker. Admin-only, like pushing. It doesn't restart anything. Send it while
 the relay is online: an offline relay never hears it. See
-[EDGE-RELAY.md](/edge-relay/reference/#where-a-pushed-file-lives-and-which-file-wins).
+[Edge Relay reference](/edge-relay/reference/#where-a-pushed-file-lives-and-which-file-wins).
 
 ## Notifications
 
@@ -2720,7 +2720,7 @@ whatever quota the provider allows.
 `200` whether or not each channel worked; each result says. A failed one
 carries `error`. A failed webhook names its scheme and host and nothing else,
 because for most paging services the URL is the credential. See
-[NOTIFY.md](/iot/notifications/).
+[Alarm notifications](/iot/notifications/).
 
 ### `GET /api/notify/escalation`
 
@@ -2762,7 +2762,7 @@ hasn't configured (the answer lists the ones it has), an ntfy topic with ntfy
 not configured or an address with email not configured, an address that isn't a
 plain one, a repeat with no interval. Nothing is stored when it is refused.
 Saving it is in the system log, without the topics. See
-[NOTIFY.md](/iot/notifications/#escalation).
+[Alarm notifications](/iot/notifications/#escalation).
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2802,7 +2802,7 @@ silently did nothing looks exactly like one nobody pressed:
 The answer carries `Access-Control-Allow-Origin: *` so the ntfy web app can
 press it from its own origin; nothing on this route reads a cookie. The token
 is never logged or returned anywhere. See
-[NOTIFY.md](/iot/notifications/#acknowledge-links).
+[Alarm notifications](/iot/notifications/#acknowledge-links).
 
 ## Backups
 
@@ -2811,7 +2811,7 @@ Both admin-only: a listing shows every table's row count, users and sessions
 included. **There is no restore endpoint**, on purpose: restoring is a flag on
 the binary, run once by somebody who knows the database is meant to receive it,
 never a network call against a live one. See
-[BACKUP.md](/iot/backup/#restoring-a-backup).
+[Backups and restore](/iot/backup/#restoring-a-backup).
 
 ### `GET /api/backup`
 
@@ -2832,7 +2832,7 @@ table's rows and columns.
 Historian summaries as CSV and HTML, on a schedule, by email or download.
 Needs `HOTLOOP_REPORTS_ENABLED`. Viewers read, operators run, admins define:
 a definition names where plant data gets emailed. See
-[REPORTS.md](/gateway/reports/) for the definition's fields.
+[Scheduled reports](/gateway/reports/) for the definition's fields.
 
 ### `GET /api/reports`
 
@@ -2908,7 +2908,7 @@ that does not exist.
 Every site this Gateway federates, asked for its plant status over MCP in
 parallel, 6 seconds each, so one dead site cannot hold up the rest. The sites
 are the outbound MCP servers in the config. See
-[MCP.md](/iot/mcp/#federating-sites).
+[MCP](/iot/mcp/#federating-sites).
 
 ```json
 {"configured":true,
@@ -2985,7 +2985,7 @@ issues the writes is not a control. Changing them is a deployment.
 ## Historian targets
 
 The plant's own databases, which HotLoop writes its history to as well as its
-own. See [HISTORIAN-TARGETS.md](/iot/historian-targets/). Every role that reads the
+own. See [Historian targets](/iot/historian-targets/). Every role that reads the
 settings sees them and how each one is doing. Changing one is admin only,
 because a target is somewhere plant data goes. Passwords are sealed with the
 device credential key (`HOTLOOP_SECRET_KEY_FILE`) and never answered with;
@@ -3086,7 +3086,7 @@ One timeline of what happened, newest first: entity state changes, writes,
 alarm transitions, automation and script runs, and configuration changes and
 service calls from the system log. The trails are read where they are and merged, so
 each keeps its own retention. Numeric readings are not in it: that is what
-`GET /api/history` is for. See [LOGBOOK.md](/iot/logbook/).
+`GET /api/history` is for. See [the logbook](/iot/logbook/).
 
 | Query | <span class="sr-only">Details</span> |
 |---|---|
@@ -3205,7 +3205,7 @@ With no token configured, HotLoop makes one at its first start and keeps it in
 its database (`hotloop mcp-token` prints it), so the endpoint is never open. An agent is a caller like any
 other: it reads and writes, its writes go through the same write gate
 as everybody's, and they are audited as `mcp:<client name>`. The tools
-and resources are in [MCP.md](/iot/mcp/).
+and resources are in [MCP](/iot/mcp/).
 
 ```
 POST /mcp
@@ -3229,7 +3229,7 @@ Every URL in it is relative to the manifest's own, so it is right wherever HotLo
 is mounted. The name follows the plant name set in Settings, and the answer is
 `Cache-Control: no-cache` so a rename shows on the next look. No session: a phone
 asks before anybody has signed in. See
-[DASHBOARDS.md](/iot/dashboards/#on-a-phone).
+[Dashboards](/iot/dashboards/#on-a-phone).
 
 ### `GET /sw.js`
 

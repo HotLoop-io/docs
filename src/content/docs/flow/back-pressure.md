@@ -9,7 +9,7 @@ This is the whole project. The signature failure of a flow engine on an edge box
 is a pod that quietly inflates until the kubelet kills it, and the log it leaves
 explains nothing to whoever is holding the pager. So every place a message or a
 byte can pile up has a ceiling, and every ceiling is a written, documented
-decision in [docs/compatibility.md](/flow/compatibility/), not a cap I picked and
+decision in [Node-RED compatibility](/flow/compatibility/), not a cap I picked and
 never mentioned.
 
 | What can pile up | What stops it |

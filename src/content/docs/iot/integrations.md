@@ -186,7 +186,7 @@ all end up here, and the message is the driver's own.
 
 Probe and setup reach across the network from the HotLoop box, so both need
 `devices.write`, the same as saving a device. Listing needs `devices.read`.
-Every product carries them. The routes are in [API.md](/iot/api/#integrations).
+Every product carries them. The routes are in [the HTTP API](/iot/api/#integrations).
 
 ## Adding one
 

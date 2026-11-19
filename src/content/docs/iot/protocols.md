@@ -133,7 +133,7 @@ echoes the policy id that endpoint listed.
 | `securityMode` | `None` | `None`, `Sign`, or `SignAndEncrypt`. Left out with a `securityPolicy` other than `None`, it is `SignAndEncrypt`. |
 | `securityPolicy` | the best the server offers for the mode | `None`, `Basic256Sha256`, `Aes128_Sha256_RsaOaep`, or `Aes256_Sha256_RsaPss`. `Basic128Rsa15` and `Basic256` are refused. |
 | `username`, `password` | anonymous | User name authentication. |
-| `userCertificate`, `userPrivateKey` | none | X.509 user authentication: the session signs in as whoever the server maps this certificate to, with no password. Both PEM, set together. The key is RSA (the OPC UA library signs with RSA only; an EC key is refused with that said) and is a secret like the password: sealed at rest, redacted from every API answer, never logged. The certificate is the user's, not the client application certificate in `certFile`. With a `username` also set, the certificate is used. Against HotLoop's own server the certificate has to be attached to a user first ([OPCUA-SERVER.md](/edge/opc-ua-server/#x509-user-certificates)). |
+| `userCertificate`, `userPrivateKey` | none | X.509 user authentication: the session signs in as whoever the server maps this certificate to, with no password. Both PEM, set together. The key is RSA (the OPC UA library signs with RSA only; an EC key is refused with that said) and is a secret like the password: sealed at rest, redacted from every API answer, never logged. The certificate is the user's, not the client application certificate in `certFile`. With a `username` also set, the certificate is used. Against HotLoop's own server the certificate has to be attached to a user first ([The OPC UA server](/edge/opc-ua-server/#x509-user-certificates)). |
 | `allowInsecureCredentials` | `false` | Allows a password to be sent over an unsecured channel (`securityMode` `None`), or when nothing encrypts it. |
 | `certFile`, `keyFile` | generated | This client's application certificate and its RSA key, for a secured mode. Set both or neither. |
 | `pkiDir` | `HOTLOOP_OPCUA_CLIENT_PKI_DIR` (`/data/opcua-client-pki`) | Where the generated certificate and the `trusted/` and `rejected/` stores live. |
@@ -291,7 +291,7 @@ The password is a secret everywhere the driver and the API handle it:
   password; a new value replaces it; an empty string clears it; the placeholder for
   a device with no password is refused rather than stored. Leaving the field out
   now keeps it (in 4.15.0 it cleared it). The full rules are in
-  [AUTH.md](/iot/authentication/#device-credentials-are-write-only). The web UI's device
+  [Authentication and users](/iot/authentication/#device-credentials-are-write-only). The web UI's device
   editor shows the configuration as the API returns it and saves what it shows,
   which this handles, so editing a device does not lose its password. (The tests
   exercise that through the API, not through a browser.)
@@ -307,7 +307,7 @@ The password is a secret everywhere the driver and the API handle it:
   column as the other drivers' are. Up to 4.16.0 that's in the clear, and a backup
   contains it. From 4.17.0 it's encrypted with a key kept outside the database (see
   "Encrypted at rest" below), so a dump or a backup holds ciphertext. Either way,
-  see [BACKUP.md](/iot/backup/#protect-the-backup-files) and protect the database
+  see [Backups and restore](/iot/backup/#protect-the-backup-files) and protect the database
   and the backup volume accordingly.
 - **The edge relay.** A device file carries the password too. In the Helm chart, put
   a device file with credentials in a Secret and name it in `devicesSecret`;
@@ -459,7 +459,7 @@ Only what 8.3's server offers out of the box was exercised in this direction:
 HotLoop's OPC UA server**, signed in as a HotLoop viewer, over every security
 policy and mode Ignition offers. The setup, the certificate trust in both
 directions, the gotchas and the policy matrix are in
-[OPCUA-SERVER.md](/edge/opc-ua-server/#ignition-83-as-a-client). It found two HotLoop
+[The OPC UA server](/edge/opc-ua-server/#ignition-83-as-a-client). It found two HotLoop
 bugs, both fixed: the server minted a new certificate every time its container
 was recreated, which broke Ignition's trust after every upgrade, and Discover
 tags declared every tag a float, so a text tag reached Ignition as
@@ -688,7 +688,7 @@ refused in the PLC's words and never sent.
 **Set up from the integrations flow** (`codesys`): the runtime's address, the
 OPC UA security questions, and optionally a first dashboard of the points kept
 (the screen WebVisu would have been; see
-[INTEGRATIONS.md](/iot/integrations/#codesys)). Verified against a 4.22.0.0 runtime
+[Integrations](/iot/integrations/#codesys)). Verified against a 4.22.0.0 runtime
 in a container; see the status table for what that is not.
 
 ### Modbus TCP/RTU
@@ -847,7 +847,7 @@ never writes to the console. It also listens to the console's events websocket,
 so a switch dropping off is in the logbook when it happens, with polling still
 the truth underneath, and the UniFi tab draws the overview, the map, the
 faceplates, the clients, the networks and the WiFi. Everything about it is in
-[UNIFI.md](/iot/unifi/).
+[UniFi Network](/iot/unifi/).
 
 ### SNMP
 
@@ -924,7 +924,7 @@ and units behind them, come from the MIBs that define them: SNMPv2-MIB (RFC
 and NET-SNMP-EXTEND-MIB. Everything else the agent has still reads;
 add it as a tag by OID.
 
-The integration (see [INTEGRATIONS.md](/iot/integrations/#snmp)) does the asking
+The integration (see [Integrations](/iot/integrations/#snmp)) does the asking
 for you.
 
 ### BACnet/IP
@@ -1024,7 +1024,7 @@ Celsius is `°C` and `temperature`, percent relative humidity is `%` and
 is left unlabelled and named in the description by its number. The numbers and
 names of those units are held to a real device, which sends the number its own
 table gives each name. The integration (see
-[INTEGRATIONS.md](/iot/integrations/#bacnetip)) does the asking for you.
+[Integrations](/iot/integrations/#bacnetip)) does the asking for you.
 
 ## Going out: the Kafka API
 
@@ -1035,7 +1035,7 @@ topics you name. It is a historian target, set up under Settings, Historian
 targets, and it takes Apache Kafka, Redpanda, and anything else that speaks the
 Kafka API, over TLS with a SASL login. The record formats, what "at least once"
 means here, and what is and isn't proven are in
-[HISTORIAN-TARGETS.md](/iot/historian-targets/#kafka-api-event-stream). The client
+[Historian targets](/iot/historian-targets/#kafka-api-event-stream). The client
 is [franz-go](https://github.com/twmb/franz-go).
 
 ## Everything else: gateway mode
@@ -1051,16 +1051,13 @@ server, a HART multiplexer with a Modbus map.
 Point a device at that endpoint and configure it as OPC UA or Modbus.
 
 Writing eight more drivers that each duplicate what a site's existing gateway
-already does would add nine more things to get subtly wrong, for protocols where
+already does would add eight more things to get subtly wrong, for protocols where
 the equipment is hardest to test against. If a site genuinely has no gateway and
 needs one of these natively, that is a real piece of work to schedule, not a
 file to add that logs "not implemented".
 
 **There are no placeholder drivers in this tree.** A protocol either has a
-working implementation or it is in this section. The previous version of this
-product had sixteen protocol files of which fifteen returned
-`"not implemented"`, while the catalog advertised all sixteen. A test now
-enforces that every protocol the model declares has a driver compiled in, and
+working implementation or it is in this section. A test enforces that every protocol the model declares has a driver compiled in, and
 vice versa.
 
 ## Device credentials
@@ -1070,7 +1067,7 @@ These are the credentials each protocol reads, and all of them are write-only
 through the API (4.15.1): they show as `[redacted]` to every role, a save that
 sends the placeholder or leaves the key out keeps the stored value, and a new
 string replaces it. The rules, and what does not go through the API, are in
-[AUTH.md](/iot/authentication/#device-credentials-are-write-only).
+[Authentication and users](/iot/authentication/#device-credentials-are-write-only).
 
 | Protocol | Credentials in the configuration | Credentials in the address |
 |---|---|---|
@@ -1093,7 +1090,7 @@ see the difference. A credential written into a URL (`mqtt://user:pass@host`,
 address or option is sealed and comes back exactly as typed, and a URL with
 nothing secret in it is left readable. The `password` option is still the
 tidier place for one. See
-[BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key).
+[Backups and restore](/iot/backup/#device-credentials-and-the-secret-key).
 
 Any other option whose name looks like a credential (it contains `password`,
 `token`, `secret`, `apikey`, `authorization`, `private`, `passphrase`, or ends in
@@ -1102,7 +1099,7 @@ others) is hidden too, whatever protocol it is in, so an option added to a drive
 later is hidden until someone decides it should not be. A test walks every
 driver's options and fails until each one is on the list of credentials or the
 list of options known not to be. See
-[AUTH.md](/iot/authentication/#device-credentials-are-write-only) for the full rules.
+[Authentication and users](/iot/authentication/#device-credentials-are-write-only) for the full rules.
 
 ## Adding a device
 
@@ -1222,9 +1219,9 @@ like these; most of what MTConnect and UniFi report never does.
 ### Where it lives
 
 On the tag, saved with it. Through the API it is the `noData` list on
-`POST /api/tags` (see [API.md](/iot/api/#post-apitags)), in the editor it is the
+`POST /api/tags` (see [the HTTP API](/iot/api/#post-apitags)), in the editor it is the
 box above, and in an Edge Relay it is the same JSON in the device file's tag
-(see [EDGE-RELAY.md](/edge-relay/reference/)). Saving the tag reloads the running
+(see [Edge Relay reference](/edge-relay/reference/)). Saving the tag reloads the running
 device, so a change takes effect on the next poll and nothing restarts by hand.
 A re-discovery leaves a tag's list alone.
 

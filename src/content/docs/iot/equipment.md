@@ -9,7 +9,7 @@ A plant already has a way of organizing itself, and every SCADA, MES and
 historian it owns uses it: ISA-95. Enterprise, site, area, line, cell, unit,
 equipment. So that is what HotLoop uses, one tree of it, and not a separate
 list for floors, another for areas and a third for devices. See
-[ENTITIES.md](/iot/entities/) for what hangs off it.
+[Entities](/iot/entities/) for what hangs off it.
 
 ## Levels
 
@@ -192,7 +192,7 @@ nothing an agent sees moved. When the tree does change the text, a rename
 say, an agent sees the new text, the same as if somebody had typed it into the
 device. `list_entities` is where agents see the tree: it filters by a node
 and everything under it, and gives each entity's place. See
-[MCP.md](/iot/mcp/#entities).
+[MCP](/iot/mcp/#entities).
 
 ## Backup and restore
 

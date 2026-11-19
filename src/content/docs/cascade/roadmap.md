@@ -64,7 +64,7 @@ route of the REST API, so the route's own handler checks the permission, validat
 the body, makes the change and writes the audit row. It ships on, with read and
 write, like every MCP in the HotLoop family, and the two switches for it are the
 deployment's own (`HOTLOOP_CASCADE_MCP`, `HOTLOOP_CASCADE_MCP_WRITES`), which no
-tool and no route can change. the MCP page has every tool and what it asks for.
+tool and no route can change. The MCP page has every tool and what it asks for.
 
 And the screens the editor was missing: Credentials, Projects (members and
 service accounts), Users, the audit log, Settings and an Account page with API

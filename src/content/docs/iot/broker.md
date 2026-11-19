@@ -48,7 +48,7 @@ deployments that would otherwise have no broker at all.
 Three kinds of login get in, and they are not equal.
 
 **Logins made in HotLoop** (Settings, MQTT, or `/api/broker/logins` in
-[API.md](/iot/api/)) carry rules: the topics the login may publish to and the
+[The HTTP API](/iot/api/)) carry rules: the topics the login may publish to and the
 topics it may subscribe to. `%u` in a rule is the login's own name and `%p` the
 discovery prefix. They start from a profile and are yours to edit after:
 
@@ -101,13 +101,13 @@ A broker with no `HOTLOOP_BROKER_USERS` and anonymous off starts fine. Until
 somebody makes a login in HotLoop, the only thing that can connect is HotLoop.
 
 Other brokers are their own business. On Mosquitto or EMQX, the ACLs are that
-broker's to enforce, the same boundary [FLEET.md](/gateway/fleet/) draws, and
-[DISCOVERY.md](/iot/mqtt-discovery/) has an ACL for HotLoop's own login there.
+broker's to enforce, the same boundary [Fleet management](/gateway/fleet/) draws, and
+[MQTT discovery](/iot/mqtt-discovery/) has an ACL for HotLoop's own login there.
 
 ## Discovery, and HotLoop's own login
 
 With the broker on, HotLoop listens on it for devices that announce
-themselves (see [DISCOVERY.md](/iot/mqtt-discovery/)). The broker notes which login and
+themselves (see [MQTT discovery](/iot/mqtt-discovery/)). The broker notes which login and
 client published each discovery config. The Discovered screen shows it, and a
 device accepted from one login that gets announced by another is held for a
 person, with a warning in the log ("Kitchen re-announced by login garage-node;
@@ -158,7 +158,7 @@ is always the operator's to provide.
 | `HOTLOOP_BROKER_TLS_CERT_FILE` / `_KEY_FILE` | n/a | Required when TLS is enabled |
 | `HOTLOOP_BROKER_ALLOW_ANONYMOUS` | `false` | Per-deployment opt-in; never set this by default |
 | `HOTLOOP_BROKER_USERS` | none | `user:password,user2:password2`. Each can do anything; see above. Logins with rules are made in HotLoop |
-| `HOTLOOP_BROKER_DISCOVERY` | `true` | Listen for devices announcing themselves; see [DISCOVERY.md](/iot/mqtt-discovery/) |
+| `HOTLOOP_BROKER_DISCOVERY` | `true` | Listen for devices announcing themselves; see [MQTT discovery](/iot/mqtt-discovery/) |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | The topic prefix announcements arrive under |
 
 ## What has and has not been verified

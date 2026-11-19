@@ -9,8 +9,7 @@ Cascade gets the plant talking to everything else. An alarm, a webhook, a
 schedule, a new row or an MQTT burst becomes a batch of items, and the items run
 through steps that call real systems with real credentials. If an API is down or
 the box reboots halfway through, the job still finishes, because every step is
-checkpointed and a retry is a row in the database, not a goroutine praying
-nobody pulls the plug.
+checkpointed and a retry is a row in the database.
 
 It's one static Go binary. SQLite on a Raspberry Pi, or Postgres with as many
 workers as you want on k3s. Postgres is the queue too, so there's no Redis to
@@ -28,11 +27,14 @@ honest.
 small language HotLoop's automations use. It can't touch the OS, the network or
 the filesystem, and it always terminates. JavaScript lives in exactly one place,
 the Code step, and that runs in a separate jailed process with no secrets, no
-network and no filesystem. Running JavaScript in every field is a remote code
-execution bug factory, and we're not opening one.
+network and no filesystem. Keeping it out of every other field keeps remote code execution out of them.
 
 **It won't gate anything.** SSO, enforced MFA, RBAC, audit, version history,
 scoped API keys and HA workers are all in the one binary. There is no license check anywhere in the code.
 
 **It won't phone home.** No license server, no cloud dependency. Telemetry is
 opt-in, off by default, and documented down to the field when it lands.
+
+## Where to go next
+
+[Run Cascade](/cascade/running/), run it [with Podman Quadlet](/cascade/quadlet/), or read [the Cascade roadmap](/cascade/roadmap/). Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.

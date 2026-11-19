@@ -176,7 +176,7 @@ sunset.
 - **It's worked out on the box.** From the site's latitude and longitude
   (`HOTLOOP_SITE_LATITUDE`, `HOTLOOP_SITE_LONGITUDE`), with NOAA's solar
   equations, no service and no internet. A plant that lost its uplink still
-  turns the lights on at dusk. See [SUN.md](/iot/sun/).
+  turns the lights on at dusk. See [the sun](/iot/sun/).
 - **No location, not armed.** A rule with a sun trigger on a site with no
   latitude and longitude isn't armed, and the system log says which two
   variables to set. It used to be the kind of thing that sits there armed and
@@ -288,7 +288,7 @@ writable, the value must be in range, and the attempt is audited as
 ### call_service
 
 Commands an entity by its service, the way `POST /api/services/...` and the
-MCP `call_service` tool do. See [ENTITIES.md](/iot/entities/#services) for what
+MCP `call_service` tool do. See [Entities](/iot/entities/#services) for what
 each domain takes.
 
 ```json

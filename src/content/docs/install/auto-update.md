@@ -57,7 +57,7 @@ app answers `/readyz`: the same release came back as `UPDATED rolled back`.
 A migration. When a release migrates the database and then fails its health
 check, Podman puts the previous release back, and it starts on the schema the
 failed one left. That is safe, and it is held safe three ways
-([MIGRATIONS.md](/iot/migrations/) has the detail):
+([Migrations only add](/iot/migrations/) has the detail):
 
 - **Migrations only add.** A table, a column with a default, an index. Never a
   drop, a rename or a type change, so the previous release finds everything it
@@ -71,7 +71,7 @@ failed one left. That is safe, and it is held safe three ways
   unit's `Restart=always` keeps trying and keeps being refused. What fixes it
   is a release that knows the schema: the newest one, which is what `:stable`
   is (`sudo podman auto-update`, or pull it and restart). Or restore a backup
-  taken by the release you are on ([BACKUP.md](/iot/backup/)).
+  taken by the release you are on ([Backups and restore](/iot/backup/)).
 
 So a rollback no longer has a release-notes caveat. What it still can't undo is
 data: the failed release may have written rows the old one ignores. Take a
@@ -142,7 +142,7 @@ from the fleet screen, because a relay already listens for commands from the
 Gateway it forwards to. IoT, Edge, and Gateway have no such channel to reach them,
 and building one would put a "restart this box" button on a web UI for the sake
 of a feature that `sudo podman auto-update` already is. See
-[EDGE-RELAY.md](/edge-relay/reference/#updating-a-relay) for the relay's
+[Edge Relay reference](/edge-relay/reference/#updating-a-relay) for the relay's
 hold, and `edge-relay-hold.conf`.
 
 ## What the Gateway sees
@@ -152,7 +152,7 @@ when the unit said (it does, before every start). An Edge or Gateway that has
 edge publish on is a Sparkplug node like a relay, and puts the same two in
 every birth, so a Gateway that has it in its fleet list shows the version and
 digest and logs the change when an auto-update moves it
-([FLEET.md](/gateway/fleet/)). IoT has no upstream, so its digest is on its
+([Fleet management](/gateway/fleet/)). IoT has no upstream, so its digest is on its
 own `/api/status` and nowhere else.
 
 ## Under Helm

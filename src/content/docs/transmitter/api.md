@@ -21,7 +21,7 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` or `RawData`. Change it while disabled |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion in the group header |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | DataSet ConfigurationVersion. Bump the major whenever the field list changes |
-| `bTimestamp` | BOOL | TRUE | stamp every message with the PLC clock, in the NetworkMessage and the DataSetMessage (whole seconds, see `WIRE-FORMAT.md`). FALSE sends the 1.0.0 bytes, 17 bytes shorter |
+| `bTimestamp` | BOOL | TRUE | stamp every message with the PLC clock, in the NetworkMessage and the DataSetMessage (whole seconds, see [What goes on the wire](/transmitter/wire-format/)). FALSE sends the 1.0.0 bytes, 17 bytes shorter |
 | `tRetry` | TIME | T#2S | how long to wait before reopening the socket after ten sends in a row failed |
 
 ## Outputs

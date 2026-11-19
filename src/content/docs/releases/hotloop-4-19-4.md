@@ -42,7 +42,7 @@ What changed in 4.19.4.
 - **A deployment that saved `allowMcpWrites: false` stays off.** That includes one installed from the App Store, which stores every answer. Flip it if you want agents to write.
 - **The endpoint is never open.** The charts always set an MCP token. A HotLoop started without `HOTLOOP_MCP_TOKEN` (a Quadlet unit, a bare binary) used to serve `/mcp` to anybody who could reach the port and only logged a warning. It now makes a 24 byte token at its first start and keeps it in its database, so every replica and every restore carries the same one. A call without the token is a `401`. A token you configured is never replaced.
 - **To get the token on a bare or Quadlet install:** `hotloop mcp-token` prints it. If you have an agent pointed at `/mcp` on one of those installs with no token, it stops working at this upgrade until you give it that token. That is on purpose.
-- **Who made the call.** A static token says which client called, never which person. With the OIDC settings on, a Vord login or a Fireball Hub assertion on `/mcp` makes the audit name the person (`mcp:pat@example.com`), and an optional write role narrows writes per caller on top of the switches above. It is off unless you set it, and the token keeps working beside it. the MCP page has the setup.
+- **Who made the call.** A static token says which client called, never which person. With the OIDC settings on, a Vord login or a Fireball Hub assertion on `/mcp` makes the audit name the person (`mcp:pat@example.com`), and an optional write role narrows writes per caller on top of the switches above. It is off unless you set it, and the token keeps working beside it. The MCP page has the setup.
 
 ### Writes to a scaled tag
 

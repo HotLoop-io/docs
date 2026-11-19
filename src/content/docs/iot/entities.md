@@ -243,7 +243,7 @@ the alarm engine's (see [Alarm entities](#alarm-entities)).
 
 State is computed, not stored, but the logbook keeps every entity's newest
 state and when it last changed (`entity_last_state`, see
-[LOGBOOK.md](/iot/logbook/)). After a restart, an entity whose state comes back
+[The logbook](/iot/logbook/)). After a restart, an entity whose state comes back
 the same **keeps its `last_changed`**: a pump running since Tuesday still says
 Tuesday. The unavailable and unknown a tag entity passes through while its
 device reconnects do not count as a change. A state that did change while the
@@ -369,7 +369,7 @@ take none.
 An entity also has a place on the equipment tree and a set of labels:
 `equipment_id` (null to follow its device), the read-only `area_id` clients
 group by, and `labels`. `PUT` takes `equipment_id` and `labels` like any
-other field. See [EQUIPMENT.md](/iot/equipment/).
+other field. See [the equipment tree and labels](/iot/equipment/).
 
 ## Services
 
@@ -976,25 +976,25 @@ into tag writes. A provider that writes a tag still writes it through the gate.
 Helpers are the second: `input_boolean`, `input_number`,
 `input_select`, `input_text`, `input_counter`, `timer` and `schedule`, values
 the plant's people own rather than a PLC, kept by HotLoop and set with
-`helpers.write`. They write no tag. See [HELPERS.md](/iot/helpers/).
+`helpers.write`. They write no tag. See [Helpers](/iot/helpers/).
 
 Scripts are the third: every script is a `script`
 entity, `script.<id>`, on while a run of it is going in any process and off
 when none is. `turn_on` runs it with the service data as its fields,
 `turn_off` stops it, both with `scripts.run`. Deleting a script orphans its
-entity, like deleting an alarm definition. See [SCRIPTS.md](/iot/scripts/).
+entity, like deleting an alarm definition. See [Scripts](/iot/scripts/).
 
 Recipes are the fourth: every recipe is a `scene` entity,
 `scene.<id>`, whose state is when it last wrote to the plant and whose
 attributes say how its newest application went. `turn_on` applies it, with
 `recipes.apply` and the recipe's own permission when it names one. Deleting a
-recipe orphans its entity. See [RECIPES.md](/iot/recipes/).
+recipe orphans its entity. See [Recipes](/iot/recipes/).
 
 The sun is the fifth: `binary_sensor.sun_up`,
 `sensor.sun_elevation` and `sensor.sun_azimuth`, worked out every second from
 the site's latitude and longitude, on the box. They read and take no services.
 A site with no location has none, and ones left over from when it had one read
-unavailable and say which variables to set. See [SUN.md](/iot/sun/).
+unavailable and say which variables to set. See [the sun](/iot/sun/).
 
 ## Entities everywhere else
 
@@ -1022,14 +1022,14 @@ reading, so a screen is populated before anything changes. The `values`,
 Agents get `list_entities`, `get_states` and `call_service`. `call_service`
 runs through the same service runner as `POST /api/services/...`, so an agent's
 call is gated by the MCP switch like `write_tag` and audited against the entity
-with source `mcp`. See [MCP.md](/iot/mcp/#entities).
+with source `mcp`. See [MCP](/iot/mcp/#entities).
 
 ### Automations
 
 A `state` trigger fires a rule when an entity's state changes, conditions can
 read `states`, `attrs` and entity `qualities`, and a `call_service` action
 commands an entity through the gate, audited as `automation:<rule-id>`. See
-[AUTOMATIONS.md](/iot/automations/#state-triggers-follow-entities).
+[Automations](/iot/automations/#state-triggers-follow-entities).
 
 Both follow the engine's `OnStateChanged` hook, which is why the rules in
 [How the engine runs](#how-the-engine-runs) matter: a state trigger sees every
@@ -1116,7 +1116,7 @@ of hiding them. What is required is marked but not enforced by the form: the
 registry decides, and its refusal is shown as it wrote it.
 
 **Plant** is the equipment tree and the labels. See
-[EQUIPMENT.md](/iot/equipment/).
+[The equipment tree and labels](/iot/equipment/).
 
 ## Backup and restore
 
@@ -1129,18 +1129,18 @@ restored definition with no entity gets one on the first sync. A backup taken be
 neither table; restore it, start the Gateway, and the registry's first sync
 gives every restored tag its entity. `entity_labels` is in the backup too, and
 restoring a backup from before the equipment tree is covered in
-[EQUIPMENT.md](/iot/equipment/).
+[The equipment tree and labels](/iot/equipment/).
 
 Migration 0007 adds three columns to `write_audit`. A backup taken before it
 still restores: restore loads a file with fewer columns than today's table into
 the leading columns and lets the new ones take their defaults, because a
 migration that adds a column always appends it. A backup from a newer version
-is still refused. See [BACKUP.md](/iot/backup/).
+is still refused. See [Backups and restore](/iot/backup/).
 
 ## What is not here yet
 
 The core, the equipment tree, commanding entities through the write gate,
 composite equipment, alarm entities, entities in MCP, automations and the
-live feed, and the screens are all here. See [ROADMAP.md](/roadmap/). A state
+live feed, and the screens are all here. See [HotLoop roadmap](/roadmap/). A state
 trigger's `forSec` ("on for five minutes") is in
-[AUTOMATIONS.md](/iot/automations/#holding-a-state-forsec).
+[Automations](/iot/automations/#holding-a-state-forsec).

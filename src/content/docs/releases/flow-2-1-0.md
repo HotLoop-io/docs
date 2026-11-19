@@ -7,7 +7,7 @@ sidebar:
   label: "2.1.0"
 ---
 
-HotLoop Flow 2.1.0 is Phases 0 to 2 of the [roadmap](https://github.com/HotLoop-io/hotloop-flow/blob/v2.1.0/the roadmap) plus the everyday gaps that kept people from putting a real flow on it. Every deploy is now a record you can diff, test, review and put back. A flow can have tests that run before a bad deploy happens. A save restarts the nodes you changed and leaves the rest of the plant alone.
+HotLoop Flow 2.1.0 is Phases 0 to 2 of the [roadmap](/flow/roadmap/) plus the everyday gaps that kept people from putting a real flow on it. Every deploy is now a record you can diff, test, review and put back. A flow can have tests that run before a bad deploy happens. A save restarts the nodes you changed and leaves the rest of the plant alone.
 
 Nothing in this release changes how a flow file is read or written. The byte-exact round trip is untouched, so a `flows.json` that ran on 2.0.5 runs on 2.1.0.
 

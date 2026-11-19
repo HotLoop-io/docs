@@ -20,7 +20,7 @@ An agent signs in with an API key and gets what that key's holder could do, cut 
 - A tool that changes something wants a `reason`, and the audit log keeps it next to the change, with the key and the name the client gave itself.
 - A credential's secret never comes back, to anyone. A credential made over MCP has its secrets sealed as they arrive.
 - `HOTLOOP_CASCADE_MCP` and `HOTLOOP_CASCADE_MCP_WRITES` are the deployment's switches, both on by default. No tool and no API route can change them, so an agent that can edit the instance's settings still can't turn writes back on.
-- The routes that turn a key away themselves (making API keys, SCIM tokens, secret providers and log destinations) are not tools, because a key that could make keys is a leaked key that keeps itself alive. the MCP page lists them with every tool and the permission it asks for.
+- The routes that turn a key away themselves (making API keys, SCIM tokens, secret providers and log destinations) are not tools, because a key that could make keys is a leaked key that keeps itself alive. The MCP page lists them with every tool and the permission it asks for.
 
 ## The screens
 

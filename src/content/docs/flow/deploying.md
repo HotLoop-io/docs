@@ -40,7 +40,7 @@ Context (flow, global and node) is kept in a SQLite file, `state.db`, on that sa
 volume, and survives a restart whichever way you deploy. So do the queues behind
 durable wires. A container with no volume loses the file with everything else, so
 it keeps context only until the container is replaced. What gets written, how
-often, and what it costs a flash card is in [durable/README.md](/flow/durable-state/).
+often, and what it costs a flash card is in [Durable state, measured](/flow/durable-state/).
 
 ---
 
