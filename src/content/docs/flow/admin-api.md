@@ -5,10 +5,6 @@ description: "The HTTP and websocket calls the editor and the command line use, 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 | Method and path | Permission | Notes |
 |---|---|---|
 | `GET /health` | none | Liveness. The kubelet carries no token, and auth on this route would restart-loop the pod forever. |

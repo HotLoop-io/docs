@@ -5,10 +5,6 @@ description: "Import a Node-RED flows.json unchanged, see what it maps to node b
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Flow reads Node-RED's v1 `flows.json` format, the flat JSON array that every
 Node-RED export and flow library entry is written in. Point it at your file and
 it runs.

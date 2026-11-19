@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "fix/site-review-round-3",
+      "ref": "a4cd4b45b921d6554849ad108d55e4bb6f616535",
       "sha": "a4cd4b45b921d6554849ad108d55e4bb6f616535",
       "release": {
         "tag": "v4.22.0",
@@ -14,19 +14,19 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "fix/site-review-round-3",
-      "sha": "9d6691cd821e5e757557de2c09aefffc3dbf63c9",
+      "ref": "v2.15.0",
+      "sha": "12e91b939986e30e942aee8b057d23871671ea1e",
       "release": {
-        "tag": "v2.14.1",
-        "version": "2.14.1",
+        "tag": "v2.15.0",
+        "version": "2.15.0",
         "prerelease": false,
-        "publishedAt": "2026-11-17T08:58:48Z",
-        "sha": "79f801ffa2a45488b8845474f011c41c1ea896b8"
+        "publishedAt": "2026-11-19T17:35:13Z",
+        "sha": "0f3db9540e6880fcc511e24933f395f37bc6176f"
       }
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "fix/site-review-round-3",
+      "ref": "1be414162484468cc3f1e0a264b55376de617dfb",
       "sha": "1be414162484468cc3f1e0a264b55376de617dfb",
       "release": {
         "tag": "v1.2.1",
@@ -462,7 +462,7 @@
       "group": "Start here",
       "title": "HotLoop Flow",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -495,7 +495,7 @@
       "group": "Start here",
       "title": "Bring your Node-RED flows",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -506,7 +506,7 @@
       "group": "How it runs",
       "title": "Back-pressure, visibly",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -517,7 +517,7 @@
       "group": "How it runs",
       "title": "Store and forward",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -528,7 +528,7 @@
       "group": "How it runs",
       "title": "Durable state, measured",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/durable/README.md",
       "release": false
@@ -550,7 +550,7 @@
       "group": "Review and test",
       "title": "Every deploy is a record",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -572,7 +572,7 @@
       "group": "Review and test",
       "title": "Tracing and replay",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -594,7 +594,7 @@
       "group": "Nodes",
       "title": "The plant floor",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -605,7 +605,7 @@
       "group": "Nodes",
       "title": "Two sandboxes",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -616,7 +616,7 @@
       "group": "Nodes",
       "title": "FlowLab",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/diagrams.md",
       "release": false
@@ -638,7 +638,7 @@
       "group": "Nodes",
       "title": "Typed wires",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -682,7 +682,7 @@
       "group": "Run it",
       "title": "Configuration",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -693,7 +693,7 @@
       "group": "Run it",
       "title": "The admin API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -704,7 +704,7 @@
       "group": "Run it",
       "title": "Metrics",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -715,7 +715,7 @@
       "group": "Run it",
       "title": "Deploying Flow",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/deploying.md",
       "release": false
@@ -770,7 +770,7 @@
       "group": "Project",
       "title": "Flow roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -1216,12 +1216,23 @@
       "release": true
     },
     {
+      "slug": "releases/flow-2-15-0",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.15.0 release notes",
+      "label": "2.15.0",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.15.0.md",
+      "release": true
+    },
+    {
       "slug": "releases/flow-2-2-0",
       "product": "releases",
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.2.0 release notes",
       "label": "2.2.0",
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.2.0.md",
       "release": true
@@ -1254,7 +1265,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.5.0 release notes",
       "label": "2.5.0",
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.5.0.md",
       "release": true
@@ -1265,7 +1276,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.6.0 release notes",
       "label": "2.6.0",
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.6.0.md",
       "release": true
@@ -1276,7 +1287,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.7.0 release notes",
       "label": "2.7.0",
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.7.0.md",
       "release": true
@@ -1298,7 +1309,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.8.0 release notes",
       "label": "2.8.0",
-      "status": "changed",
+      "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.8.0.md",
       "release": true

@@ -5,10 +5,6 @@ description: "The phases of Flow, what is done and what is next, including the e
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -201,6 +197,15 @@ biggest hole in a product built for plants.
       with the same permissions, deploy checks and audit trail, because an MCP
       that could only call what a flow author wired up could not read or write
       Flow itself
+- [x] Flow's own MCP tools for diagrams and instruments: list and read the
+      diagrams, run and stop one, drive its debugger, set a control on its
+      panel, set breakpoints and probes, make a sub-diagram, and read and switch
+      an instrument's writes, each one admin route run through its own handler
+      with the permission that route asks for (`status.read`, `diagram.run`,
+      `instrument.write`). Until now the diagram routes had no tool, so an agent
+      could deploy a diagram and not run it. Every admin route is now a tool or
+      is named in a test as one a person has to make, and the test fails when a
+      new route is added without one. 40 tools
 
 ### Phase 8: the editor, rewritten in Astro
 
@@ -246,24 +251,24 @@ change, and the flow file still loads and saves byte for byte: a diagram is a ta
 with an `ew_diagram` key, and which input a wire lands on is kept in `ew_in` on the
 node it leaves. [FlowLab](/flow/flowlab/) has the rest.
 
-- [ ] The scheduler: all wired inputs ready, independent branches in parallel,
+- [x] The scheduler: all wired inputs ready, independent branches in parallel,
       and an `after` wire for order where no data flows
-- [ ] While and for loops with carried values, and an error wire that skips the
+- [x] While and for loops with carried values, and an error wire that skips the
       nodes after a fault, stops a loop and carries its source and code
-- [ ] A serial port, with reads to a terminator or a byte count, a timeout on the
+- [x] A serial port, with reads to a terminator or a byte count, a timeout on the
       error wire, and a port that is opened again after a pulled cable and counted
-- [ ] A reading parser, stable-value detection, and a text log with a time column
-- [ ] A panel served by Flow: controls, indicators and a chart or graph, open on a
+- [x] A reading parser, stable-value detection, and a text log with a time column
+- [x] A panel served by Flow: controls, indicators and a chart or graph, open on a
       phone while a run is live
-- [ ] Run, stop, highlight execution, probes on any wire, breakpoints on nodes,
+- [x] Run, stop, highlight execution, probes on any wire, breakpoints on nodes,
       wires and passes, and step into, over and out
-- [ ] The editor draws named ports and wires to the one you drop on, and the same
+- [x] The editor draws named ports and wires to the one you drop on, and the same
       page runs and debugs
-- [ ] Case structure, records and shared types, waveforms
-- [ ] TDMS and binary logging, and a database and MQTT out
-- [ ] Instrument sessions and a data acquisition client
-- [ ] Analysis: statistics and filters
-- [ ] Sub-diagrams, an error list in CI, and the editor's zoom and layout work
+- [x] Case structure, records and shared types, waveforms
+- [x] TDMS and binary logging, and a database and MQTT out
+- [x] Instrument sessions and a data acquisition client
+- [x] Analysis: statistics and filters
+- [x] Sub-diagrams, an error list in CI, and the editor's zoom and layout work
 - [ ] Proven on a Pi for a day, which needs the board and a long run
 
 ---
@@ -341,8 +346,8 @@ answers, because the reasons are what stops somebody reopening them.
 Decided 2026-10-03:
 
 - **Industrial nodes get built in Flow,** on the same open source libraries the
-  HotLoop drivers use. HotLoop's drivers stay HotLoop's. Flow keeps its own license, which was a different one when this was decided and is HotLoop's EmberNet Source License 1.0,
-  which replaced the Business Source License 1.1 it carried from 2.2.0.
+  HotLoop drivers use. HotLoop's drivers stay HotLoop's. Flow keeps its own license, which was a different one when this was decided and is now the HotLoop Source License Agreement 1.0,
+  which replaced the EmberNet Source License 1.0 and, before it, the Business Source License 1.1 it carried from 2.2.0.
 - **Flow stays its own product and is never embedded in HotLoop.** It runs next
   to HotLoop and talks to HotLoop's API from the outside, which is what the
   Phase 5 HotLoop nodes do, and that's the whole relationship.

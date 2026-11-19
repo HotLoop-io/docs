@@ -5,10 +5,6 @@ description: "Mark a wire durable and messages go to disk, in order, when the no
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Mark a wire durable and, while the node on the other end keeps up, it is an
 ordinary wire and writes nothing to disk. The moment that node stops taking
 messages, the wire spills to the same SQLite file before the sender moves on, and

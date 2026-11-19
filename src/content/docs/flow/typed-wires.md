@@ -5,10 +5,6 @@ description: "Put a JSON Schema on the json node and check messages on a wire, s
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A message with the wrong shape is the failure we least want on a live line. A
 temperature that arrives as the string `"hot"`, a missing `id`, a number where a
 list was supposed to be: nothing crashes, the flow keeps going, and something

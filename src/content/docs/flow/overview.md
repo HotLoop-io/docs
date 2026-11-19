@@ -5,10 +5,6 @@ description: "A visual flow engine for the plant floor in one Go binary, with a 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 **Wire the plant. Review it like code.**
 
 HotLoop Flow is a visual flow engine for the plant floor, written in Go. You wire
@@ -44,10 +40,10 @@ What that means on a bad night:
 It runs your existing flows unchanged, too. That's [further down](/flow/migrating-from-node-red/),
 because it's a feature, not the point.
 
-Current release is `2.14.1`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.14.1`
-for amd64 and arm64, the Helm repo is `https://hotloop.io/hotloop-flow/`, and
-[Deploying Flow](/flow/deploying/) has Kubernetes, Podman and Quadlet. It has 117 node types for messages and 37 for FlowLab diagrams. Home and lab use is free, so is use by schools, nonprofits and government, and
-use through EmberNet, business use included, is unrestricted, under HotLoop's EmberNet Source License.
+Current release is `2.15.0`. The image is `ghcr.io/hotloop-io/hotloop-flow:2.15.0`
+for amd64 (arm64 follows in 2.15.1), the Helm repo is `https://hotloop.io/hotloop-flow/`, and
+[Deploying Flow](/flow/deploying/) has Kubernetes, Podman and Quadlet. It has 117 node types for messages and 39 for FlowLab diagrams. Home and lab use is free, so is use by schools, nonprofits and government, and
+use through EmberNet, a partner platform, business use included, is unrestricted, under the HotLoop Source License Agreement.
 
 ## The numbers
 

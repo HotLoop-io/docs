@@ -7,10 +7,6 @@ sidebar:
   label: "2.6.0"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop Flow 2.6.0 gives a durable wire a way to tell you it has stopped delivering. Nothing about how your flows run changes. If you run durable wires on a plant line, what you get is a counter you can alert on for the one failure that used to look like a quiet queue.
 
 ## What's new

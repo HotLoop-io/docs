@@ -5,10 +5,6 @@ description: "Context that survives a restart and durable wires that only touch 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A historian going down for an hour shouldn't cost you an hour of readings, as long as the outage fits the disk quota (256 MiB by default: about an hour at 100 readings a second for a 120-byte reading, measured on 2.13.1), and a counter in a flow shouldn't start over because the pod moved. Both of those are a
 SQLite file on the volume, and this page is what goes in it, what it guarantees,
 what it doesn't, and what it costs a flash card.

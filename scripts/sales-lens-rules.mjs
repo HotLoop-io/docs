@@ -142,7 +142,7 @@ export const PRE = {
     { sub: [/How it's checked: Pallets Jinja2[\s\S]*?does there\. The\s+format's own filters/, "The format's own filters"] },
   ],
   'flow/overview': [
-    { sub: [ws('About 104,000 lines of Go, a little under 40 percent of it tests, 117 node types for messages and 37 for FlowLab diagrams, and the race detector comes back clean on every package.'), 'It has 117 node types for messages and 37 for FlowLab diagrams.'] },
+    { sub: [ws('About 104,000 lines of Go, a little under 40 percent of it tests, 117 node types for messages and 39 for FlowLab diagrams, and the race detector comes back clean on every package.'), 'It has 117 node types for messages and 39 for FlowLab diagrams.'] },
     { sub: [ws('Absolute numbers only, each with the command that made it, so you can go disagree with me on your own hardware.'), 'Absolute numbers only, so you can go disagree with me on your own hardware.'] },
     { sub: [ws('| Image, `2.8.0` amd64, as `podman image inspect` reports it |'), '| Image, amd64 |'] },
     { drop: /The 2\.7\.0 number, 41,402,530/ },

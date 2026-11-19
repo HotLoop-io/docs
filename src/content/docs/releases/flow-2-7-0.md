@@ -7,10 +7,6 @@ sidebar:
   label: "2.7.0"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop Flow 2.7.0 is the first cut of FlowLab, a second way to run a tab for test benches and data loggers. Flows run exactly as they did, and a flow file you have today loads and saves byte for byte. FlowLab only starts when you add a tab to it, so if you don't, the one thing that changes for you is the sessions fix, the last item below.
 
 ## What's new
