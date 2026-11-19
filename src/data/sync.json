@@ -15,7 +15,7 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "0e8288ecaa6f66ccdfa7ee9823bcf578d99f687d",
+      "sha": "41733ba32c689e585ae35ca9fb7f0f6728dcf7d0",
       "release": {
         "tag": "v2.15.1",
         "version": "2.15.1",
