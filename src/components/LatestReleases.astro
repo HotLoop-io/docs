@@ -1,5 +1,7 @@
 ---
-// The newest release page from each of the three lines, read from the sync's page list.
+// The newest release page from each of the five lines. Core, Flow and Cascade come from the sync's page list.
+// HotLoop for CODESYS takes its version from the sync, and Transmitter's notes are hand-written pages.
+import { getCollection } from 'astro:content';
 import sync from '../data/sync.json';
 
 const newest = (prefix: string) =>
@@ -8,7 +10,12 @@ const rows = [
   { label: 'HotLoop core', page: newest('releases/hotloop-') },
   { label: 'HotLoop Flow', page: newest('releases/flow-') },
   { label: 'HotLoop Cascade', page: newest('releases/cascade-') },
+  { label: 'HotLoop for CODESYS', page: { slug: `releases/codesys-${sync.codesys.version.replace(/\./g, '-')}`, label: sync.codesys.version } },
 ];
+const transmitter = (await getCollection('docs', (e) => e.id.startsWith('releases/transmitter-')))
+  .map((e) => ({ slug: e.id, label: e.id.replace('releases/transmitter-', '').replace(/-/g, '.') }))
+  .sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))[0];
+if (transmitter) rows.push({ label: 'HotLoop Transmitter', page: transmitter });
 ---
 
 <ul class="latest">

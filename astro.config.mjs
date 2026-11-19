@@ -68,7 +68,7 @@ export default defineConfig({
         ThemeSelect: './src/components/ThemeSelect.astro',
         PageFrame: './src/components/PageFrame.astro',
       },
-      description: 'Documentation for every HotLoop product, including what has not been proven yet.',
+      description: 'Documentation for every HotLoop product: how to install, set up and run each one, and what it has been run against.',
       logo: { src: './src/assets/logo-mark.svg', alt: 'HotLoop' },
       favicon: '/favicon.svg',
       social: [
@@ -208,6 +208,7 @@ export default defineConfig({
             { label: 'HotLoop Flow', collapsed: true, items: flowRelease.sort(relSort).map(page) },
             { label: 'HotLoop Cascade', collapsed: true, items: cascadeRelease.sort(relSort).map(page) },
             { label: 'HotLoop for CODESYS', collapsed: true, items: [{ slug: 'releases/codesys-0-3-5', label: '0.3.5' }, { slug: 'releases/codesys-0-3-4', label: '0.3.4' }, { slug: 'releases/codesys-0-3-3', label: '0.3.3' }, { slug: 'releases/codesys-0-3-2', label: '0.3.2' }, { slug: 'releases/codesys-0-3-1', label: '0.3.1' }, { slug: 'releases/codesys-0-3-0', label: '0.3.0' }] },
+            { label: 'HotLoop Transmitter', collapsed: true, items: [{ slug: 'releases/transmitter-1-1-0', label: '1.1.0' }, { slug: 'releases/transmitter-1-0-0', label: '1.0.0' }] },
           ],
         },
         { slug: 'roadmap', label: 'HotLoop roadmap' },
