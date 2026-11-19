@@ -191,7 +191,7 @@ The chart's name is baked into the Deployment's and the StatefulSet's selectors,
 
 The names, the Secret's database password and the volume claim render identical to 4.3.1's, so the new database pod mounts the old data. The Gateway migrates the schema forward on start, and updates TimescaleDB from 2.29.1 to 2.30.1 while it's at it.
 
-We checked that by rendering both charts side by side. Step 1 is your way back: if the upgrade surprises you, you have a dump from five minutes ago, and we want to hear about it at [support@hotloop.io](mailto:support@hotloop.io).
+We checked that by rendering both charts side by side. Step 1 is your way back: if the upgrade surprises you, you have a dump from five minutes ago, and we want to hear about it at [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai).
 
 ### What behaves differently
 

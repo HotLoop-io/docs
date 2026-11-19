@@ -103,7 +103,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 ## 10. Support
 
-10.1 Community support is on GitHub Discussions, at our discretion and without any promise of response time. For anything else, write to support@hotloop.io.
+10.1 Community support is on GitHub Discussions, at our discretion and without any promise of response time. Support is provided by EmberNet, HotLoop's Gold Licensee: write to helpdesk@fireballz.ai.
 
 10.2 Paid support, service levels and rollouts, if you want them, come from a systems integrator you hire, not from these terms.
 
@@ -123,7 +123,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 13.1 If you believe content on one of the Sites infringes your copyright, send a notice to our designated agent. Include: your contact details; the work you say is infringed; where the material is; a statement that you believe in good faith the use is not authorized; a statement that your notice is accurate and, under penalty of perjury, that you are the owner or authorized to act for the owner; and your signature.
 
-13.2 Designated agent: Copyright Agent, HotLoop LLC, support@hotloop.io.
+13.2 Designated agent: Copyright Agent, HotLoop LLC, helpdesk@fireballz.ai.
 
 13.3 We may remove or disable access to the material and tell the user who posted it. That user may send a counter-notice to the same agent. We may close the accounts of repeat infringers.
 
@@ -171,7 +171,7 @@ These terms apply to everyone who downloads, installs or uses HotLoop. They expl
 
 20.1 You may not transfer these terms without our written consent. We may transfer them as part of a merger, reorganization or sale of our business.
 
-20.2 We give notice on the Sites. Send notices to us at support@hotloop.io.
+20.2 We give notice on the Sites. Send notices to us at helpdesk@fireballz.ai.
 
 20.3 Neither of us is liable for delay caused by events beyond reasonable control.
 

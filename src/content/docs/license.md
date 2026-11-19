@@ -14,7 +14,7 @@ Every HotLoop product ships under the HotLoop Source License Agreement 1.0. You 
 
 ## Using HotLoop in a business
 
-Running HotLoop to support a company's operations, building it into something you sell, or hosting it for your customers is business use. Email [support@hotloop.io](mailto:support@hotloop.io), tell us what you want to run and where, and we'll set you up with the right license for it. [Using HotLoop in a business](/business/) says more about what counts.
+Running HotLoop to support a company's operations, building it into something you sell, or hosting it for your customers is business use. Email EmberNet, HotLoop's Gold Licensee, at [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai), tell us what you want to run and where, and we'll set you up with the right license for it. [Using HotLoop in a business](/business/) says more about what counts.
 
 ## Every version becomes AGPL
 
@@ -26,4 +26,4 @@ One agreement covers HotLoop IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotL
 
 ## The full agreement
 
-This page is the short version. The [HotLoop Source License Agreement 1.0](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) is the full text, and where the two differ, the agreement governs. Questions go to [support@hotloop.io](mailto:support@hotloop.io).
+This page is the short version. The [HotLoop Source License Agreement 1.0](https://github.com/HotLoop-io/HotLoop-io/blob/main/LICENSE.md) is the full text, and where the two differ, the agreement governs. Questions go to EmberNet, HotLoop's Gold Licensee, at [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai).
