@@ -17,4 +17,4 @@ What it means for you: name the release whatever you like, and the provisioner f
 
 ## What was checked
 
-The chart renders from the live index with Helm. [Where it stands](/codesys/where-it-stands/) says what it was run against.
+The chart renders from the live index with Helm, and it has been run on bare metal (2026-11-17). [Where it stands](/codesys/where-it-stands/) says what it was run against.

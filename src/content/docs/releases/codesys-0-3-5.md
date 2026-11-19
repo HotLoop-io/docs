@@ -18,4 +18,4 @@ What it means for you: this is the one to install, and an upgrade from 0.3.4 kee
 
 ## What was checked
 
-An upgrade from 0.3.4 with a profile applied to 0.3.5, with a CODESYS Control for Linux SL 4.22.0.0 runtime on the node's network beside it: one new pod on 4.20.2 came up, the device and its 44 tags were still there and none writable, the page answered, and the HotLoop log had no warnings or errors. Both pods deleted and the runtime restarted: all three came back by themselves.
+An upgrade from 0.3.4 with a profile applied to 0.3.5, with a CODESYS Control for Linux SL 4.22.0.0 runtime on the node's network beside it: one new pod on 4.20.2 came up, the device and its 44 tags were still there and none writable, the page answered, and the HotLoop log had no warnings or errors. Both pods deleted and the runtime restarted: all three came back by themselves. It has been run on bare metal (2026-11-17).
