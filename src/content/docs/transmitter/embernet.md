@@ -14,6 +14,6 @@ The EmberNet pages that mention it:
 - [HotLoop Gateway on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
 - [HotLoop for CODESYS on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
 
-To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 Back to the [HotLoop Transmitter overview](/transmitter/overview/), or the [HotLoop Transmitter page on hotloop.io](https://hotloop.io/transmitter/).

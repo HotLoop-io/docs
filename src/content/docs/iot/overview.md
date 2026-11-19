@@ -39,4 +39,4 @@ SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 17 by defau
 
 Helm or Podman Quadlet, the same two ways as the rest of the lineup, and [the IoT install page](/iot/install/) has the commands for both. The boxes follow `:stable` and update themselves, and [that page](/install/auto-update/) says what happens when an update can't start.
 
-Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.

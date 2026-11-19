@@ -192,7 +192,7 @@ The chart's name is baked into the Deployment's and the StatefulSet's selectors,
 
 The names, the Secret's database password and the volume claim render identical to 4.3.1's, so the new database pod mounts the old data. The Gateway migrates the schema forward on start, and updates TimescaleDB from 2.29.1 to 2.30.1 while it's at it.
 
-We checked that by rendering both charts side by side. Step 1 is your way back: if the upgrade surprises you, you have a dump from five minutes ago, and we want to hear about it at [support@hotloop.io](mailto:support@hotloop.io).
+We checked that by rendering both charts side by side. Step 1 is your way back: if the upgrade surprises you, you have a dump from five minutes ago, and we want to hear about it at [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai).
 
 ### What behaves differently
 
@@ -203,7 +203,7 @@ We checked that by rendering both charts side by side. Step 1 is your way back: 
 - **The poll settings are `HOTLOOP_POLL_INTERVAL`, `HOTLOOP_MIN_POLL_INTERVAL`, and `HOTLOOP_POLL_TIMEOUT`.** The old Settings screen told you to set `HOTLOOP_POLL_INTERVAL_MS`, `HOTLOOP_MIN_POLL_INTERVAL_MS`, and `HOTLOOP_TIMEOUT_MS`, which nothing ever read. If you set those, they did nothing. Rename them.
 - **OPC UA tags you imported keep the type they were imported with.** Discover tags used to call every node a float. It reads each node's real type now, but tags imported before keep `float`, and HotLoop's own OPC UA server publishes a tag as its declared type, so a text tag reaches Ignition as `Bad_TypeMismatch`. Go declare your text tags `string`.
 - **Edge publish has a values block now.** If you set it through `extraEnv`, move it to `edgePublish:` and drop the variables, or they're set twice.
-- **The OPC UA server says `HotLoop`** as its manufacturer, where it used to say Fireball Industries. If a client or an inventory script matches on that string, change it before it stops matching.
+- **The OPC UA server says `HotLoop`** as its manufacturer, where earlier versions used a different manufacturer name. If a client or an inventory script matches on that string, change it before it stops matching.
 - **The license.** The terms changed after 4.3.1. The current ones are on [the License page](/license/).
 
 ### API changes from 4.3.1

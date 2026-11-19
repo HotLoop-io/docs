@@ -37,4 +37,4 @@ opt-in, off by default, and documented down to the field when it lands.
 
 ## Where to go next
 
-[Run Cascade](/cascade/running/), run it [with Podman Quadlet](/cascade/quadlet/), or read [the Cascade roadmap](/cascade/roadmap/). Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Run Cascade](/cascade/running/), run it [with Podman Quadlet](/cascade/quadlet/), or read [the Cascade roadmap](/cascade/roadmap/). Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.

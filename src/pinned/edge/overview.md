@@ -33,4 +33,4 @@ SQLite, PostgreSQL, or TimescaleDB, from the same binary. The chart and the Quad
 
 [The Edge install page](/edge/install/) has Helm and Podman Quadlet, with the commands. Moving a site from IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history, and [the lineup](/products/) has the how.
 
-Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.

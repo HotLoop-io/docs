@@ -16,6 +16,6 @@ Where it is on the EmberNet docs:
 
 The Gateway page also covers HotLoop Transmitter, the CODESYS library that publishes OPC UA PubSub.
 
-To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
 Back to the [HotLoop for CODESYS overview](/codesys/overview/), or the [HotLoop for CODESYS page on hotloop.io](https://hotloop.io/codesys/).

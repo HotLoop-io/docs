@@ -41,4 +41,4 @@ Once HotLoop and the node's own runtime both answer, the provisioner sets up the
 
 ## Where to go next
 
-[Install it](/codesys/install/), read what a [profile](/codesys/profile/) holds, or see [where it stands](/codesys/where-it-stands/) and the [roadmap](/codesys/roadmap/). Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
+[Install it](/codesys/install/), read what a [profile](/codesys/profile/) holds, or see [where it stands](/codesys/where-it-stands/) and the [roadmap](/codesys/roadmap/). Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
