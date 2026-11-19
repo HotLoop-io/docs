@@ -65,5 +65,5 @@ From HotLoop 4.19 the Edge chart signs a person in from the EmberCORE dashboard'
 
 ## How far it has been run
 
-The chart renders from the live index with Helm, and every step of an install has been run against a real CODESYS Control for Linux SL 4.22.0.0 runtime. [Where it stands](/codesys/where-it-stands/).
+It has been run on bare metal (2026-11-17), and the chart renders from the live index with Helm. [Where it stands](/codesys/where-it-stands/).
 

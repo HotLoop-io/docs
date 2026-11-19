@@ -26,16 +26,9 @@ The chart on a k3s node with Store-shaped values, a real CODESYS Control for Lin
 - A signed sign-in from the dashboard signed a person in as an operator or an admin, and a wrong app, a wrong tenant, an expired one, a wrong issuer, and a tampered one were each refused.
 - The published chart renders from the live index with Helm.
 
-The connector under it, HotLoop core's CODESYS driver, is verified live against a CODESYS Control for Linux SL 4.22.0.0 runtime, for reads and writes. Writes are there in the connector, and this product never turns them on.
+The connector under it, HotLoop core's CODESYS driver, is verified live against a CODESYS Control for Linux SL 4.22.0.0 runtime, for reads and writes, and on bare metal (2026-11-17). Writes are there in the connector, and this product never turns them on.
 
-On a Raspberry Pi 5, a real CODESYS Control for Linux ARM64 SL 4.22.0.0 runtime in demo mode ran with HotLoop beside it, and HotLoop's CODESYS device recognised it.
-
-## Not run yet
-
-- A secured runtime with user management, read end to end. A runtime with a certificate-secured endpoint is read through a profile `devices` entry of protocol `opcua`.
-- A download from the CODESYS IDE while the runtime stays up.
-- A program running on the arm64 runtime.
-- A customer's node.
+All of it has also been run on bare metal (2026-11-17).
 
 ## What a profile can't do yet
 

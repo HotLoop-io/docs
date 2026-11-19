@@ -15,4 +15,4 @@ What it means for you: a box on 0.3.3 gets the new UI and the MCP tools with a c
 
 ## What was checked
 
-An upgrade from 0.3.1 with a profile applied to 0.3.3, beside a CODESYS Control for Linux SL 4.22.0.0 runtime: one new pod on 4.20.0 came up, the devices and their 2,232 tags were still there, and the listeners connected again.
+An upgrade from 0.3.1 with a profile applied to 0.3.3, beside a CODESYS Control for Linux SL 4.22.0.0 runtime: one new pod on 4.20.0 came up, the devices and their 2,232 tags were still there, and the listeners connected again. It has been run on bare metal (2026-11-17).

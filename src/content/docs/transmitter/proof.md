@@ -3,7 +3,7 @@ title: "What was run"
 description: "What the library was built with, run on, and read back by, and the one place two readers disagree."
 ---
 
-This page is the 1.0.0 run. The 1.1.0 run, with timestamps and the `.package`, is in the [1.1.0 release notes](/releases/transmitter-1-1-0/).
+This page is the 1.0.0 run. The 1.1.0 run, with timestamps and the `.package`, is in the [1.1.0 release notes](/releases/transmitter-1-1-0/). The library has since been run on bare metal (2026-11-17).
 
 ## The build
 

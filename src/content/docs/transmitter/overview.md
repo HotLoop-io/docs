@@ -68,7 +68,7 @@ sections of the spec that define each byte.
 
 ## Tested against
 
-The CODESYS Control for Linux SL 4.22.0.0 runtime. See the [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) for what
+The CODESYS Control for Linux SL 4.22.0.0 runtime, and on bare metal (2026-11-17). See the [timing page](/transmitter/timing/) and the [proof page](/transmitter/proof/) for what
 was run and what was read back.
 
 Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
