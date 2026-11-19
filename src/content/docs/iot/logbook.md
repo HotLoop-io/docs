@@ -10,8 +10,8 @@ somebody wrote 180 to the zone 1 setpoint, the high temperature alarm was
 raised and acknowledged, the cooldown automation ran, a device was
 reconfigured. For the whole plant, one place on the equipment tree and
 everything under it, or one entity. It is the Logbook tab, a section of every
-entity's drawer, `GET /api/logbook` (see [API.md](/iot/api/#logbook)) and the
-`get_logbook` MCP tool (see [MCP.md](/iot/mcp/)).
+entity's drawer, `GET /api/logbook` (see [the HTTP API](/iot/api/#logbook)) and the
+`get_logbook` MCP tool (see [MCP](/iot/mcp/)).
 
 The first question after anything goes wrong is "what happened just before?",
 and until now the answer was in five places: the write audit, the alarm
@@ -113,7 +113,7 @@ at the time it was first seen down.
   person placed on the tree: the switch a linked device hangs off, and every
   switch between it and the gateway, so a switch dropping shows under every
   line it feeds. A console placed on the tree finds the events about
-  everything it adopted. See [UNIFI.md](/iot/unifi/#events).
+  everything it adopted. See [UniFi Network](/iot/unifi/#events).
 - **Entity:** the same, for one entity: its state changes, writes to it and
   its tags, its alarms, the rules it triggers or that wrote to it, and config
   changes to it or its tags. An entity that has since been deleted is still
@@ -149,7 +149,7 @@ makes last month's partition and the next three months' ahead of time, so a
 line always has one to land in; a line for a month with no partition lands in
 the default partition, and the maintenance moves those into their month when
 it makes it (which is what happens after a restore, see
-[BACKUP.md](/iot/backup/)) or deletes them once they are past the retention.
+[Backups and restore](/iot/backup/)) or deletes them once they are past the retention.
 
 The other trails keep what they always kept:
 
@@ -191,4 +191,4 @@ why the last write failed.
 
 Both tables are in every backup: `entity_last_state` after the entity
 tables, `entity_state_log` just before `tag_history`. See
-[BACKUP.md](/iot/backup/).
+[Backups and restore](/iot/backup/).

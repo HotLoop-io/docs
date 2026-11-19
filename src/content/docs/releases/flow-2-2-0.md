@@ -7,6 +7,10 @@ sidebar:
   label: "2.2.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what it knew when it restarts, and shows you where a message went. It is also the first release under HotLoop's Business Source License, and I'm putting that first because it's the part you have to read.
 
 ## The license changed
@@ -30,11 +34,11 @@ HotLoop Flow 2.2.0 is the release where Flow talks to the PLCs, remembers what i
 
 **State that survives a restart**
 - Flow, global and node context live in a SQLite file, `state.db`, on the data volume. A restart no longer wipes them.
-- Durable wires. Mark a wire durable and, while the node on the other end keeps up, it's an ordinary wire and writes nothing. When that node stops taking messages, the wire spills to the same file in order and drains when the target comes back. I proved it against a real InfluxDB killed for ten minutes, with the runtime `kill -9`'d mid-outage and mid-drain: none missing, none doubled.
+- Durable wires. Mark a wire durable and, while the node on the other end keeps up, it's an ordinary wire and writes nothing. When that node stops taking messages, the wire spills to the same file in order and drains when the target comes back. We proved it against a real InfluxDB killed for ten minutes, with the runtime `kill -9`'d mid-outage and mid-drain: none missing, none doubled.
 
 **Plant nodes**
 - Modbus TCP read and write, OPC UA read, write and subscribe, S7 read and write, EtherNet/IP read and write, and Sparkplug B as an edge node and as a host. Flow can talk to what `scan` finds now.
-- Sparkplug does the births, the will, `bdSeq`, rebirth requests and commands the spec asks for. I checked it against an independent Sparkplug implementation in both directions, edge node and host.
+- Sparkplug does the births, the will, `bdSeq`, rebirth requests and commands the spec asks for. We checked it against an independent Sparkplug implementation in both directions, edge node and host.
 - A silent device fails the request inside the timeout and the next message reconnects. An OPC UA subscription notices it dropped, says so once, and picks itself back up.
 
 **The editor**

@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.21.1
+reviewed: hotloop=4.22.0
 title: "HotLoop IoT overview"
 description: "HotLoop IoT is the automation base: entities, automations, dashboards, alarms, MQTT discovery, and every protocol driver, on SQLite or PostgreSQL, built in Go."
 sidebar:
@@ -7,7 +7,7 @@ sidebar:
 ---
 
 :::note[IoT is out, first released in 4.18.10]
-The image is `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}` built for amd64, arm64 and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
+The image is `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}` built for amd64 (arm64 and arm/v7 follow in the next version), about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
 :::
 
 IoT is the base Edge and the Gateway are built on. If the box in front of you is a Pi, a NUC in a closet, a rack of smart plugs and sensors, or one PLC on a bench, this is the one. It is the smallest image of the three full products, and it still carries everything that makes HotLoop useful: the entities, the rules, the alarms, and the one write gate that nothing gets around.
@@ -37,3 +37,5 @@ SQLite or PostgreSQL. The chart and the Quadlet units run PostgreSQL 17 by defau
 ## Installing it
 
 Helm or Podman Quadlet, the same two ways as the rest of the lineup, and [the IoT install page](/iot/install/) has the commands for both. The boxes follow `:stable` and update themselves, and [that page](/install/auto-update/) says what happens when an update can't start.
+
+Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.

@@ -16,6 +16,6 @@ Where it is on the EmberNet docs:
 - [HotLoop IoT on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
 - [HotLoop Flow on EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
 
-It feeds a Gateway over Sparkplug B.
+To run it at a plant, sign up at [embernet.ai](https://embernet.ai/). [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
 
 Back to the [HotLoop Edge Relay overview](/edge-relay/overview/), or the [HotLoop Edge Relay page on hotloop.io](https://hotloop.io/edge-relay/).

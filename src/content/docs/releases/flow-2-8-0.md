@@ -7,6 +7,10 @@ sidebar:
   label: "2.8.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop Flow 2.8.0 adds four things to FlowLab, the diagram tab for test benches and data loggers: analysis nodes, a data acquisition node for NI hardware, an MQTT output that keeps what the broker misses, and a TDMS log. Flows run exactly as they did, a flow file you have today loads and saves byte for byte, and a tab that isn't a diagram doesn't see any of it.
 
 ## What's new
@@ -34,4 +38,4 @@ None.
 
 On amd64, a plain `helm upgrade` to the 2.8.0 image and chart, or the new tag in your Quadlet unit. On arm64, stay where you are until 2.8.1, which is this release with arm64 added and nothing else. Nothing happens on first start and there is nothing to migrate.
 
-Image: `ghcr.io/hotloop-io/hotloop-flow:2.8.0`, linux/amd64 only. I build amd64 first, let it read stable in production, and then one small 2.8.1 with nothing else in it adds arm64. Until then the `2` tag holds the new amd64 image and the arm64 image from 2.7.1, so a box on arm64 that follows `2` or `2.7` keeps what it has, and a box pinned to `2.8.0` needs amd64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.8.0/README.md
+Image: `ghcr.io/hotloop-io/hotloop-flow:2.8.0`, linux/amd64 only. We build amd64 first, let it read stable in production, and then one small 2.8.1 with nothing else in it adds arm64. Until then the `2` tag holds the new amd64 image and the arm64 image from 2.7.1, so a box on arm64 that follows `2` or `2.7` keeps what it has, and a box pinned to `2.8.0` needs amd64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.8.0/README.md

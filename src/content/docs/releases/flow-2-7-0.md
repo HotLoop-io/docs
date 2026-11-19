@@ -7,6 +7,10 @@ sidebar:
   label: "2.7.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop Flow 2.7.0 is the first cut of FlowLab, a second way to run a tab for test benches and data loggers. Flows run exactly as they did, and a flow file you have today loads and saves byte for byte. FlowLab only starts when you add a tab to it, so if you don't, the one thing that changes for you is the sessions fix, the last item below.
 
 ## What's new
@@ -38,6 +42,6 @@ None. The permission `diagram.run` is new. A user whose permission list is `["*"
 
 ## Upgrade
 
-On amd64, a plain `helm upgrade` to the 2.7.0 image and chart, and on arm64 stay where you are until 2.7.1, or the new tag in your Quadlet unit. Nothing happens on first start, there is nothing to migrate, and your flows, deployment records and credentials are not touched. If you roll back after saving a flow file with a diagram in it, the older build keeps the file byte for byte and says `unknown node type` for each FlowLab node, which then don't run. I checked that against the build before this one.
+On amd64, a plain `helm upgrade` to the 2.7.0 image and chart, and on arm64 stay where you are until 2.7.1, or the new tag in your Quadlet unit. Nothing happens on first start, there is nothing to migrate, and your flows, deployment records and credentials are not touched. If you roll back after saving a flow file with a diagram in it, the older build keeps the file byte for byte and says `unknown node type` for each FlowLab node, which then don't run. We checked that against the build before this one.
 
-Image: `ghcr.io/hotloop-io/hotloop-flow:2.7.0`, linux/amd64 only. I build amd64 first, let it read stable in production, and then one small 2.7.1 with nothing else in it adds arm64. Until then the `2` tag holds the new amd64 image and the arm64 image from 2.6.0, so a box on arm64 that follows `2` or `2.6` keeps what it has, and a box that is pinned to `2.7.0` needs amd64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.7.0/README.md
+Image: `ghcr.io/hotloop-io/hotloop-flow:2.7.0`, linux/amd64 only. We build amd64 first, let it read stable in production, and then one small 2.7.1 with nothing else in it adds arm64. Until then the `2` tag holds the new amd64 image and the arm64 image from 2.6.0, so a box on arm64 that follows `2` or `2.6` keeps what it has, and a box that is pinned to `2.7.0` needs amd64. Chart: `https://hotloop.io/hotloop-flow/`. The README at this tag has the rest, with pictures: https://github.com/HotLoop-io/hotloop-flow/blob/v2.7.0/README.md

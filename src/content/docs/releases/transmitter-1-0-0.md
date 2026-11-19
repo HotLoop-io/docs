@@ -23,7 +23,7 @@ Structured Text, and nothing else gets installed on the controller.
 * A non-blocking send. A bad address, a dead socket or a field list that is too big puts the block in an error
   state you can read and never faults your application.
 
-## What I ran, and what it showed
+## What we ran, and what it showed
 
 All of it against CODESYS Control for Linux SL 4.22.0.0, on the files below.
 

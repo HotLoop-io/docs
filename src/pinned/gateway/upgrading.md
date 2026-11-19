@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.21.1
+reviewed: hotloop=4.22.0
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
 description: "From 4.18.11 it is a helm upgrade, but agents can write now and scaled tags change. From 4.18.10 the database moves to PostgreSQL 17. Older, you go in hops."
 sidebar:
@@ -12,13 +12,17 @@ Five ways onto {{hotloop}}, and they are nothing alike. From 4.18.11 it is a pla
 4.21.0 turned `Basic128Rsa15` and `Basic256` off by default, on upgrades as well as new installs. The server no longer lists them and refuses a client that asks for one by name. Check whether any OPC UA client of yours (Ignition's connection shows it) speaks nothing newer than `Basic256`, and move it to `Basic256Sha256`. If it can't move, `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` (chart `opcuaServer.allowDeprecatedPolicies: true`) brings the two back, and the server says so at start. 4.21.0 also adds migration 0027, a new table, so the upgrade is otherwise a plain `helm upgrade`. The release check started 4.20.2 on the migrated schema and it ran, so the table is not a reason a rollback is unsafe.
 :::
 
+:::note[On arm64, wait for the multi-arch build]
+4.22.0 is built for amd64. A Gateway on arm64 stays on 4.21.1 until the next version adds the arm64 image.
+:::
+
 :::note[Older charts are fetched by URL]
 The chart repository's index keeps the Gateway's charts back to 4.16.0, so `hotloop/hotloop --version 4.17.0` resolves, and the tarballs are served by URL too. The commands below for 4.16.0 and 4.17.0 name the chart by its URL, like `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`, and that works either way. IoT and Edge start at 4.18.10.
 :::
 
 ## Upgrading from 4.18.11
 
-Why bother: agents over MCP can write now, a value you write to a scaled tag lands in the register the way you meant it, a CODESYS runtime is read by the names its programmer gave the variables, HotLoop can send readings and the system log to a Kafka broker, OPC UA PubSub over UADP works in both directions, and a store install signs you in as yourself. [The 4.19.4 release notes](/releases/hotloop-4-19-4/) have the whole list, [4.19.5](/releases/hotloop-4-19-5/) is the multi-arch build of it, and [4.19.8](/releases/hotloop-4-19-8/) is the one to install, with a Logbook fix and tag pickers that search the whole plant. 4.19.0 to 4.19.3, 4.19.6 and 4.19.7 were tagged and never published, so none of them exists to upgrade from.
+Why bother: agents over MCP can write now, a value you write to a scaled tag lands in the register the way you meant it, a CODESYS runtime is read by the names its programmer gave the variables, HotLoop can send readings and the system log to a Kafka broker, OPC UA PubSub over UADP works in both directions, and a store install signs you in as yourself. [The 4.19.4 release notes](/releases/hotloop-4-19-4/) have the whole list, [4.19.5](/releases/hotloop-4-19-5/) is the multi-arch build of it, and [4.19.8](/releases/hotloop-4-19-8/) adds a Logbook fix and tag pickers that search the whole plant. 4.19.0 to 4.19.3, 4.19.6 and 4.19.7 were tagged and never published, so none of them exists to upgrade from.
 
 ```bash
 helm repo update
@@ -61,7 +65,7 @@ The same for `hotloop-edge` and `hotloop-iot`. Take a backup on 4.18.10 first an
   ```
 
 - **A failure leaves you where you were.** If anything fails before the swap, the 16 data is untouched and the database does not start on a half-built directory. On the chart the pod stays in `Init:Error`. On Quadlet the upgrade unit fails and the database unit behind it never starts. Fix what the log says and start it again.
-- **`helm rollback` to 4.18.10 will not start its database.** This is the caveat. A rollback puts the database image back to PostgreSQL 16, and 16 will not open a 17 directory. Nothing is lost and nothing is half changed, the database just does not start. Getting it back means the swap in [the deployment guide](https://github.com/HotLoop-io/hotloop/blob/v4.18.11/docs/DEPLOYMENT.md#going-back): stop the database, move `pgdata` to `pgdata.pg17` and `pgdata.pg16` to `pgdata`. **That drops every write made on 17 since the upgrade,** because `pgdata.pg16` is the database as it was at that moment. Roll forward when you can. The swap back works once, and the next upgrade refuses to run while a `pgdata.pg16` is in the way. It is documented, not run by a test.
+- **`helm rollback` to 4.18.10 will not start its database.** This is the caveat. A rollback puts the database image back to PostgreSQL 16, and 16 will not open a 17 directory. Nothing is lost and nothing is half changed, the database just does not start. Getting it back means the swap in [Going back](/install/helm/#going-back) on the k3s and Helm page: stop the database, move `pgdata` to `pgdata.pg17` and `pgdata.pg16` to `pgdata`. **That drops every write made on 17 since the upgrade,** because `pgdata.pg16` is the database as it was at that moment. Roll forward when you can. The swap back works once, and the next upgrade refuses to run while a `pgdata.pg16` is in the way. It is documented, not run by a test.
 - **Quadlet boxes aren't hit by that.** Podman's auto-update rolls back only the app, never the database, and the 4.18.10 app reads a PostgreSQL 17 database fine, because migrations only add. A Quadlet box that rolls an update back keeps running.
 - **One new migration, `0025_kiosk_pin`.** It only adds columns, every one with a default, so 4.18.10 runs on the schema it leaves.
 - **A lockout is on now, for every install.** Ten wrong passwords or PINs in a row lock that one account for 5 minutes, and an admin can unlock it. A script that retries a wrong password more than ten times starts getting `429`. `HOTLOOP_AUTH_LOCKOUT_ATTEMPTS=0` turns it off.
@@ -82,7 +86,7 @@ Copy the new `hotloop-db.container`, `hotloop-db-upgrade.container`, and `hotloo
 
 Why bother: the Gateway stops being the only image. IoT and Edge are new, the database is a setting, devices that announce themselves over MQTT show up on their own, history can be written out to the plant's own database, and a box that follows `:stable` rolls a bad update back by itself. That last one only works because migrations only add. [The 4.18.10 release notes](/releases/hotloop-4-18-10/) have the list.
 
-It's a plain `helm upgrade`. I rendered the 4.17.0 and {{hotloop}} Gateway charts side by side with the same values: the same eight objects, the same selectors, the same volume claims.
+It's a plain `helm upgrade`. We rendered the 4.17.0 and {{hotloop}} Gateway charts side by side with the same values: the same eight objects, the same selectors, the same volume claims.
 
 ```bash
 helm repo update hotloop
@@ -181,13 +185,13 @@ The chart's name is baked into the Deployment's and the StatefulSet's selectors,
      -n <namespace> -f your-4.3.1-values.yaml
    ```
 
-   That's the 4.16.0 chart by its URL, because the repository's index lists only the latest chart. Once you're on 4.16.0, add the repository (`helm repo add hotloop https://hotloop.io/hotloop`) for the hops after it.
+   That's the 4.16.0 chart by its URL, which works before the repository is added. Once you're on 4.16.0, add the repository (`helm repo add hotloop https://hotloop.io/hotloop`) for the hops after it.
 
    Nothing in that file was removed from the chart. Rename any `IIOT_` in `extraEnv` to `HOTLOOP_`, and drop an `image.repository` override if you had one. Don't use `--reuse-values`. It skips every default this chart added since 4.3.1, which is more than half its keys, and you'd be running a chart that's mostly holes.
 
 The names, the Secret's database password and the volume claim render identical to 4.3.1's, so the new database pod mounts the old data. The Gateway migrates the schema forward on start, and updates TimescaleDB from 2.29.1 to 2.30.1 while it's at it.
 
-We proved that by rendering both charts side by side, not by running it on a live cluster. That gap is exactly why step 1 exists. If the upgrade surprises you, you have a dump from five minutes ago, and we want to hear about it at [support@hotloop.io](mailto:support@hotloop.io).
+We checked that by rendering both charts side by side. Step 1 is your way back: if the upgrade surprises you, you have a dump from five minutes ago, and we want to hear about it at [support@hotloop.io](mailto:support@hotloop.io).
 
 ### What behaves differently
 

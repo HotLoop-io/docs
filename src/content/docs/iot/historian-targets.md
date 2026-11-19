@@ -32,13 +32,13 @@ Databases HotLoop writes to:
 ## Adding one
 
 **Settings, Historian targets, Add a target**, or `POST /api/historian/targets`
-(see [API.md](/iot/api/#historian-targets)). It's admin only, because a target is
+(see [the HTTP API](/iot/api/#historian-targets)). It's admin only, because a target is
 somewhere plant data goes, and deciding where is an admin's call. Everybody
 who can read the settings sees the targets and how each one is doing.
 
 A target is a kind, an address (`host` or `host:port`), a database, a table,
 and a login. The password is sealed with the same key as device credentials
-(`HOTLOOP_SECRET_KEY_FILE`, see [BACKUP.md](/iot/backup/)) and never comes back out
+(`HOTLOOP_SECRET_KEY_FILE`, see [Backups and restore](/iot/backup/)) and never comes back out
 of the API. With no key, a target with a password is refused: a database
 login in the clear in a backup is exactly what that key exists to stop.
 

@@ -2,20 +2,20 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
-      "sha": "9373d09abea72c316f04bac2b48da866898a3b85",
+      "ref": "fix/site-review-round-3",
+      "sha": "a4cd4b45b921d6554849ad108d55e4bb6f616535",
       "release": {
-        "tag": "v4.21.1",
-        "version": "4.21.1",
+        "tag": "v4.22.0",
+        "version": "4.22.0",
         "prerelease": false,
-        "publishedAt": "2026-11-16T15:56:50Z",
-        "sha": "0307eae3b60727d1fd7ee09fa6c9e21cc29af877"
+        "publishedAt": "2026-11-18T23:44:25Z",
+        "sha": "c516f5edf773a5d59eafc7e4dd4c2d19ed40a63c"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "origin/main",
-      "sha": "257ae7781bd3598792a43c69b3c6b857889680de",
+      "ref": "fix/site-review-round-3",
+      "sha": "9d6691cd821e5e757557de2c09aefffc3dbf63c9",
       "release": {
         "tag": "v2.14.1",
         "version": "2.14.1",
@@ -26,8 +26,8 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "origin/main",
-      "sha": "da0a62d2934088902e9a52c16c8eb85b442cfcaa",
+      "ref": "fix/site-review-round-3",
+      "sha": "1be414162484468cc3f1e0a264b55376de617dfb",
       "release": {
         "tag": "v1.2.1",
         "version": "1.2.1",
@@ -99,7 +99,7 @@
       "group": "The base",
       "title": "Entities",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/ENTITIES.md",
       "release": false
@@ -209,7 +209,7 @@
       "group": "Screens and alerts",
       "title": "Alarm notifications",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/NOTIFY.md",
       "release": false
@@ -242,7 +242,7 @@
       "group": "Devices and data",
       "title": "The embedded MQTT broker",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BROKER.md",
       "release": false
@@ -275,7 +275,7 @@
       "group": "Devices and data",
       "title": "UniFi Network",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/UNIFI.md",
       "release": false
@@ -308,7 +308,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -319,7 +319,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -352,7 +352,7 @@
       "group": "What Edge adds",
       "title": "Edge publish and store-and-forward",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/EDGE-PUBLISH.md",
       "release": false
@@ -363,7 +363,7 @@
       "group": "What Edge adds",
       "title": "The OPC UA server",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/OPCUA-SERVER.md",
       "release": false
@@ -374,7 +374,7 @@
       "group": "What the Gateway adds",
       "title": "Fleet management",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/FLEET.md",
       "release": false
@@ -385,7 +385,7 @@
       "group": "What the Gateway adds",
       "title": "Scheduled reports",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/REPORTS.md",
       "release": false
@@ -396,7 +396,7 @@
       "group": "Reference",
       "title": "Edge Relay reference",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/EDGE-RELAY.md",
       "release": false
@@ -462,7 +462,7 @@
       "group": "Start here",
       "title": "HotLoop Flow",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -495,7 +495,7 @@
       "group": "Start here",
       "title": "Bring your Node-RED flows",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -506,7 +506,7 @@
       "group": "How it runs",
       "title": "Back-pressure, visibly",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -517,7 +517,7 @@
       "group": "How it runs",
       "title": "Store and forward",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -550,7 +550,7 @@
       "group": "Review and test",
       "title": "Every deploy is a record",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -572,7 +572,7 @@
       "group": "Review and test",
       "title": "Tracing and replay",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -594,7 +594,7 @@
       "group": "Nodes",
       "title": "The plant floor",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -605,7 +605,7 @@
       "group": "Nodes",
       "title": "Two sandboxes",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -616,7 +616,7 @@
       "group": "Nodes",
       "title": "FlowLab",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/diagrams.md",
       "release": false
@@ -638,7 +638,7 @@
       "group": "Nodes",
       "title": "Typed wires",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -682,7 +682,7 @@
       "group": "Run it",
       "title": "Configuration",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -693,7 +693,7 @@
       "group": "Run it",
       "title": "The admin API",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -704,7 +704,7 @@
       "group": "Run it",
       "title": "Metrics",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "README.md",
       "release": false
@@ -715,7 +715,7 @@
       "group": "Run it",
       "title": "Deploying Flow",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/deploying.md",
       "release": false
@@ -770,7 +770,7 @@
       "group": "Project",
       "title": "Flow roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -913,7 +913,7 @@
       "group": "Project",
       "title": "Cascade roadmap",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -946,7 +946,7 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.18.10 release notes",
       "label": "4.18.10",
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/releases/4.18.10.md",
       "release": true
@@ -957,7 +957,7 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.18.11 release notes",
       "label": "4.18.11",
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/releases/4.18.11.md",
       "release": true
@@ -990,7 +990,7 @@
       "group": "HotLoop core",
       "title": "HotLoop core 4.19.4 release notes",
       "label": "4.19.4",
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/releases/4.19.4.md",
       "release": true
@@ -1070,6 +1070,17 @@
       "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.21.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-22-0",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.22.0 release notes",
+      "label": "4.22.0",
+      "status": "changed",
+      "repo": "hotloop",
+      "source": "docs/releases/4.22.0.md",
       "release": true
     },
     {
@@ -1210,7 +1221,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.2.0 release notes",
       "label": "2.2.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.2.0.md",
       "release": true
@@ -1243,7 +1254,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.5.0 release notes",
       "label": "2.5.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.5.0.md",
       "release": true
@@ -1254,7 +1265,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.6.0 release notes",
       "label": "2.6.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.6.0.md",
       "release": true
@@ -1265,7 +1276,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.7.0 release notes",
       "label": "2.7.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.7.0.md",
       "release": true
@@ -1287,7 +1298,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.8.0 release notes",
       "label": "2.8.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.8.0.md",
       "release": true
@@ -1331,7 +1342,7 @@
       "group": "HotLoop Cascade",
       "title": "HotLoop Cascade 0.1.1 release notes",
       "label": "0.1.1",
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "docs/release-notes/0.1.1.md",
       "release": true
@@ -1342,7 +1353,7 @@
       "group": "HotLoop Cascade",
       "title": "HotLoop Cascade 0.1.2 release notes",
       "label": "0.1.2",
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "docs/release-notes/0.1.2.md",
       "release": true
@@ -1353,7 +1364,7 @@
       "group": "HotLoop Cascade",
       "title": "HotLoop Cascade 1.0.0 release notes",
       "label": "1.0.0",
-      "status": "released",
+      "status": "changed",
       "repo": "cascade",
       "source": "docs/release-notes/1.0.0.md",
       "release": true

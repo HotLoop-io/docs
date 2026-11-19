@@ -5,6 +5,10 @@ description: "Switches, ports, PoE, WAN failover and clients read from a UniFi c
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A plant's network is equipment. When a PLC goes quiet, the first question is
 "is it the PLC, or the switch port it's plugged into", and until now the answer
 lived in the UniFi app on somebody's phone. So HotLoop reads the UniFi console
@@ -42,7 +46,7 @@ each console has its own local accounts.
 
 A UniFi device can only be saved when HotLoop has a key to encrypt the password
 with (`HOTLOOP_SECRET_KEY_FILE`, which the chart sets up on its own). See
-[BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key).
+[Backups and restore](/iot/backup/#device-credentials-and-the-secret-key).
 
 | Option | Default | What it does |
 |---|---|---|
@@ -173,7 +177,7 @@ The console's client list lags. So:
 Open a device's drawer. If a UniFi console HotLoop reads lists a client at the
 device's IP, the Network section proposes it; an admin clicks **Link**. No IP
 to go on (a device addressed by name), link it by MAC. Or through the API,
-`PUT /api/devices/{id}/network`, see [API.md](/iot/api/#put-apidevicesidnetwork).
+`PUT /api/devices/{id}/network`, see [the HTTP API](/iot/api/#put-apidevicesidnetwork).
 
 A linked device's client gets tags and an alarm, **"PLC-07 off the network"**,
 priority 1, with a 120 s on-delay so a PLC rebooting doesn't page anybody.
@@ -247,7 +251,7 @@ stays where they put it.
   site is running on a backup the whole strip goes amber and says which one
   and since when. That "since" is when HotLoop first read it that way, not when
   the gateway switched, and a HotLoop that started while the site was already
-  on the 5G says so from its own start. I won't print a time I don't have.
+  on the 5G says so from its own start. We won't print a time we don't have.
   Below it: devices online, clients wired and wireless, clients per network,
   the devices the console has lost, and the latest events. A WAN the console
   says nothing about is gray and says "no liveness reported", never green.
@@ -260,7 +264,7 @@ stays where they put it.
   doesn't jiggle on a wall board. The cables are the console's own
   `downlink_table`: a switch is plugged into another only because the console
   says so. A device nothing lists as plugged into anything stands on its own
-  and says "no uplink listed". I'm not going to hang it off the gateway on a
+  and says "no uplink listed". We're not going to hang it off the gateway on a
   guess and then be wrong about where the PLC's network goes. Wired clients sit
   on the switch and port the console learned them on, wireless ones on their AP
   and SSID, counted in a chip on the card. Click a device and everything that
@@ -299,13 +303,13 @@ stays where they put it.
 
 The routes behind it are `GET /api/unifi/consoles`, `.../overview`,
 `.../topology`, `.../devices`, `.../wifi` and `.../events`, documented in
-[API.md](/iot/api/).
+[The HTTP API](/iot/api/).
 
 ### The starter alarms
 
 The alarms a plant wants on its network before anybody has had to think about
 it, made from what the console has now. **Create the usual alarms** on the
-Overview (or `POST /api/unifi/{id}/starter-alarms`, see [API.md](/iot/api/)) makes:
+Overview (or `POST /api/unifi/{id}/starter-alarms`, see [the HTTP API](/iot/api/)) makes:
 
 | Alarm | On | Priority | On-delay |
 |---|---|---|---|
@@ -318,8 +322,8 @@ They are ordinary alarm definitions: shelve them, acknowledge them, send them
 to Discord, edit the delay or the limit, delete one. Pressing it again after
 adopting more gear adds only the new gear, and a tag that already has an alarm
 on it, made by hand or by an earlier press, is left alone. The PoE alarm takes
-a limit you give instead of one HotLoop picks, because no console I read says
-what a port's budget is, and a number I guessed would be a number someone
+a limit you give instead of one HotLoop picks, because no console we read says
+what a port's budget is, and a number we guessed would be a number someone
 trusted. "Unknown device on an OT network" and "a watched client off the
 network" are not in the button: they are made when a network is marked OT and
 when a device is watched or linked, with the record that gives them a meaning.

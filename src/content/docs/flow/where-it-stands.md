@@ -7,7 +7,7 @@ editUrl: false
 
 **It runs.** It starts, serves the API and the editor, loads flows off the volume, moves messages, and comes back after a restart with its flows and credentials and context. The chart deploys it in all three network modes and the whole publish chain resolves. It runs on a real plant floor.
 
-**Verified against real infrastructure**, not just against my own encoders: Mosquitto, InfluxDB and PostgreSQL. The InfluxDB tag value came back out of a real database as `press 01,west` with the space and the comma intact. That's the escaping bug that otherwise fragments a series in silence and costs somebody a day to find.
+**Verified against real infrastructure**: Mosquitto, InfluxDB and PostgreSQL. The InfluxDB tag value came back out of a real database as `press 01,west` with the space and the comma intact. That's the escaping bug that otherwise fragments a series in silence and costs somebody a day to find.
 
 **Cookies and multipart answer the way Node-RED's own libraries do**, because they were checked against them, over a hundred cases, and the answers went into a golden file the tests replay through real sockets. That includes the ugly ones: a UTF-8 filename comes out garbled exactly as the Node-RED stack garbles it, and a cookie named `value` loses its value in `msg.responseCookies`, same as there. Matching the bugs is the point. A flow that leans on one breaks the day it stops being there.
 
@@ -17,4 +17,4 @@ What gets built next, and in what order, is in [the roadmap](/flow/roadmap/).
 
 ## Before it was HotLoop Flow
 
-It was Emberwire, and `v0.1.0` is still where it was, at `ghcr.io/embernet-ai/emberwire:0.1.0`. `2.0.0` was the first release under this name, and 2.x reads nothing the old name wrote: the `EMBERWIRE_*` variables, the two `emberwire-` database node types, a WASM module built against the old exports and the 0.1.0 credentials file all have to be redone. That's a clean break on purpose. Nobody had built on 0.1.0, and a shim for zero users is just more code to get wrong. The credentials file at least fails like an adult now. 2.0.0 died on it with a JSON parsing error. Since 2.0.1 it names the file, says Emberwire wrote it, and tells you to move it aside and enter the credentials again.
+It was Emberwire, and `v0.1.0` is still where it was, at `ghcr.io/embernet-ai/emberwire:0.1.0`. `2.0.0` was the first release under this name, and 2.x reads nothing the old name wrote: the `EMBERWIRE_*` variables, the two `emberwire-` database node types, a WASM module built against the old exports and the 0.1.0 credentials file all have to be redone. That's a clean break on purpose. Nobody had built on 0.1.0, and a shim for zero users is just more code to get wrong. Since 2.0.1 an old credentials file gets a clear message that names the file, says Emberwire wrote it, and tells you to move it aside and enter the credentials again.

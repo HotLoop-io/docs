@@ -5,19 +5,18 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
-Added in 4.4.0. Before it, this gateway had no login of its own: the EmberNet
-dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the
-actor recorded against a write came from a header the proxy set, spoofable by
-anything else on the same segment that could reach the port.
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
 
-That is no longer the default. It is still available, deliberately, for a
+HotLoop has its own login, since 4.4.0, and every product requires it by default. Running without one is still available, deliberately, for a
 deployment that really is isolated behind the dashboard and wants to say so, see [Running without a login](#running-without-a-login), but a bare
 `helm install` or a Podman Quadlet unit now comes up requiring one.
 
 ## The short version
 
 - **Local users, bcrypt passwords, server-side sessions.** No external
-  identity provider yet, see [MCP.md](/iot/mcp/) for the separate bearer-token
+  identity provider yet, see [MCP](/iot/mcp/) for the separate bearer-token
   perimeter that protects the agent interface, which this does not replace.
 - **Three roles: admin, operator, viewer.** Admin can do everything, including
   manage users. Operator can read everything and write tags, acknowledge
@@ -75,7 +74,7 @@ same `values.yaml` must not silently revert someone's password.
 | Role | Can do |
 |---|---|
 | **admin** | Everything: `*`. Including creating, disabling and deleting users. |
-| **operator** | Read every screen. Write tags (`POST /api/write`) and command entities (`POST /api/services/...`), set helpers (`helpers.write`, see [HELPERS.md](/iot/helpers/)), run and stop scripts (`scripts.run`, see [SCRIPTS.md](/iot/scripts/)), apply recipes (`recipes.apply`, see [RECIPES.md](/iot/recipes/)), make a rule from a blueprint and upgrade one (`blueprints.apply`, see [BLUEPRINTS.md](/iot/blueprints/)), see the dashboards offered to the role (`dashboards.read`, see [DASHBOARDS.md](/iot/dashboards/)), rearrange the board, acknowledge/shelve/unshelve alarms, trigger automations. Cannot edit device, tag, alarm, automation, script, recipe, blueprint or dashboard *definitions*, and cannot manage users. |
+| **operator** | Read every screen. Write tags (`POST /api/write`) and command entities (`POST /api/services/...`), set helpers (`helpers.write`, see [Helpers](/iot/helpers/)), run and stop scripts (`scripts.run`, see [Scripts](/iot/scripts/)), apply recipes (`recipes.apply`, see [Recipes](/iot/recipes/)), make a rule from a blueprint and upgrade one (`blueprints.apply`, see [Blueprints](/iot/blueprints/)), see the dashboards offered to the role (`dashboards.read`, see [Dashboards](/iot/dashboards/)), rearrange the board, acknowledge/shelve/unshelve alarms, trigger automations. Cannot edit device, tag, alarm, automation, script, recipe, blueprint or dashboard *definitions*, and cannot manage users. |
 | **viewer** | Read every screen. Nothing else. |
 
 A user can be given an explicit `permissions` list instead of a role, which
@@ -99,7 +98,7 @@ nobody is touching it.
 ### What the operator sees
 
 A panel is a physical screen: HotLoop opened at `/?screen=<name>` (see
-[DASHBOARDS.md](/iot/dashboards/#roles-and-screens)). With nobody signed in, it shows
+[Dashboards](/iot/dashboards/#roles-and-screens)). With nobody signed in, it shows
 one field, "PIN or badge", and nothing of the plant. Type the PIN and press Enter,
 or scan the badge. The panel opens its dashboard, with who is signed in and a
 **Sign out** button in the corner, because the header that would normally say it
@@ -136,7 +135,7 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" https://gateway/api/users/olga/
 - **A PIN is a credential.** It is stored as a bcrypt hash at the same cost as a
   password, never in the clear, never in the system log and never in a response.
   The users list says only `hasPin`. A backup holds the hashes exactly as it holds
-  the password ones ([BACKUP.md](/iot/backup/)).
+  the password ones ([Backups and restore](/iot/backup/)).
 - **A badge is a value a keyboard-wedge reader types.** There is no hardware
   driver. A reader that acts as a keyboard types the badge's number into the
   panel's one field and presses Enter, which is the form submitting. So a badge
@@ -256,7 +255,7 @@ you pick a role, which replaces it. The same things over the REST API:
 
 A password is 8 to 72 bytes: 72 is bcrypt's own limit, and one longer is refused
 with that said. It works the same over OPC UA (see
-[OPCUA-SERVER.md](/edge/opc-ua-server/#who-may-log-in)); in earlier releases a password over
+[The OPC UA server](/edge/opc-ua-server/#who-may-log-in)); in earlier releases a password over
 64 bytes could sign in here and not there.
 
 ```sh
@@ -430,14 +429,14 @@ places hold them as they are stored:
   `password`, header values) are encrypted with a key kept outside the database,
   and so is an address or an option with a credential written into its text
   (`mqtt://user:pass@host`, `?token=`), sealed whole. See
-  [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key).
+  [Backups and restore](/iot/backup/#device-credentials-and-the-secret-key).
 - **Backups.** `devices.copy` in a backup holds them, encrypted or not exactly as
-  the database does. See [BACKUP.md](/iot/backup/#protect-the-backup-files).
+  the database does. See [Backups and restore](/iot/backup/#protect-the-backup-files).
 - **Edge relay device files.** The relay reads a JSON file that carries the
   credentials of its devices. See
-  [EDGE-RELAY.md](/edge-relay/reference/#credentials-in-the-device-file-4150).
+  [Edge Relay reference](/edge-relay/reference/#credentials-in-the-device-file-4150).
 - **Fleet config push.** A device file pushed to a relay is published to an MQTT topic,
-  retained, as it is. See [FLEET.md](/gateway/fleet/).
+  retained, as it is. See [Fleet management](/gateway/fleet/).
 
 Protect the database, the backup volume, the relay's device file and the broker
 accordingly. Redacting the API does not change any of them.
@@ -531,7 +530,7 @@ ends at the next request the dashboard stops signing.
 - **No OpenID Connect.** Local accounts, plus the EmberNet dashboard's signed
   assertion above. An identity-provider integration is not built.
 - **No per-tenant or per-site roles.** A user's permissions are the same
-  everywhere this gateway runs, which is fine for one plant and would need
+  everywhere the Gateway runs, which is fine for one plant and would need
   more thought for the multi-site rollup in `Sites`.
 - **No lockout for a PIN or badge typed on its own,** only for a password and a
   PIN with its user name; see

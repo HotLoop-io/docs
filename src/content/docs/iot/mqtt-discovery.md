@@ -9,7 +9,7 @@ Point a device at HotLoop's broker and it shows up. Its sensors read, its
 switches show their state, its entities have the names, units and classes it
 announced. Nobody types a tag list.
 
-And it can't command a damn thing. Every point discovery makes is read-only, and
+And it can't command anything. Every point discovery makes is read-only, and
 it stays that way until an admin accepts the device and then arms each point by
 hand, looking at the exact topic the command will go to. A device announcing
 itself is a device telling you what it is. That's useful. It is not a device
@@ -556,13 +556,13 @@ Everything a config says came from whoever can publish on the prefix. So:
 With anonymous connections allowed on the embedded broker, anyone on the network
 can announce devices and publish to any command topic, and the Discovered
 screen says so in red. Give each device its own login made in HotLoop, from
-its profile, named after its topic ([BROKER.md](/iot/broker/)): then it can
+its profile, named after its topic ([The embedded MQTT broker](/iot/broker/)): then it can
 announce itself and nothing else, and it can't touch another device's command
 topic.
 
 ## The broker side
 
-Discovery runs on the embedded broker (see [BROKER.md](/iot/broker/)), on by
+Discovery runs on the embedded broker (see [the embedded MQTT broker](/iot/broker/)), on by
 default whenever the broker is. HotLoop's own client logs in with a login made
 at every start and held only in memory: there's nothing to configure and
 nothing in a backup to leak. It publishes one thing of its own, the birth
@@ -627,7 +627,7 @@ The password is sealed with the device credential key
 (`HOTLOOP_SECRET_KEY_FILE`), like a UniFi console's, and never comes back out
 of the API. Without a key a broker with a password is refused, not stored in
 the clear. A backup carries it sealed and restores under the same rule as a
-device's credentials ([BACKUP.md](/iot/backup/)). A broker whose password can't be
+device's credentials ([Backups and restore](/iot/backup/)). A broker whose password can't be
 opened is listed, not connected, and says why.
 
 Change a broker and the listener and every device from it connect again with
@@ -642,7 +642,7 @@ a decision in and no screen to make one on. So it takes whatever it hears,
 reads it and forwards it over Sparkplug, and nothing it finds can be armed: its
 tags are read-only like every discovered tag, its devices are never accepted,
 and the relay has no write path at all. Name the brokers in its device file; see
-[EDGE-RELAY.md](/edge-relay/reference/#discovery-41810). A device you can command gets
+[Edge Relay reference](/edge-relay/reference/#discovery-41810). A device you can command gets
 there the other way: accepted and armed on a Gateway, in a file it pushes. It
 forgets what it heard when it stops, and hears it again from the broker.
 
@@ -669,10 +669,10 @@ are in every backup. The decisions are the part no device can announce back.
 
 ## The API
 
-Under `/api/discovery`. See [API.md](/iot/api/#mqtt-discovery).
+Under `/api/discovery`. See [the HTTP API](/iot/api/#mqtt-discovery).
 
 ## Found on the network
 
 The same screen lists devices HotLoop heard on the plant network over mDNS,
 SSDP and DHCP, decided about the same way. See
-[NETWORK-DISCOVERY.md](/iot/network-discovery/).
+[Network discovery](/iot/network-discovery/).

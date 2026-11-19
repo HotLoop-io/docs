@@ -118,7 +118,7 @@ names; the old data stays on the volume as `pgdata.pg16`. It pulls the
 PostgreSQL 16 image only when the volume needs it. A failure leaves the 16 data
 as it was and the database not started. The whole description, the way back and
 how to delete `pgdata.pg16` are in
-[DEPLOYMENT.md](/install/helm/#postgresql-17). For a rootless install
+[k3s and Helm](/install/helm/#postgresql-17). For a rootless install
 the script path in the unit is `~/.config/containers/systemd`, from `%E`.
 
 ## SQLite instead of PostgreSQL
@@ -158,7 +158,7 @@ disk: a Pi puts the volume on a USB SSD, and network storage is not an option
 because SQLite corrupts on it. History is one table with an index, not
 partitions or a hypertable, so a site with years of history at one second wants
 the PostgreSQL files. And moving a box between SQLite and PostgreSQL is a
-backup and a restore ([BACKUP.md](/iot/backup/)), not a swap of units:
+backup and a restore ([Backups and restore](/iot/backup/)), not a swap of units:
 the new database starts empty. Do not copy a `sqlite/hotloop.container` over a
 running PostgreSQL install to "switch"; the PostgreSQL volume's data is not
 read by it.

@@ -7,6 +7,10 @@ sidebar:
   label: "4.19.4"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 4.19.0, 4.19.1, 4.19.2 and 4.19.3 were tagged and never published, so nothing named any of them exists and `stable` never moved to one. This is the first release with everything their notes list, which includes one thing that is new since 4.19.1: the charts take `hostNetwork`.
 
 - 4.19.1 added the fix for that and one more (a discovery listener that said it was up before it could hear, below) and was skipped before it released.
@@ -42,7 +46,7 @@ What changed in 4.19.4.
 - **A deployment that saved `allowMcpWrites: false` stays off.** That includes one installed from the App Store, which stores every answer. Flip it if you want agents to write.
 - **The endpoint is never open.** The charts always set an MCP token. A HotLoop started without `HOTLOOP_MCP_TOKEN` (a Quadlet unit, a bare binary) used to serve `/mcp` to anybody who could reach the port and only logged a warning. It now makes a 24 byte token at its first start and keeps it in its database, so every replica and every restore carries the same one. A call without the token is a `401`. A token you configured is never replaced.
 - **To get the token on a bare or Quadlet install:** `hotloop mcp-token` prints it. If you have an agent pointed at `/mcp` on one of those installs with no token, it stops working at this upgrade until you give it that token. That is on purpose.
-- **Who made the call.** A static token says which client called, never which person. With the OIDC settings on, a Vord login or a Fireball Hub assertion on `/mcp` makes the audit name the person (`mcp:pat@example.com`), and an optional write role narrows writes per caller on top of the switches above. It is off unless you set it, and the token keeps working beside it. the MCP page has the setup.
+- **Who made the call.** A static token says which client called, never which person. With the OIDC settings on, a Vord login or a Fireball Hub assertion on `/mcp` makes the audit name the person (`mcp:pat@example.com`), and an optional write role narrows writes per caller on top of the switches above. It is off unless you set it, and the token keeps working beside it. [the MCP page](/iot/mcp/) has the setup.
 
 ### Writes to a scaled tag
 
@@ -56,11 +60,11 @@ What changed in 4.19.4.
 
 ### A store install signs you in as yourself
 
-The chart made a random admin password in a Secret the tenant can't read, so a store install landed on a login with no way through. With the dashboard's public key configured, a request carrying a valid signed assertion for this tenant and this Service signs that person in, makes their user the first time, keeps their role in step with what the dashboard sent, and the audit trail names them. A bad, expired, wrong tenant or wrong app assertion is refused, and local login is untouched. It is off unless a key is set, and the three product charts take the key from the store. docs/AUTH.md has the settings.
+The chart made a random admin password in a Secret the tenant can't read, so a store install landed on a login with no way through. With the dashboard's public key configured, a request carrying a valid signed assertion for this tenant and this Service signs that person in, makes their user the first time, keeps their role in step with what the dashboard sent, and the audit trail names them. A bad, expired, wrong tenant or wrong app assertion is refused, and local login is untouched. It is off unless a key is set, and the three product charts take the key from the store. [Authentication and users](/iot/authentication/) has the settings.
 
 ### CODESYS, by the names the programmer gave the variables
 
-HotLoop reads and writes a CODESYS PLC through the runtime's own OPC UA server, the way CODESYS documents: the application's Symbol Configuration, published under the PLCopen IEC 61131-3 model. Discovery lists what the application exports with the types and the access the programmer gave them, walking into arrays and structures, and a tag is an IEC symbol that is found under whatever the project calls its PLC and application. A restart, a download or a lost link reads bad with the reason and comes back with no hands. I proved it against a real 4.22.0.0 runtime in testing running my own program, with a write the PLC's own logic answers, and against a second program of over a hundred thousand variables, read in 2.4 seconds.
+HotLoop reads and writes a CODESYS PLC through the runtime's own OPC UA server, the way CODESYS documents: the application's Symbol Configuration, published under the PLCopen IEC 61131-3 model. Discovery lists what the application exports with the types and the access the programmer gave them, walking into arrays and structures, and a tag is an IEC symbol that is found under whatever the project calls its PLC and application. A restart, a download or a lost link reads bad with the reason and comes back with no hands. We proved it against a real 4.22.0.0 runtime in testing running our own program, with a write the PLC's own logic answers, and against a second program of over a hundred thousand variables, read in 2.4 seconds.
 
 This touches a driver plants run, so plainly: the OPC UA driver asked for 200 nodes a request and never read what the server allows. A CODESYS runtime publishes OperationLimits of 100 and refuses more, and the driver answered by declaring every discovered tag a float and by reading none of the tags of a device with more than a hundred. Requests are now cut to the limits the server publishes at connect, and halved when a server that publishes none says too many. A data type that is a subtype of a standard one (a CODESYS STRING, BYTE or TIME) is followed up to the standard type, so it is typed and written as that. Every OPC UA device gets this, not only CODESYS ones.
 
@@ -72,7 +76,7 @@ This touches a driver plants run, so plainly: the OPC UA driver asked for 200 no
 - **A broker that vanishes mid write.** The target goes down within 25 seconds and the readings in that write are owed, instead of staying up with its queue overflowing.
 - **A topic made a moment ago.** The first look at a topic that was just made, by you or by the target's own last try, waits for it to exist and have a leader instead of reporting the target down.
 - **What it costs.** About 5 MiB on the binary of every product with a database. The Edge Relay has no historian targets and doesn't carry it. The client is franz-go, credited in `NOTICE`.
-- **Upgrading.** Migration 0026 adds an `options` column to the historian targets, empty for every target that exists. Nothing changes for them. HISTORIAN-TARGETS.md has the record formats and what is and isn't proven.
+- **Upgrading.** Migration 0026 adds an `options` column to the historian targets, empty for every target that exists. Nothing changes for them. [Historian targets](/iot/historian-targets/#kafka-api-event-stream) has the record formats and what is and isn't proven.
 
 ### OPC UA PubSub over UADP
 
@@ -81,7 +85,7 @@ This touches a driver plants run, so plainly: the OPC UA driver asked for 200 no
 - **Not yet.** Message security (signed or encrypted messages) is refused by name, as are chunked messages, discovery, events and structure fields. Delta frames are read but not sent.
 - **Arrays.** A field that is an array is read in Variant and DataValue messages, and in RawData when the device's DataSet says how it is laid out (`"Float[250]"` for an array with its count, `"Float*250"` for 250 separate fields). A tag names one element, `1000/3[17]`, and Browse lists them.
 - **Where it listens.** The group, the port and the network card are the device's own. A multicast group on a named card and a unicast port on this machine both work.
-- PROTOCOLS.md has the setup and the limits.
+- [Protocols and drivers](/iot/protocols/#opc-ua-pubsub-uadp) has the setup and the limits.
 
 ### Images, and a second set of screens
 

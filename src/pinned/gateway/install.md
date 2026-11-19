@@ -1,12 +1,12 @@
 ---
-reviewed: hotloop=4.21.1
+reviewed: hotloop=4.22.0
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Gateway {{hotloop}} ships as a container image for amd64 and arm64, about 37 MB on amd64 and 35 MB on arm64, and a Helm chart. Both pull with no login. It keeps the names it shipped under through 4.17.0, image `ghcr.io/hotloop-io/hotloop` and chart `hotloop`, so nobody running it has to change a thing. Already running an older release? Don't install over it. [Upgrading](/gateway/upgrading/) has the path from 4.17.0, which is a plain `helm upgrade`, and the paths from 4.16.0 and 4.3.1, which go in hops.
+HotLoop Gateway {{hotloop}} ships as a container image for amd64 (arm64 follows in the next version), about 37 MB on amd64 and 35 MB on arm64, and a Helm chart. Both pull with no login. It keeps the names it shipped under through 4.17.0, image `ghcr.io/hotloop-io/hotloop` and chart `hotloop`, so nobody running it has to change a thing. Already running an older release? Don't install over it. [Upgrading](/gateway/upgrading/) has the path from 4.17.0, which is a plain `helm upgrade`, and the paths from 4.16.0 and 4.3.1, which go in hops.
 
 Two ways to run it for real: the Helm chart on any Kubernetes, k3s included, and Podman Quadlet on a box that isn't in a cluster, below. There's no Docker or Compose path, on purpose, and a bare `podman run` from a shell that dies with the session isn't an install.
 

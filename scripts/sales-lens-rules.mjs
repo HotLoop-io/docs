@@ -20,20 +20,24 @@ export const GLOBAL = [
   { sub: [/\[`?docs\/DEPLOYMENT\.md`?\]/g, '[the k3s and Helm page]'] },
   { sub: [/\[`?docs\/ROADMAP\.md`?\]/g, '[the roadmap]'] },
   { sub: [/\[`?docs\/MCP\.md`?\]/g, '[the MCP page]'] },
-  { sub: [/`?docs\/EDGE-RELAY\.md`?/g, 'the Edge Relay reference'] },
-  { sub: [/`?docs\/EDGE-PUBLISH\.md`?/g, 'the Edge publish page'] },
-  { sub: [/`?docs\/FLEET\.md`?/g, 'the fleet management page'] },
-  { sub: [/`?docs\/DEPLOYMENT\.md`?/g, 'the k3s and Helm page'] },
-  { sub: [/`?docs\/PRODUCTS\.md`?/g, 'the products page'] },
-  { sub: [/`?docs\/MCP\.md`?/g, 'the MCP page'] },
-  { sub: [/`?docs\/NOTIFY\.md`?/g, 'the alarm notifications page'] },
-  { sub: [/`?docs\/ROADMAP\.md`?/g, 'the roadmap'] },
+  { sub: [/(?<![\w/.-])`?docs\/EDGE-RELAY\.md`?/g, 'the Edge Relay reference'] },
+  { sub: [/(?<![\w/.-])`?docs\/EDGE-PUBLISH\.md`?/g, 'the Edge publish page'] },
+  { sub: [/(?<![\w/.-])`?docs\/FLEET\.md`?/g, 'the fleet management page'] },
+  { sub: [/(?<![\w/.-])`?docs\/DEPLOYMENT\.md`?/g, 'the k3s and Helm page'] },
+  { sub: [/(?<![\w/.-])`?docs\/PRODUCTS\.md`?/g, 'the products page'] },
+  { sub: [/(?<![\w/.-])`?docs\/MCP\.md`?/g, 'the MCP page'] },
+  { sub: [/(?<![\w/.-])`?docs\/NOTIFY\.md`?/g, 'the alarm notifications page'] },
+  { sub: [/(?<![\w/.-])`?docs\/ROADMAP\.md`?/g, 'the roadmap'] },
   // Anything about our source tree, our test rig or our test code.
   { cut: /`[^`\n]*\b(?:internal|cmd|testdata)\/[^`\n]*`|`test\/[^`\n]*`|\.\/internal\b|\bThe Beast\b|\bnode-011\b|\bgo (?:test|vet|mod)\b|\bgolangci|-race\b|[Rr]ace detector|\bgofmt\b|\bTest[A-Z][A-Za-z0-9_]+|\bfuzz/ },
   // Our CI, except where CI is how a customer uses the product (deploy and test flows from a pipeline).
   { cut: /^(?![\s\S]*(?:\b(?:for|any|your|run in) CI\b|\bCI (?:job|system|secret|log)|error list in CI|CI checks for diagrams|Flows as code|JUnit))[\s\S]*\bCI\b/ },
   // Our build files, our repository layout, and the libraries and test peers underneath.
   { cut: /\bthird_party\b|\bCGO_ENABLED\b|\bContainerfile|\bDockerfile|\bdocker-publish|\bthis repo(?:sitory)?\b|\b[a-z_]+\.go\b|\bmain\.go\b|\b(?:gopcua|awcullen|asyncua|bacpypes3?|gosnmp|snmpd|pymodbus|open62541|opc-plc|OPC PLC|Pallets Jinja2|libplctag|nptdms|otel\/opentelemetry-collector)\b/ },
+  // A page name the subs above put at the start of a sentence starts with a capital.
+  { sub: [/(?<!\b(?:e\.g|i\.e|vs|etc))([.!?]\s+)the (MCP page|roadmap|products page|k3s and Helm page|Edge Relay reference|Edge publish page|fleet management page|alarm notifications page)\b/g, (m, a, b) => `${a}The ${b}`] },
+  // A generated reference page's note to its maintainers is for them, not the reader, so it stays in the source as a comment.
+  { sub: [/^(Generated from [^\n]*\. Do not edit by hand[^\n]*(?:\n[^\n]+)*)\n/gm, (m, note) => `<!-- ${note.replace(/\s*\n\s*/g, ' ').replace(/--/g, '-')} -->\n`] },
   { sub: [/ in the lab\b/g, ' in testing'] },
   { sub: [/\/iot\/unifi\/#(?:clients-)?on-real-gear-[0-9-]+/g, '/iot/unifi/'] },
   { sub: [/\bnet-snmp's\b/g, "an SNMP agent's"] },
@@ -47,6 +51,7 @@ export const GLOBAL = [
   { sub: [/\bgoja\b/g, 'the JavaScript interpreter'] },
   { sub: [/a JavaScript interpreter, a JavaScript interpreter in pure Go/g, 'a JavaScript interpreter in pure Go'] },
   { sub: [/\bwazero\b/g, 'the WebAssembly runtime'] },
+  { sub: [/\ba bbolt-backed\b/g, 'an embedded'] },
   { sub: [/\bbbolt\b/g, 'the embedded queue store'] },
   { sub: [/\bpaho(?: Go client|\.mqtt\.golang)?\b/g, 'the MQTT client library'] },
   // How far something has been proven is said once, in a sentence, not as a rig.
@@ -69,7 +74,7 @@ export const PRE = {
     { sub: [ws('`release.yml` moves `:stable` on every tag, and `.github/scripts/release_guard.sh` refuses a release whose units don\'t follow it.'), 'Every release tag moves `:stable`, and a release whose units don\'t follow it is refused.'] },
   ],
   'releases/flow-2-2-0': [
-    { sub: [ws('I checked it against pysparkplug in both directions, edge node and host.'), 'I checked it against an independent Sparkplug implementation in both directions, edge node and host.'] },
+    { sub: [ws('We checked it against pysparkplug in both directions, edge node and host.'), 'We checked it against an independent Sparkplug implementation in both directions, edge node and host.'] },
   ],
 
   'releases/hotloop-4-18-10': [
@@ -77,10 +82,10 @@ export const PRE = {
       "There is no 4.18.0, 4.18.1, 4.18.2, 4.18.3, 4.18.4, 4.18.5, 4.18.6, 4.18.7 or 4.18.9 to install, and 4.18.8 is not one to run. Nine of those tags published nothing. 4.18.8 left images on ghcr.io with no chart and no release, and moved `:stable` and `:latest` for the Gateway, Edge Relay and IoT, so a box that follows `:stable` may have run 4.18.8 until it updated. 4.18.10 replaces it and carries every fix from those tags. A discovered device's value could be stamped older than its own \"nothing yet\" reading, and the cache dropped it. The dashboard stops redrawing a gauge that hasn't changed. The broker built into HotLoop refused a listener's subscription when its packet id matched a message it was sending that same client, so the device behind that subscription was never discovered, and a client that published with the same packet id as a QoS 1 or 2 message the broker still owed made the broker drop its own message and never resend it after a reconnect. The broker keeps the two directions in separate tables now, and a broker that refuses a subscription says so in its log. A dashboard still loading no longer writes its address over the one the person had just moved to. If your phones log in to ntfy with a password from the same address HotLoop publishes from, give that user a tier too. 4.18.10 is everything 4.18.0 was going to be, plus what changed since 4.18.3 was tagged."] },
   ],
   'releases/cascade-0-1-1': [
-    { sub: [/its chart test failed on a hosted runner and I cancelled the run, so nothing reached the registry\. A tag stays where it is, so this is the same code with the test fixed\. That test checked[\s\S]*?pass by luck\./, "it was cancelled before anything reached the registry. A tag stays where it is, so this is the same code, published."] },
+    { sub: [/its chart test failed on a hosted runner and we cancelled the run, so nothing reached the registry\. A tag stays where it is, so this is the same code with the test fixed\. That test checked[\s\S]*?pass by luck\./, "it was cancelled before anything reached the registry. A tag stays where it is, so this is the same code, published."] },
   ],
   'releases/cascade-0-1-2': [
-    { sub: [/I run a Podman Quadlet house, and the workflows that test and publish Cascade[\s\S]*?exactly amd64 and arm64\./, "Cascade is built and published on Podman the whole way through now, and the image holds exactly amd64 and arm64."] },
+    { sub: [/We run a Podman Quadlet house, and the workflows that test and publish Cascade[\s\S]*?exactly amd64 and arm64\./, "Cascade is built and published on Podman the whole way through now, and the image holds exactly amd64 and arm64."] },
   ],
   'releases/hotloop-4-19-11': [
     { sub: [ws(', and a test that failed under load.'), '.'] },
@@ -143,7 +148,7 @@ export const PRE = {
     { drop: /^```bash\nhotloop-flow bench -mode http/ },
     { drop: /^It starts the binary, times how long until the flow answers/ },
     { sub: [ws('(8 GB, four Cortex-A76 cores, Ubuntu 26.04.1, kernel `7.0.0-1020-raspi`)'), '(8 GB, four Cortex-A76 cores)'] },
-    { sub: [ws('The process, the board, the throttle readings, and what I didn\'t establish are in [docs/bench/](/flow/benchmarks/#results-on-a-raspberry-pi-5).'), 'The [benchmarks page](/flow/benchmarks/#results-on-a-raspberry-pi-5) has the Pi run in full.'] },
+    { sub: [ws('The process, the board, the throttle readings, and what we didn\'t establish are in [docs/bench/](/flow/benchmarks/#results-on-a-raspberry-pi-5).'), 'The [benchmarks page](/flow/benchmarks/#results-on-a-raspberry-pi-5) has the Pi run in full.'] },
     { sub: [ws('The method and the rest of the caveats are in docs/bench/.'), 'The [benchmarks page](/flow/benchmarks/) has the method and the caveats.'] },
   ],
   'iot/protocols': [
@@ -156,12 +161,8 @@ export const PRE = {
     { sub: [ws('and every Linux box running `snmpd`.'), 'and every Linux box running an SNMP agent.'] },
   ],
   'iot/entities': [
-    { sub: [ws('`internal/entity` is the entity registry and the engine that computes entity state. It is the first piece of Phase 1 in [ROADMAP.md](/roadmap/): the foundation every automation, helper, script and screen in HotLoop is built on.'),
-      'The entity registry and the engine that computes entity state are the foundation every automation, helper, script and screen in HotLoop is built on.'] },
   ],
   'edge/opc-ua-server': [
-    { sub: [ws("`internal/opcuaserver` publishes this Gateway's configured devices and tags as an OPC UA address space, so a third-party OPC UA client, a SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the Gateway's live tags without anyone writing a HotLoop driver for the other side. It is the server half of what `internal/driver`'s OPC UA client does in the other direction, and it is the increment that makes \"a third-party OPC UA client reads Gateway tags\" true."),
-      "HotLoop publishes this Gateway's configured devices and tags as an OPC UA address space, so a third-party OPC UA client, a SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the Gateway's live tags without anyone writing a HotLoop driver for the other side. It is the server half of what HotLoop's OPC UA client does in the other direction."] },
     { sub: [ws("In earlier releases the library this server is built on offered both in every endpoint list with no way to remove them. The server now runs on a copy of it (`third_party/awcullen-opcua`, see its `HOTLOOP_PATCH.txt`) that can, and `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` (chart: `opcuaServer.allowDeprecatedPolicies`, default `false`) decides:"),
       "In earlier releases both were offered in every endpoint list with no way to remove them. `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` (chart: `opcuaServer.allowDeprecatedPolicies`, default `false`) decides:"] },
     { sub: [/\*\*A key can be unusable, and the server refuses it\.\*\*[\s\S]*?can go\./,
@@ -171,27 +172,23 @@ export const PRE = {
     { sub: [ws('(which is how the lab does it)'), ''] },
   ],
   'iot/broker': [
-    { sub: [ws('`internal/broker` lets this Gateway run its own MQTT broker in-process,'), 'This Gateway can run its own MQTT broker in-process,'] },
-    { sub: [ws('`internal/edgepublish` (this Gateway acting as a Sparkplug edge node) and `internal/fleet` (tracking registered edge relays) both connect'), 'Edge publish (this Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect'] },
+    { sub: [ws('`internal/edgepublish` (the Gateway acting as a Sparkplug edge node) and `internal/fleet` (tracking registered edge relays) both connect'), 'Edge publish (the Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect'] },
     { sub: [ws("`internal/edgepublish`, `internal/fleet`, or an external edge relay's `HOTLOOP_EDGE_PUBLISH_BROKER` can all be pointed at"), "Edge publish, fleet management, or an external edge relay's `HOTLOOP_EDGE_PUBLISH_BROKER` can all be pointed at"] },
   ],
   'iot/backup': [
-    { sub: [ws('`internal/backup` takes logical, table-data-only snapshots of the historian and restores them.'), 'HotLoop takes logical, table-data-only snapshots of the historian and restores them.'] },
     { sub: [ws('`--restore-from=<dir>` is a `cmd/hotloop` flag, not an environment variable,'), '`--restore-from=<dir>` is a command-line flag on the `hotloop` binary, not an environment variable,'] },
     { sub: [ws('**Not a schema backup.** `internal/store/migrations`, applied automatically by `store.Migrate` on every start (`HOTLOOP_DB_MIGRATE`, on by default), already reproduce the schema from nothing. A backup only ever captures table *data*, restoring one always assumes the schema will be rebuilt by migrations first, not by anything this package writes.'),
       '**Not a schema backup.** The schema is rebuilt automatically on every start (`HOTLOOP_DB_MIGRATE`, on by default). A backup only ever captures table *data*, and a restore always assumes the schema has been rebuilt by those migrations first.'] },
     { sub: [ws("have no data yet in any of the tables `internal/backup.Tables` lists (a brand new, empty database is the normal case; `store.Migrate` will build the schema in step 3)."), 'have no data yet in any of the backed-up tables (a brand new, empty database is the normal case; the schema will be built in step 3).'] },
   ],
   'gateway/fleet': [
-    { sub: [ws("`internal/fleet` lets the Gateway track registered edge relays,"), 'Fleet management lets the Gateway track registered edge relays,'] },
   ],
   'gateway/reports': [
-    { sub: [ws('`internal/reports` runs operator-defined reports on a schedule:'), 'The Gateway runs operator-defined reports on a schedule:'] },
     { sub: [ws('Alarm email is `internal/notify`.'), 'Alarm email is its own feature, [alarm notifications](/iot/notifications/).'] },
   ],
   'iot/notifications': [
-    { sub: [ws('`internal/notify` is the first increment of Phase 2 of the plan of record, whose own acceptance bar for this phase is literally "a 03:00 alarm pages a phone." It registers with `alarm.Engine`\'s existing `OnTransition` hook and, when an alarm is **raised**, sends'),
-      'The acceptance bar is simple: a 03:00 alarm pages a phone. When an alarm is **raised**, HotLoop sends'] },
+    { sub: [ws('HotLoop registers with `alarm.Engine`\'s existing `OnTransition` hook and, when an alarm is **raised**, sends'),
+      'When an alarm is **raised**, HotLoop sends'] },
   ],
   'edge/edge-publish': [
     { sub: [ws('`internal/edgepublish` is the implementation; this is what it means to run it.'), 'This is what it means to run it.'] },
@@ -202,7 +199,6 @@ export const PRE = {
     { drop: /It only\s+creates and removes containers named `sfp-\*`/ },
   ],
   'edge-relay/reference': [
-    { sub: [ws('`cmd/edge-relay` is a second binary, not a mode of the Gateway:'), 'Edge Relay is a second binary, not a mode of the Gateway:'] },
     { sub: [ws('`cmd/edge-relay` never imports `internal/store` (PostgreSQL/TimescaleDB), `internal/api` (the web UI and auth), `internal/mcpserver`, `internal/mcpclient`, `internal/automation` or `internal/entity` (the entity registry).'),
       'It carries no database, no web UI, no authentication, no MCP server or client, no automation engine and no entity registry.'] },
   ],
@@ -382,7 +378,7 @@ What to know:
     { cut: /^\s*Not yet run against the real Discord/ },
     { section: 'The rules' },
     { section: 'How it gets tested' },
-    { section: 'Not verified yet' },
+    { section: 'To verify next' },
     { section: 'Tests and CI' },
     { section: 'Docs' },
     { section: 'Housekeeping' },
@@ -417,3 +413,69 @@ What to know:
     { section: 'The migrations before this rule' },
   ],
 };
+
+// The voice on a buyer's page: no profanity, jokes or insults, "we" and never an unnamed "I", no past failure told for
+// its own sake, no positioning against another vendor's product, and a next step on every product overview. These add to
+// PAGE, so each one has to match like any other page rule, and a source fixed upstream is noticed and the rule dropped.
+const PLANT = "Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.";
+const VOICE = {
+  products: [
+    { sub: [ws("Refusing to start a plant over a report nobody can get is stupid, and ignoring it silently is how nobody notices for a month."), 'HotLoop keeps the plant running over a report it cannot produce, and the warning makes sure somebody sees it.'] },
+  ],
+  roadmap: [
+    { sub: [ws('at the machine. Our Ignition Edge |'), 'at the machine |'] },
+    { sub: [ws('IoT user, and telling him to buy the Gateway to talk to it would be a scam.'), 'IoT user, and IoT talks to that PLC with no upgrade.'] },
+    { rewrite: 'Ignition: verify every product against it', text: `Every product is checked against the current stable Ignition release, so a plant that runs Ignition connects HotLoop to it.
+
+| Connection | Status |
+|---|---|
+| Gateway OPC UA client → Ignition OPC UA server, secured, signed in | **Verified** (4.15.2) |
+| Ignition OPC UA client → Gateway OPC UA server | **Verified** (September 27, 2026, Ignition 8.3.9 against 4.15.3), every policy Ignition offers |
+| Gateway Sparkplug edge node → Ignition MQTT Engine | Next. Needs the Cirrus Link MQTT Engine 5.x module for 8.3 |
+| Edge Relay → Ignition MQTT Engine | Next, with the same module |
+| Gateway as Sparkplug host ← Ignition MQTT Transmission | Next |
+
+---` },
+    { sub: [/^## Ignition: verify every product against it$/m, '## Interoperability with Ignition'] },
+  ],
+  'iot/mqtt-discovery': [
+    { sub: [ws("And it can't command a damn thing."), "And it can't command anything."] },
+  ],
+  'iot/protocols': [
+    { sub: [ws('would add nine more things to get subtly wrong'), 'would add eight more things to get subtly wrong'] },
+    { sub: [ws('The previous version of this product had sixteen protocol files of which fifteen returned `"not implemented"`, while the catalog advertised all sixteen. A test now enforces'), 'A test enforces'] },
+  ],
+  'iot/authentication': [
+    { sub: [ws("HotLoop has its own logins, roles and tokens, since 4.4.0. Before that the EmberNet dashboard's reverse proxy and a NetworkPolicy were the whole perimeter, and the actor recorded against a write came from a header the proxy set, spoofable by anything else on the same segment that could reach the port. That is no longer the default. It is still available, deliberately,"),
+      'HotLoop has its own login, since 4.4.0, and every product requires it by default. Running without one is still available, deliberately,'] },
+  ],
+  'cascade/overview': [
+    { sub: [ws('a retry is a row in the database, not a goroutine praying nobody pulls the plug.'), 'a retry is a row in the database.'] },
+    { sub: [ws("Running JavaScript in every field is a remote code execution bug factory, and we're not opening one."), 'Keeping it out of every other field keeps remote code execution out of them.'] },
+    { sub: [ws('opt-in, off by default, and documented down to the field when it lands.'), `opt-in, off by default, and documented down to the field when it lands.
+
+## Where to go next
+
+[Run Cascade](/cascade/running/), run it [with Podman Quadlet](/cascade/quadlet/), or read [the Cascade roadmap](/cascade/roadmap/). ${PLANT}`] },
+  ],
+  'flow/overview': [
+    { sub: [ws('a real InfluxDB that we killed for ten minutes.'), 'a real InfluxDB that was stopped for ten minutes.'] },
+    { sub: [ws('so you can go disagree with me on your own hardware.'), 'so you can check them on your own hardware.'] },
+    { sub: [/\s+It isn't a scheduler\s+benchmark and we won't let anybody quote it as one\./, ''] },
+    { sub: [/\s+The\s+idle RSS is about five times the x86 figure above and we don't know why yet\./, ''] },
+    { sub: [ws('The [benchmarks page](/flow/benchmarks/) has the method and the caveats.'), `The [benchmarks page](/flow/benchmarks/) has the method and the caveats.\n\n${PLANT}`] },
+  ],
+  'flow/plant-floor': [
+    { sub: [ws('`scan` could find a PLC and nothing in the palette could talk to it, which is a funny thing to ship in a product for plants. Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B are in now.'),
+      'Flow talks to PLCs and brokers in Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B.'] },
+  ],
+  'flow/where-it-stands': [
+    { sub: [ws('**Verified against real infrastructure**, not just against my own encoders:'), '**Verified against real infrastructure**:'] },
+    { sub: [ws('The credentials file at least fails like an adult now. 2.0.0 died on it with a JSON parsing error. Since 2.0.1 it names the file,'), 'Since 2.0.1 an old credentials file gets a clear message that names the file,'] },
+  ],
+  'flow/roadmap': [
+    { sub: [ws("**None of this starts until HotLoop's own roadmap is done.** Flow waits its turn. The one exception is Phase 9, FlowLab and its diagrams. We're building it now because it is a separate pack that sits beside the message runtime and doesn't take anything from HotLoop's own roadmap."),
+      'FlowLab and its diagrams, Phase 9, are being built now, as a separate pack that sits beside the message runtime.'] },
+  ],
+};
+for (const [slug, rules] of Object.entries(VOICE)) PAGE[slug] = [...(PAGE[slug] || []), ...rules];

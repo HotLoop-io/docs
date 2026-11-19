@@ -5,6 +5,10 @@ description: "Every setting Flow reads, its default, its environment override an
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Declarative YAML with environment overrides. You can validate it, diff it,
 template it out of a ConfigMap and reason about it without running it, which is
 everything a config file should let you do and nothing more. Every field below is
@@ -169,5 +173,4 @@ not "it's set, so yes". A safety switch that flips on because somebody typed
 Anything not in that table is file-only, and that is deliberate: session TTL,
 backup generations, request size limits, and the server timeouts are decisions
 somebody should be reviewing in a ConfigMap, not typing into a shell at 3 AM
-while a line is down. I have been that person. Do not let that person edit
-timeouts.
+while a line is down.

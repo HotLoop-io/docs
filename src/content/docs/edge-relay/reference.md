@@ -5,7 +5,11 @@ description: "The headless poll-and-forward Sparkplug B node: what it does, ever
 editUrl: false
 ---
 
-Added in 4.6.0. Edge Relay is a second binary, not a mode of the Gateway: a poll-and-forward Sparkplug B edge node with no database, no web
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+The Edge Relay, since 4.6.0, is a second binary and runs on its own: a poll-and-forward Sparkplug B edge node with no database, no web
 UI, no auth and no write path. It exists to run on a Pi or a small industrial
 PC at the edge, forwarding everything it reads to a full Gateway running
 somewhere with a real database, over the same Sparkplug B publisher 4.5.0 added.
@@ -83,7 +87,7 @@ device file format is edge-relay-specific.
 ### Discovery (4.18.10)
 
 A relay can listen to an MQTT broker for devices that announce themselves, the
-way the Gateway does (see [DISCOVERY.md](/iot/mqtt-discovery/)), and read and forward
+way the Gateway does (see [MQTT discovery](/iot/mqtt-discovery/)), and read and forward
 whatever it hears. Name the brokers in the device file:
 
 ```json
@@ -154,12 +158,12 @@ not say where a broker is, or what topic a problem was on.
 
 The relay's OPC UA driver is the Gateway's, so a device can carry an OPC UA
 `username` and `password` (and the security options in
-[PROTOCOLS.md](/iot/protocols/#opc-ua-security-and-credentials)) in its `config`
+[Protocols and drivers](/iot/protocols/#opc-ua-security-and-credentials)) in its `config`
 block, and so can a device of any other protocol (MQTT and HTTP passwords, HTTP
 headers, credentials in an address). Those are in the device file in the clear, and
 the relay has no API to hide them behind (the API redaction added to the Gateway
 in 4.15.1 does not apply to it; see
-[AUTH.md](/iot/authentication/#where-credentials-are-still-in-the-clear)), so where the file
+[Authentication and users](/iot/authentication/#where-credentials-are-still-in-the-clear)), so where the file
 lives matters:
 
 - **In the Helm chart, use `devicesSecret`.** Devices set in the chart's `devices`

@@ -5,6 +5,10 @@ description: "Import a Node-RED flows.json unchanged, see what it maps to node b
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Flow reads Node-RED's v1 `flows.json` format, the flat JSON array that every
 Node-RED export and flow library entry is written in. Point it at your file and
 it runs.
@@ -14,7 +18,7 @@ anything, and you get identical bytes back: same key order, same spacing, no
 helpfully rewritten escapes. Edit one property and the diff is one line rather
 than the entire node.
 
-That is harder in Go than it sounds and I very nearly did not bother. A
+That is harder in Go than it sounds. A
 JavaScript object preserves key insertion order, so a JavaScript runtime gets this
 for free from `JSON.parse` and `JSON.stringify` without anybody thinking about it.
 A Go map has no order at all and `encoding/json` deliberately sorts keys. Rather
@@ -52,7 +56,7 @@ and finding out when a line stops.
 A node can also point at a config node that is not in the file. Delete a flow and
 its own MQTT broker goes with it, while a subflow that used that broker keeps
 pointing at an id that names nothing. A hand edit or a half-copied export does
-the same thing. I used to find that out when the first message hit the node, and
+the same thing. We used to find that out when the first message hit the node, and
 the nodes that only look their server up then said nothing at all. Now the import
 report has a section for it that names every node and the id it can't find, the
 editor puts the same lines in the log when it loads, and a deploy answers with
@@ -61,7 +65,7 @@ bad id. The rest of the flow keeps running. A node you disabled, and a TLS
 setting that is blank or says `true` or `false`, are not reported, because
 those are not mistakes.
 
-An id that exists is not the same as an id that works. I missed that the first
+An id that exists is not the same as an id that works. We missed that the first
 time. If the setting points at a tab, a subflow, a group or a plain node, or at
 a config node of the wrong kind, like a TLS setting aimed at an MQTT broker,
 it gets the same report and the same failed start, and the line says what the
@@ -75,7 +79,7 @@ Node-RED's node of the same name, and **a test fails the build if a node claims
 partial compatibility without stating in writing what is missing.** A node
 that is 90% compatible and silent about the other 10% is more dangerous than one
 that is obviously absent, because the first one lets a flow appear to work. The
-full matrix is [docs/compatibility.md](/flow/compatibility/), generated from the
+full matrix is [Node-RED compatibility](/flow/compatibility/), generated from the
 registry rather than maintained by hand, because a hand-maintained compatibility
 document is a lie with a timestamp.
 
@@ -88,7 +92,7 @@ shell, the file nodes are scoped, and everything listed under
 Node.js, and there is no future version of this where a package that needs Node
 suddenly does. That is the trade you make for the footprint and the sandbox,
 stated plainly so you can decide against it. Signed WASM plugins are Flow's
-answer for what you write yourself: see [docs/plugins.md](/flow/plugins/).
+answer for what you write yourself: see [Plugins without npm](/flow/plugins/).
 
 The community nodes a plant leans on are another matter. Flow runs the Node-RED
 Modbus, dashboard, PostgreSQL and e-mail types natively, in Go, under

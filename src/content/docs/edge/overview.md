@@ -8,10 +8,10 @@ editUrl: false
 ---
 
 :::note[Edge is out, first released in 4.18.10]
-The image is `ghcr.io/hotloop-io/hotloop-edge:4.21.1` built for amd64, arm64 and arm/v7, about 37 MB on amd64 and 34 MB on arm, and the chart is `hotloop-edge` from `https://hotloop.io/hotloop`. Both pull with no login, and the source repo is still private. The Quadlet units are the `edge/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/edge/install/). Before 4.18.10 the Gateway could run at the edge and publish Sparkplug upstream, and it has since 4.5.0, but it was the whole Gateway to do it.
+The image is `ghcr.io/hotloop-io/hotloop-edge:4.22.0` built for amd64 (arm64 and arm/v7 follow in the next version), about 37 MB on amd64 and 34 MB on arm, and the chart is `hotloop-edge` from `https://hotloop.io/hotloop`. Both pull with no login. The Quadlet units are the `edge/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/edge/install/). Before 4.18.10 the Gateway could run at the edge and publish Sparkplug upstream, and it has since 4.5.0, but it was the whole Gateway to do it.
 :::
 
-Edge is a box bolted next to a line. It reads the machine, runs the rules on the machine, keeps working when the WAN goes down, and tells the rest of the plant what it saw. Think Ignition Edge, built in Go, with the same write gate as everything else.
+Edge is a box bolted next to a line. It reads the machine, runs the rules on the machine, keeps working when the WAN goes down, and tells the rest of the plant what it saw. It runs on the same write gate as everything else.
 
 It has everything [IoT](/iot/overview/) has, and two things on top.
 
@@ -33,3 +33,5 @@ SQLite, PostgreSQL, or TimescaleDB, from the same binary. The chart and the Quad
 ## Installing it
 
 [The Edge install page](/edge/install/) has Helm and Podman Quadlet, with the commands. Moving a site from IoT to Edge to the Gateway keeps every device, tag, entity, automation, alarm, user, and hour of history, and [the lineup](/products/) has the how.
+
+Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.

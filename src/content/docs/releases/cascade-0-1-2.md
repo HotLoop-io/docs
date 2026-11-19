@@ -7,6 +7,10 @@ sidebar:
   label: "0.1.2"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 ## What this is
 
 0.1.2 is a build fix and nothing else. The code is the same as 0.1.1, and so is everything you run: the chart, the Quadlet units, the settings, the database.

@@ -5,7 +5,11 @@ description: "Historian numbers on a schedule as CSV or HTML, stored and emailed
 editUrl: false
 ---
 
-Added in 4.14.0. The Gateway runs operator-defined reports on a schedule:
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+Scheduled reports, since 4.14.0, run operator-defined reports on a schedule:
 it queries the historian, renders the result as CSV and HTML, stores it on a
 volume, and optionally emails it. It is the counterpart of Ignition's Reporting
 module for the part of that module a plant most often uses, a table of numbers
@@ -263,7 +267,7 @@ variables for reports alone when the alarm channel is off.
 
 It is the same SMTP code as the alarm channel, not a second copy. The alarm channel now sends through it as well. The
 connection handling is unchanged (port 465 now speaks TLS from the first byte,
-see [NOTIFY.md](/iot/notifications/#implicit-tls-port-465)): STARTTLS whenever the relay offers it, `AUTH`
+see [Alarm notifications](/iot/notifications/#implicit-tls-port-465)): STARTTLS whenever the relay offers it, `AUTH`
 when credentials are set, and a hard failure before `AUTH` when
 `HOTLOOP_NOTIFY_SMTP_TLS` is set and the relay does not offer STARTTLS. For an
 ASCII alarm the message is the same bytes as before, apart from the `Date`
@@ -360,7 +364,7 @@ every other route answers with an error naming `HOTLOOP_REPORTS_ENABLED`.
 | `HOTLOOP_REPORTS_RUN_TIMEOUT` | `5m` | Bounds one run: query, render, write, and email |
 | `HOTLOOP_REPORTS_MAX_EMAIL_BYTES` | `10485760` | The most attachment data in one email |
 | `HOTLOOP_TIMEZONE` | `UTC` | The plant timezone. Must be a real zone name, or HotLoop won't start |
-| `HOTLOOP_NOTIFY_SMTP_HOST`, `_PORT`, `_USERNAME`, `_PASSWORD`, `_FROM`, `_TLS`, `_TLS_SKIP_VERIFY` | | The relay reports email through. See [NOTIFY.md](/iot/notifications/) |
+| `HOTLOOP_NOTIFY_SMTP_HOST`, `_PORT`, `_USERNAME`, `_PASSWORD`, `_FROM`, `_TLS`, `_TLS_SKIP_VERIFY` | | The relay reports email through. See [Alarm notifications](/iot/notifications/) |
 
 The chart's `reports` block has `enabled`, `runTimeout`, `maxEmailBytes`, and
 `persistence` (size, storage class, access mode). `notify.smtp` supplies the

@@ -180,7 +180,7 @@ Keep the private key out of git. No key is committed.
 ### As an operator
 
 On the Helm chart these are `plugins.trustedKeys`, `plugins.grants` and
-`plugins.volume`, in [deploying.md](/flow/deploying/).
+`plugins.volume`, in [Deploying Flow](/flow/deploying/).
 
 You trust a publisher by putting their public key in `plugins.trustedKeys`, or in
 `HOTLOOP_FLOW_PLUGIN_TRUSTED_KEYS`, comma separated. Each entry is the

@@ -5,6 +5,10 @@ description: "How the Function node and the WebAssembly sandbox are fenced, what
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The Function node runs on the JavaScript interpreter (see [Security posture](/flow/security/)). A call
 costs 11.6 to 13.7 µs. It is not a boundary against memory: a function that
 allocates in a loop grows the Go heap until the pod dies, and all the JavaScript interpreter can do
@@ -18,7 +22,7 @@ A flow runs a WASM guest through a plugin: a signed module with a descriptor the
 editor draws its dialog from, which gets no host access unless it asks and you
 say yes. Memory is capped per node, a message gets a timeout, and a guest that
 blows past either traps, lands at a Catch node with the reason, and takes nothing
-else down. All of it is in [docs/plugins.md](/flow/plugins/), including how
+else down. All of it is in [Plugins without npm](/flow/plugins/), including how
 you trust a publisher's key and what the refusals say. What it means for you:
 the thing Node-RED needs npm and a whole Node.js install for, Flow runs as a
 sandboxed file you can verify before it loads.
@@ -45,7 +49,7 @@ compiler.
 The limits are small on purpose. This runs on edge hardware next to the flows
 that actually matter, and a node that needs more should have to say so:
 
-| <span class="sr-only">Details</span> | the JavaScript interpreter | WASM |
+| Limit | the JavaScript interpreter | WASM |
 |---|---|---|
 | Timeout per call | 5 s | 5 s |
 | Memory ceiling | none enforceable | 16 MiB a node unless the plugin says otherwise, 64 MiB at most unless you raise `plugins.maxMemoryMiB`, hard |

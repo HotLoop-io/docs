@@ -5,7 +5,12 @@ description: "Logical snapshots of the database, restores that refuse a newer sc
 editUrl: false
 ---
 
-Added in 4.12.0. HotLoop takes logical, table-data-only snapshots of the historian and restores them. Off by default (`HOTLOOP_BACKUP_ENABLED`):
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+HotLoop takes logical, table-data-only snapshots of the historian and restores
+them, since 4.12.0. Off by default (`HOTLOOP_BACKUP_ENABLED`):
 a deployment that has not configured a backup volume should not have this
 process quietly writing into an ephemeral container filesystem.
 
@@ -51,7 +56,7 @@ The `devices.copy` file holds each device's address and protocol configuration a
 they are stored, which includes the credentials the drivers log in with. How
 readable they are depends on the key, below. Since 4.15.1 the API hides every
 device credential from every role, admin included; a backup file is not behind
-the API. See [AUTH.md](/iot/authentication/#where-credentials-are-still-in-the-clear).
+the API. See [Authentication and users](/iot/authentication/#where-credentials-are-still-in-the-clear).
 
 ## Device credentials and the secret key
 
@@ -115,17 +120,17 @@ its monthly partitions exist, so they land in its default partition. The
 logbook's maintenance, when a recording Gateway starts, makes last month's and
 this month's partitions around the rows that belong in them, and deletes older
 rows from the default partition as they pass the retention, so the retention
-reaches every restored row. See [LOGBOOK.md](/iot/logbook/).
+reaches every restored row. See [the logbook](/iot/logbook/).
 
 Scripts come back with their history. A run the backup caught in the middle
 comes back `running`, and the Gateway's first start marks it cancelled,
 `interrupted by restart`, the same as a run a crash cut off: nothing resumes
-a run. See [SCRIPTS.md](/iot/scripts/).
+a run. See [Scripts](/iot/scripts/).
 
 Recipes come back with every version and every application. An application
 the backup caught halfway comes back `applying`, and the Gateway's first start
 marks it `failed`, pointing at its call id in the write audit: nothing resumes
-one, and nothing undoes one. See [RECIPES.md](/iot/recipes/).
+one, and nothing undoes one. See [Recipes](/iot/recipes/).
 
 `schema_migrations` is deliberately excluded: `store.Migrate` rebuilds it,
 and every table's DDL, from the embedded migrations. It is the one entry in

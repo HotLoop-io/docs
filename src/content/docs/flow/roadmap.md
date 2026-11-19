@@ -5,13 +5,14 @@ description: "The phases of Flow, what is done and what is next, including the e
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
-**None of this starts until HotLoop's own roadmap is done.** Flow waits its turn.
-The one exception is Phase 9, FlowLab and its diagrams. I'm building it now because it is a separate
-pack that sits beside the message runtime and doesn't take anything from HotLoop's
-own roadmap.
+FlowLab and its diagrams, Phase 9, are being built now, as a separate pack that sits beside the message runtime.
 
 ## What Flow is for
 
@@ -45,7 +46,7 @@ time.
 
 - [x] The WASM sandbox is real and tested, but no node uses it and it isn't in
       the binary. Say so until Phase 6 makes it true
-- [x] Two code comments point at a the embedded queue store-backed context store that doesn't exist.
+- [x] Two code comments point at an embedded context store that doesn't exist.
       Delete them
 - [x] Re-measure idle and loaded memory the same way on the same box, publish the
       command with the number, and drop any figure nobody can reproduce
@@ -203,7 +204,7 @@ biggest hole in a product built for plants.
 
 ### Phase 8: the editor, rewritten in Astro
 
-Done, and moved up. It was meant to go last, and I moved it ahead of Flow's first
+Done, and moved up. It was meant to go last, and we moved it ahead of Flow's first
 screenshots, because nobody should see the first ones in an editor that looks like
 it came from a different company.
 
@@ -243,7 +244,7 @@ travels on a wire of its own, a panel an operator can open on a phone, and a
 debugger that can pause a run and show what is on every wire. Existing flows don't
 change, and the flow file still loads and saves byte for byte: a diagram is a tab
 with an `ew_diagram` key, and which input a wire lands on is kept in `ew_in` on the
-node it leaves. [diagrams.md](/flow/flowlab/) has the rest.
+node it leaves. [FlowLab](/flow/flowlab/) has the rest.
 
 - [ ] The scheduler: all wired inputs ready, independent branches in parallel,
       and an `after` wire for order where no data flows
@@ -305,7 +306,7 @@ but plenty of people drop one that doesn't.
       warnings in the editor log once and not twice, and `hotloop-flow import`
       writes its report to a writer like `deploy` does, so its tests stop
       swapping out standard output
-- Upstream still has the line; I didn't ask them to
+- Upstream still has the line; we didn't ask them to
       take the change
 - [x] The durable wire purge test could count one more dropped than it had
       sampled as queued. The test was wrong, not the queue: it waited for 28 of
@@ -340,8 +341,8 @@ answers, because the reasons are what stops somebody reopening them.
 Decided 2026-10-03:
 
 - **Industrial nodes get built in Flow,** on the same open source libraries the
-  HotLoop drivers use. HotLoop's drivers stay HotLoop's. Flow's license was a different one when this was decided and is now the HotLoop Source License Agreement 1.0,
-  which replaced the EmberNet Source License 1.0 and, before it, the Business Source License 1.1 it carried from 2.2.0.
+  HotLoop drivers use. HotLoop's drivers stay HotLoop's. Flow keeps its own license, which was a different one when this was decided and is HotLoop's EmberNet Source License 1.0,
+  which replaced the Business Source License 1.1 it carried from 2.2.0.
 - **Flow stays its own product and is never embedded in HotLoop.** It runs next
   to HotLoop and talks to HotLoop's API from the outside, which is what the
   Phase 5 HotLoop nodes do, and that's the whole relationship.

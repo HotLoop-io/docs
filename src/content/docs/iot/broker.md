@@ -5,7 +5,11 @@ description: "A broker in the same process, so one small box can be the whole in
 editUrl: false
 ---
 
-Added in 4.11.0. This Gateway can run its own MQTT broker in-process, so a small, single-box HotLoop install has nothing extra to
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+HotLoop can run its own MQTT broker in-process, since 4.11.0, so a small, single-box HotLoop install has nothing extra to
 deploy. Off by default (`HOTLOOP_BROKER_ENABLED`): a deployment that already
 runs Mosquitto or EMQX has nothing to point this at, and starting a second
 broker beside one that already exists is not a safe default to guess into
@@ -13,7 +17,7 @@ existence.
 
 ## Why this exists
 
-Edge publish (this Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect *outward* to
+Edge publish (the Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect *outward* to
 an MQTT broker over `BrokerAddress`, they have never run one themselves.
 That is fine when a deployment already has a broker, whether that's an
 existing Mosquitto instance or one run alongside HotLoop for other reasons.
@@ -38,7 +42,7 @@ scale: multiple independent Sparkplug host applications, very high fan-out,
 bridging between sites, or workloads that need clustering, horizontal
 scaling, or a broker's own dedicated operational tooling (detailed metrics,
 dynamic ACLs, plugin ecosystems) are all real reasons to run Mosquitto,
-EMQX, or another dedicated broker instead, and to point this Gateway's own
+EMQX, or another dedicated broker instead, and to point the Gateway's own
 `EdgePublishConfig`/`FleetConfig` at it like any other deployment already
 can. This package does not compete with that use case; it exists for the
 deployments that would otherwise have no broker at all.
@@ -48,7 +52,7 @@ deployments that would otherwise have no broker at all.
 Three kinds of login get in, and they are not equal.
 
 **Logins made in HotLoop** (Settings, MQTT, or `/api/broker/logins` in
-[API.md](/iot/api/)) carry rules: the topics the login may publish to and the
+[The HTTP API](/iot/api/)) carry rules: the topics the login may publish to and the
 topics it may subscribe to. `%u` in a rule is the login's own name and `%p` the
 discovery prefix. They start from a profile and are yours to edit after:
 
@@ -101,13 +105,13 @@ A broker with no `HOTLOOP_BROKER_USERS` and anonymous off starts fine. Until
 somebody makes a login in HotLoop, the only thing that can connect is HotLoop.
 
 Other brokers are their own business. On Mosquitto or EMQX, the ACLs are that
-broker's to enforce, the same boundary [FLEET.md](/gateway/fleet/) draws, and
-[DISCOVERY.md](/iot/mqtt-discovery/) has an ACL for HotLoop's own login there.
+broker's to enforce, the same boundary [Fleet management](/gateway/fleet/) draws, and
+[MQTT discovery](/iot/mqtt-discovery/) has an ACL for HotLoop's own login there.
 
 ## Discovery, and HotLoop's own login
 
 With the broker on, HotLoop listens on it for devices that announce
-themselves (see [DISCOVERY.md](/iot/mqtt-discovery/)). The broker notes which login and
+themselves (see [MQTT discovery](/iot/mqtt-discovery/)). The broker notes which login and
 client published each discovery config. The Discovered screen shows it, and a
 device accepted from one login that gets announced by another is held for a
 person, with a warning in the log ("Kitchen re-announced by login garage-node;
@@ -158,7 +162,7 @@ is always the operator's to provide.
 | `HOTLOOP_BROKER_TLS_CERT_FILE` / `_KEY_FILE` | n/a | Required when TLS is enabled |
 | `HOTLOOP_BROKER_ALLOW_ANONYMOUS` | `false` | Per-deployment opt-in; never set this by default |
 | `HOTLOOP_BROKER_USERS` | none | `user:password,user2:password2`. Each can do anything; see above. Logins with rules are made in HotLoop |
-| `HOTLOOP_BROKER_DISCOVERY` | `true` | Listen for devices announcing themselves; see [DISCOVERY.md](/iot/mqtt-discovery/) |
+| `HOTLOOP_BROKER_DISCOVERY` | `true` | Listen for devices announcing themselves; see [MQTT discovery](/iot/mqtt-discovery/) |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | The topic prefix announcements arrive under |
 
 ## What has and has not been verified

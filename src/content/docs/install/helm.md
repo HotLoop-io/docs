@@ -55,7 +55,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 ### Auth
 
-Since 4.4.0. See [docs/AUTH.md](/iot/authentication/) for the full model; this is the chart
+Since 4.4.0. See [Authentication and users](/iot/authentication/) for the full model; this is the chart
 side of it.
 
 ```yaml
@@ -176,7 +176,7 @@ restart. It is off by default because it adds a PersistentVolumeClaim to an
 existing install, which stays Pending on a cluster with no default StorageClass.
 Anonymous devices on an unsecured channel do not use it. Approving a server's
 certificate, and everything else about these devices, is in
-[PROTOCOLS.md](/iot/protocols/#opc-ua-security-and-credentials).
+[Protocols and drivers](/iot/protocols/#opc-ua-security-and-credentials).
 
 ### Networking
 
@@ -209,7 +209,7 @@ From 4.19.7 every HotLoop chart (Gateway, IoT, Edge and the Edge Relay) ships wi
 | `hardware.bluetooth.enabled` | `true` | The node's D-Bus directory (`hardware.bluetooth.dbusPath`, `/run/dbus`, which holds `system_bus_socket`) is mounted at the same path, so a client reaches the node's BlueZ. It is created empty on a node with no D-Bus, so the pod still starts there. |
 | `hardware.bluetooth.hostNetwork` | `false` | The opt-in, off by default, for what needs the node's network: kernel Bluetooth sockets (HCI, L2CAP) exist only in the node's network namespace, so a client that opens one directly, and discovery that listens on the node's own network (mDNS, SSDP, a radio's multicast), need it. A client that goes through BlueZ's D-Bus API needs only the mounted socket and works from the pod network. On, the pod runs on the node's network with the consequences under [Networking](#networking). |
 
-What HotLoop does with it today: nothing yet. HotLoop has no Bluetooth, Z-Wave or USB serial code of its own (Zigbee comes through a Zigbee2MQTT bridge over MQTT, see [BROKER.md](/iot/broker/)); this is the access a feature, or a sidecar that reads a radio, needs, in place before it is asked for.
+What HotLoop does with it today: nothing yet. HotLoop has no Bluetooth, Z-Wave or USB serial code of its own (Zigbee comes through a Zigbee2MQTT bridge over MQTT, see [the embedded MQTT broker](/iot/broker/)); this is the access a feature, or a sidecar that reads a radio, needs, in place before it is asked for.
 
 What it costs, on purpose and decided: the pod is root on the node (privileged, with the node's `/dev`), and the NetworkPolicy chart default stays on for what it covers. The pod stays on the pod network. Turn any part off with `--set hardware.privileged=false --set hardware.usbDevices.enabled=false --set hardware.bluetooth.enabled=false`; with all three off the render is, line for line, the pod 4.19.6 rendered (non-root, every capability dropped, read-only root, pod network). For what needs the node's network, set `hardware.bluetooth.hostNetwork=true` (or `hostNetwork=true`): the page then answers on every address of the node at `service.targetPort`, one HotLoop per node per port, a NetworkPolicy does not apply to the pod, and `nodeSelector` pins it to the node whose radio it should see.
 
@@ -240,7 +240,7 @@ nodeSelector:
 ### Publishing upstream over Sparkplug
 
 An edge Gateway can also publish everything it reads to a central one, as a
-Sparkplug B edge node. See [EDGE-PUBLISH.md](/edge/edge-publish/) for what it
+Sparkplug B edge node. See [Edge publish and store-and-forward](/edge/edge-publish/) for what it
 publishes and how the forward queue behaves; this is the chart side.
 
 ```yaml
@@ -422,7 +422,7 @@ gen-secret-key` prints one. Outside Kubernetes, write it to a file only HotLoop
 can read and point `HOTLOOP_SECRET_KEY_FILE` at it. Without a key HotLoop runs,
 says in its startup log that device passwords are stored as typed, and refuses
 to save a UniFi console. Credentials already stored are encrypted the first time
-it starts with a key. See [BACKUP.md](/iot/backup/#device-credentials-and-the-secret-key)
+it starts with a key. See [Backups and restore](/iot/backup/#device-credentials-and-the-secret-key)
 for what that means for a restore.
 
 ## Configuration, and what the Settings screen can change
@@ -449,9 +449,9 @@ renamed far more often than it is redeployed:
 | Confirm before writing | `HOTLOOP_CONFIRM_WRITES` |
 
 Under the settings there are cards that are data rather than configuration, and
-they are editable for the same reason: **Users** ([AUTH.md](/iot/authentication/)),
+they are editable for the same reason: **Users** ([Authentication and users](/iot/authentication/)),
 **Alarm escalation**, which says who is told next when nobody acknowledges an
-alarm and when ([NOTIFY.md](/iot/notifications/#escalation)), and the historian targets
+alarm and when ([Alarm notifications](/iot/notifications/#escalation)), and the historian targets
 and MQTT logins. The channels an escalation can use are still the deployment's,
 set by `HOTLOOP_NOTIFY_*`.
 
@@ -469,7 +469,7 @@ hours off is worse than a pod that says why it won't come up.
 The site's location is `HOTLOOP_SITE_LATITUDE` and `HOTLOOP_SITE_LONGITUDE`
 (chart: `plant.latitude`, `plant.longitude`), decimal degrees, north and east
 positive. Sunrise, sunset and the sun's entities and triggers are worked out
-from them on the box ([SUN.md](/iot/sun/)). Both or neither, and a bad one stops
+from them on the box ([The sun](/iot/sun/)). Both or neither, and a bad one stops
 startup with the variable named. The Settings screen shows them read-only:
 rules fire on a sunrise, so moving it is a deploy.
 
@@ -542,7 +542,7 @@ binaries
 The backup is the old directory itself. `pg_upgrade` in copy mode never writes
 to it, so `pgdata.pg16` is the whole PostgreSQL 16 database as it stood, which is
 a better backup than a dump and the one thing that makes the way back below
-possible. HotLoop's own backup ([BACKUP.md](/iot/backup/)) is made by the running
+possible. HotLoop's own backup ([Backups and restore](/iot/backup/)) is made by the running
 app through the running database, so it cannot be taken in the step that runs
 before the database starts. Take one on the old release before you upgrade
 anyway, and copy it off the box.
@@ -577,7 +577,7 @@ dealt with first. Roll forward is the way, and a rollback is for a box that
 cannot run 17 at all. The app's own rollback rule is unchanged: the 16
 directory's schema is the one the release before the upgrade left, and a release
 that finds migrations it does not know about says so, see
-[MIGRATIONS.md](/iot/migrations/).
+[Migrations only add](/iot/migrations/).
 
 ### When you are satisfied
 
@@ -618,7 +618,7 @@ add-ons, `devices`, `cameras`, `customConfig`, `network.hostNetwork`.
 
 `helm rollback hotloop -n hotloop` puts the previous release's image back. It
 does not put the database back: a release migrates on start, and that stays done. The rule and the check are in
-[MIGRATIONS.md](/iot/migrations/).
+[Migrations only add](/iot/migrations/).
 
 The one thing a rollback across the PostgreSQL 17 release does put back is the
 database engine: the chart's database image goes back to 16, which will not open
@@ -636,7 +636,7 @@ HotLoop 4.18.10. ...
 That is not a fault to work around. It means the database has moved further than
 this release was ever run against. Roll forward to a release that knows the
 schema, which is the newest one, or restore a backup taken by the release you
-are on ([BACKUP.md](/iot/backup/)). Exactly one release back starts, with a warning in
+are on ([Backups and restore](/iot/backup/)). Exactly one release back starts, with a warning in
 the log naming both versions. Take a backup before you upgrade; the rollback
 can't undo data the newer release wrote.
 
@@ -727,7 +727,7 @@ not.
 **Every `/api/` request returns 401.** Expected once `auth.enabled` is true and
 nobody has logged in yet, that is the point of 4.4.0. Read the generated admin
 password from the release Secret (see [Auth](#auth)) and log in through the UI,
-or `POST /api/auth/login` directly. See [docs/AUTH.md](/iot/authentication/).
+or `POST /api/auth/login` directly. See [Authentication and users](/iot/authentication/).
 
 **Lost the admin password and there is no other admin account.** Generate a new
 hash and patch the Secret, then restart the pod so it re-reads the environment, `EnsureAdminUser` will not touch an account that already exists, so this

@@ -81,7 +81,7 @@ screen first.
   `alarm` and `tag`. Each can be `required` or have a `default`.
 - **`template`** is the rule: `description`, `triggers`, `condition`,
   `actions`, `mode`, `minIntervalSec`, `maxRuntimeSec`, in the automation
-  language ([AUTOMATIONS.md](/iot/automations/)). Not its `id`, `name` or
+  language ([Automations](/iot/automations/)). Not its `id`, `name` or
   `enabled`. Those belong to each rule made from it.
 
 ### The blanks
@@ -148,7 +148,7 @@ Making a rule **never replaces one**. An id that is taken, by a rule written
 by hand or one made from a blueprint, is refused.
 
 Over the API it is `POST /api/blueprints/{id}/instantiate`, with
-`?dry_run=true` for the check. See [API.md](/iot/api/#blueprints).
+`?dry_run=true` for the check. See [the HTTP API](/iot/api/#blueprints).
 
 ## The built-in ones
 
@@ -176,7 +176,7 @@ Some honest notes on them:
   14:00 to 21:59), or only the first shift of the run resets the counter.
 - **`alarm_to_notify`** is for a chat room or a ticketing system. For paging a
   phone, with rate limits, retries and acknowledge links, use the
-  notifications HotLoop sends itself ([NOTIFY.md](/iot/notifications/)).
+  notifications HotLoop sends itself ([Alarm notifications](/iot/notifications/)).
 
 ## Who can do what
 
@@ -205,7 +205,7 @@ what the rule would do, and makes it, through the route the screen uses, with th
 same input checks and the agent's name against it in the logbook. A rule is a
 standing order to command equipment every time its trigger fires, so the preview
 comes first, and every write the rule goes on to make meets the write gate.
-See [MCP.md](/iot/mcp/#blueprints).
+See [MCP](/iot/mcp/#blueprints).
 
 ## Where it all goes
 

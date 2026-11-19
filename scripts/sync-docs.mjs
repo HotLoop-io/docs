@@ -328,10 +328,27 @@ function rewriteLinks(text, page) {
   const repoInfo = REPOS[e.repo];
   const baseDir = posix.dirname(e.file);
   const ownSlugs = pageSlugs.get(e.slug) || new Set();
-  return text.replace(/(!?)\[((?:[^\[\]]|\[[^\]]*\])*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (all, bang, label, target) => {
+  // A link whose text is a source file's name (`BACKUP.md`, `docs/plugins.md`) reads as our repository.
+  // When it lands on a page here, it says the page's title instead.
+  const named = (label, dest, off, str) => {
+    if (!/^`?(?:[\w.-]+\/)*[\w.-]+\.md`?$/.test(label.trim())) return label;
+    // The sales lens already says these by name (sales-lens-rules.mjs), so they stay for it.
+    if (/^`?docs\/(?:PRODUCTS|EDGE-RELAY|EDGE-PUBLISH|DEPLOYMENT|ROADMAP|MCP|FLEET|NOTIFY)\.md`?$/.test(label.trim())) return label;
+    const title = mainPages.get(dest)?.entry.title;
+    if (!title) return label;
+    return /^The /.test(title) && /[A-Za-z0-9,;)] $/.test(str.slice(Math.max(0, off - 2), off)) ? 'the' + title.slice(3) : title;
+  };
+  return text.replace(/(!?)\[((?:[^\[\]]|\[[^\]]*\])*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (all, bang, label, target, off, str) => {
     if (bang) return image(e, label, target, baseDir, all);
     if (/^mailto:/.test(target)) return all;
     if (/^https?:\/\//.test(target)) {
+      // A link to a product repo's file that is a page on this site goes to the page, public repo or private.
+      const g = /^https:\/\/github\.com\/HotLoop-io\/([^/]+)\/(?:blob|tree)\/[^/]+\/([^#?]+)(?:#(.*))?$/.exec(target);
+      const gRepo = g && Object.keys(REPOS).find((r) => REPOS[r].slug === `HotLoop-io/${g[1]}`);
+      if (gRepo) {
+        const gDest = (g[3] && anchorToSlug.get(`${gRepo}:${g[2]}#${g[3]}`)) || fileToSlug.get(`${gRepo}:${g[2]}`);
+        if (gDest) return `[${named(label, gDest, off, str)}](${slugHref(gDest, g[3] && (pageSlugs.get(gDest) || new Set()).has(g[3]) ? g[3] : '')})`;
+      }
       // A link into a private repo is a 404 for every reader who isn't us.
       const m = /^https:\/\/github\.com\/HotLoop-io\/([^/]+)\/(blob|tree|blame|commit|pull|issues)\//.exec(target);
       if (m && Object.values(REPOS).some((r) => r.private && r.slug === `HotLoop-io/${m[1]}`)) return label;
@@ -343,7 +360,7 @@ function rewriteLinks(text, page) {
     if (pathPart === '') {
       if (ownSlugs.has(anchor)) return `[${label}](#${anchor})`;
       const dest = anchorToSlug.get(`${e.repo}:${e.file}#${anchor}`);
-      if (dest) return `[${label}](${slugHref(dest, (pageSlugs.get(dest) || new Set()).has(anchor) ? anchor : '')})`;
+      if (dest) return `[${named(label, dest, off, str)}](${slugHref(dest, (pageSlugs.get(dest) || new Set()).has(anchor) ? anchor : '')})`;
       warn(`${e.slug}: anchor #${anchor} is not on any page, link text kept: ${label}`);
       return label;
     }
@@ -353,7 +370,7 @@ function rewriteLinks(text, page) {
     if (!dest) dest = fileToSlug.get(key);
     if (dest) {
       const has = (pageSlugs.get(dest) || new Set()).has(anchor);
-      return `[${label}](${slugHref(dest, has ? anchor : '')})`;
+      return `[${named(label, dest, off, str)}](${slugHref(dest, has ? anchor : '')})`;
     }
     if (/(^|\/)(LICENSE|LICENSE\.md|TERMS\.md|NOTICE)$/.test(resolved)) return label;
     // Another page's release notes file by name.

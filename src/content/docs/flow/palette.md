@@ -23,7 +23,7 @@ editUrl: false
 The FlowLab row is a different kind of node. It runs on a tab that is a diagram, where
 a node runs once when every input has a value, and never takes a message. What
 FlowLab is, and how its loops, error wire, panel and debugger work, is
-[docs/diagrams.md](/flow/flowlab/).
+[FlowLab](/flow/flowlab/).
 
 ## Telling people, and Kafka
 

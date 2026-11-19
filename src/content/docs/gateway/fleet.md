@@ -5,7 +5,11 @@ description: "Track every Edge Relay from its Sparkplug births and deaths, and s
 editUrl: false
 ---
 
-Added in 4.7.0, building on 4.6.0's Edge Relay edition. Fleet management lets the Gateway track registered edge relays, whether they're alive, and, for an
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+Fleet management, since 4.7.0, lets the Gateway track registered edge relays, whether they're alive, and, for an
 authorized operator, ask one to rebirth, restart, or adopt a newly pushed
 config. Off by default (`HOTLOOP_FLEET_ENABLED`): a deployment with no edge
 relays has no broker to point this at.
@@ -79,8 +83,8 @@ retained. Anyone who can subscribe to `hotloop/edge-relay-config/#` can read it,
 so the broker needs TLS and an ACL on that topic before a file with credentials
 is pushed. The Gateway's API hides device credentials from every role as of 4.15.1,
 but a pushed file is not behind the API and is not changed by that. See
-[EDGE-RELAY.md](/edge-relay/reference/#credentials-in-the-device-file-4150) and
-[AUTH.md](/iot/authentication/#where-credentials-are-still-in-the-clear).
+[Edge Relay reference](/edge-relay/reference/#credentials-in-the-device-file-4150) and
+[Authentication and users](/iot/authentication/#where-credentials-are-still-in-the-clear).
 
 **A push applies live, and it never restarts anything.** Up to 4.17 a push
 only staged the file, and making it count took a second action, a
@@ -93,7 +97,7 @@ every device session it held to change one tag. Now:
   Sparkplug session and the forward queue stay up the whole time. The node
   rebirths for its new metric set and nulls the metrics it dropped first, so
   a host doesn't keep showing a removed device's last good value.
-  [EDGE-RELAY.md](/edge-relay/reference/#what-a-live-apply-keeps-and-what-it-changes)
+  [Edge Relay reference](/edge-relay/reference/#what-a-live-apply-keeps-and-what-it-changes)
   has exactly what goes out on the wire and why.
 - **A file the relay refuses** (it won't parse, it won't validate, it can't
   be saved) changes nothing on the relay, and the relay's `/status` says so
@@ -109,7 +113,7 @@ every device session it held to change one tag. Now:
 
 A pushed file lands on the relay's data volume, not over its local device
 file, and wins over the local one until the push is cleared. The relay's
-[EDGE-RELAY.md](/edge-relay/reference/#where-a-pushed-file-lives-and-which-file-wins)
+[Edge Relay reference](/edge-relay/reference/#where-a-pushed-file-lives-and-which-file-wins)
 has the precedence rules and the 4.16.0 bug that made them necessary.
 
 **Taking a push back** is `DELETE /api/fleet/{id}/config` (`fleet.config`,
@@ -147,7 +151,7 @@ is logged too, as "a different image of the same version".
 relay holds for. It only does anything to a relay set to hold updates; any
 other relay logs that it ignored it. The request names no image. What this does
 and doesn't do for each install type is in
-[EDGE-RELAY.md](/edge-relay/reference/#updating-a-relay).
+[Edge Relay reference](/edge-relay/reference/#updating-a-relay).
 
 ## Command authorization
 

@@ -277,7 +277,7 @@ of nobody touching the screen (a setting) the panel signs them out and goes back
 to the field, and a write sent after that is refused. An admin gives each person
 a code under **Settings, Users**. The whole of it, what a badge is, how the code
 is stored and what it does not do, is in
-[AUTH.md](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out).
+[Authentication and users](/iot/authentication/#kiosk-panels-pin-or-badge-and-an-idle-sign-out).
 
 On your own computer none of this applies: you are signed in with your password,
 a button's write goes straight through the gate and logs you, and there is no
@@ -413,12 +413,12 @@ write button disabled, and the server would refuse it if they got past that.
 | `PUT` | `/api/dashboards/{id}` | `dashboards.write` |
 | `DELETE` | `/api/dashboards/{id}` | `dashboards.write` |
 
-The reference with bodies and errors is in [API.md](/iot/api/#dashboards). Every
+The reference with bodies and errors is in [the HTTP API](/iot/api/#dashboards). Every
 create, save and delete is on the record as a `config` event on subject
 `dashboard:<id>`, so the Logbook says who changed what a panel shows.
 
 The table is `dashboards`, added in migration 0023 for PostgreSQL, TimescaleDB
-and SQLite. It only adds ([MIGRATIONS.md](/iot/migrations/)). The wall board's row is
+and SQLite. It only adds ([Migrations only add](/iot/migrations/)). The wall board's row is
 made by the application when it is first asked for, not by the migration, so a
 database restored from a backup taken before dashboards has it again.
 

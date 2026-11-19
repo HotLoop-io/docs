@@ -13,7 +13,7 @@ HotLoop for CODESYS is a Helm chart, `hotloop-codesys`, that installs HotLoop Ed
 
 - **A CODESYS runtime on the same node that publishes its OPC UA server on port 4840.** The provisioner finds the node's own address from Kubernetes and reads `<node address>:4840`. The runtime's own chart publishes that port on the host.
 - **A Symbol Configuration in the PLC program** with *Support OPC UA features* on, listing the variables you want to see, or `{attribute 'symbol' := 'read'}` on them in the declaration. A PLC with no Symbol Configuration answers the setup with a message that says to add one. This is the only change to the PLC project.
-- **HotLoop 4.20.2**, which the chart wraps. The CODESYS connector came with HotLoop 4.19.0. The chart depends on the `hotloop-edge` chart on the `~4.20.2` line.
+- **HotLoop 4.20.2**, which the chart wraps. The CODESYS connector came with HotLoop 4.19.4. The chart depends on the `hotloop-edge` chart on the `~4.20.2` line.
 - **A profile.** One Secret with one key. [The profile page](/codesys/profile/) has the shape.
 
 ## From the EmberCORE App Store

@@ -9,25 +9,9 @@ editUrl: false
 
 The Edge Relay is the headless one. It sits on a Pi or a small industrial PC next to the machines, polls them with the same drivers the Gateway uses, and forwards every reading over Sparkplug B to a Gateway somewhere with a real database. When the uplink dies it queues to disk and replays when the link comes back, so the historian upstream ends up with the outage backfilled, not a hole in it, as long as the outage fits the queue, which is capped at 64 MiB by default. No database, no web UI, no users, no write path, and every one of those missing pieces is something that can't break at 3 AM.
 
-The current release is 4.21.1: `ghcr.io/hotloop-io/hotloop-edge-relay:4.21.1` built for amd64, arm64 and arm/v7 (a Pi 3 or a 32-bit Pi OS install is exactly the box a relay ends up on), about 15 MB, pulled with no login, and the `hotloop-edge-relay` chart from `https://hotloop.io/hotloop`. 4.16.0 was the first release that published it, and arm/v7 came with 4.18.10. It shares a version number with the Gateway, and a release refuses to go out unless both charts carry the tag's version and the Quadlet unit follows `:stable`. So the relay gets a new version every release whether its code changed or not. One version number to ask about, and a relay chart can never point at an image nobody pushed. [Install it](/edge-relay/install/).
+The current release is 4.22.0: `ghcr.io/hotloop-io/hotloop-edge-relay:4.22.0` built for amd64, with arm64 and arm/v7 in the next version (a Pi 3 or a 32-bit Pi OS install is exactly the box a relay ends up on), about 15 MB, pulled with no login, and the `hotloop-edge-relay` chart from `https://hotloop.io/hotloop`. 4.16.0 was the first release that published it, and arm/v7 came with 4.18.10. It shares a version number with the Gateway, and a release refuses to go out unless both charts carry the tag's version and the Quadlet unit follows `:stable`. So the relay gets a new version every release whether its code changed or not. One version number to ask about, and a relay chart can never point at an image nobody pushed. [Install it](/edge-relay/install/).
 
-:::note[New in 4.18.10]
-**A pushed device file applies the moment it lands.** New devices connect, removed ones let go, changed ones reconnect, and the ones nobody touched keep their sessions. The Sparkplug session stays up, with no NDEATH and the same `bdSeq`. A bad file is refused and the old one keeps running, and `/status` says which file is running and which was refused. On 4.17.0 a push only staged the file until something restarted the relay.
-
-**The relay follows `:stable` and updates itself.** The Quadlet unit no longer pins a release. Podman moves it, and a release that can't pass the relay's own healthcheck is rolled back. Every birth carries the relay's version and image digest, and the Gateway's fleet list shows both. [Install](/edge-relay/install/#updates) has how, and the opt-in hold.
-
-**The outage queue is capped at 64 MiB by default,** not unbounded. And a relay can listen to MQTT brokers for devices that announce themselves, read-only.
-
-Still on 4.17.0? [Upgrading from 4.17.0](/gateway/upgrading/#the-edge-relay-and-quadlet) has the relay's part.
-:::
-
-:::note[Fixed in 4.17.0]
-**A device file pushed from the Gateway lands now.** On 4.16.0, a relay installed from the chart or the Quadlet unit wrote the push next to its local device file, and both installs mount that read-only. It logged `a pushed config was rejected` with `read-only file system` and kept polling the old list, while the Gateway cheerfully answered `config pushed`. In 4.17.0 a push goes to `/data/pushed-devices.json` on the relay's volume, and it wins over the local file until somebody clears it.
-
-**`persistence.enabled=false` boots.** On 4.16.0 nothing was mounted at `/data`, the root filesystem is read-only, and the relay died with `open forward queue at /data/forward.db: no such file or directory`. In 4.17.0 it runs on an emptyDir, and [Install](/edge-relay/install/#the-forward-queue-and-its-volume) says what that costs you.
-
-Still on 4.16.0? [Upgrading from 4.16.0](/gateway/upgrading/#the-edge-relay) has the relay's part, including the stale push a broker may hand back at first boot.
-:::
+Upgrading a relay? [Upgrading from 4.17.0](/gateway/upgrading/#the-edge-relay-and-quadlet) and [upgrading from 4.16.0](/gateway/upgrading/#the-edge-relay) have the relay's part.
 
 ## What it is not
 
@@ -35,14 +19,14 @@ Still on 4.16.0? [Upgrading from 4.16.0](/gateway/upgrading/#the-edge-relay) has
 
 **Not able to take a write, serve a screen, or answer an agent.** All three need a signed-in person to pin the action on, and this thing has no users at all. It reads and it forwards, and that's the whole job.
 
-**Not configured at runtime.** Devices and tags come from one JSON file, read once at start. An edge box has one operator who can edit a file and restart a service, and that's harder to get wrong than any live reload anybody could bolt on. The one other way in is a device file pushed from the Gateway over the broker connection the relay already dials out on, and that one applies live. The relay never listens for a new config.
+**Not open to configuration from the network.** Devices and tags come from one JSON file on the box. The one other way in is a device file pushed from the Gateway over the broker connection the relay already dials out on, and that one applies live. The relay never listens for a new config.
 
 ## What it does
 
 - **Polls** with the Gateway's own engine: the same workers, the same reconnect and back-off, and the same drivers for OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConnect, and HTTP. Since 4.18.10 it can also listen to MQTT brokers you name in the device file and read what announces itself there (ESPHome, Zigbee2MQTT, Tasmota, Shelly), and nothing it discovers can be armed, because a relay has no write path at all. Since 4.17.0 it can poll a UniFi console too, read-only: the tags its device file declares, and of the client work only the per-network client counts, with no OT watch. A driver bug fixed in the Gateway is fixed here.
 - **Forwards** as a Sparkplug B edge node: births, sequence numbers, and deaths the way the spec says. A reconnect announces the node once, not twice.
 - **Survives the link dying.** Readings queue to a single file on disk. When the broker comes back the queue drains before any live reading goes out, oldest first, each one flagged `is_historical` so the host upstream doesn't mistake a replay for the tag's current value. Delivery is at least once, so whatever consumes it has to tolerate a duplicate after a crash mid-replay. The queue is capped at 64 MiB by default, and past the cap the oldest readings are dropped and counted. That is about 248,000 readings, about two minutes at 2,000 readings a second, so size it from your own rate, about 240 bytes a reading with short tag names (measured on the same queue in Edge 4.21.1). Set it to `0` and it is unbounded, and a long enough outage fills the volume. [Install](/edge-relay/install/) says how to set it.
-- **Answers two read-only endpoints** on port 8081: `/healthz` (the process is up) and `/status` (device counts by connection state, tag count, queue depth, compiled-in protocols, whether the broker is connected, its version, image digest, and update mode, and which device file is running and which was refused). No tag values, no addresses, no config. Both are unauthenticated on purpose: there's no user database to hang a login on, and one shared token would be theater, not security. Keep them behind the same perimeter as the box.
+- **Answers two read-only endpoints** on port 8081: `/healthz` (the process is up) and `/status` (device counts by connection state, tag count, queue depth, compiled-in protocols, whether the broker is connected, its version, image digest, and update mode, and which device file is running and which was refused). No tag values, no addresses, no config. Both are unauthenticated on purpose: there's no user database to hang a login on, and one shared token would add no real protection. Keep them behind the same perimeter as the box.
 - **Takes orders from a Gateway.** Register a relay with the Gateway's fleet management (API only, there's no Fleet screen) and the Gateway tracks it from its births and deaths, and can send it a rebirth, a restart, a new device file, or the approval for an update it is holding. A pushed device file applies live, with no restart. A restart is its own command, because it drops the relay's broker session and every device session it holds, and a box that sits there for months shouldn't do that to take a config change.
 
 ## Who gets to command it
@@ -58,6 +42,8 @@ Edge Relay has been run end to end against a real Mosquitto broker, with a readi
 Updates have been run too: the Quadlet unit's rollback, and the opt-in hold, with a real update held while the relay ran untouched, then taken on approval. On Podman 4.9 the unit has to say `--sdnotify=healthy` itself, or a dead update is reported as a success, and it does.
 
 This binary has been run on bare metal (2026-11-17). Its OPC UA, Modbus, EtherNet/IP, and S7comm drivers are the same code the Gateway runs.
+
+Running it at a plant? [Using HotLoop in a business](/business/) covers EmberNet and a rollout by Fireball Industries, HotLoop's master systems integrator.
 
 ## License
 

@@ -5,6 +5,10 @@ description: "What Cascade has built, what each release shipped, and what is not
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 No license check exists anywhere in the code. Each phase ends when
 its "real" list has been done against real systems, not when the code compiles.
 
@@ -27,8 +31,8 @@ screen in the editor.
 
 ## What 1.0.x shipped
 
-1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, and nothing else. I called it 1.0.0
-because the editor was the last piece I wanted before I put my name under the
+1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, and nothing else. We called it 1.0.0
+because the editor was the last piece we wanted before we put our name under the
 number, not because everything below is done.
 
 1.0.1 fixed one mistake in sign-in: a database that couldn't be read used to answer
@@ -44,7 +48,7 @@ step that no longer exists fails to validate and does not start, instead of bein
 quietly changed. That is how the EmberOps steps were taken out in 1.0.0. There is
 no promise yet about the format or the API beyond that, and no upgrade test from
 every earlier release: what is tested is in `RELEASE_CHECKLIST.md`, which upgrades
-from the last release by hand. A promise goes here when I can keep it, and not
+from the last release by hand. A promise goes here when we can keep it, and not
 before.
 
 ## 1.2.0, the MCP server's last four tools
@@ -64,7 +68,7 @@ route of the REST API, so the route's own handler checks the permission, validat
 the body, makes the change and writes the audit row. It ships on, with read and
 write, like every MCP in the HotLoop family, and the two switches for it are the
 deployment's own (`HOTLOOP_CASCADE_MCP`, `HOTLOOP_CASCADE_MCP_WRITES`), which no
-tool and no route can change. the MCP page has every tool and what it asks for.
+tool and no route can change. The MCP page has every tool and what it asks for.
 
 And the screens the editor was missing: Credentials, Projects (members and
 service accounts), Users, the audit log, Settings and an Account page with API
@@ -76,7 +80,7 @@ the old Go page.
 
 Built from this phase: the webhook role (its own Deployment in the split shape
 of the chart), a concurrency limit per workflow, and many mains against one
-database. What I have not done is the test I set for this phase, killing a main
+database. What we have not done is the test we set for this phase, killing a main
 during a minute-level schedule and finding no duplicate and no missed run over an
 hour.
 

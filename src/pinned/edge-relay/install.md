@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.21.1
+reviewed: hotloop=4.22.0
 title: "Install the Edge Relay with Helm or Quadlet"
 description: "Run HotLoop Edge Relay {{hotloop}} on a cluster with Helm, or on a Pi or industrial PC as a systemd service with Podman Quadlet. The unit files are here in full."
 sidebar:
@@ -128,7 +128,7 @@ Save this as `/etc/containers/systemd/edge-relay.container`, and change the brok
 ```ini
 [Unit]
 Description=HotLoop Edge Relay
-Documentation=https://github.com/HotLoop-io/hotloop/blob/main/docs/EDGE-RELAY.md
+Documentation=https://docs.hotloop.io/edge-relay/reference/
 After=network-online.target
 Wants=network-online.target
 

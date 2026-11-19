@@ -5,6 +5,10 @@ description: "Flow on Kubernetes with Helm, on a box with Podman and Quadlet, or
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Three ways in, all from the same image, `ghcr.io/hotloop-io/hotloop-flow`, built
 for amd64 and arm64:
 
@@ -40,7 +44,7 @@ Context (flow, global and node) is kept in a SQLite file, `state.db`, on that sa
 volume, and survives a restart whichever way you deploy. So do the queues behind
 durable wires. A container with no volume loses the file with everything else, so
 it keeps context only until the container is replaced. What gets written, how
-often, and what it costs a flash card is in [durable/README.md](/flow/durable-state/).
+often, and what it costs a flash card is in [Durable state, measured](/flow/durable-state/).
 
 ---
 
@@ -189,8 +193,8 @@ On a pod you run yourself, mount the PEM and set `HOTLOOP_FLOW_ASSERTION_PUBLIC_
 | `metrics.serviceMonitor.enabled` | off | Prometheus Operator scraping. |
 | `ingress.enabled` | off | If you want it reachable from outside the cluster. |
 
-A default render has to equal the binary's own defaults too. I got tired of
-settings that say one thing in `values.yaml` and do another in the process.
+A default render has to equal the binary's own defaults too, so a setting in
+`values.yaml` always does what it says in the process.
 
 The Service listens on 8080 and forwards to the binary's 1880. Everything else is
 documented next to the value in
@@ -270,7 +274,7 @@ Rootless works the same way with the file in `~/.config/containers/systemd/`,
 `loginctl enable-linger <user>` too, or systemd stops that user's services when
 they log out, and Flow goes with them. That's
 [Podman's](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)
-and systemd's documented behavior. The rootful unit above is the one I ran.
+and systemd's documented behavior. The rootful unit above is the one we ran.
 
 **Upgrading** is changing the tag in `Image=`, then `daemon-reload` and
 `restart`. Flows, credentials and the secret stay where they were. Pin the tag.

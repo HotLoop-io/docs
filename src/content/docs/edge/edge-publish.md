@@ -5,7 +5,11 @@ description: "Publish everything a box reads to a central Gateway as a Sparkplug
 editUrl: false
 ---
 
-Added in 4.5.0. Turns this gateway into a Sparkplug B **edge node**, publishing
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+Edge publish, since 4.5.0, turns HotLoop into a Sparkplug B **edge node**, publishing
 everything it reads to a central Gateway over MQTT, the opposite direction
 from the existing MQTT driver, which consumes Sparkplug as a primary host.
 This is what it means to run it.
@@ -101,12 +105,12 @@ reading off it only once the broker has confirmed it. The node goes back to
 memory only when the disk is empty, so there is never a moment when newer
 readings can pass older ones.
 
-I built this twice, and the first version was wrong for the hardware. It wrote
+We built this twice, and the first version was wrong for the hardware. It wrote
 every reading to disk before sending it, so a kill lost nothing the node had
 accepted. It also wrote about 5 MB a second at 2,000 readings a second, which
 is 450 GB a day, from about 160 queue commits a second at eight pages each.
 That kills an SD card and is a silly amount of wear on any flash. The disk
-cost in steady state now is nothing (the numbers are below), and what I gave
+cost in steady state now is nothing (the numbers are below), and what we gave
 up for it is stated plainly in the next section.
 
 **A hard kill with the uplink up loses what was in memory.** A SIGKILL, a
@@ -141,7 +145,7 @@ metric carrying its own timestamp and `is_historical`. The spec allows it
 Sparkplug NDATA message ... as long as they have different timestamps",
 Sparkplug B 3.0, Operational Behavior, Data Publish), so a message never
 holds one tag twice at the same millisecond and starts the next message
-instead. I packed them because one reading per message was the bottleneck,
+instead. We packed them because one reading per message was the bottleneck,
 and profiling it said so: 57% of the replay's CPU was the write syscall the MQTT client library
 makes once per packet, and 200,000 queued readings took 58.5 seconds, 3,418
 a second, against a plant producing 2,000 a second. A replay slower than the
@@ -213,7 +217,7 @@ assume this queue already deduplicated for it.
 - **A reading that has only been polled can be lost to a hard kill with the
   link up.** Between the driver handing a reading over and the broker
   confirming it, it exists only in the process, and a SIGKILL or a power cut
-  takes it. That is the price of not writing every poll to disk, and I chose
+  takes it. That is the price of not writing every poll to disk, and we chose
   it over 450 GB a day. Kill it when nothing is in flight and the answer is
   exact: every reading the plant handed out was delivered or counted.
 
@@ -225,7 +229,7 @@ no reset, no hang-up. To kill with nothing in flight the plant pauses for a
 few seconds before the SIGKILL ("quiesced"); the other kills land wherever
 polling happens to be ("instant"). The runs on 2026-10-12, with a 64 MiB
 bound. "Before" is `15419f1`, the build before this work. "Write-ahead" is
-`165411f`, which wrote every reading to disk first and which I took back out.
+`165411f`, which wrote every reading to disk first and which we took back out.
 "Now" is memory while the link is up and disk during an outage:
 
 | <span class="sr-only">Details</span> | Before | Write-ahead | Now |
@@ -263,7 +267,7 @@ The replay is no longer a limit: it runs at more than a hundred times the
 rate readings arrive.
 
 The judge used to report 4,000 to 6,000 duplicates in a run with no outage.
-I captured the traffic to find out whose they were: every one was an NBIRTH
+We captured the traffic to find out whose they were: every one was an NBIRTH
 repeating the last value of a tag an earlier message had already carried, with
 the reading's own timestamp, and not one was an NDATA sent twice. A birth has
 to carry the current value of every metric the node has (that is what a birth
