@@ -9,7 +9,7 @@ editUrl: false
 
 HotLoop for CODESYS is HotLoop running on the same node as a CODESYS runtime. It reads the PLC's variables through the runtime's own OPC UA server, puts them on screens that work on a panel PC, a phone, or a wall, raises alarms on them, and keeps the history. Nothing is installed in CODESYS and nothing writes to the PLC. It is the screen you would otherwise build in CODESYS WebVisu, drawn outside the runtime. What that buys you: the operators get a screen without a download to the PLC, and the PLC gets a second set of eyes that doesn't depend on anything else on the node.
 
-It is one of the eight HotLoop products, and its own release line. The newest chart is 0.3.5, published on 2026-11-16. Under it is HotLoop Edge, so everything on the [Edge pages](/edge/overview/) is true here too.
+It is one of the eight HotLoop products, and its own release line. The newest chart is 0.3.8, published on 2026-11-16. Under it is HotLoop Edge, so everything on the [Edge pages](/edge/overview/) is true here too.
 
 ![The Line 2 screen: four value cards, a gauge, a fifteen minute trend, and an alarm list](/codesys/screen.png)
 ![The same, in dark](/codesys/screen-dark.png)

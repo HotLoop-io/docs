@@ -69,6 +69,9 @@ IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [
 
 ## HotLoop for CODESYS
 
+- [HotLoop for CODESYS 0.3.8 release notes](/releases/codesys-0-3-8/)
+- [HotLoop for CODESYS 0.3.7 release notes](/releases/codesys-0-3-7/)
+- [HotLoop for CODESYS 0.3.6 release notes](/releases/codesys-0-3-6/)
 - [HotLoop for CODESYS 0.3.5 release notes](/releases/codesys-0-3-5/)
 - [HotLoop for CODESYS 0.3.4 release notes](/releases/codesys-0-3-4/)
 - [HotLoop for CODESYS 0.3.3 release notes](/releases/codesys-0-3-3/)

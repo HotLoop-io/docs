@@ -31,12 +31,12 @@ export const PRODUCTS = [
 ];
 
 // HotLoop for CODESYS, its own release line (HotLoop-io/hotloop-codesys). The chart is published at
-// `chartRepo` (0.3.5 is the newest, 2026-11-16) and wraps HotLoop `needsCore`. The pages that name the
+// `chartRepo` (0.3.8 is the newest, 2026-11-19) and wraps HotLoop `needsCore`. The pages that name the
 // version and the chart read these through {{codesys}}, {{codesysNeeds}} and {{codesysChartRepo}}, so the
 // next chart is one edit here and a release note in src/pinned/releases.
 export const CODESYS = {
-  version: '0.3.5',
-  needsCore: '4.20.2',
+  version: '0.3.8',
+  needsCore: '4.22.0',
   chartRepo: 'https://hotloop.io/hotloop-codesys/',
 };
 

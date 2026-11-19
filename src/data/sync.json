@@ -88,8 +88,8 @@
     }
   ],
   "codesys": {
-    "version": "0.3.5",
-    "needsCore": "4.20.2",
+    "version": "0.3.8",
+    "needsCore": "4.22.0",
     "chartRepo": "https://hotloop.io/hotloop-codesys/"
   },
   "pages": [
@@ -1489,6 +1489,9 @@
     "releases/codesys-0-3-3.md",
     "releases/codesys-0-3-4.md",
     "releases/codesys-0-3-5.md",
+    "releases/codesys-0-3-6.md",
+    "releases/codesys-0-3-7.md",
+    "releases/codesys-0-3-8.md",
     "transmitter/embernet.md"
   ]
 }

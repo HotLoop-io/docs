@@ -20,14 +20,18 @@ This is the list of what is done and what is left, in the order it gets done. It
 
 - [x] HotLoop {{codesysNeeds}}, the release the chart wraps.
 - [x] The chart published at `{{codesysChartRepo}}`, {{codesys}} the newest.
-- [x] The provisioner image public, so it pulls with no login.
-- [x] [Release notes](/releases/codesys-0-3-5/) for every chart, 0.3.0 to 0.3.5.
+- [x] The provisioner image public, so it pulls with no login, 0.3.3.
+- [x] A multi-arch provisioner image, amd64 and arm64, from 0.3.3 and chart 0.3.8.
+- [x] Two OPC UA PubSub listeners on one UDP port, with HotLoop 4.22.0 and chart 0.3.7.
+- [x] [Release notes](/releases/codesys-0-3-8/) for every chart, 0.3.0 to 0.3.8.
 
-## Proven on bare metal
+## Not run yet
 
-- [x] Run on bare metal (2026-11-17), including an install from the real App Store page as staff do it, k3s v1.35.7, a node that really loses its link to the control plane with the pods kept, a download from the CODESYS IDE while the runtime stays up, a runtime on the host's own network beside the HotLoop pod on one node, and a runtime with user management on and a certificate-secured OPC UA endpoint.
+- [ ] A secured, user-managed runtime read end to end.
+- [ ] A download from the CODESYS IDE while the runtime stays up.
+- [ ] A program running on the arm64 runtime.
 
 ## To build
 
-- [ ] A multi-arch provisioner image. It is amd64 only today.
+- [ ] More than one screen in a profile.
 

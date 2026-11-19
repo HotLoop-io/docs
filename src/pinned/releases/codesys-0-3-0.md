@@ -20,4 +20,4 @@ sidebar:
 
 ## How far it was run
 
-It has been run on bare metal (2026-11-17). [Where it stands](/codesys/where-it-stands/) says what it was run against.
+[Where it stands](/codesys/where-it-stands/) says what it was run against.
