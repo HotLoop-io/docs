@@ -15,7 +15,7 @@
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
       "ref": "origin/main",
-      "sha": "abab4cc47ce4ceb273e63c7e6648e64a5f44fbd3",
+      "sha": "a851ea56f728c7d7f2e2ac5b66361893a1e6c284",
       "release": {
         "tag": "v2.15.0",
         "version": "2.15.0",
@@ -1221,7 +1221,7 @@
       "group": "HotLoop Flow",
       "title": "HotLoop Flow 2.15.0 release notes",
       "label": "2.15.0",
-      "status": "released",
+      "status": "changed",
       "repo": "flow",
       "source": "docs/releases/2.15.0.md",
       "release": true
