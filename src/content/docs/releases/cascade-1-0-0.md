@@ -7,15 +7,19 @@ sidebar:
   label: "1.0.0"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 ## What this is
 
 1.0.0 is the identity and governance work and a new editor, in one release. Everything in 0.1.2 is still here and works the way it did: the engine, the connectors, the importer, the Helm chart, the Quadlet units and the workflow file format. What changed is what a plant can do with an instance, and what it looks like while it does it.
 
-I'm calling it 1.0.0 because the editor is the last piece I wanted before I'd put my name under the number. Every screen works against the real API, and every feature below was tried against the real server it talks to, not a stand-in.
+We're calling it 1.0.0 because the editor is the last piece we wanted before we'd put our name under the number. Every screen works against the real API, and every feature below was tried against the real server it talks to, not a stand-in.
 
 ## The new editor
 
-It's rebuilt in Astro with Svelte islands, in HotLoop's own colors and type, and it follows your system's light or dark until you pick. It is still baked into the binary and fetches nothing from anywhere, so a box with no internet runs it as well as one with. Every screen the old editor had is here and does what it did, the canvas included: I carried its code across rather than rewriting it, and I counted every screen, button, field and API call before and after to make sure nothing went missing.
+It's rebuilt in Astro with Svelte islands, in HotLoop's own colors and type, and it follows your system's light or dark until you pick. It is still baked into the binary and fetches nothing from anywhere, so a box with no internet runs it as well as one with. Every screen the old editor had is here and does what it did, the canvas included: we carried its code across rather than rewriting it, and we counted every screen, button, field and API call before and after to make sure nothing went missing.
 
 The URLs you saved still work. `#/w/<id>`, `#/x/<id>`, `#/executions` and the debug links open the same screens, and `/app/main.js` and `/app/main.css` still answer.
 
@@ -27,7 +31,7 @@ The editor has a screen for each of them: Variables, Insights, and under Setting
 
 ## EmberOps steps are gone
 
-I took the EmberOps connector out. The nine steps (`erpnext.trigger`, `getList`, `getDoc`, `create`, `update`, `delete`, `submit`, `cancel` and `call`), the "When an EmberOps document is created or changes" trigger, the EmberOps credential type and the screens and docs that offered them are not in 1.0.0. If you need to reach EmberOps, the HTTP step calls its REST API with a credential, and that works today.
+We took the EmberOps connector out. The nine steps (`erpnext.trigger`, `getList`, `getDoc`, `create`, `update`, `delete`, `submit`, `cancel` and `call`), the "When an EmberOps document is created or changes" trigger, the EmberOps credential type and the screens and docs that offered them are not in 1.0.0. If you need to reach EmberOps, the HTTP step calls its REST API with a credential, and that works today.
 
 A workflow you saved with one of those steps is not dropped and not quietly changed. It fails to validate and it won't start, and the message names the step and says EmberOps steps were removed in 1.0.0. Delete the step, or replace it with an HTTP step, and it runs again. A credential of the EmberOps type stays in your list, unused, and you can delete it. The importer no longer carries an EmberOps node across, so it comes in disabled with its settings in its notes, like any node it has no step for.
 
@@ -37,7 +41,7 @@ A workflow you saved with one of those steps is not dropped and not quietly chan
 
 ## Things you need to know
 
-Migrations only go forward. A rollback puts the old image back, it does not un-migrate your database, so take a backup before you update, and treat the backup as the way back. Nothing in these migrations changes or removes what was there, but I haven't run the old image on the new schema, so I'm not promising it.
+Migrations only go forward. A rollback puts the old image back, it does not un-migrate your database, so take a backup before you update, and treat the backup as the way back. Nothing in these migrations changes or removes what was there, but we haven't run the old image on the new schema, so we're not promising it.
 
 External secrets need allowed paths. A provider with none is refused, on purpose, because the store's token can usually read far more than anyone who edits credentials should be able to name.
 

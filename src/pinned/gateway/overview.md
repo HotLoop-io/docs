@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.21.1
+reviewed: hotloop=4.22.0
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: twelve native protocol drivers, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
@@ -7,7 +7,7 @@ sidebar:
 ---
 
 :::note[{{hotloop}} is out]
-Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. The Gateway is built for amd64 and arm64, and the other three for amd64, arm64 and arm/v7, so every box pulls its own. The Gateway keeps `ghcr.io/hotloop-io/hotloop:{{hotloop}}` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
+Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. All four are built for amd64 in {{hotloop}}. The arm64 and arm/v7 images of {{hotloop}} follow in the next version, and `stable` keeps the arm images it already had. The Gateway keeps `ghcr.io/hotloop-io/hotloop:{{hotloop}}` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
 :::
 
 HotLoop Gateway reads your plant. It polls PLCs and servers in their own protocols, keeps every reading and its quality in a historian, raises ISA-18.2 alarms that can page a phone, runs automations against all of it, and hands the whole plant to agents over MCP. A site runs one chart, the Gateway and its database, instead of a historian, an alarm server, a rules engine, and a pile of glue, each one failing on its own schedule.

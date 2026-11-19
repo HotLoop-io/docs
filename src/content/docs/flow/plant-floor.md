@@ -5,6 +5,10 @@ description: "Modbus TCP, OPC UA, Sparkplug B and the other nodes that talk to P
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Flow talks to PLCs and brokers in Modbus TCP, S7, EtherNet/IP, OPC UA and Sparkplug B.
 Each one is a config node that holds the connection to the device and action
 nodes that point at it, same shape as the InfluxDB node, and the editor builds
@@ -24,7 +28,7 @@ register 40001 in a manual is address 0.
 
 **S7** is `s7 read` and `s7 write` on a `hotloop-flow-s7` server, over ISO on TCP.
 gos7 is a Go implementation of the protocol and has none of Snap7's C library in
-it, which matters because Snap7 is LGPL and I'm not linking that into a product I ship. You
+it, which matters because Snap7 is LGPL and we're not linking that into a product we ship. You
 write the address the way Siemens does: `DB1.DBX0.0`, `DB1.DBW4`,
 `M10.2`, `MW20`, `I0.0`, `QB4`, with `E` and `A` for the German spellings. The
 size letter has to agree with the data type, so `DB1.DBW0` read as a float32 is
@@ -46,7 +50,7 @@ named. A tag read as the wrong type is refused and the error says to use the
 tag's own. The path to the CPU is `1,0` unless you change it, and empty for a
 controller you reach directly. PLC-5, SLC and MicroLogix speak PCCC and not CIP
 tags, and they're out. Yes, the library is tagged beta. It's the newest release
-there is, and I'd rather tell you than leave it out.
+there is, and we'd rather tell you than leave it out.
 
 **OPC UA** is `opcua read`, `opcua write` and `opcua subscribe` on a
 `hotloop-flow-opcua` server. Security mode None, Sign or SignAndEncrypt with the
@@ -160,7 +164,7 @@ stopped halfway, which says how many targets were written. Nothing that was
 written is undone, because that is HotLoop's rule too.
 
 **Writes change equipment, and there is no ceremony, unless HotLoop is there.**
-I looked for a confirmation pattern in Flow to follow and there isn't one for
+We looked for a confirmation pattern in Flow to follow and there isn't one for
 equipment. The guards that exist bound what a node may reach
 (`discovery.allowedCIDRs` for `scan`, the file and secret scopes), and nothing
 asks "are you sure" before a message does something. So the write nodes don't
@@ -197,7 +201,7 @@ with the state it had before. HotLoop's write audit and logbook were checked for
 the account and the reason. Signing in again after HotLoop forgets the session is
 tested, and so is a refused login. The reconnect and the diffing of the feed are
 tested against a small stand-in for HotLoop that answers in the documented
-shapes, because dropping a real HotLoop's connection on cue isn't something I
+shapes, because dropping a real HotLoop's connection on cue isn't something we
 can do. Not done: HotLoop records the account Flow signs in as, and `flow:<node
 id>` goes in as the reason, because the API gives a client no way to name its own
 actor. The connection trusts the system's certificate roots and nothing else, so
@@ -218,7 +222,7 @@ simulator's tags are lower case.
 
 **`Aes256_Sha256_RsaPss` isn't in the OPC UA dropdown.** Some servers answer it with `BadSecurityChecksFailed`, so Flow does not offer a policy that fails on them.
 Basic256 and Basic128Rsa15 are deprecated and the simulator doesn't offer them,
-so they're out too. A setting I can't test doesn't get a dropdown entry.
+so they're out too. A setting we can't test doesn't get a dropdown entry.
 
 Not done: no Modbus RTU, no Modbus over TLS, no OPC UA events, history or method
 calls, no browse, no S7 timers or counters, no PCCC controllers, and 64 bit

@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.21.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 This document says exactly what the gateway speaks, exactly how far each driver
@@ -1123,7 +1123,7 @@ list of options known not to be. See
 A recorder with a burnt-out thermocouple does not go quiet. It keeps answering,
 and what it puts in the register is a code: 0x8005 for "undefined", 0x7FFF for
 "over range". Read as an int16 with a scale of 0.1, 0x8005 is -3276.3 degrees,
-and until I fixed this it came back as **good** quality, went into the
+and until we fixed this it came back as **good** quality, went into the
 historian as a real temperature and sat there for the alarms to judge. A dead
 sensor looked like a cold one.
 
@@ -1181,7 +1181,7 @@ exactly `"0x8005"` here.
   are put the right way round, not the order they came off the wire in.
 - **float32 and float64.** The code is the register bit pattern, so it has to be
   hex: `0x7FC00000` for a quiet NaN. A decimal is refused, because 32773 as a
-  float and 32773 as a bit pattern are different things and I won't guess.
+  float and 32773 as a bit pattern are different things and we won't guess.
 - **Bits, coils, discrete inputs and strings.** No raw number to compare, so
   `noData` on one is refused when the device connects.
 

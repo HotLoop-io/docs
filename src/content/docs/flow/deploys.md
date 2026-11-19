@@ -5,6 +5,10 @@ description: "Who, when, why and the exact bytes of every deploy, diffed node by
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 "What changed, who changed it, put it back" is the first thing anybody asks
 after a line stops. Three `.bak` files answer none of it. They don't know who,
 they roll over after three saves, and the one you need is always the fourth.
@@ -179,7 +183,7 @@ group and it comes along with everything in it. A configuration node that
 belongs to the flow and that only the selection uses goes into the subflow with
 it, along with whatever it points at. One that something left behind also uses
 goes global instead, so the two ends keep sharing the one connection, because a
-second broker connection on a box that counts them is the kind of surprise I do
+second broker connection on a box that counts them is the kind of surprise we do
 not ship. Environment variables the moved nodes read (typed as env, as `${NAME}`
 or `$(NAME)` in a string, or `env.get`) and that the flow declares become
 properties of the subflow that forward to the flow, so the value still comes
@@ -190,7 +194,7 @@ delete it. Deleting asks, takes every node on the flow with it, and cuts the
 wires and links other flows had into it so the file isn't left pointing at
 nothing. It takes the deleted nodes out of any Catch, Status or Complete scope
 that named them, too. A Catch or Status whose whole list was deleted keeps its
-last id, since an empty list means the whole flow and I won't flip a node from
+last id, since an empty list means the whole flow and we won't flip a node from
 watching one thing to watching everything behind your back. Ctrl+Z brings it
 back until you deploy. The last flow can't be deleted, because a runtime with no
 flow has nowhere to put a node.

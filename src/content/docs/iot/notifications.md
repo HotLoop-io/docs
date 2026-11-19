@@ -5,7 +5,12 @@ description: "ntfy, Gotify, Discord, webhooks and email. Press Acknowledge on yo
 editUrl: false
 ---
 
-Added in 4.10.0. The acceptance bar is simple: a 03:00 alarm pages a phone. When an alarm is **raised**, HotLoop sends a notification
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+Alarm notifications, since 4.10.0, page a phone when an alarm is raised at
+03:00. When an alarm is **raised**, HotLoop sends a notification
 through every configured, enabled channel whose priority floor the alarm
 meets. Off by default (`HOTLOOP_NOTIFY_ENABLED`): a deployment with nobody to
 page has nothing to configure this against.
@@ -635,7 +640,7 @@ why, when any of these happens:
   can't make it page an alarm somebody already answered.
 - **It returns to normal.** The alarm is still on the alarm list needing
   somebody to acknowledge it, but nobody is woken up for something that fixed
-  itself. That's a call I made on purpose; change the floor or the steps if you
+  itself. That's a call we made on purpose; change the floor or the steps if you
   want a different one.
 - **It's shelved.**
 - **It trips again.** That's a new occurrence with its own chain, counted from

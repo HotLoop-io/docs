@@ -7,6 +7,10 @@ sidebar:
   label: "4.18.10"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The release where HotLoop stops being one image. IoT, Edge, the Gateway and the
 Edge Relay all ship from this tag, in lockstep, each with its own image and its
 own chart. On top of that: devices that announce themselves over MQTT, history
@@ -51,7 +55,7 @@ What changed in 4.18.10.
   keeps `ghcr.io/hotloop-io/hotloop` and the chart `hotloop`, so nobody running
   it changes anything. A product is a build, not a setting: the OPC UA server
   isn't switched off in the IoT image, it isn't in it. See
-  the products page.
+  [the products page](/products/).
 - **MQTT discovery.** Point ESPHome, Zigbee2MQTT, Tasmota or a Shelly at the
   broker and it shows up, reading. It can't command anything until an admin
   accepts it and arms each point by hand. Network discovery (mDNS, SSDP, DHCP)
@@ -89,7 +93,7 @@ What changed in 4.18.10.
 ### Upgrading from 4.17.0
 
 - `helm upgrade <release> hotloop/hotloop --version 4.18.10
-  --reset-then-reuse-values`. I rendered the 4.17.0 and 4.18.10 Gateway charts
+  --reset-then-reuse-values`. We rendered the 4.17.0 and 4.18.10 Gateway charts
   side by side: the same eight objects, the same selectors, the same volume
   claims. Plain `--reuse-values` renders too this time, but it replays 4.17.0's
   values and drops every new default, so use the reset form or your values file.

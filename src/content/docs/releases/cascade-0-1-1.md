@@ -7,11 +7,15 @@ sidebar:
   label: "0.1.1"
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 ## What this is
 
 0.1.1 is the first release that isn't a candidate. There was a 0.1.0 tag and it never published anything: it was cancelled before anything reached the registry. A tag stays where it is, so this is the same code, published.
 
-What it is: the workflow engine I wanted on a plant floor. One static Go binary, SQLite on one box or Postgres with workers when you need more, and the editor baked into the binary so there is nothing else to run.
+What it is: the workflow engine we wanted on a plant floor. One static Go binary, SQLite on one box or Postgres with workers when you need more, and the editor baked into the binary so there is nothing else to run.
 
 ## What's in it
 
@@ -27,7 +31,7 @@ The image is amd64 and arm64. Pull it by the digest above if you want a deploy t
 
 On k3s: the Helm chart, standalone or split into server and workers.
 
-On a plain box: the Quadlet units under `deploy/quadlet`, SQLite on one box or Postgres with extra workers. They follow `:stable`, and Podman's auto-update timer moves them. An update that doesn't come up healthy gets rolled back to the image that was running. I ran that for real, both flavours, on Podman 5.8.7 under systemd: start waits for healthy, a killed container comes back, a good update lands, a bad one rolls back, and a workflow runs after each.
+On a plain box: the Quadlet units under `deploy/quadlet`, SQLite on one box or Postgres with extra workers. They follow `:stable`, and Podman's auto-update timer moves them. An update that doesn't come up healthy gets rolled back to the image that was running. We ran that for real, both flavours, on Podman 5.8.7 under systemd: start waits for healthy, a killed container comes back, a good update lands, a bad one rolls back, and a workflow runs after each.
 
 ## Things you need to know
 

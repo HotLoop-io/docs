@@ -5,7 +5,11 @@ description: "A broker in the same process, so one small box can be the whole in
 editUrl: false
 ---
 
-Added in 4.11.0. This Gateway can run its own MQTT broker in-process, so a small, single-box HotLoop install has nothing extra to
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+HotLoop can run its own MQTT broker in-process, since 4.11.0, so a small, single-box HotLoop install has nothing extra to
 deploy. Off by default (`HOTLOOP_BROKER_ENABLED`): a deployment that already
 runs Mosquitto or EMQX has nothing to point this at, and starting a second
 broker beside one that already exists is not a safe default to guess into
@@ -13,7 +17,7 @@ existence.
 
 ## Why this exists
 
-Edge publish (this Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect *outward* to
+Edge publish (the Gateway acting as a Sparkplug edge node) and fleet management (tracking registered edge relays) both connect *outward* to
 an MQTT broker over `BrokerAddress`, they have never run one themselves.
 That is fine when a deployment already has a broker, whether that's an
 existing Mosquitto instance or one run alongside HotLoop for other reasons.
@@ -38,7 +42,7 @@ scale: multiple independent Sparkplug host applications, very high fan-out,
 bridging between sites, or workloads that need clustering, horizontal
 scaling, or a broker's own dedicated operational tooling (detailed metrics,
 dynamic ACLs, plugin ecosystems) are all real reasons to run Mosquitto,
-EMQX, or another dedicated broker instead, and to point this Gateway's own
+EMQX, or another dedicated broker instead, and to point the Gateway's own
 `EdgePublishConfig`/`FleetConfig` at it like any other deployment already
 can. This package does not compete with that use case; it exists for the
 deployments that would otherwise have no broker at all.

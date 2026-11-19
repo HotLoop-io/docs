@@ -5,7 +5,14 @@ description: "Publish configured devices and tags as a read-only OPC UA address 
 editUrl: false
 ---
 
-Added in 4.13.0. HotLoop publishes this Gateway's configured devices and tags as an OPC UA address space, so a third-party OPC UA client, a SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the Gateway's live tags without anyone writing a HotLoop driver for the other side. It is the server half of what HotLoop's OPC UA client does in the other direction.
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+HotLoop's OPC UA server, since 4.13.0, publishes the Gateway's configured
+devices and tags as an OPC UA address space, so a third-party OPC UA client, a
+SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the
+Gateway's live tags without anyone writing a HotLoop driver for the other side.
 
 Off by default (`HOTLOOP_OPCUA_SERVER_ENABLED`): opening a listener on a plant
 network is something a deployment does on purpose. Default port 4840.

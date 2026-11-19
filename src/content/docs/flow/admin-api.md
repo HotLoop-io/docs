@@ -5,6 +5,10 @@ description: "The HTTP and websocket calls the editor and the command line use, 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.14.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 | Method and path | Permission | Notes |
 |---|---|---|
 | `GET /health` | none | Liveness. The kubelet carries no token, and auth on this route would restart-loop the pod forever. |
@@ -46,8 +50,7 @@ editUrl: false
 
 `/metrics` and `/health` being unauthenticated is a decision rather than an
 oversight. A Prometheus scraper carries no bearer token, so requiring one means
-either handing a credential to your monitoring stack or having no monitoring, and
-I have watched people pick the second one.
+either handing a credential to your monitoring stack or having no monitoring.
 
 A user with two-factor sign-in on sends `"code"` with the username and password
 to `POST /auth/token`. Without it the answer is a 401 with `"mfa": "required"`.

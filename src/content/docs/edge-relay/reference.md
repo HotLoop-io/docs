@@ -5,7 +5,11 @@ description: "The headless poll-and-forward Sparkplug B node: what it does, ever
 editUrl: false
 ---
 
-Added in 4.6.0. Edge Relay is a second binary, not a mode of the Gateway: a poll-and-forward Sparkplug B edge node with no database, no web
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
+The Edge Relay, since 4.6.0, is a second binary and runs on its own: a poll-and-forward Sparkplug B edge node with no database, no web
 UI, no auth and no write path. It exists to run on a Pi or a small industrial
 PC at the edge, forwarding everything it reads to a full Gateway running
 somewhere with a real database, over the same Sparkplug B publisher 4.5.0 added.
