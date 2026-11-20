@@ -5,6 +5,10 @@ description: "Publish everything a box reads to a central Gateway as a Sparkplug
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Edge publish, since 4.5.0, turns HotLoop into a Sparkplug B **edge node**, publishing
 everything it reads to a central Gateway over MQTT, the opposite direction
 from the existing MQTT driver, which consumes Sparkplug as a primary host.
@@ -122,7 +126,9 @@ node does when the link stops confirming is move memory to the disk. The one
 case this design does not cover is the process dying with the link up, and it
 is not covered on purpose.
 
-`HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES` bounds the outage queue, and the default is 64 MiB, about 248,000 readings: about two minutes of outage at 2,000 readings a second (the rig below runs it there), and about 41 minutes at 100. Past it the oldest readings go first and
+`HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES` bounds the outage queue, and the default
+is 64 MiB, about two minutes of outage at 2,000 readings a second (the rig
+below runs it there: about 248,000 readings fit, measured at 4.21.1). Past it the oldest readings go first and
 are counted. Set it to 0 and the queue is unbounded: the process warns about
 that at startup, because a very long outage on an unbounded queue fills the
 volume instead of dropping old readings the way the historian's own in-memory
@@ -258,7 +264,12 @@ given up" above. The five minute cut before that fix had the node sitting in
 a dead connection for the whole outage and then sending a stale chunk ahead
 of the new session's birth; 100 readings arrived out of order.
 
-At that load a 64 MiB queue holds about two minutes of outage, about 248,000 readings. Size the bound from your own rate: about 240 bytes a reading in the queue with short tag names, measured on 4.21.1.
+At that load a 64 MiB queue holds about two minutes of outage: about 248,000
+readings, which is about 236 bytes a reading with nine character tag names
+(measured at 4.21.1, queue file 61.7 MB), and a longer tag name costs more. Size
+the bound from your own rate and your own tag names. The 2026-10-12 rows above
+agree: the 5 minute outage replayed 244,335 readings, which is the same two
+minutes. 
 The replay is no longer a limit: it runs at more than a hundred times the
 rate readings arrive.
 

@@ -5,6 +5,10 @@ description: "Switches, ports, PoE, WAN failover and clients read from a UniFi c
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A plant's network is equipment. When a PLC goes quiet, the first question is
 "is it the PLC, or the switch port it's plugged into", and until now the answer
 lived in the UniFi app on somebody's phone. So HotLoop reads the UniFi console
@@ -12,11 +16,13 @@ itself: every switch, every port, PoE draw, the WAN links and the site's health,
 as ordinary tags. That means alarms, trends, entities, automations, OPC UA and
 MCP all work on them without knowing UniFi exists.
 
-This is the read-only driver, the OT watch on top of it, the screens and the
-events stream (U1 to U4 on the [roadmap](/roadmap/)). **It never writes to a
-console.** Not a PoE mode, not a
-port, not a setting. The driver's Write refuses, and the account it uses can be
-View Only.
+This is the driver, the OT watch on top of it, the screens, the events stream
+and the first commands (U1 to U5 on the [roadmap](/roadmap/)). **It reads the
+network, and it changes it only when a person has armed a tag for it.** Every tag
+is made read-only. The few points that are commands (below, "Commands") go through
+the write gate like any tag: nothing sends one until somebody marks that tag
+writable, and a console account that is View Only is refused by the console itself.
+For everything except the commands the account it uses can be View Only.
 
 ## Adding a console
 
@@ -91,7 +97,7 @@ account out. Twice. So:
 
 ## Tags
 
-Every tag is made by the driver, read-only, named from MAC addresses and port
+Every tag is made by the driver, read-only until a person arms it, named from MAC addresses and port
 numbers, never display names, so renaming a switch in the UniFi app breaks
 nothing. `<mac>` is the device's MAC in lower case without separators, `<nn>`
 the port number in two digits.
@@ -140,6 +146,28 @@ bad, never a made-up zero: a switch that reports no PoE draw has its `poe_w` tag
 
 The Edge Relay can poll a console too. It reads the tags its device file
 declares and doesn't add any, because it has nowhere to keep them.
+
+## Commands
+
+Five kinds of point are commands. Each is created read-only like every other tag, and
+does nothing until someone marks it writable. The account HotLoop logs in with has
+to be a local Administrator for these; as View Only the console answers HTTP 403 and
+HotLoop says so, and nothing changes.
+
+| Tag | Write | What the console does |
+|---|---|---|
+| `d.<mac>.locate` | `true` or `false` | Flashes the device's LED until it is turned off. Reads back what the console says. |
+| `d.<mac>.restart` | `true` | Restarts the device when it next informs. `false` does nothing. Reads 0. |
+| `p.<mac>.<nn>.power_cycle` | `true` | Turns the port's PoE off and on. `false` does nothing. Reads 0. |
+| `w.<id>.enabled` | `true` or `false` | Switches a wireless network on or off. Only that one field is sent, so the passphrase and every other setting stay. `<id>` is the console's id for the network, which a rename does not change. |
+| `c.<mac>.blocked` | `true` or `false` | Blocks a watched client from the network, or lets it back in. The point exists for a client the console has seen. |
+
+A power cycle can hurt a plant (an automation cycling a PLC every two minutes cooks
+its power supply), so two rules hold whoever asks: a port is cycled at most once in
+15 minutes (the time of the last cycle is kept in the database, so a restart does not forget it, and a cycle whose time cannot be checked is refused), and a port that carries the network is never cycled. That is an uplink,
+and any port another piece of equipment hangs off, which the console's own topology
+says; the port that powers a 5G backup is one of them. A refusal says which rule it
+was. A command the console itself refuses does not use up the cooldown.
 
 ## Clients, OT networks, and where a PLC is plugged in
 

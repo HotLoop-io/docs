@@ -5,6 +5,10 @@ description: "Publish configured devices and tags as a read-only OPC UA address 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop's OPC UA server, since 4.13.0, publishes the Gateway's configured
 devices and tags as an OPC UA address space, so a third-party OPC UA client, a
 SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the
@@ -13,7 +17,8 @@ Gateway's live tags without anyone writing a HotLoop driver for the other side.
 Off by default (`HOTLOOP_OPCUA_SERVER_ENABLED`): opening a listener on a plant
 network is something a deployment does on purpose. Default port 4840.
 
-**It is read-only.** See [Why it is read-only](#why-it-is-read-only).
+**It is read-only.** See [Why it is read-only](#why-it-is-read-only). It
+serves the history of every tag as well: see [History](#history).
 
 ## What is exposed
 
@@ -166,9 +171,9 @@ get told a perfectly real node did not exist.
 This increment does not implement writes, and says so in three places at once
 so no single change can quietly add them:
 
-- every published node has `AccessLevel = CurrentRead` and no write handler is
-  installed, so a write is refused `BadNotWritable` and a client can see before
-  it tries that the node is not writable;
+- every published node has `AccessLevel = CurrentRead | HistoryRead` and no
+  write handler is installed, so a write is refused `BadNotWritable` and a
+  client can see before it tries that the node is not writable;
 - the tests write to a tag as a viewer, an operator and an admin, and assert the
   answer is `BadNotWritable` **and that the register on the device behind the
   tag did not change**.
@@ -178,6 +183,50 @@ OPC UA write path would have to go through that gate, carry its principal into
 the audit trail, and respect the master switch. That is a change with its own
 review, not something to arrive as a by-product of publishing tags, and there
 is deliberately no setting in this version that enables it.
+
+## History
+
+Every tag node is historizing and carries the HistoryRead access level. The
+server answers the OPC UA HistoryRead service from HotLoop's own history, the
+same readings `/api/history` serves, so a client on the other end of an OPC UA
+connection reads what the Gateway kept without a second database. A user needs
+what a value read needs (`tags.read` and `values.read`), checked the way a
+value read is, for the session's user, not once at sign-in.
+
+- **Raw** (`ReadRawModifiedDetails`): the readings in a window, each with its
+  own quality as the status and its own timestamp. A start before the end reads
+  forward and a start after the end reads backward, newest first. The start is
+  included and the end left out (OPC UA 10000-11, section 4.6), unless the
+  client asks for bounds, in which case the reading at or before the start and
+  the first reading outside the window at the end are added. `NumValuesPerNode`
+  is how many one call returns for a node; more than that, or more than 10,000,
+  comes back in pages, each with a continuation point that is good for five
+  minutes and one use (at most 1,000 are held at once). A window with nothing in
+  it is `Good_NoData`. Modified history is refused (`BadHistoryOperationUnsupported`):
+  nothing here is ever modified or deleted.
+- **Processed** (`ReadProcessedDetails`): Average, Minimum, Maximum, Count,
+  Start, End and Total, over intervals of `ProcessingInterval` from the start
+  time, by the quality rule (README, "The quality rule"): only good readings
+  with a finite number count. An interval with none is `Good_NoData` (Count
+  says 0), and one with readings left out reads `Uncertain_DataSubNormal`, so
+  the number is never better than what was in it. Another aggregate is refused
+  for that node (`BadAggregateNotSupported`), a string tag has none, and a
+  window of more than 10,000 intervals or 500,000 readings is refused
+  (`BadTooManyOperations`) rather than cut short. Only a forward window with
+  both ends is answered.
+- **At time** (`ReadAtTimeDetails`): what the tag held at each time, which is its
+  last reading at or before it, stamped with the time asked for. It never
+  interpolates, because a reading is a value somebody took; a time before the
+  tag's first reading is `Bad_NoData`.
+- **Events** are not served: `BadHistoryOperationUnsupported`. A device or any
+  other object has no history either, and a property node (`EngineeringUnits`,
+  `EURange`) does not carry HistoryRead.
+
+The historian keeps a reading when it moves past the deadband, not on every
+poll, so a quiet tag has few rows: read At time, or a Processed window around a
+tag's last reading, when you need what it held and not only when it changed.
+`HistoryServerCapabilities` says history can be read and that a call returns at
+most 10,000 values.
 
 ## Security model
 

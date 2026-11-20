@@ -5,6 +5,10 @@ description: "The entity registry every automation, helper, script and screen is
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The entity registry and the engine that computes entity state are the
 foundation every automation, helper, script and screen in HotLoop is built on.
 
@@ -634,7 +638,8 @@ Creation checks everything it can against the tags as they are now, and
 refuses (400, saying what to fix) anything that is not right:
 
 - the domain is one of `select`, `button`, `motor`, `valve`, `loop`,
-  `counter`. The tag domains are made for you from tags, and `alarm` from alarm
+  `counter`, `weather` (`GET /api/entities/composites` says which, and the roles
+  of each). The tag domains are made for you from tags, and `alarm` from alarm
   definitions;
 - every required role is bound, and no role the domain does not have;
 - **every bound tag exists**;
@@ -680,6 +685,8 @@ category `config`, with the bindings.
 | | `mode` | any | required, armed. Read to know the mode, written by `set_mode` |
 | `counter` | `state` | integer | required. The count |
 | | `reset_command` | bool or number | armed. Pulsed if a bool, written with 0 if a number (it may be the count register itself) |
+| `weather` | `temperature` | number | required. The state |
+| | `humidity`, `pressure`, `wind_speed`, `wind_gust`, `wind_bearing`, `rain_rate`, `rain_today`, `solar_radiation`, `uv_index` | number | feedback, each an attribute. None is armed: a station is read, never commanded |
 
 A valve needs at least one of `state`, `opened`, `closed` and `position` (something has
 to say where it is) and exactly one of `command` and `position_command`. Both
@@ -803,6 +810,14 @@ The state is the count, an integer tag. `reset` writes 0 to a numeric
 `reset_command` (bind the count register itself if that is how the PLC resets
 it) or pulses a bool one. A counter with no `reset_command` is read-only.
 `unit_of_measurement` is the entity's, else the tag's.
+
+### `weather`
+
+A roof-top station as one entity: see WEATHER.md. The state is the
+temperature; every other reading is an attribute, there only when its sensor can
+be read, with the dew point, heat index and wind chill worked out from them. A
+reading that is bound and cannot be read is named in `unavailable`, never shown
+as zero. It takes no service.
 
 ### `select`
 

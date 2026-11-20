@@ -5,6 +5,10 @@ description: "Logins, roles, tokens and the users screen, and what a deployment 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop has its own login, since 4.4.0, and every product requires it by default. Running without one is still available, deliberately, for a
 deployment that really is isolated behind the dashboard and wants to say so, see [Running without a login](#running-without-a-login), but a bare
 `helm install` or a Podman Quadlet unit now comes up requiring one.
@@ -70,7 +74,7 @@ same `values.yaml` must not silently revert someone's password.
 | Role | Can do |
 |---|---|
 | **admin** | Everything: `*`. Including creating, disabling and deleting users. |
-| **operator** | Read every screen. Write tags (`POST /api/write`) and command entities (`POST /api/services/...`), set helpers (`helpers.write`, see [Helpers](/iot/helpers/)), run and stop scripts (`scripts.run`, see [Scripts](/iot/scripts/)), apply recipes (`recipes.apply`, see [Recipes](/iot/recipes/)), make a rule from a blueprint and upgrade one (`blueprints.apply`, see [Blueprints](/iot/blueprints/)), see the dashboards offered to the role (`dashboards.read`, see [Dashboards](/iot/dashboards/)), rearrange the board, acknowledge/shelve/unshelve alarms, trigger automations. Cannot edit device, tag, alarm, automation, script, recipe, blueprint or dashboard *definitions*, and cannot manage users. |
+| **operator** | Read every screen. Write tags (`POST /api/write`) and command entities (`POST /api/services/...`), set helpers (`helpers.write`, see [Helpers](/iot/helpers/)), run and stop scripts (`scripts.run`, see [Scripts](/iot/scripts/)), apply recipes (`recipes.apply`, see [Recipes](/iot/recipes/)), make a rule from a blueprint and upgrade one (`blueprints.apply`, see [Blueprints](/iot/blueprints/)), see the dashboards offered to the role (`dashboards.read`, see [Dashboards](/iot/dashboards/)), read the energy used and what it cost (`energy.read`, see ENERGY.md; making a meter or a tariff is `energy.write`, an admin's), rearrange the board, acknowledge/shelve/unshelve alarms, trigger automations. Cannot edit device, tag, alarm, automation, script, recipe, blueprint or dashboard *definitions*, and cannot manage users. |
 | **viewer** | Read every screen. Nothing else. |
 
 A user can be given an explicit `permissions` list instead of a role, which
