@@ -5,10 +5,6 @@ description: "The phases of Flow, what is done and what is next, including the e
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.16.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
