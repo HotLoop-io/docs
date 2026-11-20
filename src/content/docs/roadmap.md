@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
@@ -149,6 +149,10 @@ This is where "better and cooler" has to be obvious from across the room.
 - [x] Dashboard builder: cards, drag and drop, as many dashboards as you want.
       Saves name the version they started from, so two people building one
       page can't overwrite each other unseen; see [Dashboards](/iot/dashboards/)
+- [x] Screen files: a dashboard saved as a versioned file and imported into
+      another install, so a customer's screens are theirs and never part of the
+      product; every missing tag or device is listed and mapped before anything is
+      saved. See SCREEN-FILE.md
 - [x] Card set: gauges, numbers, trends, entity lists, write buttons with the
       confirmation, script buttons, alarm lists, markdown, camera, a floor plan
       with live tags on it, recipe pickers and the plant status strip. A card
@@ -627,6 +631,18 @@ say what changed for a running site.
       are the deployment's and have no route, so the settings route refuses them
       for an agent as it does for a screen. Fixed, see
       [MCP](/iot/mcp/#changing-configuration)
+- [x] **MCP could not bring in a CODESYS alarm export, read back most of what it
+      changed, or check a body before saving it.** The alarms screen imports a
+      CODESYS Export Alarms file, and the only way to do it from an agent was
+      curl. `import_codesys_alarms` previews and applies it through the same
+      route, with a reason on apply. Twenty-four reads now sit beside the
+      writes they belong to (alarm definitions, dashboards, the board, the equipment tree, labels,
+      discovered devices, network finds, brokers, integrations, blueprints,
+      scripts, runs, the UniFi consoles and their networks), and
+      `validate_automation`, `validate_script` and `browse_device` are the
+      editors' dry runs. A caller the write role leaves out can make the plain
+      reads and nothing else. One hundred and sixty-three tools. `screen_export` and `screen_import` carry a screen between installs, the import a dry run unless told otherwise. Fixed, see
+      [MCP](/iot/mcp/#reads-and-dry-runs)
 - [x] The MCP endpoint was open to anybody who could reach the port when no
       `HOTLOOP_MCP_TOKEN` was set (every chart sets one; a bare binary or a
       Quadlet unit didn't), and the process only said so in its log. It makes a

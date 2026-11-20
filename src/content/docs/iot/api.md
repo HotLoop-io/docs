@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
@@ -446,6 +446,8 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/api/dashboards/{id}` | `dashboards.read` | all |
 | `PUT` | `/api/dashboards/{id}` | `dashboards.write` | all |
 | `DELETE` | `/api/dashboards/{id}` | `dashboards.write` | all |
+| `GET` | `/api/dashboards/{id}/export` | `dashboards.read` | all |
+| `POST` | `/api/dashboards/import` | `dashboards.write` | all |
 | `GET` | `/api/scripts` | `scripts.read` | all |
 | `POST` | `/api/scripts` | `scripts.write` | all |
 | `POST` | `/api/scripts/validate` | `scripts.write` | all |
@@ -777,7 +779,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.22.0"
+  "version": "4.22.1"
 }
 ```
 
@@ -2613,6 +2615,51 @@ nothing else is touched. The wall board is a `400`: it is always there.
 
 Builds, saves and deletes are logged as `config` events on subject
 `dashboard:<id>`.
+
+### `GET /api/dashboards/{id}/export`
+
+The dashboard as a screen file: a versioned JSON document that
+[`POST /api/dashboards/import`](#post-apidashboardsimport) loads into another
+install. It answers as an attachment named `<id>.hotloop-screen.json`. The
+caller needs `dashboards.read` and has to be offered the dashboard, as for
+`GET` one. The wall board is a `400`: it is an install's pinned gauges, not a
+layout. The format is in SCREEN-FILE.md.
+
+### `POST /api/dashboards/import`
+
+Reads a screen file, checks it against this install, and saves it as a new
+dashboard. Admin-only, and it cannot save what `POST /api/dashboards` would
+refuse. The body is the file itself, or `{"file": {...}}` with options beside
+it:
+
+| Option | <span class="sr-only">Details</span> |
+|---|---|
+| `id`, `name` | Save it under another id or name. |
+| `replace` | If the id is taken, save over that dashboard at its current version. Without it a taken id is a `409`. |
+| `skipAssignments` | Leave off the file's `screens` and `homeFor`, which belong to the install that made it. `roles` stay. |
+| `remap` | What to call things here: `tags` (whole key to whole key, as the file names the tag or as it reads once `devices` has moved it), `devices` (id to id, which also moves the device part of every tag not named in `tags`), `entities`, `scripts`, `recipes`, and `equipment` (id to id). An entry that nothing on the screen used is a warning. |
+| `dryRun` | Answer the report and save nothing. Always `200`. |
+
+The answer is a report whether or not anything was saved:
+
+```json
+{"ok":false,"dryRun":true,"id":"line-2","name":"Line 2","cards":6,"replaces":false,
+ "problems":[{"kind":"tag","ref":"press-01/Zone1_Temp","message":"tag press-01/Zone1_Temp does not exist here; map it to one that does, or add it on the Tags screen first"}],
+ "warnings":[],"remapped":[],
+ "requires":{"tags":[{"key":"press-01/Zone1_Temp","writable":false}],"entities":[],"scripts":[],"recipes":[],"devices":[],"equipment":[]}}
+```
+
+Every missing reference is listed, not just the first. A `kind` is `file`
+(not a screen file, the wrong format, a newer format version than this build
+reads, or a field it does not know), `screen` (the dashboard's own rules: a
+bad card, a role that does not exist, too large), `tag`, `entity`, `script`,
+`recipe`, `device`, `equipment`, `writable` (a button or setpoint on a tag that
+is not writable), `assignment` (a screen name or a role's home that another
+dashboard holds) or `exists` (the id is taken). An import with any problem
+saves nothing: `400`, or `409` when the only trouble is `exists` or
+`assignment`, with the same report. Success is `201`, or `200` when it replaced
+one, with the report and the saved `dashboard`. It is logged as a `config`
+event on subject `dashboard:<id>`.
 
 ## Webhooks
 

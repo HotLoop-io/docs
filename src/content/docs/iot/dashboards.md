@@ -5,6 +5,10 @@ description: "Pages of cards built per role or per screen: gauges, trends, entit
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
 sitting where the zones are. Build as many as the plant needs, give each to the
@@ -305,6 +309,11 @@ Whoever holds `dashboards.write` (admins) sees **Edit** on a dashboard and
 Nothing is saved until **Save**. **Discard** throws the changes away. A `409` on
 save means somebody saved first: the page offers to load theirs.
 
+**Export** (beside Edit) saves the dashboard on screen as a file, and **Import**
+(in the bar beside New dashboard, for whoever holds `dashboards.write`) loads one into this install, so a screen
+is a customer's data and moves between installs without anyone rebuilding it.
+See SCREEN-FILE.md.
+
 ## Layout
 
 | Width | Columns | A card of `w` takes |
@@ -412,6 +421,8 @@ write button disabled, and the server would refuse it if they got past that.
 | `GET` | `/api/dashboards/{id}` | `dashboards.read` |
 | `PUT` | `/api/dashboards/{id}` | `dashboards.write` |
 | `DELETE` | `/api/dashboards/{id}` | `dashboards.write` |
+| `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
+| `POST` | `/api/dashboards/import` | `dashboards.write` |
 
 The reference with bodies and errors is in [the HTTP API](/iot/api/#dashboards). Every
 create, save and delete is on the record as a `config` event on subject

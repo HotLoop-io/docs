@@ -7,10 +7,6 @@ sidebar:
   label: "4.19.4"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 4.19.0, 4.19.1, 4.19.2 and 4.19.3 were tagged and never published, so nothing named any of them exists and `stable` never moved to one. This is the first release with everything their notes list, which includes one thing that is new since 4.19.1: the charts take `hostNetwork`.
 
 - 4.19.1 added the fix for that and one more (a discovery listener that said it was up before it could hear, below) and was skipped before it released.

@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop Cascade 1.3.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 No license check exists anywhere in the code. Each phase ends when
@@ -51,6 +51,34 @@ every earlier release: what is tested is in `RELEASE_CHECKLIST.md`, which upgrad
 from the last release by hand. A promise goes here when we can keep it, and not
 before.
 
+## 1.3.0, the editor in 14 languages
+
+Built. English, Spanish, French, Italian, German, Norwegian Bokmål, Bulgarian, Greek,
+Korean, Japanese, Vietnamese, Hindi, Simplified Chinese and Arabic. A language picker
+in the top bar and on the sign-in page; every screen, the step titles and help, and
+the server's refusals are translated; dates, numbers and durations follow the
+language; Arabic is written right to left with the canvas and code left to right.
+Each language is tried on every screen at desktop and phone width in a real browser,
+and the build refuses a language with a line missing. The words come from the shared
+HotLoop glossary, and the lines a native reader should confirm first are listed in
+each language's `_review.json`; none has had a native-speaker review yet.
+
+## 1.4.0, waiting, retention, limits and backup
+
+Built. A pod that starts before its database, which the
+chart does in the split shape, now waits for it and says so, instead of restarting
+two or three times (the install showed no restarts in the chart test). And
+retention: a setting for how many days finished executions are kept, off by default,
+and a pass once an hour that removes the older ones with their step data. The same
+pass removes the files in the blob store that no run points at any more: output that
+was too big for the database, and attachments, a shared file only when the last run
+using it is gone. And a
+rate limit for each API key, through the API and MCP, off by default, answered 429
+with how long to wait. (A webhook has its own limit, and an account locks after
+repeated wrong passwords, as before.) And `hotloop-cascade backup` and `restore`: the
+SQLite database, the key and the blob files with a manifest of hashes, and for
+PostgreSQL the key and blobs plus the `pg_dump` command for the database's half.
+
 ## 1.2.0, the MCP server's last four tools
 
 Built. The MCP server had four routes left out that a key may call: listing and
@@ -88,10 +116,6 @@ Not built, not scheduled:
 
 - Git source control and environments.
 - Protected instances.
-- Rate limit controls.
-- Retention: nothing prunes finished executions today, so they stay until
-  somebody deletes them.
-- Backup and restore.
 
 ## Not built: connectors and people
 
@@ -105,7 +129,9 @@ Not built, not scheduled:
 - A plugin SDK and an index.
 - Forms with human approval steps. Approvals have to work from a phone, because
   the person approving a recipe change is standing at the line, not sitting at a
-  desk.
+  desk. (The Wait step already holds a run until someone calls its resume URL, so
+  an approval can be built from a link today; what's missing is the form the
+  approver opens and a record of who approved.)
 
 ## Not built: AI steps
 

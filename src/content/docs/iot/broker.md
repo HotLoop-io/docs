@@ -5,10 +5,6 @@ description: "A broker in the same process, so one small box can be the whole in
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop can run its own MQTT broker in-process, since 4.11.0, so a small, single-box HotLoop install has nothing extra to
 deploy. Off by default (`HOTLOOP_BROKER_ENABLED`): a deployment that already
 runs Mosquitto or EMQX has nothing to point this at, and starting a second

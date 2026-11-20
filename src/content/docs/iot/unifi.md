@@ -5,10 +5,6 @@ description: "Switches, ports, PoE, WAN failover and clients read from a UniFi c
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A plant's network is equipment. When a PLC goes quiet, the first question is
 "is it the PLC, or the switch port it's plugged into", and until now the answer
 lived in the UniFi app on somebody's phone. So HotLoop reads the UniFi console
