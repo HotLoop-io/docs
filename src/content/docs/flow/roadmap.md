@@ -5,10 +5,14 @@ description: "The phases of Flow, what is done and what is next, including the e
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Flow 2.16.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop Flow is going to be, in the order it gets built. If it isn't on this
 list it isn't getting done, so put it on the list.
 
-FlowLab and its diagrams, Phase 9, are being built now, as a separate pack that sits beside the message runtime.
+Flow is built alongside HotLoop and stays its own product. FlowLab and its diagrams, Phase 9, are a separate pack that sits beside the message runtime.
 
 ## What Flow is for
 
@@ -205,7 +209,7 @@ biggest hole in a product built for plants.
       `instrument.write`). Until now the diagram routes had no tool, so an agent
       could deploy a diagram and not run it. Every admin route is now a tool or
       is named in a test as one a person has to make, and the test fails when a
-      new route is added without one. 40 tools
+      new route is added without one. 44 tools now, with the stations, failover and trace ones
 
 ### Phase 8: the editor, rewritten in Astro
 
@@ -259,16 +263,30 @@ node it leaves. [FlowLab](/flow/flowlab/) has the rest.
       error wire, and a port that is opened again after a pulled cable and counted
 - [x] A reading parser, stable-value detection, and a text log with a time column
 - [x] A panel served by Flow: controls, indicators and a chart or graph, open on a
-      phone while a run is live
+      phone while a run is live, with a second watcher on a desktop, each following
+      the run within a second
 - [x] Run, stop, highlight execution, probes on any wire, breakpoints on nodes,
       wires and passes, and step into, over and out
 - [x] The editor draws named ports and wires to the one you drop on, and the same
       page runs and debugs
 - [x] Case structure, records and shared types, waveforms
 - [x] TDMS and binary logging, and a database and MQTT out
-- [x] Instrument sessions and a data acquisition client
+- [x] Instrument sessions, over a raw socket and serial, proven against a
+      simulator and a pty
+- [ ] A data acquisition client proven against NI's own server. It is built and
+      shipped, and tested against a stand-in server only, so it stays open until
+      it has run against NI's server and a device
 - [x] Analysis: statistics and filters
 - [x] Sub-diagrams, an error list in CI, and the editor's zoom and layout work
+- [x] Replay of a finished run: every node start and finish and every wire value
+      is recorded, and the diagram bar plays the last run back on the canvas.
+      `GET /diagrams/{id}/trace`, the `get_diagram_trace` tool
+- [x] A database sink that keeps what a database misses: `postgres out`, durable,
+      written in order and in batches when the database is back, proven on a
+      real TimescaleDB
+- [x] Push one flow file, and so one set of diagrams, to every Flow install a
+      tenant runs in EmberNet, with a check after each and a failed one put
+      back ([Pushing to a tenant's stations](/flow/stations/)), proven on three real Flow processes
 - [ ] Proven on a Pi for a day, which needs the board and a long run
 
 ---
@@ -323,6 +341,15 @@ but plenty of people drop one that doesn't.
       The queue counted a message as waiting before it was on disk, so a copy
       taken the moment the count hit 100 could be one short. It counts after the
       commit now
+- [x] The editor, the node text and the dashboard page in 13 languages besides
+      English, with one shared glossary
+- [x] Kafka out, and ntfy, gotify and discord out, with the notification settings
+      core already has
+- [x] A durable wire to InfluxDB catches up in batches of up to 256, so an hour's
+      backlog drains in seconds and not minutes
+- [x] The Node-RED connector nodes a plant migration needs (Modbus server on a
+      network interface, email, postgres and the dashboard nodes), run natively
+- [x] Chart values and a render check for pushing to stations
 - [x] Secrets by reference: a node reads a password from a mounted Kubernetes
       Secret or file, so it never lives in the flow file at all
 - [x] Bring your flows: `hotloop-flow import` keeps reporting exactly what will
@@ -333,10 +360,14 @@ but plenty of people drop one that doesn't.
 
 ## Later
 
-- [ ] Active/standby: a lease, context in Postgres, and a failover that is
-      proven not to double-write to a PLC. Not before durable wires and
-      persistent context, because a split brain writing to equipment is worse
-      than a restart
+- [x] Active/standby: a lease in a PostgreSQL with a fencing number, a fence on
+      every write to equipment, and a standby that holds its writes until it
+      takes the lease over ([A warm standby with a lease](/flow/failover/)). Proven on two real
+      Flow processes against a real PostgreSQL and a Modbus server that logs
+      every write: killed mid stream, frozen and thawed, and stopped cleanly,
+      with no write from both. The context stays on each install's disk and
+      not in Postgres, which was the first sketch and is not needed to keep
+      two writers apart
 
 ## Decided
 

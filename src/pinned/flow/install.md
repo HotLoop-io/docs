@@ -1,12 +1,12 @@
 ---
-reviewed: flow=2.15.1
+reviewed: flow=2.16.0
 title: "Install HotLoop Flow with Podman or Helm"
 description: "Run HotLoop Flow {{flow}} with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:
   label: "Install"
 ---
 
-HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an image for amd64 and arm64 (the amd64 one measured 45.64 MB as Podman reports it on 2.8.0), plus a Helm chart and source you can build yourself. 2.9.0, 2.9.1, 2.10.0, 2.11.0, 2.12.0, 2.13.0, 2.14.0 and 2.15.0 are amd64 only, and 2.10.2, 2.11.1, 2.12.1, 2.13.1, 2.14.1 and 2.15.1 are built for amd64 and arm64 (2.10.1 has a chart but no image, so never pin it), so a Pi or an arm64 box that was holding at 2.13.1 can move to 2.15.1. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
+HotLoop Flow {{flow}} is current. It ships as `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, an image for amd64 and arm64 (the amd64 one measured 45.64 MB as Podman reports it on 2.8.0), plus a Helm chart and source you can build yourself. 2.9.0, 2.9.1, 2.10.0, 2.11.0, 2.12.0, 2.13.0, 2.14.0, 2.15.0 and 2.16.0 are amd64 only, and 2.10.2, 2.11.1, 2.12.1, 2.13.1, 2.14.1 and 2.15.1 are built for amd64 and arm64 (2.10.1 has a chart but no image, so never pin it), so a Pi or an arm64 box that was holding at 2.13.1 can move to 2.15.1. The image is distroless, runs as a non-root user, and has no shell in it, so there's nothing to drop into, for you or for anybody who shouldn't be there. There's no Docker or Compose path on this page: Podman for one box, Quadlet to make it a service, Helm for a cluster.
 
 Flow starts locked. It refuses to run without an admin account, because a flow can run commands. And it refuses to run without a credential secret, which encrypts every broker and database password stored with your flows. Every path below sets both.
 
@@ -101,7 +101,7 @@ kubectl port-forward svc/line3-flows 1880:8080
 
 The user is `admin`. Before 2.0.2 that generated password never worked, because the hash the app checked was made from a different random password than the one the chart stored. Upgrading a release installed that way fixes it in place, and neither the password nor the credential secret changes.
 
-One release is one instance, and the chart pins `replicaCount: 1` on purpose. Each instance holds flow state and live connections to brokers and PLCs. Two pods behind one Service would both subscribe and both write, and InfluxDB would quietly store every reading twice. To run more, install another release with its own flows.
+One release is one instance, and the chart pins `replicaCount: 1` on purpose. Each instance holds flow state and live connections to brokers and PLCs. Two pods behind one Service would both subscribe and both write, and InfluxDB would quietly store every reading twice. To run more, install another release with its own flows. Two releases can also share one job, with a lease that lets only one of them write to equipment at a time: [a warm standby with a lease](/flow/failover/).
 
 It's small on purpose too. The default `resources.preset` is `small`, requesting 10m of CPU and 64Mi of memory. Flow's process measured 16.6 MiB resident at idle, so it schedules on an edge node with 64Mi to spare, where the node-red chart's default 512Mi request would sit in Pending.
 

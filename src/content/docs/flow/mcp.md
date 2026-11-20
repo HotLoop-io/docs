@@ -5,10 +5,6 @@ description: "An agent can call a flow as a tool, and a flow can call a tool on 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.15.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 An agent that speaks the Model Context Protocol can call a flow as a tool, and a
 flow can call a tool on any MCP server, HotLoop's own included. Three nodes and
 one config node do it: `mcp tool` and `mcp result` serve a flow, `mcp client` on
@@ -119,7 +115,7 @@ sits, and `mcp result` hands what it would have answered to the test as
 ## Flow's own tools
 
 An agent that could only call what a flow author wired up could not see the
-flows or change them, so Flow serves 41 tools of its own at the same `/mcp`,
+flows or change them, so Flow serves 44 tools of its own at the same `/mcp`,
 beside the flows' tools. They read and they write. Seven are about the flows, in
 the table below, and the rest are the admin API's other routes: the settings, the
 palette, the audit log, deployment detail and diffs, the export, the flow tests,
