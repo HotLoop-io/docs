@@ -5,6 +5,10 @@ description: "Deploy any HotLoop chart on k3s or any Kubernetes: the values wort
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The chart deploys two workloads: the gateway (a Deployment, it holds no durable
 state of its own) and TimescaleDB (a StatefulSet with a volume). That is the
 default. `database.type` picks another database: plain PostgreSQL, or SQLite,
@@ -507,8 +511,10 @@ directory into the units directory and restart the database unit; the
 [Quadlet README](/install/quadlet/) has the commands. The database
 unit requires the upgrade unit, so a box that only got the new database unit does
 not start on 16 data and says why: it fails, it does not guess.
-`journalctl -u hotloop-db-upgrade` is the log. The PostgreSQL 16 image is pulled
-only when the volume needs it, so a new box never downloads it.
+`journalctl -u hotloop-db-upgrade` is the log. The unit runs only when the volume
+holds 16 data: on a new box, and on every start after the upgrade, systemd skips
+it (it shows as inactive, not failed) and the PostgreSQL 16 image is never
+pulled. When the volume does hold 16 data, the unit pulls that image first.
 
 What it does, in order, all in `hotloop-pg-upgrade.sh` (one file, the same one
 the chart and the units run):

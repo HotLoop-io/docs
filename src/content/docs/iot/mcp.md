@@ -115,7 +115,7 @@ corrupt the protocol stream.
 
 ## Tools
 
-One hundred and sixty-three of them: twenty-seven that read the plant and command it, sixty-six that change its configuration ([below](#changing-configuration)), twenty-eight reads and dry runs that go with them ([below](#reads-and-dry-runs)) and forty-two for administration ([below](#administration)).
+One hundred and seventy-one of them: twenty-seven that read the plant and command it, sixty-nine that change its configuration ([below](#changing-configuration)), thirty-three reads and dry runs that go with them ([below](#reads-and-dry-runs)) and forty-two for administration ([below](#administration)).
 
 | Tool | Does |
 |---|---|
@@ -282,7 +282,7 @@ goes on to make meets the write gate, as for a rule a person made. See
 ## Changing configuration
 
 Everything an agent can read, it can change. The tools above that read the plant
-have counterparts that change it, sixty-six of them, and none of them is a
+have counterparts that change it, sixty-nine of them, and none of them is a
 second implementation: each is one route of the REST API, and a call is run
 through that route's own handler. The validation, the permission check, the
 runtime reload and the audit line are the route's, with the agent as the actor
@@ -378,6 +378,9 @@ and never opens its port.
 | `create_entity` | `POST /api/entities` | `entities.write` |
 | `update_entity` | `PUT /api/entities/{entity_id}` | `entities.write` |
 | `delete_entity` | `DELETE /api/entities/{entity_id}` | `entities.write` |
+| `create_energy_meter` | `POST /api/energy/meters` | `energy.write` |
+| `update_energy_meter` | `PUT /api/energy/meters/{id}` | `energy.write` |
+| `delete_energy_meter` | `DELETE /api/energy/meters/{id}` | `energy.write` |
 | `create_helper` | `POST /api/helpers` | `entities.write` |
 | `update_helper` | `PUT /api/helpers/{entity_id}` | `entities.write` |
 | `delete_helper` | `DELETE /api/helpers/{entity_id}` | `entities.write` |
@@ -470,6 +473,11 @@ permission their route asks for, so they stay behind the write role.
 | Tool | Route | Permission |
 |---|---|---|
 | `list_alarm_definitions` | `GET /api/alarms` | `alarms.read` |
+| `list_composite_entities` | `GET /api/entities/composites` | `entities.read` |
+| `list_energy_meters` | `GET /api/energy/meters` | `energy.read` |
+| `get_energy_meter` | `GET /api/energy/meters/{id}` | `energy.read` |
+| `get_energy_summary` | `GET /api/energy/summary/{period}` | `energy.read` |
+| `get_energy_series` | `GET /api/energy/series/{meter}/{period}/{step}` | `energy.read` |
 | `list_alarm_events` | `GET /api/alarms/events` | `alarms.read` |
 | `screen_export` | `GET /api/dashboards/{id}/export` | `dashboards.read` |
 | `list_dashboards` | `GET /api/dashboards` | `dashboards.read` |

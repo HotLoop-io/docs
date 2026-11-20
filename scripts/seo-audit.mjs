@@ -50,7 +50,8 @@ const warn = (route, msg) => warnings.push(`${route}  ${msg}`);
     const rel = '/' + relative(dist, f).split(sep).join('/');
     let buf;
     if (TEXT.test(f)) buf = readFileSync(f);
-    else if (/\/pagefind\//.test(rel)) {
+    // Pagefind's word index (pagefind/index/) is binary, so scanning it for words only finds noise. The fragments hold the page text, and the built HTML is scanned too.
+    else if (/\/pagefind\//.test(rel) && !/\/pagefind\/index\//.test(rel)) {
       const raw = readFileSync(f);
       const at = raw.indexOf(Buffer.from([0x1f, 0x8b]));
       try { buf = at >= 0 ? gunzipSync(raw.subarray(at)) : raw; } catch { buf = raw; }

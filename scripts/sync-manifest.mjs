@@ -205,10 +205,9 @@ export const SLUG_RULES = {
 };
 
 Object.assign(SLUG_RULES, {
-  // Measured on node-011, 2026-11-17: the 64 MiB Edge queue holds about 248,000 readings (about 240 bytes each, nine-character tag names), and Flow's 256 MiB quota holds about 360,000 119-byte readings. The older 2.75 minute and 180 byte figures do not hold at 4.21.1. These two rules go when the source docs carry the measured figures (edge/edge-publish: hotloop docs/EDGE-PUBLISH.md, bead 38a7c9); the sync refuses a rule its source no longer matches.
+  // Core's source now carries the measured queue figures itself, so the old rewrites are gone. It still ends the paragraph on the estimate the 4.18.10 notes quoted, which is a past figure told for its own sake, so that sentence comes off.
   'edge/edge-publish': [
-    [ws("and the default is 64 MiB, about two and three quarter minutes of outage at 2,000 readings a second (the rig below runs it there)."), "and the default is 64 MiB, about 248,000 readings: about two minutes of outage at 2,000 readings a second (the rig below runs it there), and about 41 minutes at 100."],
-    [ws("At that load a 64 MiB queue holds about two and three quarter minutes of outage. Size the bound from your own rate: about 180 bytes a reading on disk."), "At that load a 64 MiB queue holds about two minutes of outage, about 248,000 readings. Size the bound from your own rate: about 240 bytes a reading in the queue with short tag names, measured on 4.21.1."],
+    [ws(" The 4.18.10 release notes quote about two and three quarter minutes and about 180 bytes a reading; those were an estimate, and these are measured."), ''],
   ],
   'flow/durable-state': [
     [ws("A historian going down for an hour shouldn't cost you an hour of readings, and a counter in a flow"), "A historian going down for an hour shouldn't cost you an hour of readings, as long as the outage fits the disk quota (256 MiB by default: about an hour at 100 readings a second for a 120-byte reading, measured on 2.13.1), and a counter in a flow"],

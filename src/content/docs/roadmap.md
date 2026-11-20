@@ -65,7 +65,7 @@ IoT user, and IoT talks to that PLC with no upgrade.
       doing anything, instead of guessing
 - [x] IoT keeps 30 days of history by default. Pi disks are small, and the
       Gateway is where long history lives
-- [ ] No license keys and no unlocking at runtime. No tier is paid. A tier is an
+- [x] No license keys and no unlocking at runtime. No tier is paid. A tier is an
       image, and upgrading is an image swap on the same data
 - [x] **Every box follows `:stable` and updates itself.** The Gateway, Edge and
       IoT Quadlet units track `:stable` like the relay's, with Podman's
@@ -161,11 +161,12 @@ This is where "better and cooler" has to be obvious from across the room.
       same switcher and taking the same assignments
 - [x] Looks the same on a panel PC, a laptop and a phone: one layout that
       folds from twelve columns to one, tested at five widths
+- [x] The web UI in English and 13 more languages: Spanish, French, Italian, German, Norwegian, Bulgarian, Greek, Korean, Japanese, Vietnamese, Hindi, Simplified Chinese and Arabic (right to left), chosen in the top bar and kept in the browser. See I18N.md
 - Built so the Edge HMI can be made from it: a dashboard bound to a screen name
   opens at `/?screen=<name>` with no header and no tabs
 ### Phase 4: integrations and discovery
 
-- [ ] Integration framework: an integration adds devices and entities, has a
+- [x] Integration framework: an integration adds devices and entities, has a
       config flow, and is tested against the real thing
 - [x] **MQTT discovery**: Zigbee2MQTT and ESPHome in the format they publish,
       Tasmota in its own, Shelly Gen2 and later from the statuses it publishes.
@@ -200,14 +201,26 @@ This is where "better and cooler" has to be obvious from across the room.
       longitude with NOAA's equations, no service, and held to every sunrise,
       sunset and noon NOAA published for 2026 at six places from Utqiagvik to
       Quito. See [the sun](/iot/sun/)
-- [ ] Weather. Not from a cloud weather API: HotLoop doesn't phone anybody
-      to find out it's raining
+- [x] Weather. Not from a cloud weather API: HotLoop doesn't phone anybody
+      to find out it's raining. A `weather` entity is a station on the plant's
+      own roof, its tags bound in roles (temperature, humidity, pressure, wind,
+      rain, sunlight), with the dew point, heat index and wind chill worked out
+      on the box and held to the NWS tables. A sensor that can't be read is
+      unavailable, never zero. One card, 14 languages, and agents build and read
+      one over MCP. See WEATHER.md
 
 ### Phase 5: energy, phones, notifications
 
-- [ ] Energy: kWh, gas, water, compressed air, and cost per unit made. One energy dashboard, pointed at a factory floor
-- [ ] Web app that installs on a phone and works offline
-- [ ] Notifications, see below
+- [x] Energy: kWh, gas, water, compressed air, and cost per unit made. One energy dashboard, pointed at a factory floor.
+      A meter is a tag read as a counter or a power, kept in 15 minute buckets in
+      the database (migration 0029), priced as it is counted by a flat or
+      time-of-use tariff, so a price changed later never changes what last month
+      cost. The cost of a unit made is the cost over what a production counter
+      counted, and "Nothing made" when nothing was. The Energy screen, sensors for
+      every rule, 14 languages, and MCP. Not built: demand charges, and shift
+      totals beyond a from and to. See ENERGY.md
+- [x] Web app that installs on a phone and works offline
+- [x] Notifications, see below
 
 ---
 
@@ -239,7 +252,7 @@ Four channels. That's the list.
       Discord roles (nobody until you name them), recorded under the person who
       pressed. Talks to Discord over an outbound connection (the Gateway), so
       the plant doesn't need a public address.
-- [ ] Escalation: nobody acked in N minutes, go wake up the next person or the
+- [x] Escalation: nobody acked in N minutes, go wake up the next person or the
       next channel
 - Not doing: SMS and Google Messages (RCS needs carrier approval per company,
   per country, and a self-hosted box can't get it), Slack, Teams, Google Chat,
@@ -366,11 +379,15 @@ back up and patch, and they are not adopting ours to get a trend.
       keep alive frames, lost-message and configuration-change handling. See
       [Protocols and drivers](/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Publish tags as UADP, in Edge and Gateway, beside the OPC UA server
+- [x] The OPC UA server answers HistoryRead from the history the Gateway keeps, raw and processed, so a client reads a tag's past from HotLoop itself. Only a variable the session may read is served. See [the OPC UA server](/edge/opc-ua-server/)
 - [x] A CODESYS publisher against it: HotLoop Transmitter 1.1.0, the CODESYS
       UADP publisher library, read by this subscriber (4.19.2) against a live
       CODESYS Control for Linux SL runtime
 - [ ] Message security (signed and encrypted NetworkMessages)
-- [ ] Delta frames from the publisher; DataSetMetaData and discovery messages
+- [x] Delta frames from the publisher, as an option (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): only
+      the changed fields between key frames. See
+      [Protocols and drivers](/iot/protocols/)
+- [ ] DataSetMetaData and discovery messages
       so a subscriber can name the fields; array and structure fields in what
       the publisher sends, and structure fields in what the subscriber reads; events
 - [ ] Against a Siemens or Beckhoff publisher, and over a router (multicast
@@ -404,7 +421,7 @@ Every product is checked against the current stable Ignition release, so a plant
       the edge publisher's start, and it took the whole Edge down with it
       at boot; fixed with store and forward. The HMI screens themselves
       come with the Phase 3 dashboards
-- [ ] HMI writes that name a human. On your own computer you're already signed
+- [x] HMI writes that name a human. On your own computer you're already signed
       in, so a write goes straight through and logs you. A shared kiosk panel
       signs operators in with a PIN or badge and signs them out when idle,
       because "panel-3 opened the valve" isn't an audit trail
@@ -681,18 +698,18 @@ the most fun thing to build and the easiest way to spend a quarter while the
 plant still can't do what it needs to. So it waits, and nothing above gets
 delayed for it.
 
-- [ ] **Rewrite the web UI of HotLoop IoT, Edge and the Gateway in Astro,** the
+- [x] **Rewrite the web UI of HotLoop IoT, Edge and the Gateway in Astro,** the
       same framework the HotLoop website is built with. It builds to static
       assets that get embedded in the one Go binary, exactly like the UI does
       now, so every product still ships as one image with nothing to install
       beside it. No Node on the box, no second process, no CDN. The goal is a
       modern UI across every HotLoop project, one look and one set of parts
       instead of a screen per era
-- [ ] **A design pass comes first.** Before a single component gets written:
+- [x] **A design pass comes first.** Before a single component gets written:
       the screens, the navigation, the way an alarm looks at 3 AM on a phone,
       and one design system the site and every product share. Rewriting
       screens without it just moves the mess into a newer framework
-- [ ] **Nothing regresses.** Every screen the browser tests drive today keeps
+- [x] **Nothing regresses.** Every screen the browser tests drive today keeps
       working and keeps being driven, and the API doesn't change for the UI's
       sake. A rewrite that loses a screen somebody uses on the floor isn't done
 

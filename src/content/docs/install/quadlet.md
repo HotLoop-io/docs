@@ -5,6 +5,10 @@ description: "Run HotLoop as real systemd services on a Pi or small industrial P
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 For a Pi or a small industrial PC that is **not** part of a k3s cluster. If
 it is, use the product's chart instead. This directory and the charts are the
 two supported ways to run HotLoop.
@@ -41,7 +45,8 @@ Each directory has the same units and one script:
   for a database it can use.
 - **`hotloop-db-upgrade.container`** and **`hotloop-db-upgrade.sh`**: the
   database's move from PostgreSQL 16 to 17, once. It runs before the database
-  unit every time and does nothing unless the volume still holds 16 data. See
+  unit and only when the volume still holds 16 data; on a fresh volume, or one
+  already on 17, systemd skips it. See
   [PostgreSQL 16 to 17](#postgresql-16-to-17).
 - **`hotloop-db.volume`** and **`hotloop-data.volume`**: the database, and
   everything the app writes under `/data` (backups, certificates, the forward

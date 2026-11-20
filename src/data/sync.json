@@ -3,7 +3,7 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "831bb4b6f7e783abe7de6431816da3ff1be6245d",
+      "sha": "15bbd971c6a5a5158e615144c1534675f458db78",
       "release": {
         "tag": "v4.22.1",
         "version": "4.22.1",
@@ -27,7 +27,7 @@
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "65a72db20ebdf1a3201d6e8eb6a999d2bd37f8ba",
+      "sha": "a5569a6b583b0594b87535711fffbe76bd81f7ae",
       "release": {
         "tag": "v1.3.1",
         "version": "1.3.1",
@@ -99,7 +99,7 @@
       "group": "The base",
       "title": "Entities",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/ENTITIES.md",
       "release": false
@@ -165,7 +165,7 @@
       "group": "Automation",
       "title": "Blueprints",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BLUEPRINTS.md",
       "release": false
@@ -231,7 +231,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -275,7 +275,7 @@
       "group": "Devices and data",
       "title": "UniFi Network",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/UNIFI.md",
       "release": false
@@ -308,7 +308,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -319,7 +319,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -352,7 +352,7 @@
       "group": "What Edge adds",
       "title": "Edge publish and store-and-forward",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/EDGE-PUBLISH.md",
       "release": false
@@ -363,7 +363,7 @@
       "group": "What Edge adds",
       "title": "The OPC UA server",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/OPCUA-SERVER.md",
       "release": false
@@ -407,7 +407,7 @@
       "group": "Install",
       "title": "k3s and Helm",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "docs/DEPLOYMENT.md",
       "release": false
@@ -418,7 +418,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "released",
+      "status": "changed",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -1114,6 +1114,17 @@
       "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.22.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-23-0",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.23.0 release notes",
+      "label": "4.23.0",
+      "status": "next",
+      "repo": "hotloop",
+      "source": "docs/releases/4.23.0.md",
       "release": true
     },
     {

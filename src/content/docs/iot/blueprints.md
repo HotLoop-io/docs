@@ -5,6 +5,10 @@ description: "Write a rule once with blanks and fill it in per pump. Each rule k
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 A blueprint is a rule written once with blanks in it. "When *this motor* has
 been running longer than *this long*, say so, and stop it if *I ask you to*."
 Somebody who knows what the rule should do writes it one time. Everybody
@@ -160,6 +164,7 @@ under a new id, starting at version 1, to change as you like.
 | `motor_running_too_long` | a motor, how long it may run (default an hour), whether to stop it | When the motor has been `running` that long in one go, logs a warning. If asked, stops it with `motor.stop`. |
 | `tank_high_level_stop_pump` | a level sensor, the limit, the pump (a motor) | When the level is at or over the limit, and the reading's quality is good, and the pump is not already stopped, stops the pump and logs it. |
 | `alarm_to_notify` | an alarm, the state to act on (default `unack-active`), a webhook URL | When the alarm goes to that state, POSTs `{"text": "Alarm temp-hi is unack-active"}` to the URL. |
+| `device_silent_cycle_its_port` | a device's online sensor, how long it may be silent (default 5 minutes), the UniFi device and port power cycle tag, how long to wait after (default 3 minutes), an alarm, the least gap between runs (default an hour) | When the device has been off that long, cycles its switch port's power once through the write gate, waits for it to come back, and if it has not, raises the alarm. The driver refuses a second cycle of one port inside 15 minutes and never cycles a port that carries the network. |
 | `shift_schedule_counter_reset` | a schedule helper, a counter (PLC or helper) | When the schedule turns on, resets the counter and logs it. |
 
 Some honest notes on them:

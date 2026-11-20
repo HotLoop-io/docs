@@ -5,6 +5,10 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -563,14 +567,21 @@ names:
 | `HOTLOOP_UADP_PUBLISH_INTERVAL` | `1s` | |
 | `HOTLOOP_UADP_PUBLISH_KEY_FRAME_EVERY` | `10` | at most this many intervals between key frames |
 | `HOTLOOP_UADP_PUBLISH_DATAVALUE` | `false` | DataValue fields (value, status, time) instead of Variants |
+| `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES` | `false` | a DataSet that changed goes out as a delta frame (only the changed fields) between key frames |
 | `HOTLOOP_UADP_PUBLISH_INTERFACE`, `_TTL` | system's, `1` | the card multicast leaves by, and its hop limit |
 
 Each DataSet goes out on its own DataSetWriter, one NetworkMessage each. A
 DataSet whose values changed goes out as a key frame (every field), one that
 didn't as a keep alive, and a key frame at least every `KEY_FRAME_EVERY`
-intervals so a subscriber that joined late converges. Delta frames are not sent:
-a key frame is complete, so a lost datagram costs one interval and not a wrong
-value. A tag that is bad is published as its status and never as its last
+intervals so a subscriber that joined late converges. Delta frames are off
+by default: a key frame is complete, so a lost datagram costs one interval and
+not a wrong value. With `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true` a DataSet that
+changed goes out as a delta frame instead, carrying only the fields that changed
+since the last message and their positions, and the key frame still comes at
+least every `KEY_FRAME_EVERY` intervals; a lost delta then costs up to that many
+intervals of a stale field, which is the price of a smaller message on a slow
+link. HotLoop's own subscriber reads delta
+frames. value. A tag that is bad is published as its status and never as its last
 value; one nothing has been read for yet is published as
 `BadWaitingForInitialData`. Values are clamped to their published type, not
 wrapped. Message security is not supported, so this belongs on a network the
@@ -836,10 +847,11 @@ reports every scalar with the path that reaches it.
 ### UniFi Network
 
 The plant network as a device: one site on one UniFi console, its switches,
-every switch port, PoE draw, the WAN links and the site's health, as read-only
-tags that create themselves as gear is adopted. One login per console, the
-certificate pinned, and the console password encrypted in the database. It
-never writes to the console. It also listens to the console's events websocket,
+every switch port, PoE draw, the WAN links and the site's health, as tags that
+create themselves as gear is adopted, read-only until armed. One login per console,
+the certificate pinned, and the console password encrypted in the database. It
+changes the console only through the few command tags a person arms (a locate LED,
+a restart, a port's PoE power cycle; see UNIFI.md). It also listens to the console's events websocket,
 so a switch dropping off is in the logbook when it happens, with polling still
 the truth underneath, and the UniFi tab draws the overview, the map, the
 faceplates, the clients, the networks and the WiFi. Everything about it is in

@@ -271,6 +271,8 @@ grants everything under a resource (`reports.*`). The admin role is `*`.
 | `blueprints.write` | no | no | yes |
 | `dashboards.read` | yes | yes | yes |
 | `dashboards.write` | no | no | yes |
+| `energy.read` | yes | yes | yes |
+| `energy.write` | no | no | yes |
 | `fleet.read` | yes | yes | yes |
 | `fleet.write` | no | yes | yes |
 | `fleet.rebirth` | no | yes | yes |
@@ -395,6 +397,7 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/api/history` | `values.read` | all |
 | `GET` | `/api/writes` | `values.read` | all |
 | `GET` | `/api/entities` | `entities.read` | all |
+| `GET` | `/api/entities/composites` | `entities.read` | all |
 | `GET` | `/api/entities/{entity_id}` | `entities.read` | all |
 | `GET` | `/api/entities/{entity_id}/image` | `entities.read` | all |
 | `PUT` | `/api/entities/{entity_id}` | `entities.write` | all |
@@ -402,6 +405,15 @@ see [Not in this product](#not-in-this-product).
 | `DELETE` | `/api/entities/{entity_id}` | `entities.write` | all |
 | `GET` | `/api/states` | `entities.read` | all |
 | `GET` | `/api/states/{entity_id}` | `entities.read` | all |
+| `GET` | `/api/energy/meters` | `energy.read` | all |
+| `POST` | `/api/energy/meters` | `energy.write` | all |
+| `GET` | `/api/energy/meters/{id}` | `energy.read` | all |
+| `PUT` | `/api/energy/meters/{id}` | `energy.write` | all |
+| `DELETE` | `/api/energy/meters/{id}` | `energy.write` | all |
+| `GET` | `/api/energy/summary` | `energy.read` | all |
+| `GET` | `/api/energy/summary/{period}` | `energy.read` | all |
+| `GET` | `/api/energy/series` | `energy.read` | all |
+| `GET` | `/api/energy/series/{meter}/{period}/{step}` | `energy.read` | all |
 | `POST` | `/api/services/{domain}/{service}` | `values.write`, `alarms.ack`, `helpers.write`, `scripts.run`, `recipes.apply` (in handler) | all |
 | `GET` | `/api/helpers` | `entities.read` | all |
 | `POST` | `/api/helpers` | `entities.write` | all |
@@ -779,7 +791,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.22.1"
+  "version": "4.23.0"
 }
 ```
 
@@ -1642,7 +1654,7 @@ answer a plant can get.
 ## Entities and states
 
 Every tag gets entities without anybody asking; composites (motors, valves,
-loops, counters, selects, buttons) are built from tags by an admin. Snake_case,
+loops, counters, selects, buttons, weather stations) are built from tags by an admin. Snake_case,
 like every entity endpoint. The whole model is in [Entities](/iot/entities/).
 
 ### `GET /api/entities`
@@ -1658,6 +1670,17 @@ Every entity, orphans included.
 
 ```json
 [{"id":5,"entity_id":"switch.tank_farm_pump","unique_id":"tag-control:tank-farm/pump","domain":"switch","platform":"tag","name":"pump","device_id":"tank-farm","options":{},"disabled":false,"hidden":false,"created_at":"2026-09-27T20:21:39.153197Z","updated_at":"2026-09-27T20:21:39.153197Z","bindings":[{"role":"command","device_id":"tank-farm","tag_name":"pump"},{"role":"state","device_id":"tank-farm","tag_name":"pump"}],"equipment_id":null,"area_id":4,"labels":[]}]
+```
+
+### `GET /api/entities/composites`
+
+What `POST /api/entities` can create: each domain, the roles its tags are bound
+in, and the services it takes. A role says its `kind` of tag, whether it is
+`required`, whether a service writes it (`command`) and whether the state is read
+from it (`feedback`). A weather station takes no service.
+
+```json
+{"domains":[{"domain":"weather","roles":[{"role":"temperature","kind":"number","required":true,"command":false,"feedback":true},{"role":"humidity","kind":"number","required":false,"command":false,"feedback":true}],"services":[]}]}
 ```
 
 ### `GET /api/entities/{entity_id}`
@@ -1744,6 +1767,93 @@ behind it.
 One state. `404` for an unknown entity, and a different `404` for a disabled
 one, which says how to enable it: a disabled entity is not missing, and
 reporting it as missing sends somebody hunting for a typo.
+
+## Energy
+
+What the plant uses and what it costs: kilowatt hours, gas, water, compressed
+air, and the cost of a unit made. A meter is a tag read as a quantity used. The
+whole model, the tariffs and what the screen does are in ENERGY.md.
+Reading is `energy.read`, which every role has; making or changing a meter or a
+tariff is `energy.write`, an admin's.
+
+### `GET /api/energy/meters`
+
+Every meter, by kind and then name, each with how it is being read and what it
+used today.
+
+```json
+[{"id":"main","name":"Main panel","kind":"electricity","mode":"counter","source":{"device_id":"pm-01","tag_name":"kWh"},"unit":"kWh","factor":0.001,"tariff":{"currency":"USD","price":0.12,"bands":[{"from":"22:00","to":"06:00","price":0.07}]},"enabled":true,"status":{"state":"ok","last_read_at":"2026-11-19T21:15:00Z","resets":0,"gap_seconds":0},"today":{"value":412.6,"cost":49.51,"covered_seconds":43200,"estimated":false}}]
+```
+
+`status.state` is `ok`, `waiting` (nothing has been read from the tag yet), `bad`
+(the tag's reading is not good, and `reason` says why) or `disabled`.
+
+### `POST /api/energy/meters`
+
+Makes a meter. `id` is lowercase letters, digits, `-` and `_`. `kind` is
+`electricity`, `gas`, `water`, `air`, `heat` or `production`. `mode` is `counter`
+(a cumulative tag: what was used is how far it moved, times `factor`) or `power`
+(a rate: what was used is the rate over the time it held, with `power_unit` `W`,
+`kW` or `MW`, and `unit` `Wh`, `kWh` or `MWh`). `source` is the tag. `tariff` is a
+flat `price` per unit with an optional `currency`, and optional `bands`
+(`from` and `to` on a quarter hour, `days`, `price`) for a time-of-use tariff;
+a production meter has none. `enabled` left out is `true`. `201` with `{"meter": {...}, "warnings": []}`. `400`
+saying what is wrong: the tag is not there or is not a number, a band is not on a
+quarter hour, a power meter with a factor. `409` for an id that is taken.
+
+### `GET /api/energy/meters/{id}`
+
+One meter, as the list shows it. `404` for an unknown one.
+
+### `PUT /api/energy/meters/{id}`
+
+Replaces a meter's definition. What it already counted stays, and keeps the price
+it was made at. Pointing it at another tag or mode forgets where the last
+reading left off, because the next reading is of something else.
+
+### `DELETE /api/energy/meters/{id}`
+
+Removes a meter and everything it counted. `404` for an unknown one.
+
+### `GET /api/energy/summary`
+
+Each meter's use and cost over a window, and the cost of a unit made. The window
+is `?period=` (`today`, `yesterday`, `this_week`, `last_week`, `this_month`,
+`last_month`, `last_7_days`, `last_30_days`; days and months are the site's) or
+`?from=&to=` as RFC 3339, from included and to not, at most 400 days. `meters` is
+a comma separated list of the meters whose cost goes into the cost per unit, and
+`per` names the one production meter to divide by.
+
+```json
+{"period":"today","from":"2026-11-19T05:00:00Z","to":"2026-11-20T05:00:00Z",
+ "meters":[{"id":"main","name":"Main panel","kind":"electricity","unit":"kWh","currency":"USD","value":412.6,"cost":49.51,"covered_seconds":43200,"coverage":1,"estimated":false}],
+ "costs":[{"currency":"USD","cost":49.51}],
+ "per_unit":[{"production":"parts","units":9800,"currency":"USD","cost":49.51,"cost_per_unit":0.00505}]}
+```
+
+`coverage` is the share of the window so far that readings back. Costs in two
+currencies are never added, so there is a `per_unit` row for each. `cost_per_unit`
+is `null` when nothing was made: that is no answer, not zero.
+
+### `GET /api/energy/summary/{period}`
+
+The same as the summary, over one named period given in the path. `meters` and
+`per` still go in the query.
+
+### `GET /api/energy/series`
+
+One meter's use over a window, `?meter=<id>`, the window as above, and `step`:
+`quarter` (at most 8 days), `hour` (the default), `day` or `month`. A step with no
+readings is not in the list.
+
+```json
+{"meter":"main","unit":"kWh","currency":"USD","step":"day","points":[{"start":"2026-11-19T05:00:00Z","value":412.6,"cost":49.51,"estimated":false}]}
+```
+
+### `GET /api/energy/series/{meter}/{period}/{step}`
+
+The same as the series, with the meter, the named period and the step all in the
+path, for a caller that has only a path to give.
 
 ## Services
 

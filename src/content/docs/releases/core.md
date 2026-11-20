@@ -11,6 +11,7 @@ HotLoop IoT, Edge, Gateway and Edge Relay are one codebase and release together 
 
 Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed.
 
+- [HotLoop core 4.23.0 release notes](/releases/hotloop-4-23-0/) (coming in the next release)
 - [HotLoop core 4.22.1 release notes](/releases/hotloop-4-22-1/)
 - [HotLoop core 4.22.0 release notes](/releases/hotloop-4-22-0/)
 - [HotLoop core 4.21.1 release notes](/releases/hotloop-4-21-1/)
