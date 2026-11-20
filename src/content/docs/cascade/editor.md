@@ -5,10 +5,6 @@ description: "The editor is built into the Cascade binary: folders, a canvas wit
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The editor is baked into the binary, so there is nothing else to run and nothing it
 fetches from anywhere: open the address the server listens on and sign in. It is an
 Astro app with Svelte islands, built to static files at image build time, in the

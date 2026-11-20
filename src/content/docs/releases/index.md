@@ -5,12 +5,13 @@ description: "What shipped in every HotLoop core, Flow, Cascade, HotLoop for COD
 editUrl: false
 ---
 
-Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is 4.22.0, the latest Flow release is 2.16.0, and the latest Cascade release is 1.2.1.
+Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is 4.22.1, the latest Flow release is 2.16.0, and the latest Cascade release is 1.3.1.
 
 ## HotLoop core
 
 IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [one set of release notes](/releases/core/).
 
+- [HotLoop core 4.22.1 release notes](/releases/hotloop-4-22-1/)
 - [HotLoop core 4.22.0 release notes](/releases/hotloop-4-22-0/)
 - [HotLoop core 4.21.1 release notes](/releases/hotloop-4-21-1/)
 - [HotLoop core 4.21.0 release notes](/releases/hotloop-4-21-0/)
@@ -58,6 +59,10 @@ IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [
 
 ## HotLoop Cascade
 
+- [HotLoop Cascade 1.4.0-rc.1 release notes](/releases/cascade-1-4-0-rc-1/) (coming in the next release)
+- [HotLoop Cascade 1.4.0 release notes](/releases/cascade-1-4-0/) (coming in the next release)
+- [HotLoop Cascade 1.3.1 release notes](/releases/cascade-1-3-1/)
+- [HotLoop Cascade 1.3.0 release notes](/releases/cascade-1-3-0/)
 - [HotLoop Cascade 1.2.1 release notes](/releases/cascade-1-2-1/)
 - [HotLoop Cascade 1.2.0 release notes](/releases/cascade-1-2-0/)
 - [HotLoop Cascade 1.1.1 release notes](/releases/cascade-1-1-1/)

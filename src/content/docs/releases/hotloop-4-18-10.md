@@ -7,10 +7,6 @@ sidebar:
   label: "4.18.10"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The release where HotLoop stops being one image. IoT, Edge, the Gateway and the
 Edge Relay all ship from this tag, in lockstep, each with its own image and its
 own chart. On top of that: devices that announce themselves over MQTT, history

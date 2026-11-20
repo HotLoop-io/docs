@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 :::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
 :::
 
 The gateway speaks MCP in both directions: agents can read and drive the plant,
@@ -115,7 +115,7 @@ corrupt the protocol stream.
 
 ## Tools
 
-One hundred and thirty-three of them: twenty-seven that read the plant and command it, sixty-four that change its configuration ([below](#changing-configuration)) and forty-two for administration ([below](#administration)).
+One hundred and sixty-three of them: twenty-seven that read the plant and command it, sixty-six that change its configuration ([below](#changing-configuration)), twenty-eight reads and dry runs that go with them ([below](#reads-and-dry-runs)) and forty-two for administration ([below](#administration)).
 
 | Tool | Does |
 |---|---|
@@ -282,7 +282,7 @@ goes on to make meets the write gate, as for a rule a person made. See
 ## Changing configuration
 
 Everything an agent can read, it can change. The tools above that read the plant
-have counterparts that change it, sixty-four of them, and none of them is a
+have counterparts that change it, sixty-six of them, and none of them is a
 second implementation: each is one route of the REST API, and a call is run
 through that route's own handler. The validation, the permission check, the
 runtime reload and the audit line are the route's, with the agent as the actor
@@ -431,6 +431,72 @@ and never opens its port.
 | `update_dashboard` | `PUT /api/dashboards/{id}` | `dashboards.write` |
 | `delete_dashboard` | `DELETE /api/dashboards/{id}` | `dashboards.write` |
 | `save_board` | `PUT /api/board` | `board.write` |
+
+**Imports**
+
+| Tool | Route | Permission |
+|---|---|---|
+| `import_codesys_alarms` | `POST /api/alarms/import/codesys` | `alarms.write` |
+| `screen_import` | `POST /api/dashboards/import` | `dashboards.write` |
+
+`import_codesys_alarms` takes the file the CODESYS IDE's Export Alarms wrote, as
+`contentBase64` (the bytes as they are on disk, which the IDE writes as UTF-16) or
+as `content` (the text, if you have it as text), with the `deviceId` the alarms belong to and, if you
+want them, `application` and `defaultPriority`. Left alone it only previews: it
+says which alarms would come across and which would not, saves nothing, and needs
+no reason. With `apply` true it saves them as alarm definitions, and then it needs
+a reason and the MCP write switch like every tool that changes configuration.
+
+`screen_export` answers a dashboard as a HotLoop screen file (SCREEN-FILE.md),
+and `screen_import` takes one in, on this install or another. It asks first:
+`dryRun` is true unless you say false, and a dry run saves nothing and answers the
+report with every problem listed and the references to `remap`. A real import
+needs `dryRun` false, a reason and the MCP write switch, and an id that exists is
+refused unless `replace` is true. The screen is the customer's data, so the file
+is the way it moves between installs, never code.
+
+### Reads and dry runs
+
+An agent that can change a dashboard, a broker or a node of the equipment tree
+has to be able to read what is there first, so each object a tool above changes
+has a read here, and the editors' dry runs are tools too. Each is one route run
+through its own handler with the read permission that route asks for. A read
+answers without a reason and without the write switch, and a caller the write role
+leaves out can still make them, because they carry a read permission and nothing
+more. The three dry runs (`validate_automation`, `validate_script` and
+`browse_device`) change nothing; the two that check a body carry the write
+permission their route asks for, so they stay behind the write role.
+
+| Tool | Route | Permission |
+|---|---|---|
+| `list_alarm_definitions` | `GET /api/alarms` | `alarms.read` |
+| `list_alarm_events` | `GET /api/alarms/events` | `alarms.read` |
+| `screen_export` | `GET /api/dashboards/{id}/export` | `dashboards.read` |
+| `list_dashboards` | `GET /api/dashboards` | `dashboards.read` |
+| `get_dashboard` | `GET /api/dashboards/{id}` | `dashboards.read` |
+| `get_board` | `GET /api/board` | `values.read` |
+| `list_equipment` | `GET /api/equipment` | `equipment.read` |
+| `get_equipment` | `GET /api/equipment/{id}` | `equipment.read` |
+| `list_labels` | `GET /api/labels` | `equipment.read` |
+| `get_label` | `GET /api/labels/{label_id}` | `equipment.read` |
+| `list_discovered_devices` | `GET /api/discovery` | `devices.read` |
+| `get_discovered_device` | `GET /api/discovery/{source}/{key}` | `devices.read` |
+| `list_network_finds` | `GET /api/network-discovery` | `devices.read` |
+| `get_network_find` | `GET /api/network-discovery/{key}` | `devices.read` |
+| `list_integrations` | `GET /api/integrations` | `devices.read` |
+| `list_mqtt_brokers` | `GET /api/mqtt/brokers` | `devices.read` |
+| `get_blueprint` | `GET /api/blueprints/{id}` | `blueprints.read` |
+| `get_script` | `GET /api/scripts/{id}` | `scripts.read` |
+| `list_automation_runs` | `GET /api/runs` | `automations.read` |
+| `list_script_runs` | `GET /api/scripts/{id}/runs` | `scripts.read` |
+| `list_unifi_consoles` | `GET /api/unifi/consoles` | `devices.read` |
+| `list_unifi_networks` | `GET /api/unifi/{id}/networks` | `devices.read` |
+| `list_unifi_known_devices` | `GET /api/unifi/{id}/known` | `devices.read` |
+| `get_device_network` | `GET /api/devices/{id}/network` | `devices.read` |
+| `get_diagnostics` | `GET /api/diagnostics` | `status.read` |
+| `browse_device` | `POST /api/devices/{id}/browse` | `devices.read` |
+| `validate_automation` | `POST /api/automations/validate` | `automations.write` |
+| `validate_script` | `POST /api/scripts/validate` | `scripts.write` |
 
 ### Administration
 

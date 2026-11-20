@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.22.0 is out]
-Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. All four are built for amd64 in 4.22.0. The arm64 and arm/v7 images of 4.22.0 follow in the next version, and `stable` keeps the arm images it already had. The Gateway keeps `ghcr.io/hotloop-io/hotloop:4.22.0` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
+:::note[4.22.1 is out]
+Four products from one tag: [IoT](/iot/overview/), [Edge](/edge/overview/), the Gateway and the [Edge Relay](/edge-relay/overview/), each with its own image and chart. All four are built for amd64 and arm64 in 4.22.1, and for arm/v7 too in the three small ones. The Gateway keeps `ghcr.io/hotloop-io/hotloop:4.22.1` and the chart `hotloop` from `https://hotloop.io/hotloop`, and both pull with no login. [Install it](/gateway/install/). On 4.18.11? It's a `helm upgrade`, and agents can write after it, so read the two things that change. On 4.17.0? It's a plain `helm upgrade`, but not with `--reuse-values`, and a couple of defaults moved. On 4.16.0 or 4.3.1? You go through 4.17.0 first. Either way, [read the upgrade first](/gateway/upgrading/). You want to find this out here, not from a stuck rollout.
 :::
 
 HotLoop Gateway reads your plant. It polls PLCs and servers in their own protocols, keeps every reading and its quality in a historian, raises ISA-18.2 alarms that can page a phone, runs automations against all of it, and hands the whole plant to agents over MCP. A site runs one chart, the Gateway and its database, instead of a historian, an alarm server, a rules engine, and a pile of glue, each one failing on its own schedule.
@@ -19,7 +19,7 @@ It's written in Go, from scratch: one static binary on a distroless base, no sid
 
 ## Where to start
 
-The ground floor, in 4.22.0 and in every release back to 4.16.0:
+The ground floor, in 4.22.1 and in every release back to 4.16.0:
 
 - [Install](/gateway/install/) is Helm from the published chart or Podman Quadlet on a box, the key to back up, and the handful of values to set before a real plant sees it.
 - [Upgrading](/gateway/upgrading/) is the procedure that keeps your data, from 4.17.0, 4.16.0, or 4.3.1, and every API change a script will trip over.
@@ -64,7 +64,7 @@ New in 4.17.0, and not in 4.16.0:
 
 HotLoop is one codebase shipped as four products, all released together from one tag: IoT, Edge, the Gateway, and the Edge Relay. The Gateway is the top of it: everything in IoT and Edge, plus fleet management, multi-site roll-ups, and scheduled reports. Features split the products. Protocols never will: every product speaks every protocol we have, so nobody has to buy up a tier to read the PLC on their bench. [The lineup](/products/) has what each one carries.
 
-All four are installable today, all 4.22.0. The relay is its own image and chart, about 15 MB against the Gateway's 37, with no database and no UI. The Gateway's fleet management tracks and commands every registered relay, and it's API only (`/api/fleet`): there's no Fleet screen in the UI.
+All four are installable today, all 4.22.1. The relay is its own image and chart, about 15 MB against the Gateway's 37, with no database and no UI. The Gateway's fleet management tracks and commands every registered relay, and it's API only (`/api/fleet`): there's no Fleet screen in the UI.
 
 Running it at a plant? [Using HotLoop in a business](/business/) covers licensing and how to reach us.
 
@@ -72,6 +72,8 @@ Running it at a plant? [Using HotLoop in a business](/business/) covers licensin
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
 
+- [4.22.1](/releases/hotloop-4-22-1/): the multi-arch build of 4.22.0, with no change to the product.
+- [4.22.0](/releases/hotloop-4-22-0/): a panel page fills its screen edge to edge at any size, the Alarms screen imports a CODESYS Export Alarms file, and OPC UA PubSub devices on one address and port share one socket. This build is amd64 only, and 4.22.1 is the one small bump that builds the arm images.
 - [4.21.1](/releases/hotloop-4-21-1/): the multi-arch build of 4.21.0, with no change to the product.
 - [4.21.0](/releases/hotloop-4-21-0/): a client can sign in to the OPC UA server with an X.509 certificate an admin attached to a user (off until `HOTLOOP_OPCUA_SERVER_ALLOW_X509=true`), OPC UA passwords of 65 to 72 bytes sign in, and the deprecated security policies `Basic128Rsa15` and `Basic256` are off by default, on upgrades too (`HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` brings them back for a legacy client). The CODESYS alarm import reads an Outside range alarm as a lo and a hi. One migration, 0027, which only adds a table.
 - [4.20.2](/releases/hotloop-4-20-2/): an EtherNet/IP device with two or more tags in a batch no longer panics its poll, and `version` prints the version with no configuration. The first core release under the EmberNet Source License 1.0.

@@ -7,10 +7,6 @@ sidebar:
   label: "4.18.11"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop's database is PostgreSQL 17 from this release, and every install that has
 PostgreSQL 16 data moves on its next upgrade without you running anything. That
 is the one thing in 4.18.11 you need to read before you touch a running plant,

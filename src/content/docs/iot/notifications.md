@@ -5,10 +5,6 @@ description: "ntfy, Gotify, Discord, webhooks and email. Press Acknowledge on yo
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Alarm notifications, since 4.10.0, page a phone when an alarm is raised at
 03:00. When an alarm is **raised**, HotLoop sends a notification
 through every configured, enabled channel whose priority floor the alarm

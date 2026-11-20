@@ -7,10 +7,6 @@ sidebar:
   label: "0.1.1"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Cascade 1.2.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 ## What this is
 
 0.1.1 is the first release that isn't a candidate. There was a 0.1.0 tag and it never published anything: it was cancelled before anything reached the registry. A tag stays where it is, so this is the same code, published.

@@ -5,6 +5,10 @@ description: "Variables, folders, annotated runs, redaction, insights, outside s
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.3.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 How a plant keeps a growing pile of workflows under control: shared settings,
 folders, annotated runs, redaction, numbers over time, outside secrets, log
 streaming and where large data lives. Everything here is free and in every
@@ -114,6 +118,42 @@ curl -X PUT $CASCADE/api/v1/executions/$RUN/annotation -H "Authorization: Bearer
 - An annotation goes when its run is deleted. The audit log keeps
   `execution.annotated` and `execution.annotation_cleared` with the vote and
   tags, and records only that a note was left, not what it said.
+
+## Keeping finished runs
+
+In the editor: Settings, Keep finished runs for (days). Through the API: `PATCH /api/v1/settings` with `{"retentionDays": 90}`, which takes the `instance.settings` permission like the rest of the settings.
+
+By default every finished run is kept for ever, as it always was. Set a number of days and a main deletes the finished runs (succeeded, failed or canceled) that ended longer ago than that, with their step data, once an hour. 0 turns it off again.
+
+- A run that is queued, running or waiting is never touched, and neither is a run whose parent is still going, because the parent is going to ask what it did.
+- Each batch of up to 500 runs is its own transaction and writes one `execution.pruned` row to the audit log, with how many went and the cutoff. Changing the setting writes `instance.retention`.
+- Every main runs the pass, and two at once only find less to do.
+- Blob cleanup follows the same pass, and runs once an hour whether retention is on or not, so a run deleted by hand is cleaned up too. See "Blob cleanup" below.
+
+## Limiting an API key
+
+In the editor: Settings, API requests per key per minute. Through the API: `PATCH /api/v1/settings` with `{"apiRateLimit": 120}`, with the `instance.settings` permission.
+
+By default a key may call as often as it likes. Set a number and each API key, and each agent signed in over MCP with one, may make that many requests a minute. A call over the limit is answered `429` with a `Retry-After` header that says how many seconds to wait. Each key has its own count, so one runaway script can't use up another's. People signed in to the editor are not held to it.
+
+The count is each process's own, because that is what protects the process: with three mains, a key can make up to three times the number, spread across them. A change to the setting reaches every main within five seconds. Changing it writes `instance.api_rate_limit` to the audit log, with the old and new numbers.
+
+A webhook has its own limit, set on the trigger, and an account locks after repeated wrong passwords; neither changes.
+
+## Backup and restore
+
+```
+hotloop-cascade backup /backups/2026-11-20
+hotloop-cascade restore /backups/2026-11-20
+```
+
+`backup` writes a new directory holding a consistent copy of the SQLite database (taken while the server runs, with `VACUUM INTO`), the key file that seals every stored credential, the blob files, and `manifest.json` with the SHA-256 of each. It takes the same `--database`, `--key-file` and `--blob-dir` settings the server does, from the same environment variables. The directory must not exist yet, or be empty; a backup is never mixed into an old one. With no key file there is no backup, because a database without its key has credentials nobody can read.
+
+`restore` puts them back, and the server has to be stopped first. It checks every file against the manifest before it writes anything, so a damaged or incomplete backup changes nothing. It refuses to overwrite a database, or a key file that differs, that is already there; `--replace` says you mean it. Start the server afterward: it brings the schema up to date, and refuses a backup taken by a newer release than itself.
+
+PostgreSQL: `backup` writes the key, the blobs and the manifest, and prints the `pg_dump --format=custom` command that makes the database's half, because that program is PostgreSQL's own and the Cascade image doesn't carry it. `restore` puts the key and blobs back and prints the `pg_restore` command. Blobs kept in S3 or Azure are not copied; back the bucket up there.
+
+Before you upgrade a release that migrates, take one: migrations only go forward, and going back to the old image needs the backup.
 
 ## Execution redaction policies
 
@@ -419,6 +459,20 @@ a Kubernetes Secret.
   so a corrupted object fails loudly instead of handing a run bad data.
 - **Size.** A single upload goes up as a multipart transfer on S3 and in blocks on
   Azure, so the usual 5 GiB single-request limit does not apply.
+- **Blob cleanup.** Once an hour a pass removes the blobs no row points at: a
+  step output that was stored as a file because it was too big for the database,
+  and the attachments items carry. A blob is kept while any step run, partial
+  output, saved response or workflow still names it, directly or through a
+  stored output that holds the attachment, so a file shared by two runs with
+  identical output stays until the last one is gone. Only blobs last written
+  more than 24 hours ago are looked at, and putting bytes that are already stored
+  counts as writing them again after the first hour, so a file a step has just
+  stored and not yet recorded is never removed. A pass that can't read a stored
+  output removes nothing. It writes one `blobs.collected` row to the audit log
+  with how many files and bytes went. The pass assumes the blob store belongs to
+  one instance (the workers and the main of one install share it); two
+  installs pointed at the same bucket or folder would each remove the other's
+  files, so give each its own (`HOTLOOP_CASCADE_BLOB_S3_PREFIX` exists for this).
 - **Changing store later.** Existing blobs stay where they were written. Move
   them to the new store before switching, because a reference to a blob the new
   store lacks is a missing file.
