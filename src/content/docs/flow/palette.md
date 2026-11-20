@@ -23,7 +23,7 @@ editUrl: false
 The FlowLab row is a different kind of node. It runs on a tab that is a diagram, where
 a node runs once when every input has a value, and never takes a message. What
 FlowLab is, and how its loops, error wire, panel and debugger work, is
-[FlowLab](/flow/flowlab/).
+[FlowLab](/flow/flowlab/). One flow file, and so one set of diagrams, can be pushed to every Flow install a tenant runs in EmberNet, each checked and a failed one put back: [Pushing to a tenant's stations](/flow/stations/). Two installs can share the job of one, with a lease and a fence on every write to equipment so only one writes: [A warm standby with a lease](/flow/failover/).
 
 ## Telling people, and Kafka
 

@@ -7,10 +7,6 @@ sidebar:
   label: "2.3.0"
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Flow 2.15.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop Flow 2.3.0 is the release where Flow reaches the rest of the plant three new ways, and catches a wrong-shaped message before it does damage. It talks to HotLoop, an agent can call a flow as a tool over MCP, and a plugin is a signed WebAssembly file and not an npm package. JSON Schema now checks messages on the `json` node, on a node's ports and on the wires in the editor. One change can affect a flow that already runs, and it is the first thing under What changed.
 
 ## What's new

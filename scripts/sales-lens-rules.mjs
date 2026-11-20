@@ -476,8 +476,8 @@ const VOICE = {
     { sub: [ws('The credentials file at least fails like an adult now. 2.0.0 died on it with a JSON parsing error. Since 2.0.1 it names the file,'), 'Since 2.0.1 an old credentials file gets a clear message that names the file,'] },
   ],
   'flow/roadmap': [
-    { sub: [ws("**None of this starts until HotLoop's own roadmap is done.** Flow waits its turn. The one exception is Phase 9, FlowLab and its diagrams. We're building it now because it is a separate pack that sits beside the message runtime and doesn't take anything from HotLoop's own roadmap."),
-      'FlowLab and its diagrams, Phase 9, are being built now, as a separate pack that sits beside the message runtime.'] },
+    { sub: [ws("Flow is built in parallel with HotLoop's own roadmap, since 2026-10-02, and is never combined into HotLoop. Phase 9, FlowLab and its diagrams, is a separate pack that sits beside the message runtime and doesn't take anything from HotLoop's own roadmap."),
+      'Flow is built alongside HotLoop and stays its own product. FlowLab and its diagrams, Phase 9, are a separate pack that sits beside the message runtime.'] },
   ],
 };
 for (const [slug, rules] of Object.entries(VOICE)) PAGE[slug] = [...(PAGE[slug] || []), ...rules];

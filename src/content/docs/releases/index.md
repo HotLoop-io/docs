@@ -5,7 +5,7 @@ description: "What shipped in every HotLoop core, Flow, Cascade, HotLoop for COD
 editUrl: false
 ---
 
-Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is 4.22.0, the latest Flow release is 2.15.1, and the latest Cascade release is 1.2.1.
+Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed. The latest HotLoop core release is 4.22.0, the latest Flow release is 2.16.0, and the latest Cascade release is 1.2.1.
 
 ## HotLoop core
 
@@ -29,6 +29,7 @@ IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [
 
 ## HotLoop Flow
 
+- [HotLoop Flow 2.16.0 release notes](/releases/flow-2-16-0/)
 - [HotLoop Flow 2.15.1 release notes](/releases/flow-2-15-1/)
 - [HotLoop Flow 2.15.0 release notes](/releases/flow-2-15-0/)
 - [HotLoop Flow 2.14.1 release notes](/releases/flow-2-14-1/)

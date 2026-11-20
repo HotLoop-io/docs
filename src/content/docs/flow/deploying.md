@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 Three ways in, all from the same image, `ghcr.io/hotloop-io/hotloop-flow`, built
-for amd64 and arm64:
+for amd64 (arm64 follows in 2.16.1):
 
 | You have | Use |
 |---|---|
@@ -70,7 +70,7 @@ To choose your own instead:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.0 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -176,6 +176,8 @@ On a pod you run yourself, mount the PEM and set `HOTLOOP_FLOW_ASSERTION_PUBLIC_
 | `history.retain` | `100` | How many deployment records are kept under `/data/deployments`. `0` keeps every one, which is a decision about disk, since each record is a copy of the flow file. |
 | `history.git.url` | empty | Mirror every deploy to a git repository as a commit from whoever deployed. Empty is off. `history.git.branch`, `.path`, `.emailDomain` and `.username` go with it, and left empty they get the binary's own defaults. |
 | `history.git.passwordSecret.name`, `.key` | empty, `password` | A Secret holding the access token for that repository. It reaches the pod as `HOTLOOP_FLOW_GIT_PASSWORD` and never touches the ConfigMap. |
+| `stations.dashboardUrl`, `stations.tenant`, `stations.dashboardTokenSecret.name`, `.key`, `stations.deployTokenSecret.name`, `.key` | empty, empty, empty, `token`, empty, `token` | Push one flow file to every Flow install the tenant runs in EmberNet, with a check after each ([Pushing to a tenant's stations](/flow/stations/)). All four of the dashboard, the tenant and the two Secret names are set or none is; a render with some of them is refused. Each Secret holds one token and is mounted as a file, never put in the ConfigMap. The deploy token is the one the stations accept and needs `flows.read`, `flows.write` and `status.read`. |
+| `failover.urlSecret.name`, `.key`, `failover.name`, `failover.ttl`, `failover.renewEvery`, `failover.writeMargin` | empty, `url`, `flow`, `15s`, a third of the ttl, `5s` | A failover pair: two installs share a lease in a PostgreSQL, one writes to equipment and the other holds its writes until it takes over ([A warm standby with a lease](/flow/failover/)). Off until the Secret is named. The Secret's key holds the PostgreSQL URL and is mounted as a file, never put in the ConfigMap. |
 | `audit.maxBytes`, `audit.keep` | 16 MiB, `4` | When `/data/audit.log` rotates, and how many rotated files stay beside it. |
 | `tests.gate`, `tests.timeout` | off, `2m` | `true` refuses a deploy whose flows fail `/data/flows.test.yaml`. Off by default, because a gate nobody asked for fails a deploy at 3 AM for a reason nobody on shift has heard of. |
 | `discovery.enabled`, `discovery.allowedCIDRs` | off, empty | The scan nodes. Enabled with an empty list refuses to start. |
@@ -215,7 +217,7 @@ so the unit can be copied around, committed and reviewed without carrying
 anything that matters.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.0 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -234,7 +236,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.15.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.16.0
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -272,6 +274,33 @@ they log out, and Flow goes with them. That's
 [Podman's](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)
 and systemd's documented behavior. The rootful unit above is the one we ran.
 
+**Pushing to the tenant's other stations** from this unit is four settings and two Podman secrets
+mounted as files (see [Pushing to a tenant's stations](/flow/stations/)). Make the secrets with
+`podman secret create`, then add to `[Container]`:
+
+```ini
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_URL=https://dashboard.example
+Environment=HOTLOOP_FLOW_STATIONS_TENANT=acme
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_TOKEN_FILE=/run/secrets/stations-dashboard-token
+Environment=HOTLOOP_FLOW_STATIONS_DEPLOY_TOKEN_FILE=/run/secrets/stations-deploy-token
+Secret=hotloop-flow-dashboard-token,type=mount,target=stations-dashboard-token
+Secret=hotloop-flow-station-token,type=mount,target=stations-deploy-token
+```
+
+All four settings or none: Flow refuses to start with some of them. The deploy token is
+made with `hotloop-flow token` and given to each station as an API token with
+`flows.read`, `flows.write` and `status.read`.
+
+**A failover pair** is two units like this one, each with its own volume, and the same
+three lines in each `[Container]` section (see [A warm standby with a lease](/flow/failover/)); the second unit's
+host name is its own, so the two never share a holder name:
+
+```ini
+Environment=HOTLOOP_FLOW_FAILOVER_URL_FILE=/run/secrets/flow-lease-url
+Environment=HOTLOOP_FLOW_FAILOVER_NAME=line3
+Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
+```
+
 **Upgrading** is changing the tag in `Image=`, then `daemon-reload` and
 `restart`. Flows, credentials and the secret stay where they were. Pin the tag.
 `:latest` on a plant floor means you find out what changed when it breaks.
@@ -295,9 +324,9 @@ To try it, not to run a line on:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.15.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.0 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.15.1
+  ghcr.io/hotloop-io/hotloop-flow:2.16.0
 ```
 
 Then open <http://localhost:1880>. That credential secret is new every time you
