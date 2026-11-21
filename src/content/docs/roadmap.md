@@ -5,10 +5,6 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -152,7 +148,7 @@ This is where "better and cooler" has to be obvious from across the room.
 - [x] Screen files: a dashboard saved as a versioned file and imported into
       another install, so a customer's screens are theirs and never part of the
       product; every missing tag or device is listed and mapped before anything is
-      saved. See SCREEN-FILE.md
+      saved. See [Screen files](/iot/screen-file/)
 - [x] Card set: gauges, numbers, trends, entity lists, write buttons with the
       confirmation, script buttons, alarm lists, markdown, camera, a floor plan
       with live tags on it, recipe pickers and the plant status strip. A card
@@ -161,7 +157,7 @@ This is where "better and cooler" has to be obvious from across the room.
       same switcher and taking the same assignments
 - [x] Looks the same on a panel PC, a laptop and a phone: one layout that
       folds from twelve columns to one, tested at five widths
-- [x] The web UI in English and 13 more languages: Spanish, French, Italian, German, Norwegian, Bulgarian, Greek, Korean, Japanese, Vietnamese, Hindi, Simplified Chinese and Arabic (right to left), chosen in the top bar and kept in the browser. See I18N.md
+- [x] The web UI in English and 13 more languages: Spanish, French, Italian, German, Norwegian, Bulgarian, Greek, Korean, Japanese, Vietnamese, Hindi, Simplified Chinese and Arabic (right to left), chosen in the top bar and kept in the browser. See [Languages](/iot/languages/)
 - Built so the Edge HMI can be made from it: a dashboard bound to a screen name
   opens at `/?screen=<name>` with no header and no tabs
 ### Phase 4: integrations and discovery
@@ -207,7 +203,7 @@ This is where "better and cooler" has to be obvious from across the room.
       rain, sunlight), with the dew point, heat index and wind chill worked out
       on the box and held to the NWS tables. A sensor that can't be read is
       unavailable, never zero. One card, 14 languages, and agents build and read
-      one over MCP. See WEATHER.md
+      one over MCP. See [Weather](/iot/weather/)
 
 ### Phase 5: energy, phones, notifications
 
@@ -217,8 +213,9 @@ This is where "better and cooler" has to be obvious from across the room.
       time-of-use tariff, so a price changed later never changes what last month
       cost. The cost of a unit made is the cost over what a production counter
       counted, and "Nothing made" when nothing was. The Energy screen, sensors for
-      every rule, 14 languages, and MCP. Not built: demand charges, and shift
-      totals beyond a from and to. See ENERGY.md
+      every rule, 14 languages, and MCP. A demand charge on the highest quarter
+      hour (migration 0030) and the totals of a named shift, from the screen, the
+      API or an agent. See [Energy](/iot/energy/)
 - [x] Web app that installs on a phone and works offline
 - [x] Notifications, see below
 

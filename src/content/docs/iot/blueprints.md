@@ -5,10 +5,6 @@ description: "Write a rule once with blanks and fill it in per pump. Each rule k
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A blueprint is a rule written once with blanks in it. "When *this motor* has
 been running longer than *this long*, say so, and stop it if *I ask you to*."
 Somebody who knows what the rule should do writes it one time. Everybody

@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.22.1
+reviewed: hotloop=4.23.2
 title: "Install HotLoop Edge {{hotloop}}"
 description: "Install HotLoop Edge {{hotloop}} on k3s with Helm or on an industrial PC with Podman Quadlet, then turn on the OPC UA server and Sparkplug publishing."
 sidebar:
@@ -42,6 +42,8 @@ Open `http://localhost:8080`. Writes ship off: every tag is read-only until some
 Both are off by default, because opening a listener or an uplink on a plant network is something a deployment does on purpose.
 
 **The OPC UA server** is `opcuaServer.enabled: true`, on port 4840. Set `opcuaServer.endpointHost` to the name a client reaches the box at, so the certificate matches it. [The OPC UA server](/edge/opc-ua-server/) has the security model, and it is read-only.
+
+**Box health and the host mount.** The chart's OPC UA server also serves this box's own health (CPU, memory, disk, and real-time jitter when an agent writes the file) for the EmberNet dashboard, and it makes a login for the dashboard that can read tags and values and nothing else. That is on by default: the chart mounts the host's root at `/host` and its `/proc` at `/host/proc`, both read-only, and adds no privilege. A cluster that enforces the restricted Pod Security profile refuses a hostPath, and there you set `opcuaServer.dashboard.boxHealth.enabled: false` for no device and no mounts, or `opcuaServer.dashboard.boxHealth.hostMount: false` to keep the device with the disk and CPU reading bad and saying what to mount. [The OPC UA server](/edge/opc-ua-server/#box-health-for-the-embernet-dashboard) has the rest.
 
 **Sparkplug publishing** is `edgePublish.enabled: true`, with `edgePublish.broker` and `edgePublish.group` required. Set `edgePublish.node` too, or the node id is the release name. The forward queue lives on a 1 Gi volume, `edgePublish.queueMaxBytes` defaults to 64 MiB (about 248,000 readings: about two minutes at 2,000 readings a second, at about 240 bytes a reading), and past it the oldest readings are dropped and counted. `0` is unbounded, and a long enough outage then fills the volume. Edge publishing needs `replicaCount` 1, and the chart refuses to render otherwise. [Edge publish and store-and-forward](/edge/edge-publish/) has what it does when the uplink dies.
 

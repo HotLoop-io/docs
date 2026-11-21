@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.22.1
+reviewed: hotloop=4.23.2
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: twelve native protocol drivers, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
@@ -71,6 +71,8 @@ Running it at a plant? [Using HotLoop in a business](/business/) covers licensin
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
 
+- [4.23.2](/releases/hotloop-4-23-2/): a CODESYS visualization imports as a screen, the box reports its own health to the EmberNet dashboard behind a login that can read and nothing else, and an energy meter can carry a demand charge. This build is amd64 only, and the next version is the one small bump that builds the arm images.
+- [4.23.1](/releases/hotloop-4-23-1/): weather stations and energy meters, the web UI in thirteen more languages, dashboards that export to a file and import into another install, and the first commands to a UniFi console. 4.23.0 was tagged and never published, so this release carries what its notes list. This build is amd64 only.
 - [4.22.1](/releases/hotloop-4-22-1/): the multi-arch build of 4.22.0, with no change to the product.
 - [4.22.0](/releases/hotloop-4-22-0/): a panel page fills its screen edge to edge at any size, the Alarms screen imports a CODESYS Export Alarms file, and OPC UA PubSub devices on one address and port share one socket. This build is amd64 only, and 4.22.1 is the one small bump that builds the arm images.
 - [4.21.1](/releases/hotloop-4-21-1/): the multi-arch build of 4.21.0, with no change to the product.

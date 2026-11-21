@@ -5,10 +5,6 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -791,7 +787,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.0"
+  "version": "4.23.2"
 }
 ```
 
@@ -1772,7 +1768,7 @@ reporting it as missing sends somebody hunting for a typo.
 
 What the plant uses and what it costs: kilowatt hours, gas, water, compressed
 air, and the cost of a unit made. A meter is a tag read as a quantity used. The
-whole model, the tariffs and what the screen does are in ENERGY.md.
+whole model, the tariffs and what the screen does are in [Energy](/iot/energy/).
 Reading is `energy.read`, which every role has; making or changing a meter or a
 tariff is `energy.write`, an admin's.
 
@@ -1797,7 +1793,9 @@ Makes a meter. `id` is lowercase letters, digits, `-` and `_`. `kind` is
 `kW` or `MW`, and `unit` `Wh`, `kWh` or `MWh`). `source` is the tag. `tariff` is a
 flat `price` per unit with an optional `currency`, and optional `bands`
 (`from` and `to` on a quarter hour, `days`, `price`) for a time-of-use tariff;
-a production meter has none. `enabled` left out is `true`. `201` with `{"meter": {...}, "warnings": []}`. `400`
+a production meter has none. An electricity meter in `Wh`, `kWh` or `MWh` can also
+have a `demand_price` in the tariff: what one kilowatt of its highest quarter
+hour in a window costs. `enabled` left out is `true`. `201` with `{"meter": {...}, "warnings": []}`. `400`
 saying what is wrong: the tag is not there or is not a number, a band is not on a
 quarter hour, a power meter with a factor. `409` for an id that is taken.
 
@@ -1819,7 +1817,9 @@ Removes a meter and everything it counted. `404` for an unknown one.
 
 Each meter's use and cost over a window, and the cost of a unit made. The window
 is `?period=` (`today`, `yesterday`, `this_week`, `last_week`, `this_month`,
-`last_month`, `last_7_days`, `last_30_days`; days and months are the site's) or
+`last_month`, `last_7_days`, `last_30_days`, or a shift written
+`shift:06:00-14:00` for the latest one to have started and `last_shift:06:00-14:00`
+for the one before it; days, months and shifts are the site's) or
 `?from=&to=` as RFC 3339, from included and to not, at most 400 days. `meters` is
 a comma separated list of the meters whose cost goes into the cost per unit, and
 `per` names the one production meter to divide by.
@@ -1833,11 +1833,19 @@ a comma separated list of the meters whose cost goes into the cost per unit, and
 
 `coverage` is the share of the window so far that readings back. Costs in two
 currencies are never added, so there is a `per_unit` row for each. `cost_per_unit`
-is `null` when nothing was made: that is no answer, not zero.
+is `null` when nothing was made (`reason` is `nothing_made`) or when things were
+made and no priced meter has counted any use yet (`nothing_counted`): that is no
+answer, not zero.
+
+A meter with a `demand_price` has a `demand` in its row: `peak_kw` (the highest
+quarter hour of the window, as the kilowatts it averaged), `peak_at` (when it
+started), `peak_covered_seconds` (how much of that quarter hour was read; below 900
+the peak is understated) and `cost` (the peak times the price). The row's `cost`
+stays what the energy cost; `costs` and `per_unit` include the demand charge.
 
 ### `GET /api/energy/summary/{period}`
 
-The same as the summary, over one named period given in the path. `meters` and
+The same as the summary, over one named period (or shift) given in the path. `meters` and
 `per` still go in the query.
 
 ### `GET /api/energy/series`
@@ -2733,7 +2741,7 @@ The dashboard as a screen file: a versioned JSON document that
 install. It answers as an attachment named `<id>.hotloop-screen.json`. The
 caller needs `dashboards.read` and has to be offered the dashboard, as for
 `GET` one. The wall board is a `400`: it is an install's pinned gauges, not a
-layout. The format is in SCREEN-FILE.md.
+layout. The format is in [Screen files](/iot/screen-file/).
 
 ### `POST /api/dashboards/import`
 
@@ -2749,6 +2757,7 @@ it:
 | `skipAssignments` | Leave off the file's `screens` and `homeFor`, which belong to the install that made it. `roles` stay. |
 | `remap` | What to call things here: `tags` (whole key to whole key, as the file names the tag or as it reads once `devices` has moved it), `devices` (id to id, which also moves the device part of every tag not named in `tags`), `entities`, `scripts`, `recipes`, and `equipment` (id to id). An entry that nothing on the screen used is a warning. |
 | `dryRun` | Answer the report and save nothing. Always `200`. |
+| `codesys`, `visualization` | In place of `file`: the text of a CODESYS native export, and the visualization to take when it holds several. The report then has a `conversion` with what each element became and what was left out. See [Import a CODESYS screen](/iot/codesys-screen-import/). |
 
 The answer is a report whether or not anything was saved:
 

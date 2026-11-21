@@ -3,13 +3,13 @@
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
       "ref": "origin/main",
-      "sha": "15bbd971c6a5a5158e615144c1534675f458db78",
+      "sha": "e3fffb92c49ea3b982c794d30c7a6c3154f0adbe",
       "release": {
-        "tag": "v4.22.1",
-        "version": "4.22.1",
+        "tag": "v4.23.2",
+        "version": "4.23.2",
         "prerelease": false,
-        "publishedAt": "2026-11-19T23:00:05Z",
-        "sha": "4b79371f7fda1111bea175136c2d82d43d5a24c5"
+        "publishedAt": "2026-11-21T02:03:05Z",
+        "sha": "e3fffb92c49ea3b982c794d30c7a6c3154f0adbe"
       }
     },
     "flow": {
@@ -99,7 +99,7 @@
       "group": "The base",
       "title": "Entities",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ENTITIES.md",
       "release": false
@@ -149,6 +149,39 @@
       "release": false
     },
     {
+      "slug": "iot/weather",
+      "product": "iot",
+      "group": "The base",
+      "title": "Weather",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/WEATHER.md",
+      "release": false
+    },
+    {
+      "slug": "iot/energy",
+      "product": "iot",
+      "group": "The base",
+      "title": "Energy",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/ENERGY.md",
+      "release": false
+    },
+    {
+      "slug": "iot/languages",
+      "product": "iot",
+      "group": "The base",
+      "title": "Languages",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/I18N.md",
+      "release": false
+    },
+    {
       "slug": "iot/automations",
       "product": "iot",
       "group": "Automation",
@@ -165,7 +198,7 @@
       "group": "Automation",
       "title": "Blueprints",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BLUEPRINTS.md",
       "release": false
@@ -198,9 +231,31 @@
       "group": "Screens and alerts",
       "title": "Dashboards",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DASHBOARDS.md",
+      "release": false
+    },
+    {
+      "slug": "iot/screen-file",
+      "product": "iot",
+      "group": "Screens and alerts",
+      "title": "Screen files",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/SCREEN-FILE.md",
+      "release": false
+    },
+    {
+      "slug": "iot/codesys-screen-import",
+      "product": "iot",
+      "group": "Screens and alerts",
+      "title": "Import a CODESYS screen",
+      "label": null,
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/CODESYS-SCREEN-IMPORT.md",
       "release": false
     },
     {
@@ -220,7 +275,7 @@
       "group": "Screens and alerts",
       "title": "MCP",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/MCP.md",
       "release": false
@@ -231,7 +286,7 @@
       "group": "Devices and data",
       "title": "Protocols and drivers",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/PROTOCOLS.md",
       "release": false
@@ -275,7 +330,7 @@
       "group": "Devices and data",
       "title": "UniFi Network",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/UNIFI.md",
       "release": false
@@ -308,7 +363,7 @@
       "group": "Operate",
       "title": "Authentication and users",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/AUTH.md",
       "release": false
@@ -319,7 +374,7 @@
       "group": "Operate",
       "title": "Backups and restore",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/BACKUP.md",
       "release": false
@@ -341,7 +396,7 @@
       "group": "Operate",
       "title": "The HTTP API",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/API.md",
       "release": false
@@ -352,7 +407,7 @@
       "group": "What Edge adds",
       "title": "Edge publish and store-and-forward",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/EDGE-PUBLISH.md",
       "release": false
@@ -363,7 +418,7 @@
       "group": "What Edge adds",
       "title": "The OPC UA server",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/OPCUA-SERVER.md",
       "release": false
@@ -407,7 +462,7 @@
       "group": "Install",
       "title": "k3s and Helm",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/DEPLOYMENT.md",
       "release": false
@@ -418,7 +473,7 @@
       "group": "Install",
       "title": "Podman Quadlet",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "deploy/quadlet/README.md",
       "release": false
@@ -451,7 +506,7 @@
       "group": "Lineup",
       "title": "HotLoop roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "hotloop",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -1117,14 +1172,25 @@
       "release": true
     },
     {
-      "slug": "releases/hotloop-4-23-0",
+      "slug": "releases/hotloop-4-23-1",
       "product": "releases",
       "group": "HotLoop core",
-      "title": "HotLoop core 4.23.0 release notes",
-      "label": "4.23.0",
-      "status": "next",
+      "title": "HotLoop core 4.23.1 release notes",
+      "label": "4.23.1",
+      "status": "released",
       "repo": "hotloop",
-      "source": "docs/releases/4.23.0.md",
+      "source": "docs/releases/4.23.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-23-2",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.23.2 release notes",
+      "label": "4.23.2",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.23.2.md",
       "release": true
     },
     {
@@ -1323,6 +1389,39 @@
       "status": "released",
       "repo": "flow",
       "source": "docs/releases/2.16.3.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-16-4",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.16.4 release notes",
+      "label": "2.16.4",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.16.4.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-16-5",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.16.5 release notes",
+      "label": "2.16.5",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.16.5.md",
+      "release": true
+    },
+    {
+      "slug": "releases/flow-2-16-6",
+      "product": "releases",
+      "group": "HotLoop Flow",
+      "title": "HotLoop Flow 2.16.6 release notes",
+      "label": "2.16.6",
+      "status": "released",
+      "repo": "flow",
+      "source": "docs/releases/2.16.6.md",
       "release": true
     },
     {
@@ -1587,39 +1686,6 @@
       "status": "next",
       "repo": "cascade",
       "source": "docs/release-notes/1.4.0.md",
-      "release": true
-    },
-    {
-      "slug": "releases/flow-2-16-4",
-      "product": "releases",
-      "group": "HotLoop Flow",
-      "title": "HotLoop Flow 2.16.4 release notes",
-      "label": "2.16.4",
-      "status": "released",
-      "repo": "flow",
-      "source": "docs/releases/2.16.4.md",
-      "release": true
-    },
-    {
-      "slug": "releases/flow-2-16-5",
-      "product": "releases",
-      "group": "HotLoop Flow",
-      "title": "HotLoop Flow 2.16.5 release notes",
-      "label": "2.16.5",
-      "status": "released",
-      "repo": "flow",
-      "source": "docs/releases/2.16.5.md",
-      "release": true
-    },
-    {
-      "slug": "releases/flow-2-16-6",
-      "product": "releases",
-      "group": "HotLoop Flow",
-      "title": "HotLoop Flow 2.16.6 release notes",
-      "label": "2.16.6",
-      "status": "released",
-      "repo": "flow",
-      "source": "docs/releases/2.16.6.md",
       "release": true
     }
   ],

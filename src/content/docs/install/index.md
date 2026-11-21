@@ -21,10 +21,10 @@ There are two ways to run a HotLoop product for real: Helm on k3s or any Kuberne
 
 | Product | Latest release | Helm | Quadlet | Start here |
 |---|---|---|---|---|
-| [HotLoop IoT](/iot/overview/) | 4.22.1 | Yes | Yes | [Install IoT](/iot/install/) |
-| [HotLoop Edge](/edge/overview/) | 4.22.1 | Yes | Yes | [Install Edge](/edge/install/) |
-| [HotLoop Gateway](/gateway/overview/) | 4.22.1 | Yes | Yes | [Install the Gateway](/gateway/install/) |
-| [HotLoop Edge Relay](/edge-relay/overview/) | 4.22.1 | Yes | Yes | [Install the Edge Relay](/edge-relay/install/) |
+| [HotLoop IoT](/iot/overview/) | 4.23.2 | Yes | Yes | [Install IoT](/iot/install/) |
+| [HotLoop Edge](/edge/overview/) | 4.23.2 | Yes | Yes | [Install Edge](/edge/install/) |
+| [HotLoop Gateway](/gateway/overview/) | 4.23.2 | Yes | Yes | [Install the Gateway](/gateway/install/) |
+| [HotLoop Edge Relay](/edge-relay/overview/) | 4.23.2 | Yes | Yes | [Install the Edge Relay](/edge-relay/install/) |
 | [HotLoop Flow](/flow/overview/) | 2.16.6 | Yes | Yes | [Install Flow](/flow/install/) |
 | [HotLoop Cascade](/cascade/overview/) | 1.3.1 | Yes, no login needed | Yes, no login needed, see [Cascade with Podman Quadlet](/cascade/quadlet/) | [Running Cascade](/cascade/running/) |
 | [HotLoop for CODESYS](/codesys/overview/) | 0.3.8 | Yes, or the EmberCORE App Store | No | [Install HotLoop for CODESYS](/codesys/install/) |

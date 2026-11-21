@@ -5,10 +5,6 @@ description: "Publish configured devices and tags as a read-only OPC UA address 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop's OPC UA server, since 4.13.0, publishes the Gateway's configured
 devices and tags as an OPC UA address space, so a third-party OPC UA client, a
 SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the
@@ -227,6 +223,50 @@ poll, so a quiet tag has few rows: read At time, or a Processed window around a
 tag's last reading, when you need what it held and not only when it changed.
 `HistoryServerCapabilities` says history can be read and that a call returns at
 most 10,000 values.
+
+## Box health, for the EmberNet dashboard
+
+The dashboard's Task Manager reads a box's CPU, memory, disk and real-time jitter
+from the box itself: HotLoop publishes them as a device and the server serves
+their history ([History](#history)), so the dashboard never reads its own
+database for them. What is built, and how it is switched on:
+
+* **The device.** With `HOTLOOP_BOX_HEALTH_NODE` set (the chart sets it to the
+  Kubernetes node's name) HotLoop makes a device whose id is exactly that name,
+  with the protocol `boxhealth` ([Protocols and drivers](/iot/protocols/#box-health)). Its
+  tags are `cpu_util_pct`, `mem_util_pct`, `disk_util_pct` (the box's own disk),
+  `data_util_pct` (the volume HotLoop keeps its data on), and, only when
+  `HOTLOOP_BOX_HEALTH_JITTER_FILE` names the JSON file a real-time agent writes,
+  `rtos_jitter_core1_us`, `rtos_jitter_core2_us` and `rtos_jitter_core3_us`. Their
+  OPC UA node ids are in the namespace `urn:hotloop:ua:gateway` with the string
+  identifier `<device id>/<tag>`.
+* **The box's numbers.** The chart mounts the host's root at `/host` and its
+  `/proc` at `/host/proc`, both read-only, and sets the node name, **by default**
+  (`opcuaServer.dashboard.boxHealth.enabled: true`), so the dashboard's Task Manager
+  works the moment HotLoop is installed. Only a statfs of `/host` and the CPU and
+  memory counters are read, and no privilege is added. A cluster that enforces the
+  restricted Pod Security profile refuses a hostPath: there, set `enabled: false`
+  (no device, no mounts) or `hostMount: false` (the device, but the box's disk and
+  CPU read bad and say what to mount). The device does not need the OPC UA server.
+* **A login that can read and nothing else.** The chart makes the user
+  `embernet-dashboard-read` with exactly `tags.read` and `values.read` (an
+  explicit permission list, never a role) at the first install, and keeps its
+  generated password in the Secret `<release>-opcua-dashboard` (keys `username`,
+  `password` and `password-hash`). An upgrade never rotates it. An account that
+  exists is never changed by a restart.
+* **The dashboard's certificate.** The dashboard makes the Secret
+  `<release>-opcua-trust`, one key per certificate named `<sha1 thumbprint>.crt`.
+  The chart mounts it, optional, at `/etc/hotloop/opcua-trust`, and the server
+  keeps those files in `trusted/` (`HOTLOOP_OPCUA_SERVER_TRUST_DIR`): at start and
+  every 30 seconds, a new file is added, a changed one rewritten, and one that
+  leaves the Secret taken out again. A file an operator put in `trusted/` is never
+  touched, and wins over a Secret key of the same name.
+* **The port.** The release's own Service (the one the dashboard discovers) lists
+  the OPC UA port 4840 when the server is on, beside the OPC UA server's own
+  Service.
+
+The server stays as it was: Basic256Sha256 SignAndEncrypt, no anonymous sessions,
+no trust-all.
 
 ## Security model
 

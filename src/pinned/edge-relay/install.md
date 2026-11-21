@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.22.1
+reviewed: hotloop=4.23.2
 title: "Install the Edge Relay with Helm or Quadlet"
 description: "Run HotLoop Edge Relay {{hotloop}} on a cluster with Helm, or on a Pi or industrial PC as a systemd service with Podman Quadlet. The unit files are here in full."
 sidebar:
