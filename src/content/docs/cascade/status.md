@@ -5,7 +5,7 @@ description: "Cascade is released: what is in it, what is not in it yet, and whe
 editUrl: false
 ---
 
-1.3.1 is the release out today, and 1.3.0, 1.2.1, 1.2.0, 1.1.1, 1.1.0, 1.0.2, 1.0.1 and 1.0.0 are the eight before it. 1.0.0
+1.4.0 is the release out today, and 1.3.1, 1.3.0, 1.2.1, 1.2.0, 1.1.1, 1.1.0, 1.0.2, 1.0.1 and 1.0.0 are the nine before it. 1.0.0
 is the first with the identity and governance work, each piece tried against the real server it talks to: SAML, LDAP and Active Directory, SCIM, custom roles, external secrets, log streaming, variables, folders, insights, execution annotations, redaction policies, and S3 and Azure blob stores. It also has a new editor, so every one of those has a screen. 1.0.1 fixes
 one mistake in sign-in: when the database could not be read, Cascade answered "not
 signed in" and cleared the cookie, so a short outage signed everyone out and could
@@ -14,11 +14,11 @@ session. 1.0.2 lets a workflow sign and verify with an HMAC key kept as a creden
 and lets a public form on another website call a webhook from the browser. 1.1.0 adds
 the MCP server, and the screens the editor was missing: credentials, projects, users,
 the audit log, settings and your account, with sign-in now the editor's own page.
-1.1.1 is 1.1.0 with the arm64 image added. 1.2.0 gives the MCP server its last four tools, and 1.2.1 is 1.2.0 with the arm64 image added. 1.3.0 puts the editor in English and thirteen other languages. 1.3.1 is 1.3.0 with the arm64 image added. Nothing migrates between 1.0.0 and 1.3.1.
+1.1.1 is 1.1.0 with the arm64 image added. 1.2.0 gives the MCP server its last four tools, and 1.2.1 is 1.2.0 with the arm64 image added. 1.3.0 puts the editor in English and thirteen other languages. 1.3.1 is 1.3.0 with the arm64 image added. 1.4.0 waits for the database at start, keeps finished runs for as long as you say and cleans up their files, can cap how often one API key calls, and backs up and restores. Nothing migrates between 1.0.0 and 1.4.0.
 
 What isn't here yet (Git source control and environments, more connectors, and AI
 steps) is in the roadmap.
 
 The repository is private. The image and the chart are public and pull with no
-login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `1.3.1`,
-`1.3`, `1`, `latest` and `stable`, for amd64 and arm64.
+login. The image is `ghcr.io/hotloop-io/hotloop-cascade`, with tags `1.4.0`,
+`1.4`, `1`, `latest` and `stable`, for amd64 and arm64.

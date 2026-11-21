@@ -5,14 +5,7 @@ description: "What shipped in HotLoop Cascade 1.4.0, what changed on upgrade, an
 editUrl: false
 sidebar:
   label: "1.4.0"
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[Coming in the next release]
-These notes are for a release that is not out yet. HotLoop Cascade 1.3.1 is the latest one you can install.
-:::
 
 ## What this is
 
@@ -41,6 +34,8 @@ Settings has a new field, API requests per key per minute, and `PATCH /api/v1/se
 - The scale test the roadmap set is done. Two mains on one PostgreSQL ran a workflow that fires every minute for an hour while one of them was killed with SIGKILL at the slot boundary, seven times in turn and left down about 25 seconds each time: 61 runs for 61 minute slots, none missed, none doubled.
 - The test stack's OAuth server (Hydra) now runs on Postgres. It failed in parallel runs before, passed after, and failed again with the change reverted. No Cascade code introspects tokens.
 - The chart test now fails if a pod restarts at install.
+- A log destination that fails now waits out its back-off from when the failure is on record, not from when the send failed. A slow write of the failure note used up the first second, and the retry straight after was sent instead of held back; the suite stopped on it under load.
+- The language check now sweeps the screen that reads one run, at both widths, in every language, because a run's step and status words are the ones a plant reads most.
 - The two new settings refusals are translated in every language, and the settings help says the big outputs go with their runs.
 
 ## amd64 only, and why

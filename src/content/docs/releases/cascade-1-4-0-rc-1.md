@@ -5,14 +5,7 @@ description: "What shipped in HotLoop Cascade 1.4.0-rc.1, what changed on upgrad
 editUrl: false
 sidebar:
   label: "1.4.0-rc.1"
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[Coming in the next release]
-These notes are for a release that is not out yet. HotLoop Cascade 1.3.1 is the latest one you can install.
-:::
 
 This is a release candidate for 1.4.0. It moves no `stable`, `latest`, `1.4` or `1` tag and is not in the App Store index, so nothing pulls it by default. It is the code 1.4.0 will ship, pulled and run on a real Podman host before the real tag, and 1.4.0 will be this code with only its version strings changed. Read the 1.4.0 notes for what is in it.
 

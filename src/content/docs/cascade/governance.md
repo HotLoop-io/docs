@@ -5,10 +5,6 @@ description: "Variables, folders, annotated runs, redaction, insights, outside s
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Cascade 1.3.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 How a plant keeps a growing pile of workflows under control: shared settings,
 folders, annotated runs, redaction, numbers over time, outside secrets, log
 streaming and where large data lives. Everything here is free and in every
