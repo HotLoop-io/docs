@@ -5,10 +5,6 @@ description: "The entity registry every automation, helper, script and screen is
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The entity registry and the engine that computes entity state are the
 foundation every automation, helper, script and screen in HotLoop is built on.
 
@@ -813,7 +809,7 @@ it) or pulses a bool one. A counter with no `reset_command` is read-only.
 
 ### `weather`
 
-A roof-top station as one entity: see WEATHER.md. The state is the
+A roof-top station as one entity: see [Weather](/iot/weather/). The state is the
 temperature; every other reading is an attribute, there only when its sensor can
 be read, with the dew point, heat index and wind chill worked out from them. A
 reading that is bound and cannot be read is named in `unavailable`, never shown

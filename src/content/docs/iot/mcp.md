@@ -5,10 +5,6 @@ description: "Let an agent read the whole plant and touch only what you armed, t
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The gateway speaks MCP in both directions: agents can read and drive the plant,
 and an automation rule can call a tool somewhere else.
 
@@ -450,7 +446,7 @@ says which alarms would come across and which would not, saves nothing, and need
 no reason. With `apply` true it saves them as alarm definitions, and then it needs
 a reason and the MCP write switch like every tool that changes configuration.
 
-`screen_export` answers a dashboard as a HotLoop screen file (SCREEN-FILE.md),
+`screen_export` answers a dashboard as a HotLoop screen file ([Screen files](/iot/screen-file/)),
 and `screen_import` takes one in, on this install or another. It asks first:
 `dryRun` is true unless you say false, and a dry run saves nothing and answers the
 report with every problem listed and the references to `remap`. A real import

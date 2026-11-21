@@ -5,10 +5,6 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -687,6 +683,35 @@ the runtime kept the session, and the session is given up for the same
 reconnect. A tag for a variable the program does not have reads bad with the
 server's reason and does not cause a reconnect.
 
+**Securing the runtime's OPC UA server.** A CODESYS Control runtime offers only unsecured
+endpoints until its OPC UA server has a certificate, and then it also offers the policies of its
+`CommunicationPolicy` (AES128-SHA256-RSAOAEP by default, Basic256Sha256, AES256-SHA256-RSAPSS)
+with Sign and SignAndEncrypt. CODESYS documents making that certificate in the Security Screen
+(CODESYS Security Agent, Devices, the controller, OPC UA Server) and trusting a client by moving its
+certificate from "Certificates in Quarantine" to "Trusted Certificates". The Linux runtime's PLC shell
+does the same without the IDE, with commands CODESYS lists for the device editor's PLC shell
+(`cert-getapplist`, `cert-genselfsigned <n>`, `cert-getcertlist quarantine`, `cert-export`,
+`cert-import trusted`), over the Unix socket the Linux runtime documents for it
+(`/var/opt/codesyscontrolapi/plcshell.sock`, "Accessing the PLC Shell"). Set the device to
+`securityMode` `SignAndEncrypt` with a `securityPolicy`, connect once (HotLoop's own certificate lands
+in the runtime's quarantine and the connection is refused, with a message that says so), trust that
+certificate, and the device reads. Not shown: the IDE's Security Screen, a CA-signed
+certificate, user management with a secured runtime.
+
+**A runtime with no license stops itself.** A CODESYS Control runtime that has no
+license runs in demo mode and shuts down after about two hours (the runtime's log
+says `no runtime license - running in demo mode(~2 hours)` at every start). From
+HotLoop's side that is a runtime restart like any other: the device goes
+disconnected with "the PLC's runtime is not answering" and comes back by itself
+once something starts the runtime again (a container's restart policy, a systemd
+unit). Nothing in HotLoop counts the two hours or treats the stop differently,
+and nothing restarts the runtime for you; a runtime that is not started again
+stays disconnected. Run against a 4.22.0.0 runtime in a container with no license: it stopped itself 2 hours 5 minutes after
+it started, with exit code 0; the container's restart policy started it again 31
+seconds later, its application was running 82 seconds after that, and the device
+read good again 35 seconds after the application started (2 minutes 28 seconds
+from the stop), with no hand step.
+
 **Writes.** A tag is read-only until someone marks it writable, as for every
 device, and nothing a setup creates is. Then the write gate is as for OPC UA, with
 the PLC's half in front of it: a write to a symbol exported read-only, or one the user may not write, is
@@ -843,6 +868,19 @@ firmware update.
 
 One request serves every tag on the device. `Browse` walks the document and
 reports every scalar with the path that reaches it.
+
+### Box health
+
+The machine HotLoop runs on, as a read-only device: `cpu_util_pct` (CPU time not
+idle since the last read), `mem_util_pct` (MemTotal against MemAvailable),
+`disk_util_pct` (the box's disk, a statfs of the host's root mounted read-only at
+`diskPath`, `/host` by default), `data_util_pct` (the volume at `dataPath`, `/data`),
+and `rtos_jitter_core1_us` to `core3_us` when `jitterFile` names the JSON file
+`{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}` that a real-time agent rewrites
+(a file older than five minutes reads bad). CPU and memory come from `procRoot`
+(`/proc`, or `/host/proc` when the host's is mounted). A value that cannot be read
+is bad quality with the reason, never zero. The device is made by
+`HOTLOOP_BOX_HEALTH_NODE` ([The OPC UA server](/edge/opc-ua-server/#box-health-for-the-embernet-dashboard)).
 
 ### UniFi Network
 

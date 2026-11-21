@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.22.1
+reviewed: hotloop=4.23.2
 title: "Install HotLoop IoT {{hotloop}}"
 description: "Install HotLoop IoT {{hotloop}} on k3s with Helm, or on a Pi or small PC as systemd services with Podman Quadlet, on PostgreSQL, or a SQLite file."
 sidebar:

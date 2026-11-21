@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.22.1
+reviewed: hotloop=4.23.2
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:
@@ -46,6 +46,10 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 Open `http://localhost:8080`. That admin account is a bootstrap, not a reset switch. Once it exists, changing `auth.admin.password` and upgrading does nothing, so a password somebody set in the UI never gets clobbered by the next deploy.
 
 Now add a device, discover its tags, and try to write to one. You can't. That's on purpose. Every tag starts read-only and gets armed one at a time, and `safety.allowWrites` stays off until you decide this pod gets to move machinery. Nobody's first day with HotLoop should end with a press doing something they didn't ask for.
+
+## Box health and the host mount
+
+The chart's OPC UA server also serves this box's own health (CPU, memory, disk, and real-time jitter when an agent writes the file) for the EmberNet dashboard, and it makes a login for the dashboard that can read tags and values and nothing else, its password kept in the Secret `<release>-opcua-dashboard` across upgrades. The mounts are on by default: the chart mounts the host's root at `/host` and its `/proc` at `/host/proc`, both read-only, and adds no privilege. A cluster that enforces the restricted Pod Security profile refuses a hostPath, so there you set `opcuaServer.dashboard.boxHealth.enabled: false` for no device and no mounts, or `opcuaServer.dashboard.boxHealth.hostMount: false` to keep the device with the disk and CPU reading bad and saying what to mount. The Quadlet drop-in is `deploy/quadlet/opcua-dashboard.conf`.
 
 ## What to set before a real plant sees it
 

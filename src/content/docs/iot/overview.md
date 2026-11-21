@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[IoT is out, first released in 4.18.10]
-The image is `ghcr.io/hotloop-io/hotloop-iot:4.22.1` built for amd64, arm64 and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
+The image is `ghcr.io/hotloop-io/hotloop-iot:4.23.2` built for amd64, arm64 and arm/v7, about 31 MB on amd64 and 29 MB on a Pi, and the chart is `hotloop-iot` from `https://hotloop.io/hotloop`. Both pull with no login. The Quadlet units are the `iot/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/iot/install/). The pages in this section say what each feature has been run against, and where a page follows `main` and not the release, it says that too.
 :::
 
 IoT is the base Edge and the Gateway are built on. If the box in front of you is a Pi, a NUC in a closet, a rack of smart plugs and sensors, or one PLC on a bench, this is the one. It is the smallest image of the three full products, and it still carries everything that makes HotLoop useful: the entities, the rules, the alarms, and the one write gate that nothing gets around.
@@ -22,7 +22,8 @@ A bigger product never takes anything away from it. [Edge](/edge/overview/) is I
 - **Helpers, the logbook, and the sun.** The values your people own, one timeline of everything that happened, and sunrise worked out on the box. [Helpers](/iot/helpers/), [logbook](/iot/logbook/), [the sun](/iot/sun/).
 - **Dashboards, notifications, and MCP.** Screens built per role, alarms that page a phone, and an agent that can read the plant and touch only what you armed. [Dashboards](/iot/dashboards/), [notifications](/iot/notifications/), [MCP](/iot/mcp/).
 - **Every protocol driver (a CODESYS runtime by symbol name, and OPC UA PubSub over UADP included), MQTT with discovery, and an embedded broker.** [Protocols](/iot/protocols/), [the broker](/iot/broker/), [MQTT discovery](/iot/mqtt-discovery/), [network discovery](/iot/network-discovery/).
-- **UniFi, read-only,** and **history written out to your own database, or to a Kafka broker.** [UniFi](/iot/unifi/), [historian targets](/iot/historian-targets/).
+- **UniFi, read-only until you arm a command,** and **history written out to your own database, or to a Kafka broker.** UniFi reads the network, and the few points that are commands (a locate LED, a restart, a PoE power cycle, a wireless network on or off, a client block) do nothing until somebody marks that tag writable. [UniFi](/iot/unifi/), [historian targets](/iot/historian-targets/).
+- **Weather, energy, screens that travel, and thirteen more languages.** A roof station is one entity. A meter is a tag read as energy used, kept in 15 minute buckets with a tariff and a demand charge. A dashboard exports to a file and imports into another install, and a CODESYS visualization imports as a screen. The web UI speaks English and thirteen more languages. [Energy](/iot/energy/), [weather](/iot/weather/), [screen files](/iot/screen-file/), [CODESYS screens](/iot/codesys-screen-import/), [languages](/iot/languages/).
 - **Users, backups, and migrations that only add.** [Authentication](/iot/authentication/), [backups](/iot/backup/), [migrations](/iot/migrations/), and [the HTTP API](/iot/api/).
 
 [The write gate](/gateway/write-gate/) is the one page to read before a real plant sees any of this. It applies to every product.

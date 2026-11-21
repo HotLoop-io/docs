@@ -5,10 +5,6 @@ description: "Pages of cards built per role or per screen: gauges, trends, entit
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.22.1, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 A dashboard is a page of cards somebody built. Gauges, trends, lists of
 entities, a button that starts the pump, a floor plan with the temperatures
 sitting where the zones are. Build as many as the plant needs, give each to the
@@ -312,7 +308,7 @@ save means somebody saved first: the page offers to load theirs.
 **Export** (beside Edit) saves the dashboard on screen as a file, and **Import**
 (in the bar beside New dashboard, for whoever holds `dashboards.write`) loads one into this install, so a screen
 is a customer's data and moves between installs without anyone rebuilding it.
-See SCREEN-FILE.md.
+See [Screen files](/iot/screen-file/).
 
 ## Layout
 
