@@ -36,7 +36,7 @@ SQLite, c'est un seul écrivain sur un seul disque local : une seule réplique, 
 
 ### Sauvegarder la clé
 
-Le chart génère aussi `<release>-secret-key` (`hotloop-secret-key` avec les commandes ci-dessus). Il contient la clé qui chiffre chaque mot de passe d'appareil que HotLoop conserve. La clé n'est jamais dans la base ni dans une sauvegarde, elle fait donc partie de vos données : une sauvegarde ne restaure les identifiants que là où cette clé est montée. Le chart garde le Secret après un `helm uninstall`. Sauvegardez-la ailleurs qu'à côté de vos sauvegardes, car une clé posée à côté des sauvegardes qu'elle protège ne protège rien. [Installer la Gateway](/fr/gateway/install/#back-up-the-key-before-you-need-it) raconte toute l'histoire, et c'est la même clé.
+Le chart génère aussi `<release>-secret-key` (`hotloop-secret-key` avec les commandes ci-dessus). Il contient la clé qui chiffre chaque mot de passe d'appareil que HotLoop conserve. La clé n'est jamais dans la base ni dans une sauvegarde, elle fait donc partie de vos données : une sauvegarde ne restaure les identifiants que là où cette clé est montée. Le chart garde le Secret après un `helm uninstall`. Sauvegardez-la ailleurs qu'à côté de vos sauvegardes, car une clé posée à côté des sauvegardes qu'elle protège ne protège rien. [Installer la Gateway](/fr/gateway/install/#sauvegardez-la-clé-avant-den-avoir-besoin) raconte toute l'histoire, et c'est la même clé.
 
 ### Se connecter
 

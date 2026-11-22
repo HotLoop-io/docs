@@ -36,7 +36,7 @@ SQLite ist ein Schreiber auf einer lokalen Platte, also ein Replikat, und das Vo
 
 ### Sichern Sie den Schlüssel
 
-Das Chart erzeugt auch `<release>-secret-key` (`hotloop-secret-key` mit den Befehlen oben). Er enthält den Schlüssel, der jedes Passwort verschlüsselt, das HotLoop für ein Gerät speichert. Der Schlüssel ist nie in der Datenbank und nie in einer Sicherung, er gehört also zu Ihren Daten: Eine Sicherung stellt Zugangsdaten nur dort wieder her, wo dieser Schlüssel eingehängt ist. Das Chart behält das Secret über ein `helm uninstall` hinaus. Sichern Sie ihn woanders als neben Ihren Sicherungen, denn ein Schlüssel neben den Sicherungen, die er schützt, schützt nichts. [Das Gateway installieren](/de/gateway/install/#back-up-the-key-before-you-need-it) erzählt die ganze Geschichte, und es ist derselbe Schlüssel.
+Das Chart erzeugt auch `<release>-secret-key` (`hotloop-secret-key` mit den Befehlen oben). Er enthält den Schlüssel, der jedes Passwort verschlüsselt, das HotLoop für ein Gerät speichert. Der Schlüssel ist nie in der Datenbank und nie in einer Sicherung, er gehört also zu Ihren Daten: Eine Sicherung stellt Zugangsdaten nur dort wieder her, wo dieser Schlüssel eingehängt ist. Das Chart behält das Secret über ein `helm uninstall` hinaus. Sichern Sie ihn woanders als neben Ihren Sicherungen, denn ein Schlüssel neben den Sicherungen, die er schützt, schützt nichts. [Das Gateway installieren](/de/gateway/install/#sichern-sie-den-schlüssel-bevor-sie-ihn-brauchen) erzählt die ganze Geschichte, und es ist derselbe Schlüssel.
 
 ### Anmelden
 

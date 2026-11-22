@@ -1,0 +1,117 @@
+---
+title: "Installare HotLoop Gateway {{hotloop}} con Helm"
+description: "Installate HotLoop Gateway {{hotloop}} dal chart Helm su k3s o su qualsiasi Kubernetes, accedete e impostate l'essenziale prima che lo veda uno stabilimento."
+sidebar:
+  label: "Installazione"
+---
+
+HotLoop Gateway {{hotloop}} viene distribuito come immagine di container per amd64 e arm64, di circa 37 MB su amd64 e 35 MB su arm64, più un chart Helm. Entrambi si scaricano senza accesso. Mantiene i nomi con cui è uscito fino alla 4.17.0, immagine `ghcr.io/hotloop-io/hotloop` e chart `hotloop`, così chi lo usa non deve cambiare nulla. Avete già in funzione una versione precedente? Non installate sopra. [Aggiornamento](/it/gateway/upgrading/) descrive il percorso dalla 4.17.0, un semplice `helm upgrade`, e i percorsi dalla 4.16.0 e dalla 4.3.1, che procedono a tappe.
+
+Due modi per usarlo davvero: il chart Helm su qualsiasi Kubernetes, k3s compreso, e Podman Quadlet su una macchina fuori da un cluster, più sotto. Non c'è un percorso con Docker o Compose, di proposito, e un semplice `podman run` lanciato da una shell che muore con la sessione non è un'installazione.
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install hotloop hotloop/hotloop --version {{hotloop}} \
+  --namespace hotloop --create-namespace
+```
+
+Questo distribuisce il Gateway, più TimescaleDB 2.30.1 accanto su un volume da 20 Gi, con 90 giorni di storico. Il database è un'impostazione, `database.type`: `timescaledb` è il valore predefinito, `postgresql` esegue PostgreSQL 17 semplice, e `sqlite` esegue il Gateway su un file senza alcun pod di database, con una sola replica e archiviazione locale, mai NFS. Passare dall'uno all'altro in seguito è un backup e un ripristino, perché il nuovo database parte vuoto. Una macchina che contiene già dati PostgreSQL 16 passa alla 17 al prossimo aggiornamento senza che facciate nulla, quindi [leggete come va](/it/gateway/upgrading/#upgrading-from-41810) prima di toccare uno stabilimento in funzione. Il chart genera la password del database, il token MCP e una password di amministratore nel Secret della release, e li riusa a ogni aggiornamento, così un `helm upgrade` non cambia mai una password alle vostre spalle né vi disconnette dal vostro stabilimento.
+
+## Fate il backup della chiave prima di averne bisogno
+
+Il chart genera anche un secondo Secret, `<release>-secret-key` (`hotloop-secret-key` con il comando qui sopra). Contiene la chiave che cifra ogni password che HotLoop conserva per un dispositivo: la `password` di un dispositivo OPC UA, MQTT, HTTP, MTConnect o UniFi, i valori degli header HTTP e MTConnect come le chiavi API, la password di ogni altro broker MQTT che la discovery ascolta e la password di ogni destinazione dello storico. La chiave non è mai nel database né in un backup, quindi un dump che esce dalla porta su un portatile contiene testo cifrato, non le chiavi dello stabilimento.
+
+Il chart conserva quel Secret tra un aggiornamento e l'altro, e anche dopo un `helm uninstall`, perché un database rimasto sul suo volume è inutile per le sue credenziali senza di essa. Questo significa anche che **la chiave fa parte dei vostri dati.** Avviate il Gateway senza di essa e ogni dispositivo con una password sigillata resta giù, a riprovare, con un errore che nomina la chiave di cui ha bisogno. Un backup si ripristina solo dove quella chiave è montata, e `--restore-from` lo rifiuta per nome ovunque altrove.
+
+Quindi fate il backup del Secret come fate per gli altri segreti del cluster, e conservatelo altrove rispetto ai vostri backup. Una chiave accanto ai backup che protegge non protegge nulla.
+
+**Renderizzate il chart invece di installarlo? Portate una chiave vostra.** La chiave è generata da un `lookup` che solo un vero `helm install` o `helm upgrade` può fare. Tutto ciò che esegue `helm template` e applica il risultato ottiene una chiave nuova a ogni rendering, e la sincronizzazione successiva blocca fuori ogni password sigillata. Create una chiave con `hotloop gen-secret-key`, mettetela in un Secret che gestite voi sotto la chiave `secret.key` e nominate quel Secret in `secretKey.existingSecret`. Helm, Fleet e l'App Store di EmberNet installano tutti davvero e non ne hanno bisogno.
+
+Una credenziale scritta in un URL (`mqtt://user:pass@host`) o in testo libero resta in chiaro. Mettetela in `password`. [Credenziali dei dispositivi](/it/iot/protocols/#device-credentials) ha l'elenco completo di ciò che viene cifrato.
+
+## Accedere
+
+L'utente è `admin`. Le note di installazione stampano il comando che rilegge la password:
+
+```bash
+kubectl -n hotloop get secret hotloop \
+  -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl -n hotloop port-forward svc/hotloop 8080:8080
+```
+
+Aprite `http://localhost:8080`. Quell'account admin è un account di avvio, non un interruttore di reset. Una volta creato, cambiare `auth.admin.password` e aggiornare non fa nulla, così una password impostata nell'interfaccia non viene mai sovrascritta dal deploy successivo.
+
+Ora aggiungete un dispositivo, scoprite i suoi tag e provate a scrivere su uno. Non potete. È voluto. Ogni tag parte di sola lettura e si arma uno alla volta, e `safety.allowWrites` resta disattivato finché non decidete che questo pod può muovere macchinari. Nessuno dovrebbe chiudere il primo giorno con HotLoop con una pressa che fa qualcosa che nessuno ha chiesto.
+
+## Salute della macchina e mount dell'host
+
+Il server OPC UA del chart serve anche la salute di questa macchina (CPU, memoria, disco e jitter in tempo reale quando un agente scrive il file) per la dashboard EmberNet, e crea per la dashboard un accesso che può leggere tag e valori e nient'altro, con la password conservata nel Secret `<release>-opcua-dashboard` tra un aggiornamento e l'altro. I mount sono attivi per impostazione predefinita: il chart monta la radice dell'host su `/host` e il suo `/proc` su `/host/proc`, entrambi in sola lettura, e non aggiunge privilegi. Un cluster che applica il profilo Pod Security restricted rifiuta un hostPath, quindi lì si imposta `opcuaServer.dashboard.boxHealth.enabled: false` per non avere né dispositivo né mount, oppure `opcuaServer.dashboard.boxHealth.hostMount: false` per tenere il dispositivo con disco e CPU segnati come non validi e con l'indicazione di cosa montare. Il drop-in Quadlet è `deploy/quadlet/opcua-dashboard.conf`.
+
+## Cosa impostare prima che uno stabilimento vero lo veda
+
+Mettete questi valori in un file di valori e installate con `-f`. Non affidatevi a `--set` per nulla che vi servirà di nuovo al prossimo aggiornamento, perché non lo ricorderete voi e non lo ricorderà l'aggiornamento.
+
+| Valore | Predefinito | Perché modificarlo |
+|---|---|---|
+| `plant.name`, `plant.siteId` | `HotLoop`, vuoto | Come si chiama l'impianto sulle schermate, nelle pagine e per gli altri siti. |
+| `global.timezone` | `America/New_York` | Pianificazioni, report e cambi turno seguono questo fuso. Deve essere un nome di fuso reale (`America/Chicago`, non `CST`), perché un fuso che non si carica ferma l'avvio invece di girare in silenzio su UTC. |
+| `publicUrl` | vuoto | L'indirizzo con cui un telefono sul Wi-Fi dell'impianto raggiunge HotLoop. Senza, le notifiche non hanno un link di ritorno e ntfy non riceve il pulsante Riconosci. |
+| `safety.allowWrites` | `false` | L'interruttore generale. Disattivato, nulla scrive su una macchina, da nessuna parte. Attivatelo quando l'installazione è stata rivista. |
+| `safety.allowMcpWrites` | `true` | Permette agli agenti di scrivere attraverso la stessa porta, attivo dalla 4.19.4. Segue l'interruttore generale: con `safety.allowWrites` disattivato, nulla scrive, agenti compresi. Impostatelo su `false` e gli agenti possono ancora leggere tutto lo stabilimento ma non scrivono mai. I chart impostano sempre un token MCP, quindi `/mcp` non è mai aperto. |
+| `database.postgresql.persistence.size` | `20Gi` | Qui vive il vostro storico. Dimensionatelo in base al numero di tag e a `historian.retentionDays` (90). |
+| `logbook.retentionDays` | `90` | Giorni di cambi di stato delle entità che il [registro](/it/iot/logbook/) conserva. `0` conserva tutto finché il volume si riempie, e il Gateway ve lo segnala all'avvio. |
+| `secretKey.existingSecret` | vuoto | Un Secret che gestite voi con la chiave delle password dei dispositivi. Lasciatelo vuoto e il chart ne crea uno. Impostatelo se renderizzate il chart con `helm template`. |
+| `database.type` | `timescaledb` | Su quale database gira l'applicazione: `timescaledb`, `postgresql` o `sqlite`. Un'impostazione, non un'altra immagine. |
+| `plant.latitude`, `plant.longitude` | vuoto | Dove si trova lo stabilimento, in gradi decimali, così [il sole](/it/iot/sun/) viene calcolato sulla macchina. Entrambi o nessuno. |
+| `edgePublish.queueMaxBytes` | `67108864` | Il limite della coda di interruzione quando pubblicate a monte via Sparkplug, 64 MiB. Oltre, le letture più vecchie vengono scartate e contate. `0` è illimitato, e un'interruzione abbastanza lunga riempie allora il volume. |
+| `database.postgresql.enabled` | `true` | Impostatelo su `false` e compilate `database.external` per usare il vostro PostgreSQL. Con l'estensione TimescaleDB avete una hypertable, senza un partizionamento nativo. |
+| `opcuaClient.persistence.enabled` | `false` | Attivatelo prima di aggiungere un dispositivo OPC UA protetto. Senza, i certificati del client non hanno dove sopravvivere a un riavvio, e il dispositivo rifiuta di connettersi invece di farvi riapprovare la fiducia su entrambi i lati a ogni nuovo deploy. |
+| `ingress` | disattivato | Solo se lo volete raggiungibile da fuori del cluster tramite un nome. |
+
+Le scritture partono disattivate, ed è proprio il punto. Anche con `safety.allowWrites` attivo, un tag è di sola lettura finché non lo armate da solo, e ogni valore viene controllato rispetto all'intervallo del tag, rifiutato e mai limitato. [Il varco di scrittura](/it/gateway/write-gate/) ha ogni controllo, in ordine.
+
+## Podman Quadlet
+
+Per una macchina che non è in un cluster. Quadlet trasforma i container in veri servizi systemd: partono all'avvio senza che nessuno sia collegato, ripartono quando muoiono e scrivono nel journal. Serve **Podman 5.0 o successivo**. Raspberry Pi OS Bookworm include la 4.3, che non ha Quadlet, quindi un Pi vuole Trixie o successivo. Mettete il volume del database su un SSD USB e non sulla scheda SD.
+
+Le unit si trovano nella directory `gateway/` del repository HotLoop, sotto `deploy/quadlet/`. [Podman Quadlet](/it/install/quadlet/) spiega ogni file.
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+Poi aprite `http://<this box>:8080` e accedete come `admin`. I tre secret sono la password del database, la chiave delle password dei dispositivi (conservatene una copia altrove rispetto a questa macchina, per lo stesso motivo di prima) e l'hash bcrypt della password dell'admin, mai la password stessa. La unit conserva 90 giorni di storico e segue `:stable`.
+
+PostgreSQL semplice invece di TimescaleDB è la stessa unit con `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` aggiunto a `hotloop.container`. Un file SQLite sono i file in `gateway/sqlite/` e niente dalla directory sopra, perché condividono i nomi delle unit: `hotloop.container` e `hotloop-data.volume`, e due secret, `hotloop-secret-key` e `hotloop-admin-password-hash`.
+
+Attivate il timer di Podman una volta per macchina e il Gateway si aggiorna da solo:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+Il container del database non segue `:stable`, di proposito, e un aggiornamento che non riesce ad avviarsi viene annullato. [L'aggiornamento automatico di :stable](/it/install/auto-update/) dice cosa fa un aggiornamento, cosa un rollback non può annullare e come sospendere gli aggiornamenti finché non lo dite voi. Queste sono le unit che sono state eseguite davvero: senza root sotto systemd, compreso un aggiornamento che migra, poi non riesce ad avviarsi e viene annullato. Da allora è stato eseguito anche su hardware reale (2026-11-17).
+
+## Poi
+
+Aggiungete un dispositivo, scoprite i suoi tag e guardateli arrivare. [Protocolli](/it/iot/protocols/) dice fin dove è stato provato ogni driver, compresi i due eseguiti su hardware reale il 2026-11-17, S7comm ed EtherNet/IP. Se lo usate sotto EmberCORE, EmberCORE lo trova da solo e lo inoltra all'indirizzo interno al cluster, senza ingress.
+
+## Licenza
+
+HotLoop Gateway è sotto la HotLoop Source License Agreement 1.0. È gratuito da usare e con sorgenti disponibili, non open source secondo l'OSI. L'uso domestico e di laboratorio è gratuito, così come quello di scuole, organizzazioni no profit ed enti pubblici per le proprie attività. Vedere [la pagina della licenza](/it/license/) e [Usare HotLoop in un'azienda](/it/business/).

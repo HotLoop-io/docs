@@ -36,7 +36,7 @@ SQLite er én skriver på én lokal disk, så det er én replika, og volumet leg
 
 ### Ta sikkerhetskopi av nøkkelen
 
-Chartet genererer også `<release>-secret-key` (`hotloop-secret-key` med kommandoene over). Den holder nøkkelen som krypterer hvert passord HotLoop lagrer for en enhet. Nøkkelen er aldri i databasen og aldri i en sikkerhetskopi, så den er en del av dataene dine: en sikkerhetskopi gjenoppretter legitimasjon bare der den nøkkelen er montert. Chartet beholder Secret gjennom en `helm uninstall`. Ta vare på den et annet sted enn ved siden av sikkerhetskopiene dine, for en nøkkel som ligger ved siden av sikkerhetskopiene den beskytter, beskytter ingenting. [Installere Gateway](/nb/gateway/install/#back-up-the-key-before-you-need-it) har hele historien, og det er den samme nøkkelen.
+Chartet genererer også `<release>-secret-key` (`hotloop-secret-key` med kommandoene over). Den holder nøkkelen som krypterer hvert passord HotLoop lagrer for en enhet. Nøkkelen er aldri i databasen og aldri i en sikkerhetskopi, så den er en del av dataene dine: en sikkerhetskopi gjenoppretter legitimasjon bare der den nøkkelen er montert. Chartet beholder Secret gjennom en `helm uninstall`. Ta vare på den et annet sted enn ved siden av sikkerhetskopiene dine, for en nøkkel som ligger ved siden av sikkerhetskopiene den beskytter, beskytter ingenting. [Installere Gateway](/nb/gateway/install/#ta-sikkerhetskopi-av-nøkkelen-før-du-trenger-den) har hele historien, og det er den samme nøkkelen.
 
 ### Logge inn
 
