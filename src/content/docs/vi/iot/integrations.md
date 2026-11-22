@@ -28,7 +28,7 @@ Sẽ có thêm tích hợp trên khung này khi chúng được chứng minh v�
 
 ## Chiều ngược lại
 
-Một tích hợp đưa thiết bị vào. Để gửi các giá trị đọc và sự kiện của HotLoop ra một broker Kafka, xem [luồng sự kiện Kafka API](/vi/iot/historian-targets/#kafka-api-event-stream) trong các đích của historian: Apache Kafka và Redpanda, TLS và SASL, giá trị đọc trên một topic và nhật ký hệ thống trên topic khác. Để gửi chúng dưới dạng OPC UA PubSub (UADP qua UDP), hoặc để đọc dữ liệu của một publisher, xem [OPC UA PubSub](/vi/iot/protocols/#opc-ua-pubsub-uadp): đọc một publisher là một thiết bị với giao thức `opcua-pubsub`, không có quy trình thiết lập, vì một datagram mang vị trí trường chứ không mang tên.
+Một tích hợp đưa thiết bị vào. Để gửi các giá trị đọc và sự kiện của HotLoop ra một broker Kafka, xem [luồng sự kiện Kafka API](/vi/iot/historian-targets/#kafka-api-luồng-sự-kiện) trong các đích của historian: Apache Kafka và Redpanda, TLS và SASL, giá trị đọc trên một topic và nhật ký hệ thống trên topic khác. Để gửi chúng dưới dạng OPC UA PubSub (UADP qua UDP), hoặc để đọc dữ liệu của một publisher, xem [OPC UA PubSub](/vi/iot/protocols/#opc-ua-pubsub-uadp): đọc một publisher là một thiết bị với giao thức `opcua-pubsub`, không có quy trình thiết lập, vì một datagram mang vị trí trường chứ không mang tên.
 
 ## SNMP
 

@@ -28,7 +28,7 @@ Weitere kommen auf diesem Gerüst hinzu, sobald sie sich gegen einen echten Serv
 
 ## In die andere Richtung
 
-Eine Integration holt ein Gerät herein. Um die Messwerte und Ereignisse von HotLoop an einen Kafka-Broker zu senden, siehe [den Kafka-API-Ereignisstrom](/de/iot/historian-targets/#kafka-api-event-stream) unter den Historian-Zielen: Apache Kafka und Redpanda, TLS und SASL, die Messwerte auf einem Topic und das Systemlog auf einem anderen. Um sie als OPC UA PubSub (UADP über UDP) zu senden oder die eines Publishers zu lesen, siehe [OPC UA PubSub](/de/iot/protocols/#opc-ua-pubsub-uadp): Eines zu lesen heißt, ein Gerät mit dem Protokoll `opcua-pubsub` anzulegen, ohne Einrichtungsablauf, denn ein Datagramm trägt Feldpositionen und keine Namen.
+Eine Integration holt ein Gerät herein. Um die Messwerte und Ereignisse von HotLoop an einen Kafka-Broker zu senden, siehe [den Kafka-API-Ereignisstrom](/de/iot/historian-targets/#kafka-api-ereignisstrom) unter den Historian-Zielen: Apache Kafka und Redpanda, TLS und SASL, die Messwerte auf einem Topic und das Systemlog auf einem anderen. Um sie als OPC UA PubSub (UADP über UDP) zu senden oder die eines Publishers zu lesen, siehe [OPC UA PubSub](/de/iot/protocols/#opc-ua-pubsub-uadp): Eines zu lesen heißt, ein Gerät mit dem Protokoll `opcua-pubsub` anzulegen, ohne Einrichtungsablauf, denn ein Datagramm trägt Feldpositionen und keine Namen.
 
 ## SNMP
 

@@ -28,7 +28,7 @@ description: "وجّه HotLoop إلى جهاز تعرف عنوانه، وانظ�
 
 ## في الاتجاه المعاكس
 
-التكامل يجلب جهازًا إلى الداخل. لإرسال قراءات HotLoop وأحداثه إلى وسيط Kafka، انظر [تدفق أحداث Kafka API](/ar/iot/historian-targets/#kafka-api-event-stream) ضمن وجهات أرشيف البيانات: Apache Kafka وRedpanda، وTLS وSASL، القراءات على topic والسجل النظامي على آخر. ولإرسالها بصيغة OPC UA PubSub (‏UADP عبر UDP)، أو لقراءة ما ينشره ناشر، انظر [OPC UA PubSub](/ar/iot/protocols/#opc-ua-pubsub-uadp): قراءة واحد منها هي جهاز بالبروتوكول `opcua-pubsub`، دون مسار إعداد، لأن حزمة البيانات تحمل مواضع الحقول لا الأسماء.
+التكامل يجلب جهازًا إلى الداخل. لإرسال قراءات HotLoop وأحداثه إلى وسيط Kafka، انظر [تدفق أحداث Kafka API](/ar/iot/historian-targets/#واجهة-kafka-api-تدفق-الأحداث) ضمن وجهات أرشيف البيانات: Apache Kafka وRedpanda، وTLS وSASL، القراءات على topic والسجل النظامي على آخر. ولإرسالها بصيغة OPC UA PubSub (‏UADP عبر UDP)، أو لقراءة ما ينشره ناشر، انظر [OPC UA PubSub](/ar/iot/protocols/#opc-ua-pubsub-uadp): قراءة واحد منها هي جهاز بالبروتوكول `opcua-pubsub`، دون مسار إعداد، لأن حزمة البيانات تحمل مواضع الحقول لا الأسماء.
 
 ## SNMP
 

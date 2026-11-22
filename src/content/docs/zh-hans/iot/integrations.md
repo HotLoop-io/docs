@@ -28,7 +28,7 @@ description: "把 HotLoop 指向您知道地址的设备，查看实际内容，
 
 ## 反方向
 
-集成是把设备引进来。要把 HotLoop 的读数和事件发送出去给 Kafka broker，请参见历史库目标下的 [Kafka API 事件流](/zh-hans/iot/historian-targets/#kafka-api-event-stream)：Apache Kafka 和 Redpanda，TLS 和 SASL，读数放在一个 topic，系统日志放在另一个。要以 OPC UA PubSub（基于 UDP 的 UADP）发送，或者读取某个发布者的数据，请参见 [OPC UA PubSub](/zh-hans/iot/protocols/#opc-ua-pubsub-uadp)：读取一个发布者就是创建一个协议为 `opcua-pubsub` 的设备，没有设置流程，因为数据报携带的是字段位置，不是名称。
+集成是把设备引进来。要把 HotLoop 的读数和事件发送出去给 Kafka broker，请参见历史库目标下的 [Kafka API 事件流](/zh-hans/iot/historian-targets/#kafka-api事件流)：Apache Kafka 和 Redpanda，TLS 和 SASL，读数放在一个 topic，系统日志放在另一个。要以 OPC UA PubSub（基于 UDP 的 UADP）发送，或者读取某个发布者的数据，请参见 [OPC UA PubSub](/zh-hans/iot/protocols/#opc-ua-pubsub-uadp)：读取一个发布者就是创建一个协议为 `opcua-pubsub` 的设备，没有设置流程，因为数据报携带的是字段位置，不是名称。
 
 ## SNMP
 

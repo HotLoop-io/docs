@@ -28,7 +28,7 @@ Flere legges til på dette rammeverket etter hvert som de kan bevises mot en ekt
 
 ## Den andre veien
 
-En integrasjon henter en enhet inn. For å sende HotLoops målinger og hendelser ut til en Kafka-broker, se [Kafka API-hendelsesstrømmen](/nb/iot/historian-targets/#kafka-api-event-stream) under historian-mål: Apache Kafka og Redpanda, TLS og SASL, målinger på ett topic og systemloggen på et annet. For å sende dem som OPC UA PubSub (UADP over UDP), eller for å lese en publishers, se [OPC UA PubSub](/nb/iot/protocols/#opc-ua-pubsub-uadp): å lese en er en enhet med protokollen `opcua-pubsub`, uten oppsettsflyt, siden en datagram bærer feltposisjoner og ikke navn.
+En integrasjon henter en enhet inn. For å sende HotLoops målinger og hendelser ut til en Kafka-broker, se [Kafka API-hendelsesstrømmen](/nb/iot/historian-targets/#kafka-api-hendelsesstrøm) under historian-mål: Apache Kafka og Redpanda, TLS og SASL, målinger på ett topic og systemloggen på et annet. For å sende dem som OPC UA PubSub (UADP over UDP), eller for å lese en publishers, se [OPC UA PubSub](/nb/iot/protocols/#opc-ua-pubsub-uadp): å lese en er en enhet med protokollen `opcua-pubsub`, uten oppsettsflyt, siden en datagram bærer feltposisjoner og ikke navn.
 
 ## SNMP
 

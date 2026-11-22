@@ -28,7 +28,7 @@ description: "Στρέψτε το HotLoop σε συσκευή με γνωστή 
 
 ## Προς την άλλη κατεύθυνση
 
-Μια ενσωμάτωση φέρνει μια συσκευή μέσα. Για να στείλετε τις μετρήσεις και τα συμβάντα του HotLoop προς έναν broker Kafka, δείτε [τη ροή συμβάντων του Kafka API](/el/iot/historian-targets/#kafka-api-event-stream) στους προορισμούς του historian: Apache Kafka και Redpanda, TLS και SASL, οι μετρήσεις σε ένα topic και το αρχείο καταγραφής συστήματος σε άλλο. Για να τα στείλετε ως OPC UA PubSub (UADP πάνω από UDP), ή για να διαβάσετε αυτά ενός publisher, δείτε [OPC UA PubSub](/el/iot/protocols/#opc-ua-pubsub-uadp): η ανάγνωση ενός είναι μια συσκευή με πρωτόκολλο `opcua-pubsub`, χωρίς ροή ρύθμισης, αφού ένα datagram φέρει θέσεις πεδίων και όχι ονόματα.
+Μια ενσωμάτωση φέρνει μια συσκευή μέσα. Για να στείλετε τις μετρήσεις και τα συμβάντα του HotLoop προς έναν broker Kafka, δείτε [τη ροή συμβάντων του Kafka API](/el/iot/historian-targets/#kafka-api-ροή-συμβάντων) στους προορισμούς του historian: Apache Kafka και Redpanda, TLS και SASL, οι μετρήσεις σε ένα topic και το αρχείο καταγραφής συστήματος σε άλλο. Για να τα στείλετε ως OPC UA PubSub (UADP πάνω από UDP), ή για να διαβάσετε αυτά ενός publisher, δείτε [OPC UA PubSub](/el/iot/protocols/#opc-ua-pubsub-uadp): η ανάγνωση ενός είναι μια συσκευή με πρωτόκολλο `opcua-pubsub`, χωρίς ροή ρύθμισης, αφού ένα datagram φέρει θέσεις πεδίων και όχι ονόματα.
 
 ## SNMP
 
