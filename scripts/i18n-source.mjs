@@ -99,7 +99,11 @@ export function headingSlugs(text) {
   const s = new GithubSlugger();
   const out = [];
   let fence = false;
-  for (const l of text.replace(/\r\n/g, '\n').split('\n')) {
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  let i = 0;
+  if (lines[0] === '---') { i = 1; while (i < lines.length && lines[i] !== '---') i++; i++; } // a front matter comment line is not a heading
+  for (; i < lines.length; i++) {
+    const l = lines[i];
     if (/^\s*(```|~~~)/.test(l)) { fence = !fence; continue; }
     if (fence) continue;
     const m = /^(#{1,6}) +(.*?)\s*#*$/.exec(l);
