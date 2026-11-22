@@ -37,7 +37,6 @@ Tout se trouve dans l'espace de noms `HLTX`. Le bloc est `HLTX.FB_HLTX_Publisher
 | `uiMessageSize` | UINT | octets du dernier message |
 | `diLastSocketResult` | UDINT | le dernier code d'erreur du runtime pour un appel de socket, 0 signifie correct |
 | `diLastClockResult` | UDINT | le dernier résultat de lecture de l'horloge de l'automate pour un horodatage, 0 signifie correct. Quand il n'est pas 0, le message part sans horodatage |
-| `diLastClockResult` | UDINT | le dernier résultat de lecture de l'horloge de l'automate pour un horodatage, 0 signifie correct. Quand il n'est pas 0, le message part sans horodatage |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microsecondes passées dans le dernier appel du bloc, et la plus longue depuis l'activation ou `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | le plus long temps passé à construire un message, et dans l'appel d'envoi lui-même, depuis l'activation ou `Clear()` |
 

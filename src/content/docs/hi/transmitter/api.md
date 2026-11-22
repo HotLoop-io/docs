@@ -37,7 +37,6 @@ description: "HotLoop Transmitter पब्लिशर फ़ंक्शन �
 | `uiMessageSize` | UINT | आख़िरी संदेश के बाइट |
 | `diLastSocketResult` | UDINT | सॉकेट कॉल से आया आख़िरी रनटाइम त्रुटि कोड, 0 ठीक है |
 | `diLastClockResult` | UDINT | टाइमस्टैम्प के लिए PLC घड़ी पढ़ने का आख़िरी नतीजा, 0 ठीक है। 0 न हो तो संदेश बिना मुहर के जाता है |
-| `diLastClockResult` | UDINT | टाइमस्टैम्प के लिए PLC घड़ी पढ़ने का आख़िरी नतीजा, 0 ठीक है। 0 न हो तो संदेश बिना मुहर के जाता है |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | ब्लॉक की आख़िरी कॉल में लगे माइक्रोसेकंड, और सक्षम करने या `Clear()` के बाद से सबसे लंबा |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | सक्षम करने या `Clear()` के बाद से, एक संदेश बनाने में और भेजने की कॉल में ही लगा सबसे लंबा समय |
 

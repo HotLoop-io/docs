@@ -37,7 +37,6 @@ Alles liegt im Namensraum `HLTX`. Der Baustein ist `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | Bytes der letzten Nachricht |
 | `diLastSocketResult` | UDINT | der letzte Runtime-Fehlercode eines Socket-Aufrufs, 0 ist in Ordnung |
 | `diLastClockResult` | UDINT | das letzte Ergebnis beim Lesen der SPS-Uhr für einen Zeitstempel, 0 ist in Ordnung. Ist es nicht 0, geht die Nachricht ohne Zeitstempel hinaus |
-| `diLastClockResult` | UDINT | das letzte Ergebnis beim Lesen der SPS-Uhr für einen Zeitstempel, 0 ist in Ordnung. Ist es nicht 0, geht die Nachricht ohne Zeitstempel hinaus |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | Mikrosekunden im letzten Aufruf des Bausteins und der längste seit Aktivierung oder `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | die längste Zeit für den Aufbau einer Nachricht und im Sendeaufruf selbst, seit Aktivierung oder `Clear()` |
 

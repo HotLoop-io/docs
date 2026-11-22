@@ -37,7 +37,6 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | bytes in the last message |
 | `diLastSocketResult` | UDINT | the last runtime error code from a socket call, 0 is fine |
 | `diLastClockResult` | UDINT | the last result of reading the PLC clock for a timestamp, 0 is fine. When it is not 0 the message goes out unstamped |
-| `diLastClockResult` | UDINT | the last result of reading the PLC clock for a timestamp, 0 is fine. When it is not 0 the message goes out unstamped |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microseconds spent in the last call of the block, and the longest since enable or `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | the longest time spent building one message, and in the send call itself, since enable or `Clear()` |
 

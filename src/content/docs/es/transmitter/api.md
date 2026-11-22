@@ -37,7 +37,6 @@ Todo está en el espacio de nombres `HLTX`. El bloque es `HLTX.FB_HLTX_Publisher
 | `uiMessageSize` | UINT | bytes del último mensaje |
 | `diLastSocketResult` | UDINT | el último código de error del runtime en una llamada de socket, 0 es correcto |
 | `diLastClockResult` | UDINT | el último resultado de leer el reloj del PLC para una marca de tiempo, 0 es correcto. Cuando no es 0 el mensaje sale sin marca |
-| `diLastClockResult` | UDINT | el último resultado de leer el reloj del PLC para una marca de tiempo, 0 es correcto. Cuando no es 0 el mensaje sale sin marca |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microsegundos empleados en la última llamada del bloque, y el máximo desde que se habilitó o desde `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | el mayor tiempo empleado en construir un mensaje, y en la propia llamada de envío, desde que se habilitó o desde `Clear()` |
 
