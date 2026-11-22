@@ -1,0 +1,68 @@
+---
+title: "El perfil"
+description: "La única entrada de HotLoop for CODESYS: un JSON con revisión, el dispositivo y sus variables, las alarmas y una pantalla, y cómo lo aplica el aprovisionador."
+sidebar:
+  label: "El perfil"
+---
+
+Un perfil es un archivo JSON en un Secret en el namespace de la instalación, bajo la clave `profile.json`. No está en el chart ni en la imagen del aprovisionador, así que ambos son genéricos y públicos, y nada en ninguno nombra las variables de nadie. Lo aporta quien instala la app. En EmberNet el Store lo escribe como `<release>-profile`.
+
+El aprovisionador lo vuelve a leer en cada pasada, así que un perfil más nuevo llega a una instalación en marcha sin reiniciar.
+
+## La forma
+
+| Clave | Qué contiene |
+|---|---|
+| `revision` | Un número entero desde 1. La pantalla y las alarmas solo se reemplazan cuando es mayor que la revisión que las creó. |
+| `device` | `id`, `name`, `options` (las opciones del conector, como `browseRoot`, `arrayElements` y `browseMaxNodes`) y `points`, los nombres de variable que HotLoop conserva del PLC. |
+| `alarms` | Definiciones de alarma de HotLoop, cada una con un `id`. |
+| `dashboard` | Una pantalla de HotLoop, con un `id`. Un [panel](/es/iot/dashboards/) es una lista de tarjetas. |
+
+Un perfil crea una pantalla. Crea un dispositivo a partir de `device`, o varios a partir de `devices`, que se describe a continuación.
+
+## Una lista de dispositivos
+
+Un perfil puede llevar `devices` junto a `device` o en su lugar. Cada entrada es el cuerpo del `POST /api/devices` de HotLoop (`id`, `name`, `protocol`, `address`, `enabled`, `pollIntervalMs`, `timeoutMs` y `config`, el bloque propio del protocolo) con sus `tags`, los descriptores que HotLoop importa para el dispositivo: `name`, `address`, `dataType` y, opcionalmente, `unit`, `description` y `deviceClass`. Eso cubre un oyente OPC UA PubSub (UADP) con sus `dataSets` RawData, un cliente OPC UA y varios dispositivos en un solo perfil. En cada pasada:
+
+- se crea un dispositivo que HotLoop no tiene, y uno que ya tiene se deja como está, de modo que la edición de una persona permanece hasta que la `revision` del perfil sea mayor que la que creó el dispositivo;
+- se importa cada tag del perfil que le falte al dispositivo, de solo lectura;
+- nada de esto espera al servidor OPC UA del nodo, así que un oyente solo escucha, y un runtime caído o reiniciándose no retiene nada más (el `device` único sigue leyendo el runtime, y una pasada con él caído lo dice y vuelve a intentarlo);
+- sin `devices` el perfil funciona exactamente como antes, y con ambos presentes se aplican los dos.
+
+Lo que significa para usted: un oyente PubSub, como uno alimentado por [HotLoop Transmitter](/es/transmitter/overview/), vuelve configurado por sí solo sin ningún PLC del que leer.
+
+## Un ejemplo
+
+Este es el perfil que hay detrás de las capturas de la [vista general](/es/codesys/overview/), con el programa de demostración de HotLoop. `GVL_Demo` es la lista de variables del programa de demostración, y las etiquetas son inventadas.
+
+```json
+{
+  "revision": 2,
+  "device": {
+    "id": "line-2",
+    "name": "Line 2 PLC",
+    "options": {"browseRoot": "Application.GVL_Demo", "arrayElements": 4, "browseMaxNodes": 500},
+    "points": ["GVL_Demo.bRun", "GVL_Demo.rTemp", "GVL_Demo.udiCycles", "GVL_Demo.nEcho", "GVL_Demo.rEcho", "GVL_Demo.rReadOnly"]
+  },
+  "alarms": [
+    {"id": "line-2-mixer-hot", "name": "Mixer temperature high", "tagName": "GVL_Demo.rTemp", "condition": "hi", "limit": 20, "deadband": 0.5, "priority": 2, "message": "{device}/{tag} at {value}, limit {limit}"}
+  ],
+  "dashboard": {
+    "id": "line-2-screen", "name": "Line 2", "description": "The Line 2 screen.", "kind": "cards", "roles": [], "homeFor": [], "screens": [],
+    "cards": [
+      {"id": "t", "type": "value", "title": "Mixer temperature", "w": 3, "h": 2, "config": {"tag": "line-2/GVL_Demo.rTemp", "decimals": 1}},
+      {"id": "tr", "type": "trend", "title": "Mixer temperature, last 15 minutes", "w": 6, "h": 3, "config": {"tags": ["line-2/GVL_Demo.rTemp"], "minutes": 15}},
+      {"id": "al", "type": "alarms", "title": "Line 2 alarms", "w": 6, "h": 3, "config": {"outstanding": true, "limit": 8}}
+    ]
+  }
+}
+```
+
+El `tag` de una tarjeta es el id del dispositivo, una barra y el nombre del punto. Los tipos de tarjeta, las condiciones de alarma y el resto de las claves de una pantalla son los mismos que en los [paneles](/es/iot/dashboards/) de HotLoop y [la API HTTP](/es/iot/api/).
+
+## Qué hace el aprovisionador con él
+
+- **Crea el dispositivo** si no hay uno, y añade cualquier variable de `points` que el PLC tenga y el dispositivo no.
+- **Nunca escribe en el PLC.** Cada tag que crea es de solo lectura, y un perfil no tiene forma de marcar uno como escribible.
+- **Crea las alarmas y la pantalla** cuando faltan, y las reemplaza solo cuando `revision` es mayor que la que las creó. Un cambio que una persona hizo en la pantalla en HotLoop sobrevive, por tanto, hasta que se publica a propósito un perfil más nuevo.
+- **Sigue mirando.** Cada cinco minutos, y antes tras una pasada que no pudo terminar, porque el runtime o HotLoop todavía no respondían.

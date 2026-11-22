@@ -1,0 +1,67 @@
+---
+title: "Installere HotLoop for CODESYS"
+description: "Installer HotLoop for CODESYS fra EmberCORE App Store eller med Helm: hva noden trenger, profil-Secret, hva det gjør selv og hvordan du sjekker det."
+sidebar:
+  label: "Installasjon"
+---
+
+HotLoop for CODESYS er et Helm-chart, `hotloop-codesys`, som installerer HotLoop Edge og en klargjører på samme node som en CODESYS-kjøretid. Chartet er publisert på `{{codesysChartRepo}}`, med {{codesys}} som den nyeste, og klargjørerens image hentes uten innlogging. På EmberNet er det en App Store-app. Uten EmberNet er det Helm på k3s.
+
+## Hva noden trenger først
+
+- **En CODESYS-kjøretid på samme node som publiserer OPC UA-serveren sin på port 4840.** Klargjøreren finner nodens egen adresse fra Kubernetes og leser `<node address>:4840`. Kjøretidens eget chart publiserer den porten på verten.
+- **En Symbol Configuration i PLS-programmet** med *Support OPC UA features* slått på, som lister variablene du vil se, eller `{attribute 'symbol' := 'read'}` på dem i deklarasjonen. En PLS uten Symbol Configuration svarer på oppsettet med en melding som sier at du må legge til en. Dette er den eneste endringen i PLS-prosjektet.
+- **HotLoop {{codesysNeeds}}**, som chartet pakker inn. CODESYS-koblingen kom med HotLoop 4.19.4. Chartet avhenger av `hotloop-edge`-chartet på linjen `~{{codesysNeeds}}`.
+- **En profil.** Én Secret med én nøkkel. [Profilsiden](/nb/codesys/profile/) har formen.
+
+## Fra EmberCORE App Store
+
+Chartet er merket for ansatte, så Store lister det for EmberNet-ansatte, som installerer det på kundens tenant. Det er ikke en knapp en tenant trykker selv, så spør den som tar seg av tenanten din. Store skriver profilen inn i tenantens namespace som `<release>-profile`, sender den valgte noden og tenantens etiketter inn i chartet, og sender dashbordets offentlige nøkkel for innlogging. Etter det er det ingenting å gjøre.
+
+## Med Helm
+
+```bash
+kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
+helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo update
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+```
+
+Gi Secret navnet `<release>-profile`, eller endre det chartet leter etter med `profile.existingSecret` (Secret) og `profile.key` (nøkkelen, `profile.json` som standard). For å feste installasjonen til kjøretidens node, sett `nodeSelector`. For HotLoop alene uten profil, for å sette opp for hånd, installer med `--set provisioner.enabled=false`.
+
+## Med en kjøretid på nodens nettverk
+
+En kjøretid installert fra sitt chart med `network.hostNetwork=true` holder vertsport 8080 for WebVisu, så HotLoops side kan ikke også lytte på 8080 der. Chartet får HotLoops side til å lytte på 8090 inne i podden og beholder Service på 8080, slik at App Store-flisen og klargjøreren når den som før. Installer med vertsnettverket på for begge:
+
+```bash
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+  --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
+```
+
+HotLoops OPC UA PubSub-lyttere binder en UDP-port eksklusivt, så to lyttere på én port kan ikke begge koble til. Klargjøreren avviser en profil som ber om det, og sier hvorfor.
+
+## Hva installasjonen gjør
+
+1. HotLoop Edge starter på den noden med SQLite på nodens local-path-lagring. Ingen database-pod, én replika, og oppdateringsstrategien er `Recreate`.
+2. Klargjøreren starter på samme node. Den leser den monterte profilen ved hver runde, slik at en nyere profil når en installasjon som kjører. Den venter på HotLoop og på nodens egen CODESYS-kjøretid, og setter deretter opp profilens enhet, variabler, alarmer og skjermbilde.
+3. Den ser etter på nytt hvert femte minutt og holder enheten riktig etter hvert som PLS-programmet endres. Variabler en profil lister og som PLS-en nå har, legges til, og en som PLS-en ikke lenger har, leses som dårlig med serverens begrunnelse.
+4. Begge poddene tåler `node.kubernetes.io/unreachable` og `not-ready` uten `tolerationSeconds`, slik at en node som mister kontrollplanet sitt, beholder dem. Chartet har dette med seg selv og avhenger ikke av klyngens innstilling.
+
+OPC UA-serveren, den innebygde brokeren, edge-publisering og sikkerhetskopier er av, fordi ingen av dem er ønsket ved siden av en kjøretid. Slå en på gjennom values i `hotloop-edge` hvis du vil.
+
+## Sjekk det
+
+```bash
+kubectl -n <namespace> logs deploy/<release>-provision
+```
+
+En god oppstart sier at enheten ble satt opp med variablene sine, ingen skrivbare, og at alarmene og skjermbildet ble laget. Åpne HotLoop-tjenesten, logg inn som `admin` og se på Enheter og Dashbord. Admin-passordet ligger i release-Secret, akkurat som i alle HotLoop-chart.
+
+## Innlogging fra dashbordet
+
+Fra HotLoop 4.19 logger Edge-chartet inn en person fra EmberCORE-dashbordets signerte assertion (`embernetSignin`-values, fire `HOTLOOP_AUTH_ASSERTION_*`-variabler og Service-annotasjonen `embernet.ai/signin: assertion`). Dette chartet arver alt dette fra `hotloop-edge`-subchartet, og Store sender den offentlige nøkkelen inn i det. Klargjøreren bruker chartets admin-konto, som lokal innlogging fortsatt tillater. I en testklynge logget en gyldig assertion inn en person som operator eller admin, og en assertion for feil app, feil tenant, en utløpt, en fra feil utsteder og en manipulert ble hver avvist.
+
+## Hvor langt det er kjørt
+
+Det er kjørt på bare metal (2026-11-17), og chartet rendres fra den levende indeksen med Helm. [Hvor det står](/nb/codesys/where-it-stands/).
+

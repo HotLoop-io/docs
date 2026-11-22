@@ -1,0 +1,34 @@
+{
+  "page": "codesys/install",
+  "english": "src/pinned/codesys/install.md",
+  "langs": {
+    "es": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "fr": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "it": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "de": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "nb": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "bg": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "el": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "ko": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "ja": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "vi": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "hi": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "zh-hans": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"],
+    "ar": ["1f891f84801b","b7d2188b5020","ee4a98c27483","60b457c6fd7e","d2c2e89fd1e5","b31bdc2b19a4","11db12c5f7ea","f706457ae0c8","efab17bf260b","655888946287","f99a7801cd10","289587b2416a","0c6c4ae9d9fe","66b810273b37","a1f46c9c8c7f","4072bdc71283","77df585d1334","852079f258e7","29eb6c554857","c6bc0178e407","a6bed8ffa957","6bac10fa3bf5","dccaba6cc420","b049d6fe613a","700b0392c3b9","cbfdc808ae11","47f9688b7ed4","750370f591f7"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "fr": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "it": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "de": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "nb": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "bg": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "el": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ko": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ja": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "vi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "hi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "zh-hans": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ar": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"}
+  }
+}
