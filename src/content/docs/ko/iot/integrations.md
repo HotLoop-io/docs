@@ -28,7 +28,7 @@ description: "HotLoop를 주소를 아는 장치에 연결해 실제 내용을 �
 
 ## 반대 방향
 
-통합은 장치를 들여옵니다. HotLoop의 측정값과 이벤트를 Kafka 브로커로 내보내려면 히스토리안 대상의 [Kafka API 이벤트 스트림](/ko/iot/historian-targets/#kafka-api-event-stream)을 참고하십시오. Apache Kafka와 Redpanda, TLS와 SASL을 지원하며, 측정값은 한 토픽에, 시스템 로그는 다른 토픽에 보냅니다. OPC UA PubSub(UDP 위의 UADP)로 내보내거나 퍼블리셔의 것을 읽으려면 [OPC UA PubSub](/ko/iot/protocols/#opc-ua-pubsub-uadp)를 참고하십시오. 읽는 일은 프로토콜이 `opcua-pubsub`인 장치로 구성하며, 데이터그램에는 이름이 아니라 필드 위치만 담겨 있으므로 설정 절차는 없습니다.
+통합은 장치를 들여옵니다. HotLoop의 측정값과 이벤트를 Kafka 브로커로 내보내려면 히스토리안 대상의 [Kafka API 이벤트 스트림](/ko/iot/historian-targets/#kafka-api-이벤트-스트림)을 참고하십시오. Apache Kafka와 Redpanda, TLS와 SASL을 지원하며, 측정값은 한 토픽에, 시스템 로그는 다른 토픽에 보냅니다. OPC UA PubSub(UDP 위의 UADP)로 내보내거나 퍼블리셔의 것을 읽으려면 [OPC UA PubSub](/ko/iot/protocols/#opc-ua-pubsub-uadp)를 참고하십시오. 읽는 일은 프로토콜이 `opcua-pubsub`인 장치로 구성하며, 데이터그램에는 이름이 아니라 필드 위치만 담겨 있으므로 설정 절차는 없습니다.
 
 ## SNMP
 

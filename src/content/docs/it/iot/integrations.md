@@ -28,7 +28,7 @@ Altre si aggiungono su questa struttura man mano che si possono provare su un ve
 
 ## Nell'altra direzione
 
-Un'integrazione porta dentro un dispositivo. Per inviare le letture e gli eventi di HotLoop a un broker Kafka, vedere [il flusso di eventi dell'API Kafka](/it/iot/historian-targets/#kafka-api-event-stream) nelle destinazioni dell'historian: Apache Kafka e Redpanda, TLS e SASL, le letture su un topic e il log di sistema su un altro. Per inviarli come OPC UA PubSub (UADP su UDP), o per leggere quelli di un publisher, vedere [OPC UA PubSub](/it/iot/protocols/#opc-ua-pubsub-uadp): leggerne uno significa un dispositivo con il protocollo `opcua-pubsub`, senza flusso di configurazione, perché un datagramma porta posizioni di campi e non nomi.
+Un'integrazione porta dentro un dispositivo. Per inviare le letture e gli eventi di HotLoop a un broker Kafka, vedere [il flusso di eventi dell'API Kafka](/it/iot/historian-targets/#api-kafka-flusso-di-eventi) nelle destinazioni dell'historian: Apache Kafka e Redpanda, TLS e SASL, le letture su un topic e il log di sistema su un altro. Per inviarli come OPC UA PubSub (UADP su UDP), o per leggere quelli di un publisher, vedere [OPC UA PubSub](/it/iot/protocols/#opc-ua-pubsub-uadp): leggerne uno significa un dispositivo con il protocollo `opcua-pubsub`, senza flusso di configurazione, perché un datagramma porta posizioni di campi e non nomi.
 
 ## SNMP
 

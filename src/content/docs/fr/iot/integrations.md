@@ -28,7 +28,7 @@ D'autres s'ajoutent sur ce cadre à mesure qu'on peut les éprouver sur un vrai 
 
 ## Dans l'autre sens
 
-Une intégration fait entrer un appareil. Pour envoyer les mesures et les événements de HotLoop vers un broker Kafka, voir [le flux d'événements de l'API Kafka](/fr/iot/historian-targets/#kafka-api-event-stream) dans les cibles d'historien : Apache Kafka et Redpanda, TLS et SASL, les mesures sur un topic et le journal système sur un autre. Pour les envoyer en OPC UA PubSub (UADP sur UDP), ou pour lire ceux d'un éditeur, voir [OPC UA PubSub](/fr/iot/protocols/#opc-ua-pubsub-uadp) : en lire un revient à un appareil avec le protocole `opcua-pubsub`, sans flux de configuration, car un datagramme porte des positions de champs et pas de noms.
+Une intégration fait entrer un appareil. Pour envoyer les mesures et les événements de HotLoop vers un broker Kafka, voir [le flux d'événements de l'API Kafka](/fr/iot/historian-targets/#api-kafka-flux-dévénements) dans les cibles d'historien : Apache Kafka et Redpanda, TLS et SASL, les mesures sur un topic et le journal système sur un autre. Pour les envoyer en OPC UA PubSub (UADP sur UDP), ou pour lire ceux d'un éditeur, voir [OPC UA PubSub](/fr/iot/protocols/#opc-ua-pubsub-uadp) : en lire un revient à un appareil avec le protocole `opcua-pubsub`, sans flux de configuration, car un datagramme porte des positions de champs et pas de noms.
 
 ## SNMP
 

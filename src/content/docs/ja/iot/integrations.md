@@ -28,7 +28,7 @@ description: "アドレスがわかるデバイスに HotLoop を向け、実際
 
 ## 逆方向
 
-インテグレーションはデバイスを取り込みます。HotLoop の測定値とイベントを Kafka ブローカーに送り出すには、ヒストリアンのターゲットにある [Kafka API イベントストリーム](/ja/iot/historian-targets/#kafka-api-event-stream)を参照してください。Apache Kafka と Redpanda、TLS と SASL に対応し、測定値は 1 つのトピックに、システムログは別のトピックに送ります。OPC UA PubSub(UDP 上の UADP)として送る場合や、パブリッシャーのものを読む場合は、[OPC UA PubSub](/ja/iot/protocols/#opc-ua-pubsub-uadp) を参照してください。読み取りは `opcua-pubsub` プロトコルのデバイスとして構成し、データグラムには名前ではなくフィールドの位置が含まれるため、セットアップの手順はありません。
+インテグレーションはデバイスを取り込みます。HotLoop の測定値とイベントを Kafka ブローカーに送り出すには、ヒストリアンのターゲットにある [Kafka API イベントストリーム](/ja/iot/historian-targets/#kafka-apiイベントストリーム)を参照してください。Apache Kafka と Redpanda、TLS と SASL に対応し、測定値は 1 つのトピックに、システムログは別のトピックに送ります。OPC UA PubSub(UDP 上の UADP)として送る場合や、パブリッシャーのものを読む場合は、[OPC UA PubSub](/ja/iot/protocols/#opc-ua-pubsub-uadp) を参照してください。読み取りは `opcua-pubsub` プロトコルのデバイスとして構成し、データグラムには名前ではなくフィールドの位置が含まれるため、セットアップの手順はありません。
 
 ## SNMP
 

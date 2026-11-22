@@ -28,7 +28,7 @@ description: "HotLoop को ज्ञात पते वाले डिवा
 
 ## दूसरी दिशा में
 
-इंटीग्रेशन डिवाइस को अंदर लाता है। HotLoop की रीडिंग और इवेंट को Kafka ब्रोकर पर भेजने के लिए, हिस्टोरियन टारगेट के अंतर्गत [Kafka API इवेंट स्ट्रीम](/hi/iot/historian-targets/#kafka-api-event-stream) देखें: Apache Kafka और Redpanda, TLS और SASL, रीडिंग एक टॉपिक पर और सिस्टम लॉग दूसरे पर। उन्हें OPC UA PubSub (UDP पर UADP) के रूप में भेजने के लिए, या किसी पब्लिशर के पढ़ने के लिए, [OPC UA PubSub](/hi/iot/protocols/#opc-ua-pubsub-uadp) देखें: एक को पढ़ना `opcua-pubsub` प्रोटोकॉल वाला डिवाइस है, बिना सेटअप फ़्लो के, क्योंकि डेटाग्राम में फ़ील्ड की स्थितियाँ होती हैं, नाम नहीं।
+इंटीग्रेशन डिवाइस को अंदर लाता है। HotLoop की रीडिंग और इवेंट को Kafka ब्रोकर पर भेजने के लिए, हिस्टोरियन टारगेट के अंतर्गत [Kafka API इवेंट स्ट्रीम](/hi/iot/historian-targets/#kafka-api-इवेंट-स्ट्रीम) देखें: Apache Kafka और Redpanda, TLS और SASL, रीडिंग एक टॉपिक पर और सिस्टम लॉग दूसरे पर। उन्हें OPC UA PubSub (UDP पर UADP) के रूप में भेजने के लिए, या किसी पब्लिशर के पढ़ने के लिए, [OPC UA PubSub](/hi/iot/protocols/#opc-ua-pubsub-uadp) देखें: एक को पढ़ना `opcua-pubsub` प्रोटोकॉल वाला डिवाइस है, बिना सेटअप फ़्लो के, क्योंकि डेटाग्राम में फ़ील्ड की स्थितियाँ होती हैं, नाम नहीं।
 
 ## SNMP
 
