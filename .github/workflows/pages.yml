@@ -17,8 +17,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  # A pull request's checks run in a slot of their own, and a newer push to the
+  # same pull request replaces its older run. Pushes to main keep the one deploy
+  # slot, where a newer main replaces a waiting one, because it carries every
+  # merge before it.
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
