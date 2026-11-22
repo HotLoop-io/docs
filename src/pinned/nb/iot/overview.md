@@ -1,0 +1,41 @@
+---
+title: "Oversikt over HotLoop IoT"
+description: "HotLoop IoT er automatiseringsgrunnlaget: entiteter, automasjoner, dashbord, alarmer, MQTT-oppdagelse og alle drivere, i Go, på SQLite eller PostgreSQL."
+sidebar:
+  label: "Oversikt"
+---
+
+:::note[IoT er ute, først utgitt i 4.18.10]
+Imaget er `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, bygget for amd64, arm64 og arm/v7, omtrent 31 MB på amd64 og 29 MB på en Pi, og chartet er `hotloop-iot` fra `https://hotloop.io/hotloop`. Begge lastes ned uten innlogging. Quadlet-enhetene ligger i `iot/`-mappen i [Podman Quadlet](/nb/install/quadlet/). [Installer det](/nb/iot/install/). Sidene i denne delen sier hva hver funksjon er kjørt mot, og der en side følger `main` og ikke utgivelsen, sier de det også.
+:::
+
+IoT er grunnlaget Edge og Gateway er bygget på. Hvis boksen foran deg er en Pi, en NUC i et skap, en rekke smarte støpsler og sensorer eller én PLS på en arbeidsbenk, er dette riktig produkt. Det er det minste imaget av de tre fullstendige produktene, og det har likevel alt som gjør HotLoop nyttig: entitetene, reglene, alarmene og den ene skriveporten ingenting går utenom.
+
+Et større produkt tar aldri noe fra det. [Edge](/nb/edge/overview/) er IoT pluss maskinlaget. [Gateway](/nb/gateway/overview/) er Edge pluss lokasjonslaget. Alt på disse sidene finnes i begge.
+
+## Hva IoT har
+
+- **Entiteter og utstyrstreet.** Hver tag får en entitet med en id som aldri endres, hengt på ett ISA-95-tre. [Entiteter](/nb/iot/entities/), [utstyrstreet](/nb/iot/equipment/).
+- **Automasjoner, blueprints, skript og oppskrifter.** Regler som kompileres når du lagrer, navngitte sekvenser og settpunktsett som går gjennom skriveporten. [Automasjoner](/nb/iot/automations/), [blueprints](/nb/iot/blueprints/), [skript](/nb/iot/scripts/), [oppskrifter](/nb/iot/recipes/).
+- **Hjelpere, loggboken og solen.** Verdiene folkene dine eier, én tidslinje over alt som skjedde, og soloppgang regnet ut på boksen. [Hjelpere](/nb/iot/helpers/), [loggbok](/nb/iot/logbook/), [solen](/nb/iot/sun/).
+- **Dashbord, varsler og MCP.** Skjermbilder bygget per rolle, alarmer som ringer en telefon og en agent som kan lese anlegget og bare røre det du har armert. [Dashbord](/nb/iot/dashboards/), [varsler](/nb/iot/notifications/), [MCP](/nb/iot/mcp/).
+- **Alle protokolldrivere (en CODESYS-runtime etter symbolnavn og OPC UA PubSub over UADP inkludert), MQTT med oppdagelse og en innebygd broker.** [Protokoller](/nb/iot/protocols/), [brokeren](/nb/iot/broker/), [MQTT-oppdagelse](/nb/iot/mqtt-discovery/), [nettverksoppdagelse](/nb/iot/network-discovery/).
+- **UniFi, skrivebeskyttet til du armerer en kommando,** og **historikk skrevet ut til din egen database eller til en Kafka-broker.** UniFi leser nettverket, og de få punktene som er kommandoer (en lokaliserings-LED, en omstart, en PoE-strømsyklus, et trådløst nettverk på eller av, en klientblokkering) gjør ingenting før noen merker den taggen som skrivbar. [UniFi](/nb/iot/unifi/), [historian-mål](/nb/iot/historian-targets/).
+- **Vær, energi, skjermbilder som reiser og tretten språk til.** En takstasjon er én entitet. En måler er en tag lest som brukt energi, lagret i 15-minutters intervaller med tariff og effektavgift. Et dashbord eksporteres til en fil og importeres i en annen installasjon, og en CODESYS-visualisering importeres som et skjermbilde. Nettgrensesnittet snakker engelsk og tretten språk til. [Energi](/nb/iot/energy/), [vær](/nb/iot/weather/), [skjermfiler](/nb/iot/screen-file/), [CODESYS-skjermbilder](/nb/iot/codesys-screen-import/), [språk](/nb/iot/languages/).
+- **Brukere, sikkerhetskopier og migreringer som bare legger til.** [Autentisering](/nb/iot/authentication/), [sikkerhetskopier](/nb/iot/backup/), [migreringer](/nb/iot/migrations/) og [HTTP-API-et](/nb/iot/api/).
+
+[Skriveporten](/nb/gateway/write-gate/) er den ene siden du bør lese før et ekte anlegg ser noe av dette. Den gjelder for alle produkter.
+
+## Hva det ikke har
+
+Ingen OPC UA-server, ingen Sparkplug-publisering med lagring og videresending, ingen flåte, ingen flere lokasjoner og ingen planlagte rapporter. De er ikke slått av i IoT, de er ikke i binærfilen, så ingen miljøvariabel og ingen dårlig dag kan slå dem på. API-et beholder alle rutene likevel, og en rute for noe IoT ikke har svarer `404` og navngir produktet som har det.
+
+## Databaser
+
+SQLite eller PostgreSQL. Chartet og Quadlet-enhetene kjører PostgreSQL 17 som standard, med 30 dagers historikk, og `HOTLOOP_DB_TYPE=sqlite` setter hele greia på en fil helt uten databasecontainer. I chartet er det `database.type`, og å be IoT-chartet om `timescaledb` får installasjonen til å feile. Å gå over til en annen database er en sikkerhetskopi og en gjenoppretting. [Produktoversikten](/nb/products/) har tabellen, og [Sikkerhetskopier](/nb/iot/backup/) har gjenopprettingen.
+
+## Installere det
+
+Helm eller Podman Quadlet, de samme to veiene som resten av produktrekken, og [installasjonssiden for IoT](/nb/iot/install/) har kommandoene for begge. Boksene følger `:stable` og oppdaterer seg selv, og [den siden](/nb/install/auto-update/) sier hva som skjer når en oppdatering ikke kan starte.
+
+Skal du bruke det i et anlegg? [Bruke HotLoop i en bedrift](/nb/business/) dekker lisens og hvordan du kommer i kontakt med oss.
