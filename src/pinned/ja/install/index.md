@@ -30,6 +30,49 @@ HotLoop 製品を本番で動かす方法は 2 つです。k3s など任意の K
 
 HotLoop IoT、Edge、Gateway、Edge Relay は 1 つのタグから同時に出るため、同じバージョン番号を共有します。Flow、Cascade、HotLoop for CODESYS、Transmitter はそれぞれ独自のバージョンです。IoT、Edge、Gateway の Quadlet ユニットには Podman 5.0 以降が必要で、リレーのユニットは Podman 4.9.3 で動作確認しました。Raspberry Pi OS Bookworm には Quadlet が全くない 4.3 が入っているので、Pi には Trixie 以降が必要です。
 
+## EmberNet App Store からインストールする
+
+EmberNet では、インストールは App Store です。選んだノードに、同じ Helm チャートを代わりに入れるので、チャートの追加も、値ファイルも、コマンドラインも要りません。実機のノードで計ったところ、App Store を開いてからボードにライブの値が出るまで1分10秒でした。
+
+<figure>
+<video controls preload="none" playsinline width="1920" height="1080" poster="/embernet-install/poster.webp" aria-label="EmberNet App Store から HotLoop Gateway をインストールする様子。開始からライブデータまで1分10秒" style="width:100%;height:auto;aspect-ratio:16/9">
+<source src="/embernet-install/install-hotloop-on-embernet.mp4" type="video/mp4" />
+<source src="/embernet-install/install-hotloop-on-embernet.webm" type="video/webm" />
+お使いのブラウザではこの動画を再生できません。 <a href="/embernet-install/install-hotloop-on-embernet.mp4">ダウンロード</a>.
+</video>
+<figcaption>ワンテイク、実時間です。時計は App Store を開いた時点から HotLoop がデータを読むまで進み、インストールの待ち時間は4倍速で見せています。</figcaption>
+</figure>
+
+1. EmberCORE で **App Store** を開きます。
+
+   ![カテゴリ、公開元、並べ替えのフィルターがある EmberCORE の App Store](/embernet-install/hotloop-install-01-app-store.webp)
+
+2. **HotLoop** カテゴリを選び、HotLoop Gateway の **デプロイ** を押します。このカテゴリには HotLoop の各製品が専用のカードで並びます。
+
+   ![HotLoop カテゴリで絞り込んだ App Store。HotLoop Cascade、Edge、Edge Relay、Flow、Gateway、IoT のカードが並ぶ](/embernet-install/hotloop-install-02-hotloop-apps.webp)
+
+3. ノードを選んで、もう一度 **デプロイ** を押します。
+
+   ![ノードを選んだ HotLoop Gateway のデプロイ画面](/embernet-install/hotloop-install-03-choose-node.webp)
+
+4. EmberCORE がインストールを知らせ、HotLoop Gateway がバージョンと Flux アドレスとともに **実行中のアプリ** に現れます。
+
+   ![HotLoop Gateway がノードにインストールされていることを知らせる EmberCORE のメッセージ](/embernet-install/hotloop-install-04-installing.webp)
+
+   ![HotLoop Gateway が実行中の「実行中のアプリ」画面。バージョン、オンラインの Flux アドレス、起動、開く、Pod シェル、デバイスシェル、削除のボタンが見える](/embernet-install/hotloop-install-05-running.webp)
+
+5. **起動** を押します。EmberCORE がサインインさせ、ボックス自身の状態がすでに読み取られた状態で HotLoop が開くので、最初に見えるのはライブデータです。
+
+   ![EmberCORE の中でサインイン済みで開いた HotLoop Gateway。デバイス1台、4 タグ中 4 つが報告中、アラームなし](/embernet-install/hotloop-install-06-hotloop-signed-in.webp)
+
+6. 気になるタグをピン留めすると、ボード上のライブゲージになります。
+
+   ![ノードの CPU、メモリ、ディスクのタグが並ぶ、ボードへのタグのピン留め画面](/embernet-install/hotloop-install-07-pin-a-tag.webp)
+
+   ![ノードの CPU、メモリ、ディスク使用率のライブゲージが並ぶ HotLoop のボード](/embernet-install/hotloop-install-08-board-live.webp)
+
+EmberNet のドキュメントでも、同じインストールをページごとに順に説明しています。[EmberNet 上の HotLoop Gateway](https://docs.embernet.ai/docs/app-store/hotloop)
+
 ## 実際の工場に入れる前に
 
 - [書き込みゲート](/ja/gateway/write-gate/)を読んでください。どの製品でも同じで、あなたが許可していない機械を何も動かせない理由です。

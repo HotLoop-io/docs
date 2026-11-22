@@ -32,6 +32,49 @@ Hay dos maneras de ejecutar un producto HotLoop de verdad: Helm sobre k3s o cual
 
 HotLoop IoT, Edge, Gateway y Edge Relay salen de una misma etiqueta, en bloque, así que comparten número de versión. Flow, Cascade, HotLoop for CODESYS y Transmitter tienen el suyo. Las unidades Quadlet de IoT, Edge y Gateway necesitan Podman 5.0 o superior, y la del relay se ejecutó en Podman 4.9.3. Raspberry Pi OS Bookworm trae la 4.3, que no tiene Quadlet, así que una Pi necesita Trixie o posterior.
 
+## Instalar desde el App Store de EmberNet
+
+En EmberNet, la instalación es el App Store. Ejecuta por usted el mismo chart de Helm, en el nodo que elija, así que no hay chart que añadir, ni archivo de valores, ni línea de comandos. Lo cronometramos en un nodo real: 1 minuto y 10 segundos desde que se abre el App Store hasta ver lecturas en vivo en el tablero.
+
+<figure>
+<video controls preload="none" playsinline width="1920" height="1080" poster="/embernet-install/poster.webp" aria-label="Instalación de HotLoop Gateway desde el App Store de EmberNet, del inicio a los datos en vivo en 1 minuto y 10 segundos" style="width:100%;height:auto;aspect-ratio:16/9">
+<source src="/embernet-install/install-hotloop-on-embernet.mp4" type="video/mp4" />
+<source src="/embernet-install/install-hotloop-on-embernet.webm" type="video/webm" />
+Su navegador no puede reproducir este vídeo. <a href="/embernet-install/install-hotloop-on-embernet.mp4">Descargarlo</a>.
+</video>
+<figcaption>Una sola toma, en tiempo real. El reloj corre desde que se abre el App Store hasta que HotLoop lee datos, y la espera de la instalación se muestra a cuatro veces la velocidad.</figcaption>
+</figure>
+
+1. En EmberCORE, abra el **App Store**.
+
+   ![El App Store de EmberCORE con los filtros de categoría, publicador y orden](/embernet-install/hotloop-install-01-app-store.webp)
+
+2. Elija la categoría **HotLoop** y pulse **Desplegar** en HotLoop Gateway. Cada producto de HotLoop tiene su propia tarjeta en esta categoría.
+
+   ![El App Store filtrado por la categoría HotLoop, con las tarjetas de HotLoop Cascade, Edge, Edge Relay, Flow, Gateway e IoT](/embernet-install/hotloop-install-02-hotloop-apps.webp)
+
+3. Elija el nodo y pulse **Desplegar** otra vez.
+
+   ![El cuadro de diálogo para desplegar HotLoop Gateway con un nodo elegido](/embernet-install/hotloop-install-03-choose-node.webp)
+
+4. EmberCORE confirma la instalación, y HotLoop Gateway aparece en **Aplicaciones en ejecución** con su versión y su dirección de Flux.
+
+   ![El aviso de EmberCORE de que HotLoop Gateway se está instalando en el nodo](/embernet-install/hotloop-install-04-installing.webp)
+
+   ![Aplicaciones en ejecución con HotLoop Gateway en marcha, su versión, su dirección de Flux en línea y los botones Iniciar, Abrir, Shell del pod, Shell del dispositivo y Quitar](/embernet-install/hotloop-install-05-running.webp)
+
+5. Pulse **Iniciar**. EmberCORE le da acceso, y HotLoop se abre con el estado de la propia máquina ya en lectura, así que lo primero que ve son datos en vivo.
+
+   ![HotLoop Gateway abierto en EmberCORE y con la sesión iniciada, con un dispositivo, 4 de 4 etiquetas informando y sin alarmas](/embernet-install/hotloop-install-06-hotloop-signed-in.webp)
+
+6. Fije las etiquetas que le importan y se convierten en indicadores en vivo en el tablero.
+
+   ![El cuadro para fijar etiquetas en el tablero, con las etiquetas de CPU, memoria y disco del nodo](/embernet-install/hotloop-install-07-pin-a-tag.webp)
+
+   ![El tablero de HotLoop con indicadores en vivo de CPU, memoria y disco del nodo](/embernet-install/hotloop-install-08-board-live.webp)
+
+La documentación de EmberNet recorre la misma instalación página por página: [HotLoop Gateway en EmberNet](https://docs.embernet.ai/docs/app-store/hotloop).
+
 ## Antes de ponerlo en una planta real
 
 - Lea [la compuerta de escritura](/es/gateway/write-gate/). Es igual en todos los productos, y es la razón por la que nada mueve una máquina que usted no armó.
