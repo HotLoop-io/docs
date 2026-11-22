@@ -45,7 +45,7 @@ JSON en UTF-8, de hasta 4 MiB.
 
 **`exported`.** Qué producto y versión lo escribió, y cuándo. Para la persona que lee el archivo. No se decide nada a partir de él: los tipos de tarjeta deciden si un HotLoop puede mostrar la pantalla, y un tipo de tarjeta desconocido se rechaza por su nombre.
 
-**`screen`.** El panel tal como lo guarda la API de paneles, sin la contabilidad propia de la instalación (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` se omite cuando está vacía. Las tarjetas van en orden de lectura, cada una con su tamaño (`w` de 12 columnas, `h` en filas) y su `config`, exactamente como [Paneles](/es/iot/dashboards/#the-cards) describe cada tipo. La maquetación es eso: un flujo de tarjetas, nunca coordenadas en píxeles. Una tarjeta de símbolos coloca sus símbolos por píxel en su propia página, dentro de su config.
+**`screen`.** El panel tal como lo guarda la API de paneles, sin la contabilidad propia de la instalación (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` se omite cuando está vacía. Las tarjetas van en orden de lectura, cada una con su tamaño (`w` de 12 columnas, `h` en filas) y su `config`, exactamente como [Paneles](/es/iot/dashboards/#las-tarjetas) describe cada tipo. La maquetación es eso: un flujo de tarjetas, nunca coordenadas en píxeles. Una tarjeta de símbolos coloca sus símbolos por píxel en su propia página, dentro de su config.
 
 **Los recursos van dentro.** Un plano en una tarjeta de mapa y el fondo de una tarjeta de símbolos son URL de datos PNG en base64 dentro del `config` de la tarjeta, así que un solo archivo es la pantalla entera, y enviarlo es enviar también la imagen. Los límites son los del panel: 700 KB por imagen y 2 MiB por pantalla.
 

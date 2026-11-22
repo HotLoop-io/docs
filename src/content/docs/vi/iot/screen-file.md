@@ -45,7 +45,7 @@ JSON UTF-8, tối đa 4 MiB.
 
 **`exported`.** Sản phẩm và phiên bản nào đã ghi nó, và khi nào. Dành cho người đọc tệp. Không có gì được quyết định từ đó: các loại thẻ quyết định liệu một HotLoop có hiển thị được màn hình hay không, và một loại thẻ không biết bị từ chối kèm tên.
 
-**`screen`.** Bảng điều khiển như API bảng điều khiển lưu giữ, không có sổ sách riêng của bản cài đặt (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` được bỏ khi trống. Các thẻ theo thứ tự đọc, mỗi thẻ có kích thước (`w` trên 12 cột, `h` tính theo hàng) và `config` của nó, đúng như [Bảng điều khiển](/vi/iot/dashboards/#the-cards) mô tả từng loại. Bố cục chính là vậy: một dòng chảy các thẻ, không bao giờ là tọa độ điểm ảnh. Một thẻ biểu tượng đặt các biểu tượng của nó theo điểm ảnh trên trang riêng của nó, bên trong config của nó.
+**`screen`.** Bảng điều khiển như API bảng điều khiển lưu giữ, không có sổ sách riêng của bản cài đặt (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` được bỏ khi trống. Các thẻ theo thứ tự đọc, mỗi thẻ có kích thước (`w` trên 12 cột, `h` tính theo hàng) và `config` của nó, đúng như [Bảng điều khiển](/vi/iot/dashboards/#các-thẻ) mô tả từng loại. Bố cục chính là vậy: một dòng chảy các thẻ, không bao giờ là tọa độ điểm ảnh. Một thẻ biểu tượng đặt các biểu tượng của nó theo điểm ảnh trên trang riêng của nó, bên trong config của nó.
 
 **Tài nguyên nằm bên trong.** Một mặt bằng trên thẻ bản đồ và nền của thẻ biểu tượng là các data URL PNG base64 trong `config` của thẻ, nên một tệp là toàn bộ màn hình, và gửi nó cũng là gửi cả hình ảnh. Giới hạn là của bảng điều khiển: 700 KB mỗi hình và 2 MiB mỗi màn hình.
 

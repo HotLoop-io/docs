@@ -45,7 +45,7 @@ UTF-8 JSON，最大 4 MiB。
 
 **`exported`。** 由哪个产品和版本在何时写入。给读文件的人看。不据此决定任何事：卡片类型决定 HotLoop 能否显示画面，不认识的卡片类型会按名称被拒绝。
 
-**`screen`。** 仪表板 API 所保存的仪表板，不含安装自己的记账信息（`version`、`updatedBy`、`createdAt`、`updatedAt`）。`description` 为空时省略。卡片按阅读顺序排列，每张都有尺寸（12 列中的 `w`，以行计的 `h`）和 `config`，各类型与[仪表板](/zh-hans/iot/dashboards/#the-cards)的描述完全一致。布局就是这样：卡片的流，从来不是像素坐标。符号卡片在自己的页面上按像素放置符号，写在它的 config 里。
+**`screen`。** 仪表板 API 所保存的仪表板，不含安装自己的记账信息（`version`、`updatedBy`、`createdAt`、`updatedAt`）。`description` 为空时省略。卡片按阅读顺序排列，每张都有尺寸（12 列中的 `w`，以行计的 `h`）和 `config`，各类型与[仪表板](/zh-hans/iot/dashboards/#卡片)的描述完全一致。布局就是这样：卡片的流，从来不是像素坐标。符号卡片在自己的页面上按像素放置符号，写在它的 config 里。
 
 **资源在文件之内。** 地图卡片上的平面图和符号卡片的背景，是卡片 `config` 中的 base64 PNG 数据 URL，所以一个文件就是整个画面，发送它也就是把图片一起发送。限制是仪表板的限制：每张图片 700 KB，每个画面 2 MiB。
 
