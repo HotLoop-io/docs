@@ -1,0 +1,256 @@
+---
+title: "Edge Relay mit Helm oder Quadlet installieren"
+description: "HotLoop Edge Relay {{hotloop}} per Helm auf einem Cluster oder auf einem Pi oder Industrie-PC als systemd-Dienst mit Podman Quadlet. Alle Unit-Dateien im Wortlaut."
+sidebar:
+  label: "Installation"
+---
+
+Zwei unterstützte Wege, beide mit Containern, beide starten beim Booten und starten neu, wenn sie sterben: das Helm-Chart auf einem Cluster und eine Podman-Quadlet-Unit auf einem Rechner, der nicht in einem steht. Ein bloßes `podman run` aus einer SSH-Sitzung gehört nicht dazu. So hört ein Edge-Rechner still auf weiterzuleiten, sobald sich jemand abmeldet und der Container mit ihm geht, und niemand merkt es, bis der Historian ein Loch hat. Einen Docker-Weg gibt es ebenfalls nicht.
+
+Welchen Weg Sie auch gehen, das Relay braucht zwei Dinge: einen Broker, auf dem es veröffentlicht, und eine Sparkplug-Gruppen-ID. Das Image wird ohne Anmeldung geladen.
+
+:::note[Von 4.17.0 oder 4.16.0 kommend]
+Ab 4.17.0 aktualisieren Sie das Chart mit `--reset-then-reuse-values`, und Quadlet-Nutzer nehmen das neue `edge-relay.container`, das `:stable` folgt, statt 4.17.0 festzunageln. [Von 4.17.0 aktualisieren](/de/gateway/upgrading/#the-edge-relay-and-quadlet) enthält den Teil des Relays. Das Relay von 4.16.0 konnte bei keiner der beiden Installationen unten eine gepushte Gerätedatei annehmen: Der Push starb an einem schreibgeschützten Mount, während das Gateway `config pushed` meldete, und `persistence.enabled=false` startete nicht einmal. 4.17.0 hat beides behoben, und [Von 4.16.0 aktualisieren](/de/gateway/upgrading/#the-edge-relay) enthält diesen Teil, einschließlich des veralteten Pushs, den der Broker beim ersten Start zurückliefern kann.
+:::
+
+## Die Gerätedatei
+
+Beide Wege lesen dasselbe Dokument: die abzufragenden Geräte und die darauf zu lesenden Tags.
+
+```json
+{
+  "devices": [
+    {
+      "id": "press-01",
+      "name": "Press 1",
+      "protocol": "opcua",
+      "address": "opc.tcp://press-01.local:4840",
+      "enabled": true,
+      "pollIntervalMs": 1000
+    }
+  ],
+  "tags": [
+    {
+      "deviceId": "press-01",
+      "name": "Zone1_Temp",
+      "address": "ns=2;s=Zone1.Temp",
+      "dataType": "float",
+      "enabled": true
+    }
+  ]
+}
+```
+
+Es sind dieselben Geräte- und Tag-Formen, die die API des Gateways annimmt, mit denselben Regeln geprüft: Ein Gerät braucht ein Protokoll, das HotLoop kennt, und ein Tag braucht ein Gerät, das existiert. Darüber hinaus lehnt das Relay eine doppelt deklarierte Geräte-ID ab und ein Tag, das auf ein nie deklariertes Gerät zeigt, die beiden Fehler, die eine von Hand bearbeitete Datei macht und die eine Datenbank für Sie gefangen hätte.
+
+Die lokale Datei wird beim Start gelesen und noch einmal, wenn ein Push gelöscht wird. Ändern Sie sie, starten Sie das Relay neu. Sie wird absichtlich nicht überwacht. Eine von einem Gateway gepushte Gerätedatei ist die, die live gilt, und sie hat Vorrang vor dieser, solange sie existiert.
+
+Die Datei kann auch eine `discovery`-Liste von MQTT-Brokern enthalten, die das Relay auf Geräte abhört, die sich selbst ankündigen, nur lesend. [Die Referenz](/de/edge-relay/reference/) hat das Format.
+
+Der `config`-Block eines Geräts kann Zugangsdaten enthalten, etwa `username` und `password` bei OPC UA. Sie stehen in dieser Datei im Klartext, und das Relay hat keine API, hinter der es sie verbergen könnte, deshalb kommt es darauf an, wo die Datei liegt. Beide Wege unten decken das ab.
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install press-line-3 hotloop/hotloop-edge-relay \
+  --version {{hotloop}} --namespace hotloop --create-namespace \
+  --set edgePublish.broker=tcp://gateway.plant.local:1883 \
+  --set edgePublish.group=Plant1 \
+  --set edgePublish.node=press-line-3 \
+  -f devices.yaml
+```
+
+`edgePublish.broker` und `edgePublish.group` sind erforderlich, und das Chart verweigert das Rendern ohne sie. Setzen Sie auch `edgePublish.node`. Bleibt es leer, ist es der Hostname des Pods, und der Pod eines Deployments bekommt bei jedem Ersetzen einen neuen Namen. Nach dem nächsten Node-Drain sehen die Flotte des Gateways und jeder Sparkplug-Host weiter oben einen brandneuen Edge-Knoten, und der, den Sie registriert haben, erscheint offline.
+
+Broker-Passwort: Tragen Sie es in `edgePublish.password` ein, oder nennen Sie ein Secret mit einem `password`-Schlüssel in `edgePublish.existingSecret`. Schalten Sie `edgePublish.tls` ein, wenn der Broker TLS spricht.
+
+`devices.yaml` enthält dieselben zwei Listen wie die Gerätedatei, unter `devices:` und `tags:`:
+
+```yaml
+devices:
+  - id: press-01
+    name: Press 1
+    protocol: opcua
+    address: "opc.tcp://press-01.local:4840"
+    enabled: true
+    pollIntervalMs: 1000
+tags:
+  - deviceId: press-01
+    name: Zone1_Temp
+    address: "ns=2;s=Zone1.Temp"
+    dataType: float
+    enabled: true
+```
+
+Sie landen in einer ConfigMap und im Helm-Release-Eintrag, und jeder, der ConfigMaps im Namespace lesen kann, kann sie lesen. Trägt ein Gerät ein Passwort, legen Sie die ganze Gerätedatei in einem Secret unter dem Schlüssel `devices.json` ab und nennen Sie dieses stattdessen. Das Secret wird anstelle der ConfigMap gemountet, und `devices` und `tags` werden ignoriert:
+
+```bash
+kubectl -n hotloop create secret generic press-devices --from-file=devices.json
+helm upgrade press-line-3 hotloop/hotloop-edge-relay --version {{hotloop}} \
+  --reset-then-reuse-values --set devicesSecret=press-devices
+```
+
+`--reset-then-reuse-values`, nicht `--reuse-values`. Das einfache spielt die Werte ab, die das Release schon hat, und überspringt jeden Standardwert, den ein neueres Chart hinzugefügt hat. Führen Sie es auf einem mit 4.16.0 installierten Relay aus, und es verliert `pushedDevicesFile`, sodass ein Push wieder am schreibgeschützten Mount stirbt, und nichts schlägt fehl, um Sie zu warnen.
+
+Die Installationshinweise warnen dann, dass keine Geräte konfiguriert sind. Sie zählen die `devices`-Liste des Charts, die Sie absichtlich leer gelassen haben. Prüfen Sie stattdessen `/status`:
+
+```bash
+kubectl -n hotloop logs deploy/press-line-3
+kubectl -n hotloop port-forward svc/press-line-3 8081:8081
+curl localhost:8081/status
+```
+
+### Die Weiterleitungswarteschlange und ihr Volume
+
+Die Weiterleitungswarteschlange liegt auf einem eigenen PVC, standardmäßig 256Mi (`persistence.size`), sodass gepufferte Messwerte überleben, wenn der Pod umzieht. Dasselbe Volume enthält das OPC-UA-Clientzertifikat und seinen Trust Store unter `/data/opcua-client-pki`, damit ein gesicherter Server dem Relay einmal vertraut, nicht nach jedem Neustart.
+
+`edgePublish.queueMaxBytes` ist standardmäßig 64 MiB (`67108864`), früher war es `0`, unbegrenzt. Über der Obergrenze werden die ältesten Messwerte verworfen und gezählt. Das sind etwa 248.000 Messwerte, etwa zwei Minuten bei 2.000 Messwerten pro Sekunde, also dimensionieren Sie es nach Ihrer eigenen Rate, etwa 240 Byte pro Messwert bei kurzen Tag-Namen (gemessen an derselben Warteschlange in Edge 4.21.1), und halten Sie es deutlich unter `persistence.size`. Setzen Sie es auf `0`, ist es wieder unbegrenzt: Ein ausreichend langer Broker-Ausfall füllt dann das Volume, statt alte Messwerte zu verwerfen, ein volles Volume ist ein zweiter Ausfall obendrauf, und die Installationshinweise sagen das. Ein mit `--reuse-values` aktualisiertes Relay behält, was es hatte.
+
+`persistence.enabled=false` startet seit 4.17.0 (in 4.16.0 tötete es das Relay beim Start), mit einem emptyDir unter `/data`, begrenzt auf `persistence.size`. Wissen Sie, was das kostet, bevor Sie es wählen: Jedes Mal, wenn der Pod ersetzt wird (ein Node-Drain, eine Eviction, ein `kubectl delete pod`, ein `helm upgrade`, der ihn neu ausrollt), verliert er die Weiterleitungswarteschlange und jeden darin gepufferten Messwert, jede gepushte Gerätedatei (das Relay fällt still auf die `devices` des Charts zurück) und das OPC-UA-Clientzertifikat, sodass jeder gesicherte Server dem Relay erneut vertrauen muss. Die Installationshinweise geben diese Warnung aus. In Ordnung für einen Test. Für ein Relay, dessen Messwerte zählen, behalten Sie das PVC.
+
+Eine gepushte Gerätedatei liegt auf demselben Volume, unter `/data/pushed-devices.json` (`pushedDevicesFile` in den Werten des Charts), und hat Vorrang vor den `devices` des Charts, solange sie existiert, über Neustarts, Neuplanungen und einen `helm upgrade`, der `devices` ändert, hinweg. Das Relay protokolliert, von welcher Datei es gestartet ist. Um zur Liste des Charts zurückzukehren, löschen Sie den Push mit `DELETE /api/fleet/{id}/config` am Gateway, während das Relay verbunden ist, und es wechselt sofort zur Liste des Charts. Ein Push gilt ebenfalls live, ohne Neustart.
+
+## Quadlet
+
+Für einen Pi oder Industrie-PC außerhalb jedes Clusters. Quadlet macht den Container zu einem echten systemd-Dienst: Er startet beim Booten, ohne dass jemand angemeldet ist, startet neu, wenn er stirbt, und schreibt ins Journal. Diese Unit lief auf Podman 4.9.3, und ihre Schlüssel wurden gegen das `quadlet`-Binary von Podman 5.8.6 geprüft. Raspberry Pi OS Bookworm liefert 4.3, das gar kein Quadlet hat, nehmen Sie also Trixie oder neuer.
+
+Die Unit und ihr Datenvolume liegen in `deploy/quadlet/` im HotLoop-Repository, neben `devices.example.json`. Legen Sie zuerst die Verzeichnisse an:
+
+```bash
+sudo mkdir -p /etc/containers/systemd /etc/edge-relay
+```
+
+Speichern Sie dies als `/etc/containers/systemd/edge-relay.container` und ändern Sie Broker, Gruppe und Knoten für diesen Rechner:
+
+```ini
+[Unit]
+Description=HotLoop Edge Relay
+Documentation=https://docs.hotloop.io/edge-relay/reference/
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+# Every box tracks :stable, so this line never needs editing.
+Image=ghcr.io/hotloop-io/hotloop-edge-relay:stable
+AutoUpdate=registry
+ContainerName=edge-relay
+
+# The image has no shell or curl, so the binary asks itself. A JSON array,
+# not a string, because a string runs through /bin/sh -c and there isn't one.
+HealthCmd=["/edge-relay", "--healthcheck"]
+HealthInterval=10s
+HealthRetries=3
+HealthStartPeriod=20s
+Notify=healthy
+# Podman 4.9 reads Notify=healthy as plain true. Without this line a broken
+# release is not rolled back there.
+PodmanArgs=--sdnotify=healthy
+
+# The image digest, written by the ExecStartPre below, for the Gateway's fleet list.
+EnvironmentFile=/run/edge-relay/relay.env
+
+Environment=HOTLOOP_EDGE_PUBLISH_BROKER=tcp://gateway.example.local:1883
+Environment=HOTLOOP_EDGE_PUBLISH_GROUP=Plant1
+Environment=HOTLOOP_EDGE_PUBLISH_NODE=press-line-3
+# The outage queue's limit, 64 MiB.
+Environment=HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES=67108864
+Environment=HOTLOOP_EDGE_RELAY_DEVICES_FILE=/etc/edge-relay/devices.json
+# Where a pushed device file lands, instead of failing on the read-only
+# mount below. It wins over the file above for as long as it exists.
+Environment=HOTLOOP_EDGE_RELAY_PUSHED_FILE=/data/pushed-devices.json
+Environment=HOTLOOP_LOG_LEVEL=info
+
+# Delete this line if the broker takes anonymous connections.
+Secret=edge-relay-broker-password,type=env,target=HOTLOOP_EDGE_PUBLISH_PASSWORD
+
+Volume=/etc/edge-relay/devices.json:/etc/edge-relay/devices.json:ro,Z
+Volume=edge-relay-data.volume:/data
+
+# Only reachable from this host. /status has no auth, on purpose.
+PublishPort=127.0.0.1:8081:8081
+
+User=65532:65532
+ReadOnly=true
+Tmpfs=/tmp
+NoNewPrivileges=true
+DropCapability=all
+
+[Service]
+Restart=always
+RestartSec=5
+# Exit status 75 is a relay stopping because an operator approved an update.
+SuccessExitStatus=75
+
+RuntimeDirectory=edge-relay
+ExecStartPre=/bin/sh -c '/usr/bin/podman image exists ghcr.io/hotloop-io/hotloop-edge-relay:stable || /usr/bin/podman pull ghcr.io/hotloop-io/hotloop-edge-relay:stable'
+ExecStartPre=/bin/sh -c 'echo HOTLOOP_IMAGE_DIGEST=$$(/usr/bin/podman image inspect --format "{{.Digest}}" ghcr.io/hotloop-io/hotloop-edge-relay:stable) > /run/edge-relay/relay.env'
+
+# A bad image fails three healthchecks in about a minute, and then it is rolled back.
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Und dies als `/etc/containers/systemd/edge-relay-data.volume`. Es enthält die Weiterleitungswarteschlange und jede gepushte Gerätedatei. Es ist ein benanntes Volume, damit es einen `podman system prune` überlebt und damit sein Besitzer ohne chown zum Nicht-Root-Benutzer des Containers passt:
+
+```ini
+[Volume]
+```
+
+Legen Sie die Gerätedatei unter `/etc/edge-relay/devices.json` ab, dann:
+
+```bash
+printf '%s' 'your-broker-password' | \
+  sudo podman secret create edge-relay-broker-password -
+sudo systemctl daemon-reload
+sudo systemctl start edge-relay.service
+sudo systemctl status edge-relay.service
+curl localhost:8081/status
+```
+
+Der Broker nimmt anonyme Verbindungen an? Überspringen Sie das Secret und löschen Sie die Zeile `Secret=`. In einem isolierten OT-Netz ist das eine echte Konfiguration, kein Fehler, den man umgehen muss. Das `:Z` am Mount der Gerätedatei ist für SELinux und auf einer Distribution ohne es harmlos.
+
+Um Geräte vom Rechner aus zu ändern: Bearbeiten Sie die Datei, dann `sudo systemctl restart edge-relay.service`. Eine vom Gateway gepushte Gerätedatei braucht nichts davon, weil sie live gilt. Solange ein Push besteht, ist er das, was das Relay ausführt und wovon es startet, Ihre Änderungen an der lokalen Datei bewirken also nichts, bis Sie den Push mit `DELETE /api/fleet/{id}/config` am Gateway löschen. Wenn etwas falsch aussieht, zuerst `sudo journalctl -u edge-relay.service`. Das Relay sagt, auf welcher Datei es läuft und warum es eine Gerätedatei oder einen Push abgelehnt hat, und das zu lesen dauert weniger, als Ihr JSON anzuzweifeln.
+
+### Updates
+
+Die Unit folgt `:stable`, und Podman aktualisiert sie, sobald sein Timer läuft:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+Wenn der Timer auslöst, zieht Podman `:stable` und startet die Unit auf dem neuen Image neu, falls sich der Digest geändert hat. Die Unit gilt erst als oben, wenn der Healthcheck des Relays selbst besteht, also stellt Podman das vorherige Image wieder her und startet es, falls das neue ihn nie besteht. Ein Release, das nicht startet, kostet auf einem Rechner ein paar Minuten und nicht ein Relay, das unten bleibt. Die Weiterleitungswarteschlange und eine gepushte Gerätedatei liegen auf dem Datenvolume, das ein neues Image nicht berührt. Die Flottenliste des Gateways zeigt Version und Image-Digest jedes Relays und protokolliert eine Zeile, wenn sich einer ändert.
+
+Podman aktualisiert beim Lauf jeden beschrifteten Container auf dem Rechner, nicht nur diesen. Ein Standort, der will, dass ein Mensch bestimmt, wann, hat zwei Opt-ins, beide in `deploy/quadlet/`. `edge-relay-hold.conf` hält Updates zurück, bis ein Administrator am Gateway sie mit `POST /api/fleet/{id}/update` freigibt, und es braucht den Timer für den ganzen Rechner ausgeschaltet. `update-window.conf` lässt den Timer nur in einem Fenster auslösen, etwa sonntags um 03:00. Das Gateway kann Ihnen nicht sagen, dass ein Update wartet, nur, was jedes Relay gerade ausführt. Das Zurückhalten wurde mit einem echten Update erprobt, das 30 Sekunden gehalten und dann nach Freigabe übernommen wurde, und die Referenzseite, [Ein Relay aktualisieren](/de/edge-relay/reference/#updating-a-relay), hat alles, was es tut und nicht kann.
+
+## Danach: vom Gateway aus verwalten
+
+Die Flottenverwaltung ist im Gateway aus, bis Sie sie einschalten, weil ein Gateway ohne Relays keinen Broker hat, auf den es zeigen könnte. Setzen Sie `HOTLOOP_FLEET_ENABLED` auf `true` und richten Sie `HOTLOOP_FLEET_BROKER` auf denselben Broker, auf dem die Relays veröffentlichen, mit `HOTLOOP_FLEET_USER`, `HOTLOOP_FLEET_PASSWORD` und `HOTLOOP_FLEET_TLS`, falls nötig. Das Gateway-Chart hat keine eigenen Flottenwerte, sie gehören also in sein `extraEnv`:
+
+```yaml
+extraEnv:
+  - name: HOTLOOP_FLEET_ENABLED
+    value: "true"
+  - name: HOTLOOP_FLEET_BROKER
+    value: tcp://gateway.plant.local:1883
+```
+
+Registrieren Sie dann jedes Relay mit Gruppe und Knoten. Die Registrierung ist Absicht: Ein Relay, das einfach auf dem Broker auftaucht, ist kein Flottenmitglied, bis jemand es sagt. Senden Sie dies per `POST` an `/api/fleet` als Benutzer mit `fleet.write`:
+
+```json
+{
+  "id": "press-line-3",
+  "name": "Press line 3",
+  "group": "Plant1",
+  "nodeId": "press-line-3",
+  "statusUrl": "http://press-line-3.hotloop.svc:8081"
+}
+```
+
+`statusUrl` ist optional. Ohne sie weiß das Gateway aus Geburten und Toden, ob das Relay online oder offline ist. Mit ihr fragt das Gateway außerdem den `/status` des Relays nach Warteschlangentiefe und Gerätezahlen ab, und ein Relay, das es nicht erreichen kann, erscheint als nicht erreichbar, nie als gesunde Null. Die Quadlet-Unit oben veröffentlicht 8081 nur auf `127.0.0.1`, ein Gateway auf einem anderen Rechner kann `/status` also nicht erreichen, bis Sie `PublishPort=` ändern, und dann ist es auch für jeden in diesem Netz erreichbar.
+
+Von da an verfolgt das Gateway das Relay und kann ihm `POST /api/fleet/{id}/rebirth`, `POST /api/fleet/{id}/restart`, `POST /api/fleet/{id}/update` oder `POST /api/fleet/{id}/config` senden. Letzteres ist der Push, der ab 4.17.0 ankommt und in 4.16.0 nie ankam, und der ab 4.18.10 live gilt. `DELETE /api/fleet/{id}/config` löscht einen Push, und das Relay kehrt sofort zu seiner lokalen Datei zurück. All das ist nur API: Es gibt keinen Flottenbildschirm in der Oberfläche des Gateways. Bevor Sie sich auf irgendetwas davon verlassen, sperren Sie die ACL des Brokers so ab, dass nur das Gateway Befehle und Gerätedateien veröffentlichen kann. [Die Übersicht](/de/edge-relay/overview/#wer-es-steuern-darf) sagt, warum.

@@ -1,0 +1,256 @@
+---
+title: "Installer Edge Relay med Helm eller Quadlet"
+description: "Kjør HotLoop Edge Relay {{hotloop}} på en klynge med Helm, eller på en Pi eller industri-PC som systemd-tjeneste med Podman Quadlet. Unit-filene i sin helhet."
+sidebar:
+  label: "Installasjon"
+---
+
+To støttede måter, begge med containere, begge starter ved oppstart og starter på nytt når de dør: Helm-chartet på en klynge og en Podman Quadlet-unit på en maskin som ikke er i en. En enkel `podman run` fra en SSH-økt er ikke noen av dem. Slik slutter en edge-maskin i stillhet å videresende første gang noen logger ut og containeren forsvinner med dem, og ingen merker det før historianen har et hull. Det finnes heller ingen Docker-vei.
+
+Uansett hvilken vei du velger, trenger releet to ting: en broker å publisere til og en Sparkplug-gruppe-id. Bildet hentes uten innlogging.
+
+:::note[Kommer du fra 4.17.0 eller 4.16.0]
+Fra 4.17.0 oppgraderer du chartet med `--reset-then-reuse-values`, og Quadlet-brukere tar den nye `edge-relay.container`, som følger `:stable` i stedet for å feste 4.17.0. [Oppgradering fra 4.17.0](/nb/gateway/upgrading/#the-edge-relay-and-quadlet) har releets del. Releet i 4.16.0 kunne ikke ta imot en pushet enhetsfil i noen av de to installasjonene under: pushen døde på en skrivebeskyttet montering mens Gateway sa `config pushed`, og `persistence.enabled=false` startet ikke engang. 4.17.0 rettet begge, og [Oppgradering fra 4.16.0](/nb/gateway/upgrading/#the-edge-relay) har den delen, inkludert den utdaterte pushen brokeren kan gi tilbake ved første oppstart.
+:::
+
+## Enhetsfilen
+
+Begge måtene leser det samme dokumentet: enhetene som skal avspørres og taggene som skal leses på dem.
+
+```json
+{
+  "devices": [
+    {
+      "id": "press-01",
+      "name": "Press 1",
+      "protocol": "opcua",
+      "address": "opc.tcp://press-01.local:4840",
+      "enabled": true,
+      "pollIntervalMs": 1000
+    }
+  ],
+  "tags": [
+    {
+      "deviceId": "press-01",
+      "name": "Zone1_Temp",
+      "address": "ns=2;s=Zone1.Temp",
+      "dataType": "float",
+      "enabled": true
+    }
+  ]
+}
+```
+
+Dette er de samme enhets- og tag-formene Gateways API tar imot, sjekket med de samme reglene: en enhet trenger en protokoll HotLoop kjenner, og en tag trenger en enhet som finnes. I tillegg avviser releet en enhets-id deklarert to ganger og en tag som peker til en enhet som aldri ble deklarert, de to feilene en håndredigert fil gjør som en database ville ha fanget for deg.
+
+Den lokale filen leses ved oppstart, og på nytt når en push fjernes. Endre den, start releet på nytt. Den overvåkes ikke, med vilje. En enhetsfil pushet fra en Gateway er den som gjelder live, og den vinner over denne så lenge den finnes.
+
+Filen kan også inneholde en `discovery`-liste med MQTT-brokere releet lytter til for enheter som melder seg selv, bare lesing. [Referansen](/nb/edge-relay/reference/) har formatet.
+
+En enhets `config`-blokk kan inneholde påloggingsinformasjon, som `username` og `password` for OPC UA. De ligger i den filen i klartekst, og releet har ikke noe API å skjule dem bak, så det betyr noe hvor filen ligger. Begge veiene under dekker det.
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install press-line-3 hotloop/hotloop-edge-relay \
+  --version {{hotloop}} --namespace hotloop --create-namespace \
+  --set edgePublish.broker=tcp://gateway.plant.local:1883 \
+  --set edgePublish.group=Plant1 \
+  --set edgePublish.node=press-line-3 \
+  -f devices.yaml
+```
+
+`edgePublish.broker` og `edgePublish.group` er påkrevd, og chartet nekter å rendre uten dem. Sett også `edgePublish.node`. Står den tom, er det podens vertsnavn, og poden til en Deployment får nytt navn hver gang den erstattes. Etter neste node-drain ser Gateways flåte og alle Sparkplug-verter oppstrøms en splitter ny edge-node, og den du registrerte vises som frakoblet.
+
+Brokerpassord: legg det i `edgePublish.password`, eller navngi en Secret med en `password`-nøkkel i `edgePublish.existingSecret`. Slå på `edgePublish.tls` hvis brokeren snakker TLS.
+
+`devices.yaml` har de samme to listene som enhetsfilen, under `devices:` og `tags:`:
+
+```yaml
+devices:
+  - id: press-01
+    name: Press 1
+    protocol: opcua
+    address: "opc.tcp://press-01.local:4840"
+    enabled: true
+    pollIntervalMs: 1000
+tags:
+  - deviceId: press-01
+    name: Zone1_Temp
+    address: "ns=2;s=Zone1.Temp"
+    dataType: float
+    enabled: true
+```
+
+De havner i en ConfigMap og i Helm-releaseposten, og alle som kan lese ConfigMaps i navneområdet, kan lese dem. Hvis en enhet har et passord, legg hele enhetsfilen i en Secret under nøkkelen `devices.json` og navngi den i stedet. Secret monteres i stedet for ConfigMap, og `devices` og `tags` ignoreres:
+
+```bash
+kubectl -n hotloop create secret generic press-devices --from-file=devices.json
+helm upgrade press-line-3 hotloop/hotloop-edge-relay --version {{hotloop}} \
+  --reset-then-reuse-values --set devicesSecret=press-devices
+```
+
+`--reset-then-reuse-values`, ikke `--reuse-values`. Den vanlige spiller av verdiene releasen allerede har og hopper over alle standardverdier et nyere chart la til. Kjør den på et relé installert i 4.16.0, så mister det `pushedDevicesFile`, slik at en push igjen dør på den skrivebeskyttede monteringen, og ingenting feiler for å varsle deg.
+
+Installasjonsnotatene advarer da om at ingen enheter er konfigurert. De teller chartets `devices`-liste, som du lot stå tom med vilje. Sjekk `/status` i stedet:
+
+```bash
+kubectl -n hotloop logs deploy/press-line-3
+kubectl -n hotloop port-forward svc/press-line-3 8081:8081
+curl localhost:8081/status
+```
+
+### Videresendingskøen og volumet dens
+
+Videresendingskøen ligger på en egen PVC, 256Mi som standard (`persistence.size`), slik at bufrede målinger overlever at poden flytter. Det samme volumet inneholder OPC UA-klientsertifikatet og tillitslageret dets i `/data/opcua-client-pki`, slik at en sikret server stoler på releet én gang, ikke etter hver omstart.
+
+`edgePublish.queueMaxBytes` er 64 MiB som standard (`67108864`), der den før var `0`, ubegrenset. Over taket forkastes de eldste målingene og telles. Det er omtrent 248 000 målinger, omtrent to minutter ved 2 000 målinger i sekundet, så dimensjoner den ut fra din egen rate, omtrent 240 byte per måling med korte tag-navn (målt på samme kø i Edge 4.21.1), og hold den godt under `persistence.size`. Sett den til `0`, og den er ubegrenset igjen: et langt nok brokerbrudd fyller da volumet i stedet for å forkaste gamle målinger, et fullt volum er et andre brudd oppå det første, og installasjonsnotatene sier det. Et relé oppgradert med `--reuse-values` beholder det det hadde.
+
+`persistence.enabled=false` starter siden 4.17.0 (i 4.16.0 drepte det releet ved oppstart), med en emptyDir på `/data` begrenset til `persistence.size`. Vit hva det koster før du velger det: hver gang poden erstattes (en node-drain, en eviction, en `kubectl delete pod`, en `helm upgrade` som ruller den) mister den videresendingskøen og hver måling bufret i den, enhver pushet enhetsfil (releet går i stillhet tilbake til chartets `devices`) og OPC UA-klientsertifikatet, slik at hver sikret server må stole på releet på nytt. Installasjonsnotatene skriver ut den advarselen. Greit for en prøve. For et relé der målingene betyr noe, behold PVC-en.
+
+En pushet enhetsfil ligger på det samme volumet, i `/data/pushed-devices.json` (`pushedDevicesFile` i chartets verdier), og vinner over chartets `devices` så lenge den finnes, gjennom omstarter, omplanlegginger og en `helm upgrade` som endrer `devices`. Releet logger hvilken fil det startet fra. For å gå tilbake til chartets liste, fjern pushen med `DELETE /api/fleet/{id}/config` på Gateway mens releet er tilkoblet, så bytter det til chartets liste på stedet. En push gjelder også live, uten omstart.
+
+## Quadlet
+
+For en Pi eller en industri-PC utenfor enhver klynge. Quadlet gjør containeren til en ekte systemd-tjeneste: den starter ved oppstart uten at noen er pålogget, starter på nytt når den dør og logger til journalen. Denne unit-en ble kjørt på Podman 4.9.3, og nøklene ble sjekket mot `quadlet`-binæren fra Podman 5.8.6. Raspberry Pi OS Bookworm leveres med 4.3, som ikke har Quadlet i det hele tatt, så bruk Trixie eller nyere.
+
+Unit-en og datavolumet ligger i `deploy/quadlet/` i HotLoop-repoet, ved siden av `devices.example.json`. Lag katalogene først:
+
+```bash
+sudo mkdir -p /etc/containers/systemd /etc/edge-relay
+```
+
+Lagre dette som `/etc/containers/systemd/edge-relay.container`, og endre broker, gruppe og node for denne maskinen:
+
+```ini
+[Unit]
+Description=HotLoop Edge Relay
+Documentation=https://docs.hotloop.io/edge-relay/reference/
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+# Every box tracks :stable, so this line never needs editing.
+Image=ghcr.io/hotloop-io/hotloop-edge-relay:stable
+AutoUpdate=registry
+ContainerName=edge-relay
+
+# The image has no shell or curl, so the binary asks itself. A JSON array,
+# not a string, because a string runs through /bin/sh -c and there isn't one.
+HealthCmd=["/edge-relay", "--healthcheck"]
+HealthInterval=10s
+HealthRetries=3
+HealthStartPeriod=20s
+Notify=healthy
+# Podman 4.9 reads Notify=healthy as plain true. Without this line a broken
+# release is not rolled back there.
+PodmanArgs=--sdnotify=healthy
+
+# The image digest, written by the ExecStartPre below, for the Gateway's fleet list.
+EnvironmentFile=/run/edge-relay/relay.env
+
+Environment=HOTLOOP_EDGE_PUBLISH_BROKER=tcp://gateway.example.local:1883
+Environment=HOTLOOP_EDGE_PUBLISH_GROUP=Plant1
+Environment=HOTLOOP_EDGE_PUBLISH_NODE=press-line-3
+# The outage queue's limit, 64 MiB.
+Environment=HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES=67108864
+Environment=HOTLOOP_EDGE_RELAY_DEVICES_FILE=/etc/edge-relay/devices.json
+# Where a pushed device file lands, instead of failing on the read-only
+# mount below. It wins over the file above for as long as it exists.
+Environment=HOTLOOP_EDGE_RELAY_PUSHED_FILE=/data/pushed-devices.json
+Environment=HOTLOOP_LOG_LEVEL=info
+
+# Delete this line if the broker takes anonymous connections.
+Secret=edge-relay-broker-password,type=env,target=HOTLOOP_EDGE_PUBLISH_PASSWORD
+
+Volume=/etc/edge-relay/devices.json:/etc/edge-relay/devices.json:ro,Z
+Volume=edge-relay-data.volume:/data
+
+# Only reachable from this host. /status has no auth, on purpose.
+PublishPort=127.0.0.1:8081:8081
+
+User=65532:65532
+ReadOnly=true
+Tmpfs=/tmp
+NoNewPrivileges=true
+DropCapability=all
+
+[Service]
+Restart=always
+RestartSec=5
+# Exit status 75 is a relay stopping because an operator approved an update.
+SuccessExitStatus=75
+
+RuntimeDirectory=edge-relay
+ExecStartPre=/bin/sh -c '/usr/bin/podman image exists ghcr.io/hotloop-io/hotloop-edge-relay:stable || /usr/bin/podman pull ghcr.io/hotloop-io/hotloop-edge-relay:stable'
+ExecStartPre=/bin/sh -c 'echo HOTLOOP_IMAGE_DIGEST=$$(/usr/bin/podman image inspect --format "{{.Digest}}" ghcr.io/hotloop-io/hotloop-edge-relay:stable) > /run/edge-relay/relay.env'
+
+# A bad image fails three healthchecks in about a minute, and then it is rolled back.
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Og dette som `/etc/containers/systemd/edge-relay-data.volume`. Det inneholder videresendingskøen og enhver pushet enhetsfil. Det er et navngitt volum slik at det overlever en `podman system prune`, og slik at eierskapet samsvarer med containerens ikke-root-bruker uten en chown:
+
+```ini
+[Volume]
+```
+
+Legg enhetsfilen i `/etc/edge-relay/devices.json`, deretter:
+
+```bash
+printf '%s' 'your-broker-password' | \
+  sudo podman secret create edge-relay-broker-password -
+sudo systemctl daemon-reload
+sudo systemctl start edge-relay.service
+sudo systemctl status edge-relay.service
+curl localhost:8081/status
+```
+
+Tar brokeren imot anonyme tilkoblinger? Hopp over secret-en og slett `Secret=`-linjen. På et isolert OT-nettverk er det et ekte oppsett, ikke en feil å gå utenom. `:Z` på monteringen av enhetsfilen er for SELinux, og harmløs på en distribusjon uten.
+
+For å endre enheter fra maskinen: rediger filen, deretter `sudo systemctl restart edge-relay.service`. En enhetsfil pushet fra Gateway trenger ingenting av det, fordi den gjelder live. Mens en push er på plass, er det den releet kjører og starter fra, så endringene dine i den lokale filen gjør ingenting før du fjerner pushen med `DELETE /api/fleet/{id}/config` på Gateway. Når noe ser galt ut, `sudo journalctl -u edge-relay.service` før noe annet. Releet sier hvilken fil det er på, og hvorfor det avviste en enhetsfil eller en push, og å lese det tar kortere tid enn å tvile på JSON-en din.
+
+### Oppdateringer
+
+Unit-en følger `:stable`, og Podman flytter den når tidtakeren er på:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+Når tidtakeren utløses, henter Podman `:stable`, og hvis digesten endret seg, starter den unit-en på nytt på det nye bildet. Unit-en regnes ikke som oppe før releets egen healthcheck består, så hvis det nye bildet aldri gjør det, setter Podman det forrige tilbake og starter det. En release som ikke kan starte, koster noen minutter på én maskin, og ikke et relé som blir nede. Videresendingskøen og en pushet enhetsfil ligger på datavolumet, som et nytt bilde ikke rører. Gateways flåteliste viser hvert releés versjon og bilde-digest og logger en linje når en endrer seg.
+
+Podman oppdaterer hver merket container på maskinen når den kjører, ikke bare denne. Et sted som vil at en person skal si når, har to opt-ins, begge i `deploy/quadlet/`. `edge-relay-hold.conf` holder oppdateringer tilbake til en administrator på Gateway godkjenner dem med `POST /api/fleet/{id}/update`, og den trenger tidtakeren av for hele maskinen. `update-window.conf` lar tidtakeren utløses bare i et vindu, som søndag klokken 03:00. Gateway kan ikke fortelle deg at en oppdatering venter, bare hva hvert relé kjører nå. Tilbakeholdelsen ble kjørt med en ekte oppdatering holdt i 30 sekunder og så tatt på godkjenning, og referansesiden, [Oppdatere et relé](/nb/edge-relay/reference/#updating-a-relay), har alt den gjør og ikke kan.
+
+## Deretter: styr det fra en Gateway
+
+Flåtestyring er av i Gateway til du slår den på, fordi en Gateway uten relé ikke har noen broker å peke på. Sett `HOTLOOP_FLEET_ENABLED` til `true` og pek `HOTLOOP_FLEET_BROKER` på den samme brokeren relé-ene publiserer til, med `HOTLOOP_FLEET_USER`, `HOTLOOP_FLEET_PASSWORD` og `HOTLOOP_FLEET_TLS` hvis den trenger dem. Gateway-chartet har ingen egne flåteverdier, så de går i `extraEnv`:
+
+```yaml
+extraEnv:
+  - name: HOTLOOP_FLEET_ENABLED
+    value: "true"
+  - name: HOTLOOP_FLEET_BROKER
+    value: tcp://gateway.plant.local:1883
+```
+
+Registrer så hvert relé med gruppe og node. Registreringen er med vilje: et relé som bare dukker opp på brokeren, er ikke et flåtemedlem før noen sier det. Send med `POST` dette til `/api/fleet` som en bruker med `fleet.write`:
+
+```json
+{
+  "id": "press-line-3",
+  "name": "Press line 3",
+  "group": "Plant1",
+  "nodeId": "press-line-3",
+  "statusUrl": "http://press-line-3.hotloop.svc:8081"
+}
+```
+
+`statusUrl` er valgfri. Uten den vet Gateway online og offline fra fødsler og dødsfall. Med den spør Gateway også releets `/status` om kødybde og enhetsantall, og et relé den ikke når, vises som utilgjengelig, aldri som en sunn null. Quadlet-unit-en over publiserer bare 8081 på `127.0.0.1`, så en Gateway på en annen maskin kan ikke nå `/status` før du endrer `PublishPort=`, og da er den også nåbar for alle på det nettverket.
+
+Fra da av følger Gateway releet og kan sende det `POST /api/fleet/{id}/rebirth`, `POST /api/fleet/{id}/restart`, `POST /api/fleet/{id}/update` eller `POST /api/fleet/{id}/config`. Den siste er pushen, som virker fra 4.17.0 og aldri gjorde det i 4.16.0, og gjelder live fra 4.18.10. `DELETE /api/fleet/{id}/config` fjerner en push, og releet går tilbake til sin lokale fil på stedet. Alt dette er bare API: det finnes ingen flåteskjerm i Gateways brukergrensesnitt. Før du stoler på noe av det, lås brokerens ACL slik at bare Gateway kan publisere kommandoer og enhetsfiler. [Oversikten](/nb/edge-relay/overview/#hvem-som-kan-kommandere-det) sier hvorfor.

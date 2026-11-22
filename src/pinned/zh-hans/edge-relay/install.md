@@ -1,0 +1,256 @@
+---
+title: "Helm 与 Quadlet 安装 Relay"
+description: "在集群上用 Helm 运行 HotLoop Edge Relay {{hotloop}}，或在树莓派、工控机上用 Podman Quadlet 作为 systemd 服务运行。附完整的 unit 文件。"
+sidebar:
+  label: "安装"
+---
+
+支持两种方式，都是容器，都会开机自启并在退出后重启：集群上用 Helm chart，不在集群里的机器上用 Podman Quadlet unit。在 SSH 会话里直接敲一条 `podman run` 不算其中之一。边缘设备正是这样悄悄停止转发的：有人一退出登录，容器也跟着消失，直到历史库出现空洞才有人发现。也没有 Docker 这条路。
+
+无论走哪条路，中继都需要两样东西：一个用来发布的代理，以及一个 Sparkplug 组 id。镜像无需登录即可拉取。
+
+:::note[从 4.17.0 或 4.16.0 升级]
+从 4.17.0 起，请用 `--reset-then-reuse-values` 升级 chart，Quadlet 用户使用新的 `edge-relay.container`，它跟随 `:stable`，而不是固定在 4.17.0。中继相关的部分见[从 4.17.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay-and-quadlet)。4.16.0 的中继在下面两种安装方式中都无法接收推送的设备文件：Gateway 显示 `config pushed`，而推送却死在只读挂载上，`persistence.enabled=false` 甚至无法启动。4.17.0 修复了这两处，这部分内容见[从 4.16.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay)，其中包括代理在首次启动时可能返回的过期推送。
+:::
+
+## 设备文件
+
+两种方式读取的是同一份文档：要轮询的设备，以及要在这些设备上读取的变量。
+
+```json
+{
+  "devices": [
+    {
+      "id": "press-01",
+      "name": "Press 1",
+      "protocol": "opcua",
+      "address": "opc.tcp://press-01.local:4840",
+      "enabled": true,
+      "pollIntervalMs": 1000
+    }
+  ],
+  "tags": [
+    {
+      "deviceId": "press-01",
+      "name": "Zone1_Temp",
+      "address": "ns=2;s=Zone1.Temp",
+      "dataType": "float",
+      "enabled": true
+    }
+  ]
+}
+```
+
+这与 Gateway 的 API 接受的设备和变量格式相同，按相同的规则检查：设备需要 HotLoop 认识的协议，变量需要一个存在的设备。此外，中继会拒绝被声明两次的设备 id，以及指向从未声明过的设备的变量，这是手工编辑的文件会犯的两种错误，而数据库本来会替您拦下它们。
+
+本地文件在启动时读取，在推送被清除时再读一次。修改它，然后重启中继。它不会被监视，这是有意的。从 Gateway 推送的设备文件才是实时生效的那一份，只要它存在，就优先于这份文件。
+
+文件还可以带一个 `discovery` 列表，列出中继监听的 MQTT 代理，用来发现主动宣告自己的设备，只读。格式见[参考](/zh-hans/edge-relay/reference/)。
+
+设备的 `config` 块可以包含凭据，比如 OPC UA 的 `username` 和 `password`。它们以明文存放在该文件中，而中继没有可以把它们藏在后面的 API，所以文件放在哪里很重要。下面的两条路径都处理了这一点。
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install press-line-3 hotloop/hotloop-edge-relay \
+  --version {{hotloop}} --namespace hotloop --create-namespace \
+  --set edgePublish.broker=tcp://gateway.plant.local:1883 \
+  --set edgePublish.group=Plant1 \
+  --set edgePublish.node=press-line-3 \
+  -f devices.yaml
+```
+
+`edgePublish.broker` 和 `edgePublish.group` 是必填项，没有它们 chart 拒绝渲染。同时请设置 `edgePublish.node`。留空时它是 pod 的主机名，而 Deployment 的 pod 每次被替换都会换一个新名字。下一次节点排空之后，Gateway 的设备群和上游每个 Sparkplug 主机都会看到一个全新的边缘节点，而您注册的那个会显示为离线。
+
+代理密码：放在 `edgePublish.password` 中，或在 `edgePublish.existingSecret` 中指定一个带 `password` 键的 Secret。如果代理使用 TLS，请开启 `edgePublish.tls`。
+
+`devices.yaml` 包含与设备文件相同的两个列表，位于 `devices:` 和 `tags:` 之下：
+
+```yaml
+devices:
+  - id: press-01
+    name: Press 1
+    protocol: opcua
+    address: "opc.tcp://press-01.local:4840"
+    enabled: true
+    pollIntervalMs: 1000
+tags:
+  - deviceId: press-01
+    name: Zone1_Temp
+    address: "ns=2;s=Zone1.Temp"
+    dataType: float
+    enabled: true
+```
+
+它们会进入 ConfigMap 和 Helm release 记录，任何能读取该命名空间中 ConfigMap 的人都能读到。如果设备带有密码，请把整个设备文件放进一个 Secret，键名为 `devices.json`，然后改为指定它。该 Secret 会代替 ConfigMap 挂载，`devices` 和 `tags` 会被忽略：
+
+```bash
+kubectl -n hotloop create secret generic press-devices --from-file=devices.json
+helm upgrade press-line-3 hotloop/hotloop-edge-relay --version {{hotloop}} \
+  --reset-then-reuse-values --set devicesSecret=press-devices
+```
+
+用 `--reset-then-reuse-values`，而不是 `--reuse-values`。普通的那个会重放 release 已有的值，并跳过较新 chart 新增的任何默认值。在 4.16.0 上安装的中继上运行它，会丢掉 `pushedDevicesFile`，于是推送又会死在只读挂载上，而且没有任何失败来提醒您。
+
+安装说明随后会警告没有配置设备。它们统计的是 chart 的 `devices` 列表，而您是有意把它留空的。请改查 `/status`：
+
+```bash
+kubectl -n hotloop logs deploy/press-line-3
+kubectl -n hotloop port-forward svc/press-line-3 8081:8081
+curl localhost:8081/status
+```
+
+### 转发队列及其卷
+
+转发队列位于它自己的 PVC 上，默认 256Mi（`persistence.size`），所以 pod 迁移后，缓冲的读数依然保留。同一个卷还在 `/data/opcua-client-pki` 保存 OPC UA 客户端证书及其信任库，这样受保护的服务器只需信任中继一次，而不是每次重启后都要重新信任。
+
+`edgePublish.queueMaxBytes` 默认是 64 MiB（`67108864`），以前是 `0`，即无上限。超过上限后，最旧的读数会被丢弃并计数。这大约是 248,000 条读数，按每秒 2,000 条算大约两分钟，所以请根据您自己的速率来定大小，变量名较短时每条读数约 240 字节（在 Edge 4.21.1 的同一队列上测得），并让它明显小于 `persistence.size`。设为 `0` 则又变回无上限：足够长的代理故障会写满卷，而不是丢弃旧读数，卷写满就是叠加在第一次故障之上的第二次故障，安装说明里也这样提醒。用 `--reuse-values` 升级的中继保留原有的值。
+
+`persistence.enabled=false` 自 4.17.0 起可以启动（在 4.16.0 上它会在启动时杀死中继），在 `/data` 使用一个上限为 `persistence.size` 的 emptyDir。选择之前请清楚它的代价：每次 pod 被替换（节点排空、驱逐、`kubectl delete pod`、导致它滚动更新的 `helm upgrade`），它都会丢失转发队列和其中缓冲的每一条读数、任何推送的设备文件（中继会悄悄回到 chart 的 `devices`），以及 OPC UA 客户端证书，因此每台受保护的服务器都得重新信任中继。安装说明会打印这条警告。试用没问题。对读数重要的中继，请保留 PVC。
+
+推送的设备文件位于同一个卷上，路径是 `/data/pushed-devices.json`（chart 的值中的 `pushedDevicesFile`），只要它存在，就会优先于 chart 的 `devices`，在重启、重新调度和修改 `devices` 的 `helm upgrade` 之后依然如此。中继会记录它是从哪个文件启动的。要回到 chart 的列表，请在中继已连接时，在 Gateway 上用 `DELETE /api/fleet/{id}/config` 清除推送，它会立即切换到 chart 的列表。推送同样是实时生效的，无需重启。
+
+## Quadlet
+
+适用于任何集群之外的树莓派或工控机。Quadlet 把容器变成真正的 systemd 服务：无人登录时开机自启，退出后重启，并写入 journal。这个 unit 在 Podman 4.9.3 上运行过，它的键用 Podman 5.8.6 的 `quadlet` 二进制文件核对过。Raspberry Pi OS Bookworm 自带的是完全没有 Quadlet 的 4.3，所以请使用 Trixie 或更新版本。
+
+这个 unit 及其数据卷位于 HotLoop 仓库的 `deploy/quadlet/` 中，紧挨着 `devices.example.json`。先创建目录：
+
+```bash
+sudo mkdir -p /etc/containers/systemd /etc/edge-relay
+```
+
+把下面的内容保存为 `/etc/containers/systemd/edge-relay.container`，并为这台机器修改代理、组和节点：
+
+```ini
+[Unit]
+Description=HotLoop Edge Relay
+Documentation=https://docs.hotloop.io/edge-relay/reference/
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+# Every box tracks :stable, so this line never needs editing.
+Image=ghcr.io/hotloop-io/hotloop-edge-relay:stable
+AutoUpdate=registry
+ContainerName=edge-relay
+
+# The image has no shell or curl, so the binary asks itself. A JSON array,
+# not a string, because a string runs through /bin/sh -c and there isn't one.
+HealthCmd=["/edge-relay", "--healthcheck"]
+HealthInterval=10s
+HealthRetries=3
+HealthStartPeriod=20s
+Notify=healthy
+# Podman 4.9 reads Notify=healthy as plain true. Without this line a broken
+# release is not rolled back there.
+PodmanArgs=--sdnotify=healthy
+
+# The image digest, written by the ExecStartPre below, for the Gateway's fleet list.
+EnvironmentFile=/run/edge-relay/relay.env
+
+Environment=HOTLOOP_EDGE_PUBLISH_BROKER=tcp://gateway.example.local:1883
+Environment=HOTLOOP_EDGE_PUBLISH_GROUP=Plant1
+Environment=HOTLOOP_EDGE_PUBLISH_NODE=press-line-3
+# The outage queue's limit, 64 MiB.
+Environment=HOTLOOP_EDGE_PUBLISH_QUEUE_MAX_BYTES=67108864
+Environment=HOTLOOP_EDGE_RELAY_DEVICES_FILE=/etc/edge-relay/devices.json
+# Where a pushed device file lands, instead of failing on the read-only
+# mount below. It wins over the file above for as long as it exists.
+Environment=HOTLOOP_EDGE_RELAY_PUSHED_FILE=/data/pushed-devices.json
+Environment=HOTLOOP_LOG_LEVEL=info
+
+# Delete this line if the broker takes anonymous connections.
+Secret=edge-relay-broker-password,type=env,target=HOTLOOP_EDGE_PUBLISH_PASSWORD
+
+Volume=/etc/edge-relay/devices.json:/etc/edge-relay/devices.json:ro,Z
+Volume=edge-relay-data.volume:/data
+
+# Only reachable from this host. /status has no auth, on purpose.
+PublishPort=127.0.0.1:8081:8081
+
+User=65532:65532
+ReadOnly=true
+Tmpfs=/tmp
+NoNewPrivileges=true
+DropCapability=all
+
+[Service]
+Restart=always
+RestartSec=5
+# Exit status 75 is a relay stopping because an operator approved an update.
+SuccessExitStatus=75
+
+RuntimeDirectory=edge-relay
+ExecStartPre=/bin/sh -c '/usr/bin/podman image exists ghcr.io/hotloop-io/hotloop-edge-relay:stable || /usr/bin/podman pull ghcr.io/hotloop-io/hotloop-edge-relay:stable'
+ExecStartPre=/bin/sh -c 'echo HOTLOOP_IMAGE_DIGEST=$$(/usr/bin/podman image inspect --format "{{.Digest}}" ghcr.io/hotloop-io/hotloop-edge-relay:stable) > /run/edge-relay/relay.env'
+
+# A bad image fails three healthchecks in about a minute, and then it is rolled back.
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target
+```
+
+再把下面的内容保存为 `/etc/containers/systemd/edge-relay-data.volume`。它保存转发队列和任何推送的设备文件。它是命名卷，所以能在 `podman system prune` 后保留，并且无需 chown，其属主就与容器的非 root 用户匹配：
+
+```ini
+[Volume]
+```
+
+把设备文件放到 `/etc/edge-relay/devices.json`，然后：
+
+```bash
+printf '%s' 'your-broker-password' | \
+  sudo podman secret create edge-relay-broker-password -
+sudo systemctl daemon-reload
+sudo systemctl start edge-relay.service
+sudo systemctl status edge-relay.service
+curl localhost:8081/status
+```
+
+代理允许匿名连接？请跳过 secret，并删除 `Secret=` 这一行。在隔离的 OT 网络上，这是一种真实的配置，而不是需要绕开的错误。设备文件挂载上的 `:Z` 用于 SELinux，在没有它的发行版上无害。
+
+要在机器上更改设备：编辑文件，然后 `sudo systemctl restart edge-relay.service`。从 Gateway 推送的设备文件完全不需要这些，因为它实时生效。只要有推送在生效，它就是中继运行和启动所依据的内容，因此在您用 Gateway 上的 `DELETE /api/fleet/{id}/config` 清除推送之前，您对本地文件的编辑不会有任何作用。当某处看起来不对时，首先运行 `sudo journalctl -u edge-relay.service`。中继会说明它用的是哪个文件，以及它为什么拒绝了设备文件或推送，读它比怀疑自己的 JSON 花的时间少。
+
+### 更新
+
+这个 unit 跟随 `:stable`，一旦它的定时器开启，Podman 就会更新它：
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+定时器触发时，Podman 拉取 `:stable`，如果摘要变了，就用新镜像重启 unit。在中继自身的健康检查通过之前，unit 不算启动，所以如果新镜像始终通不过，Podman 会换回之前的镜像并启动它。一个无法启动的版本，代价是一台机器上的几分钟，而不是一个一直宕机的中继。转发队列和推送的设备文件在数据卷上，新镜像不会碰它。Gateway 的设备群列表显示每个中继的版本和镜像摘要，并在其中一个变化时记录一行日志。
+
+Podman 运行时会更新机器上每一个带标签的容器，而不只是这一个。想让人来决定何时更新的站点有两个选项，都在 `deploy/quadlet/` 中。`edge-relay-hold.conf` 会扣住更新，直到 Gateway 上的管理员用 `POST /api/fleet/{id}/update` 批准，并且需要整台机器的定时器关闭。`update-window.conf` 只让定时器在某个时间窗内触发，比如周日 03:00。Gateway 无法告诉您有更新在等待，只能告诉您每个中继当前运行的是什么。这个扣留功能用一次真实更新验证过，先扣留 30 秒，再在批准后放行，参考页[更新中继](/zh-hans/edge-relay/reference/#updating-a-relay)写明了它能做什么和不能做什么。
+
+## 然后：通过 Gateway 来管理
+
+在您开启之前，Gateway 中的设备群管理是关闭的，因为没有中继的 Gateway 没有可指向的代理。把 `HOTLOOP_FLEET_ENABLED` 设为 `true`，并把 `HOTLOOP_FLEET_BROKER` 指向中继发布所用的同一个代理，需要时再加上 `HOTLOOP_FLEET_USER`、`HOTLOOP_FLEET_PASSWORD` 和 `HOTLOOP_FLEET_TLS`。Gateway 的 chart 没有自己的设备群值，所以它们放进它的 `extraEnv`：
+
+```yaml
+extraEnv:
+  - name: HOTLOOP_FLEET_ENABLED
+    value: "true"
+  - name: HOTLOOP_FLEET_BROKER
+    value: tcp://gateway.plant.local:1883
+```
+
+然后按组和节点注册每个中继。注册是有意为之：只是出现在代理上的中继，在有人说它是之前，并不是设备群成员。以拥有 `fleet.write` 的用户身份，把下面的内容 `POST` 到 `/api/fleet`：
+
+```json
+{
+  "id": "press-line-3",
+  "name": "Press line 3",
+  "group": "Plant1",
+  "nodeId": "press-line-3",
+  "statusUrl": "http://press-line-3.hotloop.svc:8081"
+}
+```
+
+`statusUrl` 是可选的。没有它，Gateway 通过出生和死亡消息得知在线和离线。有了它，Gateway 还会轮询中继的 `/status` 以获取队列深度和设备数量，而它无法连到的中继会显示为不可达，绝不会显示成健康的零。上面的 Quadlet unit 只在 `127.0.0.1` 上发布 8081，所以另一台机器上的 Gateway 无法访问 `/status`，除非您修改 `PublishPort=`，而那样做之后，该网络上的任何人也都能访问。
+
+从此 Gateway 跟踪该中继，并可以向它发送 `POST /api/fleet/{id}/rebirth`、`POST /api/fleet/{id}/restart`、`POST /api/fleet/{id}/update` 或 `POST /api/fleet/{id}/config`。最后一个就是推送，从 4.17.0 起生效，在 4.16.0 上从未生效，并自 4.18.10 起实时应用。`DELETE /api/fleet/{id}/config` 清除一次推送，中继立即回到它的本地文件。这一切都只通过 API：Gateway 的界面里没有设备群页面。在依赖其中任何一项之前，请锁紧代理的 ACL，使只有 Gateway 能发布命令和设备文件。[概览](/zh-hans/edge-relay/overview/#谁能指挥它)说明了原因。
