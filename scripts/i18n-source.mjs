@@ -95,17 +95,30 @@ const segLines = (text) => parse(text).flatMap((x, i) => (x.seg !== undefined ? 
 
 // ---- headings and anchors -------------------------------------------------------------
 const stripMd = (s) => s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[*`]/g, '').replace(/<[^>]+>/g, '').trim();
+// A code fence opens with 3 or more backticks or tildes and closes only with the same character, at least as many.
+// So a ```` block that shows a ``` fence inside it, or a ~~~ block that holds backticks, stays one block. Call it
+// line by line with the open fence (or null); it returns the fence still open after the line and whether the line
+// belongs to the code (the opening and closing lines included).
+export function fenceStep(open, line) {
+  if (open) {
+    const c = /^\s*(`{3,}|~{3,})\s*$/.exec(line);
+    return c && c[1][0] === open[0] && c[1].length >= open.length ? { open: null, code: true } : { open, code: true };
+  }
+  const f = /^\s*(`{3,}|~{3,})/.exec(line);
+  return f ? { open: f[1], code: true } : { open: null, code: false };
+}
 export function headingSlugs(text) {
   const s = new GithubSlugger();
   const out = [];
-  let fence = false;
+  let fence = null;
   const lines = text.replace(/\r\n/g, '\n').split('\n');
   let i = 0;
   if (lines[0] === '---') { i = 1; while (i < lines.length && lines[i] !== '---') i++; i++; } // a front matter comment line is not a heading
   for (; i < lines.length; i++) {
     const l = lines[i];
-    if (/^\s*(```|~~~)/.test(l)) { fence = !fence; continue; }
-    if (fence) continue;
+    const st = fenceStep(fence, l);
+    fence = st.open;
+    if (st.code) continue;
     const m = /^(#{1,6}) +(.*?)\s*#*$/.exec(l);
     if (m) out.push(s.slug(stripMd(m[2])));
   }
@@ -303,10 +316,11 @@ export function anchorProblems(v, { fix = false } = {}) {
     for (const lang of langs) {
       const files = [`${PINNED}/${lang}/${id}.md`, `${CONTENT}/${lang}/${id}.md`, `${CONTENT}/${lang}/${id}.mdx`].filter((p) => v.exists(p));
       const text = v.read(files[files.length - 1]);
-      let fence = false;
+      let fence = null;
       for (const line of text.split('\n')) {
-        if (/^\s*(```|~~~)/.test(line)) { fence = !fence; continue; }
-        if (fence) continue;
+        const st = fenceStep(fence, line);
+        fence = st.open;
+        if (st.code) continue;
         for (const m of line.matchAll(/(?<!!)\]\(([^)\s]*)#([^)\s]+)\)/g)) {
           const path = m[1], anchor = m[2];
           let target = id;
