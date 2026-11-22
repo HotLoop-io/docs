@@ -1,0 +1,93 @@
+---
+title: "HotLoop Gateway im Überblick"
+description: "Ein Industrie-Gateway: zwölf native Treiber, ein Historian mit Qualität, ISA-18.2-Alarme, MCP für Agenten und ein Schreib-Gate, an dem keiner vorbeikommt."
+sidebar:
+  label: "Übersicht"
+---
+
+:::note[{{hotloop}} ist da]
+Vier Produkte aus einem Tag: [IoT](/de/iot/overview/), [Edge](/de/edge/overview/), das Gateway und das [Edge Relay](/de/edge-relay/overview/), jedes mit eigenem Image und eigenem Chart. Alle vier werden in {{hotloop}} für amd64 und arm64 gebaut, die drei kleinen auch für arm/v7. Das Gateway behält `ghcr.io/hotloop-io/hotloop:{{hotloop}}` und das Chart `hotloop` von `https://hotloop.io/hotloop`, und beide lassen sich ohne Anmeldung laden. [Installieren Sie es](/de/gateway/install/). Sie sind auf 4.18.11? Das ist ein `helm upgrade`, und danach dürfen Agenten schreiben, lesen Sie also die beiden Änderungen. Sie sind auf 4.17.0? Das ist ein einfaches `helm upgrade`, aber nicht mit `--reuse-values`, und ein paar Standardwerte haben sich verschoben. Sie sind auf 4.16.0 oder 4.3.1? Dann zuerst über 4.17.0. In jedem Fall gilt: [Lesen Sie zuerst die Upgrade-Anleitung](/de/gateway/upgrading/). Das erfahren Sie besser hier als bei einem hängenden Rollout.
+:::
+
+HotLoop Gateway liest Ihr Werk. Es fragt SPS und Server in deren eigenem Protokoll ab, speichert jeden Messwert samt Qualität in einem Historian, löst ISA-18.2-Alarme aus, die ein Telefon anrufen können, führt Automatisierungen über alles aus und reicht das ganze Werk per MCP an Agenten weiter. Ein Standort betreibt ein einziges Chart, das Gateway mit seiner Datenbank, statt eines Historians, eines Alarmservers, einer Regel-Engine und eines Haufens Klebecode, die jeder in eigenem Takt ausfallen.
+
+Es kann diese Anlagen auch steuern, deshalb läuft jeder Wert auf dem Weg zu einem Gerät durch [ein einziges Schreib-Gate](/de/gateway/write-gate/). Schreiben ist ab Werk ausgeschaltet, jedes Tag ist schreibgeschützt, bis es jemand scharf schaltet, ein Wert außerhalb seines Bereichs wird abgelehnt statt begrenzt, und jeder Versuch wird protokolliert, bevor er die Leitung berührt, Ablehnungen eingeschlossen.
+
+Es ist von Grund auf in Go geschrieben: eine statische Binärdatei auf einer Distroless-Basis, ohne Sidecar, ohne Interpreter, als Nicht-Root-Benutzer, mit allen Capabilities entzogen, auf einem schreibgeschützten Root-Dateisystem.
+
+## Wo Sie anfangen
+
+Das Fundament, in {{hotloop}} und in jedem Release bis zurück zu 4.16.0:
+
+- [Installation](/de/gateway/install/) ist Helm aus dem veröffentlichten Chart oder Podman Quadlet auf einer Box, der zu sichernde Schlüssel und die wenigen Werte, die Sie setzen, bevor ein echtes Werk es sieht.
+- [Upgrade](/de/gateway/upgrading/) ist das Verfahren, das Ihre Daten behält, ab 4.17.0, 4.16.0 oder 4.3.1, und jede API-Änderung, über die ein Skript stolpern wird.
+- [Das Schreib-Gate](/de/gateway/write-gate/) ist jede Prüfung zwischen einer Anfrage und einer Maschine, in der Reihenfolge, in der der Code sie ausführt, und was jede Ablehnung antwortet.
+- [Protokolle](/de/iot/protocols/) sagt genau, wie weit jeder Treiber erprobt ist, auch die beiden, die am 2026-11-17 auf echter Hardware liefen, S7comm und EtherNet/IP.
+- [Automatisierungen](/de/iot/automations/) behandelt Auslöser, Bedingungen und Aktionen und warum eine Regel beim Speichern kompiliert wird und nicht erst, wenn sie um 3 Uhr nachts auslöst.
+- [Model Context Protocol](/de/iot/mcp/) ist das Gateway als MCP-Server und -Client, und wie ein Gateway alle Standorte liest.
+
+Neu in 4.19.4 gegenüber 4.18.11: Agenten schreiben durch dasselbe Gate wie die Oberfläche (MCP ist in jedem Produkt an, und der Endpunkt hat immer ein Token), ein in ein skaliertes Tag geschriebener Wert landet so im Register, wie Sie es meinten, eine CODESYS-Runtime wird über die Namen ihrer Symbol Configuration gelesen, ein Kafka-Ereignisstrom kommt zu den Historian-Zielen, OPC UA PubSub über UADP abonniert und veröffentlicht, und `hostNetwork` ist eine Chart-Einstellung. 4.19.5 ist der Multi-Arch-Build davon, und 4.19.8 bringt eine Korrektur am Logbuch und Tag-Auswahlen, die den ganzen Anlagenbaum durchsuchen. [Die Release Notes](/de/releases/hotloop-4-19-4/) sagen, was jedes davon bringt und was es kostet.
+
+Neu in 4.18.11 gegenüber 4.18.10: Die Datenbank ist PostgreSQL 17 mit einem Upgrade, das von selbst läuft, SNMP und BACnet/IP über einen gemeinsamen Integrationsablauf, Kiosk-Anmeldung mit Sperre, Alarmeskalation und eine Oberfläche, die sich auf dem Telefon installieren lässt. [Die Release Notes](/de/releases/hotloop-4-18-11/) sagen, was jedes davon bringt und was es kostet.
+
+Neu in 4.18.10 gegenüber 4.17.0: die Produktreihe aus vier Produkten, die Wahl der Datenbank, MQTT und Netzwerkerkennung, Historian-Ziele und Boxen, die sich selbst aktualisieren. [Die Release Notes](/de/releases/hotloop-4-18-10/) sagen, was jedes davon bringt.
+
+Neu in 4.17.0 gegenüber 4.16.0:
+
+- [Rezepte](/de/iot/recipes/), [Skripte](/de/iot/scripts/), [Blueprints](/de/iot/blueprints/), [Helfer](/de/iot/helpers/), [Logbuch](/de/iot/logbook/) und [UniFi Network](/de/iot/unifi/). [Die Release Notes](/de/releases/hotloop-4-17-0/) sagen, was jedes davon bringt.
+
+## Was es mit den Daten macht
+
+**Historian.** Standardmäßig TimescaleDB (seit 4.18.11 auf PostgreSQL 17), und einfaches PostgreSQL oder eine SQLite-Datei funktionieren ebenfalls, denn [die Datenbank ist eine Einstellung](/de/releases/hotloop-4-18-10/). Die Verlaufstabelle ist eine Hypertable, wenn die Erweiterung da ist, und nativ bereichspartitioniert, wenn nicht, sodass ein einfaches PostgreSQL funktioniert, statt zu scheitern. Setzen Sie pro Tag ein Totband. Ohne eines schreibt ein Sensor, der im letzten Bit zittert, bei jedem Scan für immer eine Zeile, und tausend Tags im Sekundentakt sind etwa 86 Millionen Zeilen am Tag.
+
+**Alarme.** ISA-18.2, einschließlich des Zustands, den die meisten selbstgebauten Systeme übersehen: `rtn-unack`, ein Alarm, der von allein wieder normal wurde, bevor ihn jemand sah. Quittiert und wieder normal sind getrennte Achsen, daher steht der kurze Ausreißer um 03:00 Uhr noch in der Liste, wenn die Frühschicht kommt, statt spurlos zu verschwinden. Asymmetrische Totbänder sowie Ein- und Ausschaltverzögerungen verhindern, dass ein Grenzwert die Liste zu einem Rauschen flattern lässt, das niemand liest. Ausblenden endet nach höchstens 24 Stunden, denn ein Ausblenden ohne Ende ist eine Unterdrückung, die niemand aufgeschrieben hat.
+
+**Qualität.** Jeder Messwert trägt gut, unsicher oder schlecht, und schlecht heißt, der Wert ist nicht bekannt. Es heißt nie null. Alarme behalten bei einem schlechten Messwert ihren Zustand, statt ihn auszuwerten, sodass ein toter Messumformer als toter Messumformer erscheint und nicht als Prozessstörung. Trends und Berichte aggregieren nur gute Messwerte, zählen, was sie weggelassen haben, und geben einem Zeitraum ohne gute Werte gar keinen Wert. Null ist ein Messwert (ein geschlossenes Ventil, ein Durchfluss von nichts), und den hat uns niemand genommen.
+
+**Entitäten.** Die Zulaufpumpe, nicht Register 40001. Jedes Tag bekommt kostenlos eine Entität, ein Motor, ein Ventil oder ein PID-Regelkreis ist eine Entität aus den Tags, die er wirklich ist, und alles hängt an einem ISA-95-Anlagenbaum. Regeln, Bildschirme und Agenten lesen sich wie das Werk und nicht wie eine Registerkarte. Ein Motor läuft, wenn sein Rückmeldekontakt es sagt, nie weil wir ihm Start gesagt haben.
+
+**Benachrichtigung.** ntfy, Gotify, Discord, Webhook und E-Mail. Tippen Sie auf dem Telefon auf Quittieren, und der Alarm ist im Gateway quittiert, mit einem signierten Link, der abläuft und nur einmal funktioniert. Der Discord-Bot wurde gegen einen Ersatz getestet, der das dokumentierte Protokoll von Discord durchsetzt.
+
+## Die Bildschirme
+
+**Board** ist der, der an der Wand hängen bleibt. Angeheftete Tags sind Anzeigen mit ihren Alarmgrenzen dort, wo sie auf dem Bogen wirklich liegen, und der letzten Verlaufsminute darunter. Das Layout wird mit dem Werk gespeichert, nicht in einem Browser, daher zeigen der Panel-PC in der Halle und der Laptop im Büro dasselbe Board.
+
+**Entitäten** ist das Werk, wie Menschen darüber reden, jede Sache an ihrem Platz im Baum. Die Qualität wird vor dem Wert gezeichnet: Ein schlechter Messwert zeigt seinen letzten guten Wert grau und schraffiert, und nichts, dem man nicht trauen kann, sieht je aus wie etwas, dem man trauen kann. Ein Bediener, der einer veralteten Zahl traut, ist so ein Tank übergelaufen. **Werk** ist der Baum-Editor.
+
+**Übersicht, Geräte, Tags, Trends, Alarme, Automatisierungen und Protokolle** sind die Arbeitsbildschirme. 4.17.0 fügt vier hinzu: **Logbuch** ist die Zeitleiste, **Skripte** führt benannte Abläufe mit einem Formular für ihre Felder aus, **Rezepte** wendet einen Satz Sollwerte an und zeigt genau, was hinausging (ein Wert, der nicht zurückgelesen wurde, ist bernsteinfarben, nie grün), und **Blueprints** macht aus einer Regel mit Lücken eine echte Regel, mit **Erst prüfen**, das zeigt, was sie täte, bevor sie existiert. Seit 4.18.10 listet **Geräte** auch, was die Erkennung gefunden hat, schreibgeschützt, bis ein Administrator es annimmt. **Standorte** liest über mehrere Werke, und ein Standort, der nicht antwortet, wird als nicht erreichbar gezeigt, mit dem Grund, und aus der Zusammenfassung ausgelassen. Ein nicht erreichbares Werk als null Alarme zu zählen, ist so, wie eine Zentrale in der schlimmsten Nacht des Jahres entscheidet, dass alles in Ordnung ist.
+
+**Einstellungen** ist das, womit das Gateway tatsächlich läuft: jede Einstellung, ihr wirksamer Wert und ob er aus der Datenbank, einer Umgebungsvariable oder dem Standard stammt. Wenn es etwas Unerwartetes tut, finden Sie hier heraus, warum. Die Sicherheitsschalter sind dort absichtlich schreibgeschützt, denn die Hauptkontrolle darüber, ob dieser Prozess Anlagen steuern darf, gehört nicht hinter dieselbe Browsersitzung, die die Schreibvorgänge auslöst.
+
+## Wo es in der Produktreihe sitzt
+
+HotLoop ist eine Codebasis, die als vier Produkte ausgeliefert wird, alle gemeinsam aus einem Tag veröffentlicht: IoT, Edge, das Gateway und das Edge Relay. Das Gateway ist die Spitze: alles aus IoT und Edge, dazu Flottenverwaltung, standortübergreifende Zusammenfassungen und geplante Berichte. Funktionen trennen die Produkte. Protokolle nie: Jedes Produkt spricht jedes Protokoll, das wir haben, damit niemand eine Stufe höher kaufen muss, um die SPS auf dem eigenen Prüfstand zu lesen. [Die Produktreihe](/de/products/) zeigt, was jedes mitbringt.
+
+Alle vier sind heute installierbar, alle in {{hotloop}}. Das Relay hat ein eigenes Image und ein eigenes Chart, etwa 15 MB gegenüber 37 beim Gateway, ohne Datenbank und ohne Oberfläche. Die Flottenverwaltung des Gateways verfolgt und steuert jedes registrierte Relay und ist nur über die API erreichbar (`/api/fleet`): In der Oberfläche gibt es keinen Flotten-Bildschirm.
+
+Im Einsatz in einem Werk? [HotLoop im Unternehmen nutzen](/de/business/) behandelt die Lizenzierung und wie Sie uns erreichen.
+
+## Was sich geändert hat, Release für Release
+
+Jedes Release hat eigene Notes, und dort steht das Detail, damit es an einer Stelle steht und nicht an zwei.
+
+- [4.23.2](/de/releases/hotloop-4-23-2/): Eine CODESYS-Visualisierung wird als Bildschirm importiert, die Box meldet ihren eigenen Zustand an das EmberNet-Dashboard hinter einem Login, der lesen kann und sonst nichts, und ein Energiezähler kann ein Leistungsentgelt tragen. Dieser Build ist nur amd64, und die nächste Version ist der eine kleine Schritt, der die arm-Images baut.
+- [4.23.1](/de/releases/hotloop-4-23-1/): Wetterstationen und Energiezähler, die Weboberfläche in dreizehn weiteren Sprachen, Dashboards, die in eine Datei exportiert und in eine andere Installation importiert werden, und die ersten Befehle an eine UniFi-Konsole. 4.23.0 wurde getaggt und nie veröffentlicht, deshalb enthält dieses Release, was seine Notes auflisten. Dieser Build ist nur amd64.
+- [4.22.1](/de/releases/hotloop-4-22-1/): der Multi-Arch-Build von 4.22.0, ohne Änderung am Produkt.
+- [4.22.0](/de/releases/hotloop-4-22-0/): Eine Panel-Seite füllt ihren Bildschirm in jeder Größe von Rand zu Rand, der Alarme-Bildschirm importiert eine CODESYS-Export-Alarms-Datei, und OPC-UA-PubSub-Geräte auf derselben Adresse und demselben Port teilen sich einen Socket. Dieser Build ist nur amd64, und 4.22.1 ist der eine kleine Schritt, der die arm-Images baut.
+- [4.21.1](/de/releases/hotloop-4-21-1/): der Multi-Arch-Build von 4.21.0, ohne Änderung am Produkt.
+- [4.21.0](/de/releases/hotloop-4-21-0/): Ein Client kann sich mit einem X.509-Zertifikat am OPC-UA-Server anmelden, das ein Administrator einem Benutzer zugewiesen hat (aus bis `HOTLOOP_OPCUA_SERVER_ALLOW_X509=true`), OPC-UA-Passwörter von 65 bis 72 Bytes melden an, und die veralteten Sicherheitsrichtlinien `Basic128Rsa15` und `Basic256` sind standardmäßig aus, auch bei Upgrades (`HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` holt sie für einen alten Client zurück). Der CODESYS-Alarmimport liest einen Outside-range-Alarm als lo und hi. Eine Migration, 0027, die nur eine Tabelle hinzufügt.
+- [4.20.2](/de/releases/hotloop-4-20-2/): Ein EtherNet/IP-Gerät mit zwei oder mehr Tags in einem Stapel bringt seine Abfrage nicht mehr zum Absturz, und `version` gibt die Version ohne Konfiguration aus. Das erste Core-Release unter der EmberNet Source License 1.0.
+- [4.20.1](/de/releases/hotloop-4-20-1/): der Multi-Arch-Build von 4.20.0, ohne Änderung am Produkt.
+- [4.20.0](/de/releases/hotloop-4-20-0/): Die neue Weboberfläche ist die Seite unter `/`, die alte ist weg, mit denselben Bildschirmen und Bedienelementen, den Farben von HotLoop, den Bildschirmen gruppiert in Betrieb, Werk, Bauen und System und einer Leiste mit fünf Einträgen auf dem Telefon. MCP kann alles ändern, was es lesen kann: 128 Tools, vierundsechzig, die die Konfiguration ändern, und siebenunddreißig für die eigenen Funktionen des Administrators, jedes eine Route der API, ausgeführt durch ihren eigenen Handler mit der Berechtigung dieser Route, einem Pflichtgrund und dem Agenten in der Audit-Zeile, hinter `allowMcpWrites`. Dieser Build ist nur amd64, und das nächste Release baut die arm-Images.
+- [4.19.11](/de/releases/hotloop-4-19-11/): die Dashboard-Karten für Sollwert und Symbolseite, ein Schreibvorgang auf ein CODESYS- oder OPC-UA-Tag, der aus der SPS zurückgelesen wird, ein CODESYS-Gerät, das einmal pro Sekunde gelesen wird, aus einem CODESYS-Projekt importierte Alarme, die UniFi-Bildschirme, die vor der Zahl daneben eine Kurve zeichnen, und ein Kafka- oder Redpanda-Ziel, das sagt, warum ein Broker Schreibvorgänge ablehnt. Dieser Build ist nur amd64, und das nächste Release ist der eine kleine Schritt, der die arm-Images baut.
+- [4.19.10](/de/releases/hotloop-4-19-10/): der Multi-Arch-Build von 4.19.8, ohne Änderung am Produkt. Es gibt kein 4.19.9.
+- [4.19.8](/de/releases/hotloop-4-19-8/): Die Schaltfläche Ältere Einträge im Logbuch behält ihre Seite, und jede Tag-Auswahl durchsucht die ganze Anlage. Es enthält auch die Änderungen von 4.19.6 und 4.19.7, weil keines davon veröffentlicht wurde.
+- [4.19.5](/de/releases/hotloop-4-19-5/): der Multi-Arch-Build von 4.19.4, mit sonst nichts darin.
+- [4.19.4](/de/releases/hotloop-4-19-4/): Agenten-Schreibzugriffe und ein Token an jedem MCP-Endpunkt, skalierte Schreibvorgänge, die richtig ankommen, CODESYS über Symbolnamen, ein Kafka-Ereignisstrom, OPC UA PubSub über UADP und `hostNetwork`. Es gibt kein 4.19.0 bis 4.19.3, und die Notes sagen, warum.
+- [4.18.11](/de/releases/hotloop-4-18-11/): PostgreSQL 17 mit einem Upgrade, das von selbst läuft (lesen Sie dieses, bevor Sie ein laufendes Werk aktualisieren), SNMP und BACnet/IP über einen gemeinsamen Integrationsablauf, Kiosk-Anmeldung mit Sperre, Alarmeskalation und eine Oberfläche, die sich auf dem Telefon installieren lässt.
+- [4.18.10](/de/releases/hotloop-4-18-10/): die Produktreihe aus vier Produkten, die Wahl der Datenbank, MQTT und Netzwerkerkennung, Historian-Ziele und Boxen, die sich selbst aktualisieren. Es gibt kein 4.18.0 bis 4.18.9, und die Notes sagen, warum.
+- [4.17.0](/de/releases/hotloop-4-17-0/): Rezepte, Skripte, Blueprints, Helfer, das Logbuch und UniFi Network, schreibgeschützt.
+
+## Lizenz
+
+HotLoop Gateway steht unter der HotLoop Source License Agreement 1.0, wie jedes HotLoop-Produkt. Es ist kostenlos nutzbar und quelloffen einsehbar, nicht Open Source im Sinne der OSI, und jede Version wird vier Jahre nach ihrer Veröffentlichung zu AGPL-3.0 oder später. Der private und der Laborbetrieb sind kostenlos, ebenso die Nutzung durch Schulen, gemeinnützige Organisationen und Behörden für ihren eigenen Betrieb. Es gibt keine Lizenzschlüssel, und zur Laufzeit wird nichts freigeschaltet. [Die Lizenzseite](/de/license/) enthält den Text, und [HotLoop im Unternehmen nutzen](/de/business/) erklärt beide Wege, es bei der Arbeit zu betreiben.
