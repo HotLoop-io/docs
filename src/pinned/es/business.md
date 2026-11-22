@@ -1,0 +1,30 @@
+---
+title: Usar HotLoop en una empresa
+description: Cómo trata la licencia de HotLoop el uso empresarial, qué cuenta como uso empresarial y cómo prepararse para él.
+sidebar:
+  label: Usar HotLoop en una empresa
+---
+
+¿Va a ejecutar HotLoop en el trabajo? Así lo trata la licencia y así se prepara.
+
+Todos los productos HotLoop se rigen por el HotLoop Source License Agreement 1.0: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS y HotLoop Transmitter. HotLoop tiene el código disponible, no es código abierto según la OSI, y el código de Flow es público. El uso doméstico y de laboratorio es gratuito, y también lo es el de escuelas, organizaciones sin ánimo de lucro y organismos públicos para sus propias operaciones. [La página de Licencia](/es/license/) tiene los detalles, y el acuerdo completo prevalece sobre lo escrito aquí.
+
+## Qué cuenta como uso empresarial
+
+Más de lo que la gente espera, y es a propósito. Si lo ejecuta una empresa u otra entidad con ánimo de lucro, o usted lo ejecuta para ella, trátelo como uso empresarial. El uso puramente interno cuenta. No cobrar a nadie cuenta. Que HotLoop le haga ganar dinero o ahorrarlo no entra en la cuenta. Mejor saberlo antes de haber montado la automatización de toda una planta sobre un "es solo interno".
+
+## Cómo prepararse
+
+El soporte y las licencias los gestiona EmberNet, Gold Licensee de HotLoop. Escriba a [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). Cuéntenos qué quiere ejecutar, en cuántas máquinas y dónde, y le prepararemos con la licencia adecuada.
+
+## Plataformas asociadas
+
+HotLoop funciona en plataformas asociadas, y EmberNet es una de ellas. La documentación de cada producto tiene una página sobre cómo ejecutarlo allí.
+
+## Soporte
+
+El software se entrega tal cual, sin garantía. La ayuda de la comunidad está en [GitHub Discussions](https://github.com/orgs/HotLoop-io/discussions). Si su planta necesita a alguien responsable de un despliegue, de SLA o de una garantía, eso lo da el integrador de sistemas que contrate.
+
+## ¿Aún no lo tiene claro?
+
+Pregunte primero. Sale mucho más barato que descubrirlo después de montarlo todo sobre una suposición equivocada. Escriba a [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) y le diremos de qué lado de la línea está.

@@ -1,0 +1,61 @@
+---
+title: "HotLoop-dokumentasjon"
+description: "Dokumentasjon for alle HotLoop-produktene: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS og Transmitter, med installasjon, oppsett og bruk."
+template: splash
+editUrl: false
+hero:
+  tagline: "Programvare for fabrikkgulvet, skrevet i Go. Den leser utstyret ditt, beholder hver avlesning og flytter ikke en maskin som ingen har armert. Denne dokumentasjonen lærer deg å installere, sette opp og drive hvert produkt, og sier klart hvor langt hvert av dem er bevist."
+  actions:
+    - text: "Installer HotLoop"
+      link: /nb/install/
+      icon: right-arrow
+    - text: "Produktserien"
+      link: /nb/products/
+      variant: minimal
+    - text: "Utgivelsesnotater"
+      link: /nb/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## Familien
+
+HotLoop er åtte produkter for fabrikkgulvet: fire som vokser med en lokasjon (IoT, Edge, Gateway og Edge Relay), pluss Flow for logikk og kobling, Cascade for arbeidsflyter, HotLoop for CODESYS for PLS-ens egen skjerm og Transmitter for å legge verdiene fra en PLS ut på nettverket. De utgis på fem utgivelseslinjer, så hver har sin egen versjon. Hver del av sidemenyen viser bare det produktet leverer, og et større produkt lenker til sidene det arver fra et mindre.
+
+<ProductPicker />
+
+Usikker på hvilket som passer til boksen? [Produktserien](/nb/products/) har tabellen, størrelsene og veien fra ett produkt til det neste.
+
+## Start ut fra hva du skal gjøre
+
+<CardGrid>
+  <LinkCard title="Overvåke en maskin" description="Les utstyret, behold historikken, utløs alarmene." href="/nb/iot/overview/" />
+  <LinkCard title="Drive en linje-HMI" description="Dashbord bundet til en skjerm og en OPC UA-server for SCADA-systemet ditt." href="/nb/edge/overview/" />
+  <LinkCard title="Koble sammen lokasjoner" description="Flåtestyring, oppsummeringer på tvers av lokasjoner og planlagte rapporter." href="/nb/gateway/overview/" />
+  <LinkCard title="Koble logikk i Flow" description="Kjør Node-RED-flytene dine på en Go-kjøretid." href="/nb/flow/quick-start/" />
+  <LinkCard title="Automatisere forretningsflyter i Cascade" description="Alarmer og tidsplaner blir arbeidsflyter med sjekkpunkter." href="/nb/cascade/running/" />
+  <LinkCard title="Videresende fra en liten boks" description="Les, videresend over Sparkplug B og mellomlagre når linken faller ut." href="/nb/edge-relay/overview/" />
+  <LinkCard title="Sette skjermer på en CODESYS-PLS" description="Skjermer, alarmer og historikk ved siden av kjøretiden, uten å installere noe i CODESYS." href="/nb/codesys/overview/" />
+  <LinkCard title="Publisere fra innsiden av PLS-en" description="OPC UA PubSub over UDP fra et CODESYS-bibliotek i prosjektet ditt." href="/nb/transmitter/overview/" />
+</CardGrid>
+
+## Det siste fra hver linje
+
+<LatestReleases />
+
+## Slik leser du denne dokumentasjonen
+
+**«Verifisert» betyr at det har kjørt mot det virkelige:** en ekte OPC UA-server, en ekte broker, selve Ignition og ekte utstyr på fysisk maskinvare. Det er kravet for hver påstand på disse sidene, så når en side sier at en protokoll eller en funksjon virker, har den kjørt.
+
+**Den siste utgivelsen er den du har installert.** En side som beskriver noe nyere enn den utgitte versjonen har et merke **Neste utgivelse** og en boks øverst, så du alltid vet hva som er i installasjonen din og hva som kommer.
+
+## Hvor du går videre
+
+- [Installer HotLoop](/nb/install/), de to veiene inn: Helm på k3s, eller Podman Quadlet på en boks.
+- [Skriveporten](/nb/gateway/write-gate/), siden du bør lese før et ekte anlegg ser noe av dette.
+- [Den automatiske oppdateringen av :stable](/nb/install/auto-update/), hva en boks gjør når en utgivelse ikke starter.
+- Hvor hvert produkt er på vei: [veikartet for HotLoop](/nb/roadmap/) for IoT, Edge, Gateway og Edge Relay, [veikartet for Flow](/nb/flow/roadmap/), [veikartet for Cascade](/nb/cascade/roadmap/), [veikartet for HotLoop for CODESYS](/nb/codesys/roadmap/) og [veikartet for Transmitter](/nb/transmitter/roadmap/).
+- [Bruke HotLoop i en bedrift](/nb/business/), hvis boksen tilhører et selskap.

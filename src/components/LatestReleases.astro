@@ -3,6 +3,9 @@
 // HotLoop for CODESYS takes its version from the sync, and Transmitter's notes are hand-written pages.
 import { getCollection } from 'astro:content';
 import sync from '../data/sync.json';
+import { forPage } from '../i18n/page';
+
+const { t, to } = forPage(Astro.url.pathname);
 
 const newest = (prefix: string) =>
   sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).sort((a, b) => b.slug.localeCompare(a.slug, undefined, { numeric: true }))[0];
@@ -19,8 +22,8 @@ if (transmitter) rows.push({ label: 'HotLoop Transmitter', page: transmitter });
 ---
 
 <ul class="latest">
-  {rows.map((r) => <li><a href={`/${r.page.slug}/`}>{r.label}: {r.page.label || r.page.title}</a></li>)}
-  <li><a href="/releases/">All release notes</a></li>
+  {rows.map((r) => <li><a href={to(`/${r.page.slug}/`)}>{r.label}: {r.page.label || r.page.title}</a></li>)}
+  <li><a href={to('/releases/')}>{t('lr.all')}</a></li>
 </ul>
 
 <style>

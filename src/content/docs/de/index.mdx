@@ -1,0 +1,61 @@
+---
+title: "HotLoop-Dokumentation"
+description: "Dokumentation aller HotLoop-Produkte: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS und Transmitter, und wie man sie installiert und nutzt."
+template: splash
+editUrl: false
+hero:
+  tagline: "Software für die Fertigung, in Go geschrieben. Sie liest Ihre Anlagen, behält jeden Messwert und bewegt keine Maschine, die niemand scharf geschaltet hat. Diese Dokumentation zeigt Ihnen, wie Sie jedes Produkt installieren, einrichten und betreiben, und sagt klar, wie weit jedes erprobt ist."
+  actions:
+    - text: "HotLoop installieren"
+      link: /de/install/
+      icon: right-arrow
+    - text: "Die Produktpalette"
+      link: /de/products/
+      variant: minimal
+    - text: "Versionshinweise"
+      link: /de/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## Die Familie
+
+HotLoop sind acht Produkte für die Fertigung: vier, die mit einem Standort wachsen (IoT, Edge, Gateway und Edge Relay), dazu Flow für die Verdrahtung, Cascade für Workflows, HotLoop for CODESYS für den eigenen Bildschirm der SPS und Transmitter, um die Werte einer SPS ins Netz zu bringen. Sie erscheinen in fünf Release-Linien, jede mit ihrer eigenen Version. Jeder Abschnitt der Seitenleiste zeigt nur, was das Produkt ausliefert, und ein größeres Produkt verweist auf die Seiten, die es von einem kleineren übernimmt.
+
+<ProductPicker />
+
+Nicht sicher, welches zu Ihrer Box passt? [Die Produktpalette](/de/products/) hat die Tabelle, die Größen und den Weg von einem Produkt zum nächsten.
+
+## Starten Sie nach dem, was Sie vorhaben
+
+<CardGrid>
+  <LinkCard title="Eine Maschine überwachen" description="Anlagen lesen, den Verlauf behalten, Alarme auslösen." href="/de/iot/overview/" />
+  <LinkCard title="Eine Linien-HMI betreiben" description="Dashboards, die an einen Bildschirm gebunden sind, und ein OPC-UA-Server für Ihr SCADA." href="/de/edge/overview/" />
+  <LinkCard title="Standorte verbinden" description="Flottenverwaltung, standortübergreifende Zusammenfassungen und geplante Berichte." href="/de/gateway/overview/" />
+  <LinkCard title="Logik in Flow verdrahten" description="Ihre Node-RED-Flows auf einer Go-Laufzeit ausführen." href="/de/flow/quick-start/" />
+  <LinkCard title="Geschäftsabläufe in Cascade automatisieren" description="Alarme und Zeitpläne werden zu Workflows mit Kontrollpunkten." href="/de/cascade/running/" />
+  <LinkCard title="Von einer kleinen Box weiterleiten" description="Abfragen, über Sparkplug B weiterleiten und puffern, wenn die Verbindung ausfällt." href="/de/edge-relay/overview/" />
+  <LinkCard title="Bildschirme auf eine CODESYS-SPS bringen" description="Bildschirme, Alarme und Verlauf neben der Laufzeit, ohne etwas in CODESYS zu installieren." href="/de/codesys/overview/" />
+  <LinkCard title="Aus der SPS heraus veröffentlichen" description="OPC UA PubSub über UDP aus einer CODESYS-Bibliothek in Ihrem Projekt." href="/de/transmitter/overview/" />
+</CardGrid>
+
+## Das Neueste aus jeder Linie
+
+<LatestReleases />
+
+## So lesen Sie diese Dokumentation
+
+**„Verifiziert“ heißt, es lief gegen das echte System:** einen echten OPC-UA-Server, einen echten Broker, Ignition selbst und echte Anlagen auf physischer Hardware. Das ist die Latte für jede Aussage auf diesen Seiten. Wenn eine Seite sagt, dass ein Protokoll oder eine Funktion funktioniert, ist es gelaufen.
+
+**Das neueste Release ist das, was Sie installiert haben.** Eine Seite, die etwas Neueres beschreibt als das veröffentlichte Release, trägt ein Abzeichen **Nächstes Release** und einen Hinweiskasten oben, damit Sie immer wissen, was in Ihrer Installation steckt und was noch kommt.
+
+## Wie es weitergeht
+
+- [HotLoop installieren](/de/install/), die zwei Wege hinein: Helm auf k3s oder Podman Quadlet auf einer Box.
+- [Das Schreibtor](/de/gateway/write-gate/), die eine Seite, die Sie lesen sollten, bevor ein echtes Werk etwas davon sieht.
+- [Das automatische Update von :stable](/de/install/auto-update/), was eine Box tut, wenn ein Release nicht startet.
+- Wohin jedes Produkt geht: die [HotLoop-Roadmap](/de/roadmap/) für IoT, Edge, Gateway und Edge Relay, die [Flow-Roadmap](/de/flow/roadmap/), die [Cascade-Roadmap](/de/cascade/roadmap/), die [Roadmap von HotLoop for CODESYS](/de/codesys/roadmap/) und die [Transmitter-Roadmap](/de/transmitter/roadmap/).
+- [HotLoop im Unternehmen nutzen](/de/business/), wenn die Box einer Firma gehört.

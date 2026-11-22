@@ -16,7 +16,13 @@ const SITE = process.env.SITE_URL || null;
 const TITLE_MAX = 60;       // Google truncates around 600px, roughly 60 characters
 const TITLE_MIN = 15;
 const DESC_MIN = 70;
-const DESC_MAX = 160;       // truncated around 155 to 160
+const DESC_MAX = 160;
+// Chinese, Japanese and Korean carry about twice the meaning per character and Google counts them by
+// pixel width, so their windows are lower. These are the limits scripts/i18n-check.mjs applies to the catalogs.
+const CJK = /^(ja|ko|zh)/i;
+const limits = (lang) => (CJK.test(lang || '') ? { tMax: 40, tMin: 15, dMin: 30, dMax: 110 } : { tMax: TITLE_MAX, tMin: TITLE_MIN, dMin: DESC_MIN, dMax: DESC_MAX });
+const LANG_FOLDERS = ['es', 'fr', 'it', 'de', 'nb', 'bg', 'el', 'ko', 'ja', 'vi', 'hi', 'zh-hans', 'ar'];
+const TAG = { 'zh-hans': 'zh-Hans' };       // truncated around 155 to 160
 
 function walk(dir, out = []) {
   for (const e of readdirSync(dir)) {
@@ -62,6 +68,7 @@ const warn = (route, msg) => warnings.push(`${route}  ${msg}`);
   for (const f of [join(root, 'scripts', 'og.mjs')]) if (existsSync(f)) for (const h of scan('scripts/og.mjs', readFileSync(f, 'utf8'))) err('forbidden', h);
 }
 
+const alternatesByRoute = new Map();
 const titles = new Map();
 const descs = new Map();
 const idsByRoute = new Map();
@@ -76,7 +83,7 @@ for (const f of htmlFiles) {
   // Redirect stubs and internal test files are not pages a crawler should index.
   if (/http-equiv=["']refresh["']/i.test(src) || route.startsWith('/__')) continue;
 
-  const is404 = route.endsWith('/404.html') || route === '/404/';
+  const is404 = route.endsWith('/404.html') || /(^|\/)404\/$/.test(route);
   pages++;
 
   // ids on the page, for fragment checks
@@ -90,13 +97,30 @@ for (const f of htmlFiles) {
   const lang = root.querySelector('html')?.getAttribute('lang');
   if (!lang) err(route, 'missing <html lang>');
 
+  // A language folder serves every English page, in English with a notice, until it is translated. Those
+  // pages are marked noindex on purpose and share the English title and description, so they are exempt from
+  // the duplicate and noindex rules below. A translated page is a real page and gets every check.
+  const folder = LANG_FOLDERS.find((f) => route === `/${f}/` || route.startsWith(`/${f}/`));
+  const robotsMeta = root.querySelector('meta[name="robots"]')?.getAttribute('content') || '';
+  const fallback = Boolean(folder) && !is404 && /noindex/i.test(robotsMeta);
+  {
+    const want = folder ? (TAG[folder] || folder) : 'en';
+    if (lang && lang !== want) err(route, `<html lang="${lang}"> on a page that should be ${want}`);
+    const dir = root.querySelector('html')?.getAttribute('dir');
+    if (want === 'ar' && dir !== 'rtl') err(route, 'Arabic page without dir="rtl"');
+    if (want !== 'ar' && dir && dir !== 'ltr') err(route, `dir="${dir}" on a left-to-right page`);
+    const alts = root.querySelectorAll('link[rel="alternate"][hreflang]').map((l) => [l.getAttribute('hreflang'), l.getAttribute('href')]);
+    alternatesByRoute.set(route, { want, alts, fallback });
+  }
+
   // title
   const title = root.querySelector('title')?.text.trim();
   if (!title) err(route, 'missing <title>');
   else {
-    if (title.length > TITLE_MAX) err(route, `title is ${title.length} chars, over ${TITLE_MAX}: "${title}"`);
-    if (title.length < TITLE_MIN) warn(route, `title is only ${title.length} chars: "${title}"`);
-    if (!is404) {
+    const L = limits(fallback ? "en" : lang);
+    if ([...title].length > L.tMax) err(route, `title is ${title.length} chars, over ${L.tMax}: "${title}"`);
+    if ([...title].length < L.tMin) warn(route, `title is only ${title.length} chars: "${title}"`);
+    if (!is404 && !fallback) {
       if (titles.has(title)) err(route, `duplicate title with ${titles.get(title)}: "${title}"`);
       titles.set(title, route);
     }
@@ -106,10 +130,13 @@ for (const f of htmlFiles) {
   const desc = root.querySelector('meta[name="description"]')?.getAttribute('content')?.trim();
   if (!desc) { if (!is404) err(route, 'missing meta description'); }
   else {
-    if (desc.length > DESC_MAX) err(route, `description is ${desc.length} chars, over ${DESC_MAX}`);
-    if (desc.length < DESC_MIN) err(route, `description is only ${desc.length} chars, under ${DESC_MIN}`);
-    if (descs.has(desc)) err(route, `duplicate description with ${descs.get(desc)}`);
-    descs.set(desc, route);
+    const L = limits(fallback ? "en" : lang);
+    if ([...desc].length > L.dMax) err(route, `description is ${desc.length} chars, over ${L.dMax}`);
+    if ([...desc].length < L.dMin) err(route, `description is only ${desc.length} chars, under ${L.dMin}`);
+    if (!fallback) {
+      if (descs.has(desc)) err(route, `duplicate description with ${descs.get(desc)}`);
+      descs.set(desc, route);
+    }
   }
 
   // exactly one h1
@@ -174,8 +201,31 @@ for (const f of htmlFiles) {
   }
 
   // it should never be noindex by accident on a real page
-  if (!is404 && /noindex/i.test(root.querySelector('meta[name="robots"]')?.getAttribute('content') || '')) {
+  if (!is404 && !fallback && /noindex/i.test(robotsMeta)) {
     err(route, 'a real page is marked noindex');
+  }
+}
+
+// hreflang: a translated page lists itself, English, x-default and every other translation; the lists agree, every
+// target is a real translated page, and a page with no translation carries none. A fallback page (English under a
+// language folder) is noindex and is never named in any list.
+{
+  for (const [route, { want, alts, fallback }] of alternatesByRoute) {
+    if (fallback) { if (alts.length) err(route, 'a fallback page lists hreflang alternates'); continue; }
+    if (!alts.length) continue;
+    const map = new Map(alts);
+    for (const tag of [want, 'en', 'x-default']) if (!map.has(tag)) err(route, `hreflang is missing ${tag}`);
+    for (const [tag, url] of alts) {
+      let path;
+      try { path = new URL(url).pathname; } catch { err(route, `hreflang ${tag} is not an absolute URL: ${url}`); continue; }
+      if (!url.startsWith('https://')) err(route, `hreflang ${tag} is not https: ${url}`);
+      const there = alternatesByRoute.get(path);
+      if (!there) { err(route, `hreflang ${tag} points at a page that is not in the build: ${path}`); continue; }
+      if (there.fallback) err(route, `hreflang ${tag} points at ${path}, which is only English under a language folder`);
+      if (there.want !== (tag === 'x-default' ? 'en' : tag)) err(route, `hreflang ${tag} points at ${path}, which is ${there.want}`);
+      if (!there.alts.some(([, u]) => new URL(u).pathname === route)) err(route, `hreflang ${tag} (${path}) does not link back`);
+    }
+    if (new URL(map.get(want)).pathname !== route) err(route, `hreflang ${want} is not this page`);
   }
 }
 

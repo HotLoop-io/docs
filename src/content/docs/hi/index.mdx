@@ -1,0 +1,61 @@
+---
+title: "HotLoop दस्तावेज़"
+description: "सभी HotLoop उत्पादों के दस्तावेज़: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS और Transmitter, इंस्टॉल से उपयोग तक।"
+template: splash
+editUrl: false
+hero:
+  tagline: "Go में लिखा प्लांट-फ़्लोर सॉफ़्टवेयर। यह आपके उपकरण को पढ़ता है, हर रीडिंग रखता है, और ऐसी मशीन को नहीं चलाएगा जिसे किसी ने आर्म नहीं किया। ये दस्तावेज़ हर उत्पाद को इंस्टॉल, सेट अप और चलाना सिखाते हैं, और साफ़ बताते हैं कि हर एक को कितना परखा गया है।"
+  actions:
+    - text: "HotLoop इंस्टॉल करें"
+      link: /hi/install/
+      icon: right-arrow
+    - text: "पूरी श्रृंखला"
+      link: /hi/products/
+      variant: minimal
+    - text: "रिलीज़ नोट्स"
+      link: /hi/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## पूरा परिवार
+
+HotLoop प्लांट के लिए आठ उत्पाद हैं: चार जो एक साइट के साथ बढ़ते हैं (IoT, Edge, Gateway और Edge Relay), साथ में लॉजिक जोड़ने के लिए Flow, वर्कफ़्लो के लिए Cascade, PLC की अपनी स्क्रीन के लिए HotLoop for CODESYS, और PLC के मान नेटवर्क पर भेजने के लिए Transmitter। ये पांच रिलीज़ लाइनों पर आते हैं, इसलिए हर एक का अपना संस्करण है। साइडबार का हर अनुभाग केवल वही दिखाता है जो वह उत्पाद देता है, और बड़ा उत्पाद उन पृष्ठों से जुड़ता है जो वह छोटे उत्पाद से लेता है।
+
+<ProductPicker />
+
+पक्का नहीं कि कौन सा आपके बॉक्स के लिए सही है? [पूरी श्रृंखला](/hi/products/) में तालिका, आकार और एक उत्पाद से अगले पर जाने का रास्ता है।
+
+## आप जो कर रहे हैं उसके अनुसार शुरू करें
+
+<CardGrid>
+  <LinkCard title="एक मशीन की निगरानी" description="उपकरण पढ़ें, इतिहास रखें, अलार्म उठाएं।" href="/hi/iot/overview/" />
+  <LinkCard title="लाइन HMI चलाना" description="स्क्रीन से जुड़े डैशबोर्ड, और आपके SCADA के लिए OPC UA सर्वर।" href="/hi/edge/overview/" />
+  <LinkCard title="साइटों को जोड़ना" description="बेड़े का प्रबंधन, बहु-साइट रोल-अप और निर्धारित रिपोर्ट।" href="/hi/gateway/overview/" />
+  <LinkCard title="Flow में लॉजिक जोड़ना" description="अपने Node-RED फ़्लो Go रनटाइम पर चलाएं।" href="/hi/flow/quick-start/" />
+  <LinkCard title="Cascade में व्यावसायिक वर्कफ़्लो स्वचालित करना" description="अलार्म और शेड्यूल चेकपॉइंट वाले वर्कफ़्लो बन जाते हैं।" href="/hi/cascade/running/" />
+  <LinkCard title="छोटे बॉक्स से आगे भेजना" description="पढ़ें, Sparkplug B पर आगे भेजें, और अपलिंक टूटने पर बफ़र करें।" href="/hi/edge-relay/overview/" />
+  <LinkCard title="CODESYS PLC पर स्क्रीन लगाना" description="CODESYS में कुछ इंस्टॉल किए बिना, रनटाइम के साथ स्क्रीन, अलार्म और इतिहास।" href="/hi/codesys/overview/" />
+  <LinkCard title="PLC के अंदर से प्रकाशित करना" description="आपके प्रोजेक्ट की CODESYS लाइब्रेरी से UDP पर OPC UA PubSub।" href="/hi/transmitter/overview/" />
+</CardGrid>
+
+## हर लाइन की ताज़ा रिलीज़
+
+<LatestReleases />
+
+## इन दस्तावेज़ों को कैसे पढ़ें
+
+**“सत्यापित” का मतलब है कि यह असली चीज़ के विरुद्ध चला:** असली OPC UA सर्वर, असली ब्रोकर, स्वयं Ignition, और असली हार्डवेयर पर असली उपकरण। इन पृष्ठों के हर दावे के लिए यही कसौटी है, इसलिए जब कोई पृष्ठ कहता है कि कोई प्रोटोकॉल या सुविधा काम करती है, तो वह चली है।
+
+**नवीनतम रिलीज़ वही है जो आपके पास इंस्टॉल है।** जो पृष्ठ प्रकाशित रिलीज़ से नई चीज़ का वर्णन करता है, उस पर **अगली रिलीज़** का बैज और ऊपर एक बॉक्स होता है, ताकि आप हमेशा जानें कि आपकी इंस्टॉलेशन में क्या है और क्या आने वाला है।
+
+## आगे कहां जाएं
+
+- [HotLoop इंस्टॉल करें](/hi/install/), अंदर आने के दो रास्ते: k3s पर Helm, या बॉक्स पर Podman Quadlet।
+- [राइट गेट](/hi/gateway/write-gate/), वह एक पृष्ठ जो किसी असली प्लांट के इसे देखने से पहले पढ़ना चाहिए।
+- [:stable का स्वचालित अपडेट](/hi/install/auto-update/), जब कोई रिलीज़ शुरू नहीं हो पाती तब बॉक्स क्या करता है।
+- हर उत्पाद किस ओर जा रहा है: IoT, Edge, Gateway और Edge Relay के लिए [HotLoop रोडमैप](/hi/roadmap/), [Flow रोडमैप](/hi/flow/roadmap/), [Cascade रोडमैप](/hi/cascade/roadmap/), [HotLoop for CODESYS रोडमैप](/hi/codesys/roadmap/) और [Transmitter रोडमैप](/hi/transmitter/roadmap/)।
+- [व्यवसाय में HotLoop का उपयोग](/hi/business/), अगर बॉक्स किसी कंपनी का है।

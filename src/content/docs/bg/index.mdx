@@ -1,0 +1,61 @@
+---
+title: "Документация на HotLoop"
+description: "Документация за всички продукти на HotLoop: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS и Transmitter, с инсталиране, настройка и работа."
+template: splash
+editUrl: false
+hero:
+  tagline: "Софтуер за производствения цех, написан на Go. Чете вашето оборудване, пази всяко отчитане и няма да задвижи машина, която никой не е взел на пускане. Тази документация ви учи как да инсталирате, настроите и пуснете всеки продукт и казва ясно докъде е доказан всеки от тях."
+  actions:
+    - text: "Инсталиране на HotLoop"
+      link: /bg/install/
+      icon: right-arrow
+    - text: "Цялата гама"
+      link: /bg/products/
+      variant: minimal
+    - text: "Бележки към версиите"
+      link: /bg/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## Семейството
+
+HotLoop са осем продукта за производствения цех: четири, които растат заедно с обекта (IoT, Edge, Gateway и Edge Relay), плюс Flow за свързването на логиката, Cascade за работните процеси, HotLoop for CODESYS за собствения екран на PLC и Transmitter за изкарване на стойностите на PLC в мрежата. Излизат в пет линии на версиите, така че всяка има собствена версия. Всеки раздел в страничната лента показва само това, което продуктът доставя, а по-големият продукт сочи към страниците, които наследява от по-малкия.
+
+<ProductPicker />
+
+Не сте сигурни кой пасва на вашето устройство? [Цялата гама](/bg/products/) има таблицата, размерите и пътя от един продукт към следващия.
+
+## Започнете според това, което правите
+
+<CardGrid>
+  <LinkCard title="Наблюдение на машина" description="Четете оборудването, пазете историята, вдигайте алармите." href="/bg/iot/overview/" />
+  <LinkCard title="Управление на HMI на линия" description="Табла, свързани с екран, и OPC UA сървър за вашата SCADA." href="/bg/edge/overview/" />
+  <LinkCard title="Свързване на обекти" description="Управление на флота, обобщения за няколко обекта и планирани отчети." href="/bg/gateway/overview/" />
+  <LinkCard title="Свързване на логика във Flow" description="Пускайте вашите потоци от Node-RED върху среда за изпълнение на Go." href="/bg/flow/quick-start/" />
+  <LinkCard title="Автоматизиране на бизнес процеси в Cascade" description="Алармите и графиците стават работни процеси с контролни точки." href="/bg/cascade/running/" />
+  <LinkCard title="Препращане от малко устройство" description="Четете, препращайте през Sparkplug B и буферирайте, когато връзката падне." href="/bg/edge-relay/overview/" />
+  <LinkCard title="Екрани върху PLC с CODESYS" description="Екрани, аларми и история до средата за изпълнение, без нищо инсталирано в CODESYS." href="/bg/codesys/overview/" />
+  <LinkCard title="Публикуване от вътрешността на PLC" description="OPC UA PubSub през UDP от библиотека на CODESYS във вашия проект." href="/bg/transmitter/overview/" />
+</CardGrid>
+
+## Последното от всяка линия
+
+<LatestReleases />
+
+## Как да четете тази документация
+
+**„Проверено“ означава, че е работило срещу реалното:** истински OPC UA сървър, истински брокер, самият Ignition и истинско оборудване на физически хардуер. Това е летвата за всяко твърдение на тези страници, така че когато страница казва, че протокол или функция работи, то е работило.
+
+**Последната версия е тази, която имате инсталирана.** Страница, която описва нещо по-ново от публикуваната версия, носи значка **Следваща версия** и кутия най-отгоре, за да знаете винаги какво има във вашата инсталация и какво предстои.
+
+## Накъде нататък
+
+- [Инсталиране на HotLoop](/bg/install/), двата пътя навътре: Helm върху k3s или Podman Quadlet на устройство.
+- [Вратата за запис](/bg/gateway/write-gate/), страницата, която трябва да прочетете, преди истински завод да види нещо от всичко това.
+- [Автоматичното обновяване на :stable](/bg/install/auto-update/), какво прави едно устройство, когато версия не стартира.
+- Накъде върви всеки продукт: [пътната карта на HotLoop](/bg/roadmap/) за IoT, Edge, Gateway и Edge Relay, [пътната карта на Flow](/bg/flow/roadmap/), [пътната карта на Cascade](/bg/cascade/roadmap/), [пътната карта на HotLoop for CODESYS](/bg/codesys/roadmap/) и [пътната карта на Transmitter](/bg/transmitter/roadmap/).
+- [HotLoop в бизнеса](/bg/business/), ако устройството принадлежи на фирма.
