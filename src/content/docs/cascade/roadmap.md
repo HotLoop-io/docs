@@ -56,8 +56,11 @@ the server's refusals are translated; dates, numbers and durations follow the
 language; Arabic is written right to left with the canvas and code left to right.
 Each language is tried on every screen at desktop and phone width in a real browser,
 and the build refuses a language with a line missing. The words come from the shared
-HotLoop glossary, and the lines a native reader should confirm first are listed in
-each language's `_review.json`; none has had a native-speaker review yet.
+HotLoop glossary.
+
+## 1.4.1, the Settings page
+
+Built. The Settings page no longer puts a field back when a save's answer arrives after the person has changed it: a field that still holds what was sent takes the server's value, and one edited since keeps the edit. And the review lists in the language folders are gone.
 
 ## 1.4.0, waiting, retention, limits and backup
 
