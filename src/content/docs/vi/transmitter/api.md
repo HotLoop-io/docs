@@ -37,7 +37,6 @@ Mọi thứ nằm trong không gian tên `HLTX`. Khối là `HLTX.FB_HLTX_Publis
 | `uiMessageSize` | UINT | số byte của thông điệp gần nhất |
 | `diLastSocketResult` | UDINT | mã lỗi runtime gần nhất từ một lệnh gọi socket, 0 là bình thường |
 | `diLastClockResult` | UDINT | kết quả gần nhất của việc đọc đồng hồ PLC để lấy dấu thời gian, 0 là bình thường. Khi khác 0, thông điệp đi ra không có dấu |
-| `diLastClockResult` | UDINT | kết quả gần nhất của việc đọc đồng hồ PLC để lấy dấu thời gian, 0 là bình thường. Khi khác 0, thông điệp đi ra không có dấu |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | số micro giây dùng trong lần gọi gần nhất của khối, và lâu nhất kể từ khi bật hoặc `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | thời gian lâu nhất để dựng một thông điệp, và trong chính lệnh gọi gửi, kể từ khi bật hoặc `Clear()` |
 

@@ -37,7 +37,6 @@ Alt ligger i navnerommet `HLTX`. Blokken er `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | byte i den siste meldingen |
 | `diLastSocketResult` | UDINT | den siste feilkoden fra kjøretiden for et socketkall, 0 er i orden |
 | `diLastClockResult` | UDINT | det siste resultatet av å lese PLS-klokken for et tidsstempel, 0 er i orden. Når det ikke er 0, går meldingen ut uten stempel |
-| `diLastClockResult` | UDINT | det siste resultatet av å lese PLS-klokken for et tidsstempel, 0 er i orden. Når det ikke er 0, går meldingen ut uten stempel |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | mikrosekunder brukt i det siste kallet til blokken, og det lengste siden aktivering eller `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | den lengste tiden brukt på å bygge én melding, og i selve sendekallet, siden aktivering eller `Clear()` |
 

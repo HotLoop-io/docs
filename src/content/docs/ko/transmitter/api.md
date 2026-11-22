@@ -37,7 +37,6 @@ description: "HotLoop Transmitter 퍼블리셔 펑션 블록의 모든 입력, �
 | `uiMessageSize` | UINT | 마지막 메시지의 바이트 수 |
 | `diLastSocketResult` | UDINT | 소켓 호출에서 받은 마지막 런타임 오류 코드, 0이면 정상 |
 | `diLastClockResult` | UDINT | 타임스탬프를 위해 PLC 시계를 읽은 마지막 결과, 0이면 정상. 0이 아니면 메시지는 타임스탬프 없이 나갑니다 |
-| `diLastClockResult` | UDINT | 타임스탬프를 위해 PLC 시계를 읽은 마지막 결과, 0이면 정상. 0이 아니면 메시지는 타임스탬프 없이 나갑니다 |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | 블록의 마지막 호출에 쓴 마이크로초와, 활성화 또는 `Clear()` 이후 가장 긴 값 |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | 활성화 또는 `Clear()` 이후, 메시지 하나를 만드는 데 걸린 가장 긴 시간과 전송 호출 자체에 걸린 가장 긴 시간 |
 
