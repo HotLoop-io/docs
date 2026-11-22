@@ -1,0 +1,26 @@
+---
+title: "运行 Cascade"
+description: "用 Podman Quadlet 或 k3s 上的 Helm 运行 Cascade，可基于 SQLite 或 Postgres，并配有单元和 Chart 探针所用的健康检查。"
+---
+
+在 Podman 主机上，`deploy/quadlet` 提供 systemd 单元。一个文件加一个卷就是基于 SQLite 的 Cascade；`deploy/quadlet/postgres` 则是服务器、一个 worker 和 PostgreSQL，运行在各自独立的网络上。两者都随开机启动，失败后自动重启，并以只读、非 root、去掉全部 capability 的方式运行。其 README 有详细步骤。
+
+手动拉取某个版本：
+
+```sh
+podman pull ghcr.io/hotloop-io/hotloop-cascade:{{cascade}}
+```
+
+这些单元跟随 `:stable`，由 Podman 的自动更新定时器更新。
+
+在 k3s 上，`charts/hotloop-cascade` 就是 Helm Chart：
+
+```sh
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version {{cascade}}
+```
+
+Chart 在 Service 和提供编辑器的 pod 上带有 EmberNet 仪表板读取的标签，因此从 App Store 部署的 Cascade 会显示在 Running Apps 下，并带有 LAUNCH 按钮。`gui.appName`、`gui.port` 和 `gui.displayName` 可以改变显示的内容。
+
+这是基于 SQLite、带一个卷的单个 pod。配合 PostgreSQL 使用 `--set split=true`（使用由 Chart 运行的 PostgreSQL 时加 `--set postgresql.enabled=true`，使用您自己的则用 `externalDatabase.existingSecret`），就会把它拆分成 API、Webhook 和 worker 三种 pod，可以分别扩展。用于加密已存储凭据的密钥会在首次安装时生成，并在卸载该 release 后保留，因为密钥若随 release 一起消失，就会让保留下来的数据库中的所有凭据一并失效。请备份这个密钥。
+
+`hotloop-cascade healthcheck` 会查询正在运行的服务器自身的健康端点，并以 0 或 1 退出。Quadlet 单元和 Chart 的探针都使用它背后的这些端点。

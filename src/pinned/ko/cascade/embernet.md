@@ -1,0 +1,18 @@
+---
+title: "HotLoop Cascade 문서 위치"
+description: "HotLoop Cascade를 다루는 docs.embernet.ai 페이지: App Store 등록 정보와 그 주변 페이지입니다."
+sidebar:
+  label: "EmberNet 문서에서"
+---
+
+HotLoop Cascade는 모든 단계에 체크포인트가 있는 워크플로 자동화입니다. EmberNet이 App Store에서 패키징하고 배포하며, EmberNet 문서가 그 부분을 다룹니다.
+
+EmberNet 문서에서 볼 수 있는 곳입니다.
+
+- [EmberNet의 HotLoop Cascade](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+- [App Store 개요](https://docs.embernet.ai/docs/app-store/overview)
+- [EmberNet의 HotLoop Gateway](https://docs.embernet.ai/docs/app-store/hotloop)
+
+[기업에서 HotLoop 사용하기](/ko/business/)에서 라이선스와 문의 방법을 안내합니다.
+
+[HotLoop Cascade 개요](/ko/cascade/overview/)로 돌아가거나, [hotloop.io의 HotLoop Cascade 페이지](https://hotloop.io/cascade/)로 이동하세요.

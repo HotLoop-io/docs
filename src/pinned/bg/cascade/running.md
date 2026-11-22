@@ -1,0 +1,26 @@
+---
+title: "Стартиране на Cascade"
+description: "Стартирайте Cascade с Podman Quadlet или с Helm на k3s, върху SQLite или Postgres, с проверката на състоянието, която ползват единиците и пробите на чарта."
+---
+
+На хост с Podman `deploy/quadlet` съдържа systemd единици. Един файл и един том са Cascade върху SQLite; `deploy/quadlet/postgres` е сървърът, един worker и PostgreSQL в собствена мрежа. И двата стартират при зареждане, рестартират се при грешка и работят само за четене, без root и без нито една capability. Неговият README описва стъпките.
+
+За да изтеглите версия ръчно:
+
+```sh
+podman pull ghcr.io/hotloop-io/hotloop-cascade:{{cascade}}
+```
+
+Единиците следват `:stable`, а таймерът за автоматично обновяване на Podman ги обновява.
+
+На k3s `charts/hotloop-cascade` е Helm чартът:
+
+```sh
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version {{cascade}}
+```
+
+Чартът носи етикетите, които таблото на EmberNet чете, върху Service и върху подовете, които обслужват редактора, така че Cascade, внедрен от App Store, се показва в Running Apps с бутон LAUNCH. `gui.appName`, `gui.port` и `gui.displayName` променят какво се показва.
+
+Това е един под върху SQLite с том. `--set split=true` с PostgreSQL (`--set postgresql.enabled=true` за такъв, който чартът пуска, или `externalDatabase.existingSecret` за вашия) го разделя на API, webhook и worker подове, които мащабирате поотделно. Ключът, който запечатва съхранените данни за вход, се създава при първата инсталация и се запазва при деинсталиране на release-а, защото ключ, който си отива с release-а, отнася със себе си всички данни за вход в запазена база данни. Направете резервно копие.
+
+`hotloop-cascade healthcheck` пита собствената крайна точка за състояние на работещия сървър и приключва с 0 или 1. Единиците на Quadlet и пробите на чарта използват крайните точки зад нея.
