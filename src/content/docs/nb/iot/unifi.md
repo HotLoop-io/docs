@@ -17,7 +17,7 @@ Dette er driveren, OT-overvåkingen som bygger på den, skjermbildene, hendelses
    | sha256sum` gir det samme), lim det inn i `certFingerprint` og lagre.
 4. Taggene opprettes av seg selv ved neste polling. Se nedenfor.
 
-En UniFi-enhet kan bare lagres når HotLoop har en nøkkel å kryptere passordet med (`HOTLOOP_SECRET_KEY_FILE`, som chartet setter opp selv). Se [Sikkerhetskopier og gjenoppretting](/nb/iot/backup/#device-credentials-and-the-secret-key).
+En UniFi-enhet kan bare lagres når HotLoop har en nøkkel å kryptere passordet med (`HOTLOOP_SECRET_KEY_FILE`, som chartet setter opp selv). Se [Sikkerhetskopier og gjenoppretting](/nb/iot/backup/#enhetslegitimasjon-og-den-hemmelige-nøkkelen).
 
 | Valg | Standard | Hva det gjør |
 |---|---|---|

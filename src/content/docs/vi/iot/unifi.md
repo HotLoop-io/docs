@@ -17,7 +17,7 @@ Một thiết bị HotLoop là **một site trên một bảng điều khiển**
    | sha256sum` cho cùng kết quả), dán vào `certFingerprint` rồi lưu.
 4. Các tag tự được tạo ở lần thăm dò kế tiếp. Xem bên dưới.
 
-Thiết bị UniFi chỉ lưu được khi HotLoop có khóa để mã hóa mật khẩu (`HOTLOOP_SECRET_KEY_FILE`, do chart tự thiết lập). Xem [Sao lưu và khôi phục](/vi/iot/backup/#device-credentials-and-the-secret-key).
+Thiết bị UniFi chỉ lưu được khi HotLoop có khóa để mã hóa mật khẩu (`HOTLOOP_SECRET_KEY_FILE`, do chart tự thiết lập). Xem [Sao lưu và khôi phục](/vi/iot/backup/#thông-tin-xác-thực-thiết-bị-và-khóa-bí-mật).
 
 | Tùy chọn | Mặc định | Công dụng |
 |---|---|---|

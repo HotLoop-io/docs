@@ -17,7 +17,7 @@ HotLoop 장치 하나는 **콘솔 하나의 사이트 하나**입니다. Cloud G
    | sha256sum`에 넘겨도 같은 값이 나옵니다) `certFingerprint`에 붙여 넣고 저장합니다.
 4. 태그는 다음 폴링에서 저절로 만들어집니다. 아래를 참고하십시오.
 
-UniFi 장치는 HotLoop에 비밀번호를 암호화할 키(`HOTLOOP_SECRET_KEY_FILE`, 차트가 자동으로 설정합니다)가 있어야만 저장할 수 있습니다. [백업 및 복원](/ko/iot/backup/#device-credentials-and-the-secret-key)을 참고하십시오.
+UniFi 장치는 HotLoop에 비밀번호를 암호화할 키(`HOTLOOP_SECRET_KEY_FILE`, 차트가 자동으로 설정합니다)가 있어야만 저장할 수 있습니다. [백업 및 복원](/ko/iot/backup/#장치-자격-증명과-비밀-키)을 참고하십시오.
 
 | 옵션 | 기본값 | 동작 |
 |---|---|---|

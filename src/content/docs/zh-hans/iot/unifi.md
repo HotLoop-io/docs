@@ -17,7 +17,7 @@ description: "把 UniFi 控制台的交换机、端口、PoE、WAN 故障切换�
    | sha256sum` 处理，得到的结果相同），把它粘贴到 `certFingerprint`，然后保存。
 4. 变量会在下一次轮询时自动创建。见下文。
 
-只有当 HotLoop 拥有加密密码的密钥时，才能保存 UniFi 设备（`HOTLOOP_SECRET_KEY_FILE`，由 chart 自行配置）。参见[备份与恢复](/zh-hans/iot/backup/#device-credentials-and-the-secret-key)。
+只有当 HotLoop 拥有加密密码的密钥时，才能保存 UniFi 设备（`HOTLOOP_SECRET_KEY_FILE`，由 chart 自行配置）。参见[备份与恢复](/zh-hans/iot/backup/#设备凭据与密钥)。
 
 | 选项 | 默认值 | 作用 |
 |---|---|---|

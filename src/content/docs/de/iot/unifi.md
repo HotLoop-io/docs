@@ -17,7 +17,7 @@ Ein HotLoop-Gerät ist **ein Standort auf einer Konsole**. Das Cloud Gateway und
    | sha256sum` geleitet liefert dasselbe), tragen Sie ihn in `certFingerprint` ein und speichern Sie.
 4. Die Tags legen sich bei der nächsten Abfrage von selbst an. Siehe unten.
 
-Ein UniFi-Gerät lässt sich nur speichern, wenn HotLoop einen Schlüssel hat, um das Passwort zu verschlüsseln (`HOTLOOP_SECRET_KEY_FILE`, den das Chart selbst einrichtet). Siehe [Backups und Wiederherstellung](/de/iot/backup/#device-credentials-and-the-secret-key).
+Ein UniFi-Gerät lässt sich nur speichern, wenn HotLoop einen Schlüssel hat, um das Passwort zu verschlüsseln (`HOTLOOP_SECRET_KEY_FILE`, den das Chart selbst einrichtet). Siehe [Backups und Wiederherstellung](/de/iot/backup/#gerätezugangsdaten-und-der-geheime-schlüssel).
 
 | Option | Standard | Was sie bewirkt |
 |---|---|---|
