@@ -1,0 +1,24 @@
+---
+title: "HotLoop Flow 文档位置"
+description: "docs.embernet.ai 上介绍 HotLoop Flow 的页面：它在 App Store 中的条目，以及提到它的每一页。"
+sidebar:
+  label: "在 EmberNet 文档中"
+---
+
+HotLoop Flow 是面向工厂现场的可视化流程引擎。EmberNet 从 App Store 打包并部署它，EmberNet 文档介绍这一部分。
+
+它在 EmberNet 文档中的位置：
+
+- [EmberNet 上的 HotLoop Flow](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [App Store 概览](https://docs.embernet.ai/docs/app-store/overview)
+- [EmberNet 上的 Node-RED](https://docs.embernet.ai/docs/app-store/node-red)
+- [EmberNet 上的 AnvilMQ](https://docs.embernet.ai/docs/app-store/anvilmq)
+- [AnvilMQ 消息代理](https://docs.embernet.ai/docs/services/anvilmq)
+- [EmberCORE 访问](https://docs.embernet.ai/docs/dashboard/access)
+- [EmberNet 上的 HotLoop Gateway](https://docs.embernet.ai/docs/app-store/hotloop)
+- [EmberNet 上的 HotLoop Edge Relay](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [EmberNet 上的 HotLoop Cascade](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+
+[在企业中使用 HotLoop](/zh-hans/business/)介绍许可方式和联系我们的方法。
+
+返回 [HotLoop Flow 概览](/zh-hans/flow/overview/)，或前往 [hotloop.io 上的 HotLoop Flow 页面](https://hotloop.io/flow/)。

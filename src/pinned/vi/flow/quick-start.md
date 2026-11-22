@@ -1,0 +1,51 @@
+---
+title: "Bắt đầu nhanh với HotLoop Flow"
+description: "Biên dịch hoặc chạy HotLoop Flow, đặt tài khoản quản trị và bí mật thông tin xác thực mà nó yêu cầu, rồi khởi động, từ mã nguồn hoặc từ image."
+---
+
+Từ mã nguồn:
+
+```bash
+cd web && npm install && npm run build && cd ..
+go build -o hotloop-flow ./cmd/hotloop-flow
+
+export HOTLOOP_FLOW_DATA_DIR=./data
+export HOTLOOP_FLOW_ADMIN_USER=admin
+export HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(./hotloop-flow hash-password -password 'something-long')"
+export HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)"
+
+./hotloop-flow
+```
+
+Bước biên dịch trình soạn thảo đi trước và không phải tùy chọn. Gói được nhúng bằng `go:embed`, nên một bản biên dịch Go thiếu nó sẽ lỗi vì thiếu mẫu, thay vì tạo ra tệp nhị phân không có trình soạn thảo.
+
+Hoặc bỏ qua tất cả những điều đó:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+Tạo hash bằng `podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long'`. Image là distroless không chạy bằng root và không có shell, nên không có gì để `exec` vào và không có gì để kẻ giành được quyền thực thi mã làm bàn đạp.
+
+Sau đó mở <http://localhost:1880>. Thả một tệp `flows.json` vào thư mục dữ liệu rồi khởi động lại, hoặc cứ dựng luồng ngay trong trình soạn thảo. Trình soạn thảo là Astro với các đảo Svelte trên một canvas TypeScript thuần và SVG gốc, được dựng thành tệp tĩnh bên trong tệp nhị phân: JS 190.7 kB và CSS 30.1 kB đã rút gọn, 62.5 kB và 6.8 kB khi nén gzip, đọc từ `web/dist/_astro` sau `npm run build`. Không có gì trong đó được tải từ nơi nào khác, nên nó chạy được trên máy không có internet.
+
+## Các lệnh
+
+| Lệnh | Việc nó làm |
+|---|---|
+| `hotloop-flow` | Phục vụ runtime, API quản trị và trình soạn thảo. Là mặc định. |
+| `hotloop-flow -config <path>` | Như trên, từ một tệp YAML. Cũng đọc `HOTLOOP_FLOW_CONFIG`. |
+| `hotloop-flow hash-password` | Hash bcrypt cho một mật khẩu. Nhận `-password` hoặc `HOTLOOP_FLOW_PASSWORD`. Từ chối mọi thứ dưới 8 ký tự. |
+| `hotloop-flow import <flows.json>` | Báo cáo điều sẽ xảy ra trước khi bạn triển khai nó. |
+| `hotloop-flow diff <old> <new>` | Diff từng nút của hai tệp luồng. Cũng là trình điều khiển diff và difftool của git. |
+| `hotloop-flow plugin keygen`, `sign`, `verify` | Tạo khóa nhà phát hành, ký một [plugin](/vi/flow/plugins/) và chạy mọi kiểm tra mà máy chủ thực hiện khi nạp nó, cho biết lý do nếu nó sẽ từ chối. |
+| `hotloop-flow test <tests.yaml>` | Chạy [kiểm thử luồng](/vi/flow/tests/) trong tiến trình. `-junit` cho CI/CD. |
+| `hotloop-flow deploy -file <flows.json>` | Hiển thị diff so với một thể hiện đang chạy, rồi triển khai kèm ghi chú. Dành cho CI/CD. |
+| `hotloop-flow export` | Tệp luồng đang chạy, từng byte, hoặc `-deployment N` từ lịch sử. |
+| `hotloop-flow token` | Một token API mới và hash cần cấu hình cho nó. |
+| `hotloop-flow bench` | Bộ đo hiệu năng đã tạo ra [các con số](/vi/flow/overview/#các-con-số). |
+| `hotloop-flow version` | Phiên bản. |

@@ -1,0 +1,19 @@
+{
+  "page": "flow/subflows",
+  "english": "src/content/docs/flow/subflows.md",
+  "langs": {
+    "es": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "fr": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "it": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "de": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "nb": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "bg": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "el": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "ko": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "ja": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "vi": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "hi": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "zh-hans": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"],
+    "ar": ["6d879e325d80","5dbbe4920310","8bb4c3633f59","6c7f0bceb3ea","f4908035e6d0"]
+  }
+}

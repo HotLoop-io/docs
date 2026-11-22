@@ -1,0 +1,19 @@
+{
+  "page": "flow/building",
+  "english": "src/content/docs/flow/building.md",
+  "langs": {
+    "es": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "fr": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "it": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "de": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "nb": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "bg": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "el": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "ko": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "ja": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "vi": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "hi": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "zh-hans": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"],
+    "ar": ["5549e46410a2","20d1f03713e2","a17a8a2068d5","cc8b523dccaa"]
+  }
+}
