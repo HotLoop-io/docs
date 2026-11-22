@@ -1,0 +1,93 @@
+---
+title: "HotLoop Gateway i korte trekk"
+description: "En industriell gateway: tolv innebygde drivere, en historian som tar vare på kvaliteten, ISA-18.2-alarmer, MCP for agenter og én skriveport uten omveier."
+sidebar:
+  label: "Oversikt"
+---
+
+:::note[{{hotloop}} er ute]
+Fire produkter fra én tag: [IoT](/nb/iot/overview/), [Edge](/nb/edge/overview/), Gateway og [Edge Relay](/nb/edge-relay/overview/), hvert med eget image og eget chart. Alle fire bygges for amd64 og arm64 i {{hotloop}}, og de tre små også for arm/v7. Gateway beholder `ghcr.io/hotloop-io/hotloop:{{hotloop}}` og chartet `hotloop` fra `https://hotloop.io/hotloop`, og begge kan hentes uten innlogging. [Installer det](/nb/gateway/install/). Er du på 4.18.11? Det er en `helm upgrade`, og agenter kan skrive etterpå, så les de to endringene. Er du på 4.17.0? Det er en vanlig `helm upgrade`, men ikke med `--reuse-values`, og et par standardverdier har flyttet seg. Er du på 4.16.0 eller 4.3.1? Da går du via 4.17.0 først. Uansett: [les oppgraderingen først](/nb/gateway/upgrading/). Det er bedre å finne ut av dette her enn av en rollout som står fast.
+:::
+
+HotLoop Gateway leser anlegget ditt. Den henter data fra PLS-er og servere i deres eget protokollspråk, lagrer hver måling og kvaliteten i en historian, utløser ISA-18.2-alarmer som kan varsle en telefon, kjører automasjoner mot alt sammen og gir hele anlegget til agenter via MCP. Én lokasjon kjører ett chart, Gateway og databasen, i stedet for en historian, en alarmserver, en regelmotor og en haug med lim, som hver svikter på sin egen tid.
+
+Den kan også styre utstyret, så hver verdi på vei til en enhet går gjennom [én skriveport](/nb/gateway/write-gate/). Skriving leveres avslått, hvert tag er skrivebeskyttet til noen aktiverer det, en verdi utenfor området avvises i stedet for å bli begrenset, og hvert forsøk logges før det rører ledningen, avvisninger inkludert.
+
+Den er skrevet i Go fra bunnen av: én statisk binærfil på et distroless-grunnlag, uten sidecar og uten tolk, kjørt som ikke-root-bruker med alle capabilities fjernet på et skrivebeskyttet rotfilsystem.
+
+## Hvor du begynner
+
+Grunnmuren, i {{hotloop}} og i alle utgivelser tilbake til 4.16.0:
+
+- [Installasjon](/nb/gateway/install/) er Helm fra det publiserte chartet eller Podman Quadlet på en boks, nøkkelen du må sikkerhetskopiere og de få verdiene du setter før et ekte anlegg ser det.
+- [Oppgradering](/nb/gateway/upgrading/) er framgangsmåten som beholder dataene dine, fra 4.17.0, 4.16.0 eller 4.3.1, og hver API-endring et skript kommer til å snuble i.
+- [Skriveporten](/nb/gateway/write-gate/) er hver kontroll mellom en forespørsel og en maskin, i den rekkefølgen koden kjører dem, og hva hver avvisning svarer.
+- [Protokoller](/nb/iot/protocols/) sier nøyaktig hvor langt hver driver er bevist, blant dem de to som ble kjørt på fysisk maskinvare 2026-11-17, S7comm og EtherNet/IP.
+- [Automasjoner](/nb/iot/automations/) dekker utløsere, vilkår og handlinger, og hvorfor en regel kompileres når du lagrer den og ikke når den utløses klokka 3 om natta.
+- [Model Context Protocol](/nb/iot/mcp/) er Gateway som MCP-server og -klient, og hvordan én Gateway leser alle lokasjoner.
+
+Nytt i 4.19.4, og ikke i 4.18.11: agenter skriver gjennom samme port som skjermen (MCP er på i alle produkter, og endepunktet har alltid et token), en verdi skrevet til et skalert tag havner i registeret slik du mente, en CODESYS-runtime leses med navnene i Symbol Configuration, en Kafka-hendelsestrøm blir en del av historian-målene, OPC UA PubSub over UADP abonnerer og publiserer, og `hostNetwork` er en chart-innstilling. 4.19.5 er multiarkitektur-bygget av den, og 4.19.8 legger til en rettelse i Loggboken og tag-velgere som søker i hele anlegget. [Utgivelsesnotatene](/nb/releases/hotloop-4-19-4/) sier hva hver av dem gir deg, og hva det koster.
+
+Nytt i 4.18.11, og ikke i 4.18.10: databasen er PostgreSQL 17 med en oppgradering som kjører seg selv, SNMP og BACnet/IP gjennom én integrasjonsflyt, kioskinnlogging med utestengning, alarmeskalering og et grensesnitt som kan installeres på en telefon. [Utgivelsesnotatene](/nb/releases/hotloop-4-18-11/) sier hva hver av dem gir deg, og hva det koster.
+
+Nytt i 4.18.10, og ikke i 4.17.0: produktlinjen med fire produkter, valg av database, MQTT og nettverksoppdaging, historian-mål og bokser som oppdaterer seg selv. [Utgivelsesnotatene](/nb/releases/hotloop-4-18-10/) sier hva hver av dem gir deg.
+
+Nytt i 4.17.0, og ikke i 4.16.0:
+
+- [Oppskrifter](/nb/iot/recipes/), [Skript](/nb/iot/scripts/), [Blueprints](/nb/iot/blueprints/), [Hjelpere](/nb/iot/helpers/), [Loggbok](/nb/iot/logbook/) og [UniFi Network](/nb/iot/unifi/). [Utgivelsesnotatene](/nb/releases/hotloop-4-17-0/) sier hva hver av dem gir deg.
+
+## Hva den gjør med dataene
+
+**Historian.** TimescaleDB som standard (på PostgreSQL 17 siden 4.18.11), og vanlig PostgreSQL eller en SQLite-fil fungerer også, fordi [databasen er en innstilling](/nb/releases/hotloop-4-18-10/). Historikktabellen er en hypertable når utvidelsen finnes og nativt områdepartisjonert når den ikke gjør det, så en vanlig PostgreSQL fungerer i stedet for å feile. Sett et dødbånd per tag. Uten det skriver en sensor som jitrer i sin siste bit en rad for hver skanning for alltid, og tusen tags lest hvert sekund blir omtrent 86 millioner rader i døgnet.
+
+**Alarmer.** ISA-18.2, også tilstanden de fleste hjemmebygde systemer går glipp av: `rtn-unack`, en alarm som gikk tilbake til normal av seg selv før noen så den. Kvittert og tilbake til normal er to adskilte akser, så den korte utløsningen klokka 03:00 står fortsatt på lista når morgenskiftet kommer inn, i stedet for å forsvinne uten at noen merker det. Asymmetriske dødbånd og på- og avforsinkelser hindrer en grenseverdi i å få lista til å flimre til støy ingen leser. Utsettelse stopper på 24 timer, for en utsettelse uten slutt er en undertrykking ingen har skrevet ned.
+
+**Kvalitet.** Hver måling har god, usikker eller dårlig, og dårlig betyr at verdien ikke er kjent. Det betyr aldri null. Alarmer beholder tilstanden sin på en dårlig måling i stedet for å vurdere den, så en død føler vises som en død føler og ikke som en prosessforstyrrelse. Trender og rapporter aggregerer bare gode målinger, teller hva de utelot, og gir en periode uten gode målinger ingen verdi i det hele tatt. Null er en måling (en lukket ventil, en strøm av ingenting), og den har ingen tatt fra oss.
+
+**Entiteter.** Innløpspumpa, ikke register 40001. Hvert tag får en entitet gratis, en motor, en ventil eller en PID-sløyfe er én entitet bygd av tagene den virkelig er, og alt henger på ett ISA-95-utstyrstre. Regler, skjermbilder og agenter leses som anlegget og ikke som et registerkart. En motor går når gangkontakten sier det, aldri fordi vi har sagt at den skal starte.
+
+**Varsling.** ntfy, Gotify, Discord, webhook og e-post. Trykk Kvitter på telefonen, og alarmen er kvittert i Gateway, med en lenke som er signert, utløper og virker bare én gang. Discord-boten er testet mot en stand-in som håndhever Discords dokumenterte protokoll.
+
+## Skjermbildene
+
+**Tavle** er den som blir stående på en vegg. Festede tags er målere med alarmgrensene tegnet der de faktisk ligger på buen, og det siste minuttet av historikken under. Oppsettet lagres sammen med anlegget, ikke i en nettleser, så panel-PC-en på gulvet og laptopen på kontoret viser samme tavle.
+
+**Entiteter** er anlegget slik folk snakker om det, hver ting under sin plass i treet. Kvalitet tegnes før verdien: en dårlig måling viser sin siste gode verdi grånet og skravert, og ingenting du ikke kan stole på ser noen gang ut som noe du kan stole på. En operatør som stoler på et gammelt tall er slik en tank renner over. **Anlegg** er tre-editoren.
+
+**Oversikt, Enheter, Tags, Trender, Alarmer, Automasjoner og Protokoller** er arbeidsskjermbildene. 4.17.0 legger til fire: **Loggbok** er tidslinjen, **Skript** kjører navngitte sekvenser med et skjema for feltene deres, **Oppskrifter** bruker et sett med settpunkter og viser nøyaktig hva som gikk ut (en verdi som ikke ble lest tilbake vises gul, aldri grønn), og **Blueprints** gjør en regel med blanke felt om til en ekte regel, med **Sjekk først** som viser hva den ville gjort før den finnes. Siden 4.18.10 lister **Enheter** også det oppdagingen fant, skrivebeskyttet til en administrator godtar det. **Lokasjoner** leser på tvers av anlegg, og en lokasjon som ikke svarer vises som utilgjengelig, med årsak, og holdes utenfor sammendraget. Å telle et anlegg du ikke når som null alarmer er slik et hovedkontor bestemmer at alt er bra den verste natta i året.
+
+**Innstillinger** er det Gateway faktisk kjører med: hver innstilling, den gjeldende verdien og om den kom fra databasen, en miljøvariabel eller standarden. Når den gjør noe du ikke forventet, er det her du finner ut hvorfor. Sikkerhetsbryterne er skrivebeskyttet der med vilje, fordi hovedkontrollen over om denne prosessen kan styre utstyr ikke hører hjemme bak den samme nettleserøkta som utsteder skrivingene.
+
+## Hvor den sitter i produktlinjen
+
+HotLoop er én kodebase levert som fire produkter, alle utgitt sammen fra én tag: IoT, Edge, Gateway og Edge Relay. Gateway er toppen: alt i IoT og Edge, pluss flåtestyring, oppsummeringer på tvers av lokasjoner og planlagte rapporter. Funksjoner skiller produktene. Protokoller gjør aldri det: alle produkter snakker alle protokollene vi har, så ingen må kjøpe seg opp et nivå for å lese PLS-en på benken sin. [Produktlinjen](/nb/products/) viser hva hvert produkt har.
+
+Alle fire kan installeres i dag, alle i {{hotloop}}. Relayet har eget image og eget chart, omtrent 15 MB mot Gateways 37, uten database og uten grensesnitt. Flåtestyringen i Gateway sporer og styrer hvert registrerte relay, og den er bare API (`/api/fleet`): det finnes ikke noe Flåte-skjermbilde i grensesnittet.
+
+Bruker du det på et anlegg? [Bruke HotLoop i en bedrift](/nb/business/) forklarer lisensiering og hvordan du når oss.
+
+## Hva som endret seg, utgivelse for utgivelse
+
+Hver utgivelse har egne notater, og detaljene står i notatene, så de er på ett sted og ikke to.
+
+- [4.23.2](/nb/releases/hotloop-4-23-2/): en CODESYS-visualisering importeres som skjermbilde, boksen melder sin egen helse til EmberNet-dashbordet bak en innlogging som kan lese og ingenting annet, og en energimåler kan ha en effektavgift. Dette bygget er bare amd64, og neste versjon er det lille trinnet som bygger arm-imagene.
+- [4.23.1](/nb/releases/hotloop-4-23-1/): værstasjoner og energimålere, nettgrensesnittet på tretten språk til, dashbord som eksporteres til en fil og importeres i en annen installasjon, og de første kommandoene til en UniFi-konsoll. 4.23.0 ble tagget og aldri publisert, så denne utgivelsen har med det notatene lister opp. Dette bygget er bare amd64.
+- [4.22.1](/nb/releases/hotloop-4-22-1/): multiarkitektur-bygget av 4.22.0, uten endring i produktet.
+- [4.22.0](/nb/releases/hotloop-4-22-0/): en panelside fyller skjermen kant til kant i alle størrelser, Alarmer-skjermbildet importerer en CODESYS Export Alarms-fil, og OPC UA PubSub-enheter på samme adresse og port deler én socket. Dette bygget er bare amd64, og 4.22.1 er det lille trinnet som bygger arm-imagene.
+- [4.21.1](/nb/releases/hotloop-4-21-1/): multiarkitektur-bygget av 4.21.0, uten endring i produktet.
+- [4.21.0](/nb/releases/hotloop-4-21-0/): en klient kan logge inn på OPC UA-serveren med et X.509-sertifikat en administrator har knyttet til en bruker (av til `HOTLOOP_OPCUA_SERVER_ALLOW_X509=true`), OPC UA-passord på 65 til 72 byte logger inn, og de utgåtte sikkerhetspolicyene `Basic128Rsa15` og `Basic256` er av som standard, også ved oppgraderinger (`HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` henter dem tilbake for en gammel klient). CODESYS-alarmimporten leser en Outside range-alarm som en lo og en hi. Én migrering, 0027, som bare legger til en tabell.
+- [4.20.2](/nb/releases/hotloop-4-20-2/): en EtherNet/IP-enhet med to eller flere tags i en batch krasjer ikke lenger pollingen sin, og `version` skriver ut versjonen uten konfigurasjon. Den første kjerneutgivelsen under EmberNet Source License 1.0.
+- [4.20.1](/nb/releases/hotloop-4-20-1/): multiarkitektur-bygget av 4.20.0, uten endring i produktet.
+- [4.20.0](/nb/releases/hotloop-4-20-0/): det nye nettgrensesnittet er siden på `/` og det gamle er borte, med de samme skjermbildene og kontrollene, HotLoops farger, skjermbildene gruppert i Drift, Anlegg, Bygg og System, og en linje med fem på telefon. MCP kan endre alt det kan lese: 128 verktøy, sekstifire som endrer konfigurasjon og trettisju for administratorens egne funksjoner, hvert en rute i API-et kjørt gjennom sin egen handler med den rutas tillatelse, en obligatorisk begrunnelse og agenten i revisjonslinja, bak `allowMcpWrites`. Dette bygget er bare amd64, og neste utgivelse bygger arm-imagene.
+- [4.19.11](/nb/releases/hotloop-4-19-11/): dashbordkortene for settpunkt og symbolside, en skriving til et CODESYS- eller OPC UA-tag som leses tilbake fra PLS-en, en CODESYS-enhet som leses én gang i sekundet, alarmer importert fra et CODESYS-prosjekt, UniFi-skjermbildene som tegner et spor før tallet ved siden av, og et Kafka- eller Redpanda-mål som sier hvorfor en broker avviser skriving. Dette bygget er bare amd64, og neste utgivelse er det lille trinnet som bygger arm-imagene.
+- [4.19.10](/nb/releases/hotloop-4-19-10/): multiarkitektur-bygget av 4.19.8, uten endring i produktet. Det finnes ingen 4.19.9.
+- [4.19.8](/nb/releases/hotloop-4-19-8/): Eldre oppføringer-knappen i Loggboken beholder siden sin, og hver tag-velger søker i hele anlegget. Den har også med endringene fra 4.19.6 og 4.19.7, fordi ingen av dem ble publisert.
+- [4.19.5](/nb/releases/hotloop-4-19-5/): multiarkitektur-bygget av 4.19.4, uten noe annet.
+- [4.19.4](/nb/releases/hotloop-4-19-4/): agentskriving og et token på hvert MCP-endepunkt, skalert skriving som lander riktig, CODESYS etter symbolnavn, en Kafka-hendelsestrøm, OPC UA PubSub over UADP og `hostNetwork`. Det finnes ingen 4.19.0 til 4.19.3, og notatene sier hvorfor.
+- [4.18.11](/nb/releases/hotloop-4-18-11/): PostgreSQL 17 med en oppgradering som kjører seg selv (les denne før du oppgraderer et anlegg i drift), SNMP og BACnet/IP gjennom én integrasjonsflyt, kioskinnlogging med utestengning, alarmeskalering og et grensesnitt som kan installeres på en telefon.
+- [4.18.10](/nb/releases/hotloop-4-18-10/): produktlinjen med fire produkter, valg av database, MQTT og nettverksoppdaging, historian-mål og bokser som oppdaterer seg selv. Det finnes ingen 4.18.0 til 4.18.9, og notatene sier hvorfor.
+- [4.17.0](/nb/releases/hotloop-4-17-0/): oppskrifter, skript, blueprints, hjelpere, loggboken og UniFi Network, skrivebeskyttet.
+
+## Lisens
+
+HotLoop Gateway er under HotLoop Source License Agreement 1.0, som alle HotLoop-produkter. Det er gratis å bruke og har tilgjengelig kildekode, ikke åpen kildekode etter OSI, og hver versjon går over til AGPL-3.0 eller nyere fire år etter utgivelsen. Hjemmebruk og laboratoriebruk er gratis, og det samme gjelder skoler, ideelle organisasjoner og offentlige organer for egen drift. Det finnes ingen lisensnøkler, og ingenting låses opp mens det kjører. [Lisenssiden](/nb/license/) har teksten, og [Bruke HotLoop i en bedrift](/nb/business/) dekker begge måtene å kjøre det på jobb.
