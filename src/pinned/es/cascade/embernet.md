@@ -1,0 +1,18 @@
+---
+title: "HotLoop Cascade en EmberNet"
+description: "Las páginas de docs.embernet.ai que tratan de HotLoop Cascade: su ficha en la App Store y las páginas que la rodean."
+sidebar:
+  label: "En la documentación de EmberNet"
+---
+
+HotLoop Cascade es automatización de flujos de trabajo en la que cada paso tiene un punto de control. EmberNet lo empaqueta y lo despliega desde la App Store, y la documentación de EmberNet cubre ese lado.
+
+Dónde está en la documentación de EmberNet:
+
+- [HotLoop Cascade en EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+- [Resumen de la App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [HotLoop Gateway en EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+
+[Usar HotLoop en una empresa](/es/business/) explica la licencia y cómo contactarnos.
+
+Volver al [resumen de HotLoop Cascade](/es/cascade/overview/) o a la [página de HotLoop Cascade en hotloop.io](https://hotloop.io/cascade/).

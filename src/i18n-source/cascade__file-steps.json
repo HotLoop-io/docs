@@ -1,0 +1,19 @@
+{
+  "page": "cascade/file-steps",
+  "english": "src/content/docs/cascade/file-steps.md",
+  "langs": {
+    "es": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "fr": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "it": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "de": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "nb": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "bg": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "el": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "ko": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "ja": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "vi": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "hi": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "zh-hans": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"],
+    "ar": ["2e47f84391bd","be65b3e6be9a","da02b6ca2698"]
+  }
+}

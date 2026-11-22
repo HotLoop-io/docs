@@ -1,0 +1,26 @@
+---
+title: "تشغيل Cascade"
+description: "شغّل Cascade باستخدام Podman Quadlet أو Helm على k3s، فوق SQLite أو Postgres، مع فحص الصحة الذي تستخدمه الوحدات وفحوص الـ chart."
+---
+
+على مضيف Podman، يحتوي `deploy/quadlet` على وحدات systemd. ملف واحد ووحدة تخزين واحدة تعني Cascade على SQLite؛ أما `deploy/quadlet/postgres` فهو الخادم وworker وPostgreSQL على شبكة خاصة بها. يبدأ كلاهما عند الإقلاع، ويُعاد تشغيلهما عند الفشل، ويعملان للقراءة فقط وبلا صلاحيات root وبعد إزالة كل capability. ويشرح ملف README الخاص به الخطوات.
+
+لسحب إصدار يدويًا:
+
+```sh
+podman pull ghcr.io/hotloop-io/hotloop-cascade:{{cascade}}
+```
+
+تتبع الوحدات `:stable`، ويقوم مؤقّت التحديث التلقائي في Podman بتحريكها.
+
+على k3s، يكون `charts/hotloop-cascade` هو Helm chart:
+
+```sh
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version {{cascade}}
+```
+
+يحمل الـ chart الوسوم التي تقرؤها لوحة تحكم EmberNet، على Service وعلى الـ pods التي تقدّم المحرر، ولذلك يظهر Cascade المنشور من App Store تحت Running Apps مع زر LAUNCH. وتغيّر `gui.appName` و`gui.port` و`gui.displayName` ما يعرضه.
+
+هذا pod واحد على SQLite مع وحدة تخزين. أما `--set split=true` مع PostgreSQL (`--set postgresql.enabled=true` لقاعدة يشغّلها الـ chart، أو `externalDatabase.existingSecret` لقاعدتك الخاصة) فيقسّمه إلى pods لـ API وwebhook وworker تقوم بتوسيعها كلاً على حدة. يُنشأ المفتاح الذي يختم بيانات الاعتماد المخزنة عند التثبيت الأول ويُحتفظ به عند إزالة الـ release، لأن مفتاحًا يذهب مع الـ release يأخذ معه كل بيانات الاعتماد في قاعدة بيانات محفوظة. احتفظ بنسخة احتياطية منه.
+
+يستعلم `hotloop-cascade healthcheck` من نقطة الصحة الخاصة بالخادم العامل نفسه وينتهي بالقيمة 0 أو 1. وتستخدم وحدات Quadlet وفحوص الـ chart كلاهما نقاط النهاية الواقعة خلفه.

@@ -1,0 +1,19 @@
+{
+  "page": "cascade/building",
+  "english": "src/content/docs/cascade/building.md",
+  "langs": {
+    "es": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "fr": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "it": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "de": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "nb": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "bg": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "el": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "ko": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "ja": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "vi": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "hi": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "zh-hans": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"],
+    "ar": ["dce599210f77","020eb025c27e","c15d5c39ee8c","ba5f69261ebb","4bf1d092cded"]
+  }
+}
