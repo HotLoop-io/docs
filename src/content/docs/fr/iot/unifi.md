@@ -17,7 +17,7 @@ Un appareil HotLoop correspond à **un site sur une console**. Le Cloud Gateway 
    | sha256sum` donne le même résultat), collez-la dans `certFingerprint`, puis enregistrez.
 4. Les tags se créent d'eux-mêmes à l'interrogation suivante. Voir plus bas.
 
-Un appareil UniFi ne peut être enregistré que si HotLoop dispose d'une clé pour chiffrer le mot de passe (`HOTLOOP_SECRET_KEY_FILE`, que le chart met en place tout seul). Voir [Sauvegardes et restauration](/fr/iot/backup/#device-credentials-and-the-secret-key).
+Un appareil UniFi ne peut être enregistré que si HotLoop dispose d'une clé pour chiffrer le mot de passe (`HOTLOOP_SECRET_KEY_FILE`, que le chart met en place tout seul). Voir [Sauvegardes et restauration](/fr/iot/backup/#identifiants-dappareils-et-clé-secrète).
 
 | Option | Par défaut | Ce qu'elle fait |
 |---|---|---|

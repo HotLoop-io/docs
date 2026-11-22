@@ -17,7 +17,7 @@ HotLoop のデバイス 1 台は**1 つのコンソールの 1 つのサイト**
    | sha256sum` に渡しても同じ値になります)、`certFingerprint` に貼り付けて保存します。
 4. タグは次のポーリングで自動的に作成されます。詳しくは以下を参照してください。
 
-UniFi デバイスは、HotLoop にパスワードを暗号化するキー(`HOTLOOP_SECRET_KEY_FILE`。チャートが自動で設定します)がある場合にのみ保存できます。[バックアップと復元](/ja/iot/backup/#device-credentials-and-the-secret-key)を参照してください。
+UniFi デバイスは、HotLoop にパスワードを暗号化するキー(`HOTLOOP_SECRET_KEY_FILE`。チャートが自動で設定します)がある場合にのみ保存できます。[バックアップと復元](/ja/iot/backup/#デバイスの認証情報と秘密鍵)を参照してください。
 
 | オプション | 既定値 | 内容 |
 |---|---|---|

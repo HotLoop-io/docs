@@ -17,7 +17,7 @@ Un dispositivo HotLoop è **un sito su una console**. Il Cloud Gateway e l'Expre
    | sha256sum` dà lo stesso risultato), incollarla in `certFingerprint` e salvare.
 4. I tag si creano da soli al polling successivo. Vedere sotto.
 
-Un dispositivo UniFi si può salvare solo quando HotLoop ha una chiave con cui cifrare la password (`HOTLOOP_SECRET_KEY_FILE`, che il chart configura da solo). Vedere [Backup e ripristino](/it/iot/backup/#device-credentials-and-the-secret-key).
+Un dispositivo UniFi si può salvare solo quando HotLoop ha una chiave con cui cifrare la password (`HOTLOOP_SECRET_KEY_FILE`, che il chart configura da solo). Vedere [Backup e ripristino](/it/iot/backup/#credenziali-dei-dispositivi-e-chiave-segreta).
 
 | Opzione | Predefinito | Cosa fa |
 |---|---|---|
