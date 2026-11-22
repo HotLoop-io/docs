@@ -1,0 +1,67 @@
+---
+title: "Installer HotLoop for CODESYS"
+description: "Installez HotLoop for CODESYS depuis l'App Store d'EmberCORE ou avec Helm : ce qu'il faut au nœud, le Secret du profil, ce qu'il fait seul, comment le vérifier."
+sidebar:
+  label: "Installer"
+---
+
+HotLoop for CODESYS est un chart Helm, `hotloop-codesys`, qui installe HotLoop Edge et un provisionneur sur le même nœud qu'un runtime CODESYS. Le chart est publié à `{{codesysChartRepo}}`, avec {{codesys}} comme la plus récente, et l'image du provisionneur se récupère sans connexion. Sur EmberNet, c'est une application de l'App Store. Sans EmberNet, c'est Helm sur k3s.
+
+## Ce dont le nœud a d'abord besoin
+
+- **Un runtime CODESYS sur le même nœud qui publie son serveur OPC UA sur le port 4840.** Le provisionneur obtient l'adresse du nœud lui-même auprès de Kubernetes et lit `<node address>:4840`. Le chart du runtime publie ce port sur l'hôte.
+- **Une Symbol Configuration dans le programme de l'automate** avec *Support OPC UA features* activé, listant les variables que vous voulez voir, ou `{attribute 'symbol' := 'read'}` sur elles dans la déclaration. Un automate sans Symbol Configuration répond à la mise en place par un message qui dit d'en ajouter une. C'est la seule modification du projet de l'automate.
+- **HotLoop {{codesysNeeds}}**, que le chart enveloppe. Le connecteur CODESYS est arrivé avec HotLoop 4.19.4. Le chart dépend du chart `hotloop-edge` sur la ligne `~{{codesysNeeds}}`.
+- **Un profil.** Un Secret avec une clé. [La page du profil](/fr/codesys/profile/) en donne la forme.
+
+## Depuis l'App Store d'EmberCORE
+
+Le chart est marqué pour le personnel, donc le Store le liste pour le personnel d'EmberNet, qui l'installe sur le tenant du client. Ce n'est pas un bouton que le tenant presse lui-même, demandez donc à la personne qui s'occupe de votre tenant. Le Store écrit le profil dans le namespace du tenant sous le nom `<release>-profile`, passe au chart le nœud choisi et les étiquettes du tenant, et passe la clé publique du dashboard pour la connexion. Ensuite, il n'y a plus rien à faire.
+
+## Avec Helm
+
+```bash
+kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
+helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo update
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+```
+
+Nommez le Secret `<release>-profile`, ou changez ce que le chart cherche avec `profile.existingSecret` (le Secret) et `profile.key` (la clé, `profile.json` par défaut). Pour fixer l'installation au nœud du runtime, définissez `nodeSelector`. Pour HotLoop seul, sans profil, à configurer à la main, installez avec `--set provisioner.enabled=false`.
+
+## Avec un runtime sur le réseau du nœud
+
+Un runtime installé depuis son chart avec `network.hostNetwork=true` occupe le port 8080 de l'hôte pour WebVisu, donc la page de HotLoop ne peut pas y écouter aussi sur le 8080. Le chart fait écouter la page de HotLoop sur le 8090 dans le pod et garde le Service sur le 8080, de sorte que la vignette de l'App Store et le provisionneur l'atteignent comme avant. Installez avec le réseau de l'hôte activé pour les deux :
+
+```bash
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+  --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
+```
+
+Les écouteurs OPC UA PubSub de HotLoop se lient à un port UDP de façon exclusive, donc deux écouteurs sur un même port ne peuvent pas se connecter tous les deux. Le provisionneur refuse un profil qui le demande, et dit pourquoi.
+
+## Ce que fait l'installation
+
+1. HotLoop Edge démarre sur ce nœud avec SQLite sur le stockage local-path du nœud. Pas de pod de base de données, une réplique, et la stratégie de mise à jour est `Recreate`.
+2. Le provisionneur démarre sur le même nœud. Il lit le profil monté à chaque passage, donc un profil plus récent atteint une installation en cours. Il attend HotLoop et le runtime CODESYS du nœud, puis met en place l'appareil, les variables, les alarmes et l'écran du profil.
+3. Il regarde de nouveau toutes les cinq minutes et garde l'appareil à jour à mesure que le programme de l'automate change. Les variables qu'un profil liste et que l'automate a désormais sont ajoutées, et celle que l'automate n'a plus se lit comme mauvaise avec la raison du serveur.
+4. Les deux pods tolèrent `node.kubernetes.io/unreachable` et `not-ready` sans `tolerationSeconds`, de sorte qu'un nœud qui perd son plan de contrôle les garde. Le chart le porte lui-même et ne dépend pas du réglage du cluster.
+
+Le serveur OPC UA, le broker intégré, la publication en edge et les sauvegardes sont désactivés, car aucun n'est souhaité à côté d'un runtime. Activez-en un par les values de `hotloop-edge` si vous le voulez.
+
+## Vérifiez-le
+
+```bash
+kubectl -n <namespace> logs deploy/<release>-provision
+```
+
+Un bon démarrage indique que l'appareil a été mis en place avec ses variables, aucune modifiable, et que les alarmes et l'écran ont été créés. Ouvrez le service HotLoop, connectez-vous en tant que `admin` et regardez Appareils et Tableaux de bord. Le mot de passe admin est dans le Secret de la release, comme pour tout chart HotLoop.
+
+## Connexion depuis le dashboard
+
+Depuis HotLoop 4.19, le chart Edge connecte une personne à partir de l'assertion signée du dashboard EmberCORE (les values `embernetSignin`, quatre variables `HOTLOOP_AUTH_ASSERTION_*` et l'annotation de Service `embernet.ai/signin: assertion`). Ce chart hérite de tout cela du sous-chart `hotloop-edge`, et le Store lui transmet la clé publique. Le provisionneur utilise le compte admin du chart, que la connexion locale autorise toujours. Dans un cluster de test, une bonne assertion a connecté une personne comme operator ou comme admin, et une assertion d'une mauvaise application, d'un mauvais tenant, expirée, d'un mauvais émetteur et une assertion altérée ont chacune été refusées.
+
+## Jusqu'où il a été exécuté
+
+Il a été exécuté sur du matériel physique (2026-11-17), et le chart s'affiche depuis l'index en direct avec Helm. [Où il en est](/fr/codesys/where-it-stands/).
+

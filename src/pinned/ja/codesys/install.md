@@ -1,0 +1,67 @@
+---
+title: "HotLoop for CODESYSの導入"
+description: "EmberCORE App StoreまたはHelmでHotLoop for CODESYSをインストールします。ノードに必要なもの、プロファイルのSecret、自動で行うこと、確認方法を説明します。"
+sidebar:
+  label: "インストール"
+---
+
+HotLoop for CODESYSは、CODESYSランタイムと同じノードにHotLoop Edgeとプロビジョナーをインストールするチャート`hotloop-codesys`です。チャートは`{{codesysChartRepo}}`で公開され、最新は{{codesys}}で、プロビジョナーのイメージはログインなしで取得できます。EmberNetではApp Storeのアプリです。EmberNetがない場合は、k3s上のHelmです。
+
+## ノードに最初に必要なもの
+
+- **同じノード上で、ポート4840でOPC UAサーバーを公開するCODESYSランタイム。** プロビジョナーはノード自身のアドレスをKubernetesから取得し、`<node address>:4840`を読みます。ランタイム自身のチャートが、そのポートをホストに公開します。
+- **PLCプログラムのSymbol Configuration。** *Support OPC UA features*をオンにして見たい変数を列挙するか、宣言でそれらに`{attribute 'symbol' := 'read'}`を付けます。Symbol ConfigurationのないPLCは、セットアップに対して追加するよう促すメッセージで応答します。PLCプロジェクトで変更するのはこれだけです。
+- **HotLoop {{codesysNeeds}}**。チャートがこれを包んでいます。CODESYSコネクターはHotLoop 4.19.4で加わりました。チャートは`~{{codesysNeeds}}`系列の`hotloop-edge`チャートに依存します。
+- **プロファイル。** キーが1つのSecretが1つです。[プロファイルのページ](/ja/codesys/profile/)に形式があります。
+
+## EmberCORE App Storeから
+
+チャートはスタッフ向けに設定されているため、StoreはEmberNetのスタッフにそれを表示し、スタッフがお客様のテナントにインストールします。テナント自身が押すボタンではないので、テナントを担当している人に連絡してください。Storeは、プロファイルをテナントのネームスペースに`<release>-profile`として書き込み、選ばれたノードとテナントのラベルをチャートに渡し、サインイン用にダッシュボードの公開鍵を渡します。その後はやることがありません。
+
+## Helmで
+
+```bash
+kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
+helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo update
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+```
+
+Secretの名前を`<release>-profile`にするか、チャートが探す名前を`profile.existingSecret`(Secret)と`profile.key`(キー、既定は`profile.json`)で変更します。インストールをランタイムのノードに固定するには、`nodeSelector`を設定します。プロファイルなしでHotLoopだけを入れて手動でセットアップする場合は、`--set provisioner.enabled=false`でインストールします。
+
+## ノードのネットワーク上にランタイムがある場合
+
+`network.hostNetwork=true`で自身のチャートからインストールしたランタイムは、WebVisuのためにホストのポート8080を占有するので、HotLoopのページはそこで8080をリッスンできません。チャートはHotLoopのページをPod内で8090でリッスンさせ、Serviceは8080のままにするので、App Storeのタイルとプロビジョナーはこれまでどおり到達できます。両方でホストネットワークをオンにしてインストールします。
+
+```bash
+helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+  --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
+```
+
+HotLoopのOPC UA PubSubリスナーはUDPポートを排他的にバインドするため、1つのポートで2つのリスナーが同時に接続することはできません。プロビジョナーはそれを求めるプロファイルを拒否し、理由を示します。
+
+## インストールで行われること
+
+1. HotLoop Edgeがそのノードで、ノードのlocal-pathストレージ上のSQLiteで起動します。データベースのPodはなく、レプリカは1つで、更新戦略は`Recreate`です。
+2. プロビジョナーが同じノードで起動します。マウントされたプロファイルをパスのたびに読むので、新しいプロファイルは稼働中のインストールにも届きます。HotLoopとノード自身のCODESYSランタイムを待ってから、プロファイルのデバイス、変数、アラーム、画面を設定します。
+3. 5分ごとに再確認し、PLCのプログラムが変わるのに合わせてデバイスを正しく保ちます。プロファイルが列挙していて、PLCが新たに持った変数は追加され、PLCがもう持たない変数は、サーバーが示す理由とともに不良として読まれます。
+4. 両方のPodは`tolerationSeconds`なしで`node.kubernetes.io/unreachable`と`not-ready`を許容するので、コントロールプレーンを失ったノードもPodを保持します。チャートがこれを自前で持ち、クラスターの設定には依存しません。
+
+OPC UAサーバー、組み込みブローカー、エッジのパブリッシュ、バックアップはオフです。ランタイムの隣ではどれも必要とされないからです。必要なら`hotloop-edge`のvaluesでどれかをオンにしてください。
+
+## 確認する
+
+```bash
+kubectl -n <namespace> logs deploy/<release>-provision
+```
+
+正常に起動すると、デバイスが変数とともにセットアップされ、書き込み可能なものはなく、アラームと画面が作られたと表示されます。HotLoopのサービスを開き、`admin`でサインインして、デバイスとダッシュボードを確認します。adminのパスワードは、ほかのHotLoopチャートと同じく、リリースのSecretにあります。
+
+## ダッシュボードからのサインイン
+
+HotLoop 4.19から、EdgeチャートはEmberCOREダッシュボードの署名済みアサーションで人をサインインさせます(`embernetSignin`のvalues、4つの`HOTLOOP_AUTH_ASSERTION_*`変数、Serviceのアノテーション`embernet.ai/signin: assertion`)。このチャートはそのすべてを`hotloop-edge`サブチャートから継承し、Storeが公開鍵を渡します。プロビジョナーは、ローカルログインが引き続き許可するチャートのadminアカウントを使います。テストクラスターでは、正しいアサーションで人がoperatorまたはadminとしてサインインでき、誤ったアプリ、誤ったテナント、期限切れ、誤った発行者、改ざんされたアサーションは、それぞれ拒否されました。
+
+## どこまで実行されたか
+
+実機で実行されており(2026-11-17)、チャートはHelmでライブのインデックスからレンダリングされます。[現在の状況](/ja/codesys/where-it-stands/)。
+
