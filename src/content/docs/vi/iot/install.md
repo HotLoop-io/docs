@@ -36,7 +36,7 @@ SQLite là một bộ ghi trên một đĩa cục bộ, nên chỉ có một b�
 
 ### Sao lưu khóa
 
-Chart cũng tạo `<release>-secret-key` (`hotloop-secret-key` với các lệnh ở trên). Nó giữ khóa mã hóa mọi mật khẩu HotLoop lưu cho một thiết bị. Khóa không bao giờ nằm trong cơ sở dữ liệu hay trong bản sao lưu, nên nó là một phần dữ liệu của bạn: bản sao lưu chỉ khôi phục thông tin xác thực ở nơi khóa đó được gắn. Chart giữ lại Secret sau `helm uninstall`. Hãy cất nó ở nơi khác, không phải cạnh các bản sao lưu của bạn, vì một chiếc khóa nằm cạnh những bản sao lưu nó bảo vệ thì chẳng bảo vệ gì. [Cài đặt Gateway](/vi/gateway/install/#back-up-the-key-before-you-need-it) có toàn bộ câu chuyện, và đó là cùng một khóa.
+Chart cũng tạo `<release>-secret-key` (`hotloop-secret-key` với các lệnh ở trên). Nó giữ khóa mã hóa mọi mật khẩu HotLoop lưu cho một thiết bị. Khóa không bao giờ nằm trong cơ sở dữ liệu hay trong bản sao lưu, nên nó là một phần dữ liệu của bạn: bản sao lưu chỉ khôi phục thông tin xác thực ở nơi khóa đó được gắn. Chart giữ lại Secret sau `helm uninstall`. Hãy cất nó ở nơi khác, không phải cạnh các bản sao lưu của bạn, vì một chiếc khóa nằm cạnh những bản sao lưu nó bảo vệ thì chẳng bảo vệ gì. [Cài đặt Gateway](/vi/gateway/install/#sao-lưu-khóa-trước-khi-bạn-cần-đến-nó) có toàn bộ câu chuyện, và đó là cùng một khóa.
 
 ### Đăng nhập
 

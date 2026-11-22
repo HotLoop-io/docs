@@ -34,7 +34,7 @@ SQLite è un solo scrittore su un solo disco locale, quindi una sola replica, e 
 
 ### Fate il backup della chiave
 
-Il chart genera anche `<release>-secret-key` (`hotloop-secret-key` con i comandi sopra). Contiene la chiave che cifra ogni password di dispositivo che HotLoop conserva. La chiave non sta mai nel database né in un backup, quindi fa parte dei vostri dati: un backup ripristina le credenziali solo dove quella chiave è montata. Il chart conserva il Secret dopo un `helm uninstall`. Salvatela altrove rispetto ai vostri backup, perché una chiave accanto ai backup che protegge non protegge nulla. [Installare il Gateway](/it/gateway/install/#back-up-the-key-before-you-need-it) racconta tutta la storia, ed è la stessa chiave.
+Il chart genera anche `<release>-secret-key` (`hotloop-secret-key` con i comandi sopra). Contiene la chiave che cifra ogni password di dispositivo che HotLoop conserva. La chiave non sta mai nel database né in un backup, quindi fa parte dei vostri dati: un backup ripristina le credenziali solo dove quella chiave è montata. Il chart conserva il Secret dopo un `helm uninstall`. Salvatela altrove rispetto ai vostri backup, perché una chiave accanto ai backup che protegge non protegge nulla. [Installare il Gateway](/it/gateway/install/#fate-il-backup-della-chiave-prima-di-averne-bisogno) racconta tutta la storia, ed è la stessa chiave.
 
 ### Accedere
 

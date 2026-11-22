@@ -20,7 +20,7 @@ helm install hotloop hotloop/hotloop-edge --version {{hotloop}} \
 
 Đặt tên bản phát hành là `hotloop`, bất kể sản phẩm nào. Tên bản phát hành là tên mà volume cơ sở dữ liệu, các Secret và Service dùng, và giữ nguyên nó là điều cho phép một địa điểm nâng lên sản phẩm lớn hơn sau này.
 
-Lệnh đó triển khai Edge cùng TimescaleDB 2.30.1 trên PostgreSQL 17 bên cạnh, trên volume 20 Gi, giữ 90 ngày lịch sử. Chart tạo mật khẩu cơ sở dữ liệu, token MCP và mật khẩu quản trị trong Secret của bản phát hành, và dùng lại chúng ở mỗi lần nâng cấp. Nó cũng tạo `<release>-secret-key`, khóa mã hóa mọi mật khẩu thiết bị mà HotLoop lưu. Khóa đó là một phần dữ liệu của bạn, và [trang cài đặt Gateway](/vi/gateway/install/#back-up-the-key-before-you-need-it) nói vì sao và cách sao lưu. Đó là cùng một khóa.
+Lệnh đó triển khai Edge cùng TimescaleDB 2.30.1 trên PostgreSQL 17 bên cạnh, trên volume 20 Gi, giữ 90 ngày lịch sử. Chart tạo mật khẩu cơ sở dữ liệu, token MCP và mật khẩu quản trị trong Secret của bản phát hành, và dùng lại chúng ở mỗi lần nâng cấp. Nó cũng tạo `<release>-secret-key`, khóa mã hóa mọi mật khẩu thiết bị mà HotLoop lưu. Khóa đó là một phần dữ liệu của bạn, và [trang cài đặt Gateway](/vi/gateway/install/#sao-lưu-khóa-trước-khi-bạn-cần-đến-nó) nói vì sao và cách sao lưu. Đó là cùng một khóa.
 
 Để dùng PostgreSQL thường hoặc tệp SQLite, đặt `database.type` thành `postgresql` hoặc `sqlite` khi cài. Tệp SQLite là một bộ ghi trên một đĩa cục bộ, nên chỉ có một bản sao và không bao giờ dùng NFS. Đổi cơ sở dữ liệu sau này là sao lưu rồi khôi phục, vì cơ sở dữ liệu mới bắt đầu trống. [Sao lưu](/vi/iot/backup/) có phần khôi phục.
 

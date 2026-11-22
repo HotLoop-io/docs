@@ -1,0 +1,117 @@
+---
+title: "Installer HotLoop Gateway {{hotloop}} med Helm"
+description: "Installer HotLoop Gateway {{hotloop}} fra det publiserte Helm-chartet på k3s eller Kubernetes, logg inn og still inn det viktigste før et anlegg ser det."
+sidebar:
+  label: "Installasjon"
+---
+
+HotLoop Gateway {{hotloop}} leveres som et containerbilde for amd64 og arm64, rundt 37 MB på amd64 og 35 MB på arm64, og et Helm-chart. Begge lastes ned uten innlogging. Det beholder navnene det kom ut med til og med 4.17.0, bilde `ghcr.io/hotloop-io/hotloop` og chart `hotloop`, så ingen som kjører det må endre noe. Kjører du allerede en eldre versjon? Ikke installer over den. [Oppgradering](/nb/gateway/upgrading/) har veien fra 4.17.0, som er en vanlig `helm upgrade`, og veiene fra 4.16.0 og 4.3.1, som går i etapper.
+
+To måter å kjøre det på for alvor: Helm-chartet på hvilket som helst Kubernetes, k3s inkludert, og Podman Quadlet på en boks som ikke er i en klynge, lenger ned. Det finnes bevisst ingen Docker- eller Compose-vei, og en bar `podman run` fra et skall som dør med økten er ikke en installasjon.
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install hotloop hotloop/hotloop --version {{hotloop}} \
+  --namespace hotloop --create-namespace
+```
+
+Det setter opp Gateway, pluss TimescaleDB 2.30.1 ved siden av på et volum på 20 Gi, med 90 dagers historikk. Databasen er en innstilling, `database.type`: `timescaledb` er standard, `postgresql` kjører vanlig PostgreSQL 17, og `sqlite` kjører Gateway på en fil uten noen databasepod, med én replika og lokal lagring, aldri NFS. Å bytte mellom dem senere er en sikkerhetskopi og en gjenoppretting, fordi den nye databasen starter tom. En boks som allerede har PostgreSQL 16-data går over til 17 ved neste oppgradering uten at du gjør noe, så [les hvordan det går](/nb/gateway/upgrading/#upgrading-from-41810) før du rører et anlegg i drift. Chartet lager databasepassordet, MCP-tokenet og et administratorpassord i release-Secret, og gjenbruker dem ved hver oppgradering, så en `helm upgrade` bytter aldri et passord bak ryggen din eller logger deg ut av ditt eget anlegg.
+
+## Ta sikkerhetskopi av nøkkelen før du trenger den
+
+Chartet lager også en andre Secret, `<release>-secret-key` (`hotloop-secret-key` med kommandoen over). Den inneholder nøkkelen som krypterer hvert passord HotLoop lagrer for en enhet: `password` for en OPC UA-, MQTT-, HTTP-, MTConnect- eller UniFi-enhet, HTTP- og MTConnect-headerverdier som API-nøkler, passordet til hver annen MQTT-megler oppdagelsen lytter til, og passordet til hvert historian-mål. Nøkkelen ligger aldri i databasen og aldri i en sikkerhetskopi, så en dump som går ut døren på en bærbar inneholder chiffertekst, ikke nøklene til anlegget.
+
+Chartet beholder den Secret på tvers av oppgraderinger, og også gjennom en `helm uninstall`, fordi en database som blir liggende på volumet er ubrukelig for påloggingsopplysningene sine uten den. Det betyr også at **nøkkelen er en del av dataene dine.** Start Gateway uten den, og hver enhet med et forseglet passord blir stående nede og prøve på nytt, med en feil som nevner nøkkelen den trenger. En sikkerhetskopi gjenopprettes bare der nøkkelen er montert, og `--restore-from` avviser den ved navn alle andre steder.
+
+Ta derfor sikkerhetskopi av Secret på samme måte som du tar kopi av klyngens andre hemmeligheter, og oppbevar den et annet sted enn ved siden av sikkerhetskopiene dine. En nøkkel ved siden av sikkerhetskopiene den beskytter, beskytter ingenting.
+
+**Rendrer du chartet i stedet for å installere det? Ta med din egen nøkkel.** Nøkkelen lages av et `lookup` som bare en ekte `helm install` eller `helm upgrade` kan gjøre. Alt som kjører `helm template` og anvender resultatet får en ny nøkkel ved hver rendering, og neste synkronisering låser ute alle forseglede passord. Lag en nøkkel med `hotloop gen-secret-key`, legg den i en Secret du styrer selv under nøkkelen `secret.key`, og navngi den Secret i `secretKey.existingSecret`. Helm, Fleet og EmberNet App Store installerer alle på ekte og trenger ikke dette.
+
+En påloggingsopplysning skrevet inn i en URL (`mqtt://user:pass@host`) eller i fritekst forblir i klartekst. Legg den i `password`. [Enhetslegitimasjon](/nb/iot/protocols/#device-credentials) har hele listen over hva som krypteres.
+
+## Logg inn
+
+Brukeren er `admin`. Installasjonsnotatene skriver ut kommandoen som leser passordet tilbake:
+
+```bash
+kubectl -n hotloop get secret hotloop \
+  -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl -n hotloop port-forward svc/hotloop 8080:8080
+```
+
+Åpne `http://localhost:8080`. Den admin-kontoen er en oppstartskonto, ikke en tilbakestillingsbryter. Når den først finnes, gjør det ingenting å endre `auth.admin.password` og oppgradere, så et passord noen har satt i grensesnittet blir aldri overskrevet av neste utrulling.
+
+Legg nå til en enhet, oppdag taggene dens og prøv å skrive til en av dem. Det går ikke. Det er med vilje. Hver tag starter skrivebeskyttet og slås på én om gangen, og `safety.allowWrites` forblir av til du bestemmer at denne poden får flytte maskineri. Ingens første dag med HotLoop bør ende med en presse som gjør noe ingen ba om.
+
+## Boksens helse og vertsmonteringen
+
+Chartets OPC UA-server leverer også denne boksens egen helse (CPU, minne, disk og sanntidsjitter når en agent skriver filen) til EmberNet-dashbordet, og lager en pålogging for dashbordet som kan lese tagger og verdier og ingenting annet, med passordet lagret i Secret `<release>-opcua-dashboard` på tvers av oppgraderinger. Monteringene er på som standard: chartet monterer vertens rot på `/host` og dens `/proc` på `/host/proc`, begge skrivebeskyttet, og gir ingen ekstra rettigheter. En klynge som håndhever den begrensede Pod Security-profilen avviser en hostPath, så der setter du `opcuaServer.dashboard.boxHealth.enabled: false` for ingen enhet og ingen monteringer, eller `opcuaServer.dashboard.boxHealth.hostMount: false` for å beholde enheten med disk og CPU markert som ugyldig og en beskjed om hva som må monteres. Quadlet-drop-in-filen er `deploy/quadlet/opcua-dashboard.conf`.
+
+## Hva du bør stille inn før et ekte anlegg ser det
+
+Legg dette i en verdifil og installer med `-f`. Ikke stol på `--set` for noe du trenger igjen ved neste oppgradering, for du husker det ikke, og det gjør ikke oppgraderingen heller.
+
+| Verdi | Standard | Hvorfor du endrer den |
+|---|---|---|
+| `plant.name`, `plant.siteId` | `HotLoop`, tom | Hva anlegget heter på skjermer, i sider og for andre lokasjoner. |
+| `global.timezone` | `America/New_York` | Tidsplaner, rapporter og skiftbytter går etter den. Det må være et ekte sonenavn (`America/Chicago`, ikke `CST`), fordi en tidssone som ikke lar seg laste stopper oppstarten i stedet for å stille kjøre på UTC. |
+| `publicUrl` | tom | Adressen en telefon på anleggets Wi-Fi når HotLoop på. Uten den har varsler ingen lenke tilbake, og ntfy får ingen Bekreft-knapp. |
+| `safety.allowWrites` | `false` | Hovedbryteren. Av, så skriver ingenting til en maskin, fra noe sted. Slå den på når utrullingen er gjennomgått. |
+| `safety.allowMcpWrites` | `true` | Lar agenter skrive gjennom samme port, på siden 4.19.4. Den følger hovedbryteren: med `safety.allowWrites` av skriver ingenting, agenter heller ikke. Sett den til `false`, og agenter kan fortsatt lese hele anlegget og skriver aldri. Chartene setter alltid et MCP-token, så `/mcp` er aldri åpent. |
+| `database.postgresql.persistence.size` | `20Gi` | Her bor historikken din. Dimensjoner den etter antall tagger og `historian.retentionDays` (90). |
+| `logbook.retentionDays` | `90` | Dager med tilstandsendringer for entiteter som [loggboken](/nb/iot/logbook/) beholder. `0` beholder alt til volumet er fullt, og Gateway advarer deg om det ved oppstart. |
+| `secretKey.existingSecret` | tom | En Secret du styrer selv med nøkkelen til enhetspassordene. La den stå tom, så lager chartet en. Sett den hvis du rendrer chartet med `helm template`. |
+| `database.type` | `timescaledb` | Hvilken database appen kjører på: `timescaledb`, `postgresql` eller `sqlite`. En innstilling, ikke et annet bilde. |
+| `plant.latitude`, `plant.longitude` | tom | Hvor anlegget ligger, i desimalgrader, så [solen](/nb/iot/sun/) regnes ut på boksen. Begge eller ingen. |
+| `edgePublish.queueMaxBytes` | `67108864` | Grensen for avbruddskøen når du publiserer oppover over Sparkplug, 64 MiB. Utover den kastes de eldste målingene og telles. `0` er ubegrenset, og et langt nok avbrudd fyller da volumet. |
+| `database.postgresql.enabled` | `true` | Sett `false` og fyll ut `database.external` for å bruke din egen PostgreSQL. Med TimescaleDB-utvidelsen får du en hypertabell, uten den innebygd partisjonering. |
+| `opcuaClient.persistence.enabled` | `false` | Slå den på før du legger til en sikret OPC UA-enhet. Uten den har klientens sertifikater ingen plass å overleve en omstart, og enheten nekter å koble til i stedet for å la deg godkjenne tilliten på begge sider på nytt etter hver ny utrulling. |
+| `ingress` | av | Bare hvis du vil ha den tilgjengelig utenfra clusteret med et navn. |
+
+Skriving leveres avslått, og det er poenget. Selv med `safety.allowWrites` på er en tag skrivebeskyttet til du slår den på for seg, og hver verdi sjekkes mot tagens område, avvises og klippes aldri. [Skriveporten](/nb/gateway/write-gate/) har hver sjekk, i rekkefølge.
+
+## Podman Quadlet
+
+For en boks som ikke er i en klynge. Quadlet gjør containerne til ekte systemd-tjenester: de starter ved oppstart uten at noen er logget inn, starter på nytt når de dør og logger til journalen. Det krever **Podman 5.0 eller nyere**. Raspberry Pi OS Bookworm leveres med 4.3, som ikke har Quadlet i det hele tatt, så en Pi trenger Trixie eller nyere. Legg databasevolumet på en USB-SSD og ikke på SD-kortet.
+
+Enhetene ligger i katalogen `gateway/` i HotLoop-repositoriet, under `deploy/quadlet/`. [Podman Quadlet](/nb/install/quadlet/) forklarer hver fil.
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+Åpne så `http://<this box>:8080` og logg inn som `admin`. De tre hemmelighetene er databasepassordet, nøkkelen til enhetspassordene (ta kopi av den et annet sted enn på denne boksen, av samme grunn som over) og bcrypt-hashen av admins passord, aldri selve passordet. Enheten beholder 90 dagers historikk og følger `:stable`.
+
+Vanlig PostgreSQL i stedet for TimescaleDB er samme enhet med `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` lagt til i `hotloop.container`. En SQLite-fil er filene i `gateway/sqlite/` og ingenting fra katalogen over, fordi de deler enhetsnavn: `hotloop.container` og `hotloop-data.volume`, og to hemmeligheter, `hotloop-secret-key` og `hotloop-admin-password-hash`.
+
+Slå på Podmans timer én gang per boks, så oppdaterer Gateway seg selv:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+Databasecontaineren følger ikke `:stable`, med vilje, og en oppdatering som ikke kan starte rulles tilbake. [Den automatiske :stable-oppdateringen](/nb/install/auto-update/) forteller hva en oppdatering gjør, hva en tilbakerulling ikke kan angre, og hvordan du holder oppdateringer tilbake til du sier fra. Dette er enhetene som faktisk ble kjørt: rootless under systemd, inkludert en oppdatering som migrerer, så ikke kan starte og rulles tilbake. Siden har de også kjørt på bar metall (2026-11-17).
+
+## Deretter
+
+Legg til en enhet, oppdag taggene dens og se dem komme inn. [Protokoller](/nb/iot/protocols/) sier hvor langt hver driver er prøvd, inkludert de to som kjørte på bar metall 2026-11-17, S7comm og EtherNet/IP. Kjører du det under EmberCORE, finner EmberCORE det selv og proxyer det på adressen inne i klyngen, uten ingress.
+
+## Lisens
+
+HotLoop Gateway er under HotLoop Source License Agreement 1.0. Det er gratis å bruke og har tilgjengelig kildekode, men er ikke åpen kildekode etter OSI. Hjemme- og laboratoriebruk er gratis, og det samme gjelder skoler, ideelle organisasjoner og offentlige organer for egen drift. Se [lisenssiden](/nb/license/) og [Bruke HotLoop i en bedrift](/nb/business/).

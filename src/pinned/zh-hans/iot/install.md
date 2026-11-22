@@ -34,7 +34,7 @@ SQLite 是单个本地磁盘上的单个写入方，所以只能是一个副本�
 
 ### 备份密钥
 
-图表还会生成 `<release>-secret-key`（上面的命令中是 `hotloop-secret-key`）。它保存着加密 HotLoop 为设备保存的每一个密码的密钥。这把密钥从不在数据库里，也从不在备份里，所以它是你数据的一部分：备份只能在挂载了这把密钥的地方恢复凭据。图表在 `helm uninstall` 之后仍会保留这个 Secret。请把它备份到你的备份之外的地方，因为紧挨着它所保护的备份放着的密钥，什么也保护不了。完整的来龙去脉见[安装 Gateway](/zh-hans/gateway/install/#back-up-the-key-before-you-need-it)，它们是同一把密钥。
+图表还会生成 `<release>-secret-key`（上面的命令中是 `hotloop-secret-key`）。它保存着加密 HotLoop 为设备保存的每一个密码的密钥。这把密钥从不在数据库里，也从不在备份里，所以它是你数据的一部分：备份只能在挂载了这把密钥的地方恢复凭据。图表在 `helm uninstall` 之后仍会保留这个 Secret。请把它备份到你的备份之外的地方，因为紧挨着它所保护的备份放着的密钥，什么也保护不了。完整的来龙去脉见[安装 Gateway](/zh-hans/gateway/install/#在需要之前先备份密钥)，它们是同一把密钥。
 
 ### 登录
 

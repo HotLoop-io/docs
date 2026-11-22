@@ -22,7 +22,7 @@ helm install hotloop hotloop/hotloop-edge --version 4.23.2 \
 
 无论哪个产品，都把发行版命名为 `hotloop`。数据库的卷、Secret 和 Service 都以发行版名称命名，保持这个名称，站点以后才能升级到更大的产品。
 
-这会部署 Edge，以及旁边运行在 PostgreSQL 17 上的 TimescaleDB 2.30.1，使用 20 Gi 的卷，保留 90 天历史。图表会在发行版的 Secret 中生成数据库密码、MCP 令牌和管理员密码，并在每次升级时重复使用。它还会生成 `<release>-secret-key`，也就是加密 HotLoop 保存的每一个设备密码的密钥。这把密钥是你数据的一部分，[Gateway 安装页面](/zh-hans/gateway/install/#back-up-the-key-before-you-need-it)说明了原因和备份方法。它们是同一把密钥。
+这会部署 Edge，以及旁边运行在 PostgreSQL 17 上的 TimescaleDB 2.30.1，使用 20 Gi 的卷，保留 90 天历史。图表会在发行版的 Secret 中生成数据库密码、MCP 令牌和管理员密码，并在每次升级时重复使用。它还会生成 `<release>-secret-key`，也就是加密 HotLoop 保存的每一个设备密码的密钥。这把密钥是你数据的一部分，[Gateway 安装页面](/zh-hans/gateway/install/#在需要之前先备份密钥)说明了原因和备份方法。它们是同一把密钥。
 
 要用普通 PostgreSQL 或 SQLite 文件，安装时把 `database.type` 设为 `postgresql` 或 `sqlite`。SQLite 文件是单个本地磁盘上的单个写入方，所以只能是一个副本，绝不能放在 NFS 上。以后更换数据库需要备份再恢复，因为新数据库一开始是空的。恢复方法见[备份](/zh-hans/iot/backup/)。
 

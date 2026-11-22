@@ -20,7 +20,7 @@ helm install hotloop hotloop/hotloop-edge --version {{hotloop}} \
 
 어떤 제품이든 릴리스 이름은 `hotloop`으로 합니다. 데이터베이스 볼륨, Secret, Service의 이름이 릴리스 이름을 따르며, 이름을 유지해야 나중에 사이트를 상위 제품으로 옮길 수 있습니다.
 
-이렇게 하면 Edge와 그 옆의 PostgreSQL 17 위에서 도는 TimescaleDB 2.30.1이 20 Gi 볼륨에 배포되고, 이력은 90일 보관됩니다. 차트는 데이터베이스 비밀번호, MCP 토큰, 관리자 비밀번호를 릴리스 Secret에 생성하고 업그레이드할 때마다 재사용합니다. 또한 HotLoop이 보관하는 모든 장치 비밀번호를 암호화하는 키인 `<release>-secret-key`도 생성합니다. 이 키는 데이터의 일부이며, 이유와 백업 방법은 [Gateway 설치 페이지](/ko/gateway/install/#back-up-the-key-before-you-need-it)에 있습니다. 같은 키입니다.
+이렇게 하면 Edge와 그 옆의 PostgreSQL 17 위에서 도는 TimescaleDB 2.30.1이 20 Gi 볼륨에 배포되고, 이력은 90일 보관됩니다. 차트는 데이터베이스 비밀번호, MCP 토큰, 관리자 비밀번호를 릴리스 Secret에 생성하고 업그레이드할 때마다 재사용합니다. 또한 HotLoop이 보관하는 모든 장치 비밀번호를 암호화하는 키인 `<release>-secret-key`도 생성합니다. 이 키는 데이터의 일부이며, 이유와 백업 방법은 [Gateway 설치 페이지](/ko/gateway/install/#필요해지기-전에-키를-백업하세요)에 있습니다. 같은 키입니다.
 
 일반 PostgreSQL이나 SQLite 파일을 쓰려면 설치할 때 `database.type`을 `postgresql` 또는 `sqlite`로 설정합니다. SQLite 파일은 로컬 디스크 하나에 쓰는 쪽이 하나뿐이므로 복제본은 하나이며 NFS는 절대 안 됩니다. 나중에 데이터베이스를 바꾸려면 백업과 복원을 해야 합니다. 새 데이터베이스는 비어 있는 채로 시작하기 때문입니다. 복원 방법은 [백업](/ko/iot/backup/)에 있습니다.
 

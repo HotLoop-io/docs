@@ -20,7 +20,7 @@ helm install hotloop hotloop/hotloop-edge --version {{hotloop}} \
 
 どの製品でもリリース名は `hotloop` にします。データベースのボリューム、Secret、Service はリリース名から名前が付き、リリース名を保つことで、後からサイトを上位の製品へ移せます。
 
-これで Edge と、その隣の PostgreSQL 17 上の TimescaleDB 2.30.1 が 20 Gi のボリュームにデプロイされ、履歴は 90 日間保持されます。チャートはデータベースのパスワード、MCP トークン、管理者パスワードをリリースの Secret に生成し、アップグレードのたびに再利用します。HotLoop が保持するすべてのデバイスのパスワードを暗号化する鍵、`<release>-secret-key` も生成します。この鍵はデータの一部です。理由とバックアップ方法は [Gateway のインストールページ](/ja/gateway/install/#back-up-the-key-before-you-need-it)にあります。同じ鍵です。
+これで Edge と、その隣の PostgreSQL 17 上の TimescaleDB 2.30.1 が 20 Gi のボリュームにデプロイされ、履歴は 90 日間保持されます。チャートはデータベースのパスワード、MCP トークン、管理者パスワードをリリースの Secret に生成し、アップグレードのたびに再利用します。HotLoop が保持するすべてのデバイスのパスワードを暗号化する鍵、`<release>-secret-key` も生成します。この鍵はデータの一部です。理由とバックアップ方法は [Gateway のインストールページ](/ja/gateway/install/#必要になる前にキーをバックアップする)にあります。同じ鍵です。
 
 通常の PostgreSQL や SQLite ファイルを使うには、インストール時に `database.type` を `postgresql` または `sqlite` にします。SQLite ファイルは 1 つのローカルディスクに書き込む 1 つのライターなので、レプリカは 1 つで、NFS は使えません。後でデータベースを切り替えるにはバックアップと復元が必要です。新しいデータベースは空で始まるためです。復元は[バックアップ](/ja/iot/backup/)にあります。
 
