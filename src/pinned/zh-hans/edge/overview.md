@@ -1,0 +1,35 @@
+---
+title: "HotLoop Edge 概览"
+description: "HotLoop Edge 是 IoT 加上机器层：OPC UA 服务器、Sparkplug B 发布，以及在上行链路中断时让工厂继续运行的存储转发。"
+sidebar:
+  label: "概览"
+---
+
+:::note[Edge 已发布，首个版本是 4.18.10]
+镜像是 `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`，为 amd64、arm64 和 arm/v7 构建，amd64 上约 37 MB，arm 上约 34 MB，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-edge`。两者都无需登录即可拉取。Quadlet 单元在 [Podman Quadlet](/zh-hans/install/quadlet/) 的 `edge/` 目录中。[安装它](/zh-hans/edge/install/)。在 4.18.10 之前，Gateway 也可以运行在边缘并向上游发布 Sparkplug，从 4.5.0 起就可以，但需要运行整个 Gateway。
+:::
+
+Edge 是装在产线旁边的一个盒子。它读取机器，在机器上运行规则，WAN 断开时继续工作，并把看到的情况告诉工厂的其余部分。它和其他一切一样走同一个写入关口。
+
+它拥有 [IoT](/zh-hans/iot/overview/) 的全部功能，外加两样东西。
+
+## Edge 增加了什么
+
+- **[Edge 发布与存储转发](/zh-hans/edge/edge-publish/)。** 它把读到的一切作为 Sparkplug B 边缘节点向上游发布。链路中断时先缓冲到磁盘，链路恢复后按顺序重放，所以上游的历史数据库得到的是补全的中断时段，而不是一个空洞，只要中断时长没有超出队列容量。队列默认 64 MiB，约 248,000 条读数：每秒 100 条时约 41 分钟，每秒 2,000 条时约两分钟。超出后最旧的读数先丢弃，每一条都会计数，`edgePublish.queueMaxBytes` 可以调大。读数在代理确认期间留在内存中，只有代理停止时才写入磁盘。一项测试会在负载下切断上行链路，在中断中途杀死进程，并统计每一条读数。链路正常时被强行终止，仍可能损失约一次轮询的读数，页面中写明了这一点，并给出数字。
+- **[OPC UA 服务器](/zh-hans/edge/opc-ua-server/)。** 只读并受保护。你已有的 SCADA 无需新驱动即可看到每个变量，Ignition 8.3.9 已完整读取过它。启用之前它是关闭的。
+
+本地画面和逻辑在上行链路中断时继续运行，一项测试会让真实的二进制文件面对一条吞掉一切的链路来证明这一点。在 WAN 中断期间重启的盒子会带着画面和报警启动，而在 4.18.10 之前，它会陷入崩溃循环，在 WAN 恢复之前既没有画面也没有报警。仪表板就是画面，它们在 [IoT](/zh-hans/iot/dashboards/) 中。在共用面板上指明某个人、PIN 码或工牌的 HMI 写入还没有做。它在[路线图](/zh-hans/roadmap/)上。
+
+## 它没有什么
+
+没有设备群，没有多站点，也没有定时报表。这些属于 [Gateway](/zh-hans/gateway/overview/)，不在 Edge 的二进制文件中。
+
+## 数据库
+
+同一个二进制文件支持 SQLite、PostgreSQL 或 TimescaleDB。图表和 Quadlet 单元默认运行 TimescaleDB，除非你修改，否则保留 90 天历史。在图表中是 `database.type`，`HOTLOOP_DB_TYPE=sqlite` 会让盒子使用文件，不需要数据库容器。[产品系列](/zh-hans/products/)中有对照表。
+
+## 安装
+
+[Edge 安装页面](/zh-hans/edge/install/)有 Helm 和 Podman Quadlet，附带命令。把站点从 IoT 迁到 Edge 再迁到 Gateway，每台设备、变量、实体、自动化、报警、用户和每一小时的历史都会保留，具体方法见[产品系列](/zh-hans/products/)。
+
+在工厂里使用？[在企业中使用 HotLoop](/zh-hans/business/)介绍许可方式和联系我们的方法。

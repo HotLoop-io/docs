@@ -1,0 +1,24 @@
+---
+title: "HotLoop Edge in EmberNet"
+description: "Die Seiten auf docs.embernet.ai zu HotLoop Edge: der App-Store-Eintrag und jede Seite, die es erwähnt."
+sidebar:
+  label: "In der EmberNet-Dokumentation"
+---
+
+HotLoop Edge ist IoT plus ein OPC-UA-Server und Sparkplug-B-Veröffentlichung mit Store and Forward. EmberNet verpackt und installiert es aus dem App Store, und die EmberNet-Dokumentation deckt diese Seite ab.
+
+Wo es in der EmberNet-Dokumentation steht:
+
+- [HotLoop Edge in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [Übersicht des App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [HotLoop Gateway in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [HotLoop IoT in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [HotLoop Edge Relay in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [FUXA in EmberNet](https://docs.embernet.ai/docs/app-store/fuxa)
+- [HotLoop for CODESYS in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
+
+FUXA liest einen Edge über OPC UA, und HotLoop for CODESYS installiert ihn neben einer Runtime.
+
+[HotLoop im Unternehmen nutzen](/de/business/) behandelt die Lizenz und wie Sie uns erreichen.
+
+Zurück zur [Übersicht zu HotLoop Edge](/de/edge/overview/) oder zur [Seite zu HotLoop Edge auf hotloop.io](https://hotloop.io/edge/).

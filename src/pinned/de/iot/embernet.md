@@ -1,0 +1,20 @@
+---
+title: "HotLoop IoT in EmberNet"
+description: "Die Seiten auf docs.embernet.ai zu HotLoop IoT: der App-Store-Eintrag und jede Seite, die es erwähnt."
+sidebar:
+  label: "In der EmberNet-Dokumentation"
+---
+
+HotLoop IoT ist die Automatisierungsbasis, klein genug für einen Raspberry Pi. EmberNet verpackt und installiert es aus dem App Store, und die EmberNet-Dokumentation deckt diese Seite ab.
+
+Wo es in der EmberNet-Dokumentation steht:
+
+- [HotLoop IoT in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [Übersicht des App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [HotLoop Gateway in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [HotLoop Edge in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [HotLoop Edge Relay in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+
+[HotLoop im Unternehmen nutzen](/de/business/) behandelt die Lizenz und wie Sie uns erreichen.
+
+Zurück zur [Übersicht zu HotLoop IoT](/de/iot/overview/) oder zur [Seite zu HotLoop IoT auf hotloop.io](https://hotloop.io/iot/).

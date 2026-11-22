@@ -1,0 +1,21 @@
+---
+title: "HotLoop Edge Relay in EmberNet"
+description: "Die Seiten auf docs.embernet.ai zu HotLoop Edge Relay: der App-Store-Eintrag und jede Seite, die es erwähnt."
+sidebar:
+  label: "In der EmberNet-Dokumentation"
+---
+
+HotLoop Edge Relay ist ein Sparkplug-B-Edge-Node ohne Oberfläche, der abfragt und weiterleitet. EmberNet verpackt und installiert es aus dem App Store, und die EmberNet-Dokumentation deckt diese Seite ab.
+
+Wo es in der EmberNet-Dokumentation steht:
+
+- [HotLoop Edge Relay in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [Übersicht des App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [HotLoop Gateway in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [HotLoop Edge in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [HotLoop IoT in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [HotLoop Flow in EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+
+[HotLoop im Unternehmen nutzen](/de/business/) behandelt die Lizenz und wie Sie uns erreichen.
+
+Zurück zur [Übersicht zu HotLoop Edge Relay](/de/edge-relay/overview/) oder zur [Seite zu HotLoop Edge Relay auf hotloop.io](https://hotloop.io/edge-relay/).

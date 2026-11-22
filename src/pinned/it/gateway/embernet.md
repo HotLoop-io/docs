@@ -1,0 +1,26 @@
+---
+title: "HotLoop Gateway su EmberNet"
+description: "Le pagine di docs.embernet.ai che trattano HotLoop Gateway: la sua scheda nell'App Store e ogni pagina che lo cita."
+sidebar:
+  label: "Nella documentazione EmberNet"
+---
+
+HotLoop Gateway è l'historian completo, il server di allarmi, il motore di automazione e la superficie MCP. EmberNet lo impacchetta e lo distribuisce dall'App Store, e la documentazione EmberNet copre questo lato.
+
+Dove si trova nella documentazione EmberNet:
+
+- [HotLoop Gateway su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [Panoramica dell'App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [Panoramica della piattaforma](https://docs.embernet.ai/docs/platform/overview)
+- [Architettura della piattaforma](https://docs.embernet.ai/docs/platform/architecture)
+- [Accesso a EmberCORE](https://docs.embernet.ai/docs/dashboard/access)
+- [HotLoop Edge su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [HotLoop IoT su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [HotLoop Edge Relay su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [HotLoop Flow su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [HotLoop Cascade su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+- [HotLoop for CODESYS su EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
+
+[Usare HotLoop in un'azienda](/it/business/) spiega la licenza e come contattarci.
+
+Torna alla [panoramica di HotLoop Gateway](/it/gateway/overview/), oppure alla [pagina di HotLoop Gateway su hotloop.io](https://hotloop.io/gateway/).
