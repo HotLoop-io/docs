@@ -50,7 +50,7 @@ Cùng luồng và cùng lệnh, ngày 2026-10-22, trên một Raspberry Pi 5 Mod
 | Engine, chuỗi năm nút, không có I/O | **7.74 đến 8.15 µs mỗi thông điệp**, cấp phát 4.0 KB |
 | HTTP, cùng lệnh giữ trong 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
 
-Dòng cuối là dòng trung thực cho một máy luôn có tải. Bo mạch chạm ngưỡng nhiệt mềm trong chưa đầy một phút, bị giảm xung từ khoảng phút thứ hai và nằm ở 83 đến 86 C với xung nhịp 1.5 đến 1.7 GHz trong phần còn lại. [Trang benchmark](/vi/flow/benchmarks/#results-on-a-raspberry-pi-5) có toàn bộ lần chạy trên Pi.
+Dòng cuối là dòng trung thực cho một máy luôn có tải. Bo mạch chạm ngưỡng nhiệt mềm trong chưa đầy một phút, bị giảm xung từ khoảng phút thứ hai và nằm ở 83 đến 86 C với xung nhịp 1.5 đến 1.7 GHz trong phần còn lại. [Trang benchmark](/vi/flow/benchmarks/#kết-quả-trên-raspberry-pi-5) có toàn bộ lần chạy trên Pi.
 
 [Trang benchmark](/vi/flow/benchmarks/) có phương pháp và các lưu ý.
 

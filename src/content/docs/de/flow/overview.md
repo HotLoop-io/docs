@@ -52,7 +52,7 @@ Derselbe Flow und dieselben Befehle, am 2026-10-22, auf einem Raspberry Pi 5 Mod
 | Engine, Kette aus fünf Knoten, ohne E/A | **7.74 bis 8.15 µs pro Nachricht**, 4.0 KB zugewiesen |
 | HTTP, derselbe Befehl 600 s lang gehalten | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
 
-Die letzte Zeile ist die ehrliche für eine Maschine, die dauerhaft unter Last bleibt. Die Platine erreichte ihre weiche Temperaturgrenze nach weniger als einer Minute, drosselte ab etwa der zweiten Minute und blieb den Rest der Zeit bei 83 bis 86 C mit einem Takt von 1.5 bis 1.7 GHz. Die [Benchmark-Seite](/de/flow/benchmarks/#results-on-a-raspberry-pi-5) hat den Pi-Lauf vollständig.
+Die letzte Zeile ist die ehrliche für eine Maschine, die dauerhaft unter Last bleibt. Die Platine erreichte ihre weiche Temperaturgrenze nach weniger als einer Minute, drosselte ab etwa der zweiten Minute und blieb den Rest der Zeit bei 83 bis 86 C mit einem Takt von 1.5 bis 1.7 GHz. Die [Benchmark-Seite](/de/flow/benchmarks/#ergebnisse-auf-einem-raspberry-pi-5) hat den Pi-Lauf vollständig.
 
 Die [Benchmark-Seite](/de/flow/benchmarks/) hat die Methode und die Einschränkungen.
 

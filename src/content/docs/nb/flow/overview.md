@@ -52,7 +52,7 @@ Samme flyt og samme kommandoer, 2026-10-22, på en Raspberry Pi 5 Model B (8 GB,
 | Motor, kjede med fem noder, uten I/O | **7.74 til 8.15 µs per melding**, 4.0 KB allokert |
 | HTTP, samme kommando holdt i 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
 
-Den siste raden er den ærlige for en maskin som holder seg belastet. Kortet nådde den myke temperaturgrensen på under et minutt, strupet fra omtrent to minutter og ble liggende på 83 til 86 C med klokken på 1.5 til 1.7 GHz resten av tiden. [Referansetestsiden](/nb/flow/benchmarks/#results-on-a-raspberry-pi-5) har hele kjøringen på Pi-en.
+Den siste raden er den ærlige for en maskin som holder seg belastet. Kortet nådde den myke temperaturgrensen på under et minutt, strupet fra omtrent to minutter og ble liggende på 83 til 86 C med klokken på 1.5 til 1.7 GHz resten av tiden. [Referansetestsiden](/nb/flow/benchmarks/#resultater-på-en-raspberry-pi-5) har hele kjøringen på Pi-en.
 
 [Referansetestsiden](/nb/flow/benchmarks/) har metoden og forbeholdene.
 
