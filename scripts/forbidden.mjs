@@ -23,7 +23,11 @@ export const FORBIDDEN = [
 ];
 
 // Returns one line per match, with a little of the text around it.
+// Pagefind puts zero-width spaces between the words of ja and zh-hans text in its fragments, and they split "CI/CD" and
+// "for CI" so the allow-patterns above never match. They are not text: take them out before looking.
+export const ZERO_WIDTH = /[\u200B-\u200D\u2060\uFEFF]/g;
 export function scan(label, text) {
+  text = text.replace(ZERO_WIDTH, '');
   const hits = [];
   for (const entry of FORBIDDEN) {
     const re = Array.isArray(entry) ? entry[0] : entry;

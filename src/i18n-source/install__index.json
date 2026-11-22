@@ -15,5 +15,20 @@
     "hi": ["fcbbf82413b1","39f0f5003a7a","ee4a98c27483","72e94c25752f","8c1959647367","3863274bfc17","f335c09927a3","9dc5f06ce60a","abd66ba07f4e","401f126ff6bd","fff033b809e6","09c193c8b46a","634bca4f6b87","5e88f3acc63b","749d532b0f3c","3aa883ad1eab","9c44c9d004a2","47574db76f35","14d3593f0d4b","1386a7c7f099","86f2c9b64264","22d5a01dd255","771fc9e6a3f6","7ddbdedd9ee5","3872624881aa","20a926810b68","6f3592126ff4","c48db9ecfcd6","6908cfe98563","771c7ace7564","c1d235dcce85","a02d7c63500b","a855d96fc793","43dfce9b04a9","8001a3359968","4abdc6966152","fd52848cca88","e62138c24472","6127f088810b","5edc8fcbedd5","318b1fbfeb59","44f6fb5e3451","d2210ece51f2"],
     "zh-hans": ["fcbbf82413b1","39f0f5003a7a","ee4a98c27483","72e94c25752f","8c1959647367","3863274bfc17","f335c09927a3","9dc5f06ce60a","abd66ba07f4e","401f126ff6bd","fff033b809e6","09c193c8b46a","634bca4f6b87","5e88f3acc63b","749d532b0f3c","3aa883ad1eab","9c44c9d004a2","47574db76f35","14d3593f0d4b","1386a7c7f099","86f2c9b64264","22d5a01dd255","771fc9e6a3f6","7ddbdedd9ee5","3872624881aa","20a926810b68","6f3592126ff4","c48db9ecfcd6","6908cfe98563","771c7ace7564","c1d235dcce85","a02d7c63500b","a855d96fc793","43dfce9b04a9","8001a3359968","4abdc6966152","fd52848cca88","e62138c24472","6127f088810b","5edc8fcbedd5","318b1fbfeb59","44f6fb5e3451","d2210ece51f2"],
     "ar": ["fcbbf82413b1","39f0f5003a7a","ee4a98c27483","72e94c25752f","8c1959647367","3863274bfc17","f335c09927a3","9dc5f06ce60a","abd66ba07f4e","401f126ff6bd","fff033b809e6","09c193c8b46a","634bca4f6b87","5e88f3acc63b","749d532b0f3c","3aa883ad1eab","9c44c9d004a2","47574db76f35","14d3593f0d4b","1386a7c7f099","86f2c9b64264","22d5a01dd255","771fc9e6a3f6","7ddbdedd9ee5","3872624881aa","20a926810b68","6f3592126ff4","c48db9ecfcd6","6908cfe98563","771c7ace7564","c1d235dcce85","a02d7c63500b","a855d96fc793","43dfce9b04a9","8001a3359968","4abdc6966152","fd52848cca88","e62138c24472","6127f088810b","5edc8fcbedd5","318b1fbfeb59","44f6fb5e3451","d2210ece51f2"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "fr": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "it": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "de": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "nb": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "bg": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "el": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ko": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ja": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "vi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "hi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "zh-hans": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ar": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"}
   }
 }

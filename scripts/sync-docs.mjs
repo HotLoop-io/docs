@@ -591,7 +591,10 @@ const staleAssets = [];
 
 // What src/content/docs holds after this run, for the translation check (scripts/i18n-source.mjs).
 function translationOverlay() {
-  return new Map([...out].filter(([k]) => k !== '__sync.json').map(([k, v]) => [`src/content/docs/${k}`, v]));
+  // sync.json is in it too: the check reads the latest release of each product from it, and those are the ones this run found.
+  const m = new Map([...out].filter(([k]) => k !== '__sync.json').map(([k, v]) => [`src/content/docs/${k}`, v]));
+  if (out.has('__sync.json')) m.set('src/data/sync.json', out.get('__sync.json'));
+  return m;
 }
 
 if (CHECK) {

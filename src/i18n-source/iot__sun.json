@@ -15,5 +15,20 @@
     "hi": ["b4f552501f62","954bb2a11097","1902b763540a","2e9efc2248fe","118dcfc4a854","5bf2dcc327b7","e3f1b10e525b","34a6a24c096d","f01dc39dcfea","0a86edecdd33","0685cc507652","46ef18c98ce2","a6a265ce018c","6d0d6f85aa02","1e901fb2dc67","441de52ed8ff","e2e8d9cc3300","2ae8bbe47768","f2277c0dc10c","8f1707468caa","97a107805a02","549a18e1214f","6b15e46afb65","9c63aceab918","9782feb75b04","c8330babc3c2","d1155c82dd4c","ed4324b15b86","5fd6a922615f","9db763431ded","665b3e9b9e25"],
     "zh-hans": ["b4f552501f62","954bb2a11097","1902b763540a","2e9efc2248fe","118dcfc4a854","5bf2dcc327b7","e3f1b10e525b","34a6a24c096d","f01dc39dcfea","0a86edecdd33","0685cc507652","46ef18c98ce2","a6a265ce018c","6d0d6f85aa02","1e901fb2dc67","441de52ed8ff","e2e8d9cc3300","2ae8bbe47768","f2277c0dc10c","8f1707468caa","97a107805a02","549a18e1214f","6b15e46afb65","9c63aceab918","9782feb75b04","c8330babc3c2","d1155c82dd4c","ed4324b15b86","5fd6a922615f","9db763431ded","665b3e9b9e25"],
     "ar": ["b4f552501f62","954bb2a11097","1902b763540a","2e9efc2248fe","118dcfc4a854","5bf2dcc327b7","e3f1b10e525b","34a6a24c096d","f01dc39dcfea","0a86edecdd33","0685cc507652","46ef18c98ce2","a6a265ce018c","6d0d6f85aa02","1e901fb2dc67","441de52ed8ff","e2e8d9cc3300","2ae8bbe47768","f2277c0dc10c","8f1707468caa","97a107805a02","549a18e1214f","6b15e46afb65","9c63aceab918","9782feb75b04","c8330babc3c2","d1155c82dd4c","ed4324b15b86","5fd6a922615f","9db763431ded","665b3e9b9e25"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "fr": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "it": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "de": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "nb": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "bg": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "el": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ko": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ja": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "vi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "hi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "zh-hans": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ar": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"}
   }
 }

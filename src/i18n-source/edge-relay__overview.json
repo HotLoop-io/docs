@@ -15,5 +15,20 @@
     "hi": ["fb3c0920b1ac","ba819fc622d0","023c530d9789","580e6192488e","5b6927f037be","d9ecb8e38652","ffcf794990af","0ddeaad9782f","6947f4910ed1","a9796cf638f2","31ab8384b003","a73e6ed1afe4","3bc4863e4406","522f19962ac9","8ffcfa8cb93e","e7782b022976","c7a37523895b","aae85a32d391","004344804cc6","c618b9cfabe1","025e02b60b14","c89f9de7100d","a98d28637664","f32c153ec21a","6c549a56db01","e4486ca7f489"],
     "zh-hans": ["fb3c0920b1ac","ba819fc622d0","023c530d9789","580e6192488e","5b6927f037be","d9ecb8e38652","ffcf794990af","0ddeaad9782f","6947f4910ed1","a9796cf638f2","31ab8384b003","a73e6ed1afe4","3bc4863e4406","522f19962ac9","8ffcfa8cb93e","e7782b022976","c7a37523895b","aae85a32d391","004344804cc6","c618b9cfabe1","025e02b60b14","c89f9de7100d","a98d28637664","f32c153ec21a","6c549a56db01","e4486ca7f489"],
     "ar": ["fb3c0920b1ac","ba819fc622d0","023c530d9789","580e6192488e","5b6927f037be","d9ecb8e38652","ffcf794990af","0ddeaad9782f","6947f4910ed1","a9796cf638f2","31ab8384b003","a73e6ed1afe4","3bc4863e4406","522f19962ac9","8ffcfa8cb93e","e7782b022976","c7a37523895b","aae85a32d391","004344804cc6","c618b9cfabe1","025e02b60b14","c89f9de7100d","a98d28637664","f32c153ec21a","6c549a56db01","e4486ca7f489"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "fr": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "it": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "de": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "nb": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "bg": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "el": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ko": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ja": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "vi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "hi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "zh-hans": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ar": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"}
   }
 }

@@ -68,7 +68,28 @@ function wrapsInto(prevLine, line) {
 }
 export const segs = (items) => items.filter((x) => x.seg !== undefined).map((x) => x.seg);
 export const hashSeg = (s) => createHash('sha256').update(s).digest('hex').slice(0, 12);
-export const hashes = (text) => segs(parse(text)).map(hashSeg);
+export const hashes = (text, versions = null) => segs(parse(text)).map((s) => hashSeg(normalizeVersions(s, versions)));
+
+// Release versions are not wording. A page that says 4.23.2 where the product's latest release is 4.23.2 says
+// {{hotloop}} as far as the translation is concerned, so a release that moves the number does not mark every
+// translation stale. `versions` is the sync's map ({ hotloop: '4.23.2', flow: '2.16.6', cascade: '1.4.1' }).
+// Three shapes are recognised, each only for the product's LATEST release: the full version, its x line (4.23.x),
+// and its major.minor (4.23, never inside a longer number). Older versions in a release list stay as written,
+// because they are history and do not move.
+const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export function normalizeVersions(s, versions) {
+  if (!versions) return s;
+  let out = s;
+  for (const [name, ver] of Object.entries(versions)) {
+    const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(ver ?? '');
+    if (!m) continue;
+    const full = esc(ver), line = esc(`${m[1]}.${m[2]}`);
+    out = out.replace(new RegExp(`(?<![\\w.-])${full}(?![\\w]|\\.\\d|-\\d)`, 'g'), `{{${name}}}`)
+      .replace(new RegExp(`(?<![\\w.-])${line}\\.x\\b`, 'g'), `{{${name}.x}}`)
+      .replace(new RegExp(`(?<![\\w.-])${line}(?![\\w]|\\.\\d|-\\d)`, 'g'), `{{${name}.minor}}`);
+  }
+  return out;
+}
 // The line number (1-based) in the file of each segment.
 const segLines = (text) => parse(text).flatMap((x, i) => (x.seg !== undefined ? [i + 1] : []));
 
@@ -109,6 +130,14 @@ function view(overlay = new Map()) {
   };
   return { exists, read, walk };
 }
+// The latest release of each product, from the sync's own data, as the sync sees it (the overlay carries the file it is
+// about to write). Empty when there is no sync data, and then nothing is normalized.
+export function versionMap(v) {
+  try {
+    const repos = JSON.parse(v.read('src/data/sync.json')).repos ?? {};
+    return Object.fromEntries(Object.entries(repos).flatMap(([k, r]) => (r?.release?.version ? [[k, r.release.version]] : [])));
+  } catch { return {}; }
+}
 const idOf = (rel, base) => rel.slice(base.length + 1).replace(/\.mdx?$/, '');
 const recordPath = (id) => `${RECORDS}/${id.replace(/\//g, '__')}.json`;
 
@@ -146,7 +175,10 @@ export function readRecord(v, id) {
 function writeRecordFile(id, rec) {
   const langs = FOLDERS.filter((l) => rec.langs[l]);
   const body = langs.map((l) => `    ${JSON.stringify(l)}: ${JSON.stringify(rec.langs[l])}`).join(',\n');
-  const text = `{\n  "page": ${JSON.stringify(id)},\n  "english": ${JSON.stringify(rec.english)},\n  "langs": {\n${body}\n  }\n}\n`;
+  // The versions each language's hashes were normalized against, so a version that was current then still reads as its token.
+  const vl = langs.filter((l) => rec.versions?.[l] && Object.keys(rec.versions[l]).length);
+  const vers = vl.length ? `,\n  "versions": {\n${vl.map((l) => `    ${JSON.stringify(l)}: ${JSON.stringify(rec.versions[l])}`).join(',\n')}\n  }` : '';
+  const text = `{\n  "page": ${JSON.stringify(id)},\n  "english": ${JSON.stringify(rec.english)},\n  "langs": {\n${body}\n  }${vers}\n}\n`;
   const p = join(ROOT, recordPath(id));
   mkdirSync(dirname(p), { recursive: true });
   writeFileSync(p, text);
@@ -158,7 +190,8 @@ export function record(id, lang, { english, path, v = view() } = {}) {
   const ep = path ?? englishPath(v, id);
   if (!ep) throw new Error(`${id}: there is no English page to record against`);
   const text = english ?? v.read(ep);
-  const h = hashes(text);
+  const vm = versionMap(v);
+  const h = hashes(text, vm);
   const tp = translationPath(v, lang, id);
   if (!tp) throw new Error(`${id} ${lang}: there is no translated page to record`);
   const n = segs(parse(v.read(tp))).length;
@@ -166,6 +199,7 @@ export function record(id, lang, { english, path, v = view() } = {}) {
   const rec = readRecord(v, id) ?? { page: id, english: ep, langs: {} };
   rec.english = ep;
   rec.langs[lang] = h;
+  rec.versions = { ...(rec.versions ?? {}), [lang]: vm };
   writeRecordFile(id, rec);
   return h.length;
 }
@@ -195,6 +229,19 @@ export function diff(recorded, current) {
   };
 }
 
+// The hashes of the current English to compare against one language's recorded list. A segment counts as the
+// recorded one when it matches with the versions normalized against today's releases (a release moved), against the
+// releases of the day it was recorded (an older line that was the latest then), or as written (a record made before
+// versions were normalized). Otherwise it takes today's normalized hash, which is what the next record writes.
+export function currentHashes(text, v, recorded, recordedVersions = null) {
+  const have = new Set(recorded);
+  const now = versionMap(v);
+  return segs(parse(text)).map((x) => {
+    const c = [hashSeg(normalizeVersions(x, now)), recordedVersions ? hashSeg(normalizeVersions(x, recordedVersions)) : null, hashSeg(x)];
+    return c.find((h) => h && have.has(h)) ?? c[0];
+  });
+}
+
 // ---- the check -------------------------------------------------------------------------
 const clip = (s, n = 420) => (s.length > n ? s.slice(0, n - 1) + '...' : s);
 
@@ -208,7 +255,7 @@ export function examine(overlay = new Map()) {
   // A record whose page has no translation left.
   for (const rel of v.walk(RECORDS)) {
     if (!rel.endsWith('.json')) continue;
-    const id = idOf(rel, RECORDS).replace(/__/g, '/');
+    const id = idOf(rel, RECORDS).replace(/\.json$/, '').replace(/__/g, '/');
     const rec = readRecord(v, id);
     for (const lang of Object.keys(rec?.langs ?? {})) if (!pages.get(id)?.has(lang)) problems.push(`${id} ${lang}: has a record in ${rel} and no translated page. Delete that language from the record.`);
   }
@@ -216,7 +263,6 @@ export function examine(overlay = new Map()) {
     const ep = englishPath(v, id);
     if (!ep) { problems.push(`${id}: translated in ${[...langs].join(' ')} and there is no English page ${id}`); continue; }
     const etext = v.read(ep);
-    const cur = hashes(etext);
     const curSegs = segs(parse(etext));
     const lines = segLines(etext);
     const rec = readRecord(v, id);
@@ -227,6 +273,7 @@ export function examine(overlay = new Map()) {
       const r = rec?.langs?.[lang];
       if (!r) { problems.push(`${id} ${lang}: ${tp} has no record of the English it was made from. Run: node scripts/i18n-source.mjs record ${id} ${lang}`); continue; }
       if (have !== r.length) { problems.push(`${id} ${lang}: ${tp} has ${have} segments and its record says it was made from ${r.length}. It no longer lines up with its source.`); continue; }
+      const cur = currentHashes(etext, v, r, rec.versions?.[lang]);
       const d = diff(r, cur);
       if (!d.changed.length && !d.removed.length) continue;
       const key = d.changed.join(',') + '|' + d.removed.join(',');
@@ -329,5 +376,32 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const [id, ...langs] = rest;
     if (!id) { console.error('usage: i18n-source.mjs record <page> [lang ...]'); process.exit(2); }
     for (const l of langs.length ? langs : FOLDERS) console.log(`recorded ${id} ${l}: ${record(id, l)} segments`);
+  } else if (cmd === 'migrate') {
+    // One time: records made before versions were normalized hold the hash of the English as written. Where a segment
+    // is still exactly what was recorded, store its normalized hash and the versions, so the next release does not flag it.
+    const v = view();
+    const vm = versionMap(v);
+    let n = 0;
+    for (const rel of v.walk(RECORDS)) {
+      if (!rel.endsWith('.json')) continue;
+      const id = idOf(rel, RECORDS).replace(/\.json$/, '').replace(/__/g, '/');
+      const rec = readRecord(v, id);
+      const ep = englishPath(v, id);
+      if (!rec || !ep) continue;
+      const cur = segs(parse(v.read(ep)));
+      for (const lang of Object.keys(rec.langs)) {
+        if (rec.versions?.[lang]) continue;
+        const r = rec.langs[lang];
+        const raw = cur.map(hashSeg);
+        const { keptB } = align(r, raw);
+        const next = [...r];
+        keptB.forEach((i, j) => { if (i >= 0) next[i] = hashSeg(normalizeVersions(cur[j], vm)); });
+        rec.langs[lang] = next;
+        rec.versions = { ...(rec.versions ?? {}), [lang]: vm };
+        n++;
+      }
+      writeRecordFile(id, rec);
+    }
+    console.log(`i18n-source: migrated ${n} language record(s) to normalized versions`);
   } else { console.error(`unknown command ${cmd}`); process.exit(2); }
 }
