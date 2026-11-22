@@ -50,7 +50,7 @@ Le même flux et les mêmes commandes, le 2026-10-22, sur un Raspberry Pi 5 Mode
 | Moteur, chaîne de cinq nœuds, sans E/S | **7.74 à 8.15 µs par message**, 4.0 KB alloués |
 | HTTP, la même commande tenue 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
 
-La dernière ligne est la plus honnête pour une machine qui reste chargée. La carte a atteint sa limite de température douce en moins d'une minute, a commencé à brider vers la deuxième minute, et est restée entre 83 et 86 C avec l'horloge entre 1.5 et 1.7 GHz pour le reste. La [page des benchmarks](/fr/flow/benchmarks/#results-on-a-raspberry-pi-5) donne l'essai complet sur le Pi.
+La dernière ligne est la plus honnête pour une machine qui reste chargée. La carte a atteint sa limite de température douce en moins d'une minute, a commencé à brider vers la deuxième minute, et est restée entre 83 et 86 C avec l'horloge entre 1.5 et 1.7 GHz pour le reste. La [page des benchmarks](/fr/flow/benchmarks/#résultats-sur-un-raspberry-pi-5) donne l'essai complet sur le Pi.
 
 La [page des benchmarks](/fr/flow/benchmarks/) donne la méthode et les réserves.
 

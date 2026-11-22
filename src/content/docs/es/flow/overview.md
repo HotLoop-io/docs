@@ -52,7 +52,7 @@ El mismo flujo y los mismos comandos, el 2026-10-22, en una Raspberry Pi 5 Model
 | Motor, cadena de cinco nodos, sin E/S | **7.74 a 8.15 µs por mensaje**, 4.0 KB asignados |
 | HTTP, el mismo comando sostenido durante 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
 
-La última fila es la honesta para una máquina que se mantiene cargada. La placa llegó a su límite de temperatura suave en menos de un minuto, empezó a reducir la frecuencia a partir de los dos minutos y se quedó a 83 a 86 C con el reloj a 1.5 a 1.7 GHz el resto del tiempo. La [página de benchmarks](/es/flow/benchmarks/#results-on-a-raspberry-pi-5) tiene la ejecución en la Pi completa.
+La última fila es la honesta para una máquina que se mantiene cargada. La placa llegó a su límite de temperatura suave en menos de un minuto, empezó a reducir la frecuencia a partir de los dos minutos y se quedó a 83 a 86 C con el reloj a 1.5 a 1.7 GHz el resto del tiempo. La [página de benchmarks](/es/flow/benchmarks/#resultados-en-una-raspberry-pi-5) tiene la ejecución en la Pi completa.
 
 La [página de benchmarks](/es/flow/benchmarks/) tiene el método y las salvedades.
 

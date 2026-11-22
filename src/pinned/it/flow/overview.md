@@ -50,7 +50,7 @@ Lo stesso flusso e gli stessi comandi, il 2026-10-22, su un Raspberry Pi 5 Model
 | Motore, catena di cinque nodi, senza I/O | **7.74 a 8.15 µs a messaggio**, 4.0 KB allocati |
 | HTTP, lo stesso comando mantenuto per 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
 
-L'ultima riga è quella onesta per una macchina che resta sotto carico. La scheda ha raggiunto il limite di temperatura morbido in meno di un minuto, ha iniziato a ridurre la frequenza dopo circa due minuti ed è rimasta a 83 a 86 C con il clock a 1.5 a 1.7 GHz per il resto del tempo. La [pagina dei benchmark](/it/flow/benchmarks/#results-on-a-raspberry-pi-5) ha la prova sul Pi per intero.
+L'ultima riga è quella onesta per una macchina che resta sotto carico. La scheda ha raggiunto il limite di temperatura morbido in meno di un minuto, ha iniziato a ridurre la frequenza dopo circa due minuti ed è rimasta a 83 a 86 C con il clock a 1.5 a 1.7 GHz per il resto del tempo. La [pagina dei benchmark](/it/flow/benchmarks/#risultati-su-un-raspberry-pi-5) ha la prova sul Pi per intero.
 
 La [pagina dei benchmark](/it/flow/benchmarks/) ha il metodo e le avvertenze.
 
