@@ -1,0 +1,51 @@
+---
+title: "HotLoop Flow 快速入门"
+description: "构建或运行 HotLoop Flow，设置它必需的管理员账号和凭据密钥，然后从源码或镜像启动。"
+---
+
+从源码开始：
+
+```bash
+cd web && npm install && npm run build && cd ..
+go build -o hotloop-flow ./cmd/hotloop-flow
+
+export HOTLOOP_FLOW_DATA_DIR=./data
+export HOTLOOP_FLOW_ADMIN_USER=admin
+export HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(./hotloop-flow hash-password -password 'something-long')"
+export HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)"
+
+./hotloop-flow
+```
+
+编辑器的构建在先，并且不是可选的。该包通过 `go:embed` 嵌入，所以没有它的 Go 构建会因缺少匹配的文件而失败，而不是产出一个没有编辑器的二进制文件。
+
+或者跳过这一切：
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+用 `podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long'` 生成哈希。镜像是以非 root 运行的 distroless，里面没有 shell，所以没有可以 `exec` 进去的地方，也没有可供获得代码执行权限的人用来横向移动的东西。
+
+然后打开 <http://localhost:1880>。把 `flows.json` 放进数据目录并重启，或者直接在编辑器里构建流程。编辑器是 Astro，在纯 TypeScript 和原生 SVG 的画布之上加 Svelte 岛，构建成二进制文件内的静态文件：压缩后 JS 190.7 kB、CSS 30.1 kB，gzip 后 62.5 kB 和 6.8 kB，数据取自 `npm run build` 之后的 `web/dist/_astro`。其中没有任何内容是从别处获取的，所以在没有互联网的机器上也能运行。
+
+## 命令
+
+| 命令 | 作用 |
+|---|---|
+| `hotloop-flow` | 提供运行时、管理 API 和编辑器。这是默认行为。 |
+| `hotloop-flow -config <path>` | 同上，但从 YAML 文件读取。也会读取 `HOTLOOP_FLOW_CONFIG`。 |
+| `hotloop-flow hash-password` | 为密码生成 bcrypt 哈希。接受 `-password` 或 `HOTLOOP_FLOW_PASSWORD`。拒绝少于 8 个字符的内容。 |
+| `hotloop-flow import <flows.json>` | 在部署之前报告会发生什么。 |
+| `hotloop-flow diff <old> <new>` | 逐节点比较两个流程文件。也是 git 的 diff 驱动和 difftool。 |
+| `hotloop-flow plugin keygen`, `sign`, `verify` | 生成发布者密钥，为[插件](/zh-hans/flow/plugins/)签名，并运行服务器加载插件时所做的每一项检查，如果会拒绝则说明原因。 |
+| `hotloop-flow test <tests.yaml>` | 在进程内运行[流程测试](/zh-hans/flow/tests/)。流水线使用 `-junit`。 |
+| `hotloop-flow deploy -file <flows.json>` | 显示与运行中实例的 diff，然后带备注部署。用于流水线。 |
+| `hotloop-flow export` | 运行中的流程文件，按字节原样导出，或用 `-deployment N` 从历史中导出。 |
+| `hotloop-flow token` | 一个新的 API 令牌，以及要为它配置的哈希。 |
+| `hotloop-flow bench` | 产出[这些数据](/zh-hans/flow/overview/#数据)的基准测试工具。 |
+| `hotloop-flow version` | 版本。 |

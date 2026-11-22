@@ -1,0 +1,51 @@
+---
+title: "HotLoop Flow क्विक स्टार्ट"
+description: "HotLoop Flow को बिल्ड या रन करें, उसकी माँगी हुई एडमिन अकाउंट और क्रेडेंशियल सीक्रेट सेट करें, और सोर्स या इमेज से शुरू करें।"
+---
+
+सोर्स से:
+
+```bash
+cd web && npm install && npm run build && cd ..
+go build -o hotloop-flow ./cmd/hotloop-flow
+
+export HOTLOOP_FLOW_DATA_DIR=./data
+export HOTLOOP_FLOW_ADMIN_USER=admin
+export HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(./hotloop-flow hash-password -password 'something-long')"
+export HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)"
+
+./hotloop-flow
+```
+
+एडिटर बिल्ड पहले आता है और वैकल्पिक नहीं है। बंडल `go:embed` से जुड़ा होता है, इसलिए उसके बिना Go बिल्ड बिना एडिटर वाली बाइनरी बनाने के बजाय किसी पैटर्न के न मिलने पर विफल हो जाता है।
+
+या यह सब छोड़ दें:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+हैश `podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long'` से बनाएँ। इमेज distroless है, बिना root के चलती है और उसमें शेल नहीं है, इसलिए `exec` करने के लिए कुछ नहीं है और कोड एक्ज़ीक्यूशन पा लेने वाले के लिए आगे बढ़ने का कोई सहारा नहीं।
+
+फिर <http://localhost:1880> खोलें। डेटा डायरेक्टरी में `flows.json` डालें और रीस्टार्ट करें, या सीधे एडिटर में फ़्लो बनाएँ। एडिटर Astro है जिसमें Svelte आइलैंड सादे TypeScript और नेटिव SVG के कैनवास पर हैं, बाइनरी के भीतर स्टैटिक फ़ाइलों के रूप में बने हुए: 190.7 kB JS और 30.1 kB CSS मिनिफ़ाइड, gzip में 62.5 kB और 6.8 kB, `npm run build` के बाद `web/dist/_astro` से पढ़े गए। इसमें से कुछ भी कहीं से फ़ेच नहीं होता, इसलिए यह बिना इंटरनेट वाली मशीन पर चलता है।
+
+## कमांड
+
+| कमांड | क्या करती है |
+|---|---|
+| `hotloop-flow` | रनटाइम, एडमिन API और एडिटर परोसती है। यही डिफ़ॉल्ट है। |
+| `hotloop-flow -config <path>` | वही, YAML फ़ाइल से। `HOTLOOP_FLOW_CONFIG` भी पढ़ती है। |
+| `hotloop-flow hash-password` | पासवर्ड का bcrypt हैश। `-password` या `HOTLOOP_FLOW_PASSWORD` लेती है। 8 अक्षर से कम कुछ भी अस्वीकार करती है। |
+| `hotloop-flow import <flows.json>` | डिप्लॉय करने से पहले बताती है कि क्या होगा। |
+| `hotloop-flow diff <old> <new>` | दो फ़्लो फ़ाइलों का नोड दर नोड diff। git का diff ड्राइवर और difftool भी। |
+| `hotloop-flow plugin keygen`, `sign`, `verify` | प्रकाशक कुंजी बनाती है, [प्लगइन](/hi/flow/plugins/) पर हस्ताक्षर करती है, और सर्वर के लोड करते समय की हर जाँच चलाती है, और बताती है कि वह अस्वीकार क्यों करता। |
+| `hotloop-flow test <tests.yaml>` | [फ़्लो टेस्ट](/hi/flow/tests/) प्रोसेस के भीतर चलाती है। CI/CD के लिए `-junit`। |
+| `hotloop-flow deploy -file <flows.json>` | चल रहे इंस्टेंस के सामने diff दिखाती है, फिर नोट के साथ डिप्लॉय करती है। CI/CD के लिए। |
+| `hotloop-flow export` | चल रही फ़्लो फ़ाइल, बाइट दर बाइट, या इतिहास से `-deployment N`। |
+| `hotloop-flow token` | एक नया API टोकन और उसके लिए कॉन्फ़िगर करने का हैश। |
+| `hotloop-flow bench` | वह बेंचमार्क ढाँचा जिसने [आंकड़े](/hi/flow/overview/#आंकड़े) बनाए। |
+| `hotloop-flow version` | वर्शन। |

@@ -1,0 +1,51 @@
+---
+title: "Hurtigstart for HotLoop Flow"
+description: "Bygg eller kjør HotLoop Flow, sett administratorkontoen og legitimasjonshemmeligheten den krever, og start den, fra kildekoden eller fra imaget."
+---
+
+Fra kildekoden:
+
+```bash
+cd web && npm install && npm run build && cd ..
+go build -o hotloop-flow ./cmd/hotloop-flow
+
+export HOTLOOP_FLOW_DATA_DIR=./data
+export HOTLOOP_FLOW_ADMIN_USER=admin
+export HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(./hotloop-flow hash-password -password 'something-long')"
+export HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)"
+
+./hotloop-flow
+```
+
+Editorbygget kommer først og er ikke valgfritt. Pakken er innebygd med `go:embed`, så et Go-bygg uten den feiler på et manglende mønster i stedet for å lage en binær uten editor.
+
+Eller hopp over alt det:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+Lag hashen med `podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long'`. Imaget er distroless uten root og har ingen shell, så det er ingenting å kjøre `exec` inn i og ingenting for noen som får kjørt kode å bruke til å komme videre.
+
+Åpne deretter <http://localhost:1880>. Legg en `flows.json` i datamappen og start på nytt, eller bygg flyten rett i editoren. Editoren er Astro med Svelte-øyer over et lerret av ren TypeScript og innebygd SVG, bygget til statiske filer inni binæren: 190.7 kB JS og 30.1 kB CSS minifisert, 62.5 kB og 6.8 kB med gzip, lest fra `web/dist/_astro` etter `npm run build`. Ingenting i den hentes noe sted fra, så den fungerer på en maskin uten internett.
+
+## Kommandoene
+
+| Kommando | Hva den gjør |
+|---|---|
+| `hotloop-flow` | Serverer kjøretiden, admin-API-et og editoren. Standarden. |
+| `hotloop-flow -config <path>` | Det samme, fra en YAML-fil. Leser også `HOTLOOP_FLOW_CONFIG`. |
+| `hotloop-flow hash-password` | bcrypt-hash for et passord. Tar `-password` eller `HOTLOOP_FLOW_PASSWORD`. Avviser alt under 8 tegn. |
+| `hotloop-flow import <flows.json>` | Forteller hva som ville skjedd før du ruller den ut. |
+| `hotloop-flow diff <old> <new>` | Diff node for node av to flytfiler. Også gits diff-driver og difftool. |
+| `hotloop-flow plugin keygen`, `sign`, `verify` | Lager en utgivernøkkel, signerer en [plugin](/nb/flow/plugins/) og kjører hver sjekk en server gjør når den laster en, og sier hvorfor den ville avvist den. |
+| `hotloop-flow test <tests.yaml>` | Kjører [flytester](/nb/flow/tests/) i prosessen. `-junit` for CI/CD. |
+| `hotloop-flow deploy -file <flows.json>` | Viser diffen mot en kjørende instans og ruller så ut med et notat. For CI/CD. |
+| `hotloop-flow export` | Den kjørende flytfilen, byte for byte, eller `-deployment N` fra historikken. |
+| `hotloop-flow token` | Et nytt API-token og hashen som skal konfigureres for det. |
+| `hotloop-flow bench` | Referansetestoppsettet som ga [tallene](/nb/flow/overview/#tallene). |
+| `hotloop-flow version` | Versjonen. |

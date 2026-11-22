@@ -1,0 +1,24 @@
+---
+title: "HotLoop Flow в EmberNet"
+description: "Страниците на docs.embernet.ai за HotLoop Flow: описанието му в App Store и всяка страница, която го споменава."
+sidebar:
+  label: "В документацията на EmberNet"
+---
+
+HotLoop Flow е визуален механизъм за потоци за цеха. EmberNet го пакетира и внедрява от App Store, а документацията на EmberNet покрива тази страна.
+
+Къде се намира в документацията на EmberNet:
+
+- [HotLoop Flow в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [Общ преглед на App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [Node-RED в EmberNet](https://docs.embernet.ai/docs/app-store/node-red)
+- [AnvilMQ в EmberNet](https://docs.embernet.ai/docs/app-store/anvilmq)
+- [Брокер за съобщения AnvilMQ](https://docs.embernet.ai/docs/services/anvilmq)
+- [Достъп до EmberCORE](https://docs.embernet.ai/docs/dashboard/access)
+- [HotLoop Gateway в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [HotLoop Edge Relay в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [HotLoop Cascade в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+
+[HotLoop в бизнеса](/bg/business/) обяснява лиценза и как да се свържете с нас.
+
+Обратно към [прегледа на HotLoop Flow](/bg/flow/overview/) или към [страницата за HotLoop Flow в hotloop.io](https://hotloop.io/flow/).

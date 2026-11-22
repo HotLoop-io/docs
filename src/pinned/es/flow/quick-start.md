@@ -1,0 +1,51 @@
+---
+title: "Inicio rápido de HotLoop Flow"
+description: "Compile o ejecute HotLoop Flow, defina la cuenta de administrador y el secreto de credenciales que exige, y arránquelo desde el código o la imagen."
+---
+
+Desde el código fuente:
+
+```bash
+cd web && npm install && npm run build && cd ..
+go build -o hotloop-flow ./cmd/hotloop-flow
+
+export HOTLOOP_FLOW_DATA_DIR=./data
+export HOTLOOP_FLOW_ADMIN_USER=admin
+export HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(./hotloop-flow hash-password -password 'something-long')"
+export HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)"
+
+./hotloop-flow
+```
+
+La compilación del editor va primero y no es opcional. El paquete se incrusta con `go:embed`, así que una compilación de Go sin él falla por un patrón que falta en lugar de producir un binario sin editor.
+
+O sáltese todo eso:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+Genere el hash con `podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long'`. La imagen es distroless sin root y no tiene shell, así que no hay nada donde hacer `exec` ni nada que alguien con ejecución de código pueda usar para pivotar.
+
+Después abra <http://localhost:1880>. Deje un `flows.json` en el directorio de datos y reinicie, o construya el flujo directamente en el editor. El editor es Astro con islas Svelte sobre un lienzo de TypeScript simple y SVG nativo, compilado a archivos estáticos dentro del binario: 190.7 kB de JS y 30.1 kB de CSS minificados, 62.5 kB y 6.8 kB comprimidos con gzip, leídos de `web/dist/_astro` tras `npm run build`. Nada de él se descarga de ninguna parte, así que funciona en una máquina sin internet.
+
+## Los comandos
+
+| Comando | Qué hace |
+|---|---|
+| `hotloop-flow` | Sirve el runtime, la API de administración y el editor. Es el valor por defecto. |
+| `hotloop-flow -config <path>` | Lo mismo, desde un archivo YAML. También lee `HOTLOOP_FLOW_CONFIG`. |
+| `hotloop-flow hash-password` | Hash bcrypt de una contraseña. Acepta `-password` o `HOTLOOP_FLOW_PASSWORD`. Rechaza cualquier cosa de menos de 8 caracteres. |
+| `hotloop-flow import <flows.json>` | Informa de lo que pasaría antes de desplegarlo. |
+| `hotloop-flow diff <old> <new>` | Diff nodo a nodo de dos archivos de flujo. También es el controlador de diff y difftool de git. |
+| `hotloop-flow plugin keygen`, `sign`, `verify` | Crea una clave de editor, firma un [plugin](/es/flow/plugins/) y ejecuta todas las comprobaciones que hace un servidor al cargarlo, diciendo por qué lo rechazaría. |
+| `hotloop-flow test <tests.yaml>` | Ejecuta [pruebas de flujos](/es/flow/tests/) en proceso. `-junit` para CI/CD. |
+| `hotloop-flow deploy -file <flows.json>` | Muestra el diff frente a una instancia en marcha y luego despliega con una nota. Para CI/CD. |
+| `hotloop-flow export` | El archivo de flujo en ejecución, byte a byte, o `-deployment N` del historial. |
+| `hotloop-flow token` | Un token de API nuevo y el hash que se configura para él. |
+| `hotloop-flow bench` | El banco de pruebas que produjo [las cifras](/es/flow/overview/#las-cifras). |
+| `hotloop-flow version` | La versión. |

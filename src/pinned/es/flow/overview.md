@@ -1,0 +1,57 @@
+---
+title: "HotLoop Flow, el motor de flujos visual"
+description: "Un motor de flujos visual para la planta en un solo binario Go, con un tope en cada cola, despliegues revisables y sus flujos de Node-RED cargados sin cambios."
+---
+
+**Cablee la planta. Revísela como código.**
+
+HotLoop Flow es un motor de flujos visual para la planta, escrito en Go. Usted conecta sensores, brokers, PLC y bases de datos en un lienzo, y los ejecuta en un único binario estático lo bastante pequeño para una Pi, con un planificador que no se cae cuando un sensor empieza a hablar más rápido que lo que lo lee.
+
+Lo que eso significa en una mala noche:
+
+- **Cada cola tiene un tope, y cada mensaje que no cabe se cuenta.** Un sensor rápido delante de un historiador lento se acumula, bloquea o descarta según la política que elegiste, y se ve en una gráfica antes de que se vea como un OOM kill sin nada en el registro.
+- **Que un historiador caiga una hora no te cuesta una hora.** Marque un cable como duradero y, cuando el nodo que está detrás deja de aceptar mensajes, estos pasan al disco en orden y siguen ahí después de un `kill -9`. Mientras todo está sano, no se escribe nada. [Almacenar y reenviar](/es/flow/store-and-forward/) se probó contra un InfluxDB real que estuvo detenido diez minutos.
+- **Cada nodo funciona por su cuenta.** Una goroutine por nodo, así que un nodo Function que mastica una carga grande te cuesta un núcleo, no el editor ni todos los demás flujos de la máquina.
+- **El archivo del flujo se puede revisar.** Se carga y se guarda byte a byte, un cambio en una propiedad es un diff de una línea, y cada guardado es atómico con tres copias de respaldo detrás. Cada despliegue es [un registro](/es/flow/deploys/): quién, cuándo, por qué y los bytes exactos, y dos cualesquiera [se comparan nodo a nodo](/es/flow/deploys/#the-diff-reads-like-a-review), en la API, en la línea de comandos y dentro de `git diff`. Cualquiera de ellos [se revierte](/es/flow/deploys/#put-it-back), credenciales incluidas.
+- **No arranca sin protección.** Sin autenticación es un error de arranque, no un valor por defecto. El nodo `exec` viene desactivado, los nodos de archivos están confinados al directorio de datos, y las credenciales van con AES-256-GCM bajo una clave Argon2id.
+
+También ejecuta sus flujos existentes sin cambios. Eso está [más abajo](/es/flow/migrating-from-node-red/), porque es una función, no el objetivo.
+
+La versión actual es `{{flow}}`. La imagen es `ghcr.io/hotloop-io/hotloop-flow:{{flow}}` para amd64 (arm64 llega en la siguiente versión de parche), el repositorio de Helm es `https://hotloop.io/hotloop-flow/`, y [Desplegar Flow](/es/flow/deploying/) cubre Kubernetes, Podman y Quadlet. Tiene 117 tipos de nodo para mensajes y 39 para diagramas de FlowLab. El uso doméstico y de laboratorio es gratuito, igual que el de escuelas, organizaciones sin ánimo de lucro y administraciones públicas, y el uso a través de EmberNet, una plataforma asociada, empresarial incluido, no tiene restricciones, bajo el HotLoop Source License Agreement.
+
+## Las cifras
+
+Solo cifras absolutas, para que pueda comprobarlas en su propio hardware. Tres ejecuciones de cada una, y se imprime el rango.
+
+| Medida | Resultado |
+|---|---|
+| Binario, linux/amd64, estático | **41.7 MB** |
+| Imagen, amd64 | **45.64 MB** |
+| Desde el arranque hasta responder la primera petición | **0.05 s** |
+| RSS, en reposo | **16.4 a 16.7 MiB** |
+| RSS, pico bajo la carga HTTP de abajo | **26.4 a 28.5 MiB** |
+| HTTP, flujo de cinco nodos, 8 conexiones | **13.0k a 15.3k req/s** |
+| Latencia HTTP p50 / p99 | **0.39 a 0.41 ms / 1.78 a 4.03 ms** |
+| Motor, cadena de cinco nodos, sin E/S | **2.20 a 3.11 µs por mensaje**, 3.9 KB asignados |
+
+Tenga claro lo que estas cifras no son. La cifra HTTP pasa por toda la pila HTTP a propósito, porque eso es lo que ve un cliente de su flujo. Y bajo saturación todo entorno de ejecución hace cola y la cola manda en la cola de la distribución, por eso p99 varía más que p50 entre ejecuciones.
+
+### En una Raspberry Pi 5
+
+El mismo flujo y los mismos comandos, el 2026-10-22, en una Raspberry Pi 5 Model B (8 GB, cuatro núcleos Cortex-A76) con el reloj limitado a 2.0 GHz, ejecutando la imagen arm64 publicada `2.2.0` como un pod sin nada más en el nodo salvo los DaemonSets del clúster. Tres ejecuciones, se imprime el rango.
+
+| Medida | Resultado |
+|---|---|
+| Desde el arranque hasta responder la primera petición | **0.10 a 0.46 s** |
+| RSS, en reposo | **88.0 a 88.3 MiB** |
+| RSS, pico bajo la carga HTTP | **40.3 a 40.5 MiB** |
+| HTTP, flujo de cinco nodos, 8 conexiones, 30 s | **13.2k a 13.4k req/s** |
+| Latencia HTTP p50 / p99 | **0.48 ms / 2.72 a 2.78 ms** |
+| Motor, cadena de cinco nodos, sin E/S | **7.74 a 8.15 µs por mensaje**, 4.0 KB asignados |
+| HTTP, el mismo comando sostenido durante 600 s | **11.4k req/s**, p50 0.58 ms, p99 3.00 ms |
+
+La última fila es la honesta para una máquina que se mantiene cargada. La placa llegó a su límite de temperatura suave en menos de un minuto, empezó a reducir la frecuencia a partir de los dos minutos y se quedó a 83 a 86 C con el reloj a 1.5 a 1.7 GHz el resto del tiempo. La [página de benchmarks](/es/flow/benchmarks/#results-on-a-raspberry-pi-5) tiene la ejecución en la Pi completa.
+
+La [página de benchmarks](/es/flow/benchmarks/) tiene el método y las salvedades.
+
+¿Lo va a usar en una planta? [Usar HotLoop en una empresa](/es/business/) cubre la licencia y cómo contactarnos.

@@ -1,0 +1,24 @@
+---
+title: "HotLoop Flow trên EmberNet"
+description: "Các trang trên docs.embernet.ai nói về HotLoop Flow: mục của nó trong App Store và mọi trang có nhắc đến nó."
+sidebar:
+  label: "Trong tài liệu EmberNet"
+---
+
+HotLoop Flow là công cụ luồng trực quan cho nhà máy. EmberNet đóng gói và triển khai nó từ App Store, và tài liệu EmberNet nói về phần đó.
+
+Vị trí của nó trong tài liệu EmberNet:
+
+- [HotLoop Flow trên EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [Tổng quan App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [Node-RED trên EmberNet](https://docs.embernet.ai/docs/app-store/node-red)
+- [AnvilMQ trên EmberNet](https://docs.embernet.ai/docs/app-store/anvilmq)
+- [Broker thông điệp AnvilMQ](https://docs.embernet.ai/docs/services/anvilmq)
+- [Truy cập EmberCORE](https://docs.embernet.ai/docs/dashboard/access)
+- [HotLoop Gateway trên EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [HotLoop Edge Relay trên EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [HotLoop Cascade trên EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+
+[Dùng HotLoop trong doanh nghiệp](/vi/business/) nói về giấy phép và cách liên hệ với chúng tôi.
+
+Quay lại [tổng quan HotLoop Flow](/vi/flow/overview/), hoặc [trang HotLoop Flow trên hotloop.io](https://hotloop.io/flow/).

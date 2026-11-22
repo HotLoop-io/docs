@@ -241,7 +241,7 @@ for (const [route, links] of linksByRoute) {
     if (frag && hit.endsWith('.html')) {
       const pageRoute = hit.replace(/index\.html$/, '');
       const ids = idsByRoute.get(pageRoute);
-      if (ids && !ids.has(frag)) err(route, `link to missing anchor: ${raw}`);
+      if (ids && !ids.has(frag) && !ids.has(decodeURIComponent(frag))) err(route, `link to missing anchor: ${raw}`);
     }
   }
 }
