@@ -32,6 +32,49 @@ editUrl: false
 
 تخرج HotLoop IoT وEdge وGateway وEdge Relay من وسم واحد، معًا، لذا تتشارك رقم إصدار واحدًا. أما Flow وCascade وHotLoop for CODESYS وTransmitter فلكل منها رقمه. وحدات Quadlet الخاصة بـ IoT وEdge وGateway تحتاج إلى Podman 5.0 أو أحدث، وقد شُغّلت وحدة المُمرِّر على Podman 4.9.3. يأتي Raspberry Pi OS Bookworm بالإصدار 4.3 الذي لا يدعم Quadlet إطلاقًا، لذا يحتاج Pi إلى Trixie أو أحدث.
 
+## التثبيت من EmberNet App Store
+
+على EmberNet، التثبيت هو App Store. يشغّل لك مخطط Helm نفسه على العقدة التي تختارها، فلا مخطط تضيفه ولا ملف قيم ولا سطر أوامر. قسنا الزمن على عقدة حقيقية: دقيقة و10 ثوانٍ من فتح App Store إلى ظهور القراءات الحية على اللوحة.
+
+<figure>
+<video controls preload="none" playsinline width="1920" height="1080" poster="/embernet-install/poster.webp" aria-label="تثبيت HotLoop Gateway من EmberNet App Store، من البداية إلى البيانات الحية في دقيقة و10 ثوانٍ" style="width:100%;height:auto;aspect-ratio:16/9">
+<source src="/embernet-install/install-hotloop-on-embernet.mp4" type="video/mp4" />
+<source src="/embernet-install/install-hotloop-on-embernet.webm" type="video/webm" />
+لا يستطيع متصفحك تشغيل هذا الفيديو. <a href="/embernet-install/install-hotloop-on-embernet.mp4">نزّله</a>.
+</video>
+<figcaption>لقطة واحدة بالوقت الحقيقي. تعمل الساعة من فتح App Store حتى يبدأ HotLoop بقراءة البيانات، ويظهر انتظار التثبيت بسرعة أربعة أضعاف.</figcaption>
+</figure>
+
+1. في EmberCORE، افتح **App Store**.
+
+   ![EmberCORE App Store مع مرشحات الفئة والناشر والترتيب](/embernet-install/hotloop-install-01-app-store.webp)
+
+2. اختر فئة **HotLoop**، ثم اضغط **نشر** على HotLoop Gateway. لكل منتج من HotLoop بطاقته الخاصة في هذه الفئة.
+
+   ![App Store مرشّح على فئة HotLoop، وتظهر فيه بطاقات HotLoop Cascade وEdge وEdge Relay وFlow وGateway وIoT](/embernet-install/hotloop-install-02-hotloop-apps.webp)
+
+3. اختر العقدة، ثم اضغط **نشر** مرة أخرى.
+
+   ![مربع حوار نشر HotLoop Gateway مع عقدة مختارة](/embernet-install/hotloop-install-03-choose-node.webp)
+
+4. يؤكد EmberCORE التثبيت، ويظهر HotLoop Gateway ضمن **التطبيقات قيد التشغيل** مع إصداره وعنوان Flux الخاص به.
+
+   ![رسالة EmberCORE بأن HotLoop Gateway يجري تثبيته على العقدة](/embernet-install/hotloop-install-04-installing.webp)
+
+   ![التطبيقات قيد التشغيل مع HotLoop Gateway يعمل، وإصداره، وعنوان Flux متصل، وأزرار تشغيل وفتح وصدفة Pod وصدفة الجهاز وإزالة](/embernet-install/hotloop-install-05-running.webp)
+
+5. اضغط **تشغيل**. يسجّل EmberCORE دخولك، ويُفتح HotLoop وحالة الجهاز نفسها تُقرأ بالفعل، فأول ما تراه بيانات حية.
+
+   ![HotLoop Gateway مفتوح داخل EmberCORE وقد سُجّل الدخول، مع جهاز واحد و4 من 4 وسوم تُبلغ ولا إنذارات](/embernet-install/hotloop-install-06-hotloop-signed-in.webp)
+
+6. ثبّت الوسوم التي تهمك فتصبح مؤشرات حية على اللوحة.
+
+   ![مربع حوار تثبيت الوسوم على اللوحة، وفيه وسوم المعالج والذاكرة والقرص للعقدة](/embernet-install/hotloop-install-07-pin-a-tag.webp)
+
+   ![لوحة HotLoop بمؤشرات حية لاستخدام المعالج والذاكرة والقرص على العقدة](/embernet-install/hotloop-install-08-board-live.webp)
+
+توثيق EmberNet يشرح التثبيت نفسه صفحة بصفحة: [HotLoop Gateway على EmberNet](https://docs.embernet.ai/docs/app-store/hotloop).
+
 ## قبل وضع أحدها في مصنع حقيقي
 
 - اقرأ [بوابة الكتابة](/ar/gateway/write-gate/). هي نفسها في كل منتج، وهذا سبب أن لا شيء يحرّك آلة لم تفعّلها.

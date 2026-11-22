@@ -30,6 +30,49 @@ Ein HotLoop-Produkt läuft auf zwei Arten richtig: mit Helm auf k3s oder jedem K
 
 HotLoop IoT, Edge, Gateway und Edge Relay kommen aus einem Tag, im Gleichschritt, und teilen sich deshalb eine Versionsnummer. Flow, Cascade, HotLoop for CODESYS und Transmitter haben ihre eigene. Die Quadlet-Units von IoT, Edge und Gateway brauchen Podman 5.0 oder neuer, und die des Relays lief auf Podman 4.9.3. Raspberry Pi OS Bookworm liefert 4.3 mit, das Quadlet gar nicht kennt, ein Pi braucht also Trixie oder neuer.
 
+## Aus dem EmberNet App Store installieren
+
+Auf EmberNet ist die Installation der App Store. Er führt dasselbe Helm-Chart für Sie aus, auf dem Knoten, den Sie wählen. Sie brauchen also kein Chart hinzuzufügen, keine Values-Datei und keine Kommandozeile. Wir haben es auf einem echten Knoten gestoppt: 1 Minute 10 Sekunden vom Öffnen des App Store bis zu Live-Werten auf dem Board.
+
+<figure>
+<video controls preload="none" playsinline width="1920" height="1080" poster="/embernet-install/poster.webp" aria-label="HotLoop Gateway wird aus dem EmberNet App Store installiert, vom Start bis zu Live-Daten in 1 Minute 10 Sekunden" style="width:100%;height:auto;aspect-ratio:16/9">
+<source src="/embernet-install/install-hotloop-on-embernet.mp4" type="video/mp4" />
+<source src="/embernet-install/install-hotloop-on-embernet.webm" type="video/webm" />
+Ihr Browser kann dieses Video nicht abspielen. <a href="/embernet-install/install-hotloop-on-embernet.mp4">Herunterladen</a>.
+</video>
+<figcaption>Eine Aufnahme, in Echtzeit. Die Uhr läuft ab dem Öffnen des App Store, bis HotLoop Daten liest, und das Warten auf die Installation ist im Vierfachtempo zu sehen.</figcaption>
+</figure>
+
+1. Öffnen Sie in EmberCORE den **App Store**.
+
+   ![Der EmberCORE App Store mit den Filtern Kategorie, Herausgeber und Sortierung](/embernet-install/hotloop-install-01-app-store.webp)
+
+2. Wählen Sie die Kategorie **HotLoop** und drücken Sie bei HotLoop Gateway auf **Bereitstellen**. Jedes HotLoop-Produkt hat in dieser Kategorie seine eigene Karte.
+
+   ![Der App Store, gefiltert auf die Kategorie HotLoop, mit den Karten HotLoop Cascade, Edge, Edge Relay, Flow, Gateway und IoT](/embernet-install/hotloop-install-02-hotloop-apps.webp)
+
+3. Wählen Sie den Knoten und drücken Sie erneut auf **Bereitstellen**.
+
+   ![Der Dialog zum Bereitstellen von HotLoop Gateway mit gewähltem Knoten](/embernet-install/hotloop-install-03-choose-node.webp)
+
+4. EmberCORE bestätigt die Installation, und HotLoop Gateway erscheint unter **Laufende Apps** mit seiner Version und seiner Flux-Adresse.
+
+   ![Die EmberCORE-Meldung, dass HotLoop Gateway auf dem Knoten installiert wird](/embernet-install/hotloop-install-04-installing.webp)
+
+   ![Laufende Apps mit HotLoop Gateway im Zustand Läuft, mit Version, Flux-Adresse online und den Schaltflächen Starten, Öffnen, Pod-Shell, Geräte-Shell und Entfernen](/embernet-install/hotloop-install-05-running.webp)
+
+5. Drücken Sie auf **Starten**. EmberCORE meldet Sie an, und HotLoop öffnet sich mit den Zustandswerten der Box schon in Betrieb, sodass Sie als Erstes Live-Daten sehen.
+
+   ![HotLoop Gateway in EmberCORE geöffnet und angemeldet, mit einem Gerät, 4 von 4 Tags melden und ohne Alarme](/embernet-install/hotloop-install-06-hotloop-signed-in.webp)
+
+6. Pinnen Sie die Tags, die Ihnen wichtig sind, und sie werden zu Live-Anzeigen auf dem Board.
+
+   ![Der Dialog zum Anpinnen von Tags mit den CPU-, Speicher- und Datenträger-Tags des Knotens](/embernet-install/hotloop-install-07-pin-a-tag.webp)
+
+   ![Das HotLoop-Board mit Live-Anzeigen für CPU-, Speicher- und Datenträgerauslastung des Knotens](/embernet-install/hotloop-install-08-board-live.webp)
+
+Die EmberNet-Dokumentation führt dieselbe Installation Seite für Seite vor: [HotLoop Gateway auf EmberNet](https://docs.embernet.ai/docs/app-store/hotloop).
+
 ## Bevor Sie eines in ein echtes Werk stellen
 
 - Lesen Sie [das Schreibtor](/de/gateway/write-gate/). Es ist in jedem Produkt gleich, und deshalb bewegt nichts eine Maschine, die Sie nicht scharf geschaltet haben.

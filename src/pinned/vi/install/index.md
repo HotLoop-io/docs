@@ -30,6 +30,49 @@ Có hai cách để chạy một sản phẩm HotLoop cho thật: Helm trên k3s
 
 HotLoop IoT, Edge, Gateway và Edge Relay ra cùng một thẻ, đồng bộ, nên chung một số phiên bản. Flow, Cascade, HotLoop for CODESYS và Transmitter có số riêng. Các đơn vị Quadlet của IoT, Edge và Gateway cần Podman 5.0 trở lên, còn đơn vị của relay đã được chạy trên Podman 4.9.3. Raspberry Pi OS Bookworm đi kèm bản 4.3, hoàn toàn không có Quadlet, nên một Pi cần Trixie trở lên.
 
+## Cài đặt từ EmberNet App Store
+
+Trên EmberNet, cài đặt chính là App Store. Nó chạy giúp bạn cùng một biểu đồ Helm trên nút bạn chọn, nên không cần thêm biểu đồ, không cần tệp giá trị và không cần dòng lệnh. Chúng tôi đã bấm giờ trên một nút thật: 1 phút 10 giây từ lúc mở App Store đến khi bảng hiện số đọc trực tiếp.
+
+<figure>
+<video controls preload="none" playsinline width="1920" height="1080" poster="/embernet-install/poster.webp" aria-label="Cài đặt HotLoop Gateway từ EmberNet App Store, từ lúc bắt đầu đến dữ liệu trực tiếp trong 1 phút 10 giây" style="width:100%;height:auto;aspect-ratio:16/9">
+<source src="/embernet-install/install-hotloop-on-embernet.mp4" type="video/mp4" />
+<source src="/embernet-install/install-hotloop-on-embernet.webm" type="video/webm" />
+Trình duyệt của bạn không phát được video này. <a href="/embernet-install/install-hotloop-on-embernet.mp4">Tải xuống</a>.
+</video>
+<figcaption>Một lần quay liền mạch, theo thời gian thực. Đồng hồ chạy từ lúc mở App Store đến khi HotLoop đọc được dữ liệu, và phần chờ cài đặt được chiếu nhanh gấp bốn lần.</figcaption>
+</figure>
+
+1. Trong EmberCORE, mở **App Store**.
+
+   ![EmberCORE App Store với các bộ lọc Danh mục, Nhà phát hành và Sắp xếp](/embernet-install/hotloop-install-01-app-store.webp)
+
+2. Chọn danh mục **HotLoop**, rồi bấm **Triển khai** ở HotLoop Gateway. Mỗi sản phẩm HotLoop có thẻ riêng trong danh mục này.
+
+   ![App Store lọc theo danh mục HotLoop, hiện các thẻ HotLoop Cascade, Edge, Edge Relay, Flow, Gateway và IoT](/embernet-install/hotloop-install-02-hotloop-apps.webp)
+
+3. Chọn nút, rồi bấm **Triển khai** lần nữa.
+
+   ![Hộp thoại triển khai HotLoop Gateway với một nút đã chọn](/embernet-install/hotloop-install-03-choose-node.webp)
+
+4. EmberCORE xác nhận việc cài đặt, và HotLoop Gateway xuất hiện trong **Ứng dụng đang chạy** cùng phiên bản và địa chỉ Flux của nó.
+
+   ![Thông báo của EmberCORE rằng HotLoop Gateway đang được cài lên nút](/embernet-install/hotloop-install-04-installing.webp)
+
+   ![Ứng dụng đang chạy với HotLoop Gateway đang chạy, phiên bản, địa chỉ Flux trực tuyến và các nút Khởi chạy, Mở, Shell pod, Shell thiết bị và Gỡ bỏ](/embernet-install/hotloop-install-05-running.webp)
+
+5. Bấm **Khởi chạy**. EmberCORE đăng nhập cho bạn, và HotLoop mở ra khi tình trạng của chính thiết bị đã được đọc sẵn, nên điều đầu tiên bạn thấy là dữ liệu trực tiếp.
+
+   ![HotLoop Gateway mở trong EmberCORE và đã đăng nhập, với một thiết bị, 4 trên 4 tag đang báo và không có cảnh báo](/embernet-install/hotloop-install-06-hotloop-signed-in.webp)
+
+6. Ghim các thẻ tag bạn quan tâm và chúng thành đồng hồ trực tiếp trên bảng.
+
+   ![Hộp thoại ghim tag lên bảng, liệt kê các tag CPU, bộ nhớ và ổ đĩa của nút](/embernet-install/hotloop-install-07-pin-a-tag.webp)
+
+   ![Bảng HotLoop với đồng hồ trực tiếp cho mức dùng CPU, bộ nhớ và ổ đĩa của nút](/embernet-install/hotloop-install-08-board-live.webp)
+
+Tài liệu EmberNet cũng hướng dẫn cùng cách cài đặt này theo từng trang: [HotLoop Gateway trên EmberNet](https://docs.embernet.ai/docs/app-store/hotloop).
+
 ## Trước khi đưa một sản phẩm vào nhà máy thật
 
 - Hãy đọc [cổng ghi](/vi/gateway/write-gate/). Nó giống nhau ở mọi sản phẩm, và đó là lý do không gì điều khiển được một máy mà bạn chưa cho phép.

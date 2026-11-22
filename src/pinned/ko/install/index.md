@@ -30,6 +30,49 @@ HotLoop 제품을 제대로 운영하는 방법은 두 가지입니다. k3s 또�
 
 HotLoop IoT, Edge, Gateway, Edge Relay는 하나의 태그에서 함께 나오므로 같은 버전 번호를 씁니다. Flow, Cascade, HotLoop for CODESYS, Transmitter는 각자의 버전이 있습니다. IoT, Edge, Gateway의 Quadlet 유닛에는 Podman 5.0 이상이 필요하고, 릴레이 유닛은 Podman 4.9.3에서 실행해 보았습니다. Raspberry Pi OS Bookworm에는 Quadlet이 아예 없는 4.3이 들어 있으므로, Pi에는 Trixie 이상이 필요합니다.
 
+## EmberNet App Store에서 설치하기
+
+EmberNet에서는 설치가 곧 App Store입니다. 선택한 노드에 같은 Helm 차트를 대신 실행해 주므로 차트를 추가할 필요도, 값 파일도, 명령줄도 없습니다. 실제 노드에서 시간을 재 보니 App Store를 열고 보드에 실시간 값이 나올 때까지 1분 10초가 걸렸습니다.
+
+<figure>
+<video controls preload="none" playsinline width="1920" height="1080" poster="/embernet-install/poster.webp" aria-label="EmberNet App Store에서 HotLoop Gateway를 설치하는 영상. 시작부터 실시간 데이터까지 1분 10초" style="width:100%;height:auto;aspect-ratio:16/9">
+<source src="/embernet-install/install-hotloop-on-embernet.mp4" type="video/mp4" />
+<source src="/embernet-install/install-hotloop-on-embernet.webm" type="video/webm" />
+이 브라우저에서는 영상을 재생할 수 없습니다. <a href="/embernet-install/install-hotloop-on-embernet.mp4">내려받기</a>.
+</video>
+<figcaption>한 번에 찍은 실시간 영상입니다. 시계는 App Store를 연 순간부터 HotLoop이 데이터를 읽을 때까지 흐르고, 설치를 기다리는 구간은 4배속으로 보여 줍니다.</figcaption>
+</figure>
+
+1. EmberCORE에서 **App Store**를 엽니다.
+
+   ![카테고리, 게시자, 정렬 필터가 있는 EmberCORE App Store](/embernet-install/hotloop-install-01-app-store.webp)
+
+2. **HotLoop** 카테고리를 고르고 HotLoop Gateway에서 **배포**를 누릅니다. 이 카테고리에는 HotLoop 제품마다 자기 카드가 있습니다.
+
+   ![HotLoop 카테고리로 거른 App Store. HotLoop Cascade, Edge, Edge Relay, Flow, Gateway, IoT 카드가 보임](/embernet-install/hotloop-install-02-hotloop-apps.webp)
+
+3. 노드를 고르고 **배포**를 다시 누릅니다.
+
+   ![노드를 고른 HotLoop Gateway 배포 대화 상자](/embernet-install/hotloop-install-03-choose-node.webp)
+
+4. EmberCORE가 설치를 알려 주고, HotLoop Gateway가 버전과 Flux 주소와 함께 **실행 중인 앱**에 나타납니다.
+
+   ![HotLoop Gateway를 노드에 설치하고 있다는 EmberCORE 메시지](/embernet-install/hotloop-install-04-installing.webp)
+
+   ![HotLoop Gateway가 실행 중인 실행 중인 앱 화면. 버전, 온라인인 Flux 주소, 실행, 열기, Pod 셸, 장치 셸, 제거 버튼이 보임](/embernet-install/hotloop-install-05-running.webp)
+
+5. **실행**을 누릅니다. EmberCORE가 로그인시켜 주고, 박스 자체의 상태가 이미 읽히는 채로 HotLoop이 열리므로 가장 먼저 보이는 것은 실시간 데이터입니다.
+
+   ![EmberCORE 안에서 로그인된 채 열린 HotLoop Gateway. 장치 1대, 태그 4개 중 4개 보고 중, 알람 없음](/embernet-install/hotloop-install-06-hotloop-signed-in.webp)
+
+6. 중요한 태그를 고정하면 보드의 실시간 게이지가 됩니다.
+
+   ![노드의 CPU, 메모리, 디스크 태그가 보이는 보드 태그 고정 대화 상자](/embernet-install/hotloop-install-07-pin-a-tag.webp)
+
+   ![노드의 CPU, 메모리, 디스크 사용률을 실시간 게이지로 보여 주는 HotLoop 보드](/embernet-install/hotloop-install-08-board-live.webp)
+
+EmberNet 문서에서도 같은 설치 과정을 페이지별로 안내합니다. [EmberNet의 HotLoop Gateway](https://docs.embernet.ai/docs/app-store/hotloop)
+
 ## 실제 공장에 올리기 전에
 
 - [쓰기 관문](/ko/gateway/write-gate/)을 읽어 보세요. 모든 제품에서 같으며, 허용하지 않은 설비는 어떤 것도 움직이지 못하는 이유입니다.
