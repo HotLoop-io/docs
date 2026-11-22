@@ -31,6 +31,28 @@ Most pages are generated from the products' own documentation by `scripts/sync-d
 
 Each product's release checklist has a step that points here: run the sync, read what it changed, build, open a pull request, merge on green, and watch the one Pages deploy. Then open a page that moved and check it serves the new version.
 
+The sync ends by checking the translations (next section). If it lists stale pages, retranslate exactly those segments with the builder before the pull request. The build fails on a stale translated page, so it cannot merge, and a language page never says something the English page stopped saying.
+
+## Translations
+
+English plus thirteen languages (es fr it de nb bg el ko ja vi hi zh-hans ar). A page is translated in all thirteen or not at all, and a page that is not translated is served in English under the language folder, with a notice, noindex, out of the sitemap and out of every hreflang list (`src/routeData.ts`).
+
+**Every translated page records the English it was made from.** `src/i18n-source/<page with / as __>.json` holds, per language, the hash of each English segment. A segment is the front matter title, description and sidebar label, then each paragraph, list item, heading and table row outside code (a soft-wrapped paragraph is one). English comes from `src/pinned/<page>.md` for a pinned page, with its `{{hotloop}}` style tokens unfilled, so a version bump is not a change, and from `src/content/docs/<page>` for the rest.
+
+**The sync and the build say exactly what went stale.** `node scripts/i18n-source.mjs` (the sync ends with it, `npm run i18n` and `npm run build` run it) lines the English up against each record and prints, per page and set of languages, the segment numbers, their line in the English file and the new English. It also fails on a translated page with no record, a record with no page, a translation that no longer has its record's number of segments, and any link between translated pages whose `#anchor` is not a heading of the page it lands on.
+
+**A stale translation fails the build instead of falling back to English.** This was decided on proof, 2026-11-22 (bead 1c3dbd). Falling back means deleting a language page, and the build is green while the page quietly leaves the index of up to thirteen languages: nobody sees it. Failing means the flagged segments, usually a handful, are retranslated in the same pull request as the English change, and a language reader never meets old text under a new version. If an English fix has to ship before its retranslation, delete that page's translated files and its record in the same pull request: the page then falls back to English like any untranslated page, and returns when it is retranslated.
+
+**Retranslating exactly the flagged segments.** From the translation tools (`codex/secrets/access/site-i18n/docs-core`, README there), with `DOCS` set to this clone:
+
+1. `node resync.mjs <page>` rewrites `tr/<page>/<lang>.txt`: every segment that did not change keeps its translation, every changed or new one becomes a `@@RETRANSLATE@@ <English>` line, and `tr/<page>/work.txt` lists each with the translation it replaces.
+2. Translate those lines (the glossary in `codex/work/notes/i18n/glossary`, product names untouched, no em or en dashes), put them in with `node fill.mjs <page> < fill.json`.
+3. `node build.mjs <page>` refuses any line still marked, writes the language pages, records the new English, and rewrites the `#anchor` of every link between translated pages. Build, and the check is clean.
+
+**Anchors.** A link from a translated page into a page that is translated later carries the English heading slug until then. `node scripts/i18n-source.mjs links` lists every such link and `links --fix` rewrites it to the translated slug; the builder runs the fix after every build, so translating a page repairs the pages that point at it.
+
+A translator who builds pages some other way records them with `node scripts/i18n-source.mjs record <page> [lang ...]` after writing them. It fails when the translation does not have one segment per English segment.
+
 ## Writing
 
 Every page lands the plane: what the thing is, why it matters, and what it means for the person reading, with the real numbers and the real incident where there is one. The voice is direct and plain: we, never an unnamed I, no profanity, jokes or insults, no positioning against another vendor's product, and no past failure told for its own sake. The reference tables stay exact. Wording a source repo still carries that breaks this is rewritten by the page rules at the end of `scripts/sales-lens-rules.mjs` until the source is fixed. No em dashes as connectors, Oxford commas, American spelling. The house style is in the [brand standard](https://github.com/HotLoop-io/HotLoop-io/blob/main/brand/BRAND.md).

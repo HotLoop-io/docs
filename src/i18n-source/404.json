@@ -1,0 +1,19 @@
+{
+  "page": "404",
+  "english": "src/content/docs/404.md",
+  "langs": {
+    "es": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "fr": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "it": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "de": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "nb": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "bg": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "el": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "ko": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "ja": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "vi": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "hi": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "zh-hans": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"],
+    "ar": ["77adf63ca819","37763bac5a1a","7b1eae88aa56","6c446143a711"]
+  }
+}

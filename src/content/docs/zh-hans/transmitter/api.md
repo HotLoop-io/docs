@@ -37,6 +37,7 @@ description: "HotLoop Transmitter 发布器功能块的全部输入、输出和�
 | `uiMessageSize` | UINT | 最近一条消息的字节数 |
 | `diLastSocketResult` | UDINT | 套接字调用最近一次的运行时错误码，0 表示正常 |
 | `diLastClockResult` | UDINT | 为时间戳读取 PLC 时钟的最近一次结果，0 表示正常。不为 0 时，消息不带时间戳发出 |
+| `diLastClockResult` | UDINT | 为时间戳读取 PLC 时钟的最近一次结果，0 表示正常。不为 0 时，消息不带时间戳发出 |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | 功能块最近一次调用所用的微秒数，以及自启用或 `Clear()` 以来的最大值 |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | 自启用或 `Clear()` 以来，构建一条消息所用的最长时间，以及发送调用本身所用的最长时间 |
 

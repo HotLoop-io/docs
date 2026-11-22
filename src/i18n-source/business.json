@@ -1,0 +1,19 @@
+{
+  "page": "business",
+  "english": "src/pinned/business.md",
+  "langs": {
+    "es": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "fr": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "it": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "de": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "nb": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "bg": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "el": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "ko": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "ja": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "vi": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "hi": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "zh-hans": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"],
+    "ar": ["ff83d882552e","37eacebd4754","ae08cdb70e3c","589ed54f1449","7613986d09c7","4715fa3c9a20","9e9318f6e3cc","d9d16ad995e0","67354febc7f9","6ab3be4b10c3","81fdce4a3549","228997fd9f1f","b620aac0bff0","7e6652bfa866","c5574cfdda41"]
+  }
+}
