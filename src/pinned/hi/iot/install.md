@@ -1,0 +1,117 @@
+---
+title: "HotLoop IoT {{hotloop}} इंस्टॉल करें"
+description: "HotLoop IoT {{hotloop}} को Helm से k3s पर, या Pi या छोटे PC पर Podman Quadlet से systemd सेवाओं के रूप में, PostgreSQL या SQLite फ़ाइल के साथ इंस्टॉल करें।"
+sidebar:
+  label: "इंस्टॉल"
+---
+
+HotLoop IoT पहली बार 4.18.10 में आया। इमेज `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}` है, जो amd64, arm64 और arm/v7 के लिए बनी है, और चार्ट बाकी लाइनअप के उसी Helm रिपॉज़िटरी में `hotloop-iot` है। दोनों बिना लॉगिन के पुल होते हैं। Docker या Compose का रास्ता जानबूझकर नहीं है, और सत्र के साथ मर जाने वाले शेल से चलाया गया सादा `podman run` इंस्टॉल नहीं है।
+
+दो रास्ते हैं। क्लस्टर के लिए Helm। बिना क्लस्टर वाले Pi, NUC या छोटे औद्योगिक PC के लिए Podman Quadlet। दोनों में डेटाबेस एक बार चुनना होता है: PostgreSQL 17 (डिफ़ॉल्ट) या बिना किसी डेटाबेस कंटेनर वाली SQLite फ़ाइल।
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
+  --namespace hotloop --create-namespace
+```
+
+रिलीज़ का नाम `hotloop` रखें, चाहे प्रोडक्ट कोई भी हो। डेटाबेस का वॉल्यूम, Secrets और Service इसी रिलीज़ नाम पर बनते हैं, और इसे बनाए रखने से ही साइट बाद में बड़े प्रोडक्ट पर जा सकती है।
+
+इससे IoT के साथ उसके बगल में PostgreSQL 17.11, 10 Gi वॉल्यूम पर तैनात होता है, और 30 दिन का इतिहास रखा जाता है। चार्ट डेटाबेस पासवर्ड, MCP टोकन और एडमिन पासवर्ड रिलीज़ Secret में बनाता है और हर अपग्रेड पर उन्हीं का दोबारा उपयोग करता है, इसलिए `helm upgrade` आपकी जानकारी के बिना कभी कोई पासवर्ड नहीं बदलता।
+
+SQLite फ़ाइल चाहिए और डेटाबेस पॉड नहीं, तो इंस्टॉल करते समय यही माँगें:
+
+```bash
+helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
+  --namespace hotloop --create-namespace \
+  --set database.type=sqlite
+```
+
+SQLite एक लोकल डिस्क पर एक राइटर है, इसलिए एक ही रेप्लिका, और वॉल्यूम लोकल स्टोरेज पर जाता है, कभी NFS पर नहीं। जिस साइट के पास एक-एक सेकंड के सालों के इतिहास हों, उसे PostgreSQL चाहिए। IoT चार्ट केवल `postgresql` या `sqlite` लेता है: `timescaledb` माँगने पर इंस्टॉल विफल हो जाता है। बाद में दोनों के बीच जाना बैकअप और रीस्टोर है, वैल्यू बदलना नहीं, क्योंकि नया डेटाबेस खाली शुरू होता है। रीस्टोर [बैकअप](/hi/iot/backup/) में है।
+
+### कुंजी का बैकअप लें
+
+चार्ट `<release>-secret-key` भी बनाता है (ऊपर के कमांड में `hotloop-secret-key`)। इसमें वह कुंजी है जो HotLoop द्वारा किसी डिवाइस के लिए रखे गए हर पासवर्ड को एन्क्रिप्ट करती है। यह कुंजी न डेटाबेस में होती है न बैकअप में, इसलिए यह आपके डेटा का हिस्सा है: बैकअप क्रेडेंशियल तभी बहाल करता है जहाँ वह कुंजी माउंट हो। चार्ट `helm uninstall` के बाद भी Secret रखता है। इसे अपने बैकअप के बगल में नहीं, कहीं और सहेजें, क्योंकि जिस बैकअप की सुरक्षा करनी है, उसी के बगल में रखी कुंजी किसी की सुरक्षा नहीं करती। पूरी कहानी [Gateway इंस्टॉल](/hi/gateway/install/#back-up-the-key-before-you-need-it) में है, और यह वही कुंजी है।
+
+### साइन इन
+
+उपयोगकर्ता `admin` है। इंस्टॉल नोट्स वह कमांड छापते हैं जो पासवर्ड वापस पढ़ती है:
+
+```bash
+kubectl -n hotloop get secret hotloop \
+  -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl -n hotloop port-forward svc/hotloop 8080:8080
+```
+
+`http://localhost:8080` खोलें। वह एडमिन खाता शुरुआती सेटअप है, रीसेट स्विच नहीं: एक बार बन जाने पर `auth.admin.password` बदलना और अपग्रेड करना कुछ नहीं करता, इसलिए UI में किसी का सेट किया पासवर्ड अगली तैनाती से कभी नहीं मिटता।
+
+अब एक डिवाइस जोड़ें, उसके टैग खोजें और किसी एक में लिखने की कोशिश करें। आप नहीं लिख पाएँगे। राइट बंद अवस्था में आते हैं: हर टैग तब तक केवल पढ़ने योग्य है जब तक कोई उसे सक्रिय न करे, और `safety.allowWrites` तब तक `false` रहता है जब तक आप तय न करें कि यह तैनाती मशीनरी चला सकती है। [राइट गेट](/hi/gateway/write-gate/) में हर जाँच क्रम से है।
+
+### असली प्लांट के देखने से पहले क्या सेट करें
+
+इन्हें एक values फ़ाइल में रखें और `-f` के साथ इंस्टॉल करें।
+
+| मान | डिफ़ॉल्ट | इसे क्यों बदलें |
+|---|---|---|
+| `plant.name`, `plant.siteId` | `HotLoop`, खाली | स्क्रीन पर, पृष्ठों में और अन्य साइटों को प्लांट का नाम क्या दिखता है। |
+| `plant.latitude`, `plant.longitude` | खाली | प्लांट कहाँ है, दशमलव डिग्री में। [सूरज](/hi/iot/sun/) का समय इन्हीं से बॉक्स पर निकाला जाता है। दोनों या कोई नहीं। |
+| `global.timezone` | `America/New_York` | शेड्यूल और शिफ़्ट बदलाव इसी पर चलते हैं। यह असली ज़ोन नाम होना चाहिए, क्योंकि जो लोड न हो वह स्टार्टअप रोक देता है। |
+| `publicUrl` | खाली | वह पता जिससे प्लांट Wi-Fi पर कोई फ़ोन HotLoop तक पहुँचता है। इसके बिना सूचनाओं में वापसी लिंक नहीं होता और ntfy को पुष्टि बटन नहीं मिलता। |
+| `safety.allowWrites` | `false` | मास्टर स्विच। बंद हो तो कहीं से भी किसी मशीन में कुछ नहीं लिखा जाता। |
+| `safety.allowMcpWrites` | `true` | एजेंटों को उसी गेट से लिखने देता है, 4.19.4 से चालू। यह मास्टर स्विच का अनुसरण करता है: `safety.allowWrites` बंद हो तो एजेंट समेत कुछ नहीं लिखता। इसे `false` रखें तो एजेंट पूरा प्लांट पढ़ सकते हैं और कभी नहीं लिख सकते। |
+| `historian.retentionDays` | `30` | कितने दिन का इतिहास रखा जाए। Gateway और Edge 90 रखते हैं, क्योंकि Pi की डिस्क छोटी होती है। |
+| `logbook.retentionDays` | `90` | एंटिटी की स्थिति बदलने के कितने दिन [लॉगबुक](/hi/iot/logbook/) रखती है। |
+| `database.postgresql.persistence.size` | `10Gi` | आपका इतिहास यहाँ रहता है। इसे अपने टैग की संख्या और ऊपर की अवधि के हिसाब से तय करें। |
+| `secretKey.existingSecret` | खाली | आपका अपना प्रबंधित Secret, जिसमें डिवाइस पासवर्ड की कुंजी हो। चार्ट को `helm template` से रेंडर करें तो इसे सेट करें, जो स्थिर कुंजी नहीं बना सकता। |
+| `opcuaClient.persistence.enabled` | `false` | सुरक्षित OPC UA डिवाइस जोड़ने से पहले इसे चालू करें, ताकि क्लाइंट के प्रमाणपत्र रीस्टार्ट के बाद भी बचे रहें। |
+| `ingress` | बंद | केवल तब, जब आप इसे क्लस्टर के बाहर से किसी नाम से पहुँचने योग्य रखना चाहें। |
+
+## Podman Quadlet
+
+ऐसे बॉक्स के लिए जो क्लस्टर में नहीं है। Quadlet कंटेनरों को असली systemd सेवाएँ बना देता है: वे बूट पर बिना किसी के लॉगिन किए शुरू होती हैं, मरने पर फिर चलती हैं और जर्नल में लॉग करती हैं। इसके लिए **Podman 5.0 या नया** चाहिए। Raspberry Pi OS Bookworm में 4.3 आता है, जिसमें Quadlet बिल्कुल नहीं है, इसलिए Pi को Trixie या नया चाहिए। डेटाबेस वॉल्यूम SD कार्ड पर नहीं, USB SSD पर रखें, क्योंकि इतिहास दिन भर लिखता है और SD कार्ड ठीक इसी से मरते हैं।
+
+यूनिट HotLoop रिपॉज़िटरी की `iot/` डायरेक्टरी में, `deploy/quadlet/` के नीचे हैं। हर फ़ाइल क्या है, यह [Podman Quadlet](/hi/install/quadlet/) में समझाया गया है। PostgreSQL के लिए संक्षिप्त रूप:
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop-iot:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop-iot:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+फिर `http://<this box>:8080` खोलें और `admin` के रूप में लॉगिन करें। तीन सीक्रेट हैं: डेटाबेस पासवर्ड, वह कुंजी जो डिवाइस पासवर्ड को एन्क्रिप्ट करती है (इसे खोया तो हर पासवर्ड फिर से टाइप करना होगा, इसलिए इसकी एक प्रति ऐसी जगह रखें जो यह बॉक्स न हो), और एडमिन के पासवर्ड का bcrypt हैश, पासवर्ड खुद कभी नहीं।
+
+इसकी जगह SQLite फ़ाइल के लिए `iot/sqlite/` की फ़ाइलें इस्तेमाल करें और ऊपर की डायरेक्टरी से कुछ नहीं। उनके यूनिट नाम एक जैसे हैं, इसलिए या तो एक सेट या दूसरा, कभी दोनों नहीं। ये दो फ़ाइलें हैं, `hotloop.container` और `hotloop-data.volume`, और दो सीक्रेट, `hotloop-secret-key` और `hotloop-admin-password-hash`। डेटाबेस `hotloop-data` वॉल्यूम पर `/data/hotloop.db` है।
+
+यूनिट `:stable` का अनुसरण करती है, और टाइमर चालू होने पर Podman उसे आगे बढ़ाता है:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+नई इमेज ऊपर आते समय डेटाबेस माइग्रेट करती है, और अगर वह शुरू न हो पाए तो Podman पिछली इमेज वापस रख देता है। डेटाबेस कंटेनर जानबूझकर `:stable` का अनुसरण नहीं करता। [:stable का ऑटो-अपडेट](/hi/install/auto-update/) बताता है कि अपडेट क्या करता है, रोलबैक क्या पलट नहीं सकता, और आपके कहने तक अपडेट कैसे रोकें। अपडेट चालू करने से पहले बैकअप लें।
+
+## बड़े प्रोडक्ट पर जाना
+
+IoT से Edge और फिर Gateway पर जाने पर हर डिवाइस, टैग, एंटिटी, ऑटोमेशन, अलार्म, उपयोगकर्ता और इतिहास का हर घंटा बना रहता है, और तरीका [प्रोडक्ट लाइनअप](/hi/products/) में है। यह बदलाव Quadlet पर और असली क्लस्टर पर `helm upgrade` के रूप में चलाया जा चुका है। छोटे प्रोडक्ट पर लौटना उस बॉक्स पर करने लायक बदलाव नहीं है जिसकी आपको परवाह है, इसलिए पहले बैकअप लें।
+
+## अब तक कितना चलाया गया है
+
+IoT की SQLite और PostgreSQL Quadlet यूनिट कमिट की गई फ़ाइलों से, बिना root के systemd के अंतर्गत चलाई जा चुकी हैं, और systemd के अंतर्गत root के रूप में असली Pi और 32-बिट arm इमेज असली हार्डवेयर पर, बेयर मेटल पर चलाई जा चुकी हैं (2026-11-17)।
+
+## लाइसेंस
+
+HotLoop IoT, HotLoop Source License Agreement 1.0 के अंतर्गत है। यह मुफ़्त है और स्रोत देखने योग्य है, OSI ओपन सोर्स नहीं है। घर और लैब में उपयोग मुफ़्त है, और स्कूलों, गैर-लाभकारी संस्थाओं और सरकारी निकायों का अपने संचालन के लिए उपयोग भी। [लाइसेंस पृष्ठ](/hi/license/) और [व्यवसाय में HotLoop का उपयोग](/hi/business/) देखें।

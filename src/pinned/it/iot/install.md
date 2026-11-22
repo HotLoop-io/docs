@@ -1,0 +1,117 @@
+---
+title: "Installare HotLoop IoT {{hotloop}}"
+description: "Installa HotLoop IoT {{hotloop}} su k3s con Helm, oppure su un Pi o un piccolo PC come servizi systemd con Podman Quadlet, con PostgreSQL o un file SQLite."
+sidebar:
+  label: "Installazione"
+---
+
+HotLoop IoT è uscito per la prima volta nella 4.18.10. L'immagine è `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, compilata per amd64, arm64 e arm/v7, e il chart è `hotloop-iot` nello stesso repository Helm del resto della gamma. Entrambi si scaricano senza accesso. Non c'è un percorso con Docker o Compose, di proposito, e un semplice `podman run` lanciato da una shell che muore con la sessione non è un'installazione.
+
+Due strade. Un cluster usa Helm. Un Pi, un NUC o un piccolo PC industriale senza cluster usa Podman Quadlet. In entrambi i casi il database si sceglie una volta sola: PostgreSQL 17 (predefinito) o un file SQLite senza alcun contenitore di database.
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
+  --namespace hotloop --create-namespace
+```
+
+Chiamate la release `hotloop` qualunque sia il prodotto. Il nome della release è quello che portano il volume del database, i Secret e il Service, e mantenerlo è ciò che permette a un sito di passare più avanti a un prodotto superiore.
+
+Questo distribuisce IoT più PostgreSQL 17.11 accanto, su un volume da 10 Gi, con 30 giorni di storico. Il chart genera la password del database, il token MCP e una password di amministratore nel Secret della release, e li riusa a ogni aggiornamento, così un `helm upgrade` non cambia mai una password alle vostre spalle.
+
+Per un file SQLite e nessun pod di database, chiedetelo all'installazione:
+
+```bash
+helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
+  --namespace hotloop --create-namespace \
+  --set database.type=sqlite
+```
+
+SQLite è un solo scrittore su un solo disco locale, quindi una sola replica, e il volume va su storage locale, mai NFS. Un sito con anni di storico a un secondo vuole PostgreSQL. Il chart di IoT accetta `postgresql` o `sqlite` e nient'altro: chiedergli `timescaledb` fa fallire l'installazione. Passare dall'uno all'altro più avanti significa backup e ripristino, non una modifica dei valori, perché il nuovo database parte vuoto. [Backup](/it/iot/backup/) ha il ripristino.
+
+### Fate il backup della chiave
+
+Il chart genera anche `<release>-secret-key` (`hotloop-secret-key` con i comandi sopra). Contiene la chiave che cifra ogni password di dispositivo che HotLoop conserva. La chiave non sta mai nel database né in un backup, quindi fa parte dei vostri dati: un backup ripristina le credenziali solo dove quella chiave è montata. Il chart conserva il Secret dopo un `helm uninstall`. Salvatela altrove rispetto ai vostri backup, perché una chiave accanto ai backup che protegge non protegge nulla. [Installare il Gateway](/it/gateway/install/#back-up-the-key-before-you-need-it) racconta tutta la storia, ed è la stessa chiave.
+
+### Accedere
+
+L'utente è `admin`. Le note di installazione stampano il comando che rilegge la password:
+
+```bash
+kubectl -n hotloop get secret hotloop \
+  -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl -n hotloop port-forward svc/hotloop 8080:8080
+```
+
+Aprite `http://localhost:8080`. Quell'account di amministratore è un avvio iniziale, non un interruttore di reset: una volta creato, cambiare `auth.admin.password` e aggiornare non fa nulla, quindi una password impostata da qualcuno nell'interfaccia non viene mai sovrascritta dal prossimo deploy.
+
+Ora aggiungete un dispositivo, scoprite i suoi tag e provate a scriverne uno. Non potete. Le scritture partono disattivate, ogni tag è di sola lettura finché qualcuno non lo arma, e `safety.allowWrites` resta `false` finché non decidete che questa installazione può muovere macchinari. [La porta di scrittura](/it/gateway/write-gate/) ha ogni controllo, in ordine.
+
+### Che cosa impostare prima che lo veda un impianto vero
+
+Metteteli in un file di valori e installate con `-f`.
+
+| Valore | Predefinito | Perché modificarlo |
+|---|---|---|
+| `plant.name`, `plant.siteId` | `HotLoop`, vuoto | Come si chiama l'impianto sulle schermate, nelle pagine e per gli altri siti. |
+| `plant.latitude`, `plant.longitude` | vuoto | Dove si trova l'impianto, in gradi decimali. [Il sole](/it/iot/sun/) si calcola da questi sulla scatola. Entrambi o nessuno. |
+| `global.timezone` | `America/New_York` | Pianificazioni e cambi turno ci si basano. Deve essere un nome di fuso reale, perché uno che non si carica blocca l'avvio. |
+| `publicUrl` | vuoto | L'indirizzo con cui un telefono sul Wi-Fi dell'impianto raggiunge HotLoop. Senza, le notifiche non hanno un link di ritorno e ntfy non riceve il pulsante Riconosci. |
+| `safety.allowWrites` | `false` | L'interruttore generale. Spento, niente scrive su una macchina, da nessuna parte. |
+| `safety.allowMcpWrites` | `true` | Permette agli agenti di scrivere dalla stessa porta, attivo dalla 4.19.4. Segue l'interruttore generale: con `safety.allowWrites` spento, niente scrive, agenti compresi. Impostatelo a `false` e gli agenti possono ancora leggere tutto l'impianto senza mai scrivere. |
+| `historian.retentionDays` | `30` | Giorni di storico conservati. Il Gateway e Edge ne tengono 90, perché il disco di un Pi è piccolo. |
+| `logbook.retentionDays` | `90` | Giorni di cambi di stato delle entità che il [registro](/it/iot/logbook/) conserva. |
+| `database.postgresql.persistence.size` | `10Gi` | Qui vive il vostro storico. Dimensionatelo sul numero di tag e sulla conservazione indicata sopra. |
+| `secretKey.existingSecret` | vuoto | Un Secret gestito da voi con la chiave delle password dei dispositivi. Impostatelo se generate il chart con `helm template`, che non può generare una chiave stabile. |
+| `opcuaClient.persistence.enabled` | `false` | Attivatelo prima di aggiungere un dispositivo OPC UA protetto, così i certificati del client sopravvivono a un riavvio. |
+| `ingress` | disattivato | Solo se lo volete raggiungibile da fuori del cluster tramite un nome. |
+
+## Podman Quadlet
+
+Per una scatola che non sta in un cluster. Quadlet trasforma i contenitori in veri servizi systemd: partono all'avvio senza nessuno connesso, ripartono quando muoiono e scrivono nel journal. Richiede **Podman 5.0 o successivo**. Raspberry Pi OS Bookworm include la 4.3, che non ha affatto Quadlet, quindi un Pi vuole Trixie o successivo. Mettete il volume del database su un SSD USB e non sulla scheda SD, perché lo storico scrive tutto il giorno e le schede SD muoiono proprio di questo.
+
+Le unità sono nella directory `iot/` del repository HotLoop, sotto `deploy/quadlet/`. [Podman Quadlet](/it/install/quadlet/) spiega che cos'è ogni file. La versione breve per PostgreSQL:
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop-iot:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop-iot:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+Poi aprite `http://<this box>:8080` e accedete come `admin`. I tre secret sono la password del database, la chiave che cifra le password dei dispositivi (se la perdete bisogna ridigitarle tutte, quindi tenetene una copia in un posto che non sia questa scatola) e l'hash bcrypt della password dell'amministratore, mai la password stessa.
+
+Per un file SQLite invece, usate i file in `iot/sqlite/` e nulla dalla directory sopra. Hanno gli stessi nomi di unità, quindi è un insieme o l'altro, mai entrambi. Sono due file, `hotloop.container` e `hotloop-data.volume`, e due secret, `hotloop-secret-key` e `hotloop-admin-password-hash`. Il database è `/data/hotloop.db` sul volume `hotloop-data`.
+
+L'unità segue `:stable`, e Podman la aggiorna quando il timer è attivo:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+Una nuova immagine migra il database all'avvio, e se non riesce a partire, Podman rimette quella precedente. Il contenitore del database non segue `:stable`, di proposito. [L'aggiornamento automatico di :stable](/it/install/auto-update/) spiega che cosa fa un aggiornamento, che cosa un ritorno indietro non può annullare e come sospendere gli aggiornamenti finché non lo dite voi. Fate un backup prima di attivare gli aggiornamenti.
+
+## Passare a un prodotto superiore
+
+Da IoT a Edge al Gateway si conserva ogni dispositivo, tag, entità, automazione, allarme, utente e ora di storico, e [la gamma](/it/products/) spiega come. Il passaggio è stato eseguito su Quadlet e come `helm upgrade` su un cluster reale. Tornare a un prodotto inferiore non è un passaggio da fare su una scatola a cui tenete, quindi fate prima un backup.
+
+## Fin dove è stato provato
+
+Le unità Quadlet di IoT con SQLite e con PostgreSQL sono state eseguite sotto systemd, senza root, dai file di cui è stato fatto il commit, e un vero Pi sotto systemd come root e le immagini arm a 32 bit sono state eseguite su hardware reale, su bare metal (2026-11-17).
+
+## Licenza
+
+HotLoop IoT è sotto l'HotLoop Source License Agreement 1.0. È gratuito e con sorgenti disponibili, non open source secondo l'OSI. L'uso domestico e di laboratorio è gratuito, così come quello di scuole, organizzazioni non profit ed enti pubblici per le proprie attività. Vedete [la pagina della licenza](/it/license/) e [Usare HotLoop in un'azienda](/it/business/).

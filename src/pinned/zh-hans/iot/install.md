@@ -1,0 +1,117 @@
+---
+title: "安装 HotLoop IoT {{hotloop}}"
+description: "用 Helm 在 k3s 上，或在 Pi 或小型 PC 上以 Podman Quadlet 的 systemd 服务方式，搭配 PostgreSQL 或 SQLite 文件安装 HotLoop IoT {{hotloop}}。"
+sidebar:
+  label: "安装"
+---
+
+HotLoop IoT 首次发布于 4.18.10。镜像是 `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`，为 amd64、arm64 和 arm/v7 构建，图表是与产品系列其余部分同一个 Helm 仓库中的 `hotloop-iot`。两者都无需登录即可拉取。我们特意没有提供 Docker 或 Compose 路径，从会随会话一起结束的 shell 里直接敲一条 `podman run` 也不算安装。
+
+有两种方式。有集群就用 Helm。没有集群的 Pi、NUC 或小型工业 PC 用 Podman Quadlet。无论哪种，数据库只需选一次：PostgreSQL 17（默认），或完全不需要数据库容器的 SQLite 文件。
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
+  --namespace hotloop --create-namespace
+```
+
+无论哪个产品，都把发行版命名为 `hotloop`。数据库的卷、Secret 和 Service 都以发行版名称命名，保持这个名称，站点以后才能升级到更大的产品。
+
+这会部署 IoT，以及旁边的 PostgreSQL 17.11，使用 10 Gi 的卷，保留 30 天历史。图表会在发行版的 Secret 中生成数据库密码、MCP 令牌和管理员密码，并在每次升级时重复使用，所以 `helm upgrade` 绝不会在你不知情时更换密码。
+
+如果要用 SQLite 文件、不要数据库 Pod，请在安装时指定：
+
+```bash
+helm install hotloop hotloop/hotloop-iot --version {{hotloop}} \
+  --namespace hotloop --create-namespace \
+  --set database.type=sqlite
+```
+
+SQLite 是单个本地磁盘上的单个写入方，所以只能是一个副本，卷放在本地存储上，绝不能放在 NFS 上。拥有多年、间隔一秒的历史的站点，需要 PostgreSQL。IoT 图表只接受 `postgresql` 或 `sqlite`，要求 `timescaledb` 会让安装失败。以后在两者之间切换需要备份再恢复，而不是改一个值，因为新数据库一开始是空的。恢复方法见[备份](/zh-hans/iot/backup/)。
+
+### 备份密钥
+
+图表还会生成 `<release>-secret-key`（上面的命令中是 `hotloop-secret-key`）。它保存着加密 HotLoop 为设备保存的每一个密码的密钥。这把密钥从不在数据库里，也从不在备份里，所以它是你数据的一部分：备份只能在挂载了这把密钥的地方恢复凭据。图表在 `helm uninstall` 之后仍会保留这个 Secret。请把它备份到你的备份之外的地方，因为紧挨着它所保护的备份放着的密钥，什么也保护不了。完整的来龙去脉见[安装 Gateway](/zh-hans/gateway/install/#back-up-the-key-before-you-need-it)，它们是同一把密钥。
+
+### 登录
+
+用户是 `admin`。安装说明会打印读回密码的命令：
+
+```bash
+kubectl -n hotloop get secret hotloop \
+  -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl -n hotloop port-forward svc/hotloop 8080:8080
+```
+
+打开 `http://localhost:8080`。这个管理员账号只是初始引导，不是重置开关：一旦创建，修改 `auth.admin.password` 并升级不会有任何效果，所以有人在界面里设置的密码绝不会被下一次部署覆盖。
+
+现在添加一台设备，发现它的变量，然后试着写入其中一个。你写不进去。写入出厂时是关闭的，在有人启用之前，每个变量都是只读，`safety.allowWrites` 保持 `false`，直到你决定这个部署可以驱动机械。[写入关口](/zh-hans/gateway/write-gate/)按顺序列出了每一项检查。
+
+### 在真正的工厂看到它之前要设置什么
+
+把这些放进一个 values 文件，然后用 `-f` 安装。
+
+| 值 | 默认值 | 为什么要改 |
+|---|---|---|
+| `plant.name`, `plant.siteId` | `HotLoop`，空 | 工厂在画面、页面中以及对其他站点显示的名称。 |
+| `plant.latitude`, `plant.longitude` | 空 | 工厂所在位置，十进制度数。[太阳](/zh-hans/iot/sun/)的时间由它们在盒子上算出。要么都填，要么都不填。 |
+| `global.timezone` | `America/New_York` | 计划和换班都按它运行。必须是真实的时区名称，因为加载不了的名称会让启动停止。 |
+| `publicUrl` | 空 | 工厂 Wi-Fi 上的手机访问 HotLoop 所用的地址。没有它，通知里就没有返回链接，ntfy 也不会有确认按钮。 |
+| `safety.allowWrites` | `false` | 总开关。关闭时，任何地方都不会向机器写入。 |
+| `safety.allowMcpWrites` | `true` | 允许代理通过同一个关口写入，从 4.19.4 起默认开启。它跟随总开关：`safety.allowWrites` 关闭时，包括代理在内什么都不会写入。设为 `false`，代理仍能读取整个工厂，但永远不会写入。 |
+| `historian.retentionDays` | `30` | 历史保留的天数。Gateway 和 Edge 保留 90 天，因为 Pi 的磁盘很小。 |
+| `logbook.retentionDays` | `90` | [日志簿](/zh-hans/iot/logbook/)保留实体状态变化的天数。 |
+| `database.postgresql.persistence.size` | `10Gi` | 你的历史存放在这里。按变量数量和上面的保留期来确定大小。 |
+| `secretKey.existingSecret` | 空 | 由你自己管理、保存设备密码密钥的 Secret。如果用无法生成稳定密钥的 `helm template` 渲染图表，就设置它。 |
+| `opcuaClient.persistence.enabled` | `false` | 添加受保护的 OPC UA 设备之前先启用，这样客户端证书在重启后仍然保留。 |
+| `ingress` | 关闭 | 只有当你想让它能从集群外按名称访问时才用。 |
+
+## Podman Quadlet
+
+用于不在集群里的盒子。Quadlet 把容器变成真正的 systemd 服务：无人登录时随开机启动，崩溃后重启，并写入日志。它需要 **Podman 5.0 或更高版本**。Raspberry Pi OS Bookworm 自带的是 4.3，完全没有 Quadlet，所以 Pi 需要 Trixie 或更新的系统。数据库卷请放在 USB SSD 上，不要放在 SD 卡上，因为历史整天都在写入，SD 卡正是死于这个。
+
+这些单元在 HotLoop 仓库 `deploy/quadlet/` 下的 `iot/` 目录中。每个文件是什么，见 [Podman Quadlet](/zh-hans/install/quadlet/)。PostgreSQL 的简要做法：
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop-iot:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop-iot:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+然后打开 `http://<this box>:8080`，以 `admin` 登录。三个 secret 分别是数据库密码、加密设备密码的密钥（丢了就得把每个密码重新输入一遍，所以请把副本保存在这个盒子以外的地方），以及管理员密码的 bcrypt 哈希，绝不是密码本身。
+
+如果改用 SQLite 文件，就用 `iot/sqlite/` 里的文件，不要用上一级目录里的。它们的单元名相同，所以只能用其中一套，绝不能两套同用。这是两个文件，`hotloop.container` 和 `hotloop-data.volume`，以及两个 secret，`hotloop-secret-key` 和 `hotloop-admin-password-hash`。数据库是 `hotloop-data` 卷上的 `/data/hotloop.db`。
+
+这个单元跟随 `:stable`，定时器启用后由 Podman 推进它：
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+新镜像在启动时迁移数据库，如果无法启动，Podman 会换回前一个镜像。数据库容器有意不跟随 `:stable`。更新做什么、回滚无法撤销什么，以及如何暂停更新直到你说可以，见 [:stable 自动更新](/zh-hans/install/auto-update/)。启用更新之前先做一次备份。
+
+## 升级到更大的产品
+
+从 IoT 到 Edge 再到 Gateway，每台设备、变量、实体、自动化、报警、用户和每一小时的历史都会保留，具体方法见[产品系列](/zh-hans/products/)。这一迁移已经在 Quadlet 上跑过，也在真实集群上以 `helm upgrade` 的形式跑过。退回到较小的产品，不是你在重要的盒子上该做的迁移，所以请先备份。
+
+## 已经运行到什么程度
+
+IoT 的 SQLite 和 PostgreSQL Quadlet 单元已用提交的文件在 systemd 下以非 root 方式运行过，真实的 Pi 在 systemd 下以 root 运行，以及 32 位 arm 镜像，都已在真实硬件上、裸机环境中运行过（2026-11-17）。
+
+## 许可
+
+HotLoop IoT 使用 HotLoop Source License Agreement 1.0。它免费使用，源代码可查看，但不是 OSI 定义的开源。家庭和实验室使用免费，学校、非营利组织和政府机构为自身运营使用也免费。参见[许可页面](/zh-hans/license/)和[在企业中使用 HotLoop](/zh-hans/business/)。
