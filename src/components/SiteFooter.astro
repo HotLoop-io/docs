@@ -1,6 +1,9 @@
 ---
 import sync from '../data/sync.json';
 import { existsSync } from 'node:fs';
+import { forPage } from '../i18n/page';
+
+const { t, rich, to } = forPage(Astro.url.pathname);
 
 const year = new Date().getFullYear();
 const products = sync.products;
@@ -12,49 +15,47 @@ const hasTerms = existsSync(new URL('../content/docs/terms.md', import.meta.url)
 <footer class="site">
   <div class="wrap top">
     <div class="about">
-      <a class="brand" href="/" aria-label="HotLoop Docs, home">
+      <a class="brand" href={to('/')} aria-label={t('n.home')}>
         <img src="/brand/logo-mark.svg" alt="" width="28" height="28" />
         <span class="word" translate="no">hot<span>loop</span></span>
       </a>
-      <p>Automation loops for the real world. These docs say what has been proven on real equipment and what hasn't, and they don't round up.</p>
+      <p>{t('f.tag')}</p>
     </div>
 
-    <nav aria-label="Products">
-      <h2>Products</h2>
-      <a href="/products/">The lineup</a>
-      {products.map((p) => <a href={`/${p.id}/overview/`}>{p.name}</a>)}
+    <nav aria-label={t('f.products')}>
+      <h2>{t('f.products')}</h2>
+      <a href={to('/products/')}>{t('f.lineup')}</a>
+      {products.map((p) => <a href={to(`/${p.id}/overview/`)}>{p.name}</a>)}
     </nav>
 
-    <nav aria-label="Docs">
-      <h2>Docs</h2>
-      <a href="/install/">Install</a>
-      <a href="/install/helm/">k3s and Helm</a>
-      <a href="/install/quadlet/">Podman Quadlet</a>
-      <a href="/install/auto-update/">The :stable auto-update</a>
-      <a href="/releases/">Release notes</a>
-      <a href="/roadmap/">HotLoop roadmap</a>
-      <a href="/flow/roadmap/">Flow roadmap</a>
-      <a href="/cascade/roadmap/">Cascade roadmap</a>
-      <a href="/codesys/roadmap/">HotLoop for CODESYS roadmap</a>
-      <a href="/transmitter/roadmap/">Transmitter roadmap</a>
-      {hasLicense && <a href="/license/">License</a>}
-      {hasTerms && <a href="/terms/">Terms</a>}
+    <nav aria-label={t('f.docs')}>
+      <h2>{t('f.docs')}</h2>
+      <a href={to('/install/')}>{t('f.install')}</a>
+      <a href={to('/install/helm/')}>{t('f.helm')}</a>
+      <a href={to('/install/quadlet/')}>{t('f.quadlet')}</a>
+      <a href={to('/install/auto-update/')}>{t('f.auto')}</a>
+      <a href={to('/releases/')}>{t('f.releases')}</a>
+      <a href={to('/roadmap/')}>{t('f.roadmap')}</a>
+      <a href={to('/flow/roadmap/')}>{t('f.flowRoadmap')}</a>
+      <a href={to('/cascade/roadmap/')}>{t('f.cascadeRoadmap')}</a>
+      <a href={to('/codesys/roadmap/')}>{t('f.codesysRoadmap')}</a>
+      <a href={to('/transmitter/roadmap/')}>{t('f.transmitterRoadmap')}</a>
+      {hasLicense && <a href={to('/license/')}>{t('f.license')}</a>}
+      {hasTerms && <a href={to('/terms/')}>{t('s.terms')}</a>}
     </nav>
 
-    <nav aria-label="Community">
+    <nav aria-label={t('f.community')}>
       <h2>HotLoop</h2>
       <a href="https://hotloop.io/">hotloop.io</a>
       <a href="https://github.com/HotLoop-io">GitHub</a>
-      <a href="https://github.com/orgs/HotLoop-io/discussions">Discussions</a>
-      <a href="https://www.reddit.com/r/HotLoop/">Reddit, r/HotLoop</a>
-      <a href="mailto:helpdesk@fireballz.ai">Support by EmberNet</a>
+      <a href="https://github.com/orgs/HotLoop-io/discussions">{t('f.discussions')}</a>
+      <a href="https://www.reddit.com/r/HotLoop/">{t('f.reddit')}</a>
+      <a href="mailto:helpdesk@fireballz.ai">{t('f.support')}</a>
     </nav>
   </div>
 
   <div class="wrap bottom">
-    <p>
-      Every HotLoop product is under the HotLoop Source License Agreement 1.0. Home and lab use is free. <a href="/business/">Run HotLoop at a plant</a>.
-    </p>
+    <p set:html={rich('f.line')} />
     <p class="small">&copy; {year} HotLoop LLC</p>
   </div>
 </footer>

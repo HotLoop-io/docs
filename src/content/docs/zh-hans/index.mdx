@@ -1,0 +1,61 @@
+---
+title: "HotLoop 文档"
+description: "所有 HotLoop 产品的文档:IoT、Edge、Gateway、Edge Relay、Flow、Cascade、HotLoop for CODESYS 和 Transmitter,以及如何安装、配置和使用。"
+template: splash
+editUrl: false
+hero:
+  tagline: "用 Go 编写的工厂现场软件。它读取您的设备，保存每一次读数，并且不会驱动没有人解除保护的机器。这份文档教您安装、配置和运行每一款产品，并如实说明每一款产品被验证到了什么程度。"
+  actions:
+    - text: "安装 HotLoop"
+      link: /zh-hans/install/
+      icon: right-arrow
+    - text: "产品阵容"
+      link: /zh-hans/products/
+      variant: minimal
+    - text: "发布说明"
+      link: /zh-hans/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## 产品家族
+
+HotLoop 是面向工厂现场的八款产品：四款随站点一起成长（IoT、Edge、Gateway 和 Edge Relay），另有负责逻辑编排的 Flow、负责工作流的 Cascade、为 PLC 自带画面而做的 HotLoop for CODESYS，以及把 PLC 数值送上网络的 Transmitter。 它们分五条发布线出货，所以每条线都有自己的版本。侧边栏的每个部分只显示该产品出货的内容，较大的产品会链接到它从较小产品继承的页面。
+
+<ProductPicker />
+
+不确定哪一款适合您的设备？[产品阵容](/zh-hans/products/)里有对比表、规格，以及从一款产品升到下一款的路径。
+
+## 按您要做的事开始
+
+<CardGrid>
+  <LinkCard title="监控一台设备" description="读取设备，保存历史，触发报警。" href="/zh-hans/iot/overview/" />
+  <LinkCard title="运行产线 HMI" description="绑定到画面的仪表板，以及面向您的 SCADA 的 OPC UA 服务器。" href="/zh-hans/edge/overview/" />
+  <LinkCard title="连接多个站点" description="设备群管理、多站点汇总和定时报告。" href="/zh-hans/gateway/overview/" />
+  <LinkCard title="在 Flow 中编排逻辑" description="在 Go 运行时上运行您的 Node-RED 流程。" href="/zh-hans/flow/quick-start/" />
+  <LinkCard title="在 Cascade 中自动化业务工作流" description="报警和日程变成带检查点的工作流。" href="/zh-hans/cascade/running/" />
+  <LinkCard title="从小型设备转发" description="采集，通过 Sparkplug B 转发，上行链路断开时缓存。" href="/zh-hans/edge-relay/overview/" />
+  <LinkCard title="为 CODESYS PLC 配上画面" description="在运行时旁提供画面、报警和历史，无需在 CODESYS 里安装任何东西。" href="/zh-hans/codesys/overview/" />
+  <LinkCard title="从 PLC 内部发布" description="从项目中的 CODESYS 库通过 UDP 发出 OPC UA PubSub。" href="/zh-hans/transmitter/overview/" />
+</CardGrid>
+
+## 每条产品线的最新发布
+
+<LatestReleases />
+
+## 如何阅读这份文档
+
+**“已验证”表示它在真实对象上运行过：**真实的 OPC UA 服务器、真实的代理、Ignition 本身，以及物理硬件上的真实设备。这是这些页面里每一项说法的标准，所以当页面说某个协议或功能可用时，它是跑过的。
+
+**最新发布的版本就是您安装的版本。**描述比已发布版本更新内容的页面，会带有**下一版本**徽章和顶部的提示框，让您始终知道安装里有什么、接下来会有什么。
+
+## 接下来去哪里
+
+- [安装 HotLoop](/zh-hans/install/)，两种入口：k3s 上的 Helm，或设备上的 Podman Quadlet。
+- [写入关口](/zh-hans/gateway/write-gate/)，真实工厂看到这一切之前必读的一页。
+- [:stable 自动更新](/zh-hans/install/auto-update/)，某个版本无法启动时设备会怎么做。
+- 各产品的去向：IoT、Edge、Gateway 和 Edge Relay 的 [HotLoop 路线图](/zh-hans/roadmap/)，以及 [Flow 路线图](/zh-hans/flow/roadmap/)、[Cascade 路线图](/zh-hans/cascade/roadmap/)、[HotLoop for CODESYS 路线图](/zh-hans/codesys/roadmap/)和 [Transmitter 路线图](/zh-hans/transmitter/roadmap/)。
+- [在企业中使用 HotLoop](/zh-hans/business/)，如果设备属于一家公司。

@@ -1,0 +1,61 @@
+---
+title: "Τεκμηρίωση HotLoop"
+description: "Τεκμηρίωση για όλα τα προϊόντα HotLoop: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS και Transmitter, με εγκατάσταση, ρύθμιση και χρήση."
+template: splash
+editUrl: false
+hero:
+  tagline: "Λογισμικό για το εργοστάσιο, γραμμένο σε Go. Διαβάζει τον εξοπλισμό σας, κρατά κάθε ανάγνωση και δεν θα κινήσει μηχανή που κανείς δεν έχει οπλίσει. Αυτή η τεκμηρίωση σας μαθαίνει να εγκαθιστάτε, να ρυθμίζετε και να λειτουργείτε κάθε προϊόν, και λέει καθαρά μέχρι πού έχει αποδειχθεί το καθένα."
+  actions:
+    - text: "Εγκατάσταση του HotLoop"
+      link: /el/install/
+      icon: right-arrow
+    - text: "Η γκάμα"
+      link: /el/products/
+      variant: minimal
+    - text: "Σημειώσεις έκδοσης"
+      link: /el/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## Η οικογένεια
+
+Το HotLoop είναι οκτώ προϊόντα για το εργοστάσιο: τέσσερα που μεγαλώνουν μαζί με μια τοποθεσία (IoT, Edge, Gateway και Edge Relay), συν το Flow για τη σύνδεση της λογικής, το Cascade για τις ροές εργασίας, το HotLoop for CODESYS για τη δική του οθόνη του PLC και το Transmitter για να βγουν οι τιμές ενός PLC στο δίκτυο. Κυκλοφορούν σε πέντε γραμμές εκδόσεων, οπότε η καθεμία έχει τη δική της έκδοση. Κάθε ενότητα της πλαϊνής στήλης δείχνει μόνο ό,τι παραδίδει το προϊόν, και ένα μεγαλύτερο προϊόν παραπέμπει στις σελίδες που κληρονομεί από ένα μικρότερο.
+
+<ProductPicker />
+
+Δεν είστε σίγουροι ποιο ταιριάζει στο κουτί σας; Η [γκάμα](/el/products/) έχει τον πίνακα, τα μεγέθη και τον δρόμο από το ένα προϊόν στο επόμενο.
+
+## Ξεκινήστε ανάλογα με το τι κάνετε
+
+<CardGrid>
+  <LinkCard title="Παρακολούθηση μιας μηχανής" description="Διαβάστε τον εξοπλισμό, κρατήστε το ιστορικό, σηκώστε τους συναγερμούς." href="/el/iot/overview/" />
+  <LinkCard title="Λειτουργία του HMI μιας γραμμής" description="Πίνακες ελέγχου δεμένοι σε οθόνη και διακομιστής OPC UA για το SCADA σας." href="/el/edge/overview/" />
+  <LinkCard title="Σύνδεση τοποθεσιών" description="Διαχείριση στόλου, συγκεντρωτικά πολλών τοποθεσιών και προγραμματισμένες αναφορές." href="/el/gateway/overview/" />
+  <LinkCard title="Σύνδεση λογικής στο Flow" description="Τρέξτε τις ροές σας Node-RED σε runtime Go." href="/el/flow/quick-start/" />
+  <LinkCard title="Αυτοματοποίηση επιχειρησιακών ροών στο Cascade" description="Οι συναγερμοί και τα χρονοδιαγράμματα γίνονται ροές εργασίας με σημεία ελέγχου." href="/el/cascade/running/" />
+  <LinkCard title="Προώθηση από ένα μικρό κουτί" description="Διαβάστε, προωθήστε μέσω Sparkplug B και κρατήστε προσωρινά όταν πέσει η σύνδεση." href="/el/edge-relay/overview/" />
+  <LinkCard title="Οθόνες σε PLC CODESYS" description="Οθόνες, συναγερμοί και ιστορικό δίπλα στο runtime, χωρίς να εγκατασταθεί τίποτα στο CODESYS." href="/el/codesys/overview/" />
+  <LinkCard title="Δημοσίευση από μέσα από το PLC" description="OPC UA PubSub μέσω UDP από βιβλιοθήκη CODESYS στο έργο σας." href="/el/transmitter/overview/" />
+</CardGrid>
+
+## Τα τελευταία από κάθε γραμμή
+
+<LatestReleases />
+
+## Πώς να διαβάσετε αυτή την τεκμηρίωση
+
+**«Επαληθευμένο» σημαίνει ότι έτρεξε απέναντι στο πραγματικό:** έναν πραγματικό διακομιστή OPC UA, έναν πραγματικό broker, το ίδιο το Ignition και πραγματικό εξοπλισμό σε φυσικό υλικό. Αυτό είναι το μέτρο για κάθε ισχυρισμό σε αυτές τις σελίδες, οπότε όταν μια σελίδα λέει ότι ένα πρωτόκολλο ή μια λειτουργία δουλεύει, έχει τρέξει.
+
+**Η τελευταία έκδοση είναι αυτή που έχετε εγκατεστημένη.** Μια σελίδα που περιγράφει κάτι νεότερο από τη δημοσιευμένη έκδοση φέρει ένα σήμα **Επόμενη έκδοση** και ένα πλαίσιο στην κορυφή, ώστε να ξέρετε πάντα τι υπάρχει στην εγκατάστασή σας και τι έρχεται.
+
+## Πού να πάτε μετά
+
+- [Εγκατάσταση του HotLoop](/el/install/), οι δύο δρόμοι εισόδου: Helm στο k3s ή Podman Quadlet σε ένα κουτί.
+- [Η πύλη εγγραφής](/el/gateway/write-gate/), η σελίδα που πρέπει να διαβάσετε πριν δει ένα πραγματικό εργοστάσιο οτιδήποτε από αυτά.
+- [Η αυτόματη ενημέρωση του :stable](/el/install/auto-update/), τι κάνει ένα κουτί όταν μια έκδοση δεν ξεκινά.
+- Προς τα πού πηγαίνει κάθε προϊόν: ο [οδικός χάρτης του HotLoop](/el/roadmap/) για τα IoT, Edge, Gateway και Edge Relay, ο [οδικός χάρτης του Flow](/el/flow/roadmap/), ο [οδικός χάρτης του Cascade](/el/cascade/roadmap/), ο [οδικός χάρτης του HotLoop for CODESYS](/el/codesys/roadmap/) και ο [οδικός χάρτης του Transmitter](/el/transmitter/roadmap/).
+- [Το HotLoop σε επιχείρηση](/el/business/), αν το κουτί ανήκει σε εταιρεία.

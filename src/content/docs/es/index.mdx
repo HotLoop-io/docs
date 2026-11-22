@@ -1,0 +1,61 @@
+---
+title: Documentación de HotLoop
+description: "Documentación de todos los productos HotLoop: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS y Transmitter, de la instalación al uso."
+template: splash
+editUrl: false
+hero:
+  tagline: Software de planta escrito en Go. Lee sus equipos, guarda cada lectura y no moverá una máquina que nadie haya armado. Esta documentación le enseña a instalar, configurar y operar cada producto, y dice con claridad hasta dónde se ha probado cada uno.
+  actions:
+    - text: Instalar HotLoop
+      link: /es/install/
+      icon: right-arrow
+    - text: La gama
+      link: /es/products/
+      variant: minimal
+    - text: Notas de versión
+      link: /es/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## La familia
+
+HotLoop son ocho productos para la planta: cuatro que crecen con el sitio (IoT, Edge, Gateway y Edge Relay), además de Flow para conectar, Cascade para los flujos de trabajo, HotLoop for CODESYS para la pantalla propia del PLC y Transmitter para poner en la red los valores de un PLC. Se publican en cinco líneas de versiones, así que cada una lleva su propia versión. Cada sección de la barra lateral muestra solo lo que ese producto incluye, y un producto mayor enlaza a las páginas que hereda de uno menor.
+
+<ProductPicker />
+
+¿No sabe cuál encaja con su equipo? [La gama](/es/products/) tiene la tabla, los tamaños y el camino para pasar de un producto al siguiente.
+
+## Empiece según lo que va a hacer
+
+<CardGrid>
+  <LinkCard title="Monitorizar una máquina" description="Lea los equipos, guarde el historial y genere las alarmas." href="/iot/overview/" />
+  <LinkCard title="Operar una HMI de línea" description="Paneles vinculados a una pantalla y un servidor OPC UA para su SCADA." href="/edge/overview/" />
+  <LinkCard title="Conectar sitios" description="Gestión de flota, consolidaciones multisitio e informes programados." href="/gateway/overview/" />
+  <LinkCard title="Conectar lógica en Flow" description="Ejecute sus flujos de Node-RED sobre un runtime en Go." href="/flow/quick-start/" />
+  <LinkCard title="Automatizar flujos de negocio en Cascade" description="Las alarmas y los horarios se convierten en flujos de trabajo con puntos de control." href="/cascade/running/" />
+  <LinkCard title="Reenviar desde un equipo pequeño" description="Consulte, reenvíe por Sparkplug B y almacene mientras el enlace está caído." href="/edge-relay/overview/" />
+  <LinkCard title="Poner pantallas en un PLC CODESYS" description="Pantallas, alarmas e historial junto al runtime, sin instalar nada en CODESYS." href="/codesys/overview/" />
+  <LinkCard title="Publicar desde dentro del PLC" description="OPC UA PubSub sobre UDP desde una biblioteca CODESYS en su proyecto." href="/transmitter/overview/" />
+</CardGrid>
+
+## Lo último de cada línea
+
+<LatestReleases />
+
+## Cómo leer esta documentación
+
+**"Verificado" significa que se ejecutó contra lo real:** un servidor OPC UA real, un broker real, el propio Ignition y equipos reales en hardware físico. Ese es el listón de cada afirmación de estas páginas, así que cuando una página dice que un protocolo o una función trabaja, es que se ejecutó.
+
+**La última versión es la que usted tiene instalada.** Una página que describe algo más nuevo que la versión publicada lleva una insignia **Próxima versión** y un recuadro al principio, para que siempre sepa qué hay en su instalación y qué viene.
+
+## Adónde ir después
+
+- [Instalar HotLoop](/es/install/), las dos vías de entrada: Helm sobre k3s o Podman Quadlet en un equipo.
+- [La compuerta de escritura](/es/gateway/write-gate/), la página que hay que leer antes de que una planta real vea algo de esto.
+- [La actualización automática de :stable](/es/install/auto-update/), qué hace un equipo cuando una versión no arranca.
+- Hacia dónde va cada producto: la [hoja de ruta de HotLoop](/es/roadmap/) para IoT, Edge, Gateway y Edge Relay, la [hoja de ruta de Flow](/es/flow/roadmap/), la [hoja de ruta de Cascade](/es/cascade/roadmap/), la [hoja de ruta de HotLoop for CODESYS](/es/codesys/roadmap/) y la [hoja de ruta de Transmitter](/es/transmitter/roadmap/).
+- [Usar HotLoop en una empresa](/es/business/), si el equipo pertenece a una compañía.

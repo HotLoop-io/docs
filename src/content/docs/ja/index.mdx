@@ -1,0 +1,61 @@
+---
+title: "HotLoop ドキュメント"
+description: "HotLoop の全製品(IoT、Edge、Gateway、Edge Relay、Flow、Cascade、HotLoop for CODESYS、Transmitter)のインストール、設定、使い方を解説します。"
+template: splash
+editUrl: false
+hero:
+  tagline: "Go で書かれた現場向けソフトウェアです。設備を読み取り、すべての値を保存し、誰も許可していない機械は動かしません。このドキュメントは各製品のインストール、設定、運用の方法を説明し、それぞれがどこまで実証されているかを正直に伝えます。"
+  actions:
+    - text: "HotLoop をインストール"
+      link: /ja/install/
+      icon: right-arrow
+    - text: "製品ラインアップ"
+      link: /ja/products/
+      variant: minimal
+    - text: "リリースノート"
+      link: /ja/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## 製品ファミリー
+
+HotLoop は現場のための 8 つの製品です。サイトとともに成長する 4 つ(IoT、Edge、Gateway、Edge Relay)に、ロジックをつなぐ Flow、ワークフローを担う Cascade、PLC 自身の画面のための HotLoop for CODESYS、PLC の値をネットワークへ送り出す Transmitter が加わります。 5 つのリリースラインで出荷されるため、それぞれが独自のバージョンを持ちます。サイドバーの各セクションには、その製品が出荷するものだけが表示され、上位の製品は下位の製品から引き継ぐページへリンクします。
+
+<ProductPicker />
+
+どれが機器に合うかわからない場合は、[製品ラインアップ](/ja/products/)に比較表、サイズ、ある製品から次の製品へ上がる方法があります。
+
+## やりたいことから始める
+
+<CardGrid>
+  <LinkCard title="機械を監視する" description="設備を読み取り、履歴を保存し、アラームを発報します。" href="/ja/iot/overview/" />
+  <LinkCard title="ライン HMI を運用する" description="画面に紐づくダッシュボードと、SCADA 向けの OPC UA サーバー。" href="/ja/edge/overview/" />
+  <LinkCard title="サイトをつなぐ" description="フリート管理、複数サイトの集計、定期レポート。" href="/ja/gateway/overview/" />
+  <LinkCard title="Flow でロジックをつなぐ" description="Node-RED のフローを Go ランタイムで実行します。" href="/ja/flow/quick-start/" />
+  <LinkCard title="Cascade で業務ワークフローを自動化する" description="アラームやスケジュールが、チェックポイント付きのワークフローになります。" href="/ja/cascade/running/" />
+  <LinkCard title="小さな機器から転送する" description="収集し、Sparkplug B で転送し、上位との接続が切れたらバッファします。" href="/ja/edge-relay/overview/" />
+  <LinkCard title="CODESYS PLC に画面を載せる" description="CODESYS には何もインストールせず、ランタイムの隣で画面、アラーム、履歴を提供します。" href="/ja/codesys/overview/" />
+  <LinkCard title="PLC の内側から発信する" description="プロジェクト内の CODESYS ライブラリから UDP で送る OPC UA PubSub。" href="/ja/transmitter/overview/" />
+</CardGrid>
+
+## 各ラインの最新情報
+
+<LatestReleases />
+
+## このドキュメントの読み方
+
+**「検証済み」とは、実物に対して実行したという意味です。**実際の OPC UA サーバー、実際のブローカー、Ignition そのもの、物理ハードウェア上の実際の設備がその対象です。これがこれらのページのすべての主張の基準なので、プロトコルや機能が動作すると書かれていれば、実際に動かしています。
+
+**最新のリリースが、インストールされているバージョンです。**公開済みのリリースより新しい内容を説明するページには、**次のリリース**のバッジと上部の注意書きが付き、今のインストールに何があり、何が来るのかが常にわかります。
+
+## 次に進む先
+
+- [HotLoop のインストール](/ja/install/)。入口は 2 つ、k3s 上の Helm か、機器上の Podman Quadlet です。
+- [書き込みゲート](/ja/gateway/write-gate/)。実際の工場にこれを見せる前に、必ず読んでほしい 1 ページです。
+- [:stable の自動アップデート](/ja/install/auto-update/)。リリースが起動しないときに機器が何をするか。
+- 各製品の行き先:IoT、Edge、Gateway、Edge Relay の [HotLoop ロードマップ](/ja/roadmap/)、[Flow ロードマップ](/ja/flow/roadmap/)、[Cascade ロードマップ](/ja/cascade/roadmap/)、[HotLoop for CODESYS ロードマップ](/ja/codesys/roadmap/)、[Transmitter ロードマップ](/ja/transmitter/roadmap/)。
+- [企業での HotLoop の利用](/ja/business/)。機器が会社のものである場合。

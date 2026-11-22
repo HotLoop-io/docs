@@ -1,0 +1,61 @@
+---
+title: "توثيق HotLoop"
+description: "توثيق جميع منتجات HotLoop: IoT وEdge وGateway وEdge Relay وFlow وCascade وHotLoop for CODESYS وTransmitter، مع طريقة تثبيتها وإعدادها واستخدامها."
+template: splash
+editUrl: false
+hero:
+  tagline: "برمجيات لأرض المصنع مكتوبة بلغة Go. تقرأ معداتك، وتحتفظ بكل قراءة، ولن تحرّك آلة لم يفعّلها أحد. يعلّمك هذا التوثيق كيف تثبّت كل منتج وتعدّه وتشغّله، ويقول بوضوح إلى أي مدى ثبتت صحة كل منها."
+  actions:
+    - text: "تثبيت HotLoop"
+      link: /ar/install/
+      icon: right-arrow
+    - text: "تشكيلة المنتجات"
+      link: /ar/products/
+      variant: minimal
+    - text: "ملاحظات الإصدارات"
+      link: /ar/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## العائلة
+
+HotLoop ثمانية منتجات لأرض المصنع: أربعة تنمو مع الموقع (IoT وEdge وGateway وEdge Relay)، إضافة إلى Flow لربط المنطق، وCascade لسير العمل، وHotLoop for CODESYS لشاشة وحدة PLC نفسها، وTransmitter لإخراج قيم وحدة PLC إلى الشبكة. تصدر على خمسة خطوط إصدار، فلكل خط إصداره الخاص. يعرض كل قسم في الشريط الجانبي ما يشحنه ذلك المنتج فقط، ويشير المنتج الأكبر إلى الصفحات التي يرثها من الأصغر.
+
+<ProductPicker />
+
+لست متأكدًا أيّها يناسب جهازك؟ [تشكيلة المنتجات](/ar/products/) فيها الجدول والأحجام والطريق من منتج إلى التالي.
+
+## ابدأ بحسب ما تفعله
+
+<CardGrid>
+  <LinkCard title="مراقبة آلة" description="اقرأ المعدات، واحتفظ بالسجل، وأطلق الإنذارات." href="/ar/iot/overview/" />
+  <LinkCard title="تشغيل واجهة HMI لخط إنتاج" description="لوحات معلومات مرتبطة بشاشة، وخادم OPC UA لنظام SCADA لديك." href="/ar/edge/overview/" />
+  <LinkCard title="ربط المواقع" description="إدارة الأسطول وتجميعات متعددة المواقع وتقارير مجدولة." href="/ar/gateway/overview/" />
+  <LinkCard title="ربط المنطق في Flow" description="شغّل تدفقات Node-RED لديك على بيئة تشغيل Go." href="/ar/flow/quick-start/" />
+  <LinkCard title="أتمتة سير العمل التجاري في Cascade" description="تتحول الإنذارات والجداول الزمنية إلى سير عمل بنقاط تحقق." href="/ar/cascade/running/" />
+  <LinkCard title="التمرير من جهاز صغير" description="اقرأ ومرّر عبر Sparkplug B وخزّن مؤقتًا عند انقطاع الوصلة." href="/ar/edge-relay/overview/" />
+  <LinkCard title="وضع شاشات على وحدة PLC من CODESYS" description="شاشات وإنذارات وسجل بجانب بيئة التشغيل، دون تثبيت أي شيء داخل CODESYS." href="/ar/codesys/overview/" />
+  <LinkCard title="النشر من داخل وحدة PLC" description="OPC UA PubSub عبر UDP من مكتبة CODESYS في مشروعك." href="/ar/transmitter/overview/" />
+</CardGrid>
+
+## الأحدث من كل خط
+
+<LatestReleases />
+
+## كيف تقرأ هذا التوثيق
+
+**«مُتحقَّق منه» تعني أنه شُغِّل على الشيء الحقيقي:** خادم OPC UA حقيقي، ووسيط حقيقي، وIgnition نفسه، ومعدات حقيقية على عتاد فعلي. هذا هو المعيار لكل ادعاء في هذه الصفحات، فحين تقول صفحة إن بروتوكولًا أو ميزة تعمل، فقد شُغِّلت فعلًا.
+
+**أحدث إصدار هو ما ثبّتّه.** الصفحة التي تصف شيئًا أحدث من الإصدار المنشور تحمل شارة **الإصدار القادم** وصندوقًا في أعلاها، لتعرف دائمًا ما في تثبيتك وما هو قادم.
+
+## إلى أين بعد ذلك
+
+- [تثبيت HotLoop](/ar/install/)، طريقا الدخول: Helm على k3s، أو Podman Quadlet على جهاز.
+- [بوابة الكتابة](/ar/gateway/write-gate/)، الصفحة التي يجب قراءتها قبل أن يرى مصنع حقيقي أي شيء من هذا.
+- [التحديث التلقائي لـ :stable](/ar/install/auto-update/)، ماذا يفعل الجهاز حين لا يبدأ إصدار.
+- إلى أين يتجه كل منتج: [خارطة طريق HotLoop](/ar/roadmap/) لـ IoT وEdge وGateway وEdge Relay، و[خارطة طريق Flow](/ar/flow/roadmap/)، و[خارطة طريق Cascade](/ar/cascade/roadmap/)، و[خارطة طريق HotLoop for CODESYS](/ar/codesys/roadmap/)، و[خارطة طريق Transmitter](/ar/transmitter/roadmap/).
+- [استخدام HotLoop في الأعمال](/ar/business/)، إذا كان الجهاز ملكًا لشركة.

@@ -3,6 +3,9 @@
 // (docs, install, release notes, roadmap, and its version). Versions and release state
 // come from src/data/sync.json, which the sync writes, so this can't disagree with the pages.
 import sync from '../data/sync.json';
+import { forPage } from '../i18n/page';
+
+const { t, to } = forPage(Astro.url.pathname);
 
 const hot = sync.repos.hotloop.release;
 const flow = sync.repos.flow.release;
@@ -15,11 +18,11 @@ const latest = (prefix: string) =>
   sync.pages.filter((p) => p.release && p.status !== 'next' && p.slug.startsWith(prefix)).map((p) => p.slug).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
 
 const lines = [
-  { id: 'core', label: 'HotLoop core', version: hot.version, note: 'One codebase, one version. IoT to Edge to Gateway is the path a site grows along, and Edge Relay is the headless forwarder beside them.', notes: `/${latest('releases/hotloop-')}/`, roadmap: '/roadmap/', ids: ['iot', 'edge', 'gateway', 'edge-relay'] },
-  { id: 'flow', label: 'Flow', version: flow.version, note: 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/flow-')}/`, roadmap: '/flow/roadmap/', ids: ['flow'] },
-  { id: 'cascade', label: 'Cascade', version: cascade.version, note: cascade.prerelease ? 'Pre-release. Its own release line, running next to HotLoop.' : 'Its own release line, running next to HotLoop.', notes: `/${latest('releases/cascade-')}/`, roadmap: '/cascade/roadmap/', ids: ['cascade'] },
-  { id: 'codesys', label: 'HotLoop for CODESYS', version: codesys.version, note: 'Its own release line, running next to HotLoop. It needs HotLoop ' + codesys.needsCore + '.', notes: `/releases/codesys-${codesys.version.replace(/\./g, '-')}/`, roadmap: '/codesys/roadmap/', ids: ['codesys'] },
-  { id: 'transmitter', label: 'Transmitter', version: transmitter.version, note: 'Its own release line, running next to HotLoop.', notes: `/releases/transmitter-${transmitter.version.replace(/\./g, '-')}/`, roadmap: '/transmitter/roadmap/', ids: ['transmitter'] },
+  { id: 'core', label: 'HotLoop core', version: hot.version, note: t('m.core.blurb'), notes: `/${latest('releases/hotloop-')}/`, roadmap: '/roadmap/', ids: ['iot', 'edge', 'gateway', 'edge-relay'] },
+  { id: 'flow', label: 'Flow', version: flow.version, note: t('m.own.blurb'), notes: `/${latest('releases/flow-')}/`, roadmap: '/flow/roadmap/', ids: ['flow'] },
+  { id: 'cascade', label: 'Cascade', version: cascade.version, note: cascade.prerelease ? t('pk.preNote') : t('m.own.blurb'), notes: `/${latest('releases/cascade-')}/`, roadmap: '/cascade/roadmap/', ids: ['cascade'] },
+  { id: 'codesys', label: 'HotLoop for CODESYS', version: codesys.version, note: t('pk.codesysNote', { core: codesys.needsCore }), notes: `/releases/codesys-${codesys.version.replace(/\./g, '-')}/`, roadmap: '/codesys/roadmap/', ids: ['codesys'] },
+  { id: 'transmitter', label: 'Transmitter', version: transmitter.version, note: t('m.own.blurb'), notes: `/releases/transmitter-${transmitter.version.replace(/\./g, '-')}/`, roadmap: '/transmitter/roadmap/', ids: ['transmitter'] },
 ];
 const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/install/', gateway: '/gateway/install/', 'edge-relay': '/edge-relay/install/', flow: '/flow/install/', cascade: '/cascade/running/', codesys: '/codesys/install/', transmitter: '/transmitter/install/' };
 ---
@@ -28,8 +31,8 @@ const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/ins
   {lines.map((l) => (
     <section class="line" aria-labelledby={`line-${l.id}`}>
       <header>
-        <h3 id={`line-${l.id}`}>{l.label} line</h3>
-        <span class="chip ok">{l.id === 'cascade' && cascade.prerelease ? 'Pre-release ' : l.id === 'codesys' ? 'Chart ' : 'Version '}{l.version}</span>
+        <h3 id={`line-${l.id}`}>{t('pk.line', { line: l.label })}</h3>
+        <span class="chip ok">{t(l.id === 'cascade' && cascade.prerelease ? 'pk.pre' : l.id === 'codesys' ? 'pk.chart' : 'pk.ver', { v: l.version })}</span>
         <p>{l.note}</p>
       </header>
       <div class="picker">
@@ -37,13 +40,13 @@ const install: Record<string, string> = { iot: '/iot/install/', edge: '/edge/ins
           const p = sync.products.find((x) => x.id === id)!;
           return (
             <article class="card">
-              <h4><a href={`/${p.id}/overview/`}>{p.name}</a></h4>
-              <p class="tag">{p.tagline}</p>
+              <h4><a href={to(`/${p.id}/overview/`)}>{p.name}</a></h4>
+              <p class="tag">{t(`m.${p.id}`)}</p>
               <p class="links">
-                <a href={`/${p.id}/overview/`}>Docs</a>
-                <a href={install[p.id]}>Install</a>
-                <a href={l.notes}>Release notes</a>
-                <a href={l.roadmap}>Roadmap</a>
+                <a href={to(`/${p.id}/overview/`)}>{t('pk.docs')}</a>
+                <a href={to(install[p.id])}>{t('pk.install')}</a>
+                <a href={to(l.notes)}>{t('pk.notes')}</a>
+                <a href={to(l.roadmap)}>{t('pk.roadmap')}</a>
               </p>
             </article>
           );

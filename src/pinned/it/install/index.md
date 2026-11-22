@@ -1,0 +1,38 @@
+---
+title: "Installa HotLoop"
+description: "Come si installa ogni prodotto HotLoop: Helm su k3s o Kubernetes, oppure Podman Quadlet su un dispositivo che segue il tag stable e si aggiorna da solo."
+sidebar:
+  label: "Installazione"
+---
+
+Ci sono due modi per far girare davvero un prodotto HotLoop: Helm su k3s o su qualsiasi Kubernetes, oppure Podman con Quadlet su un dispositivo che non fa parte di un cluster. Niente Docker, niente Compose e niente `podman run` lanciato a mano da una shell che muore con la sessione. Un semplice `podman run` va bene per provare, e la pagina di Flow lo dice, ma non è un'installazione.
+
+## Scegli la via
+
+| Hai | Usa | Pagina |
+|---|---|---|
+| Un cluster k3s o Kubernetes | Helm | [k3s e Helm](/it/install/helm/) |
+| Un Pi, un NUC o un piccolo PC industriale, senza cluster | Podman Quadlet | [Podman Quadlet](/it/install/quadlet/) |
+| L'uno o l'altro, e vuoi sapere come si comportano gli aggiornamenti | | [L'aggiornamento automatico di :stable](/it/install/auto-update/) |
+
+## Cosa puoi installare oggi
+
+| Prodotto | Ultimo rilascio | Helm | Quadlet | Da dove iniziare |
+|---|---|---|---|---|
+| [HotLoop IoT](/it/iot/overview/) | {{hotloop}} | Sì | Sì | [Installa IoT](/it/iot/install/) |
+| [HotLoop Edge](/it/edge/overview/) | {{hotloop}} | Sì | Sì | [Installa Edge](/it/edge/install/) |
+| [HotLoop Gateway](/it/gateway/overview/) | {{hotloop}} | Sì | Sì | [Installa il Gateway](/it/gateway/install/) |
+| [HotLoop Edge Relay](/it/edge-relay/overview/) | {{hotloop}} | Sì | Sì | [Installa l'Edge Relay](/it/edge-relay/install/) |
+| [HotLoop Flow](/it/flow/overview/) | {{flow}} | Sì | Sì | [Installa Flow](/it/flow/install/) |
+| [HotLoop Cascade](/it/cascade/overview/) | {{cascade}} | Sì, senza login | Sì, senza login, vedi [Cascade con Podman Quadlet](/it/cascade/quadlet/) | [Eseguire Cascade](/it/cascade/running/) |
+| [HotLoop for CODESYS](/it/codesys/overview/) | {{codesys}} | Sì, oppure l'App Store di EmberCORE | No | [Installa HotLoop for CODESYS](/it/codesys/install/) |
+| [HotLoop Transmitter](/it/transmitter/overview/) | 1.1.0 | No, è una libreria CODESYS | No, è una libreria CODESYS | [Installa Transmitter](/it/transmitter/install/) |
+
+HotLoop IoT, Edge, Gateway ed Edge Relay escono da un solo tag, in blocco, quindi condividono un numero di versione. Flow, Cascade, HotLoop for CODESYS e Transmitter hanno il proprio. Le unità Quadlet di IoT, Edge e Gateway richiedono Podman 5.0 o successivo, e quella del relay è stata eseguita su Podman 4.9.3. Raspberry Pi OS Bookworm include la 4.3, che non ha affatto Quadlet, quindi un Pi richiede Trixie o successivo.
+
+## Prima di metterne uno in uno stabilimento reale
+
+- Leggi [il varco di scrittura](/it/gateway/write-gate/). È uguale in ogni prodotto, ed è il motivo per cui nulla muove una macchina che non hai armato.
+- Metti il database su un SSD USB e non sulla scheda SD, se è un Pi. Lo storico scrive tutto il giorno, ogni giorno, e le schede SD muoiono proprio per questo.
+- Fai il backup della chiave delle password dei dispositivi. Non è nel database e non è in un backup, quindi fa parte dei tuoi dati. [Backup](/it/iot/backup/) spiega come.
+- Fai un backup prima di far salire un sito a un altro prodotto o di aggiornare tra due rilasci, e copialo fuori dal dispositivo.

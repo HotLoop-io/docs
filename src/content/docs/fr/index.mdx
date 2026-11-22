@@ -1,0 +1,61 @@
+---
+title: "Documentation HotLoop"
+description: "Documentation de tous les produits HotLoop : IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS et Transmitter, de l'installation à l'usage."
+template: splash
+editUrl: false
+hero:
+  tagline: "Un logiciel d'atelier écrit en Go. Il lit vos équipements, garde chaque relevé et ne déplacera jamais une machine que personne n'a armée. Cette documentation vous apprend à installer, régler et exploiter chaque produit, et dit sans détour jusqu'où chacun a été éprouvé."
+  actions:
+    - text: "Installer HotLoop"
+      link: /fr/install/
+      icon: right-arrow
+    - text: "La gamme"
+      link: /fr/products/
+      variant: minimal
+    - text: "Notes de version"
+      link: /fr/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## La famille
+
+HotLoop, ce sont huit produits pour l'atelier : quatre qui grandissent avec un site (IoT, Edge, Gateway et Edge Relay), plus Flow pour le câblage logiciel, Cascade pour les workflows, HotLoop for CODESYS pour l'écran propre de l'automate et Transmitter pour publier les valeurs d'un automate sur le réseau. Ils sortent sur cinq lignes de versions, donc chacun porte sa propre version. Chaque section de la barre latérale n'affiche que ce que le produit livre, et un produit plus grand renvoie aux pages qu'il reprend d'un plus petit.
+
+<ProductPicker />
+
+Vous ne savez pas lequel convient à votre boîtier ? [La gamme](/fr/products/) a le tableau, les tailles et le chemin pour passer d'un produit au suivant.
+
+## Commencez selon ce que vous faites
+
+<CardGrid>
+  <LinkCard title="Surveiller une machine" description="Lisez les équipements, gardez l'historique, levez les alarmes." href="/fr/iot/overview/" />
+  <LinkCard title="Exploiter l'IHM d'une ligne" description="Des tableaux de bord liés à un écran, et un serveur OPC UA pour votre SCADA." href="/fr/edge/overview/" />
+  <LinkCard title="Relier des sites" description="Gestion de flotte, consolidations multisites et rapports planifiés." href="/fr/gateway/overview/" />
+  <LinkCard title="Câbler la logique dans Flow" description="Exécutez vos flux Node-RED sur un runtime Go." href="/fr/flow/quick-start/" />
+  <LinkCard title="Automatiser les workflows métier dans Cascade" description="Les alarmes et les plannings deviennent des workflows avec points de reprise." href="/fr/cascade/running/" />
+  <LinkCard title="Transmettre depuis un petit boîtier" description="Interrogez, transmettez par Sparkplug B et mettez en tampon quand la liaison tombe." href="/fr/edge-relay/overview/" />
+  <LinkCard title="Mettre des écrans sur un automate CODESYS" description="Écrans, alarmes et historique à côté du runtime, sans rien installer dans CODESYS." href="/fr/codesys/overview/" />
+  <LinkCard title="Publier depuis l'intérieur de l'automate" description="OPC UA PubSub sur UDP depuis une bibliothèque CODESYS dans votre projet." href="/fr/transmitter/overview/" />
+</CardGrid>
+
+## Les dernières versions de chaque ligne
+
+<LatestReleases />
+
+## Comment lire cette documentation
+
+**« Vérifié » veut dire que ça a tourné contre le réel :** un vrai serveur OPC UA, un vrai broker, Ignition lui-même et de vrais équipements sur du matériel physique. C'est le niveau exigé pour chaque affirmation de ces pages : quand une page dit qu'un protocole ou une fonction marche, c'est que ça a tourné.
+
+**La dernière version est celle que vous avez installée.** Une page qui décrit quelque chose de plus récent que la version publiée porte un badge **Version suivante** et un encadré en haut, pour que vous sachiez toujours ce qu'il y a dans votre installation et ce qui arrive.
+
+## Où aller ensuite
+
+- [Installer HotLoop](/fr/install/), les deux voies d'entrée : Helm sur k3s, ou Podman Quadlet sur un boîtier.
+- [Le sas d'écriture](/fr/gateway/write-gate/), la page à lire avant qu'une vraie usine ne voie quoi que ce soit de tout cela.
+- [La mise à jour automatique de :stable](/fr/install/auto-update/), ce que fait un boîtier quand une version ne démarre pas.
+- Où va chaque produit : la [feuille de route HotLoop](/fr/roadmap/) pour IoT, Edge, Gateway et Edge Relay, la [feuille de route Flow](/fr/flow/roadmap/), la [feuille de route Cascade](/fr/cascade/roadmap/), la [feuille de route HotLoop for CODESYS](/fr/codesys/roadmap/) et la [feuille de route Transmitter](/fr/transmitter/roadmap/).
+- [Utiliser HotLoop en entreprise](/fr/business/), si le boîtier appartient à une société.

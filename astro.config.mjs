@@ -1,8 +1,103 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 
 import { existsSync, readFileSync } from 'node:fs';
+
+// English plus the thirteen languages the HotLoop products ship in. English stays at the root, so every
+// existing URL is where it was; the others sit under their own folder. Starlight serves the English page
+// under a language folder, with a notice, until that page is translated. Its own i18n guide:
+// https://starlight.astro.build/guides/i18n/  (locales, defaultLocale 'root', sidebar translations).
+// The same list lives in src/i18n/locales.ts; scripts/i18n-check.mjs fails the build if they disagree.
+const LOCALES = {
+  root: { label: 'English', lang: 'en' },
+  es: { label: 'Español', lang: 'es' },
+  fr: { label: 'Français', lang: 'fr' },
+  it: { label: 'Italiano', lang: 'it' },
+  de: { label: 'Deutsch', lang: 'de' },
+  nb: { label: 'Norsk bokmål', lang: 'nb' },
+  bg: { label: 'Български', lang: 'bg' },
+  el: { label: 'Ελληνικά', lang: 'el' },
+  ko: { label: '한국어', lang: 'ko' },
+  ja: { label: '日本語', lang: 'ja' },
+  vi: { label: 'Tiếng Việt', lang: 'vi' },
+  hi: { label: 'हिन्दी', lang: 'hi' },
+  'zh-hans': { label: '简体中文', lang: 'zh-Hans' },
+  ar: { label: 'العربية', lang: 'ar', dir: 'rtl' },
+};
+// Sidebar words come from the same catalogs as the header and footer. A label whose English text is in
+// SIDEBAR gets a translation in every language; product names and page titles stay as they are.
+const CAT = Object.fromEntries(
+  ['en', 'es', 'fr', 'it', 'de', 'nb', 'bg', 'el', 'ko', 'ja', 'vi', 'hi', 'zh-Hans', 'ar'].map((c) => [c, JSON.parse(readFileSync(new URL(`./src/i18n/${c}.json`, import.meta.url), 'utf8'))]),
+);
+const FOLDER = { 'zh-Hans': 'zh-hans' };
+const SIDEBAR = {
+  'The lineup': 's.lineup', Install: 's.install', 'Install HotLoop': 's.installHotloop', Overview: 's.overview',
+  'The write gate': 's.writeGate', Upgrading: 's.upgrading', 'Release notes': 's.releaseNotes', 'All releases': 's.allReleases',
+  'HotLoop roadmap': 's.roadmap', 'Using HotLoop in a business': 's.business', License: 's.license', Terms: 's.terms', Roadmap: 'pk.roadmap',
+};
+const fill = (str, vars) => str.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
+const translate = (label) => {
+  const inc = /^Included from (.+)$/.exec(label);
+  const key = inc ? 's.included' : SIDEBAR[label];
+  if (!key) return undefined;
+  const vars = inc ? { product: inc[1] } : {};
+  return Object.fromEntries(Object.keys(CAT).filter((c) => c !== 'en').map((c) => [FOLDER[c] || c, fill(CAT[c][key], vars)]));
+};
+// A page with no translation is served in English under the language folder, with a notice, and is marked
+// noindex. It stays out of the sitemap, and out of every hreflang list (see src/routeData.ts), so search
+// engines only ever hear about a language version that exists.
+const hasOwnPage = (folder, rest) => {
+  const base = `./src/content/docs/${folder}${rest ? '/' + rest : ''}`;
+  return ['.md', '.mdx', '/index.md', '/index.mdx'].some((e) => existsSync(new URL(base + e, import.meta.url)));
+};
+const FOLDERS = Object.keys(LOCALES).filter((k) => k !== 'root');
+const sitemapFilter = (page) => {
+  const m = /^https:\/\/[^/]+\/([^/]+)\/(.*?)\/?$/.exec(page);
+  if (!m || !FOLDERS.includes(m[1])) return true;
+  return hasOwnPage(m[1], m[2]);
+};
+
+// First landing on an English page: if the browser's preferred languages name one of ours, go there. Starlight
+// is static, so Astro.preferredLocale (Accept-Language, on-demand rendering only) is not available and the
+// decision is made in the browser from navigator.languages. It never runs on a language page, never beats a
+// choice made in the language menu (saved in localStorage as "hl-lang", English included), never runs for a
+// crawler, and only goes to a page that exists: the target is read from the hreflang tags the page carries,
+// which src/routeData.ts writes only for translated pages.
+const DETECT = `(function(){
+  var KEY='hl-lang';
+  function set(v){try{localStorage.setItem(KEY,v)}catch(e){}}
+  document.addEventListener('change',function(e){
+    var s=e.target&&e.target.closest?e.target.closest('starlight-lang-select select'):null;
+    if(!s)return;
+    var m=/^\\/(es|fr|it|de|nb|bg|el|ko|ja|vi|hi|zh-hans|ar)(\\/|$)/.exec(String(s.value).replace(/^https?:\\/\\/[^/]+/,''));
+    set(m?(m[1]==='zh-hans'?'zh-Hans':m[1]):'en');
+  },true);
+  if(document.documentElement.lang!=='en')return;
+  try{
+    if(/bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|pinterest|lighthouse/i.test(navigator.userAgent||''))return;
+    function ours(tag){tag=String(tag||'').toLowerCase();if(!tag)return null;
+      if(tag==='zh'||tag.indexOf('zh-hans')===0||tag==='zh-cn'||tag==='zh-sg')return'zh-Hans';
+      if(tag.indexOf('zh')===0)return null;
+      var b=tag.split('-')[0];if(b==='no'||b==='nn'||b==='nb')return'nb';
+      return['en','es','fr','it','de','bg','el','ko','ja','vi','hi','ar'].indexOf(b)>=0?b:null}
+    var want=null,saved=null;try{saved=localStorage.getItem(KEY)}catch(e){}
+    if(saved)want=saved;else{var l=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language];for(var i=0;i<l.length&&!want;i++)want=ours(l[i])}
+    if(!want||want==='en')return;
+    var a=document.querySelector('link[rel="alternate"][hreflang="'+want+'"]');if(!a)return;
+    var to=new URL(a.href);if(to.pathname===location.pathname)return;
+    location.replace(to.pathname+location.search+location.hash);
+  }catch(e){}
+})();`;
+
+const localize = (items) => items.map((it) => {
+  const out = { ...it };
+  const tr = typeof it.label === 'string' ? translate(it.label) : undefined;
+  if (tr) out.translations = tr;
+  if (Array.isArray(it.items)) out.items = localize(it.items);
+  return out;
+});
 
 const site = 'https://docs.hotloop.io';
 
@@ -59,8 +154,16 @@ export default defineConfig({
     '/releases/hotloop-4-18-3/': '/releases/hotloop-4-18-10/',
   },
   integrations: [
+    // Starlight adds its own sitemap unless one is here. This one leaves out the English-under-a-language-folder
+    // pages and carries the hreflang alternates for the rest.
+    sitemap({
+      filter: sitemapFilter,
+      i18n: { defaultLocale: 'root', locales: Object.fromEntries(Object.entries(LOCALES).map(([k, v]) => [k, v.lang])) },
+    }),
     starlight({
       title: 'HotLoop Docs',
+      defaultLocale: 'root',
+      locales: LOCALES,
       routeMiddleware: './src/routeData.ts',
       components: {
         Header: './src/components/Header.astro',
@@ -87,6 +190,7 @@ export default defineConfig({
         './src/styles/theme.css',
       ],
       head: [
+        { tag: 'script', content: DETECT },
         // Structured data. It says what this site is and who publishes it, and
         // nothing else. It ties the docs to the same organization as hotloop.io.
         {
@@ -114,7 +218,7 @@ export default defineConfig({
         { tag: 'meta', attrs: { name: 'theme-color', content: '#FBFAF8', media: '(prefers-color-scheme: light)' } },
         { tag: 'meta', attrs: { name: 'theme-color', content: '#14120F', media: '(prefers-color-scheme: dark)' } },
       ],
-      sidebar: [
+      sidebar: localize([
         { slug: 'products', label: 'The lineup' },
         { label: 'Install', collapsed: true, items: [
           { slug: 'install', label: 'Install HotLoop' },
@@ -218,7 +322,7 @@ export default defineConfig({
         { slug: 'business', label: 'Using HotLoop in a business' },
         ...(has('license') ? [{ slug: 'license', label: 'License' }] : []),
         ...(has('terms') ? [{ slug: 'terms', label: 'Terms' }] : []),
-      ],
+      ]),
     }),
   ],
 });

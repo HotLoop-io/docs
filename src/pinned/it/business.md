@@ -1,0 +1,30 @@
+---
+title: "Usare HotLoop in un'azienda"
+description: "Come la licenza di HotLoop tratta l'uso aziendale, cosa conta come uso aziendale e come metterti in regola."
+sidebar:
+  label: "Usare HotLoop in un'azienda"
+---
+
+Usi HotLoop al lavoro? Ecco come lo tratta la licenza e come metterti in regola.
+
+Ogni prodotto HotLoop è sotto l'HotLoop Source License Agreement 1.0: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS e HotLoop Transmitter. HotLoop ha il codice sorgente disponibile, non è open source secondo l'OSI, e il codice di Flow è pubblico. L'uso domestico e di laboratorio è gratuito, e lo è anche l'uso di scuole, organizzazioni non profit ed enti pubblici per le proprie attività. [La pagina Licenza](/it/license/) ha i dettagli, e l'accordo completo prevale su quanto scritto qui.
+
+## Cosa conta come uso aziendale
+
+Più di quanto la gente si aspetti, ed è voluto. Se lo esegue un'azienda o qualsiasi altra entità a scopo di lucro, o lo esegui tu per conto suo, trattalo come uso aziendale. L'uso puramente interno conta. Non far pagare nessuno conta. Che HotLoop ti faccia guadagnare o risparmiare denaro non entra nel conto. Meglio saperlo prima di aver costruito l'automazione di un intero stabilimento su un «è solo interno».
+
+## Metterti in regola
+
+Supporto e licenze sono gestiti da EmberNet, Gold Licensee di HotLoop. Scrivi a [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). Dicci cosa vuoi eseguire, su quante macchine e dove, e ti metteremo in regola con la licenza giusta.
+
+## Piattaforme partner
+
+HotLoop funziona su piattaforme partner, ed EmberNet è una di queste. La documentazione di ogni prodotto ha una pagina su come eseguirlo lì.
+
+## Supporto
+
+Il software è fornito così com'è, senza garanzia. L'aiuto della community è su [GitHub Discussions](https://github.com/orgs/HotLoop-io/discussions). Se il tuo stabilimento ha bisogno di qualcuno che risponda di un'installazione, di SLA o di una garanzia, questo viene dall'integratore di sistemi che assumi.
+
+## Ancora nel dubbio?
+
+Chiedi prima. Costa molto meno che scoprirlo dopo aver costruito tutto su un'ipotesi sbagliata. Scrivi a [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) e ti diremo da che parte della linea ti trovi.

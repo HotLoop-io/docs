@@ -1,11 +1,13 @@
 ---
 // The same brand lockup as hotloop.io: the mark, then the wordmark with "loop" in the link color.
+import { forPage } from '../i18n/page';
+const { t, to } = forPage(Astro.url.pathname);
 ---
 
-<a class="brand" href="/" aria-label="HotLoop Docs, home">
+<a class="brand" href={to('/')} aria-label={t('n.home')}>
   <img src="/brand/logo-mark.svg" alt="" width="30" height="30" />
   <span class="word" translate="no">hot<span>loop</span></span>
-  <span class="docs-tag">docs</span>
+  <span class="docs-tag">{t('n.docsTag')}</span>
 </a>
 
 <style>

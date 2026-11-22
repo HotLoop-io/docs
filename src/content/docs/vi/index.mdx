@@ -1,0 +1,61 @@
+---
+title: "Tài liệu HotLoop"
+description: "Tài liệu cho mọi sản phẩm HotLoop: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS và Transmitter, cùng cách cài đặt, thiết lập và sử dụng."
+template: splash
+editUrl: false
+hero:
+  tagline: "Phần mềm cho nhà máy, viết bằng Go. Nó đọc thiết bị của bạn, giữ mọi số đọc và sẽ không điều khiển một máy mà chưa ai cho phép. Tài liệu này hướng dẫn bạn cài đặt, thiết lập và vận hành từng sản phẩm, và nói rõ từng sản phẩm đã được kiểm chứng đến đâu."
+  actions:
+    - text: "Cài đặt HotLoop"
+      link: /vi/install/
+      icon: right-arrow
+    - text: "Toàn bộ dòng sản phẩm"
+      link: /vi/products/
+      variant: minimal
+    - text: "Ghi chú phát hành"
+      link: /vi/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## Cả họ sản phẩm
+
+HotLoop gồm tám sản phẩm cho nhà máy: bốn sản phẩm lớn lên cùng một địa điểm (IoT, Edge, Gateway và Edge Relay), cùng Flow để nối logic, Cascade cho quy trình công việc, HotLoop for CODESYS cho màn hình riêng của PLC và Transmitter để đưa giá trị của PLC lên mạng. Chúng phát hành trên năm dòng phiên bản, nên mỗi dòng có phiên bản riêng. Mỗi mục ở thanh bên chỉ cho thấy những gì sản phẩm đó phát hành, và sản phẩm lớn hơn liên kết về các trang mà nó kế thừa từ sản phẩm nhỏ hơn.
+
+<ProductPicker />
+
+Chưa biết sản phẩm nào hợp với thiết bị của bạn? [Toàn bộ dòng sản phẩm](/vi/products/) có bảng so sánh, kích thước và con đường nâng cấp từ sản phẩm này lên sản phẩm kế tiếp.
+
+## Bắt đầu theo việc bạn đang làm
+
+<CardGrid>
+  <LinkCard title="Giám sát một máy" description="Đọc thiết bị, lưu lịch sử, phát báo động." href="/vi/iot/overview/" />
+  <LinkCard title="Vận hành HMI của một dây chuyền" description="Bảng điều khiển gắn với màn hình và máy chủ OPC UA cho SCADA của bạn." href="/vi/edge/overview/" />
+  <LinkCard title="Kết nối các địa điểm" description="Quản lý đội thiết bị, tổng hợp nhiều địa điểm và báo cáo theo lịch." href="/vi/gateway/overview/" />
+  <LinkCard title="Nối logic trong Flow" description="Chạy các luồng Node-RED của bạn trên nền chạy Go." href="/vi/flow/quick-start/" />
+  <LinkCard title="Tự động hóa quy trình nghiệp vụ trong Cascade" description="Báo động và lịch trình trở thành quy trình có điểm kiểm tra." href="/vi/cascade/running/" />
+  <LinkCard title="Chuyển tiếp từ một thiết bị nhỏ" description="Thu thập, chuyển tiếp qua Sparkplug B và đệm lại khi đường lên mất." href="/vi/edge-relay/overview/" />
+  <LinkCard title="Đưa màn hình lên PLC CODESYS" description="Màn hình, báo động và lịch sử cạnh runtime, không cài gì vào CODESYS." href="/vi/codesys/overview/" />
+  <LinkCard title="Phát hành từ bên trong PLC" description="OPC UA PubSub qua UDP từ một thư viện CODESYS trong dự án của bạn." href="/vi/transmitter/overview/" />
+</CardGrid>
+
+## Mới nhất từ mỗi dòng
+
+<LatestReleases />
+
+## Cách đọc tài liệu này
+
+**“Đã kiểm chứng” nghĩa là đã chạy với thứ thật:** một máy chủ OPC UA thật, một broker thật, chính Ignition và thiết bị thật trên phần cứng thật. Đó là chuẩn cho mọi khẳng định trong các trang này, nên khi một trang nói một giao thức hay tính năng hoạt động, nó đã được chạy.
+
+**Bản phát hành mới nhất là bản bạn đang cài.** Trang mô tả thứ mới hơn bản đã phát hành sẽ có huy hiệu **Bản phát hành tới** và một khung ở đầu trang, để bạn luôn biết bản cài của mình có gì và sắp có gì.
+
+## Đi tiếp đâu
+
+- [Cài đặt HotLoop](/vi/install/), hai lối vào: Helm trên k3s, hoặc Podman Quadlet trên một thiết bị.
+- [Cổng ghi](/vi/gateway/write-gate/), trang nên đọc trước khi một nhà máy thật thấy bất cứ điều gì trong số này.
+- [Tự động cập nhật của :stable](/vi/install/auto-update/), thiết bị làm gì khi một bản phát hành không khởi động được.
+- Mỗi sản phẩm đang đi về đâu: [lộ trình HotLoop](/vi/roadmap/) cho IoT, Edge, Gateway và Edge Relay, [lộ trình Flow](/vi/flow/roadmap/), [lộ trình Cascade](/vi/cascade/roadmap/), [lộ trình HotLoop for CODESYS](/vi/codesys/roadmap/) và [lộ trình Transmitter](/vi/transmitter/roadmap/).
+- [Dùng HotLoop trong doanh nghiệp](/vi/business/), nếu thiết bị thuộc về một công ty.

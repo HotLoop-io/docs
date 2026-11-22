@@ -1,0 +1,61 @@
+---
+title: "HotLoop 문서"
+description: "모든 HotLoop 제품의 문서: IoT, Edge, Gateway, Edge Relay, Flow, Cascade, HotLoop for CODESYS, Transmitter의 설치와 사용법."
+template: splash
+editUrl: false
+hero:
+  tagline: "Go로 작성한 현장용 소프트웨어입니다. 설비를 읽고, 모든 값을 보관하며, 아무도 허용하지 않은 설비는 움직이지 않습니다. 이 문서는 각 제품의 설치, 설정, 운영 방법을 알려 주고, 각 제품이 어디까지 검증되었는지를 있는 그대로 말합니다."
+  actions:
+    - text: "HotLoop 설치"
+      link: /ko/install/
+      icon: right-arrow
+    - text: "제품 라인업"
+      link: /ko/products/
+      variant: minimal
+    - text: "릴리스 노트"
+      link: /ko/releases/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ProductPicker from '../../../components/ProductPicker.astro';
+import LatestReleases from '../../../components/LatestReleases.astro';
+
+## 제품군
+
+HotLoop은 현장을 위한 여덟 가지 제품입니다. 사이트와 함께 성장하는 네 가지(IoT, Edge, Gateway, Edge Relay)에, 로직 연결을 맡는 Flow, 워크플로를 맡는 Cascade, PLC 자체 화면을 위한 HotLoop for CODESYS, PLC 값을 네트워크로 내보내는 Transmitter가 더해집니다. 다섯 개의 릴리스 라인으로 출시되므로 각 라인마다 고유한 버전이 있습니다. 사이드바의 각 섹션에는 그 제품이 제공하는 것만 표시되고, 상위 제품은 하위 제품에서 이어받는 페이지로 연결됩니다.
+
+<ProductPicker />
+
+장비에 어떤 제품이 맞을지 모르겠나요? [제품 라인업](/ko/products/)에 비교표, 크기, 한 제품에서 다음 제품으로 올라가는 방법이 있습니다.
+
+## 하려는 일에 따라 시작하세요
+
+<CardGrid>
+  <LinkCard title="설비 모니터링" description="설비를 읽고, 이력을 보관하고, 알람을 발생시킵니다." href="/ko/iot/overview/" />
+  <LinkCard title="라인 HMI 운영" description="화면에 연결된 대시보드와 SCADA용 OPC UA 서버." href="/ko/edge/overview/" />
+  <LinkCard title="사이트 연결" description="장비군 관리, 다중 사이트 집계, 예약 보고서." href="/ko/gateway/overview/" />
+  <LinkCard title="Flow에서 로직 구성" description="Go 런타임에서 Node-RED 플로를 실행합니다." href="/ko/flow/quick-start/" />
+  <LinkCard title="Cascade로 업무 워크플로 자동화" description="알람과 일정이 체크포인트가 있는 워크플로가 됩니다." href="/ko/cascade/running/" />
+  <LinkCard title="소형 장비에서 전달" description="수집하고, Sparkplug B로 전달하고, 업링크가 끊기면 버퍼링합니다." href="/ko/edge-relay/overview/" />
+  <LinkCard title="CODESYS PLC에 화면 추가" description="CODESYS에 아무것도 설치하지 않고 런타임 곁에서 화면, 알람, 이력을 제공합니다." href="/ko/codesys/overview/" />
+  <LinkCard title="PLC 내부에서 게시" description="프로젝트의 CODESYS 라이브러리에서 UDP로 보내는 OPC UA PubSub." href="/ko/transmitter/overview/" />
+</CardGrid>
+
+## 각 라인의 최신 소식
+
+<LatestReleases />
+
+## 이 문서를 읽는 방법
+
+**“검증됨”은 실제 대상에 대해 실행했다는 뜻입니다.** 실제 OPC UA 서버, 실제 브로커, Ignition 자체, 물리 하드웨어의 실제 설비가 그 대상입니다. 이 페이지의 모든 주장은 이 기준을 따르므로, 어떤 프로토콜이나 기능이 동작한다고 쓰여 있으면 실제로 실행해 본 것입니다.
+
+**최신 릴리스가 설치된 버전입니다.** 공개된 릴리스보다 새로운 내용을 다루는 페이지에는 **다음 릴리스** 배지와 상단 안내 상자가 붙어, 지금 설치된 것과 앞으로 나올 것을 항상 알 수 있습니다.
+
+## 다음으로 갈 곳
+
+- [HotLoop 설치](/ko/install/), 두 가지 시작 방법: k3s 위의 Helm 또는 장비의 Podman Quadlet.
+- [쓰기 관문](/ko/gateway/write-gate/), 실제 공장이 이 모든 것을 보기 전에 읽어야 할 한 페이지.
+- [:stable 자동 업데이트](/ko/install/auto-update/), 릴리스가 시작되지 않을 때 장비가 하는 일.
+- 각 제품의 방향: IoT, Edge, Gateway, Edge Relay의 [HotLoop 로드맵](/ko/roadmap/), [Flow 로드맵](/ko/flow/roadmap/), [Cascade 로드맵](/ko/cascade/roadmap/), [HotLoop for CODESYS 로드맵](/ko/codesys/roadmap/), [Transmitter 로드맵](/ko/transmitter/roadmap/).
+- [기업에서 HotLoop 사용하기](/ko/business/), 장비가 회사 소유인 경우.
