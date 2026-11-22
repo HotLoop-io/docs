@@ -1,0 +1,109 @@
+---
+title: "Instalar HotLoop Edge {{hotloop}}"
+description: "Instale HotLoop Edge {{hotloop}} en k3s con Helm o en un PC industrial con Podman Quadlet, y active después el servidor OPC UA y la publicación Sparkplug."
+sidebar:
+  label: "Instalación"
+---
+
+HotLoop Edge se lanzó por primera vez en la 4.18.10. La imagen es `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`, compilada para amd64, arm64 y arm/v7, y el chart es `hotloop-edge` en el mismo repositorio Helm que el resto de la gama. Ambos se descargan sin iniciar sesión. No hay camino con Docker ni Compose, a propósito, y un simple `podman run` desde una shell que muere con la sesión no es una instalación.
+
+Un clúster usa Helm. Un PC industrial o una Pi sin clúster usa Podman Quadlet. La base de datos se elige una sola vez: TimescaleDB (la predeterminada), PostgreSQL normal o un archivo SQLite sin contenedor de base de datos.
+
+## Helm
+
+```bash
+helm repo add hotloop https://hotloop.io/hotloop
+helm repo update
+helm install hotloop hotloop/hotloop-edge --version {{hotloop}} \
+  --namespace hotloop --create-namespace
+```
+
+Llame a la versión `hotloop` sea cual sea el producto. El nombre de la versión es el que llevan el volumen de la base de datos, los Secrets y el Service, y mantenerlo es lo que permite a un sitio pasar después a un producto superior.
+
+Eso despliega Edge más TimescaleDB 2.30.1 sobre PostgreSQL 17 a su lado, en un volumen de 20 Gi, con 90 días de historial. El chart genera la contraseña de la base de datos, el token MCP y una contraseña de administrador en el Secret de la versión, y los reutiliza en cada actualización. También genera `<release>-secret-key`, la clave que cifra cada contraseña de dispositivo que guarda HotLoop. Esa clave forma parte de sus datos, y [la página de instalación del Gateway](/es/gateway/install/#back-up-the-key-before-you-need-it) explica por qué y cómo guardarla. Es la misma clave.
+
+Para PostgreSQL normal o un archivo SQLite, ponga `database.type` en `postgresql` o `sqlite` al instalar. Un archivo SQLite es un solo escritor en un solo disco local, así que es una réplica y nunca NFS. Cambiar de base de datos más adelante es una copia de seguridad y una restauración, porque la nueva base empieza vacía. [Copias de seguridad](/es/iot/backup/) tiene la restauración.
+
+### Iniciar sesión
+
+El usuario es `admin`. Las notas de instalación imprimen el comando que lee la contraseña:
+
+```bash
+kubectl -n hotloop get secret hotloop \
+  -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl -n hotloop port-forward svc/hotloop 8080:8080
+```
+
+Abra `http://localhost:8080`. Las escrituras vienen desactivadas: cada tag es de solo lectura hasta que alguien lo arma, y `safety.allowWrites` sigue en `false` hasta que usted decida que esta caja puede mover maquinaria. [La puerta de escritura](/es/gateway/write-gate/) tiene cada comprobación, en orden.
+
+### Lo que añade Edge y cómo activarlo
+
+Ambos vienen desactivados por defecto, porque abrir un puerto de escucha o un enlace ascendente en una red de planta es algo que una instalación hace a propósito.
+
+**El servidor OPC UA** es `opcuaServer.enabled: true`, en el puerto 4840. Ponga en `opcuaServer.endpointHost` el nombre con el que un cliente llega a la caja, para que el certificado coincida. [El servidor OPC UA](/es/edge/opc-ua-server/) tiene el modelo de seguridad, y es de solo lectura.
+
+**Salud de la caja y el montaje del host.** El servidor OPC UA del chart también sirve la salud de esta caja (CPU, memoria, disco y la fluctuación de tiempo real cuando un agente escribe el archivo) para el panel de EmberNet, y crea un acceso para el panel que puede leer tags y valores y nada más. Está activado por defecto: el chart monta la raíz del host en `/host` y su `/proc` en `/host/proc`, ambos de solo lectura, y no añade privilegios. Un clúster que aplica el perfil restringido de Pod Security rechaza un hostPath, y ahí se pone `opcuaServer.dashboard.boxHealth.enabled: false` para no tener dispositivo ni montajes, o `opcuaServer.dashboard.boxHealth.hostMount: false` para conservar el dispositivo con la lectura de disco y CPU marcada como mala e indicando qué montar. [El servidor OPC UA](/es/edge/opc-ua-server/#box-health-for-the-embernet-dashboard) tiene el resto.
+
+**La publicación Sparkplug** es `edgePublish.enabled: true`, con `edgePublish.broker` y `edgePublish.group` obligatorios. Ponga también `edgePublish.node`, o el id del nodo es el nombre de la versión. La cola de reenvío vive en un volumen de 1 Gi, `edgePublish.queueMaxBytes` vale 64 MiB por defecto (unas 248.000 lecturas: unos dos minutos a 2.000 lecturas por segundo, a unos 240 bytes por lectura), y pasado ese límite las lecturas más antiguas se descartan y se cuentan. `0` es sin límite, y una interrupción lo bastante larga llena el volumen. La publicación de Edge necesita `replicaCount` 1, y el chart se niega a generarse si no. [Publicación de Edge y almacenamiento y reenvío](/es/edge/edge-publish/) explica qué hace cuando cae el enlace ascendente.
+
+### Qué configurar antes de que lo vea una planta real
+
+| Valor | Predeterminado | Por qué tocarlo |
+|---|---|---|
+| `plant.name`, `plant.siteId` | `HotLoop`, vacío | Cómo se llama la planta en las pantallas, en las páginas y para otros sitios. |
+| `global.timezone` | `America/New_York` | Las programaciones y los cambios de turno se rigen por ella. Tiene que ser un nombre de zona real. |
+| `publicUrl` | vacío | La dirección con la que un teléfono en el Wi-Fi de la planta llega a HotLoop. Sin ella, las notificaciones no tienen enlace de vuelta. |
+| `safety.allowWrites` | `false` | El interruptor general. Apagado, nada escribe en una máquina, desde ningún sitio. |
+| `historian.retentionDays` | `90` | Días de historial que se conservan. |
+| `database.postgresql.persistence.size` | `20Gi` | Aquí vive su historial. Dimensiónelo según el número de tags y la retención anterior. |
+| `opcuaClient.persistence.enabled` | `false` | Actívelo antes de añadir un dispositivo OPC UA seguro, para que los certificados del cliente sobrevivan a un reinicio. |
+| `secretKey.existingSecret` | vacío | Un Secret que usted gestiona con la clave de contraseñas de dispositivo. Póngalo si genera el chart con `helm template`. |
+
+## Podman Quadlet
+
+Quadlet convierte los contenedores en verdaderos servicios de systemd: arrancan al iniciar sin nadie conectado, se reinician cuando mueren y registran en el journal. Necesita **Podman 5.0 o posterior**. Raspberry Pi OS Bookworm trae la 4.3, que no tiene Quadlet en absoluto, así que una Pi necesita Trixie o posterior. Ponga el volumen de la base de datos en un SSD USB y no en la tarjeta SD.
+
+Las unidades están en el directorio `edge/` del repositorio de HotLoop, dentro de `deploy/quadlet/`, y tienen los mismos nombres que las de IoT y el Gateway. [Podman Quadlet](/es/install/quadlet/) explica cada archivo.
+
+```bash
+sudo cp hotloop.network hotloop.container hotloop-db.container \
+  hotloop-db.volume hotloop-data.volume /etc/containers/systemd/
+
+openssl rand -hex 24 | sudo podman secret create hotloop-db-password -
+sudo podman run --rm ghcr.io/hotloop-io/hotloop-edge:stable gen-secret-key \
+  | sudo podman secret create hotloop-secret-key -
+printf '%s' 'a long admin password' \
+  | sudo podman run --rm -i ghcr.io/hotloop-io/hotloop-edge:stable hash-password \
+  | sudo podman secret create hotloop-admin-password-hash -
+
+sudo systemctl daemon-reload
+sudo systemctl start hotloop.service
+sudo systemctl status hotloop.service hotloop-db.service
+curl -s localhost:8080/api/status
+```
+
+Después abra `http://<this box>:8080` e inicie sesión como `admin`. Guarde una copia de la clave en un lugar que no sea esta caja, porque perderla significa volver a escribir cada contraseña de dispositivo.
+
+La unidad publica solo el puerto 8080. Cuando active el servidor OPC UA (4840) o el broker MQTT integrado (1883), añada una línea `PublishPort=` para él en `hotloop.container`. La unidad Quadlet conserva 90 días de historial por defecto, igual que el chart.
+
+¿Quiere PostgreSQL normal en Edge? Es la unidad de TimescaleDB con `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` añadido a `hotloop.container`. ¿Quiere un archivo SQLite? Use los archivos de `edge/sqlite/` y nada del directorio superior, porque comparten nombres de unidad: son `hotloop.container` y `hotloop-data.volume`, y dos secrets, `hotloop-secret-key` y `hotloop-admin-password-hash`.
+
+La unidad sigue `:stable`, y Podman la actualiza cuando el temporizador está activado:
+
+```bash
+sudo systemctl enable --now podman-auto-update.timer
+```
+
+Una imagen nueva migra la base de datos al arrancar, y si no puede arrancar, Podman vuelve a poner la anterior. El contenedor de la base de datos no sigue `:stable`, a propósito. [La actualización automática de :stable](/es/install/auto-update/) explica qué hace una actualización, qué no puede deshacer un retroceso y cómo retener las actualizaciones hasta que usted diga. Haga una copia de seguridad antes de activar las actualizaciones.
+
+## Pasar a un producto superior
+
+De IoT a Edge y al Gateway se conserva cada dispositivo, tag, entidad, automatización, alarma, usuario y hora de historial. En Quadlet consiste en copiar el `hotloop.container` y el `hotloop-db.container` del producto mayor sobre los suyos, y [la gama](/es/products/) tiene la forma con Helm. El cambio se ha probado en Quadlet, de IoT a Edge y al Gateway sobre un mismo volumen de base de datos, y como `helm upgrade` en un clúster real. Volver a un producto inferior no es un cambio que convenga hacer en una caja que le importa, así que haga antes una copia de seguridad.
+
+## Hasta dónde se ha probado
+
+Las unidades Quadlet de Edge se han ejecutado bajo systemd, sin root, incluida una actualización que migra, no puede arrancar y se revierte. Una Pi real bajo systemd como root y las imágenes arm de 32 bits se han ejecutado en hardware real, en bare metal (2026-11-17).
+
+## Licencia
+
+HotLoop Edge está bajo el HotLoop Source License Agreement 1.0. Es gratuito y de código disponible, no de código abierto según la OSI. El uso doméstico y de laboratorio es gratuito, y también el de escuelas, organizaciones sin ánimo de lucro y organismos públicos para su propia actividad. Consulte [la página de licencia](/es/license/) y [Usar HotLoop en una empresa](/es/business/).
