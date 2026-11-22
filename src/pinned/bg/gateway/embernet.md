@@ -1,0 +1,26 @@
+---
+title: "HotLoop Gateway в EmberNet"
+description: "Страниците на docs.embernet.ai за HotLoop Gateway: описанието му в App Store и всяка страница, която го споменава."
+sidebar:
+  label: "В документацията на EmberNet"
+---
+
+HotLoop Gateway е пълният архив на данни, сървърът за аларми, машината за автоматизации и MCP повърхността. EmberNet го пакетира и внедрява от App Store, а документацията на EmberNet покрива тази страна.
+
+Къде се намира в документацията на EmberNet:
+
+- [HotLoop Gateway в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [Общ преглед на App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [Общ преглед на платформата](https://docs.embernet.ai/docs/platform/overview)
+- [Архитектура на платформата](https://docs.embernet.ai/docs/platform/architecture)
+- [Достъп до EmberCORE](https://docs.embernet.ai/docs/dashboard/access)
+- [HotLoop Edge в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [HotLoop IoT в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [HotLoop Edge Relay в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [HotLoop Flow в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [HotLoop Cascade в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+- [HotLoop for CODESYS в EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
+
+[HotLoop в бизнеса](/bg/business/) обяснява лиценза и как да се свържете с нас.
+
+Обратно към [прегледа на HotLoop Gateway](/bg/gateway/overview/) или към [страницата за HotLoop Gateway в hotloop.io](https://hotloop.io/gateway/).

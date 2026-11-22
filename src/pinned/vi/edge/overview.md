@@ -1,0 +1,35 @@
+---
+title: "Tổng quan về HotLoop Edge"
+description: "HotLoop Edge là IoT cộng với lớp máy: máy chủ OPC UA, phát hành Sparkplug B và lưu rồi chuyển tiếp giúp nhà máy vẫn chạy khi đường lên bị mất."
+sidebar:
+  label: "Tổng quan"
+---
+
+:::note[Edge đã ra mắt, lần đầu trong 4.18.10]
+Image là `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`, build cho amd64, arm64 và arm/v7, khoảng 37 MB trên amd64 và 34 MB trên arm, còn chart là `hotloop-edge` từ `https://hotloop.io/hotloop`. Cả hai đều tải về không cần đăng nhập. Các unit Quadlet nằm trong thư mục `edge/` của [Podman Quadlet](/vi/install/quadlet/). [Cài đặt nó](/vi/edge/install/). Trước 4.18.10, Gateway có thể chạy ở biên và phát hành Sparkplug lên trên, và làm được từ 4.5.0, nhưng phải dùng cả Gateway.
+:::
+
+Edge là một hộp được bắt vít cạnh dây chuyền. Nó đọc máy, chạy các quy tắc ngay trên máy, vẫn hoạt động khi WAN mất và báo cho phần còn lại của nhà máy biết nó đã thấy gì. Nó chạy qua cùng cổng ghi như mọi thứ khác.
+
+Nó có mọi thứ [IoT](/vi/iot/overview/) có, cộng thêm hai thứ.
+
+## Edge bổ sung gì
+
+- **[Phát hành từ Edge và lưu rồi chuyển tiếp](/vi/edge/edge-publish/).** Nó phát hành mọi thứ đọc được lên trên như một nút biên Sparkplug B. Khi đường truyền chết, nó đệm vào đĩa và phát lại theo thứ tự khi đường truyền trở lại, nên historian ở trên nhận được đoạn gián đoạn đã được lấp đầy thay vì một khoảng trống, miễn là đoạn gián đoạn vừa với hàng đợi. Hàng đợi mặc định là 64 MiB, khoảng 248.000 giá trị đọc: khoảng 41 phút ở 100 giá trị mỗi giây, khoảng hai phút ở 2.000. Vượt qua đó, các giá trị cũ nhất bị bỏ trước, từng giá trị đều được đếm, và `edgePublish.queueMaxBytes` nâng giới hạn lên. Giá trị đọc nằm trong bộ nhớ trong lúc broker xác nhận và chỉ ghi xuống đĩa khi broker dừng, và một bài kiểm tra cắt đường truyền khi đang chịu tải, kết thúc tiến trình giữa lúc gián đoạn rồi đếm từng giá trị. Một lần tắt đột ngột khi đường truyền còn sống vẫn có thể mất khoảng một lượt thăm dò, và trang nói rõ điều đó, kèm số liệu.
+- **[Máy chủ OPC UA](/vi/edge/opc-ua-server/).** Chỉ đọc và được bảo vệ. SCADA bạn đang có thấy mọi tag mà không cần driver mới, và Ignition 8.3.9 đã đọc nó từ đầu đến cuối. Nó tắt cho đến khi bạn bật.
+
+Các màn hình cục bộ và logic vẫn chạy khi đường lên mất, và một bài kiểm tra khởi động tệp nhị phân thật trước một đường truyền nuốt hết mọi thứ để chứng minh. Một hộp khởi động lại giữa lúc WAN gián đoạn sẽ lên với đủ màn hình và báo động, trong khi trước 4.18.10 nó rơi vào vòng lặp lỗi, không có màn hình và báo động cho đến khi WAN trở lại. Bảng điều khiển là các màn hình, và chúng ở trong [IoT](/vi/iot/dashboards/). Thao tác ghi HMI nêu tên một người, mã PIN hoặc thẻ trên bảng điều khiển dùng chung vẫn chưa được xây dựng. Nó nằm trong [lộ trình](/vi/roadmap/).
+
+## Những gì nó không có
+
+Không có đội thiết bị, không có nhiều địa điểm và không có báo cáo theo lịch. Những thứ đó thuộc về [Gateway](/vi/gateway/overview/) và không có trong tệp nhị phân của Edge.
+
+## Cơ sở dữ liệu
+
+SQLite, PostgreSQL hoặc TimescaleDB, từ cùng một tệp nhị phân. Chart và các unit Quadlet chạy TimescaleDB theo mặc định và giữ 90 ngày lịch sử trừ khi bạn đổi. Trong chart đó là `database.type`, và `HOTLOOP_DB_TYPE=sqlite` đặt hộp chạy trên một tệp, không cần container cơ sở dữ liệu. [Dòng sản phẩm](/vi/products/) có bảng.
+
+## Cài đặt
+
+[Trang cài đặt Edge](/vi/edge/install/) có Helm và Podman Quadlet, kèm các lệnh. Chuyển một địa điểm từ IoT sang Edge rồi sang Gateway vẫn giữ nguyên mọi thiết bị, tag, thực thể, tự động hóa, báo động, người dùng và từng giờ lịch sử, và [dòng sản phẩm](/vi/products/) nói cách làm.
+
+Dùng nó ở nhà máy? [Dùng HotLoop trong doanh nghiệp](/vi/business/) nói về giấy phép và cách liên hệ với chúng tôi.

@@ -1,0 +1,26 @@
+---
+title: "EmberNet पर HotLoop Gateway"
+description: "docs.embernet.ai के वे पृष्ठ जो HotLoop Gateway के बारे में हैं: App Store में उसकी लिस्टिंग और हर वह पृष्ठ जिसमें उसका ज़िक्र है।"
+sidebar:
+  label: "EmberNet दस्तावेज़ों में"
+---
+
+HotLoop Gateway पूरा हिस्टोरियन, अलार्म सर्वर, ऑटोमेशन इंजन और MCP सतह है। EmberNet इसे App Store से पैकेज करके तैनात करता है, और EmberNet दस्तावेज़ उस पक्ष को कवर करते हैं।
+
+EmberNet दस्तावेज़ों में यह कहाँ है:
+
+- [EmberNet पर HotLoop Gateway](https://docs.embernet.ai/docs/app-store/hotloop)
+- [App Store का सारांश](https://docs.embernet.ai/docs/app-store/overview)
+- [प्लेटफ़ॉर्म का सारांश](https://docs.embernet.ai/docs/platform/overview)
+- [प्लेटफ़ॉर्म आर्किटेक्चर](https://docs.embernet.ai/docs/platform/architecture)
+- [EmberCORE तक पहुँच](https://docs.embernet.ai/docs/dashboard/access)
+- [EmberNet पर HotLoop Edge](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [EmberNet पर HotLoop IoT](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [EmberNet पर HotLoop Edge Relay](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [EmberNet पर HotLoop Flow](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [EmberNet पर HotLoop Cascade](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+- [EmberNet पर HotLoop for CODESYS](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
+
+[व्यवसाय में HotLoop का उपयोग](/hi/business/) लाइसेंस और हमसे संपर्क करने का तरीका बताता है।
+
+[HotLoop Gateway के सारांश](/hi/gateway/overview/) पर लौटें, या [hotloop.io पर HotLoop Gateway का पृष्ठ](https://hotloop.io/gateway/) देखें।

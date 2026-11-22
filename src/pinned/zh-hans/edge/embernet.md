@@ -1,0 +1,24 @@
+---
+title: "HotLoop Edge 文档位置"
+description: "docs.embernet.ai 上介绍 HotLoop Edge 的页面：它在 App Store 中的条目，以及提到它的每一页。"
+sidebar:
+  label: "在 EmberNet 文档中"
+---
+
+HotLoop Edge 是 IoT 加上 OPC UA 服务器，以及带存储转发的 Sparkplug B 发布。EmberNet 从 App Store 打包并部署它，EmberNet 文档介绍这一部分。
+
+它在 EmberNet 文档中的位置：
+
+- [EmberNet 上的 HotLoop Edge](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [App Store 概览](https://docs.embernet.ai/docs/app-store/overview)
+- [EmberNet 上的 HotLoop Gateway](https://docs.embernet.ai/docs/app-store/hotloop)
+- [EmberNet 上的 HotLoop IoT](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [EmberNet 上的 HotLoop Edge Relay](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [EmberNet 上的 FUXA](https://docs.embernet.ai/docs/app-store/fuxa)
+- [EmberNet 上的 HotLoop for CODESYS](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
+
+FUXA 通过 OPC UA 读取 Edge，HotLoop for CODESYS 则把它安装在运行时旁边。
+
+[在企业中使用 HotLoop](/zh-hans/business/)介绍许可方式和联系我们的方法。
+
+返回 [HotLoop Edge 概览](/zh-hans/edge/overview/)，或前往 [hotloop.io 上的 HotLoop Edge 页面](https://hotloop.io/edge/)。

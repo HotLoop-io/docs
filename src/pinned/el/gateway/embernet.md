@@ -1,0 +1,26 @@
+---
+title: "Το HotLoop Gateway στο EmberNet"
+description: "Οι σελίδες του docs.embernet.ai για το HotLoop Gateway: η καταχώρισή του στο App Store και κάθε σελίδα που το αναφέρει."
+sidebar:
+  label: "Στα έγγραφα του EmberNet"
+---
+
+Το HotLoop Gateway είναι το πλήρες historian, ο διακομιστής συναγερμών, η μηχανή αυτοματισμών και η επιφάνεια MCP. Το EmberNet το πακετάρει και το αναπτύσσει από το App Store, και τα έγγραφα του EmberNet καλύπτουν αυτή την πλευρά.
+
+Πού βρίσκεται στα έγγραφα του EmberNet:
+
+- [Το HotLoop Gateway στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop)
+- [Επισκόπηση του App Store](https://docs.embernet.ai/docs/app-store/overview)
+- [Επισκόπηση της πλατφόρμας](https://docs.embernet.ai/docs/platform/overview)
+- [Αρχιτεκτονική της πλατφόρμας](https://docs.embernet.ai/docs/platform/architecture)
+- [Πρόσβαση στο EmberCORE](https://docs.embernet.ai/docs/dashboard/access)
+- [Το HotLoop Edge στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge)
+- [Το HotLoop IoT στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-iot)
+- [Το HotLoop Edge Relay στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-edge-relay)
+- [Το HotLoop Flow στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-flow)
+- [Το HotLoop Cascade στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-cascade)
+- [Το HotLoop for CODESYS στο EmberNet](https://docs.embernet.ai/docs/app-store/hotloop-codesys)
+
+Το [HotLoop σε επιχείρηση](/el/business/) καλύπτει την άδεια χρήσης και πώς θα επικοινωνήσετε μαζί μας.
+
+Πίσω στην [επισκόπηση του HotLoop Gateway](/el/gateway/overview/), ή στη [σελίδα του HotLoop Gateway στο hotloop.io](https://hotloop.io/gateway/).

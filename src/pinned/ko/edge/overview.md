@@ -1,0 +1,35 @@
+---
+title: "HotLoop Edge 개요"
+description: "HotLoop Edge는 IoT에 기계 계층을 더한 제품입니다. OPC UA 서버, Sparkplug B 게시, 상위 연결이 끊겨도 공장을 계속 돌리는 저장 후 전달을 갖췄습니다."
+sidebar:
+  label: "개요"
+---
+
+:::note[Edge가 출시되었습니다. 첫 출시는 4.18.10입니다]
+이미지는 amd64, arm64, arm/v7용으로 빌드된 `ghcr.io/hotloop-io/hotloop-edge:{{hotloop}}`이며 amd64에서 약 37 MB, arm에서 약 34 MB입니다. 차트는 `https://hotloop.io/hotloop`의 `hotloop-edge`입니다. 둘 다 로그인 없이 받을 수 있습니다. Quadlet 유닛은 [Podman Quadlet](/ko/install/quadlet/)의 `edge/` 디렉터리에 있습니다. [설치하세요](/ko/edge/install/). 4.18.10 이전에도 Gateway는 현장에서 실행하며 Sparkplug를 상위로 게시할 수 있었고 4.5.0부터 그랬지만, 그러려면 Gateway 전체가 필요했습니다.
+:::
+
+Edge는 라인 옆에 설치하는 박스입니다. 기계를 읽고, 기계에서 규칙을 실행하고, WAN이 끊겨도 계속 동작하며, 본 것을 공장의 나머지에 알립니다. 다른 모든 것과 같은 쓰기 게이트로 동작합니다.
+
+[IoT](/ko/iot/overview/)가 가진 것은 모두 갖추고, 거기에 두 가지가 더해집니다.
+
+## Edge가 더하는 것
+
+- **[Edge 게시와 저장 후 전달](/ko/edge/edge-publish/).** 읽은 모든 것을 Sparkplug B 엣지 노드로 상위에 게시합니다. 연결이 끊기면 디스크에 버퍼링하고, 연결이 돌아오면 순서대로 다시 보냅니다. 그래서 상위 히스토리안은 구멍이 아니라 채워진 중단 구간을 받습니다. 단, 중단이 큐에 들어갈 만큼이어야 합니다. 큐는 기본 64 MiB, 약 248,000개 값입니다. 초당 100개면 약 41분, 초당 2,000개면 약 2분입니다. 그 이상은 가장 오래된 값부터 버려지며 하나도 빠짐없이 집계되고, `edgePublish.queueMaxBytes`로 늘릴 수 있습니다. 값은 브로커가 확인하는 동안 메모리에 있고, 브로커가 멈출 때만 디스크로 갑니다. 테스트는 부하 중에 연결을 끊고, 중단 도중 프로세스를 강제 종료한 뒤 모든 값을 셉니다. 연결이 살아 있을 때의 강제 종료는 여전히 폴링 한 번 분량의 값을 잃을 수 있으며, 페이지에 수치와 함께 적혀 있습니다.
+- **[OPC UA 서버](/ko/edge/opc-ua-server/).** 읽기 전용이며 보호됩니다. 이미 가진 SCADA가 새 드라이버 없이 모든 태그를 보고, Ignition 8.3.9가 끝까지 읽어 보았습니다. 켜기 전까지는 꺼져 있습니다.
+
+로컬 화면과 로직은 상위 연결이 끊겨도 계속 실행되며, 테스트가 모든 것을 삼키는 연결을 상대로 실제 바이너리를 띄워 이를 증명합니다. WAN 장애 중에 재부팅한 박스는 화면과 알람을 갖춘 채 올라옵니다. 4.18.10 이전에는 WAN이 돌아올 때까지 화면도 알람도 없이 크래시 루프에 빠졌습니다. 대시보드가 화면이며 [IoT](/ko/iot/dashboards/)에 있습니다. 공용 패널에서 사람, PIN, 배지를 지정하는 HMI 쓰기는 아직 만들지 않았습니다. [로드맵](/ko/roadmap/)에 있습니다.
+
+## 없는 것
+
+플릿, 멀티 사이트, 예약 보고서는 없습니다. 이들은 [Gateway](/ko/gateway/overview/)의 기능이며 Edge 바이너리에는 들어 있지 않습니다.
+
+## 데이터베이스
+
+같은 바이너리로 SQLite, PostgreSQL, TimescaleDB를 쓸 수 있습니다. 차트와 Quadlet 유닛은 기본으로 TimescaleDB를 실행하고, 바꾸지 않으면 이력을 90일 보관합니다. 차트에서는 `database.type`이고, `HOTLOOP_DB_TYPE=sqlite`로 두면 데이터베이스 컨테이너 없이 파일을 씁니다. [제품 라인업](/ko/products/)에 표가 있습니다.
+
+## 설치
+
+[Edge 설치 페이지](/ko/edge/install/)에 Helm과 Podman Quadlet 명령이 있습니다. 사이트를 IoT에서 Edge로, 다시 Gateway로 옮겨도 모든 장치, 태그, 엔티티, 자동화, 알람, 사용자와 모든 이력이 그대로 남으며, 방법은 [제품 라인업](/ko/products/)에 있습니다.
+
+공장에서 쓰시나요? [기업에서 HotLoop 사용하기](/ko/business/)에서 라이선스와 문의 방법을 안내합니다.
