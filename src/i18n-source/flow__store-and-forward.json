@@ -15,5 +15,20 @@
     "hi": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
     "zh-hans": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
     "ar": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "fr": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "it": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "de": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "nb": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "bg": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "el": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ko": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ja": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "vi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "hi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "zh-hans": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ar": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"}
   }
 }

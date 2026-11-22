@@ -15,5 +15,20 @@
     "hi": ["524b58d11bec","22d8a9d10df0","543621f80f5b","72a3b7bafdb3","eb81d2c02354","5bd4c643e016","b2d15d8ab35c","04f60275ee14","2664a581b00f","3e271cd799ed","493a30ef25cb","d44729a70117","e5e886478529","1a7b090d8e2f","81545dd67a8e","ca6a993fb0d3","3e22405792b5","c27537f07b0b","3989f87765fe","8da4cfd8b845","64b2ac5aa313","7d8bb5b3521c","86725b95b3a4","e0afc80ef7ca","1c7ad1c1793f"],
     "zh-hans": ["524b58d11bec","22d8a9d10df0","543621f80f5b","72a3b7bafdb3","eb81d2c02354","5bd4c643e016","b2d15d8ab35c","04f60275ee14","2664a581b00f","3e271cd799ed","493a30ef25cb","d44729a70117","e5e886478529","1a7b090d8e2f","81545dd67a8e","ca6a993fb0d3","3e22405792b5","c27537f07b0b","3989f87765fe","8da4cfd8b845","64b2ac5aa313","7d8bb5b3521c","86725b95b3a4","e0afc80ef7ca","1c7ad1c1793f"],
     "ar": ["524b58d11bec","22d8a9d10df0","543621f80f5b","72a3b7bafdb3","eb81d2c02354","5bd4c643e016","b2d15d8ab35c","04f60275ee14","2664a581b00f","3e271cd799ed","493a30ef25cb","d44729a70117","e5e886478529","1a7b090d8e2f","81545dd67a8e","ca6a993fb0d3","3e22405792b5","c27537f07b0b","3989f87765fe","8da4cfd8b845","64b2ac5aa313","7d8bb5b3521c","86725b95b3a4","e0afc80ef7ca","1c7ad1c1793f"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "fr": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "it": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "de": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "nb": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "bg": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "el": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ko": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ja": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "vi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "hi": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "zh-hans": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"},
+    "ar": {"hotloop":"4.23.2","flow":"2.16.6","cascade":"1.4.1"}
   }
 }

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parse, segs, hashes, diff, headingSlugs } from './i18n-source.mjs';
+import { parse, segs, hashes, diff, headingSlugs, normalizeVersions, currentHashes, versionMap } from './i18n-source.mjs';
 
 const page = (body) => `---\ntitle: "T"\ndescription: "D"\n---\n\n${body}\n`;
 
@@ -39,4 +39,43 @@ test('hashes change with the text and not with the line ending', () => {
 
 test('heading slugs follow the page, with duplicates numbered', () => {
   assert.deepEqual(headingSlugs('# A\n\n## Same\n\n## Same\n\n```\n## no\n```'), ['a', 'same', 'same-1']);
+});
+
+// ---- release versions are not wording ----
+const syncJson = (h, f, c) => JSON.stringify({ repos: { hotloop: { release: { version: h } }, flow: { release: { version: f } }, cascade: { release: { version: c } } } });
+const fakeView = (h, f, c) => ({ read: (p) => { if (p !== 'src/data/sync.json') throw new Error(p); return syncJson(h, f, c); } });
+const flowPage = (v, extra = '') => page(`Flow ${v} is out. Line ${v.replace(/\.\d+$/, '.x')} holds the nodes, from ${v.replace(/\.\d+$/, '')} on.${extra}\n\nInstall ${v} with Helm, and ISA-18.2 and license 1.0 stay as they are. Before it, 2.15.0 shipped.`);
+
+test('the latest version, its x line and its major.minor normalize to the product token, older versions and other numbers stay', () => {
+  const m = { hotloop: '4.23.2', flow: '2.16.6', cascade: '1.4.1' };
+  assert.equal(normalizeVersions('Flow 2.16.6 and 2.16.x and 2.16, not 2.16.60, 2.160 or 12.16.6. Old 2.15.0, ISA-18.2, 1.0.', m), 'Flow {{flow}} and {{flow.x}} and {{flow.minor}}, not 2.16.60, 2.160 or 12.16.6. Old 2.15.0, ISA-18.2, 1.0.');
+  assert.equal(normalizeVersions('4.23.2 and 1.4.1', m), '{{hotloop}} and {{cascade}}');
+  assert.equal(normalizeVersions('plain', null), 'plain');
+});
+
+test('a release-style version bump flags none of the translations, a real wording change flags exactly its segment', () => {
+  const before = fakeView('4.23.2', '2.16.6', '1.4.1');
+  const after = fakeView('4.23.2', '2.17.0', '1.4.1');
+  const recorded = hashes(flowPage('2.16.6'), { flow: '2.16.6' });
+  const d = diff(recorded, currentHashes(flowPage('2.17.0'), after, recorded, { flow: '2.16.6' }));
+  assert.deepEqual([d.changed, d.removed], [[], []]);
+  const w = diff(recorded, currentHashes(flowPage('2.17.0', ' It is faster now.'), after, recorded, { flow: '2.16.6' }));
+  assert.equal(w.changed.length, 1);
+  assert.match(segs(parse(flowPage('2.17.0', ' It is faster now.')))[w.changed[0]], /faster now/);
+  assert.equal(versionMap(before).flow, '2.16.6');
+});
+
+test('a line that named the latest release when it was recorded is not flagged once a newer release is out', () => {
+  const list = (n) => page(`- [${n}](/releases/x/): the notes.\n- [4.23.2](/releases/y/): older.`);
+  const recorded = hashes(list('4.23.2'), { hotloop: '4.23.2' });
+  const d = diff(recorded, currentHashes(page('- [4.24.0](/releases/x/): the notes.\n- [4.23.2](/releases/y/): older.\n- [4.23.1](/releases/z/): new line.'), fakeView('4.24.0', '2.16.6', '1.4.1'), recorded, { hotloop: '4.23.2' }));
+  // the 4.23.2 history line still matches (recorded versions), the new top line matches (token), the added line is the only change
+  assert.equal(d.changed.length, 1);
+  assert.equal(d.removed.length, 0);
+});
+
+test('a record made before versions were normalized still matches the English as written', () => {
+  const raw = hashes(flowPage('2.16.6'));
+  const d = diff(raw, currentHashes(flowPage('2.16.6'), fakeView('4.23.2', '2.16.6', '1.4.1'), raw, null));
+  assert.deepEqual([d.changed, d.removed], [[], []]);
 });
