@@ -37,6 +37,7 @@ import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
 import { oxfordHeadings } from './oxford.mjs';
 import { scan } from './forbidden.mjs';
+import { report as translationReport } from './i18n-source.mjs';
 import { applyLens } from './sales-lens.mjs';
 import { GLOBAL as LENS_GLOBAL, PAGE as LENS_PAGE, PRE as LENS_PRE } from './sales-lens-rules.mjs';
 import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS, CODESYS } from './sync-manifest.mjs';
@@ -588,6 +589,11 @@ const staleAssets = [];
   walkA(root);
 }
 
+// What src/content/docs holds after this run, for the translation check (scripts/i18n-source.mjs).
+function translationOverlay() {
+  return new Map([...out].filter(([k]) => k !== '__sync.json').map(([k, v]) => [`src/content/docs/${k}`, v]));
+}
+
 if (CHECK) {
   let drift = 0;
   for (const [k, v] of out) {
@@ -601,7 +607,10 @@ if (CHECK) {
     else if (!readFileSync(p).equals(v)) { console.log(`stale image  ${k}`); drift++; }
   }
   for (const p of staleAssets) { console.log(`stale image  ${relative(PUBLIC, p).split('\\').join('/')}`); drift++; }
+  // The translated pages, against the English this run would write.
+  const translated = translationReport(translationOverlay());
   if (drift) fail(`${drift} file(s) differ from a fresh sync. Run it and commit the result.`);
+  if (!translated) fail('a translated page is behind its English, or a link between translated pages is broken. See above; retranslate exactly those segments (README, Translations), then run this again.');
   log('sync-docs: committed pages match a fresh sync');
   process.exit(0);
 }
@@ -615,6 +624,9 @@ for (const [k, v] of out) {
   writeFileSync(p, v);
 }
 log2.forEach((l) => log(l));
+// A release changes the English, and a translation keeps the English it was made from. Name every translated page this run
+// left behind, with the segments, so the retranslation happens before the pull request and not after a red build.
+if (!translationReport(translationOverlay())) log('sync-docs: translated pages are behind this run. Retranslate exactly the segments listed above (README, Translations) before the pull request: the build fails until they are.');
 log(`sync-docs: wrote ${out.size - 1} pages, ${assets.size} images and src/data/sync.json, removed ${stale.length} stale, ${warnings.length} warning(s)`);
 const counts = meta.reduce((a, m) => ((a[m.status] = (a[m.status] || 0) + 1), a), {});
 log(`sync-docs: status ${JSON.stringify(counts)}`);

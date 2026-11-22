@@ -37,6 +37,7 @@ description: "HotLoop Transmitter パブリッシャーファンクションブ�
 | `uiMessageSize` | UINT | 直前のメッセージのバイト数 |
 | `diLastSocketResult` | UDINT | ソケット呼び出しで最後に返ったランタイムのエラーコード。0 は正常 |
 | `diLastClockResult` | UDINT | タイムスタンプのために PLC の時計を読んだ最後の結果。0 は正常。0 でないときは、タイムスタンプなしでメッセージが出ます |
+| `diLastClockResult` | UDINT | タイムスタンプのために PLC の時計を読んだ最後の結果。0 は正常。0 でないときは、タイムスタンプなしでメッセージが出ます |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | ブロックの直近の呼び出しで費やしたマイクロ秒と、有効化または `Clear()` 以降で最長の値 |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | 有効化または `Clear()` 以降で、メッセージ 1 つの組み立てに費やした最長時間と、送信呼び出し自体に費やした最長時間 |
 
