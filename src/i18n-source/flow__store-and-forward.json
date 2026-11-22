@@ -1,0 +1,19 @@
+{
+  "page": "flow/store-and-forward",
+  "english": "src/content/docs/flow/store-and-forward.md",
+  "langs": {
+    "es": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "fr": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "it": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "de": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "nb": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "bg": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "el": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "ko": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "ja": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "vi": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "hi": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "zh-hans": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"],
+    "ar": ["fcf999145633","aecda4da6cdd","14bb4488f855","6ba340beba15","c2147db5bc53","540ca83ff103","ecfc20ad98da","0728df78088c","a99ce21f3f0e"]
+  }
+}

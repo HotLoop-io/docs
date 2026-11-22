@@ -1,0 +1,19 @@
+{
+  "page": "flow/troubleshooting",
+  "english": "src/content/docs/flow/troubleshooting.md",
+  "langs": {
+    "es": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "fr": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "it": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "de": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "nb": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "bg": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "el": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "ko": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "ja": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "vi": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "hi": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "zh-hans": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"],
+    "ar": ["a0050be233c6","1ac57e0ab4a0","dd18de70c325","74a99c230383","86d9b37d4ecd","8d4a0afd5d50","8ce039d815a7","ee96e1d71f46","c6bcc4026f79","7023913fa30c","1a911743a2e3"]
+  }
+}
