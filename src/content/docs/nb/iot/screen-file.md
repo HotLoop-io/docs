@@ -45,7 +45,7 @@ UTF-8 JSON, opptil 4 MiB.
 
 **`exported`.** Hvilket produkt og hvilken versjon som skrev den, og når. For den som leser filen. Ingenting avgjøres ut fra den: korttypene avgjør om en HotLoop kan vise skjermen, og en ukjent korttype avvises med navn.
 
-**`screen`.** Dashbordet slik dashbord-API-et har det, uten installasjonens egen bokføring (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` utelates når den er tom. Kortene står i leserekkefølge, hvert med sin størrelse (`w` av 12 kolonner, `h` i rader) og sin `config`, nøyaktig slik [Dashbord](/nb/iot/dashboards/#the-cards) beskriver hver type. Oppsettet er det: en flyt av kort, aldri pikselkoordinater. Et symbolkort plasserer symbolene sine per piksel på sin egen side, inne i configen.
+**`screen`.** Dashbordet slik dashbord-API-et har det, uten installasjonens egen bokføring (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` utelates når den er tom. Kortene står i leserekkefølge, hvert med sin størrelse (`w` av 12 kolonner, `h` i rader) og sin `config`, nøyaktig slik [Dashbord](/nb/iot/dashboards/#kortene) beskriver hver type. Oppsettet er det: en flyt av kort, aldri pikselkoordinater. Et symbolkort plasserer symbolene sine per piksel på sin egen side, inne i configen.
 
 **Ressursene ligger inni.** En planløsning på et kartkort og bakgrunnen til et symbolkort er base64 PNG-data-URL-er i kortets `config`, så én fil er hele skjermen, og å sende den er å sende bildet også. Grensene er dashbordets: 700 KB per bilde og 2 MiB per skjerm.
 

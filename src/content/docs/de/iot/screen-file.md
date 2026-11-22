@@ -45,7 +45,7 @@ UTF-8-JSON, bis zu 4 MiB.
 
 **`exported`.** Welches Produkt und welche Version die Datei geschrieben hat, und wann. Für die Person, die die Datei liest. Daraus wird nichts entschieden: Die Kartentypen entscheiden, ob ein HotLoop den Bildschirm anzeigen kann, und ein unbekannter Kartentyp wird mit Namen abgelehnt.
 
-**`screen`.** Das Dashboard, wie es die Dashboard-API hält, ohne die eigene Buchführung der Installation (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` entfällt, wenn sie leer ist. Die Karten stehen in Leserichtung, jede mit ihrer Größe (`w` von 12 Spalten, `h` in Zeilen) und ihrem `config`, genau wie [Dashboards](/de/iot/dashboards/#the-cards) jeden Typ beschreibt. Das Layout ist das: ein Fluss von Karten, nie Pixelkoordinaten. Eine Symbolkarte setzt ihre Symbole pixelgenau auf ihrer eigenen Seite, innerhalb ihres Configs.
+**`screen`.** Das Dashboard, wie es die Dashboard-API hält, ohne die eigene Buchführung der Installation (`version`, `updatedBy`, `createdAt`, `updatedAt`). `description` entfällt, wenn sie leer ist. Die Karten stehen in Leserichtung, jede mit ihrer Größe (`w` von 12 Spalten, `h` in Zeilen) und ihrem `config`, genau wie [Dashboards](/de/iot/dashboards/#die-karten) jeden Typ beschreibt. Das Layout ist das: ein Fluss von Karten, nie Pixelkoordinaten. Eine Symbolkarte setzt ihre Symbole pixelgenau auf ihrer eigenen Seite, innerhalb ihres Configs.
 
 **Die Ressourcen sind enthalten.** Ein Grundriss auf einer Kartenkarte und der Hintergrund einer Symbolkarte sind Base64-PNG-Daten-URLs im `config` der Karte, eine Datei ist also der ganze Bildschirm, und sie zu senden heißt, auch das Bild zu senden. Die Grenzen sind die des Dashboards: 700 KB pro Bild und 2 MiB pro Bildschirm.
 
