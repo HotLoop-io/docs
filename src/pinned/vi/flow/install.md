@@ -1,0 +1,164 @@
+---
+title: "Cài đặt HotLoop Flow bằng Podman hoặc Helm"
+description: "Chạy HotLoop Flow {{flow}} bằng Podman hoặc Quadlet, trên Kubernetes bằng Helm, hoặc từ mã nguồn. Nó khởi động ở trạng thái khóa, nên hãy đặt mật khẩu quản trị."
+sidebar:
+  label: "Cài đặt"
+---
+
+HotLoop Flow {{flow}} là bản hiện hành. Nó được phát hành dưới dạng `ghcr.io/hotloop-io/hotloop-flow:{{flow}}`, một image cho amd64 và arm64 (image amd64 đo được 45.64 MB theo báo cáo của Podman ở 2.8.0), cùng một Helm chart và mã nguồn để bạn tự biên dịch. 2.9.0, 2.9.1, 2.10.0, 2.11.0, 2.12.0, 2.13.0, 2.14.0, 2.15.0, 2.16.0, 2.16.2, 2.16.3, 2.16.4, 2.16.5 và {{flow}} chỉ có amd64, còn 2.10.2, 2.11.1, 2.12.1, 2.13.1, 2.14.1, 2.15.1 và 2.16.1 được biên dịch cho cả amd64 và arm64 (2.10.1 có chart nhưng không có image, nên đừng bao giờ ghim vào nó), vì vậy một chiếc Pi hoặc máy arm64 đang giữ ở 2.13.1 có thể chuyển lên 2.16.1. Image là distroless, chạy bằng người dùng không phải root và không có shell, nên không có gì để chui vào, dù là cho bạn hay cho bất kỳ ai không nên ở đó. Trang này không có đường dùng Docker hay Compose: Podman cho một máy, Quadlet để biến nó thành dịch vụ, Helm cho một cụm.
+
+Flow khởi động ở trạng thái khóa. Nó từ chối chạy khi không có tài khoản quản trị, vì một luồng có thể chạy lệnh. Và nó từ chối chạy khi không có bí mật thông tin xác thực, thứ mã hóa mọi mật khẩu broker và cơ sở dữ liệu được lưu cùng các luồng của bạn. Mọi cách bên dưới đều đặt cả hai.
+
+Từ 2.2.0, ngữ cảnh và các đường nối bền vững nằm trong một tệp SQLite, `state.db`, trên volume dữ liệu, nên khởi động lại không còn xóa chúng. Hãy giữ volume đó. Khi `persistence.enabled` là false trong chart, nó còn sau khi container khởi động lại nhưng không còn sau khi thay pod.
+
+## Podman
+
+Hãy tạo hash mật khẩu trước. Image không có shell, nên việc băm là một lệnh con của chính tệp nhị phân, và nó từ chối mọi thứ dưới tám ký tự.
+
+```bash
+podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long'
+```
+
+Sau đó tạo bí mật thông tin xác thực và lưu nó ở nơi bạn vẫn tìm thấy sau một năm:
+
+```bash
+openssl rand -hex 32
+```
+
+Rồi chạy nó. Cả hai giá trị đều đặt trong dấu nháy đơn, vì hash bcrypt đầy ký hiệu đô la và nếu không shell của bạn sẽ nuốt chúng.
+
+```bash
+podman run -d --name hotloop-flow -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<the hash>' \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET='<the secret>' \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+Mở `http://localhost:1880/` và đăng nhập bằng `admin`. `/health` trả lời bằng phiên bản ngay khi tiến trình chạy, và `/ready` cho biết runtime đã thực sự khởi động hay chưa.
+
+Hãy giữ bí mật đó. Mọi thứ Flow mã hóa lên volume chỉ đọc được bằng nó. Tạo lại container với một bí mật khác thì mọi mật khẩu broker đã lưu đều mất, và nó trông y như một lần khởi động sạch cho đến khi MQTT ngừng xác thực.
+
+## Quadlet
+
+Dành cho dịch vụ khởi động khi bật máy và tự khởi động lại. Cần Podman 4.4 trở lên. Đặt các bí mật vào một tệp chỉ mình bạn đọc được:
+
+```bash
+mkdir -p ~/.config/hotloop-flow ~/.config/containers/systemd
+umask 077
+cat > ~/.config/hotloop-flow/hotloop-flow.env <<'EOF'
+HOTLOOP_FLOW_ADMIN_USER=admin
+HOTLOOP_FLOW_ADMIN_PASSWORD_HASH=<the hash>
+HOTLOOP_FLOW_CREDENTIAL_SECRET=<the secret>
+EOF
+```
+
+Sau đó mô tả container cho systemd. Lưu đoạn này thành `~/.config/containers/systemd/hotloop-flow.container`:
+
+```ini
+[Unit]
+Description=HotLoop Flow
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+ContainerName=hotloop-flow
+PublishPort=1880:1880
+Volume=hotloop-flow-data:/data
+EnvironmentFile=%h/.config/hotloop-flow/hotloop-flow.env
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+```
+
+```bash
+systemctl --user daemon-reload
+systemctl --user start hotloop-flow
+```
+
+Một dịch vụ người dùng chỉ khởi động khi bật máy, và chỉ tồn tại sau khi bạn đăng xuất, nếu lingering được bật cho tài khoản của bạn: `loginctl enable-linger`. Bỏ qua bước đó thì nó vẫn chạy tốt cho đến khi bạn đăng xuất hoặc máy khởi động lại.
+
+## Helm
+
+Chart chạy trên mọi Kubernetes, kể cả k3s.
+
+```bash
+helm repo add hotloop-flow https://hotloop.io/hotloop-flow/
+helm install line3-flows hotloop-flow/hotloop-flow
+```
+
+Chart tạo mật khẩu quản trị và bí mật thông tin xác thực ở lần cài đầu tiên, và đọc lại cả hai từ Secret hiện có ở mỗi lần nâng cấp, nên nâng cấp không bao giờ xoay bí mật dưới chân các thông tin xác thực đã lưu của bạn. Ghi chú cài đặt in ra cách đọc mật khẩu. Với bản phát hành ở trên:
+
+```bash
+kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base64 -d
+kubectl port-forward svc/line3-flows 1880:8080
+```
+
+Người dùng là `admin`. Trước 2.0.2, mật khẩu được tạo ra đó chưa bao giờ dùng được, vì hash mà ứng dụng kiểm tra được tạo từ một mật khẩu ngẫu nhiên khác với mật khẩu chart đã lưu. Nâng cấp một bản phát hành cài theo cách đó sẽ sửa nó tại chỗ, và cả mật khẩu lẫn bí mật thông tin xác thực đều không đổi.
+
+Một bản phát hành là một thể hiện, và chart cố ý ghim `replicaCount: 1`. Mỗi thể hiện giữ trạng thái luồng và các kết nối sống tới broker và PLC. Hai pod sau cùng một Service sẽ cùng đăng ký và cùng ghi, và InfluxDB sẽ lặng lẽ lưu mỗi số đọc hai lần. Để chạy nhiều hơn, hãy cài một bản phát hành khác với các luồng riêng. Hai bản phát hành cũng có thể chia sẻ một công việc, với một lease chỉ cho một bản ghi vào thiết bị tại một thời điểm: [chế độ chờ nóng với lease](/vi/flow/failover/).
+
+Nó cũng nhỏ có chủ ý. `resources.preset` mặc định là `small`, yêu cầu 10m CPU và 64Mi bộ nhớ. Tiến trình của Flow đo được 16.6 MiB thường trú khi nhàn rỗi, nên nó được lập lịch trên một nút biên còn dư 64Mi, nơi yêu cầu mặc định 512Mi của chart node-red sẽ nằm ở Pending.
+
+Pod chạy với uid 65532 trên hệ thống tệp gốc chỉ đọc, không nâng đặc quyền, seccomp `RuntimeDefault` và mọi capability của Linux bị bỏ, kể cả khi bật khám phá. Đến 2.0.4, chart thêm `NET_RAW` và `NET_ADMIN` mỗi khi khám phá bật, cho các lần quét ARP mà chưa ai từng viết. 2.0.5 đã dừng việc đó, và bạn không cần đổi gì trong những gì đã đặt.
+
+Chart có ba chế độ mạng:
+
+| Chế độ | Nó có gì | Số thể hiện mỗi nút |
+|---|---|---|
+| `cluster` | Một ClusterIP và mọi thứ cụm định tuyến. Là mặc định, và là câu trả lời đúng trừ khi bạn cần lớp 2. | Không giới hạn |
+| `host` | Các giao diện, bảng ARP và miền quảng bá của máy chủ. | Một, vì cổng thuộc về nút |
+| `macvlan` | MAC và IP riêng trên VLAN đích, nằm ngay trên phân đoạn có các PLC. Cần Multus. | Không giới hạn |
+
+`macvlan` là lý do các chế độ tồn tại, vì quét một mạng PLC từ một pod chỉ thấy những gì cụm định tuyến cho nó là vô nghĩa. Nó an toàn khi có nhiều thể hiện và nằm ngay trên phân đoạn đó, không đụng cổng vì mỗi thể hiện mang địa chỉ riêng. [README của Flow](https://github.com/HotLoop-io/hotloop-flow#deploying-on-kubernetes) mô tả đầy đủ các chế độ và các cấu hình tài nguyên đặt sẵn.
+
+:::note[Chart đã được chạy ở đâu]
+Chart đã được cài và thử trên một cụm k3s bốn nút, ở chế độ mạng `cluster` mặc định: đăng nhập, một luồng được triển khai qua API, luồng đó còn nguyên sau khi pod khởi động lại, nâng cấp, và một lần triển khai từ App Store của EmberNet qua Fleet. Các chế độ `host` và `macvlan` hiển thị được, qua lint và bị từ chối khi cấu hình sai, và đã chạy trên phần cứng thật (2026-11-17).
+:::
+
+## Một VLAN cho mỗi tab
+
+2.9.0 cho phép một tab, một luồng con hoặc một nút đơn gắn các kết nối của nó vào một giao diện mạng, để một Flow giữ một tab cho mỗi máy trên một thiết bị mà cổng duy nhất mang một VLAN cho từng máy, kể cả khi mọi VLAN có cùng mạng con và cùng địa chỉ thiết bị. Cách theo tab là biến môi trường `FLOW_NETWORK_INTERFACE` trên tab, và mọi nút client trên đó đều kế thừa. 2.9.1 thêm cùng trường này vào nút `modbus-server`, nên hai máy chủ có thể lắng nghe trên cùng địa chỉ và cổng, mỗi VLAN một cái.
+
+Pod phải thấy giao diện VLAN, nên hãy chạy nó với mạng của máy chủ: `network.mode: host` trong chart, hoặc `Network=host` trong một đơn vị Quadlet. Gắn socket vào giao diện không cần capability nào trên Linux 5.7 trở lên. Trên nhân cũ hơn thì cần `CAP_NET_RAW`, và giá trị chart `bindToInterface.netRaw` (mặc định `false`) thêm đúng capability đó và không gì khác. Việc này đã được chứng minh trong một phòng thí nghiệm gồm hai không gian tên mạng dùng chung `192.168.1.0/24`, và không có gì chạy trên mạng của nhà máy.
+
+## Từ App Store của EmberNet
+
+Bạn không cần điều này, và không có bước EmberNet nào ở bất cứ đâu để chạy Flow. Nhưng chart mang các nhãn mà App Store của EmberNet tìm, nên nếu bạn đã chạy EmberCORE, Flow có trong danh mục của nó và hiện ra thành một ô.
+
+Với một tenant trên cụm riêng, EmberCORE triển khai nó qua Fleet, cần EmberCORE 4.9.37 trở lên. Các phiên bản trước tạo ra một Fleet bundle không cài gì cả. Từ Flow 2.0.3, chart đặt các nhãn tenant của EmberCORE lên mọi thứ nó tạo.
+
+Từ 2.0.4, ô đã triển khai hiện đúng tên và biểu tượng. Pod và Service mang chú thích `embernet.ai/app-icon`, mặc định là biểu tượng riêng của chart, nên EmberCORE thôi đoán biểu tượng từ tên bản phát hành, điều chưa từng khớp. Đặt `embernet.appIcon` để dùng biểu tượng của bạn, và phục vụ nó kèm `Access-Control-Allow-Origin`, nếu không ô sẽ trống. Nhãn `embernet.ai/app-name` giờ là tên chart, không phải tên bản phát hành. Thể hiện vẫn nằm trong `app.kubernetes.io/instance` và tên Service, và không selector nào đổi, nên nâng cấp tại chỗ vẫn ổn.
+
+[Ghi chú phát hành](https://hotloop.io/releases/flow/) có mọi phiên bản về tận 0.1.0.
+
+## Từ mã nguồn
+
+Bạn cần Go và Node. Trình soạn thảo được biên dịch trước và nhúng vào tệp nhị phân bằng `go:embed`, nên một bản biên dịch Go thiếu nó sẽ lỗi vì thiếu mẫu, thay vì đưa cho bạn tệp nhị phân không có trình soạn thảo.
+
+```bash
+git clone https://github.com/HotLoop-io/hotloop-flow.git
+cd hotloop-flow
+(cd web && npm ci && npm run build)
+go build -o hotloop-flow ./cmd/hotloop-flow
+```
+
+Thư mục dữ liệu mặc định là `/data`, đúng trong container và có lẽ không phải điều bạn muốn trên laptop, nên hãy trỏ nó sang chỗ khác:
+
+```bash
+export HOTLOOP_FLOW_DATA_DIR=./data
+export HOTLOOP_FLOW_ADMIN_USER=admin
+export HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(./hotloop-flow hash-password -password 'something-long')"
+export HOTLOOP_FLOW_CREDENTIAL_SECRET='<the secret>'
+./hotloop-flow
+```
+
+## Nếu bạn đến từ Emberwire 0.1.0
+
+2.x là một lần cắt gọn có chủ ý: 0.1.0 không có người dùng nào để làm hỏng, và một lớp tương thích không có người dùng chỉ là chỗ cho lỗi trú ngụ. Các biến `EMBERWIRE_*` giờ là `HOTLOOP_FLOW_*`, hai loại nút cấu hình cơ sở dữ liệu là `hotloop-flow-influxdb` và `hotloop-flow-postgres`, mô-đun WASM xuất `hotloop_flow_*`, các chỉ số là `hotloop_flow_*`, và tiêu đề triển khai là `HotLoop-Flow-Deployment-Rev`.
+
+Tệp thông tin xác thực từ 0.1.0 không thể đọc được. Từ 2.0.1, Flow nói điều đó khi khởi động: nó nêu tên tệp, nói rằng Emberwire đã ghi nó, và yêu cầu bạn đặt nó sang một bên rồi nhập lại thông tin xác thực. Image 0.1.0 vẫn ở `ghcr.io/embernet-ai/emberwire:0.1.0`, và [ghi chú phát hành](https://hotloop.io/releases/flow/) liệt kê mọi lần đứt gãy.
