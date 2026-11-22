@@ -1,0 +1,48 @@
+---
+title: "Resumen de HotLoop Edge Relay"
+description: "Un nodo perimetral Sparkplug B sin interfaz. Sondea con los drivers del Gateway, reenvía y guarda en disco si cae el enlace. Sin base de datos ni UI."
+sidebar:
+  label: "Resumen"
+---
+
+El Edge Relay es el que no tiene interfaz. Se instala en una Pi o en un pequeño PC industrial junto a las máquinas, las sondea con los mismos drivers que usa el Gateway y reenvía cada lectura por Sparkplug B a un Gateway que esté en algún lugar con una base de datos de verdad. Cuando el enlace ascendente cae, encola en disco y reproduce cuando vuelve, de modo que el historian de arriba recibe la interrupción rellenada y no un hueco, siempre que la interrupción quepa en la cola, que por defecto está limitada a 64 MiB. Sin base de datos, sin interfaz web, sin usuarios, sin camino de escritura, y cada una de esas piezas que faltan es algo que no puede fallar a las 3 de la madrugada.
+
+La versión actual es la {{hotloop}}: `ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}`, compilada para amd64, arm64 y arm/v7 (una Pi 3 o una instalación de Pi OS de 32 bits es justo la caja en la que acaba un relay), de unos 15 MB, descargable sin iniciar sesión, y el chart `hotloop-edge-relay` de `https://hotloop.io/hotloop`. La 4.16.0 fue la primera versión que lo publicó, y arm/v7 llegó con la 4.18.10. Comparte número de versión con el Gateway, y una versión se niega a salir si los dos charts no llevan la versión de la etiqueta y la unidad Quadlet no sigue `:stable`. Así que el relay recibe una versión nueva en cada lanzamiento, haya cambiado su código o no. Hay un solo número de versión por el que preguntar, y un chart de relay nunca puede apuntar a una imagen que nadie publicó. [Instálelo](/es/edge-relay/install/).
+
+¿Va a actualizar un relay? [Actualizar desde la 4.17.0](/es/gateway/upgrading/#the-edge-relay-and-quadlet) y [actualizar desde la 4.16.0](/es/gateway/upgrading/#the-edge-relay) tienen la parte del relay.
+
+## Lo que no es
+
+**No es un Gateway más pequeño con las opciones desactivadas.** Es un binario distinto. Nunca enlaza la base de datos, la interfaz web y su autenticación, el motor de automatización, el registro de entidades ni MCP, y una prueba pregunta a `go list -deps` qué enlaza realmente el binario y falla si alguno se cuela a través de un paquete compartido. No hay un modo relay escondido en el Gateway, porque un modo es un interruptor, y un interruptor puede activarse por una mala variable de entorno en una caja que nadie vigila. Un paquete que nunca se enlazó no puede activarse.
+
+**No puede aceptar una escritura, servir una pantalla ni responder a un agente.** Las tres cosas necesitan una persona identificada a la que atribuir la acción, y esto no tiene usuarios en absoluto. Lee y reenvía, y ese es todo su trabajo.
+
+**No se puede configurar desde la red.** Los dispositivos y los tags salen de un único archivo JSON en la caja. La otra única vía de entrada es un archivo de dispositivos enviado desde el Gateway por la conexión al broker que el relay ya abre hacia fuera, y esa se aplica en vivo. El relay nunca escucha una configuración nueva.
+
+## Lo que hace
+
+- **Sondea** con el motor propio del Gateway: los mismos workers, la misma reconexión y espera progresiva, y los mismos drivers para OPC UA, Modbus, MQTT y Sparkplug B, EtherNet/IP, S7comm, MTConnect y HTTP. Desde la 4.18.10 también puede escuchar brokers MQTT que usted nombre en el archivo de dispositivos y leer lo que se anuncia allí (ESPHome, Zigbee2MQTT, Tasmota, Shelly), y nada de lo que descubre se puede armar, porque un relay no tiene camino de escritura alguno. Desde la 4.17.0 puede sondear también una consola UniFi, en solo lectura: los tags que declara su archivo de dispositivos y, del trabajo con clientes, solo los recuentos de clientes por red, sin vigilancia OT. Un fallo de driver corregido en el Gateway queda corregido aquí.
+- **Reenvía** como nodo perimetral Sparkplug B: nacimientos, números de secuencia y muertes como dice la especificación. Una reconexión anuncia el nodo una vez, no dos.
+- **Sobrevive a la caída del enlace.** Las lecturas se encolan en un único archivo en disco. Cuando el broker vuelve, la cola se vacía antes de que salga cualquier lectura en vivo, empezando por la más antigua, y cada una lleva la marca `is_historical` para que el host de arriba no confunda una reproducción con el valor actual del tag. La entrega es al menos una vez, así que quien la consuma debe tolerar un duplicado tras una caída a mitad de reproducción. La cola está limitada por defecto a 64 MiB, y pasado el límite las lecturas más antiguas se descartan y se cuentan. Son unas 248.000 lecturas, unos dos minutos a 2.000 lecturas por segundo, así que dimensiónela según su propio ritmo, unos 240 bytes por lectura con nombres de tag cortos (medido en la misma cola en Edge 4.21.1). Póngala en `0` y no tiene límite, y una interrupción lo bastante larga llena el volumen. [Instalación](/es/edge-relay/install/) dice cómo configurarla.
+- **Responde en dos endpoints de solo lectura** en el puerto 8081: `/healthz` (el proceso está activo) y `/status` (recuento de dispositivos por estado de conexión, número de tags, profundidad de la cola, protocolos compilados, si el broker está conectado, su versión, el digest de la imagen y el modo de actualización, y qué archivo de dispositivos está en uso y cuál se rechazó). Sin valores de tags, sin direcciones, sin configuración. Ambos son sin autenticación a propósito: no hay base de usuarios de la que colgar un inicio de sesión, y un token compartido no añadiría protección real. Manténgalos detrás del mismo perímetro que la caja.
+- **Recibe órdenes de un Gateway.** Registre un relay en la gestión de flota del Gateway (solo API, no hay pantalla de Flota) y el Gateway lo sigue por sus nacimientos y muertes, y puede enviarle un rebirth, un reinicio, un archivo de dispositivos nuevo o la aprobación de una actualización que está reteniendo. Un archivo de dispositivos enviado se aplica en vivo, sin reiniciar. Un reinicio es su propio comando, porque corta la sesión del relay con el broker y todas las sesiones de dispositivo que mantiene, y una caja que pasa meses en marcha no debería hacer eso para aceptar un cambio de configuración.
+
+## Quién puede darle órdenes
+
+Nada en el relay decide quién puede reiniciarlo o enviarle un archivo de dispositivos. Lo comprueba el Gateway en su API: `fleet.rebirth` para un rebirth, y `fleet.restart`, `fleet.update` y `fleet.config` para un reinicio, la aprobación de una actualización y un envío, todos solo para administradores. Pero las órdenes viajan por el broker, así que cualquier cosa que pueda publicar en el tópico NCMD de Sparkplug del relay o en `hotloop/edge-relay-config/#` puede hacer exactamente lo que hace el Gateway.
+
+Así que blinde el broker. Su ACL debe dejar que solo las credenciales del propio Gateway publiquen NCMD y el tópico de configuración. Y ponga TLS en el broker antes de enviar un archivo de dispositivos con contraseñas dentro: un envío se publica retenido, y cualquiera que pueda suscribirse a ese tópico puede leer todas las credenciales del archivo.
+
+## Hasta dónde se ha probado
+
+Edge Relay se ha ejecutado de punta a punta contra un broker Mosquitto real, con una lectura atravesando todo el binario y llegando a un suscriptor MQTT normal como un NDATA de Sparkplug B con el valor correcto. Las órdenes de flota y el envío de configuración, incluido un envío retenido antes de que el relay arrancara, se han ejecutado contra un broker real, y la aplicación en vivo se ha ejecutado contra dispositivos reales Modbus TCP y OPC UA: un envío añade un dispositivo, quita otro, cambia un tercero y deja en paz a un cuarto, sin NDEATH y sin sesión caída en el que no cambió. Un cambio aplicado mientras el broker está cortado y las lecturas se acumulan vacía luego toda la cola.
+
+También se han ejecutado las actualizaciones: la reversión de la unidad Quadlet y la retención opcional, con una actualización real retenida mientras el relay seguía sin tocarse, y luego aceptada tras aprobación. En Podman 4.9 la unidad tiene que indicar `--sdnotify=healthy` por sí misma, o una actualización muerta se notifica como correcta, y lo hace.
+
+Este binario se ha ejecutado en bare metal (2026-11-17). Sus drivers de OPC UA, Modbus, EtherNet/IP y S7comm son el mismo código que ejecuta el Gateway.
+
+¿Lo va a usar en una planta? [Usar HotLoop en una empresa](/es/business/) explica la licencia y cómo contactarnos.
+
+## Licencia
+
+El Edge Relay está bajo el HotLoop Source License Agreement 1.0, como todo producto HotLoop. Es gratuito y de código disponible, no de código abierto según la OSI, y cada versión se convierte a AGPL-3.0 o posterior cuatro años después de su lanzamiento. El uso doméstico y de laboratorio es gratuito, y también el de escuelas, organizaciones sin ánimo de lucro y organismos públicos para su propia actividad. [La página de licencia](/es/license/) tiene el texto.

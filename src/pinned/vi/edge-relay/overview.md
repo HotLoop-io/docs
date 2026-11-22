@@ -1,0 +1,48 @@
+---
+title: "Tổng quan về HotLoop Edge Relay"
+description: "Một nút biên Sparkplug B không có giao diện. Nó thăm dò bằng driver của Gateway, chuyển tiếp và đệm vào đĩa khi đường truyền rớt. Không có cơ sở dữ liệu hay UI."
+sidebar:
+  label: "Tổng quan"
+---
+
+Edge Relay là loại không có giao diện. Nó nằm trên một Pi hoặc một PC công nghiệp nhỏ cạnh các máy, thăm dò chúng bằng chính các driver mà Gateway dùng và chuyển tiếp mọi giá trị đọc qua Sparkplug B tới một Gateway ở đâu đó có cơ sở dữ liệu thật. Khi đường lên chết, nó xếp hàng vào đĩa và phát lại khi đường truyền trở lại, nên historian ở trên nhận được đoạn gián đoạn đã được lấp đầy thay vì một khoảng trống, miễn là đoạn gián đoạn vừa với hàng đợi, vốn giới hạn ở 64 MiB theo mặc định. Không có cơ sở dữ liệu, không có giao diện web, không có người dùng, không có đường ghi, và mỗi thứ còn thiếu đó là thứ không thể hỏng lúc 3 giờ sáng.
+
+Bản phát hành hiện tại là {{hotloop}}: `ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}`, build cho amd64, arm64 và arm/v7 (một Pi 3 hoặc bản cài Pi OS 32 bit đúng là chiếc hộp mà một relay cuối cùng nằm trên), khoảng 15 MB, tải về không cần đăng nhập, và chart `hotloop-edge-relay` từ `https://hotloop.io/hotloop`. 4.16.0 là bản phát hành đầu tiên đăng nó, và arm/v7 đến cùng 4.18.10. Nó dùng chung số phiên bản với Gateway, và một bản phát hành từ chối ra mắt nếu cả hai chart không mang phiên bản của tag và unit Quadlet không theo `:stable`. Vì vậy relay nhận phiên bản mới ở mỗi lần phát hành, dù mã của nó có đổi hay không. Chỉ có một số phiên bản để hỏi, và chart của relay không bao giờ có thể trỏ tới một image chưa ai đẩy lên. [Cài đặt nó](/vi/edge-relay/install/).
+
+Đang nâng cấp một relay? [Nâng cấp từ 4.17.0](/vi/gateway/upgrading/#the-edge-relay-and-quadlet) và [nâng cấp từ 4.16.0](/vi/gateway/upgrading/#the-edge-relay) có phần của relay.
+
+## Nó không phải là gì
+
+**Không phải một Gateway nhỏ hơn với các tùy chọn bị tắt.** Đó là một tệp nhị phân khác. Nó không bao giờ liên kết cơ sở dữ liệu, giao diện web cùng phần xác thực của nó, bộ máy tự động hóa, sổ đăng ký thực thể hay MCP, và một bài kiểm tra hỏi `go list -deps` xem tệp nhị phân thực sự liên kết gì và thất bại nếu có thứ nào lọt vào qua một gói dùng chung. Không có chế độ relay nào ẩn trong Gateway, vì chế độ là một công tắc, và công tắc có thể bị gạt bởi một biến môi trường sai trên chiếc hộp không ai trông chừng. Một gói chưa từng được liên kết thì không thể bật.
+
+**Không thể nhận một lệnh ghi, phục vụ một màn hình hay trả lời một tác nhân.** Cả ba đều cần một người đã đăng nhập để gán hành động cho, và thứ này hoàn toàn không có người dùng. Nó đọc và chuyển tiếp, đó là toàn bộ công việc.
+
+**Không mở cho việc cấu hình từ mạng.** Thiết bị và tag đến từ một tệp JSON trên hộp. Con đường vào khác duy nhất là một tệp thiết bị được đẩy từ Gateway qua kết nối broker mà relay vốn đã mở ra ngoài, và cái đó được áp dụng ngay. Relay không bao giờ lắng nghe cấu hình mới.
+
+## Nó làm gì
+
+- **Thăm dò** bằng chính bộ máy của Gateway: cùng các worker, cùng cơ chế kết nối lại và lùi thời gian, và cùng các driver cho OPC UA, Modbus, MQTT và Sparkplug B, EtherNet/IP, S7comm, MTConnect và HTTP. Từ 4.18.10 nó cũng có thể lắng nghe các broker MQTT bạn nêu tên trong tệp thiết bị và đọc những gì tự thông báo ở đó (ESPHome, Zigbee2MQTT, Tasmota, Shelly), và không thứ nào nó khám phá được có thể kích hoạt, vì relay hoàn toàn không có đường ghi. Từ 4.17.0 nó cũng có thể thăm dò một bảng điều khiển UniFi, chỉ đọc: các tag mà tệp thiết bị của nó khai báo, và trong phần việc về máy khách chỉ có số lượng máy khách theo từng mạng, không có giám sát OT. Một lỗi driver đã sửa trong Gateway cũng được sửa ở đây.
+- **Chuyển tiếp** như một nút biên Sparkplug B: birth, số thứ tự và death đúng như đặc tả nói. Một lần kết nối lại thông báo nút một lần, không phải hai.
+- **Sống sót khi đường truyền chết.** Các giá trị đọc xếp hàng vào một tệp duy nhất trên đĩa. Khi broker trở lại, hàng đợi được xả trước khi bất kỳ giá trị trực tiếp nào đi ra, cái cũ nhất trước, mỗi cái được đánh dấu `is_historical` để máy chủ ở trên không nhầm một lần phát lại với giá trị hiện tại của tag. Việc giao là ít nhất một lần, nên thứ tiêu thụ nó phải chịu được một bản trùng sau khi sự cố giữa lúc phát lại. Hàng đợi mặc định giới hạn 64 MiB, và vượt giới hạn thì các giá trị cũ nhất bị bỏ và được đếm. Đó là khoảng 248.000 giá trị đọc, khoảng hai phút ở 2.000 giá trị mỗi giây, nên hãy chọn cỡ theo tốc độ của chính bạn, khoảng 240 byte mỗi giá trị với tên tag ngắn (đo trên cùng hàng đợi đó trong Edge 4.21.1). Đặt `0` thì không giới hạn, và một đợt gián đoạn đủ dài sẽ làm đầy volume. [Cài đặt](/vi/edge-relay/install/) nói cách đặt.
+- **Trả lời hai điểm cuối chỉ đọc** trên cổng 8081: `/healthz` (tiến trình đang chạy) và `/status` (số thiết bị theo trạng thái kết nối, số tag, độ sâu hàng đợi, các giao thức được biên dịch sẵn, broker có đang kết nối không, phiên bản, digest image và chế độ cập nhật, cùng tệp thiết bị nào đang chạy và tệp nào bị từ chối). Không có giá trị tag, không có địa chỉ, không có cấu hình. Cả hai đều không xác thực, có chủ ý: không có cơ sở dữ liệu người dùng để gắn một lần đăng nhập, và một token dùng chung không thêm bảo vệ thực sự nào. Hãy đặt chúng sau cùng vành đai với chiếc hộp.
+- **Nhận lệnh từ một Gateway.** Đăng ký một relay vào phần quản lý đội thiết bị của Gateway (chỉ API, không có màn hình Đội thiết bị) và Gateway theo dõi nó qua các birth và death của nó, và có thể gửi cho nó một rebirth, một lần khởi động lại, một tệp thiết bị mới hoặc sự chấp thuận cho một bản cập nhật mà nó đang giữ. Tệp thiết bị được đẩy sẽ áp dụng ngay, không cần khởi động lại. Khởi động lại là một lệnh riêng, vì nó làm rớt phiên broker của relay và mọi phiên thiết bị nó đang giữ, và một chiếc hộp chạy hàng tháng không nên làm vậy chỉ để nhận một thay đổi cấu hình.
+
+## Ai được ra lệnh cho nó
+
+Không có gì trên relay quyết định ai được khởi động lại nó hay đẩy cho nó một tệp thiết bị. Gateway kiểm tra tại API của mình: `fleet.rebirth` cho rebirth, và `fleet.restart`, `fleet.update` và `fleet.config` cho khởi động lại, chấp thuận cập nhật và đẩy cấu hình, tất cả chỉ dành cho quản trị viên. Nhưng các lệnh đi qua broker, nên bất cứ thứ gì có thể đăng lên topic Sparkplug NCMD của relay hoặc lên `hotloop/edge-relay-config/#` đều làm được đúng những gì Gateway làm.
+
+Vì vậy hãy khóa broker lại. ACL của nó chỉ nên cho thông tin xác thực của chính Gateway đăng NCMD và topic cấu hình. Và hãy bật TLS trên broker trước khi đẩy một tệp thiết bị có mật khẩu bên trong: một lần đẩy được đăng ở dạng retained, và bất kỳ ai đăng ký được topic đó đều đọc được mọi thông tin xác thực trong tệp.
+
+## Đã được chứng minh đến đâu
+
+Edge Relay đã được chạy từ đầu đến cuối với một broker Mosquitto thật, với một giá trị đọc đi qua toàn bộ tệp nhị phân và đến một bên đăng ký MQTT thông thường dưới dạng Sparkplug B NDATA có giá trị đúng. Các lệnh đội thiết bị và việc đẩy cấu hình, gồm cả một lần đẩy retained trước khi relay kịp khởi động, đã được chạy với một broker thật, và việc áp dụng trực tiếp đã được chạy với các thiết bị Modbus TCP và OPC UA thật: một lần đẩy thêm một thiết bị, bỏ một thiết bị, đổi một thiết bị khác và để yên thiết bị thứ tư, không có NDEATH và không rớt phiên ở thiết bị không đổi. Một thay đổi được áp dụng khi broker bị cắt và các giá trị đọc dồn lại sẽ xả toàn bộ hàng đợi sau đó.
+
+Các bản cập nhật cũng đã được chạy: việc quay lui của unit Quadlet và tùy chọn giữ lại, với một bản cập nhật thật bị giữ trong khi relay chạy không bị đụng tới, rồi được nhận sau khi chấp thuận. Trên Podman 4.9, unit phải tự nói `--sdnotify=healthy`, nếu không một bản cập nhật chết sẽ bị báo là thành công, và nó có nói.
+
+Tệp nhị phân này đã được chạy trên máy vật lý (2026-11-17). Các driver OPC UA, Modbus, EtherNet/IP và S7comm của nó là cùng mã mà Gateway chạy.
+
+Dùng nó ở nhà máy? [Dùng HotLoop trong doanh nghiệp](/vi/business/) nói về giấy phép và cách liên hệ với chúng tôi.
+
+## Giấy phép
+
+Edge Relay theo HotLoop Source License Agreement 1.0, như mọi sản phẩm HotLoop. Nó miễn phí và có mã nguồn để xem, không phải mã nguồn mở theo OSI, và mỗi phiên bản chuyển sang AGPL-3.0 hoặc mới hơn bốn năm sau khi phát hành. Dùng tại nhà và trong phòng thí nghiệm là miễn phí, cũng như việc trường học, tổ chức phi lợi nhuận và cơ quan nhà nước dùng cho hoạt động của chính họ. [Trang giấy phép](/vi/license/) có nội dung đầy đủ.
