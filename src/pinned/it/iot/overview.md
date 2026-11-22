@@ -1,0 +1,41 @@
+---
+title: "Panoramica di HotLoop IoT"
+description: "HotLoop IoT è la base di automazione: entità, automazioni, dashboard, allarmi, discovery MQTT e ogni driver di protocollo, in Go, su SQLite o PostgreSQL."
+sidebar:
+  label: "Panoramica"
+---
+
+:::note[IoT è disponibile, dalla versione 4.18.10]
+L'immagine è `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, compilata per amd64, arm64 e arm/v7, circa 31 MB su amd64 e 29 MB su un Pi, e il chart è `hotloop-iot` da `https://hotloop.io/hotloop`. Entrambi si scaricano senza accesso. Le unità Quadlet sono nella directory `iot/` di [Podman Quadlet](/it/install/quadlet/). [Installalo](/it/iot/install/). Le pagine di questa sezione dicono con che cosa è stata provata ogni funzione, e dove una pagina segue `main` e non la release, lo dicono.
+:::
+
+IoT è la base su cui sono costruiti Edge e il Gateway. Se la scatola che avete davanti è un Pi, un NUC in uno sgabuzzino, un insieme di prese e sensori smart o un PLC su un banco, questo è il prodotto giusto. È l'immagine più piccola dei tre prodotti completi, e porta comunque tutto ciò che rende utile HotLoop: le entità, le regole, gli allarmi e l'unica porta di scrittura che nulla aggira.
+
+Un prodotto più grande non gli toglie mai nulla. [Edge](/it/edge/overview/) è IoT più il livello macchina. Il [Gateway](/it/gateway/overview/) è Edge più il livello di sito. Tutto ciò che sta in queste pagine è in entrambi.
+
+## Che cosa ha IoT
+
+- **Entità e albero delle apparecchiature.** Ogni tag ottiene un'entità con un id che non cambia mai, appesa a un unico albero ISA-95. [Entità](/it/iot/entities/), [l'albero delle apparecchiature](/it/iot/equipment/).
+- **Automazioni, blueprint, script e ricette.** Regole compilate al salvataggio, sequenze con nome e insiemi di setpoint che passano dalla porta di scrittura. [Automazioni](/it/iot/automations/), [blueprint](/it/iot/blueprints/), [script](/it/iot/scripts/), [ricette](/it/iot/recipes/).
+- **Helper, registro e sole.** I valori che appartengono alle vostre persone, un'unica cronologia di tutto ciò che è successo e l'alba calcolata sulla scatola. [Helper](/it/iot/helpers/), [registro](/it/iot/logbook/), [il sole](/it/iot/sun/).
+- **Dashboard, notifiche e MCP.** Schermate costruite per ruolo, allarmi che chiamano un telefono e un agente che può leggere l'impianto e toccare solo ciò che avete armato. [Dashboard](/it/iot/dashboards/), [notifiche](/it/iot/notifications/), [MCP](/it/iot/mcp/).
+- **Ogni driver di protocollo (compreso un runtime CODESYS per nome di simbolo e OPC UA PubSub su UADP), MQTT con discovery e un broker incorporato.** [Protocolli](/it/iot/protocols/), [il broker](/it/iot/broker/), [discovery MQTT](/it/iot/mqtt-discovery/), [discovery di rete](/it/iot/network-discovery/).
+- **UniFi, in sola lettura finché non armate un comando,** e **lo storico scritto nel vostro database o in un broker Kafka.** UniFi legge la rete, e i pochi punti che sono comandi (un LED di localizzazione, un riavvio, un ciclo di alimentazione PoE, l'accensione o lo spegnimento di una rete wireless, il blocco di un client) non fanno nulla finché qualcuno non segna quel tag come scrivibile. [UniFi](/it/iot/unifi/), [destinazioni dello storico](/it/iot/historian-targets/).
+- **Meteo, energia, schermate che viaggiano e altre tredici lingue.** Una stazione sul tetto è un'entità. Un contatore è un tag letto come energia consumata, conservata in intervalli da 15 minuti con una tariffa e una penale di potenza. Un dashboard si esporta in un file e si importa in un'altra installazione, e una visualizzazione CODESYS si importa come schermata. L'interfaccia web parla inglese e altre tredici lingue. [Energia](/it/iot/energy/), [meteo](/it/iot/weather/), [file di schermata](/it/iot/screen-file/), [schermate CODESYS](/it/iot/codesys-screen-import/), [lingue](/it/iot/languages/).
+- **Utenti, backup e migrazioni che aggiungono soltanto.** [Autenticazione](/it/iot/authentication/), [backup](/it/iot/backup/), [migrazioni](/it/iot/migrations/) e [l'API HTTP](/it/iot/api/).
+
+[La porta di scrittura](/it/gateway/write-gate/) è la pagina da leggere prima che un impianto vero veda qualsiasi cosa di tutto questo. Vale per ogni prodotto.
+
+## Che cosa non ha
+
+Niente server OPC UA, niente pubblicazione Sparkplug con store and forward, niente flotta, niente multi-sito, niente report pianificati. In IoT non sono disattivati, non sono nel binario, quindi nessuna variabile d'ambiente e nessuna giornata storta può accenderli. L'API mantiene comunque ogni route, e una route per qualcosa che IoT non ha risponde `404` e indica il prodotto che ce l'ha.
+
+## Database
+
+SQLite o PostgreSQL. Il chart e le unità Quadlet usano PostgreSQL 17 per impostazione predefinita, con 30 giorni di storico, e `HOTLOOP_DB_TYPE=sqlite` mette tutto su un file senza alcun contenitore di database. Nel chart è `database.type`, e chiedere `timescaledb` al chart di IoT fa fallire l'installazione. Passare a un altro database significa backup e ripristino. [La gamma](/it/products/) ha la tabella e [Backup](/it/iot/backup/) ha il ripristino.
+
+## Installarlo
+
+Helm o Podman Quadlet, le stesse due strade del resto della gamma, e [la pagina di installazione di IoT](/it/iot/install/) ha i comandi per entrambe. Le scatole seguono `:stable` e si aggiornano da sole, e [quella pagina](/it/install/auto-update/) dice che cosa succede quando un aggiornamento non riesce a partire.
+
+Lo usate in uno stabilimento? [Usare HotLoop in un'azienda](/it/business/) spiega la licenza e come contattarci.

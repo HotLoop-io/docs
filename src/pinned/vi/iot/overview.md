@@ -1,0 +1,41 @@
+---
+title: "Tổng quan về HotLoop IoT"
+description: "HotLoop IoT là nền tảng tự động hóa: thực thể, tự động hóa, bảng điều khiển, báo động, MQTT và mọi driver, viết bằng Go, chạy trên SQLite hoặc PostgreSQL."
+sidebar:
+  label: "Tổng quan"
+---
+
+:::note[IoT đã ra mắt, lần đầu trong 4.18.10]
+Image là `ghcr.io/hotloop-io/hotloop-iot:{{hotloop}}`, build cho amd64, arm64 và arm/v7, khoảng 31 MB trên amd64 và 29 MB trên Pi, còn chart là `hotloop-iot` từ `https://hotloop.io/hotloop`. Cả hai đều tải về không cần đăng nhập. Các unit Quadlet nằm trong thư mục `iot/` của [Podman Quadlet](/vi/install/quadlet/). [Cài đặt nó](/vi/iot/install/). Các trang trong phần này nói từng tính năng đã được chạy với cái gì, và khi một trang theo `main` chứ không theo bản phát hành, chúng cũng nói rõ.
+:::
+
+IoT là nền tảng mà Edge và Gateway được xây trên đó. Nếu chiếc hộp trước mặt bạn là một Pi, một NUC trong tủ, một dãy ổ cắm và cảm biến thông minh hay một PLC trên bàn thử, thì đây là sản phẩm dành cho bạn. Đây là image nhỏ nhất trong ba sản phẩm đầy đủ, và nó vẫn mang mọi thứ làm HotLoop hữu ích: các thực thể, các quy tắc, các báo động và một cổng ghi duy nhất mà không gì lách qua được.
+
+Sản phẩm lớn hơn không bao giờ lấy đi thứ gì của nó. [Edge](/vi/edge/overview/) là IoT cộng với lớp máy. [Gateway](/vi/gateway/overview/) là Edge cộng với lớp địa điểm. Mọi thứ trên các trang này đều có trong cả hai.
+
+## IoT có gì
+
+- **Thực thể và cây thiết bị.** Mỗi tag có một thực thể với id không bao giờ đổi, treo trên một cây ISA-95. [Thực thể](/vi/iot/entities/), [cây thiết bị](/vi/iot/equipment/).
+- **Tự động hóa, bản mẫu, script và công thức.** Các quy tắc được biên dịch khi bạn lưu, các chuỗi có tên và bộ giá trị đặt đi qua cổng ghi. [Tự động hóa](/vi/iot/automations/), [bản mẫu](/vi/iot/blueprints/), [script](/vi/iot/scripts/), [công thức](/vi/iot/recipes/).
+- **Trợ thủ, nhật ký và mặt trời.** Những giá trị thuộc về người của bạn, một dòng thời gian cho mọi thứ đã xảy ra và giờ mặt trời mọc được tính ngay trên hộp. [Trợ thủ](/vi/iot/helpers/), [nhật ký](/vi/iot/logbook/), [mặt trời](/vi/iot/sun/).
+- **Bảng điều khiển, thông báo và MCP.** Màn hình dựng theo vai trò, báo động gọi điện thoại và một tác nhân có thể đọc nhà máy và chỉ chạm vào những gì bạn đã kích hoạt. [Bảng điều khiển](/vi/iot/dashboards/), [thông báo](/vi/iot/notifications/), [MCP](/vi/iot/mcp/).
+- **Mọi driver giao thức (gồm runtime CODESYS theo tên ký hiệu và OPC UA PubSub trên UADP), MQTT có khám phá và một broker nhúng.** [Giao thức](/vi/iot/protocols/), [broker](/vi/iot/broker/), [khám phá MQTT](/vi/iot/mqtt-discovery/), [khám phá mạng](/vi/iot/network-discovery/).
+- **UniFi, chỉ đọc cho đến khi bạn kích hoạt một lệnh,** và **lịch sử được ghi ra cơ sở dữ liệu của chính bạn hoặc ra một broker Kafka.** UniFi đọc mạng, và vài điểm là lệnh (đèn LED định vị, khởi động lại, chu kỳ cấp điện PoE, bật hoặc tắt một mạng không dây, chặn một máy khách) không làm gì cho đến khi ai đó đánh dấu tag đó là ghi được. [UniFi](/vi/iot/unifi/), [đích của historian](/vi/iot/historian-targets/).
+- **Thời tiết, năng lượng, màn hình đi theo bạn và thêm mười ba ngôn ngữ.** Một trạm trên mái là một thực thể. Một đồng hồ đo là một tag được đọc như năng lượng đã dùng, lưu theo từng khoảng 15 phút kèm biểu giá và phí nhu cầu. Một bảng điều khiển xuất ra một tệp và nhập vào bản cài khác, còn một màn hình trực quan CODESYS được nhập thành màn hình. Giao diện web nói tiếng Anh và thêm mười ba ngôn ngữ. [Năng lượng](/vi/iot/energy/), [thời tiết](/vi/iot/weather/), [tệp màn hình](/vi/iot/screen-file/), [màn hình CODESYS](/vi/iot/codesys-screen-import/), [ngôn ngữ](/vi/iot/languages/).
+- **Người dùng, sao lưu và các lần di chuyển chỉ thêm vào.** [Xác thực](/vi/iot/authentication/), [sao lưu](/vi/iot/backup/), [di chuyển](/vi/iot/migrations/) và [HTTP API](/vi/iot/api/).
+
+[Cổng ghi](/vi/gateway/write-gate/) là một trang cần đọc trước khi một nhà máy thật nhìn thấy bất cứ thứ gì trong số này. Nó áp dụng cho mọi sản phẩm.
+
+## Những gì nó không có
+
+Không có máy chủ OPC UA, không có phát hành Sparkplug kèm lưu và chuyển tiếp, không có đội thiết bị, không có nhiều địa điểm, không có báo cáo theo lịch. Trong IoT chúng không bị tắt, chúng không có trong tệp nhị phân, nên không biến môi trường nào và không ngày xui xẻo nào có thể bật chúng. API vẫn giữ mọi tuyến, và một tuyến cho thứ IoT không có sẽ trả `404` và nêu tên sản phẩm có nó.
+
+## Cơ sở dữ liệu
+
+SQLite hoặc PostgreSQL. Chart và các unit Quadlet chạy PostgreSQL 17 theo mặc định, giữ 30 ngày lịch sử, và `HOTLOOP_DB_TYPE=sqlite` đặt toàn bộ lên một tệp, không cần container cơ sở dữ liệu nào. Trong chart đó là `database.type`, và yêu cầu chart IoT dùng `timescaledb` sẽ làm cài đặt thất bại. Chuyển sang cơ sở dữ liệu khác là sao lưu rồi khôi phục. [Dòng sản phẩm](/vi/products/) có bảng, và [Sao lưu](/vi/iot/backup/) có phần khôi phục.
+
+## Cài đặt
+
+Helm hoặc Podman Quadlet, hai cách giống phần còn lại của dòng sản phẩm, và [trang cài đặt IoT](/vi/iot/install/) có lệnh cho cả hai. Các hộp theo `:stable` và tự cập nhật, và [trang đó](/vi/install/auto-update/) nói điều gì xảy ra khi một bản cập nhật không khởi động được.
+
+Dùng nó ở nhà máy? [Dùng HotLoop trong doanh nghiệp](/vi/business/) nói về giấy phép và cách liên hệ với chúng tôi.
