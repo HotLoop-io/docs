@@ -1,0 +1,34 @@
+{
+  "page": "releases/hotloop-4-19-8",
+  "english": "src/content/docs/releases/hotloop-4-19-8.md",
+  "langs": {
+    "es": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "fr": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "it": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "de": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "nb": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "bg": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "el": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "ko": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "ja": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "vi": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "hi": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "zh-hans": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"],
+    "ar": ["7f513553ed4e","514cc511796c","1952134d4b76","89a332ffcc7d","5644cacdbda2","90aa8b07ac01","136268815f34","3ecbc90fc2a4","a867bcb2ae1f","e2fd55096a60","c8c4f5a9c0d9","00afaed120cf","33ed7b0a5b60","77e4eef9f006","4ea3e288ba1d","c217f9d09fac","780fabb7a64d","e44933a4ec8f","1266349b780a"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"}
+  }
+}
