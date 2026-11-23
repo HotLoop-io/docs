@@ -1,0 +1,23 @@
+---
+title: "Notes de HotLoop for CODESYS 0.3.0"
+description: "Le premier chart publié de HotLoop for CODESYS : ce qu'il contient, ce qu'il enveloppe et jusqu'où il a été exécuté."
+sidebar:
+  label: "0.3.0"
+---
+
+## Ce dont il s'agit
+
+0.3.0 est le premier chart de HotLoop for CODESYS dans l'index `{{codesysChartRepo}}`, publié le 2026-11-05 : HotLoop Edge à côté d'un runtime CODESYS, configuré depuis un profil sans que personne ne clique. Il enveloppe HotLoop 4.19.4 et exécute le provisioner 0.3.0. [0.3.1](/fr/releases/codesys-0-3-1/) est arrivé le même jour et c'est celui à installer.
+
+- **Un chart qui enveloppe HotLoop Edge**, avec des valeurs par défaut pour un runtime sur le même noeud : SQLite sur le stockage propre du noeud, pas de pod de base de données, un réplica, et le serveur OPC UA, le broker, la publication Edge et les sauvegardes désactivés.
+- **Un provisioner**, un binaire Go statique et une image publique, qui lit un [profil](/fr/codesys/profile/) (l'appareil, les variables à conserver, les alarmes et un écran) et configure tout dès que le runtime de l'automate répond. Il regarde de nouveau toutes les cinq minutes.
+- **Une liste d'appareils dans un profil.** Un profil peut porter des `devices`, de n'importe quel protocole que HotLoop parle, si bien qu'un écouteur OPC UA PubSub revient configuré sans qu'aucun automate soit nécessaire. Un profil avec un seul `device` se lit exactement comme avant.
+- **Un automate qui change est suivi.** Une variable que le profil énumère et que l'automate a gagnée depuis est ajoutée. Une que l'automate a perdue se lit comme mauvaise avec la raison du serveur. L'écran et les alarmes ne sont remplacés que lorsque la révision du profil est plus élevée.
+- **Rien n'écrit dans l'automate.** Chaque tag que le provisioner configure est en lecture seule.
+- **Les deux pods tolèrent un noeud injoignable ou pas prêt** sans limite de durée.
+- **hostNetwork**, désactivé par défaut, pour un pod qui doit entendre le multicast d'un éditeur sur les cartes propres du noeud.
+- **La connexion depuis le tableau de bord EmberCORE** vient de la connexion 4.19 du chart Edge, et ce chart en hérite.
+
+## Jusqu'où il a été exécuté
+
+Il a été exécuté sur du matériel réel (2026-11-17). [Où il en est](/fr/codesys/where-it-stands/) dit contre quoi il a été exécuté.

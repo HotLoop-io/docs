@@ -1,0 +1,18 @@
+---
+title: "Notas de versión: HotLoop for CODESYS 0.3.3"
+description: "Chart 0.3.3 de HotLoop for CODESYS: envuelve HotLoop 4.20.0, de modo que la nueva interfaz web y las herramientas MCP llegan a los testers."
+sidebar:
+  label: "0.3.3"
+---
+
+## Qué cambió
+
+0.3.3 está en el índice `{{codesysChartRepo}}`, publicada el 2026-11-15. El provisioner es el mismo que ejecutaba 0.3.2.
+
+- **Envuelve HotLoop 4.20.0.** La nueva interfaz web es la página en `/`, y un agente puede cambiar todo lo que puede leer a través de MCP, detrás de la puerta de escritura.
+
+Lo que esto significa para usted: una caja en 0.3.3 obtiene la nueva interfaz y las herramientas MCP con una actualización del chart y nada más.
+
+## Qué se comprobó
+
+Una actualización desde 0.3.1 con un perfil aplicado a 0.3.3, junto a un runtime CODESYS Control for Linux SL 4.22.0.0: arrancó un pod nuevo en 4.20.0, los dispositivos y sus 2232 tags seguían allí, y los oyentes volvieron a conectar. Se ha ejecutado en hardware real (2026-11-17).

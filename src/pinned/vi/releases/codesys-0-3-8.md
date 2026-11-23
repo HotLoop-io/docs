@@ -1,0 +1,19 @@
+---
+title: "Ghi chú phát hành HotLoop for CODESYS 0.3.8"
+description: "Chart 0.3.8 của HotLoop for CODESYS: image provisioner nó chạy là 0.3.3, build cho amd64 và arm64."
+sidebar:
+  label: "0.3.8"
+---
+
+## Có gì thay đổi
+
+0.3.8 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-19.
+
+- **Nó chạy provisioner 0.3.3,** image provisioner đầu tiên build cho amd64 và arm64, nên chart cài được trên nút arm64.
+- **Không có gì khác thay đổi.** Các template, các giá trị và HotLoop mà nó bao bọc (4.22.0) là của [0.3.7](/vi/releases/codesys-0-3-7/).
+
+Điều này có nghĩa với bạn: hãy cài bản này. Trên nút amd64 không có gì khác.
+
+## Đã kiểm tra những gì
+
+Các giá trị của chart đã công bố đọc provisioner 0.3.3 và HotLoop 4.22.0, và chỉ mục image 0.3.3 liệt kê amd64 và arm64. Chart không được cài lại trên cụm cho bản phát hành này, vì chỉ có tag image dịch chuyển.

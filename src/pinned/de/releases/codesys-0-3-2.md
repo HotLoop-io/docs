@@ -1,0 +1,21 @@
+---
+title: "Versionshinweise: HotLoop for CODESYS 0.3.2"
+description: "Chart 0.3.2 von HotLoop for CODESYS: umhüllt HotLoop 4.19.11, und HotLoop nutzt Port 8090, um neben einer Runtime im Netz des Nodes zu laufen."
+sidebar:
+  label: "0.3.2"
+---
+
+## Was sich geändert hat
+
+0.3.2 steht im Index `{{codesysChartRepo}}`, veröffentlicht am 2026-11-15, und das Provisioner-Image, das es ausführt, lässt sich ohne Anmeldung ziehen. Nichts darin schreibt in die SPS.
+
+- **Es umhüllt HotLoop 4.19.11** und führt den Provisioner 0.3.1 aus.
+- **Die Seite von HotLoop lauscht im Pod auf 8090.** Eine Runtime im Netz des Nodes belegt Host-Port 8080, und der Scheduler weigerte sich, die Seite von HotLoop daneben zu platzieren. Der Service bleibt auf 8080, sodass die App-Store-Kachel und der Provisioner HotLoop wie zuvor erreichen. Alles, was direkt mit dem Pod auf 8080 sprach, wechselt auf 8090.
+- **Der Provisioner weist ein Profil ab, das zwei OPC-UA-PubSub-Listener auf einen UDP-Port legt.** HotLoop bindet einen Port exklusiv, daher blieb das zweite Gerät mit "address already in use" im Verbinden. Jetzt sagt der Provisioner das gleich zu Beginn.
+- **Jedes frühere Chart bleibt im Index.**
+
+Was das für Sie bedeutet: Eine CODESYS-Runtime im eigenen Netz des Nodes und HotLoop laufen nebeneinander auf einem Node.
+
+## Was geprüft wurde
+
+Das Chart lässt sich mit Helm aus dem Live-Index rendern, und es wurde auf Bare Metal ausgeführt (2026-11-17). [Wo es steht](/de/codesys/where-it-stands/) sagt, wogegen es ausgeführt wurde.

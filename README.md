@@ -33,6 +33,8 @@ Each product's release checklist has a step that points here: run the sync, read
 
 The sync ends by checking the translations (next section). If it lists stale pages, retranslate exactly those segments with the builder before the pull request. The build fails on a stale translated page, so it cannot merge, and a language page never says something the English page stopped saying.
 
+**A new release page carries its 13 translations in the same pull request.** The sync writes `releases/<product>-<version>.md` in English, and the sync and the build fail with `needs its 13 translations` until `es fr it de nb bg el ko ja vi hi zh-hans ar` have it too. Translate it with the builder below (`skeleton.mjs releases/<product>-<version>`, which carries over every line the repo already has in 13 languages, then `put.mjs` or `fill.mjs`, then `build.mjs`). hotloop.io already holds the same release in 13 languages, so read its entry in `src/content/releases-i18n/` first and keep the same words.
+
 ## Translations
 
 English plus thirteen languages (es fr it de nb bg el ko ja vi hi zh-hans ar). A page is translated in all thirteen or not at all, and a page that is not translated is served in English under the language folder, with a notice, noindex, out of the sitemap and out of every hreflang list (`src/routeData.ts`).
@@ -52,6 +54,8 @@ English plus thirteen languages (es fr it de nb bg el ko ja vi hi zh-hans ar). A
 1. `node resync.mjs <page>` rewrites `tr/<page>/<lang>.txt`: every segment that did not change keeps its translation, every changed or new one becomes a `@@RETRANSLATE@@ <English>` line, and `tr/<page>/work.txt` lists each with the translation it replaces.
 2. Translate those lines (the glossary in `codex/work/notes/i18n/glossary`, product names untouched, no em or en dashes), put them in with `node fill.mjs <page> < fill.json`.
 3. `node build.mjs <page>` refuses any line still marked, writes the language pages, records the new English, and rewrites the `#anchor` of every link between translated pages. Build, and the check is clean.
+
+**Release notes.** Every `releases/<product>-<version>` page is checked by the rule above. `src/i18n-releases-pending.json` lists the release pages that were English only when the rule began, with the Starlight notice, noindex and no hreflang until they are translated. The list only shrinks: after translating one, `node scripts/i18n-source.mjs releases --write` takes it off, and `node scripts/i18n-source.mjs releases` prints what is left. A release page that is neither translated nor on the list fails the build.
 
 **Anchors.** A link from a translated page into a page that is translated later carries the English heading slug until then. `node scripts/i18n-source.mjs links` lists every such link and `links --fix` rewrites it to the translated slug; the builder runs the fix after every build, so translating a page repairs the pages that point at it.
 

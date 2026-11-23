@@ -4,6 +4,7 @@
 //   node scripts/i18n-source.mjs record <id> [lang..] record: these translations were made from the English as it is now
 //   node scripts/i18n-source.mjs links [--fix]        check, or repair, the #anchor on every link between translated pages
 //   node scripts/i18n-source.mjs stale --json         the stale segments as data, for the retranslation tools
+//   node scripts/i18n-source.mjs releases [--write]   the release notes pages still without their 13 translations; --write drops the translated ones from the pending list
 //
 // How it works. A page is cut into segments: its front matter title, description and sidebar label, then every
 // line of the body that is not code, a table rule, a blank line or a bare HTML or import line. A translation holds
@@ -264,6 +265,34 @@ const clip = (s, n = 420) => (s.length > n ? s.slice(0, n - 1) + '...' : s);
 
 // Everything wrong with the translations, as { stale, problems }. `stale` is one entry per page and set of languages
 // that share the same stale segments.
+
+// ---- release notes ---------------------------------------------------------------------
+// Every release page (src/content/docs/releases/<product>-<version>.md) carries its 13 translations, so a new release
+// cannot ship in English alone. src/i18n-releases-pending.json lists the release pages that were English only when this
+// rule began. It only shrinks: a release page that is not translated and not listed fails, and a listed page that is
+// translated fails until it is taken off the list (`releases --write`).
+export const PENDING = 'src/i18n-releases-pending.json';
+const RELEASE_PAGE = /^releases\/(?:flow|cascade|hotloop|codesys|transmitter)-\d/;
+export function releasePages(v) {
+  return v.walk(CONTENT).map((rel) => idOf(rel, CONTENT)).filter((id) => RELEASE_PAGE.test(id)).sort();
+}
+export function pendingReleases(v) {
+  return v.exists(PENDING) ? JSON.parse(v.read(PENDING)).pages ?? [] : [];
+}
+function releaseProblems(v, pages) {
+  const problems = [];
+  const listed = new Set(pendingReleases(v));
+  for (const id of releasePages(v)) {
+    const have = pages.get(id) ?? new Set();
+    const missing = FOLDERS.filter((l) => !have.has(l));
+    if (!missing.length) { if (listed.has(id)) problems.push(`${id}: is translated in every language and still on the pending list ${PENDING}. Run: node scripts/i18n-source.mjs releases --write`); continue; }
+    if (!listed.has(id)) problems.push(`${id}: a release page needs its 13 translations and has none in ${missing.join(' ')}. Translate it in the same pull request as the release notes (README, Translations).`);
+  }
+  const known = new Set(releasePages(v));
+  for (const id of listed) if (!known.has(id)) problems.push(`${id}: is on the pending list ${PENDING} and there is no such release page. Run: node scripts/i18n-source.mjs releases --write`);
+  return problems;
+}
+
 export function examine(overlay = new Map()) {
   const v = view(overlay);
   const stale = [];
@@ -304,6 +333,7 @@ export function examine(overlay = new Map()) {
       });
     }
   }
+  problems.push(...releaseProblems(v, pages));
   return { stale, problems, v };
 }
 
@@ -458,6 +488,18 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     for (const d of done) console.log(`${rest.includes('--dry') ? 'would bump' : 'bumped'} ${d.id} ${d.lang}: ${d.touched} line(s)`);
     console.log(`i18n-source: ${done.length} translation(s) ${rest.includes('--dry') ? 'hold' : 'held'} an older release version`);
     process.exit(rest.includes('--dry') && done.length ? 1 : 0);
+  } else if (cmd === 'releases') {
+    const v = view();
+    const pages = translatedPages(v);
+    const todo = releasePages(v).filter((id) => FOLDERS.some((l) => !pages.get(id)?.has(l)));
+    if (rest.includes('--write')) {
+      const keep = pendingReleases(v).filter((id) => todo.includes(id));
+      writeFileSync(join(ROOT, PENDING), JSON.stringify({ pages: keep }, null, 2) + '\n');
+      console.log(`i18n-source: ${keep.length} release page(s) still pending`);
+    } else if (rest.includes('--init')) {
+      writeFileSync(join(ROOT, PENDING), JSON.stringify({ pages: todo }, null, 2) + '\n');
+      console.log(`i18n-source: ${todo.length} release page(s) written to ${PENDING}`);
+    } else { todo.forEach((id) => console.log(id)); console.log(`i18n-source: ${todo.length} release page(s) without their 13 translations`); }
   } else if (cmd === 'migrate') {
     // One time: records made before versions were normalized hold the hash of the English as written. Where a segment
     // is still exactly what was recorded, store its normalized hash and the versions, so the next release does not flag it.

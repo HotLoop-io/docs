@@ -1,0 +1,19 @@
+---
+title: "Notas de versión: HotLoop for CODESYS 0.3.5"
+description: "Chart 0.3.5 de HotLoop for CODESYS: envuelve HotLoop 4.20.2, el chart más reciente del índice."
+sidebar:
+  label: "0.3.5"
+---
+
+## Qué cambió
+
+0.3.5 está en el índice `{{codesysChartRepo}}`, publicada el 2026-11-16, y es el chart que hay que instalar.
+
+- **Envuelve HotLoop 4.20.2,** que trae la corrección de lotes de EtherNet/IP y un comando `version` que imprime sin ninguna configuración. El provisioner sigue en 0.3.1.
+- **Todo lo de [0.3.2](/es/releases/codesys-0-3-2/) a [0.3.4](/es/releases/codesys-0-3-4/) sigue aquí,** nada escribe en el PLC, y cada chart anterior sigue en el índice.
+
+Lo que esto significa para usted: este es el que hay que instalar, y una actualización desde 0.3.4 conserva su dispositivo y sus tags.
+
+## Qué se comprobó
+
+Una actualización desde 0.3.4 con un perfil aplicado a 0.3.5, con un runtime CODESYS Control for Linux SL 4.22.0.0 en la red del nodo a su lado: arrancó un pod nuevo en 4.20.2, el dispositivo y sus 44 tags seguían allí y ninguno era escribible, la página respondió, y el registro de HotLoop no tenía advertencias ni errores. Con ambos pods eliminados y el runtime reiniciado: los tres volvieron por sí solos. Se ha ejecutado en hardware real (2026-11-17).

@@ -1,0 +1,23 @@
+---
+title: "Notas de versión: HotLoop for CODESYS 0.3.0"
+description: "El primer chart publicado de HotLoop for CODESYS: qué contiene, qué envuelve y hasta dónde se ha ejecutado."
+sidebar:
+  label: "0.3.0"
+---
+
+## Qué es esto
+
+0.3.0 es el primer chart de HotLoop for CODESYS en el índice `{{codesysChartRepo}}`, publicado el 2026-11-05: HotLoop Edge junto a un runtime de CODESYS, configurado desde un perfil sin que nadie haga clic. Envuelve HotLoop 4.19.4 y ejecuta el provisioner 0.3.0. [0.3.1](/es/releases/codesys-0-3-1/) llegó el mismo día y es el que hay que instalar.
+
+- **Un chart que envuelve HotLoop Edge**, con valores por defecto para un runtime en el mismo nodo: SQLite en el almacenamiento propio del nodo, sin pod de base de datos, una réplica, y el servidor OPC UA, el broker, la publicación de Edge y las copias de seguridad desactivados.
+- **Un provisioner**, un binario estático de Go y una imagen pública, que lee un [perfil](/es/codesys/profile/) (el dispositivo, las variables que se conservan, las alarmas y una pantalla) y lo configura todo en cuanto el runtime del PLC responde. Vuelve a mirar cada cinco minutos.
+- **Una lista de dispositivos en un perfil.** Un perfil puede llevar `devices`, de cualquier protocolo que HotLoop hable, de modo que un oyente OPC UA PubSub vuelve configurado sin necesidad de PLC. Un perfil con un solo `device` se lee exactamente como antes.
+- **Se sigue a un PLC que cambia.** Una variable que el perfil enumera y que el PLC ha ganado desde entonces se añade. Una que el PLC perdió se lee como mala con el motivo del servidor. La pantalla y las alarmas se reemplazan solo cuando la revisión del perfil es mayor.
+- **Nada escribe en el PLC.** Cada tag que configura el provisioner es de solo lectura.
+- **Ambos pods toleran un nodo inalcanzable o no listo** sin límite de tiempo.
+- **hostNetwork**, desactivado por defecto, para un pod que tiene que oír el multicast de un publicador en las tarjetas propias del nodo.
+- **El inicio de sesión desde el dashboard de EmberCORE** viene del inicio de sesión 4.19 del chart de Edge, y este chart lo hereda.
+
+## Hasta dónde se ejecutó
+
+Se ha ejecutado en hardware real (2026-11-17). [Dónde está](/es/codesys/where-it-stands/) dice contra qué se ejecutó.

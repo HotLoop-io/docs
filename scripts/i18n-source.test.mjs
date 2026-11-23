@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parse, segs, hashes, diff, headingSlugs, normalizeVersions, currentHashes, versionMap } from './i18n-source.mjs';
+import { parse, segs, hashes, diff, headingSlugs, normalizeVersions, currentHashes, versionMap, examine, releasePages } from './i18n-source.mjs';
 
 const page = (body) => `---\ntitle: "T"\ndescription: "D"\n---\n\n${body}\n`;
 
@@ -90,4 +90,15 @@ test('a sync front matter comment is not a heading, so a synced page and its tra
 test('a # line inside any code fence is not a heading, whatever the fence is made of', () => {
   const t = '## A\n\n````md\n```\n# no\n```\n````\n\n## B\n\n~~~\n```\n# no2\n~~~\n\n```bash\n# comment\n```\n\n## C\n';
   assert.deepEqual(headingSlugs(t), ['a', 'b', 'c']);
+});
+
+test('a new release page with no translations fails, and a translated or pending one does not', () => {
+  const en = page('Release body.');
+  const overlay = new Map([['src/content/docs/releases/flow-9-9-9.md', en]]);
+  const bad = examine(overlay).problems.filter((p) => p.startsWith('releases/flow-9-9-9'));
+  assert.equal(bad.length, 1);
+  assert.match(bad[0], /needs its 13 translations/);
+  const listed = new Map(overlay).set('src/i18n-releases-pending.json', JSON.stringify({ pages: ['releases/flow-9-9-9'] }));
+  assert.equal(examine(listed).problems.filter((p) => p.includes('flow-9-9-9') && /needs its 13/.test(p)).length, 0);
+  assert.ok(releasePages({ walk: () => ['src/content/docs/releases/flow-2-1-0.md', 'src/content/docs/releases/index.md', 'src/content/docs/de/releases/flow-2-1-0.md'], exists: () => false, read: () => '' }).every((id) => /^releases\/flow-/.test(id)));
 });

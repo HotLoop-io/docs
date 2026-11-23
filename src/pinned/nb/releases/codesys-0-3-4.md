@@ -1,0 +1,18 @@
+---
+title: "Utgivelsesnotater HotLoop for CODESYS 0.3.4"
+description: "Chart 0.3.4 for HotLoop for CODESYS: omslutter HotLoop 4.20.1, utgivelsen som bærer multi-arch-imagene."
+sidebar:
+  label: "0.3.4"
+---
+
+## Hva som er endret
+
+0.3.4 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-16.
+
+- **Det omslutter HotLoop 4.20.1,** utgivelsen som bærer arm-imagene testerne laster ned. Provisioneren blir på 0.3.1.
+
+Hva det betyr for deg: en arm64-node laster ned HotLoops arm-image med chartet, og ingenting annet flytter seg.
+
+## Hva som ble sjekket
+
+En oppgradering fra 0.3.3 med en profil brukt på 0.3.4, ved siden av en CODESYS Control for Linux SL 4.22.0.0-runtime: en ny pod på 4.20.1 kom opp, enheten og dens 44 tags var der fortsatt og ingen var skrivbare, siden svarte, og HotLoop-loggen hadde ingen advarsler eller feil. Med runtime på nodens nett nådde provisioneren den på 4840, og runtime avviste den som anonym bruker, slik runtime er satt opp, så dens egen enhet ble stående ventende og lytterenheten og dens tags ble laget. Det er kjørt på bare metal (2026-11-17).
