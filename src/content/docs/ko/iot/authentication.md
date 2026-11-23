@@ -208,7 +208,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/jso
 
 - **데이터베이스.** 장치 자격 증명은 `config`와 `address` 열에 있습니다. `HOTLOOP_SECRET_KEY_FILE`을 설정하면 `config`에서 키가 있는 항목(모든 `password`와 헤더 값)은 데이터베이스 밖에 보관된 키로 암호화되고, 텍스트에 자격 증명이 적힌 주소나 옵션(`mqtt://user:pass@host`, `?token=`)도 통째로 봉인됩니다. [백업과 복원](/ko/iot/backup/#장치-자격-증명과-비밀-키)을 참고하세요.
 - **백업.** 백업의 `devices.copy`에는 데이터베이스와 똑같이 암호화되거나 암호화되지 않은 상태로 자격 증명이 들어 있습니다. [백업과 복원](/ko/iot/backup/#백업-파일-보호)을 참고하세요.
-- **Edge Relay 장치 파일.** 릴레이는 장치들의 자격 증명이 담긴 JSON 파일을 읽습니다. [Edge Relay 레퍼런스](/ko/edge-relay/reference/#credentials-in-the-device-file-4150)를 참고하세요.
+- **Edge Relay 장치 파일.** 릴레이는 장치들의 자격 증명이 담긴 JSON 파일을 읽습니다. [Edge Relay 레퍼런스](/ko/edge-relay/reference/#장치-파일의-자격-증명-4150)를 참고하세요.
 - **플릿 구성 푸시.** 릴레이로 푸시되는 장치 파일은 그대로 MQTT 토픽에 리테인 메시지로 게시됩니다. [플릿 관리](/ko/gateway/fleet/)를 참고하세요.
 
 이에 맞게 데이터베이스, 백업 볼륨, 릴레이의 장치 파일, 브로커를 보호하세요. API에서 숨기는 것이 이들에게는 아무 영향도 주지 않습니다.

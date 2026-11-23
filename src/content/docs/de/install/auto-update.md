@@ -56,7 +56,7 @@ Standardmäßig gibt es keinen Halt: Updates laufen, wenn der Timer auslöst. Ei
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Der Edge Relay ist in einem Punkt anders: Ein Gateway kann sein Update über die Flottenansicht freigeben, weil ein Relay ohnehin auf Befehle des Gateways lauscht, an den es weiterleitet. IoT, Edge und Gateway haben keinen solchen Kanal, und einen zu bauen würde einen Knopf "dieses Gerät neu starten" auf eine Weboberfläche setzen, für eine Funktion, die `sudo podman auto-update` schon ist. Den Halt des Relays und `edge-relay-hold.conf` finden Sie in der [Edge-Relay-Referenz](/de/edge-relay/reference/#updating-a-relay).
+Der Edge Relay ist in einem Punkt anders: Ein Gateway kann sein Update über die Flottenansicht freigeben, weil ein Relay ohnehin auf Befehle des Gateways lauscht, an den es weiterleitet. IoT, Edge und Gateway haben keinen solchen Kanal, und einen zu bauen würde einen Knopf "dieses Gerät neu starten" auf eine Weboberfläche setzen, für eine Funktion, die `sudo podman auto-update` schon ist. Den Halt des Relays und `edge-relay-hold.conf` finden Sie in der [Edge-Relay-Referenz](/de/edge-relay/reference/#ein-relay-aktualisieren).
 
 ## Was der Gateway sieht
 

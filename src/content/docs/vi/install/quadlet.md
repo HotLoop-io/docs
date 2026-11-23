@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-Nếu một image mới không qua được kiểm tra sức khỏe, Podman đặt lại image cũ. Danh sách đội thiết bị của Gateway hiển thị phiên bản và digest image của từng relay và ghi lại mọi thay đổi. Để giữ các bản cập nhật cho đến khi quản trị viên chấp thuận trên Gateway, hãy cài `edge-relay-hold.conf` như chú thích ở đầu tệp đó nói và tắt bộ hẹn giờ. Mọi việc điều này làm, và những gì nó không làm được, nằm trong [tài liệu tham chiếu Edge Relay](/vi/edge-relay/reference/#updating-a-relay).
+Nếu một image mới không qua được kiểm tra sức khỏe, Podman đặt lại image cũ. Danh sách đội thiết bị của Gateway hiển thị phiên bản và digest image của từng relay và ghi lại mọi thay đổi. Để giữ các bản cập nhật cho đến khi quản trị viên chấp thuận trên Gateway, hãy cài `edge-relay-hold.conf` như chú thích ở đầu tệp đó nói và tắt bộ hẹn giờ. Mọi việc điều này làm, và những gì nó không làm được, nằm trong [tài liệu tham chiếu Edge Relay](/vi/edge-relay/reference/#cập-nhật-một-relay).
 
 Để áp dụng thay đổi của tệp cục bộ: sửa nó, rồi chạy `sudo systemctl restart edge-relay.service`. Relay đọc tệp đó khi khởi động và không theo dõi nó.
 

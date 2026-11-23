@@ -208,7 +208,7 @@ Skrivebeskyttet gjelder API-et. Gatewayen trenger de ekte verdiene for å koble 
 
 - **Databasen.** Enhetslegitimasjon ligger i kolonnene `config` og `address`. Med `HOTLOOP_SECRET_KEY_FILE` satt krypteres de nøkkelbaserte i `config` (hvert `password`, topptekstverdier) med en nøkkel som holdes utenfor databasen, og det samme gjelder en adresse eller et alternativ med legitimasjon skrevet inn i teksten (`mqtt://user:pass@host`, `?token=`), forseglet i sin helhet. Se [Sikkerhetskopier og gjenoppretting](/nb/iot/backup/#enhetslegitimasjon-og-den-hemmelige-nøkkelen).
 - **Sikkerhetskopier.** `devices.copy` i en sikkerhetskopi inneholder dem, kryptert eller ikke akkurat som databasen. Se [Sikkerhetskopier og gjenoppretting](/nb/iot/backup/#beskytt-sikkerhetskopifilene).
-- **Enhetsfiler for Edge Relay.** Relayet leser en JSON-fil som bærer legitimasjonen til enhetene sine. Se [Edge Relay-referanse](/nb/edge-relay/reference/#credentials-in-the-device-file-4150).
+- **Enhetsfiler for Edge Relay.** Relayet leser en JSON-fil som bærer legitimasjonen til enhetene sine. Se [Edge Relay-referanse](/nb/edge-relay/reference/#legitimasjon-i-enhetsfilen-4150).
 - **Konfigurasjonspush til flåten.** En enhetsfil som pushes til et relay publiseres på et MQTT-topic, retained, som den er. Se [Flåteadministrasjon](/nb/gateway/fleet/).
 
 Beskytt databasen, sikkerhetskopivolumet, relayets enhetsfil og brokeren deretter. At API-et sladdes endrer ingen av dem.

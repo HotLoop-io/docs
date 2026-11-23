@@ -56,7 +56,7 @@ sudo systemctl enable --now podman-auto-update.timer
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Το Edge Relay διαφέρει σε ένα σημείο: ένα Gateway μπορεί να εγκρίνει την ενημέρωσή του από την οθόνη του στόλου, επειδή ένα relay ακούει ήδη για εντολές από το Gateway στο οποίο προωθεί. Το IoT, το Edge και το Gateway δεν έχουν τέτοιο κανάλι, και η δημιουργία του θα έβαζε ένα κουμπί «επανεκκίνηση αυτού του μηχανήματος» σε μια διεπαφή web για μια λειτουργία που το `sudo podman auto-update` ήδη είναι. Δείτε την [αναφορά του Edge Relay](/el/edge-relay/reference/#updating-a-relay) για το κράτημα του relay, και το `edge-relay-hold.conf`.
+Το Edge Relay διαφέρει σε ένα σημείο: ένα Gateway μπορεί να εγκρίνει την ενημέρωσή του από την οθόνη του στόλου, επειδή ένα relay ακούει ήδη για εντολές από το Gateway στο οποίο προωθεί. Το IoT, το Edge και το Gateway δεν έχουν τέτοιο κανάλι, και η δημιουργία του θα έβαζε ένα κουμπί «επανεκκίνηση αυτού του μηχανήματος» σε μια διεπαφή web για μια λειτουργία που το `sudo podman auto-update` ήδη είναι. Δείτε την [αναφορά του Edge Relay](/el/edge-relay/reference/#ενημέρωση-ενός-relay) για το κράτημα του relay, και το `edge-relay-hold.conf`.
 
 ## Τι βλέπει το Gateway
 

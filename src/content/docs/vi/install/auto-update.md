@@ -56,7 +56,7 @@ Mặc định là không giữ: cập nhật diễn ra khi bộ hẹn giờ kíc
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay khác ở một điểm: một Gateway có thể phê duyệt bản cập nhật của relay từ màn hình đội thiết bị, vì relay vốn đã lắng nghe lệnh từ Gateway mà nó chuyển tiếp tới. IoT, Edge và Gateway không có kênh như vậy để tiếp cận, và xây dựng một kênh sẽ đặt nút "khởi động lại thiết bị này" lên giao diện web cho một tính năng mà `sudo podman auto-update` đã là. Xem [tài liệu tham chiếu Edge Relay](/vi/edge-relay/reference/#updating-a-relay) về việc giữ cập nhật của relay, và `edge-relay-hold.conf`.
+Edge Relay khác ở một điểm: một Gateway có thể phê duyệt bản cập nhật của relay từ màn hình đội thiết bị, vì relay vốn đã lắng nghe lệnh từ Gateway mà nó chuyển tiếp tới. IoT, Edge và Gateway không có kênh như vậy để tiếp cận, và xây dựng một kênh sẽ đặt nút "khởi động lại thiết bị này" lên giao diện web cho một tính năng mà `sudo podman auto-update` đã là. Xem [tài liệu tham chiếu Edge Relay](/vi/edge-relay/reference/#cập-nhật-một-relay) về việc giữ cập nhật của relay, và `edge-relay-hold.conf`.
 
 ## Gateway nhìn thấy gì
 

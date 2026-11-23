@@ -208,7 +208,7 @@ Nur schreibbar betrifft die API. Das Gateway braucht die echten Werte zum Verbin
 
 - **Die Datenbank.** Gerätezugangsdaten liegen in den Spalten `config` und `address`. Mit gesetztem `HOTLOOP_SECRET_KEY_FILE` werden die Schlüsselfelder in `config` (jedes `password`, Header-Werte) mit einem Schlüssel verschlüsselt, der außerhalb der Datenbank liegt, ebenso eine Adresse oder eine Option mit Zugangsdaten im Text (`mqtt://user:pass@host`, `?token=`), ganz versiegelt. Siehe [Sicherungen und Wiederherstellung](/de/iot/backup/#gerätezugangsdaten-und-der-geheime-schlüssel).
 - **Sicherungen.** `devices.copy` in einer Sicherung enthält sie, verschlüsselt oder nicht genau wie die Datenbank. Siehe [Sicherungen und Wiederherstellung](/de/iot/backup/#sicherungsdateien-schützen).
-- **Gerätedateien des Edge Relay.** Das Relay liest eine JSON-Datei, die die Zugangsdaten seiner Geräte enthält. Siehe [Edge-Relay-Referenz](/de/edge-relay/reference/#credentials-in-the-device-file-4150).
+- **Gerätedateien des Edge Relay.** Das Relay liest eine JSON-Datei, die die Zugangsdaten seiner Geräte enthält. Siehe [Edge-Relay-Referenz](/de/edge-relay/reference/#zugangsdaten-in-der-gerätedatei-4150).
 - **Konfigurations-Push an die Flotte.** Eine an ein Relay gepushte Gerätedatei wird unverändert auf einem MQTT-Topic veröffentlicht, retained. Siehe [Flottenverwaltung](/de/gateway/fleet/).
 
 Schützen Sie die Datenbank, das Sicherungsvolume, die Gerätedatei des Relays und den Broker entsprechend. Das Schwärzen in der API ändert an keinem davon etwas.

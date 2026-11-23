@@ -56,7 +56,7 @@ sudo systemctl enable --now podman-auto-update.timer
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay एक बात में अलग है: Gateway फ़्लीट स्क्रीन से अपना अपडेट मंज़ूर कर सकता है, क्योंकि रिले पहले से उस Gateway के कमांड सुनता है जिसे वह फ़ॉरवर्ड करता है। IoT, Edge और Gateway तक पहुँचने के लिए ऐसा कोई चैनल नहीं है, और उसे बनाने का मतलब वेब UI पर "इस डिवाइस को रीस्टार्ट करें" बटन रखना होगा, जबकि वह सुविधा `sudo podman auto-update` पहले से है। रिले को रोकने के लिए [Edge Relay संदर्भ](/hi/edge-relay/reference/#updating-a-relay) और `edge-relay-hold.conf` देखें।
+Edge Relay एक बात में अलग है: Gateway फ़्लीट स्क्रीन से अपना अपडेट मंज़ूर कर सकता है, क्योंकि रिले पहले से उस Gateway के कमांड सुनता है जिसे वह फ़ॉरवर्ड करता है। IoT, Edge और Gateway तक पहुँचने के लिए ऐसा कोई चैनल नहीं है, और उसे बनाने का मतलब वेब UI पर "इस डिवाइस को रीस्टार्ट करें" बटन रखना होगा, जबकि वह सुविधा `sudo podman auto-update` पहले से है। रिले को रोकने के लिए [Edge Relay संदर्भ](/hi/edge-relay/reference/#relay-अपडेट-करना) और `edge-relay-hold.conf` देखें।
 
 ## Gateway क्या देखता है
 

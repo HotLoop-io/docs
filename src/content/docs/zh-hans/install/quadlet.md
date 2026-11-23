@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-如果新镜像通不过健康检查，Podman 会把旧镜像放回去。Gateway 的设备群列表显示每个中继的版本和镜像摘要，并记录每一次变更。若要在管理员于 Gateway 上批准之前保留更新，请按该文件顶部注释所述安装 `edge-relay-hold.conf`，并关闭定时器。这样做能做到的一切，以及做不到的，都在 [Edge Relay 参考](/zh-hans/edge-relay/reference/#updating-a-relay)中。
+如果新镜像通不过健康检查，Podman 会把旧镜像放回去。Gateway 的设备群列表显示每个中继的版本和镜像摘要，并记录每一次变更。若要在管理员于 Gateway 上批准之前保留更新，请按该文件顶部注释所述安装 `edge-relay-hold.conf`，并关闭定时器。这样做能做到的一切，以及做不到的，都在 [Edge Relay 参考](/zh-hans/edge-relay/reference/#更新-relay)中。
 
 要使本地文件的更改生效：编辑它，然后运行 `sudo systemctl restart edge-relay.service`。中继在启动时读取该文件，不会监视它。
 
