@@ -559,7 +559,7 @@ PIN이나 배지를 없애고, 그 계정이 로그인해 있는 모든 키오�
 
 ### `GET /api/opcua/certificates`
 
-OPC UA 서버 로그인을 위해 사용자에 연결된 모든 X.509 인증서를 최신순으로 보여 줍니다([OPC UA 서버](/ko/edge/opc-ua-server/#x509-user-certificates) 참고). `{"serverAcceptsCertificates":false,"certificates":[...]}`. 각 항목에는 `thumbprint`(DER 형식의 SHA-256, 소문자 16진수), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, 폐기되면 `revokedAt`과 `revokedBy`, 사용되면 `lastUsed`, 그리고 `state`(`active`, `revoked`, `expired`, `not yet valid`)가 있습니다. 활성 인증서만 로그인할 수 있습니다. `serverAcceptsCertificates`는 OPC UA 서버가 켜져 있고 `HOTLOOP_OPCUA_SERVER_ALLOW_X509`가 설정되어 있는지를 나타내며, 인증서는 어느 쪽이든 보관됩니다. 공개 인증서만 저장하거나 전송합니다.
+OPC UA 서버 로그인을 위해 사용자에 연결된 모든 X.509 인증서를 최신순으로 보여 줍니다([OPC UA 서버](/ko/edge/opc-ua-server/#x509-사용자-인증서) 참고). `{"serverAcceptsCertificates":false,"certificates":[...]}`. 각 항목에는 `thumbprint`(DER 형식의 SHA-256, 소문자 16진수), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, 폐기되면 `revokedAt`과 `revokedBy`, 사용되면 `lastUsed`, 그리고 `state`(`active`, `revoked`, `expired`, `not yet valid`)가 있습니다. 활성 인증서만 로그인할 수 있습니다. `serverAcceptsCertificates`는 OPC UA 서버가 켜져 있고 `HOTLOOP_OPCUA_SERVER_ALLOW_X509`가 설정되어 있는지를 나타내며, 인증서는 어느 쪽이든 보관됩니다. 공개 인증서만 저장하거나 전송합니다.
 
 ### `GET /api/users/{username}/certificates`
 

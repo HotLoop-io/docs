@@ -559,7 +559,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
 
 ### `GET /api/opcua/certificates`
 
-为登录 OPC UA 服务器而附加到用户的每一张 X.509 证书，最新的在前（参见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#x509-user-certificates)）：`{"serverAcceptsCertificates":false,"certificates":[...]}`。每张证书包含 `thumbprint`（DER 形式的 SHA-256，小写十六进制）、`username`、`label`、`subject`、`notBefore`、`notAfter`、`addedBy`、`addedAt`，吊销后有 `revokedAt` 和 `revokedBy`，使用后有 `lastUsed`，以及 `state`：`active`、`revoked`、`expired` 或 `not yet valid`。只有有效的证书才能让人登录。`serverAcceptsCertificates` 表示 OPC UA 服务器是否已开启并设置了 `HOTLOOP_OPCUA_SERVER_ALLOW_X509`；无论哪种情况，证书都会保留。只存储和发送公开证书。
+为登录 OPC UA 服务器而附加到用户的每一张 X.509 证书，最新的在前（参见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#x509-用户证书)）：`{"serverAcceptsCertificates":false,"certificates":[...]}`。每张证书包含 `thumbprint`（DER 形式的 SHA-256，小写十六进制）、`username`、`label`、`subject`、`notBefore`、`notAfter`、`addedBy`、`addedAt`，吊销后有 `revokedAt` 和 `revokedBy`，使用后有 `lastUsed`，以及 `state`：`active`、`revoked`、`expired` 或 `not yet valid`。只有有效的证书才能让人登录。`serverAcceptsCertificates` 表示 OPC UA 服务器是否已开启并设置了 `HOTLOOP_OPCUA_SERVER_ALLOW_X509`；无论哪种情况，证书都会保留。只存储和发送公开证书。
 
 ### `GET /api/users/{username}/certificates`
 

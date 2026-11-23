@@ -559,7 +559,7 @@ PIN या बैज हटाता है और खाते को हर �
 
 ### `GET /api/opcua/certificates`
 
-OPC UA सर्वर में साइन इन के लिए उपयोगकर्ताओं से जुड़े हर X.509 प्रमाणपत्र, नए से पुराने की ओर ([OPC UA सर्वर](/hi/edge/opc-ua-server/#x509-user-certificates) देखें): `{"serverAcceptsCertificates":false,"certificates":[...]}`। हर एक में `thumbprint` (DER रूप का SHA-256, छोटे अक्षरों का हेक्स), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, रद्द होने पर `revokedAt` और `revokedBy`, इस्तेमाल होने पर `lastUsed`, और `state` होता है: `active`, `revoked`, `expired` या `not yet valid`। केवल सक्रिय प्रमाणपत्र ही किसी को साइन इन कराता है। `serverAcceptsCertificates` बताता है कि OPC UA सर्वर चालू है और उसमें `HOTLOOP_OPCUA_SERVER_ALLOW_X509` सेट है या नहीं; प्रमाणपत्र दोनों हालत में रखे जाते हैं। केवल सार्वजनिक प्रमाणपत्र ही सहेजा या भेजा जाता है।
+OPC UA सर्वर में साइन इन के लिए उपयोगकर्ताओं से जुड़े हर X.509 प्रमाणपत्र, नए से पुराने की ओर ([OPC UA सर्वर](/hi/edge/opc-ua-server/#x509-उपयोगकर्ता-प्रमाणपत्र) देखें): `{"serverAcceptsCertificates":false,"certificates":[...]}`। हर एक में `thumbprint` (DER रूप का SHA-256, छोटे अक्षरों का हेक्स), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, रद्द होने पर `revokedAt` और `revokedBy`, इस्तेमाल होने पर `lastUsed`, और `state` होता है: `active`, `revoked`, `expired` या `not yet valid`। केवल सक्रिय प्रमाणपत्र ही किसी को साइन इन कराता है। `serverAcceptsCertificates` बताता है कि OPC UA सर्वर चालू है और उसमें `HOTLOOP_OPCUA_SERVER_ALLOW_X509` सेट है या नहीं; प्रमाणपत्र दोनों हालत में रखे जाते हैं। केवल सार्वजनिक प्रमाणपत्र ही सहेजा या भेजा जाता है।
 
 ### `GET /api/users/{username}/certificates`
 

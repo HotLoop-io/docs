@@ -559,7 +559,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 
 ### `GET /api/opcua/certificates`
 
-كل شهادة X.509 مرتبطة بمستخدم لتسجيل الدخول إلى خادم OPC UA (راجع [خادم OPC UA](/ar/edge/opc-ua-server/#x509-user-certificates))، الأحدث أولًا: `{"serverAcceptsCertificates":false,"certificates":[...]}`. لكل شهادة `thumbprint` (SHA-256 لصيغة DER، بالست عشري بأحرف صغيرة) و`username` و`label` و`subject` و`notBefore` و`notAfter` و`addedBy` و`addedAt`، و`revokedAt` و`revokedBy` بعد الإبطال، و`lastUsed` بعد الاستخدام، و`state`: `active` أو `revoked` أو `expired` أو `not yet valid`. لا تُدخل أحدًا إلا الشهادة الفعّالة. يبيّن `serverAcceptsCertificates` هل خادم OPC UA يعمل وقد ضُبط فيه `HOTLOOP_OPCUA_SERVER_ALLOW_X509`؛ وتُحفظ الشهادات في الحالتين. لا تُخزَّن أو تُرسل إلا الشهادة العامة.
+كل شهادة X.509 مرتبطة بمستخدم لتسجيل الدخول إلى خادم OPC UA (راجع [خادم OPC UA](/ar/edge/opc-ua-server/#شهادات-المستخدم-x509))، الأحدث أولًا: `{"serverAcceptsCertificates":false,"certificates":[...]}`. لكل شهادة `thumbprint` (SHA-256 لصيغة DER، بالست عشري بأحرف صغيرة) و`username` و`label` و`subject` و`notBefore` و`notAfter` و`addedBy` و`addedAt`، و`revokedAt` و`revokedBy` بعد الإبطال، و`lastUsed` بعد الاستخدام، و`state`: `active` أو `revoked` أو `expired` أو `not yet valid`. لا تُدخل أحدًا إلا الشهادة الفعّالة. يبيّن `serverAcceptsCertificates` هل خادم OPC UA يعمل وقد ضُبط فيه `HOTLOOP_OPCUA_SERVER_ALLOW_X509`؛ وتُحفظ الشهادات في الحالتين. لا تُخزَّن أو تُرسل إلا الشهادة العامة.
 
 ### `GET /api/users/{username}/certificates`
 

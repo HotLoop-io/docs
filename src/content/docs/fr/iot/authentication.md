@@ -113,7 +113,7 @@ Un mot de passe ou un PIN erroné est compté sur le **compte** sur lequel il a 
 
 Réservé aux admins. Dans l'interface, c'est **Paramètres, Utilisateurs** : chaque compte avec son rôle, s'il est actif et sa dernière connexion, avec Ajouter un utilisateur, Modifier (le rôle, et le désactiver), Nouveau mot de passe et Supprimer. Rien n'est affiché pour qui n'a pas `users.manage`, ni quand l'authentification est désactivée. Un compte dont les permissions ont été énumérées une à une apparaît comme `custom` avec leur nombre, et Modifier conserve la liste sauf si vous choisissez un rôle, qui la remplace. Les mêmes opérations par l'API REST :
 
-Un mot de passe fait de 8 à 72 octets : 72 est la limite propre à bcrypt, et un mot de passe plus long est refusé en le disant. Cela fonctionne de la même façon via OPC UA (voir [Le serveur OPC UA](/fr/edge/opc-ua-server/#who-may-log-in)) ; dans les versions antérieures, un mot de passe de plus de 64 octets pouvait ouvrir une session ici et pas là.
+Un mot de passe fait de 8 à 72 octets : 72 est la limite propre à bcrypt, et un mot de passe plus long est refusé en le disant. Cela fonctionne de la même façon via OPC UA (voir [Le serveur OPC UA](/fr/edge/opc-ua-server/#qui-peut-se-connecter)) ; dans les versions antérieures, un mot de passe de plus de 64 octets pouvait ouvrir une session ici et pas là.
 
 ```sh
 # List

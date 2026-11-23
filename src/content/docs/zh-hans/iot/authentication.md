@@ -113,7 +113,7 @@ curl -X DELETE -H "Authorization: Bearer $TOKEN" https://gateway/api/users/olga/
 
 仅限 admin。在界面里是**设置，用户**：每个账号及其角色、是否启用、上次登录时间，并有添加用户、编辑（角色，以及停用）、新密码和删除。没有 `users.manage` 的人，或者认证关闭时，不会绘制任何内容。逐条列出权限的账号显示为 `custom` 并带数量，编辑会保留该列表，除非你选一个角色，那会替换它。同样的操作也可以通过 REST API 完成：
 
-密码为 8 到 72 字节：72 是 bcrypt 自身的上限，更长的会被拒绝并说明这一点。通过 OPC UA 也一样（见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#who-may-log-in)）；在早先的版本中，超过 64 字节的密码可以在这里登录，却不能在那里登录。
+密码为 8 到 72 字节：72 是 bcrypt 自身的上限，更长的会被拒绝并说明这一点。通过 OPC UA 也一样（见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#谁可以登录)）；在早先的版本中，超过 64 字节的密码可以在这里登录，却不能在那里登录。
 
 ```sh
 # List

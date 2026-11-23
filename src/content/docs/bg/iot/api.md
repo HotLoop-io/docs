@@ -559,7 +559,7 @@ Readiness. Пингва базата данни с бюджет от 5 секу�
 
 ### `GET /api/opcua/certificates`
 
-Всеки X.509 сертификат, прикрепен към потребител за вход в OPC UA сървъра (вижте [OPC UA сървъра](/bg/edge/opc-ua-server/#x509-user-certificates)), най-новият първи: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Всеки има `thumbprint` (SHA-256 на DER формата, шестнайсетични малки букви), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` и `revokedBy` след отмяна, `lastUsed` след употреба, и `state`: `active`, `revoked`, `expired` или `not yet valid`. Само активен сертификат вкарва някого. `serverAcceptsCertificates` казва дали OPC UA сървърът е включен и има зададено `HOTLOOP_OPCUA_SERVER_ALLOW_X509`; сертификатите се пазят и в двата случая. Съхранява се и се изпраща само публичният сертификат.
+Всеки X.509 сертификат, прикрепен към потребител за вход в OPC UA сървъра (вижте [OPC UA сървъра](/bg/edge/opc-ua-server/#потребителски-сертификати-x509)), най-новият първи: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Всеки има `thumbprint` (SHA-256 на DER формата, шестнайсетични малки букви), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` и `revokedBy` след отмяна, `lastUsed` след употреба, и `state`: `active`, `revoked`, `expired` или `not yet valid`. Само активен сертификат вкарва някого. `serverAcceptsCertificates` казва дали OPC UA сървърът е включен и има зададено `HOTLOOP_OPCUA_SERVER_ALLOW_X509`; сертификатите се пазят и в двата случая. Съхранява се и се изпраща само публичният сертификат.
 
 ### `GET /api/users/{username}/certificates`
 

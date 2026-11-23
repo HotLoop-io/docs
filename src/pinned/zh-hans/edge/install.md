@@ -42,7 +42,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 **OPC UA 服务器**是 `opcuaServer.enabled: true`，端口 4840。把 `opcuaServer.endpointHost` 设为客户端访问这个盒子所用的名称，这样证书才能匹配。安全模型见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/)，它是只读的。
 
-**盒子健康状态与主机挂载。** 图表的 OPC UA 服务器还会为 EmberNet 仪表板提供这个盒子自身的健康状态（CPU、内存、磁盘，以及代理写入文件时的实时抖动），并为仪表板创建一个只能读取变量和值的登录。它默认是开启的：图表把主机的根目录挂载到 `/host`，把它的 `/proc` 挂载到 `/host/proc`，两者都是只读，也不增加任何权限。执行受限 Pod Security 配置的集群会拒绝 hostPath，在那里你可以设置 `opcuaServer.dashboard.boxHealth.enabled: false`，不要设备也不要挂载，或设置 `opcuaServer.dashboard.boxHealth.hostMount: false`，保留设备，但磁盘和 CPU 读数会标为异常并说明需要挂载什么。其余内容见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#box-health-for-the-embernet-dashboard)。
+**盒子健康状态与主机挂载。** 图表的 OPC UA 服务器还会为 EmberNet 仪表板提供这个盒子自身的健康状态（CPU、内存、磁盘，以及代理写入文件时的实时抖动），并为仪表板创建一个只能读取变量和值的登录。它默认是开启的：图表把主机的根目录挂载到 `/host`，把它的 `/proc` 挂载到 `/host/proc`，两者都是只读，也不增加任何权限。执行受限 Pod Security 配置的集群会拒绝 hostPath，在那里你可以设置 `opcuaServer.dashboard.boxHealth.enabled: false`，不要设备也不要挂载，或设置 `opcuaServer.dashboard.boxHealth.hostMount: false`，保留设备，但磁盘和 CPU 读数会标为异常并说明需要挂载什么。其余内容见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#设备健康面向-embernet-仪表板)。
 
 **Sparkplug 发布**是 `edgePublish.enabled: true`，`edgePublish.broker` 和 `edgePublish.group` 必填。也要设置 `edgePublish.node`，否则节点 ID 就是发行版名称。转发队列放在 1 Gi 的卷上，`edgePublish.queueMaxBytes` 默认为 64 MiB（每条读数约 240 字节时约 248,000 条，每秒 2,000 条时约两分钟），超出后最旧的读数会被丢弃并计数。`0` 表示不限，足够长的中断会把卷写满。Edge 发布要求 `replicaCount` 为 1，否则图表拒绝渲染。上行链路中断时它的行为见 [Edge 发布与存储转发](/zh-hans/edge/edge-publish/)。
 

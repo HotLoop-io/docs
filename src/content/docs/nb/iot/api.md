@@ -559,7 +559,7 @@ Tar bort PIN-en eller adgangskortet og logger kontoen ut av hvert kioskpanel den
 
 ### `GET /api/opcua/certificates`
 
-Hvert X.509-sertifikat knyttet til en bruker for innlogging på OPC UA-serveren (se [OPC UA-serveren](/nb/edge/opc-ua-server/#x509-user-certificates)), det nyeste først: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Hvert har `thumbprint` (SHA-256 av DER-formen, heksadesimalt med små bokstaver), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` og `revokedBy` etter tilbakekalling, `lastUsed` etter bruk, og `state`: `active`, `revoked`, `expired` eller `not yet valid`. Bare et aktivt sertifikat logger noen inn. `serverAcceptsCertificates` sier om OPC UA-serveren er på og har `HOTLOOP_OPCUA_SERVER_ALLOW_X509` satt; sertifikatene beholdes uansett. Bare det offentlige sertifikatet lagres eller sendes.
+Hvert X.509-sertifikat knyttet til en bruker for innlogging på OPC UA-serveren (se [OPC UA-serveren](/nb/edge/opc-ua-server/#x509-brukersertifikater)), det nyeste først: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Hvert har `thumbprint` (SHA-256 av DER-formen, heksadesimalt med små bokstaver), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` og `revokedBy` etter tilbakekalling, `lastUsed` etter bruk, og `state`: `active`, `revoked`, `expired` eller `not yet valid`. Bare et aktivt sertifikat logger noen inn. `serverAcceptsCertificates` sier om OPC UA-serveren er på og har `HOTLOOP_OPCUA_SERVER_ALLOW_X509` satt; sertifikatene beholdes uansett. Bare det offentlige sertifikatet lagres eller sendes.
 
 ### `GET /api/users/{username}/certificates`
 

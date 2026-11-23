@@ -42,7 +42,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 **OPC UA サーバー**は `opcuaServer.enabled: true` で、ポートは 4840 です。証明書が一致するように、`opcuaServer.endpointHost` にクライアントがボックスへ接続する名前を設定します。セキュリティモデルは [OPC UA サーバー](/ja/edge/opc-ua-server/)にあり、読み取り専用です。
 
-**ボックスの状態とホストのマウント。** チャートの OPC UA サーバーは、EmberNet ダッシュボード向けにこのボックス自身の状態(CPU、メモリ、ディスク、エージェントがファイルを書き込む場合はリアルタイムジッター)も提供し、ダッシュボード用にタグと値だけを読めるログインを作ります。これは既定で有効です。チャートはホストのルートを `/host` に、`/proc` を `/host/proc` に、どちらも読み取り専用でマウントし、権限は追加しません。制限付き Pod Security プロファイルを適用するクラスターは hostPath を拒否するため、そこでは、デバイスもマウントも不要なら `opcuaServer.dashboard.boxHealth.enabled: false` を、デバイスは残しつつディスクと CPU の値を不良として表示し何をマウントすべきか示すなら `opcuaServer.dashboard.boxHealth.hostMount: false` を設定します。残りは [OPC UA サーバー](/ja/edge/opc-ua-server/#box-health-for-the-embernet-dashboard)にあります。
+**ボックスの状態とホストのマウント。** チャートの OPC UA サーバーは、EmberNet ダッシュボード向けにこのボックス自身の状態(CPU、メモリ、ディスク、エージェントがファイルを書き込む場合はリアルタイムジッター)も提供し、ダッシュボード用にタグと値だけを読めるログインを作ります。これは既定で有効です。チャートはホストのルートを `/host` に、`/proc` を `/host/proc` に、どちらも読み取り専用でマウントし、権限は追加しません。制限付き Pod Security プロファイルを適用するクラスターは hostPath を拒否するため、そこでは、デバイスもマウントも不要なら `opcuaServer.dashboard.boxHealth.enabled: false` を、デバイスは残しつつディスクと CPU の値を不良として表示し何をマウントすべきか示すなら `opcuaServer.dashboard.boxHealth.hostMount: false` を設定します。残りは [OPC UA サーバー](/ja/edge/opc-ua-server/#embernet-ダッシュボード向けのボックスの状態)にあります。
 
 **Sparkplug 発行**は `edgePublish.enabled: true` で、`edgePublish.broker` と `edgePublish.group` が必須です。`edgePublish.node` も設定してください。しないと、ノード ID はリリース名になります。転送キューは 1 Gi のボリュームにあり、`edgePublish.queueMaxBytes` の既定は 64 MiB です(1 件約 240 バイトで約 248,000 件、毎秒 2,000 件なら約 2 分)。超えると古い値から破棄され、数えられます。`0` は無制限で、停止が十分長いとボリュームがいっぱいになります。Edge の発行には `replicaCount` が 1 であることが必要で、そうでなければチャートはレンダリングを拒否します。上位回線が切れたときの動作は [Edge 発行と蓄積転送](/ja/edge/edge-publish/)にあります。
 

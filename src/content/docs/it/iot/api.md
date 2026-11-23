@@ -559,7 +559,7 @@ Toglie il PIN o il badge e scollega l'account da ogni pannello kiosk in cui è c
 
 ### `GET /api/opcua/certificates`
 
-Ogni certificato X.509 associato a un utente per accedere al server OPC UA (vedere [il server OPC UA](/it/edge/opc-ua-server/#x509-user-certificates)), dal più recente: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Ognuno ha `thumbprint` (SHA-256 della forma DER, in esadecimale minuscolo), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` e `revokedBy` una volta revocato, `lastUsed` una volta usato, e `state`: `active`, `revoked`, `expired` o `not yet valid`. Solo un certificato attivo fa accedere qualcuno. `serverAcceptsCertificates` indica se il server OPC UA è attivo e ha `HOTLOOP_OPCUA_SERVER_ALLOW_X509` impostato; i certificati vengono conservati in entrambi i casi. Viene memorizzato o inviato solo il certificato pubblico.
+Ogni certificato X.509 associato a un utente per accedere al server OPC UA (vedere [il server OPC UA](/it/edge/opc-ua-server/#certificati-utente-x509)), dal più recente: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Ognuno ha `thumbprint` (SHA-256 della forma DER, in esadecimale minuscolo), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` e `revokedBy` una volta revocato, `lastUsed` una volta usato, e `state`: `active`, `revoked`, `expired` o `not yet valid`. Solo un certificato attivo fa accedere qualcuno. `serverAcceptsCertificates` indica se il server OPC UA è attivo e ha `HOTLOOP_OPCUA_SERVER_ALLOW_X509` impostato; i certificati vengono conservati in entrambi i casi. Viene memorizzato o inviato solo il certificato pubblico.
 
 ### `GET /api/users/{username}/certificates`
 

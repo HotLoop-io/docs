@@ -113,7 +113,7 @@ Una contraseña o un PIN incorrectos se cuentan contra la **cuenta** en la que s
 
 Solo admin. En la interfaz es **Ajustes, Usuarios**: cada cuenta con su rol, si está activa y cuándo inició sesión por última vez, con Añadir un usuario, Editar (rol, y desactivarla), Nueva contraseña y Eliminar. No se dibuja nada para quien no tenga `users.manage`, ni cuando la autenticación está desactivada. Una cuenta cuyos permisos se enumeraron uno a uno aparece como `custom` con cuántos, y Editar conserva la lista a menos que elija un rol, que la sustituye. Lo mismo mediante la API REST:
 
-Una contraseña tiene de 8 a 72 bytes: 72 es el límite propio de bcrypt, y una más larga se rechaza indicándolo. Funciona igual por OPC UA (véase [El servidor OPC UA](/es/edge/opc-ua-server/#who-may-log-in)); en versiones anteriores una contraseña de más de 64 bytes podía iniciar sesión aquí y no allí.
+Una contraseña tiene de 8 a 72 bytes: 72 es el límite propio de bcrypt, y una más larga se rechaza indicándolo. Funciona igual por OPC UA (véase [El servidor OPC UA](/es/edge/opc-ua-server/#quién-puede-iniciar-sesión)); en versiones anteriores una contraseña de más de 64 bytes podía iniciar sesión aquí y no allí.
 
 ```sh
 # List
