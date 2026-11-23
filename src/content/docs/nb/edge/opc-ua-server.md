@@ -5,7 +5,7 @@ description: "Publiser konfigurerte enheter og tags som et skrivebeskyttet OPC U
 
 OPC UA-serveren i HotLoop publiserer, siden 4.13.0, enhetene og taggene som er konfigurert i Gateway som et OPC UA-adresserom. En OPC UA-klient fra en tredjepart, en SCADA-pakke, en HMI, en historian eller et testverktøy som UaExpert kan dermed lese Gatewayens live tags uten at noen skriver en HotLoop-driver for den andre siden.
 
-Av som standard (`HOTLOOP_OPCUA_SERVER_ENABLED`): å åpne en lytter på et anleggsnettverk er noe en driftsetting gjør med vilje. Standardport 4840.
+På som standard (`HOTLOOP_OPCUA_SERVER_ENABLED`), i binærfilen og i Helm-chartet. Den starter med HotLoop-autentisering på og en egen innlogging, `opcua-reader`, som HotLoop lager med et generert passord som Innstillinger viser en administrator (`GET /api/opcua/server`); den kan lese tagger og verdier og ingenting annet. Med HotLoop-autentisering av finnes det ingen brukere å logge inn som, så serveren venter og sier fra (den nekter ikke å starte). Er 4840 allerede tatt av en annen OPC UA-server på boksen, venter den og sier fra; en port du valgte som ikke kan åpnes, er en feil: å åpne en lytter på et anleggsnettverk er noe en driftsetting gjør med vilje. Standardport 4840.
 
 **Den er skrivebeskyttet.** Se [Hvorfor den er skrivebeskyttet](#hvorfor-den-er-skrivebeskyttet). Den leverer også historikken til hver tag: se [Historikk](#historikk).
 
@@ -295,7 +295,7 @@ Hver rad er en fersk økt med den policyen og modusen, som leser live-verdier. D
 
 | Variabel | Standard | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | Funksjonen er av til dette er satt |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | På i binærfilen og chartet; `false` slår serveren av |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP-port, på alle grensesnitt |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | denne maskinens vertsnavn | Det klienter får beskjed om å koble til; skrives også inn i et generert sertifikat. **Sett denne.** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | Må være stabil mellom omstarter; må være en URI |
