@@ -216,7 +216,7 @@ HotLoop core 是四款产品，一个代码库，一个标签。每次核心发�
 - [x] 输入到设备地址、URL 选项（`mqtt://user:pass@host`、`?token=`）或自由文本中的凭据以明文保存：每个画面都会隐藏它，数据库和备份却不会。现在任何带有凭据的字符串，按照脱敏用来隐藏它的同一判断，都会被整体封存，包括地址列，之后才开启的密钥也会封存此前保存的内容。已修复，参见[备份与恢复](/zh-hans/iot/backup/#设备凭据与密钥)
 - [x] OPC UA 浏览把每个节点都标成 `float`，而不是读取其数据类型，所以通过我们自己的 OPC UA 服务器回送的文本变量会以 `Bad_TypeMismatch` 返回。是 Ignition 8.3.9 发现的。已修复（#42）
 - 发现变量现在会略过它。在设备上设置 `browseServerNodes` 可以把它找回来，或者把 `browseRoot` 指向 `i=2253` 来有意查看其内部。已修复
-- [x] OPC UA X.509 用户令牌，客户端和服务器。管理员关联到某个用户的证书（设置、API、MCP）会让客户端以该用户的身份和权限登录我们的 OPC UA 服务器；吊销有效，每次登录和拒绝都记入日志簿。在设置 `HOTLOOP_OPCUA_SERVER_ALLOW_X509` 之前保持关闭。设备驱动用 `userCertificate` 和 `userPrivateKey`（RSA，密钥像密码一样封存）以同样方式登录。带名称规则的受信任 CA 尚未构建；参见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#x509-user-certificates)
+- [x] OPC UA X.509 用户令牌，客户端和服务器。管理员关联到某个用户的证书（设置、API、MCP）会让客户端以该用户的身份和权限登录我们的 OPC UA 服务器；吊销有效，每次登录和拒绝都记入日志簿。在设置 `HOTLOOP_OPCUA_SERVER_ALLOW_X509` 之前保持关闭。设备驱动用 `userCertificate` 和 `userPrivateKey`（RSA，密钥像密码一样封存）以同样方式登录。带名称规则的受信任 CA 尚未构建；参见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#x509-用户证书)
 - [x] 我们的 OPC UA 服务器一直提供已弃用的 `Basic128Rsa15` 和 `Basic256` 策略。现在默认关闭，可用 `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES` 为旧客户端重新开启；关闭时它们不会被列出，请求其中之一的通道会被拒绝。已在该库的一份副本中修复
 - [x] 图表固定了 TimescaleDB 2.29.1；2.30.1 已经发布。已升级，测试在同一版本上运行，已有安装的扩展现在会在启动时真正更新，而不是永远停在旧版本
 - [x] 边缘发布者可能在订阅 NCMD 之前就发布 NBIRTH，而 Sparkplug B 3.0 第 5 节禁止这样做，所以主机即时的 Rebirth 或 Reboot 会被丢弃。Fleet 在监听 birth 时有同样的漏洞。已修复

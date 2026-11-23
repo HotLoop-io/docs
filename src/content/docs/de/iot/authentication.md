@@ -113,7 +113,7 @@ Ein falsches Passwort oder eine falsche PIN wird gegen das **Konto** gezählt, a
 
 Nur admin. In der Oberfläche unter **Einstellungen, Benutzer**: jedes Konto mit Rolle, ob es aktiv ist, und wann es sich zuletzt angemeldet hat, mit Benutzer hinzufügen, Bearbeiten (Rolle und Abschalten), Neues Passwort und Löschen. Für jemanden ohne `users.manage` wird nichts gezeichnet, auch nicht, wenn die Authentifizierung aus ist. Ein Konto, dessen Berechtigungen einzeln aufgelistet wurden, erscheint als `custom` mit der Anzahl, und Bearbeiten behält die Liste, außer Sie wählen eine Rolle, die sie ersetzt. Dasselbe über die REST-API:
 
-Ein Passwort hat 8 bis 72 Bytes: 72 ist bcrypts eigene Grenze, und ein längeres wird mit entsprechendem Hinweis abgelehnt. Es funktioniert genauso über OPC UA (siehe [Der OPC-UA-Server](/de/edge/opc-ua-server/#who-may-log-in)); in früheren Versionen konnte sich ein Passwort über 64 Bytes hier anmelden und dort nicht.
+Ein Passwort hat 8 bis 72 Bytes: 72 ist bcrypts eigene Grenze, und ein längeres wird mit entsprechendem Hinweis abgelehnt. Es funktioniert genauso über OPC UA (siehe [Der OPC-UA-Server](/de/edge/opc-ua-server/#wer-sich-anmelden-darf)); in früheren Versionen konnte sich ein Passwort über 64 Bytes hier anmelden und dort nicht.
 
 ```sh
 # List

@@ -559,7 +559,7 @@ PIN またはバッジを取り上げ、そのアカウントがサインイン�
 
 ### `GET /api/opcua/certificates`
 
-OPC UA サーバーへのサインイン用にユーザーに紐づけられたすべての X.509 証明書を、新しい順に返します([OPC UA サーバー](/ja/edge/opc-ua-server/#x509-user-certificates)を参照)。`{"serverAcceptsCertificates":false,"certificates":[...]}`。各証明書には、`thumbprint`(DER 形式の SHA-256、小文字の 16 進)、`username`、`label`、`subject`、`notBefore`、`notAfter`、`addedBy`、`addedAt`、失効後は `revokedAt` と `revokedBy`、使用後は `lastUsed`、そして `state`(`active`、`revoked`、`expired`、`not yet valid`)があります。サインインできるのは有効な証明書だけです。`serverAcceptsCertificates` は、OPC UA サーバーがオンで `HOTLOOP_OPCUA_SERVER_ALLOW_X509` が設定されているかを示し、証明書はどちらの場合も保持されます。保存も送信もされるのは公開証明書だけです。
+OPC UA サーバーへのサインイン用にユーザーに紐づけられたすべての X.509 証明書を、新しい順に返します([OPC UA サーバー](/ja/edge/opc-ua-server/#x509-ユーザー証明書)を参照)。`{"serverAcceptsCertificates":false,"certificates":[...]}`。各証明書には、`thumbprint`(DER 形式の SHA-256、小文字の 16 進)、`username`、`label`、`subject`、`notBefore`、`notAfter`、`addedBy`、`addedAt`、失効後は `revokedAt` と `revokedBy`、使用後は `lastUsed`、そして `state`(`active`、`revoked`、`expired`、`not yet valid`)があります。サインインできるのは有効な証明書だけです。`serverAcceptsCertificates` は、OPC UA サーバーがオンで `HOTLOOP_OPCUA_SERVER_ALLOW_X509` が設定されているかを示し、証明書はどちらの場合も保持されます。保存も送信もされるのは公開証明書だけです。
 
 ### `GET /api/users/{username}/certificates`
 

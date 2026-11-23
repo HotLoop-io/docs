@@ -113,7 +113,7 @@ Một mật khẩu hoặc PIN sai được tính cho **tài khoản** bị thử
 
 Chỉ admin. Trong giao diện là **Cài đặt, Người dùng**: mọi tài khoản cùng vai trò, đang bật hay không, và lần đăng nhập gần nhất, với Thêm người dùng, Sửa (vai trò, và tắt tài khoản), Mật khẩu mới và Xóa. Không có gì được vẽ ra cho người không có `users.manage`, hoặc khi xác thực đang tắt. Một tài khoản có quyền được liệt kê từng cái hiện là `custom` kèm số lượng, và Sửa giữ danh sách trừ khi bạn chọn một vai trò, vai trò đó sẽ thay thế danh sách. Cũng những việc ấy qua REST API:
 
-Mật khẩu dài từ 8 đến 72 byte: 72 là giới hạn của chính bcrypt, và mật khẩu dài hơn bị từ chối kèm lý do đó. Nó hoạt động như vậy cả qua OPC UA (xem [Máy chủ OPC UA](/vi/edge/opc-ua-server/#who-may-log-in)); ở các bản phát hành trước, một mật khẩu trên 64 byte có thể đăng nhập ở đây mà không đăng nhập được ở đó.
+Mật khẩu dài từ 8 đến 72 byte: 72 là giới hạn của chính bcrypt, và mật khẩu dài hơn bị từ chối kèm lý do đó. Nó hoạt động như vậy cả qua OPC UA (xem [Máy chủ OPC UA](/vi/edge/opc-ua-server/#ai-được-đăng-nhập)); ở các bản phát hành trước, một mật khẩu trên 64 byte có thể đăng nhập ở đây mà không đăng nhập được ở đó.
 
 ```sh
 # List

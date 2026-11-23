@@ -559,7 +559,7 @@ Gỡ PIN hoặc thẻ và đăng xuất tài khoản khỏi mọi bảng điều
 
 ### `GET /api/opcua/certificates`
 
-Mọi chứng chỉ X.509 gắn với người dùng để đăng nhập vào máy chủ OPC UA (xem [máy chủ OPC UA](/vi/edge/opc-ua-server/#x509-user-certificates)), mới nhất trước: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Mỗi chứng chỉ có `thumbprint` (SHA-256 của dạng DER, hex chữ thường), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` và `revokedBy` khi đã thu hồi, `lastUsed` khi đã dùng, và `state`: `active`, `revoked`, `expired` hoặc `not yet valid`. Chỉ chứng chỉ đang hoạt động mới đăng nhập được. `serverAcceptsCertificates` cho biết máy chủ OPC UA có đang bật và đã đặt `HOTLOOP_OPCUA_SERVER_ALLOW_X509` hay không; chứng chỉ được giữ trong cả hai trường hợp. Chỉ chứng chỉ công khai được lưu hoặc gửi.
+Mọi chứng chỉ X.509 gắn với người dùng để đăng nhập vào máy chủ OPC UA (xem [máy chủ OPC UA](/vi/edge/opc-ua-server/#chứng-chỉ-người-dùng-x509)), mới nhất trước: `{"serverAcceptsCertificates":false,"certificates":[...]}`. Mỗi chứng chỉ có `thumbprint` (SHA-256 của dạng DER, hex chữ thường), `username`, `label`, `subject`, `notBefore`, `notAfter`, `addedBy`, `addedAt`, `revokedAt` và `revokedBy` khi đã thu hồi, `lastUsed` khi đã dùng, và `state`: `active`, `revoked`, `expired` hoặc `not yet valid`. Chỉ chứng chỉ đang hoạt động mới đăng nhập được. `serverAcceptsCertificates` cho biết máy chủ OPC UA có đang bật và đã đặt `HOTLOOP_OPCUA_SERVER_ALLOW_X509` hay không; chứng chỉ được giữ trong cả hai trường hợp. Chỉ chứng chỉ công khai được lưu hoặc gửi.
 
 ### `GET /api/users/{username}/certificates`
 

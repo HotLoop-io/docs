@@ -113,7 +113,7 @@ Una password o un PIN errati vengono contati sull'**account** su cui sono stati 
 
 Solo admin. Nell'interfaccia è **Impostazioni, Utenti**: ogni account con il suo ruolo, se è attivo e quando ha fatto l'ultimo accesso, con Aggiungi un utente, Modifica (ruolo, e disattivazione), Nuova password ed Elimina. Non viene disegnato nulla per chi non ha `users.manage`, né quando l'autenticazione è disattivata. Un account le cui autorizzazioni sono state elencate una per una appare come `custom` con quante sono, e Modifica mantiene l'elenco a meno che non scegliate un ruolo, che lo sostituisce. Le stesse operazioni tramite l'API REST:
 
-Una password è di 8-72 byte: 72 è il limite proprio di bcrypt, e una più lunga viene rifiutata dicendolo. Funziona allo stesso modo via OPC UA (vedi [Il server OPC UA](/it/edge/opc-ua-server/#who-may-log-in)); nelle versioni precedenti una password di oltre 64 byte poteva accedere qui e non là.
+Una password è di 8-72 byte: 72 è il limite proprio di bcrypt, e una più lunga viene rifiutata dicendolo. Funziona allo stesso modo via OPC UA (vedi [Il server OPC UA](/it/edge/opc-ua-server/#chi-può-accedere)); nelle versioni precedenti una password di oltre 64 byte poteva accedere qui e non là.
 
 ```sh
 # List

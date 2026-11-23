@@ -113,7 +113,7 @@ Et feil passord eller en feil PIN telles mot **kontoen** det ble prøvd på. Ti 
 
 Bare admin. I grensesnittet er det **Innstillinger, Brukere**: hver konto med rolle, om den er på, og når den sist logget inn, med Legg til en bruker, Rediger (rolle, og å slå den av), Nytt passord og Slett. Ingenting tegnes for noen uten `users.manage`, eller når autentisering er av. En konto hvis tillatelser ble listet én og én vises som `custom` med hvor mange, og Rediger beholder listen med mindre du velger en rolle, som erstatter den. De samme tingene via REST-API-et:
 
-Et passord er 8 til 72 byte: 72 er bcrypts egen grense, og et lengre avvises med det oppgitt. Det fungerer likt over OPC UA (se [OPC UA-serveren](/nb/edge/opc-ua-server/#who-may-log-in)); i tidligere versjoner kunne et passord over 64 byte logge inn her og ikke der.
+Et passord er 8 til 72 byte: 72 er bcrypts egen grense, og et lengre avvises med det oppgitt. Det fungerer likt over OPC UA (se [OPC UA-serveren](/nb/edge/opc-ua-server/#hvem-som-kan-logge-inn)); i tidligere versjoner kunne et passord over 64 byte logge inn her og ikke der.
 
 ```sh
 # List
