@@ -27,8 +27,8 @@ Il y a deux façons d'exécuter un produit HotLoop pour de bon : Helm sur k3s o
 | [HotLoop Edge Relay](/fr/edge-relay/overview/) | 4.24.0 | Oui | Oui | [Installer Edge Relay](/fr/edge-relay/install/) |
 | [HotLoop Flow](/fr/flow/overview/) | 2.16.8 | Oui | Oui | [Installer Flow](/fr/flow/install/) |
 | [HotLoop Cascade](/fr/cascade/overview/) | 1.5.1 | Oui, sans connexion | Oui, sans connexion, voir [Cascade avec Podman Quadlet](/fr/cascade/quadlet/) | [Exécuter Cascade](/fr/cascade/running/) |
-| [HotLoop for CODESYS](/fr/codesys/overview/) | 0.3.8 | Oui, ou l'App Store EmberCORE | Non | [Installer HotLoop for CODESYS](/fr/codesys/install/) |
-| [HotLoop Transmitter](/fr/transmitter/overview/) | 1.1.0 | Non, c'est une bibliothèque CODESYS | Non, c'est une bibliothèque CODESYS | [Installer Transmitter](/fr/transmitter/install/) |
+| [HotLoop for CODESYS](/fr/codesys/overview/) | 0.3.10 | Oui, ou l'App Store EmberCORE | Non | [Installer HotLoop for CODESYS](/fr/codesys/install/) |
+| [HotLoop Transmitter](/fr/transmitter/overview/) | 1.2.0 | Non, c'est une bibliothèque CODESYS | Non, c'est une bibliothèque CODESYS | [Installer Transmitter](/fr/transmitter/install/) |
 
 HotLoop IoT, Edge, Gateway et Edge Relay sortent d'un même tag, en bloc, donc ils partagent un numéro de version. Flow, Cascade, HotLoop for CODESYS et Transmitter ont le leur. Les unités Quadlet d'IoT, Edge et Gateway demandent Podman 5.0 ou plus, et celle du relais a tourné sur Podman 4.9.3. Raspberry Pi OS Bookworm fournit la 4.3, qui n'a pas du tout Quadlet : un Pi veut donc Trixie ou plus récent.
 

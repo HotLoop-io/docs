@@ -8,11 +8,11 @@ which the CODESYS Control runtimes for Linux SL have (the second one is new in 1
 
 ## From the CODESYS Installer
 
-Since 1.1.0 the release also has `HotLoopTransmitter-1.1.0.package`, at https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.package. Install it with the CODESYS Installer (in the IDE: Tools, CODESYS Installer), or with no window using its command line, `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`. The Installer puts the library into that profile's library repository under the company HotLoop, and you go to step 3 below. The package is the same library as the `.library` file, in a ZIP the Installer reads, so the two routes give the same library.
+Since 1.1.0 the release also has `HotLoopTransmitter-1.2.0.package`, at https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.package. Install it with the CODESYS Installer (in the IDE: Tools, CODESYS Installer), or with no window using its command line, `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`. The Installer puts the library into that profile's library repository under the company HotLoop, and you go to step 3 below. The package is the same library as the `.library` file, in a ZIP the Installer reads, so the two routes give the same library.
 
 ## From the library file
 
-1. Download `HotLoopTransmitter-1.1.0.library` from https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library, and check it against `SHA256SUMS` in the same folder (`sha256sum -c SHA256SUMS`).
+1. Download `HotLoopTransmitter-1.2.0.library` from https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library, and check it against `SHA256SUMS` in the same folder (`sha256sum -c SHA256SUMS`).
 2. In the CODESYS IDE: Tools, Library Repository, Install, pick the file. It is now in the repository under the
    company HotLoop.
 3. In your project, open the Library Manager of the application, Add Library, and pick HotLoop Transmitter.
@@ -22,10 +22,14 @@ Since 1.1.0 the release also has `HotLoopTransmitter-1.1.0.package`, at https://
    network's switches must carry the group.
 
 The `.compiled-library` file is the same library without its source. Install that one instead if you do not want the
-Structured Text visible in the Library Manager. It is in the same folder, as `HotLoopTransmitter-1.1.0.compiled-library`.
+Structured Text visible in the Library Manager. It is in the same folder, as `HotLoopTransmitter-1.2.0.compiled-library`.
 
 To check what arrives, any UDP listener on the destination port works. A small Go program that listens on a port or joins a
 multicast group and prints each datagram as a line of JSON with its hex works well.
+
+## HotLoop Alarms
+
+Since 1.2.0 the release also has `HotLoopAlarms-1.0.0.0.library` and `HotLoopAlarms-1.0.0.0.compiled-library`, the library for a PLC's own alarms, in the same folder. Install either one the same way as the Transmitter library and add it to the application's Library Manager. The project needs an Alarm Configuration, and HotLoop 4.23.6 and later reads the block.
 
 ## If the block reports an error
 

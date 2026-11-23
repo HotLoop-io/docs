@@ -11,7 +11,7 @@ This page is what is published, and how far HotLoop for CODESYS has been run.
 
 ## What is out
 
-- **The chart.** `hotloop-codesys` 0.3.8 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-19, with every earlier version still there beside it. It wraps HotLoop 4.22.0. Install 0.3.8: [the release notes](/releases/codesys-0-3-5/) say what each chart changed.
+- **The chart.** `hotloop-codesys` 0.3.10 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-23, with every earlier version still there beside it. It wraps HotLoop 4.24.0. Install 0.3.10: [the release notes](/releases/codesys-0-3-5/) say what each chart changed.
 - **The provisioner image.** `ghcr.io/hotloop-io/hotloop-provision` at 0.3.3 pulls with no login, for amd64 and for arm64, and the chart runs it.
 - **The App Store listing.** It is in the EmberCORE App Store, and EmberNet installs it onto your tenant.
 

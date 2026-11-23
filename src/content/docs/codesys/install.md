@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS is a Helm chart, `hotloop-codesys`, that installs HotLoop Edge and a provisioner on the same node as a CODESYS runtime. The chart is published at `https://hotloop.io/hotloop-codesys/`, at 0.3.8 as the newest, and the provisioner image pulls with no login. On EmberNet it is an App Store app. With no EmberNet it is Helm on k3s.
+HotLoop for CODESYS is a Helm chart, `hotloop-codesys`, that installs HotLoop Edge and a provisioner on the same node as a CODESYS runtime. The chart is published at `https://hotloop.io/hotloop-codesys/`, at 0.3.10 as the newest, and the provisioner image pulls with no login. On EmberNet it is an App Store app. With no EmberNet it is Helm on k3s.
 
 ## What the node needs first
 
 - **A CODESYS runtime on the same node that publishes its OPC UA server on port 4840.** The provisioner finds the node's own address from Kubernetes and reads `<node address>:4840`. The runtime's own chart publishes that port on the host.
 - **A Symbol Configuration in the PLC program** with *Support OPC UA features* on, listing the variables you want to see, or `{attribute 'symbol' := 'read'}` on them in the declaration. A PLC with no Symbol Configuration answers the setup with a message that says to add one. This is the only change to the PLC project.
-- **HotLoop 4.22.0**, which the chart wraps. The CODESYS connector came with HotLoop 4.19.4. The chart depends on the `hotloop-edge` chart on the `~4.22.0` line.
+- **HotLoop 4.24.0**, which the chart wraps. The CODESYS connector came with HotLoop 4.19.4. The chart depends on the `hotloop-edge` chart on the `~4.24.0` line.
 - **A profile.** One Secret with one key. [The profile page](/codesys/profile/) has the shape.
 
 ## From the EmberCORE App Store
@@ -26,7 +26,7 @@ The chart is marked for staff, so the Store lists it for EmberNet staff, and the
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace>
 ```
 
 Name the Secret `<release>-profile`, or change what the chart looks for with `profile.existingSecret` (the Secret) and `profile.key` (the key, `profile.json` by default). To pin the install to the runtime's node, set `nodeSelector`. For HotLoop alone with no profile, to set up by hand, install with `--set provisioner.enabled=false`.
@@ -36,7 +36,7 @@ Name the Secret `<release>-profile`, or change what the chart looks for with `pr
 A runtime installed from its chart with `network.hostNetwork=true` holds host port 8080 for WebVisu, so HotLoop's page cannot also listen on 8080 there. The chart has HotLoop's page listen on 8090 inside the pod and keeps the Service on 8080, so the App Store tile and the provisioner reach it as before. Install with the host network on for both:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

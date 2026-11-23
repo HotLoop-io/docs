@@ -5,6 +5,10 @@ description: "Cosa ha già costruito HotLoop Transmitter, cosa arriva dopo e cos
 
 Cosa c'è oggi nella confezione, cosa viene dopo e cosa non è volutamente in programma. Una voce passa a "Rilasciato" solo quando è stata eseguita sul vero runtime 4.22.0.0 e un ricevitore l'ha letta.
 
+## Rilasciato nella 1.2.0
+
+* HotLoop Alarms, una libreria che legge gli allarmi attivi, in attesa e riconosciuti del gestore allarmi di CODESYS in variabili semplici ed esegue il riconoscimento che HotLoop scrive di ritorno. È stata eseguita sul vero runtime 4.22.0.0 e l'elenco allarmi di HotLoop l'ha letta.
+
 ## Rilasciato nella 1.1.0
 
 * Timestamp di DataSetMessage e NetworkMessage presi dall'orologio in tempo reale del PLC, attivi per impostazione predefinita; `bTimestamp` li disattiva.

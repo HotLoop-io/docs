@@ -24,7 +24,7 @@ Das ist die Liste dessen, was fertig ist und was noch fehlt, in der Reihenfolge,
 - [x] Das Provisioner-Image öffentlich, es lässt sich also ohne Anmeldung ziehen, 0.3.3.
 - [x] Ein Multi-Arch-Provisioner-Image, amd64 und arm64, ab 0.3.3 und Chart 0.3.8.
 - [x] Zwei OPC-UA-PubSub-Listener auf einem UDP-Port, mit HotLoop 4.22.0 und Chart 0.3.7.
-- [x] [Versionshinweise](/de/releases/codesys-0-3-8/) für jedes Chart, 0.3.0 bis 0.3.8.
+- [x] [Versionshinweise](/de/releases/codesys-0-3-10/) für jedes Chart, 0.3.0 bis 0.3.10.
 
 ## Auf Bare Metal bewährt
 

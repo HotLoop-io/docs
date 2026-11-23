@@ -6,6 +6,10 @@ description: "What HotLoop Transmitter has built, what is next, and what is deli
 What is in the box today, what is next, and what is deliberately not planned. A line moves to "Shipped" only
 when it has run on the real 4.22.0.0 runtime and a receiver has read it.
 
+## Shipped in 1.2.0
+
+* HotLoop Alarms, a library that reads the CODESYS alarm manager's own active, waiting and acknowledged alarms into plain variables and carries out an acknowledge that HotLoop writes back. It ran on the real 4.22.0.0 runtime, and HotLoop's alarm list read it.
+
 ## Shipped in 1.1.0
 
 * DataSetMessage and NetworkMessage timestamps from the PLC's real-time clock, on by default, `bTimestamp` switches them off.

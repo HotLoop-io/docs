@@ -15,7 +15,7 @@ HotLoop의 새 도구는 실질적인 이유가 없는 한 모두 Go로 작성�
 
 ## 사용 방법
 
-1. `HotLoopTransmitter-1.1.0.library`를 CODESYS 라이브러리 저장소에 설치하거나(Tools, Library Repository, Install), CODESYS Installer로 `HotLoopTransmitter-1.1.0.package`를 설치한 뒤 프로젝트의 Library Manager에 추가합니다. [설치 페이지](/ko/transmitter/install/)에 다운로드와 자세한 내용이 있습니다.
+1. `HotLoopTransmitter-1.2.0.library`를 CODESYS 라이브러리 저장소에 설치하거나(Tools, Library Repository, Install), CODESYS Installer로 `HotLoopTransmitter-1.2.0.package`를 설치한 뒤 프로젝트의 Library Manager에 추가합니다. [설치 페이지](/ko/transmitter/install/)에 다운로드와 자세한 내용이 있습니다.
 2. 퍼블리셔를 선언하고, 발행할 변수를 시작할 때 한 번 추가한 다음, 사이클마다 호출합니다.
 
 ```iecst

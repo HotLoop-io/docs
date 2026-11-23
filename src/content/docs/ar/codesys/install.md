@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS هو chart من Helm، `hotloop-codesys`، يثبّت HotLoop Edge ومُهيِّئًا على العقدة نفسها التي عليها بيئة تشغيل CODESYS. يُنشر الـ chart على `https://hotloop.io/hotloop-codesys/`، مع 0.3.8 بوصفه الأحدث، وتُسحب صورة المُهيِّئ دون تسجيل دخول. على EmberNet هو تطبيق في App Store. ومن دون EmberNet هو Helm على k3s.
+HotLoop for CODESYS هو chart من Helm، `hotloop-codesys`، يثبّت HotLoop Edge ومُهيِّئًا على العقدة نفسها التي عليها بيئة تشغيل CODESYS. يُنشر الـ chart على `https://hotloop.io/hotloop-codesys/`، مع 0.3.10 بوصفه الأحدث، وتُسحب صورة المُهيِّئ دون تسجيل دخول. على EmberNet هو تطبيق في App Store. ومن دون EmberNet هو Helm على k3s.
 
 ## ما تحتاجه العقدة أولًا
 
 - **بيئة تشغيل CODESYS على العقدة نفسها تنشر خادم OPC UA الخاص بها على المنفذ 4840.** يجلب المُهيِّئ عنوان العقدة نفسها من Kubernetes ويقرأ `<node address>:4840`. وينشر الـ chart الخاص ببيئة التشغيل ذلك المنفذ على المضيف.
 - **Symbol Configuration في برنامج PLC** مع تفعيل *Support OPC UA features*، تسرد المتغيرات التي تريد رؤيتها، أو `{attribute 'symbol' := 'read'}` عليها في التصريح. وPLC بلا Symbol Configuration يردّ على الإعداد برسالة تقول أن تضيف واحدة. وهذا هو التغيير الوحيد في مشروع PLC.
-- **HotLoop 4.22.0**، الذي يغلّفه الـ chart. جاء موصّل CODESYS مع HotLoop 4.19.4. ويعتمد الـ chart على chart باسم `hotloop-edge` على الخط `~4.22.0`.
+- **HotLoop 4.24.0**، الذي يغلّفه الـ chart. جاء موصّل CODESYS مع HotLoop 4.19.4. ويعتمد الـ chart على chart باسم `hotloop-edge` على الخط `~4.24.0`.
 - **ملف تعريف.** Secret واحد بمفتاح واحد. [صفحة ملف التعريف](/ar/codesys/profile/) فيها شكله.
 
 ## من App Store في EmberCORE
@@ -26,7 +26,7 @@ HotLoop for CODESYS هو chart من Helm، `hotloop-codesys`، يثبّت HotLoo
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace>
 ```
 
 سمِّ الـ Secret باسم `<release>-profile`، أو غيّر ما يبحث عنه الـ chart بـ `profile.existingSecret` (الـ Secret) و`profile.key` (المفتاح، `profile.json` افتراضيًا). ولتثبيت التركيب على عقدة بيئة التشغيل، اضبط `nodeSelector`. ولـ HotLoop وحده دون ملف تعريف، لتهيئته يدويًا، ثبّت مع `--set provisioner.enabled=false`.
@@ -36,7 +36,7 @@ helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <names
 بيئة التشغيل المثبّتة من الـ chart الخاص بها مع `network.hostNetwork=true` تحتجز منفذ المضيف 8080 لـ WebVisu، فلا تستطيع صفحة HotLoop أن تستمع أيضًا على 8080 هناك. يجعل الـ chart صفحة HotLoop تستمع على 8090 داخل الـ pod ويُبقي الـ Service على 8080، فيصل إليها مربع App Store والمُهيِّئ كما كان. ثبّت مع تفعيل شبكة المضيف لكليهما:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

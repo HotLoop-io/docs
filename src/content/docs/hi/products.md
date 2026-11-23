@@ -17,8 +17,8 @@ HotLoop प्लांट के लिए आठ उत्पाद हैं:
 | **HotLoop Edge Relay** | HotLoop core | <a href="/hi/edge-relay/overview/">दस्तावेज़</a> | <a href="/hi/edge-relay/install/">इंस्टॉल</a> | <a href="/hi/releases/#hotloop-core">नोट्स</a> | <a href="/hi/roadmap/">रोडमैप</a> |
 | **HotLoop Flow** | Flow | <a href="/hi/flow/overview/">दस्तावेज़</a> | <a href="/hi/flow/install/">इंस्टॉल</a> | <a href="/hi/releases/#hotloop-flow">नोट्स</a> | <a href="/hi/flow/roadmap/">रोडमैप</a> |
 | **HotLoop Cascade** | Cascade | <a href="/hi/cascade/overview/">दस्तावेज़</a> | <a href="/hi/cascade/running/">इंस्टॉल</a> | <a href="/hi/releases/#hotloop-cascade">नोट्स</a> | <a href="/hi/cascade/roadmap/">रोडमैप</a> |
-| **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/hi/codesys/overview/">दस्तावेज़</a> | <a href="/hi/codesys/install/">इंस्टॉल</a> | <a href="/hi/releases/codesys-0-3-8/">नोट्स</a> | <a href="/hi/codesys/roadmap/">रोडमैप</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/hi/transmitter/overview/">दस्तावेज़</a> | <a href="/hi/transmitter/install/">इंस्टॉल</a> | <a href="/hi/releases/transmitter-1-1-0/">नोट्स</a> | <a href="/hi/transmitter/roadmap/">रोडमैप</a> |
+| **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/hi/codesys/overview/">दस्तावेज़</a> | <a href="/hi/codesys/install/">इंस्टॉल</a> | <a href="/hi/releases/codesys-0-3-10/">नोट्स</a> | <a href="/hi/codesys/roadmap/">रोडमैप</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/hi/transmitter/overview/">दस्तावेज़</a> | <a href="/hi/transmitter/install/">इंस्टॉल</a> | <a href="/hi/releases/transmitter-1-2-0/">नोट्स</a> | <a href="/hi/transmitter/roadmap/">रोडमैप</a> |
 
 नीचे की तालिका कोर के चारों उत्पादों की तुलना करती है।
 

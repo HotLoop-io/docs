@@ -24,8 +24,8 @@ verifier) are Go.
 
 ## Use it
 
-1. Install `HotLoopTransmitter-1.1.0.library` into the CODESYS library repository (Tools, Library Repository,
-   Install), or install `HotLoopTransmitter-1.1.0.package` with the CODESYS Installer, then add it to the project's Library Manager. The [install page](/transmitter/install/) has the downloads and the details.
+1. Install `HotLoopTransmitter-1.2.0.library` into the CODESYS library repository (Tools, Library Repository,
+   Install), or install `HotLoopTransmitter-1.2.0.package` with the CODESYS Installer, then add it to the project's Library Manager. The [install page](/transmitter/install/) has the downloads and the details.
 2. Declare a publisher, add the variables you want to publish once at start, and call it every cycle:
 
 ```iecst

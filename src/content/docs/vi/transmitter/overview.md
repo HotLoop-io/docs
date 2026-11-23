@@ -15,7 +15,7 @@ Mọi công cụ HotLoop mới đều viết bằng Go, trừ khi có lý do th�
 
 ## Cách dùng
 
-1. Cài `HotLoopTransmitter-1.1.0.library` vào kho thư viện của CODESYS (Tools, Library Repository, Install), hoặc cài `HotLoopTransmitter-1.1.0.package` bằng CODESYS Installer, rồi thêm vào Library Manager của dự án. [Trang cài đặt](/vi/transmitter/install/) có các bản tải và chi tiết.
+1. Cài `HotLoopTransmitter-1.2.0.library` vào kho thư viện của CODESYS (Tools, Library Repository, Install), hoặc cài `HotLoopTransmitter-1.2.0.package` bằng CODESYS Installer, rồi thêm vào Library Manager của dự án. [Trang cài đặt](/vi/transmitter/install/) có các bản tải và chi tiết.
 2. Khai báo một publisher, thêm các biến muốn xuất bản một lần lúc khởi động, rồi gọi nó mỗi chu kỳ:
 
 ```iecst

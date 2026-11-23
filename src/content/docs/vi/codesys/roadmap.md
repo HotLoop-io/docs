@@ -24,7 +24,7 @@ editUrl: false
 - [x] Ảnh provisioner công khai, nên kéo về được mà không cần đăng nhập, 0.3.3.
 - [x] Ảnh provisioner đa kiến trúc, amd64 và arm64, từ 0.3.3 và chart 0.3.8.
 - [x] Hai listener OPC UA PubSub trên một cổng UDP, với HotLoop 4.22.0 và chart 0.3.7.
-- [x] [Ghi chú phát hành](/vi/releases/codesys-0-3-8/) cho mọi chart, từ 0.3.0 đến 0.3.8.
+- [x] [Ghi chú phát hành](/vi/releases/codesys-0-3-10/) cho mọi chart, từ 0.3.0 đến 0.3.10.
 
 ## Đã chứng minh trên phần cứng không có hệ điều hành
 

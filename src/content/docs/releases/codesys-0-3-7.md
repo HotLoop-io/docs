@@ -9,7 +9,7 @@ editUrl: false
 
 ## What changed
 
-0.3.7 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-19.
+0.3.7 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-23.
 
 - **It wraps HotLoop 4.22.0,** which gives every OPC UA PubSub device on one address and port a shared socket, so two listeners can sit on one UDP port.
 - **The provisioner takes two listeners on one port.** Provisioner 0.3.2 no longer turns away a profile that puts two `opcua-pubsub` devices on one port.

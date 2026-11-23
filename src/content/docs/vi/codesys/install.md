@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS là một chart Helm, `hotloop-codesys`, cài HotLoop Edge và một bộ cấp phát hồ sơ trên cùng nút với một runtime CODESYS. Chart được công bố tại `https://hotloop.io/hotloop-codesys/`, với 0.3.8 là mới nhất, và image của bộ cấp phát tải về không cần đăng nhập. Trên EmberNet đây là một ứng dụng App Store. Không có EmberNet thì là Helm trên k3s.
+HotLoop for CODESYS là một chart Helm, `hotloop-codesys`, cài HotLoop Edge và một bộ cấp phát hồ sơ trên cùng nút với một runtime CODESYS. Chart được công bố tại `https://hotloop.io/hotloop-codesys/`, với 0.3.10 là mới nhất, và image của bộ cấp phát tải về không cần đăng nhập. Trên EmberNet đây là một ứng dụng App Store. Không có EmberNet thì là Helm trên k3s.
 
 ## Nút cần gì trước tiên
 
 - **Một runtime CODESYS trên cùng nút, công bố máy chủ OPC UA của nó trên cổng 4840.** Bộ cấp phát lấy địa chỉ của chính nút từ Kubernetes và đọc `<node address>:4840`. Chart của chính runtime công bố cổng đó trên máy chủ.
 - **Một Symbol Configuration trong chương trình PLC** với *Support OPC UA features* bật, liệt kê các biến bạn muốn xem, hoặc `{attribute 'symbol' := 'read'}` trên chúng trong phần khai báo. Một PLC không có Symbol Configuration trả lời bước thiết lập bằng một thông báo bảo hãy thêm một cái. Đây là thay đổi duy nhất đối với dự án PLC.
-- **HotLoop 4.22.0**, mà chart bao bọc. Trình kết nối CODESYS có từ HotLoop 4.19.4. Chart phụ thuộc vào chart `hotloop-edge` trên dòng `~4.22.0`.
+- **HotLoop 4.24.0**, mà chart bao bọc. Trình kết nối CODESYS có từ HotLoop 4.19.4. Chart phụ thuộc vào chart `hotloop-edge` trên dòng `~4.24.0`.
 - **Một hồ sơ.** Một Secret với một khóa. [Trang hồ sơ](/vi/codesys/profile/) có hình dạng của nó.
 
 ## Từ App Store của EmberCORE
@@ -26,7 +26,7 @@ Chart được đánh dấu cho nhân viên, nên Store liệt kê nó cho nhân
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace>
 ```
 
 Đặt tên Secret là `<release>-profile`, hoặc đổi thứ chart tìm bằng `profile.existingSecret` (Secret) và `profile.key` (khóa, mặc định `profile.json`). Để ghim bản cài vào nút của runtime, đặt `nodeSelector`. Với HotLoop riêng lẻ, không có hồ sơ, để tự thiết lập bằng tay, hãy cài với `--set provisioner.enabled=false`.
@@ -36,7 +36,7 @@ helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <names
 Một runtime cài từ chart của nó với `network.hostNetwork=true` giữ cổng 8080 của máy chủ cho WebVisu, nên trang của HotLoop không thể cũng lắng nghe trên 8080 ở đó. Chart cho trang của HotLoop lắng nghe trên 8090 bên trong pod và giữ Service trên 8080, để ô App Store và bộ cấp phát vẫn đến được nó như trước. Hãy cài với mạng máy chủ bật cho cả hai:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 
