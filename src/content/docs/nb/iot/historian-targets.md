@@ -21,7 +21,7 @@ Databaser HotLoop skriver til:
 
 ## Legge til et mål
 
-**Innstillinger, Historian-mål, Legg til et mål**, eller `POST /api/historian/targets` (se [HTTP-API-et](/nb/iot/api/#historian-targets)). Det er bare for administratorer, fordi et mål er et sted anleggsdata havner, og å bestemme hvor er en administrators sak. Alle som kan lese innstillingene, ser målene og hvordan det går med hvert enkelt.
+**Innstillinger, Historian-mål, Legg til et mål**, eller `POST /api/historian/targets` (se [HTTP-API-et](/nb/iot/api/#historian-mål)). Det er bare for administratorer, fordi et mål er et sted anleggsdata havner, og å bestemme hvor er en administrators sak. Alle som kan lese innstillingene, ser målene og hvordan det går med hvert enkelt.
 
 Et mål er en type, en adresse (`host` eller `host:port`), en database, en tabell og en pålogging. Passordet krypteres med den samme nøkkelen som enhetenes legitimasjon (`HOTLOOP_SECRET_KEY_FILE`, se [Sikkerhetskopier og gjenoppretting](/nb/iot/backup/)) og kommer aldri ut av API-et igjen. Uten nøkkel avvises et mål med passord: en databasepålogging i klartekst i en sikkerhetskopi er nøyaktig det nøkkelen finnes for å hindre.
 

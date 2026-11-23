@@ -27,7 +27,7 @@ Ein Zähler liest ein Tag als verbrauchte Menge. Er hat einen von zwei Modi.
 
 Ein `production`-Zähler zählt, was die Linie gefertigt hat. Er hat keinen Tarif, und er ist das, wodurch die Kosten einer Einheit geteilt werden.
 
-Legen Sie einen auf dem Bildschirm Energie an (Neuer Zähler) oder mit `POST /api/energy/meters` (siehe [die HTTP-API](/de/iot/api/#energy)). Nur ein Administrator legt einen Zähler an, ändert oder entfernt ihn (`energy.write`); alle lesen (`energy.read`). Das Tag muss existieren und eine Zahl sein. Wird das Tag später gelöscht, sagt der Zähler, dass er wartet, und nimmt das Tag wieder auf, wenn es neu angelegt wird.
+Legen Sie einen auf dem Bildschirm Energie an (Neuer Zähler) oder mit `POST /api/energy/meters` (siehe [die HTTP-API](/de/iot/api/#energie)). Nur ein Administrator legt einen Zähler an, ändert oder entfernt ihn (`energy.write`); alle lesen (`energy.read`). Das Tag muss existieren und eine Zahl sein. Wird das Tag später gelöscht, sagt der Zähler, dass er wartet, und nimmt das Tag wieder auf, wenn es neu angelegt wird.
 
 ## Wie er zählt
 

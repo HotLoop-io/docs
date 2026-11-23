@@ -126,7 +126,7 @@ Die Betriebsart eines Laufs wird je Prozess geführt. Zwei Prozesse können im s
 
 ## Die API
 
-Jede Route, ihr Recht und ihre Antworten stehen in [der HTTP-API](/de/iot/api/#scripts).
+Jede Route, ihr Recht und ihre Antworten stehen in [der HTTP-API](/de/iot/api/#skripte).
 
 | Recht | Betrachter | Bediener | Administrator |
 |---|---|---|---|

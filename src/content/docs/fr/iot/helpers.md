@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-L'`entity_id` est fabriqué à partir du nom (`input_number.batch_target`) sauf si vous en donnez un. `PUT /api/helpers/{entity_id}` change son nom, son icône, son unité ou ses options ; `DELETE /api/helpers/{entity_id}` le supprime avec sa valeur. Toute l'API est dans [l'API HTTP](/fr/iot/api/#helpers).
+L'`entity_id` est fabriqué à partir du nom (`input_number.batch_target`) sauf si vous en donnez un. `PUT /api/helpers/{entity_id}` change son nom, son icône, son unité ou ses options ; `DELETE /api/helpers/{entity_id}` le supprime avec sa valeur. Toute l'API est dans [l'API HTTP](/fr/iot/api/#assistants).
 
 Un changement d'options qui laisserait la valeur actuelle de l'assistant hors de leurs limites est refusé : resserrer une plage en dessous de la valeur, ou retirer le choix qui est sélectionné. Fixez d'abord la valeur, ou choisissez des options qui l'incluent. Une valeur n'est jamais déplacée pour entrer dans les limites.
 

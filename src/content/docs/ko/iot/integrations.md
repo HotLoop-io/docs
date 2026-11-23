@@ -92,7 +92,7 @@ CODESYS 장치는 초당 한 번 읽으며, 이는 드라이버가 런타임의 
 
 ## 제품 안에서의 위치
 
-프로브와 설정은 HotLoop 장비에서 네트워크 너머로 접근하므로, 장치를 저장할 때와 마찬가지로 둘 다 `devices.write`가 필요합니다. 나열에는 `devices.read`가 필요합니다. 모든 제품에 포함되어 있습니다. 라우트는 [HTTP API](/ko/iot/api/#integrations)에 있습니다.
+프로브와 설정은 HotLoop 장비에서 네트워크 너머로 접근하므로, 장치를 저장할 때와 마찬가지로 둘 다 `devices.write`가 필요합니다. 나열에는 `devices.read`가 필요합니다. 모든 제품에 포함되어 있습니다. 라우트는 [HTTP API](/ko/iot/api/#통합)에 있습니다.
 
 ## 통합 추가하기
 

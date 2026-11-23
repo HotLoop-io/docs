@@ -192,7 +192,7 @@ Oppskrifter, hver versjon og hver anvendelse er med i sikkerhetskopier, og komme
 
 ## API-et
 
-[HTTP-API-et](/nb/iot/api/#recipes) har hver rute. Kort fortalt:
+[HTTP-API-et](/nb/iot/api/#oppskrifter) har hver rute. Kort fortalt:
 
 | <span class="sr-only">Detaljer</span> | <span class="sr-only">Detaljer</span> |
 |---|---|

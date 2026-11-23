@@ -192,7 +192,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 ## Το API
 
-Το [HTTP API](/el/iot/api/#recipes) έχει κάθε διαδρομή. Εν συντομία:
+Το [HTTP API](/el/iot/api/#συνταγές) έχει κάθε διαδρομή. Εν συντομία:
 
 | <span class="sr-only">Λεπτομέρειες</span> | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|

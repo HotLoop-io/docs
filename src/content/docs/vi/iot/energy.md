@@ -27,7 +27,7 @@ Một đồng hồ đo đọc một tag như một lượng đã dùng. Nó có 
 
 Đồng hồ đo `production` đếm những gì dây chuyền đã làm ra. Nó không có biểu giá, và chi phí của một đơn vị được chia cho nó.
 
-Tạo một cái trên màn hình Năng lượng (Đồng hồ đo mới) hoặc bằng `POST /api/energy/meters` (xem [API HTTP](/vi/iot/api/#energy)). Chỉ quản trị viên mới tạo, thay đổi hoặc gỡ một đồng hồ đo (`energy.write`); ai cũng đọc được (`energy.read`). Tag phải tồn tại và là một con số. Nếu tag bị xóa sau đó, đồng hồ đo cho biết nó đang chờ, và nhận lại tag khi nó được tạo lại.
+Tạo một cái trên màn hình Năng lượng (Đồng hồ đo mới) hoặc bằng `POST /api/energy/meters` (xem [API HTTP](/vi/iot/api/#năng-lượng)). Chỉ quản trị viên mới tạo, thay đổi hoặc gỡ một đồng hồ đo (`energy.write`); ai cũng đọc được (`energy.read`). Tag phải tồn tại và là một con số. Nếu tag bị xóa sau đó, đồng hồ đo cho biết nó đang chờ, và nhận lại tag khi nó được tạo lại.
 
 ## Cách đếm
 

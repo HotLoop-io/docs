@@ -27,7 +27,7 @@ description: "按 15 分钟分段记录的计量表、在分段生成时给它�
 
 `production` 计量表统计产线做出了多少。它没有电价表，每件产品的成本就是除以它得到的。
 
-在能源画面上创建（新建计量表），或使用 `POST /api/energy/meters`（请看 [HTTP API](/zh-hans/iot/api/#energy)）。只有管理员可以创建、更改或删除计量表（`energy.write`）；所有人都可以读取（`energy.read`）。变量必须存在并且是数字。如果变量之后被删除，计量表会显示它在等待，并在变量重新创建时重新接上。
+在能源画面上创建（新建计量表），或使用 `POST /api/energy/meters`（请看 [HTTP API](/zh-hans/iot/api/#能源)）。只有管理员可以创建、更改或删除计量表（`energy.write`）；所有人都可以读取（`energy.read`）。变量必须存在并且是数字。如果变量之后被删除，计量表会显示它在等待，并在变量重新创建时重新接上。
 
 ## 如何计数
 

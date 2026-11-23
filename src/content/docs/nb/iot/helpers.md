@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-`entity_id` lages av navnet (`input_number.batch_target`) hvis du ikke oppgir en. `PUT /api/helpers/{entity_id}` endrer navn, ikon, enhet eller valg; `DELETE /api/helpers/{entity_id}` sletter den og verdien. Hele API-et står i [HTTP-API-et](/nb/iot/api/#helpers).
+`entity_id` lages av navnet (`input_number.batch_target`) hvis du ikke oppgir en. `PUT /api/helpers/{entity_id}` endrer navn, ikon, enhet eller valg; `DELETE /api/helpers/{entity_id}` sletter den og verdien. Hele API-et står i [HTTP-API-et](/nb/iot/api/#hjelpere).
 
 En endring av valg som ville latt hjelperens nåværende verdi havne utenfor dem, avvises: å snevre inn et område forbi verdien, eller å fjerne alternativet som er valgt. Sett verdien først, eller velg valg som inkluderer den. En verdi flyttes aldri for å passe.
 

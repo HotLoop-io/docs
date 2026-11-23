@@ -83,7 +83,7 @@ description: "규칙을 빈칸과 함께 한 번만 작성하고 펌프마다 �
 
 규칙을 만드는 일은 **기존 규칙을 바꾸지 않습니다**. 직접 작성한 규칙이든 블루프린트로 만든 규칙이든, 이미 쓰고 있는 id는 거부됩니다.
 
-API로는 `POST /api/blueprints/{id}/instantiate`이며, 확인에는 `?dry_run=true`를 붙입니다. [HTTP API](/ko/iot/api/#blueprints)를 참고하세요.
+API로는 `POST /api/blueprints/{id}/instantiate`이며, 확인에는 `?dry_run=true`를 붙입니다. [HTTP API](/ko/iot/api/#블루프린트)를 참고하세요.
 
 ## 기본 제공 블루프린트
 

@@ -21,7 +21,7 @@ Bases de datos en las que escribe HotLoop:
 
 ## Añadir uno
 
-**Ajustes, Destinos del historiador, Añadir un destino**, o `POST /api/historian/targets` (consulte [la API HTTP](/es/iot/api/#historian-targets)). Es solo para administradores, porque un destino es un lugar al que van los datos de la planta, y decidir cuál es cosa de un administrador. Quien pueda leer los ajustes ve los destinos y cómo va cada uno.
+**Ajustes, Destinos del historiador, Añadir un destino**, o `POST /api/historian/targets` (consulte [la API HTTP](/es/iot/api/#destinos-del-historiador)). Es solo para administradores, porque un destino es un lugar al que van los datos de la planta, y decidir cuál es cosa de un administrador. Quien pueda leer los ajustes ve los destinos y cómo va cada uno.
 
 Un destino es un tipo, una dirección (`host` o `host:port`), una base de datos, una tabla y un inicio de sesión. La contraseña se cifra con la misma clave que las credenciales de los dispositivos (`HOTLOOP_SECRET_KEY_FILE`, consulte [Copias de seguridad y restauración](/es/iot/backup/)) y nunca sale de la API. Sin clave, se rechaza un destino con contraseña: un inicio de sesión de base de datos en claro dentro de una copia es justo lo que esa clave existe para evitar.
 

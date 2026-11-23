@@ -126,7 +126,7 @@ La modalità di esecuzione è mantenuta per processo. Due processi possono avvia
 
 ## L'API
 
-Ogni route, il suo permesso e le sue risposte sono in [l'API HTTP](/it/iot/api/#scripts).
+Ogni route, il suo permesso e le sue risposte sono in [l'API HTTP](/it/iot/api/#script).
 
 | Permesso | visualizzatore | operatore | amministratore |
 |---|---|---|---|

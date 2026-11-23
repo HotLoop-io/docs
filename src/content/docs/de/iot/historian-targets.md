@@ -21,7 +21,7 @@ Datenbanken, in die HotLoop schreibt:
 
 ## Ein Ziel hinzufügen
 
-**Einstellungen, Historian-Ziele, Ziel hinzufügen**, oder `POST /api/historian/targets` (siehe [die HTTP-API](/de/iot/api/#historian-targets)). Das ist nur für Administratoren, denn ein Ziel ist ein Ort, an den Werksdaten gehen, und darüber entscheidet ein Administrator. Alle, die die Einstellungen lesen dürfen, sehen die Ziele und wie es jedem geht.
+**Einstellungen, Historian-Ziele, Ziel hinzufügen**, oder `POST /api/historian/targets` (siehe [die HTTP-API](/de/iot/api/#historian-ziele)). Das ist nur für Administratoren, denn ein Ziel ist ein Ort, an den Werksdaten gehen, und darüber entscheidet ein Administrator. Alle, die die Einstellungen lesen dürfen, sehen die Ziele und wie es jedem geht.
 
 Ein Ziel besteht aus einer Art, einer Adresse (`host` oder `host:port`), einer Datenbank, einer Tabelle und einem Login. Das Passwort wird mit demselben Schlüssel wie die Zugangsdaten der Geräte verschlüsselt (`HOTLOOP_SECRET_KEY_FILE`, siehe [Sicherungen und Wiederherstellung](/de/iot/backup/)) und kommt nie wieder aus der API heraus. Ohne Schlüssel wird ein Ziel mit Passwort abgelehnt: Ein Datenbank-Login im Klartext in einer Sicherung ist genau das, was dieser Schlüssel verhindern soll.
 

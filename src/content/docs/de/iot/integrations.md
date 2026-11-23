@@ -92,7 +92,7 @@ Zugangsdaten werden so gehalten wie die eines Geräts: im Ruhezustand versiegelt
 
 ## Wo es im Produkt sitzt
 
-Sonde und Einrichtung greifen von der HotLoop-Box aus über das Netzwerk, daher brauchen beide `devices.write`, genau wie das Speichern eines Geräts. Das Auflisten braucht `devices.read`. Jedes Produkt bringt sie mit. Die Routen stehen in [der HTTP-API](/de/iot/api/#integrations).
+Sonde und Einrichtung greifen von der HotLoop-Box aus über das Netzwerk, daher brauchen beide `devices.write`, genau wie das Speichern eines Geräts. Das Auflisten braucht `devices.read`. Jedes Produkt bringt sie mit. Die Routen stehen in [der HTTP-API](/de/iot/api/#integrationen).
 
 ## Eine hinzufügen
 

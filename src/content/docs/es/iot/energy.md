@@ -27,7 +27,7 @@ Un medidor lee un tag como una cantidad consumida. Tiene uno de dos modos.
 
 Un medidor `production` cuenta lo que fabricó la línea. No tiene tarifa, y es por lo que se divide el coste de una unidad.
 
-Cree uno en la pantalla Energía (Nuevo medidor) o con `POST /api/energy/meters` (consulte [la API HTTP](/es/iot/api/#energy)). Solo un administrador crea, cambia o quita un medidor (`energy.write`); todos leen (`energy.read`). El tag debe existir y ser un número. Si el tag se borra después, el medidor dice que está esperando, y recoge el tag de nuevo cuando se vuelve a crear.
+Cree uno en la pantalla Energía (Nuevo medidor) o con `POST /api/energy/meters` (consulte [la API HTTP](/es/iot/api/#energía)). Solo un administrador crea, cambia o quita un medidor (`energy.write`); todos leen (`energy.read`). El tag debe existir y ser un número. Si el tag se borra después, el medidor dice que está esperando, y recoge el tag de nuevo cuando se vuelve a crear.
 
 ## Cómo cuenta
 

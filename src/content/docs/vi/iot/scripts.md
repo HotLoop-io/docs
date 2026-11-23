@@ -126,7 +126,7 @@ Chế độ chạy được giữ theo từng tiến trình. Hai tiến trình c
 
 ## API
 
-Mọi tuyến, quyền của nó và các câu trả lời của nó nằm trong [API HTTP](/vi/iot/api/#scripts).
+Mọi tuyến, quyền của nó và các câu trả lời của nó nằm trong [API HTTP](/vi/iot/api/#script).
 
 | Quyền | người xem | vận hành viên | quản trị viên |
 |---|---|---|---|

@@ -83,7 +83,7 @@ description: "ルールを空欄つきで一度だけ書き、ポンプごとに
 
 ルールを作成しても、**既存のルールが置き換えられることはありません**。手書きのルールでもブループリントから作ったルールでも、使用中の id は拒否されます。
 
-API では `POST /api/blueprints/{id}/instantiate` で、確認には `?dry_run=true` を付けます。[HTTP API](/ja/iot/api/#blueprints) を参照してください。
+API では `POST /api/blueprints/{id}/instantiate` で、確認には `?dry_run=true` を付けます。[HTTP API](/ja/iot/api/#ブループリント) を参照してください。
 
 ## 組み込みのブループリント
 

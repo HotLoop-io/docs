@@ -126,7 +126,7 @@ Gateway 和它旁边的 `--mcp-stdio` 进程（或滚动发布中的两个 pod�
 
 ## API
 
-每个路由、它的权限和它的答复都在 [HTTP API](/zh-hans/iot/api/#scripts) 中。
+每个路由、它的权限和它的答复都在 [HTTP API](/zh-hans/iot/api/#脚本) 中。
 
 | 权限 | 查看者 | 操作员 | 管理员 |
 |---|---|---|---|

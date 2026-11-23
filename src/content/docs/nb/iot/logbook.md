@@ -3,7 +3,7 @@ title: "Loggboken"
 description: "Tilstandsendringer, skriving, alarmer, regelkjøringer og konfigurasjonsendringer på én tidslinje, for anlegget, ett område eller én entitet."
 ---
 
-Én tidslinje over det som har skjedd på anlegget, nyeste først: pumpa gikk på, noen skrev 180 til settpunktet i sone 1, alarmen for høy temperatur ble utløst og kvittert, nedkjølingsautomatiseringen kjørte, en enhet ble omkonfigurert. For hele anlegget, ett sted i utstyrstreet og alt under, eller én entitet. Det er fanen Loggbok, en seksjon i skuffen til hver entitet, `GET /api/logbook` (se [HTTP-API-et](/nb/iot/api/#logbook)) og MCP-verktøyet `get_logbook` (se [MCP](/nb/iot/mcp/)).
+Én tidslinje over det som har skjedd på anlegget, nyeste først: pumpa gikk på, noen skrev 180 til settpunktet i sone 1, alarmen for høy temperatur ble utløst og kvittert, nedkjølingsautomatiseringen kjørte, en enhet ble omkonfigurert. For hele anlegget, ett sted i utstyrstreet og alt under, eller én entitet. Det er fanen Loggbok, en seksjon i skuffen til hver entitet, `GET /api/logbook` (se [HTTP-API-et](/nb/iot/api/#loggbok)) og MCP-verktøyet `get_logbook` (se [MCP](/nb/iot/mcp/)).
 
 Det første spørsmålet når noe går galt er «hva skjedde rett før?», og til nå lå svaret på fem steder: skrivegranskingen, alarmhistorikken, automatiseringskjøringene, systemloggen og ingens hukommelse om hva utstyret selv gjorde. Loggboken er de fem i én liste.
 

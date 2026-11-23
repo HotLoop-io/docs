@@ -199,7 +199,7 @@ Leggere è di ogni ruolo, filtrato da `roles`. Scrivere è dell'amministratore. 
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-Il riferimento con corpi ed errori è in [l'API HTTP](/it/iot/api/#dashboards). Ogni creazione, salvataggio ed eliminazione è a registro come evento `config` sul soggetto `dashboard:<id>`, così il registro di bordo dice chi ha cambiato ciò che mostra un pannello.
+Il riferimento con corpi ed errori è in [l'API HTTP](/it/iot/api/#dashboard). Ogni creazione, salvataggio ed eliminazione è a registro come evento `config` sul soggetto `dashboard:<id>`, così il registro di bordo dice chi ha cambiato ciò che mostra un pannello.
 
 La tabella è `dashboards`, aggiunta nella migrazione 0023 per PostgreSQL, TimescaleDB e SQLite. Aggiunge soltanto ([Le migrazioni aggiungono soltanto](/it/iot/migrations/)). La riga della bacheca a muro viene creata dall'applicazione la prima volta che viene richiesta, non dalla migrazione, così un database ripristinato da un backup precedente alle dashboard la ritrova.
 

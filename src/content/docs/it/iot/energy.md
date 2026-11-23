@@ -27,7 +27,7 @@ Un contatore legge un tag come una quantità consumata. Ha una di due modalità.
 
 Un contatore `production` conta ciò che la linea ha prodotto. Non ha tariffa, ed è ciò per cui si divide il costo di un'unità.
 
-Createne uno nella schermata Energia (Nuovo contatore) o con `POST /api/energy/meters` (vedi [l'API HTTP](/it/iot/api/#energy)). Solo un amministratore crea, modifica o rimuove un contatore (`energy.write`); tutti leggono (`energy.read`). Il tag deve esistere ed essere un numero. Se il tag viene eliminato in seguito, il contatore dice che è in attesa, e riprende il tag quando viene ricreato.
+Createne uno nella schermata Energia (Nuovo contatore) o con `POST /api/energy/meters` (vedi [l'API HTTP](/it/iot/api/#energia)). Solo un amministratore crea, modifica o rimuove un contatore (`energy.write`); tutti leggono (`energy.read`). Il tag deve esistere ed essere un numero. Se il tag viene eliminato in seguito, il contatore dice che è in attesa, e riprende il tag quando viene ricreato.
 
 ## Come conta
 

@@ -192,7 +192,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 ## API
 
-[HTTP API](/bg/iot/api/#recipes) има всеки маршрут. Накратко:
+[HTTP API](/bg/iot/api/#рецепти) има всеки маршрут. Накратко:
 
 | <span class="sr-only">Подробности</span> | <span class="sr-only">Подробности</span> |
 |---|---|

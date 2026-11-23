@@ -3,7 +3,7 @@ title: "El registro de actividad"
 description: "Cambios de estado, escrituras, alarmas, ejecuciones de reglas y cambios de configuración en una sola línea de tiempo, para la planta, un área o una entidad."
 ---
 
-Una sola línea de tiempo de lo que pasó en la planta, lo más reciente primero: la bomba arrancó, alguien escribió 180 en la consigna de la zona 1, se disparó y se reconoció la alarma de temperatura alta, se ejecutó la automatización de enfriamiento, se reconfiguró un dispositivo. Para toda la planta, un lugar del árbol de equipos y todo lo que hay debajo, o una sola entidad. Es la pestaña Registro, una sección del panel de cada entidad, `GET /api/logbook` (consulte [la API HTTP](/es/iot/api/#logbook)) y la herramienta MCP `get_logbook` (consulte [MCP](/es/iot/mcp/)).
+Una sola línea de tiempo de lo que pasó en la planta, lo más reciente primero: la bomba arrancó, alguien escribió 180 en la consigna de la zona 1, se disparó y se reconoció la alarma de temperatura alta, se ejecutó la automatización de enfriamiento, se reconfiguró un dispositivo. Para toda la planta, un lugar del árbol de equipos y todo lo que hay debajo, o una sola entidad. Es la pestaña Registro, una sección del panel de cada entidad, `GET /api/logbook` (consulte [la API HTTP](/es/iot/api/#registro-de-actividad)) y la herramienta MCP `get_logbook` (consulte [MCP](/es/iot/mcp/)).
 
 La primera pregunta cuando algo sale mal es «¿qué pasó justo antes?», y hasta ahora la respuesta estaba en cinco sitios: la auditoría de escrituras, el historial de alarmas, las ejecuciones de automatizaciones, el registro del sistema y la memoria de nadie sobre lo que hizo el propio equipo. El registro de actividad es esos cinco en una sola lista.
 

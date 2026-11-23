@@ -192,7 +192,7 @@ Rezepte, jede Version und jede Anwendung sind in den Backups und kommen genau so
 
 ## Die API
 
-[Die HTTP-API](/de/iot/api/#recipes) hat jede Route. Kurz:
+[Die HTTP-API](/de/iot/api/#rezepte) hat jede Route. Kurz:
 
 | <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
 |---|---|

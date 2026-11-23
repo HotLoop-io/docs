@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-`entity_id` नाम से बनता है (`input_number.batch_target`) जब तक आप खुद एक न दें। `PUT /api/helpers/{entity_id}` उसका नाम, आइकन, इकाई या विकल्प बदलता है; `DELETE /api/helpers/{entity_id}` उसे और उसका मान हटा देता है। पूरा API [HTTP API](/hi/iot/api/#helpers) में है।
+`entity_id` नाम से बनता है (`input_number.batch_target`) जब तक आप खुद एक न दें। `PUT /api/helpers/{entity_id}` उसका नाम, आइकन, इकाई या विकल्प बदलता है; `DELETE /api/helpers/{entity_id}` उसे और उसका मान हटा देता है। पूरा API [HTTP API](/hi/iot/api/#हेल्पर) में है।
 
 विकल्पों का ऐसा बदलाव जो हेल्पर के मौजूदा मान को उनके बाहर छोड़ दे, अस्वीकार होता है: मान के पार सीमा को तंग करना, या चुना हुआ विकल्प हटाना। पहले मान सेट करें, या ऐसे विकल्प चुनें जिनमें वह आता हो। मान को फ़िट करने के लिए कभी खिसकाया नहीं जाता।
 

@@ -199,7 +199,7 @@ service worker 不会应答、保存或排队任何写入，其中也没有后�
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-带请求体和错误的参考在 [HTTP API](/zh-hans/iot/api/#dashboards) 中。每一次创建、保存和删除，都会作为对主体 `dashboard:<id>` 的 `config` 事件记录在案，所以日志簿能说明是谁改了面板上显示的内容。
+带请求体和错误的参考在 [HTTP API](/zh-hans/iot/api/#仪表板) 中。每一次创建、保存和删除，都会作为对主体 `dashboard:<id>` 的 `config` 事件记录在案，所以日志簿能说明是谁改了面板上显示的内容。
 
 这张表是 `dashboards`，在 PostgreSQL、TimescaleDB 和 SQLite 的迁移 0023 中添加。它只增不减（[迁移只增不减](/zh-hans/iot/migrations/)）。墙面看板的行不是由迁移创建的，而是应用程序在第一次被请求时创建的，所以从仪表板出现之前的备份恢复的数据库，也会重新得到它。
 

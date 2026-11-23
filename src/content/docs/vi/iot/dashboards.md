@@ -199,7 +199,7 @@ Cùng bài kiểm tra này gỡ máy chủ đi, cho cả trang lẫn worker, r�
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-Tài liệu tham chiếu có nội dung và lỗi nằm ở [HTTP API](/vi/iot/api/#dashboards). Mỗi lần tạo, lưu và xóa đều được ghi lại thành sự kiện `config` trên chủ thể `dashboard:<id>`, nên Nhật ký cho biết ai đã đổi điều một bảng điều khiển hiện.
+Tài liệu tham chiếu có nội dung và lỗi nằm ở [HTTP API](/vi/iot/api/#bảng-điều-khiển). Mỗi lần tạo, lưu và xóa đều được ghi lại thành sự kiện `config` trên chủ thể `dashboard:<id>`, nên Nhật ký cho biết ai đã đổi điều một bảng điều khiển hiện.
 
 Bảng dữ liệu là `dashboards`, thêm trong migration 0023 cho PostgreSQL, TimescaleDB và SQLite. Nó chỉ thêm ([Migration chỉ thêm](/vi/iot/migrations/)). Dòng của bảng treo tường do ứng dụng tạo khi lần đầu được hỏi, không phải do migration, nên một cơ sở dữ liệu khôi phục từ bản sao lưu lấy trước khi có bảng điều khiển sẽ có lại nó.
 

@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-`entity_id`는 직접 지정하지 않으면 이름에서 만들어집니다(`input_number.batch_target`). `PUT /api/helpers/{entity_id}`로 이름, 아이콘, 단위, 옵션을 바꾸고, `DELETE /api/helpers/{entity_id}`로 값과 함께 삭제합니다. API 전체는 [HTTP API](/ko/iot/api/#helpers)에 있습니다.
+`entity_id`는 직접 지정하지 않으면 이름에서 만들어집니다(`input_number.batch_target`). `PUT /api/helpers/{entity_id}`로 이름, 아이콘, 단위, 옵션을 바꾸고, `DELETE /api/helpers/{entity_id}`로 값과 함께 삭제합니다. API 전체는 [HTTP API](/ko/iot/api/#헬퍼)에 있습니다.
 
 헬퍼의 현재 값이 범위 밖에 놓이게 되는 옵션 변경은 거부됩니다. 값보다 아래로 범위를 좁히거나, 선택되어 있는 항목을 지우는 경우입니다. 먼저 값을 설정하거나, 그 값이 포함되는 옵션을 고르십시오. 값은 옵션에 맞추려고 옮겨지는 일이 없습니다.
 

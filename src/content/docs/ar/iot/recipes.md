@@ -192,7 +192,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 ## واجهة API
 
-[واجهة HTTP البرمجية](/ar/iot/api/#recipes) فيها كل مسار. باختصار:
+[واجهة HTTP البرمجية](/ar/iot/api/#الوصفات) فيها كل مسار. باختصار:
 
 | <span class="sr-only">التفاصيل</span> | <span class="sr-only">التفاصيل</span> |
 |---|---|

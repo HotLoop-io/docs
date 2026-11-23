@@ -192,7 +192,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 ## API
 
-[HTTP API](/zh-hans/iot/api/#recipes) 列有每个路由。简述如下：
+[HTTP API](/zh-hans/iot/api/#配方) 列有每个路由。简述如下：
 
 | <span class="sr-only">详情</span> | <span class="sr-only">详情</span> |
 |---|---|

@@ -192,7 +192,7 @@ MCP では、`list_recipes` がすべてのレシピを対象とパラメータ�
 
 ## API
 
-すべてのルートは [HTTP API](/ja/iot/api/#recipes) にあります。要点は次のとおりです。
+すべてのルートは [HTTP API](/ja/iot/api/#レシピ) にあります。要点は次のとおりです。
 
 | <span class="sr-only">詳細</span> | <span class="sr-only">詳細</span> |
 |---|---|

@@ -83,7 +83,7 @@ Blueprint 在存储之前就会被检查，而不是等有人试用时：
 
 创建规则**绝不会替换已有的规则**。已被手写规则或 Blueprint 创建的规则占用的 id 会被拒绝。
 
-通过 API 是 `POST /api/blueprints/{id}/instantiate`，检查时加 `?dry_run=true`。参见 [HTTP API](/zh-hans/iot/api/#blueprints)。
+通过 API 是 `POST /api/blueprints/{id}/instantiate`，检查时加 `?dry_run=true`。参见 [HTTP API](/zh-hans/iot/api/#蓝图)。
 
 ## 内置的 Blueprint
 

@@ -27,7 +27,7 @@ En måler leser én tag som en mengde brukt. Den har én av to moduser.
 
 En `production`-måler teller det linja har produsert. Den har ingen tariff, og det er den kostnaden for én enhet deles på.
 
-Lag en på skjermen Energi (Ny måler) eller med `POST /api/energy/meters` (se [HTTP-API-et](/nb/iot/api/#energy)). Bare en administrator lager, endrer eller fjerner en måler (`energy.write`); alle leser (`energy.read`). Taggen må finnes og være et tall. Hvis taggen slettes senere, sier måleren at den venter, og tar opp taggen igjen når den lages på nytt.
+Lag en på skjermen Energi (Ny måler) eller med `POST /api/energy/meters` (se [HTTP-API-et](/nb/iot/api/#energi)). Bare en administrator lager, endrer eller fjerner en måler (`energy.write`); alle leser (`energy.read`). Taggen må finnes og være et tall. Hvis taggen slettes senere, sier måleren at den venter, og tar opp taggen igjen når den lages på nytt.
 
 ## Hvordan den teller
 

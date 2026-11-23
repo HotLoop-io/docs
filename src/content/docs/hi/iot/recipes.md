@@ -192,7 +192,7 @@ MCP पर, `list_recipes` हर रेसिपी को उसके लक�
 
 ## API
 
-[HTTP API](/hi/iot/api/#recipes) में हर रूट है। संक्षेप में:
+[HTTP API](/hi/iot/api/#रेसिपी) में हर रूट है। संक्षेप में:
 
 | <span class="sr-only">विवरण</span> | <span class="sr-only">विवरण</span> |
 |---|---|
