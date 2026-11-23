@@ -3,10 +3,6 @@ title: "Máy chủ MCP"
 description: "Cascade có máy chủ MCP vừa đọc vừa ghi: 83 công cụ, mỗi công cụ là một tuyến API chạy qua trình xử lý riêng, có quyền, lý do và một dòng kiểm toán."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop Cascade 1.4.2, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Cascade có một máy chủ MCP, và nó vừa đọc vừa ghi. Nó được phát hành ở trạng thái bật, tại `/mcp` cùng địa chỉ với API và trình soạn thảo, và một tác tử kết nối vào đó có thể làm những gì người giữ khóa của nó làm được, không hơn. Không có chế độ chỉ đọc nào để bạn phải đi vòng, vì một máy chủ mà tác tử chỉ nhìn được mà không chạm được thì chỉ là một trang trạng thái, và bạn đã có sẵn một trang như vậy rồi.
 
 84 công cụ, và mỗi công cụ đều là một route của REST API. Một lời gọi không đi bên cạnh route, nó đi xuyên qua route: bộ xử lý của chính route kiểm tra quyền, kiểm tra nội dung gửi lên, thực hiện thay đổi và ghi dòng kiểm toán. Không có gì được sao chép vào máy chủ MCP để rồi lệch đi, và không có gì bị bỏ ra khỏi nó để bị bỏ qua.

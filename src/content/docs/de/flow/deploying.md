@@ -46,7 +46,7 @@ Um stattdessen eigene zu wählen:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Sie brauchen ein Podman, das Quadlet mitbringt (`/usr/libexec/podman/quadlet` ex
 **1. Halten Sie die beiden Geheimnisse aus der Unit-Datei heraus.** Podman-Secrets liegen außerhalb, sodass die Unit herumkopiert, eingecheckt und geprüft werden kann, ohne etwas Wichtiges mitzuführen.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.16.6
+Image=ghcr.io/hotloop-io/hotloop-flow:2.16.8
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ Zum Ausprobieren, nicht um eine Linie darauf zu betreiben:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
 Öffnen Sie dann <http://localhost:1880>. Dieses Zugangsdaten-Geheimnis ist bei jedem Ausführen des Befehls neu, sodass eine in einem Lauf gespeicherte Zugangsdate im nächsten nicht gelesen werden kann. Für einen ersten Blick in Ordnung. Genau deshalb hält die Quadlet-Installation es in einem Podman-Secret.

@@ -2,38 +2,38 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
+      "ref": "d3d677c012fa9f088a52bfbb7537c141e1b5c860",
       "sha": "d3d677c012fa9f088a52bfbb7537c141e1b5c860",
       "release": {
         "tag": "v4.24.0",
         "version": "4.24.0",
         "prerelease": false,
-        "publishedAt": "2026-11-23T02:25:08Z",
+        "publishedAt": null,
         "sha": "ce790cd848ab961c28d97c573dc16349b970529b"
       }
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "origin/main",
+      "ref": "98aa95c06562f58e318beb045fae80e3219f21ad",
       "sha": "98aa95c06562f58e318beb045fae80e3219f21ad",
       "release": {
         "tag": "v2.16.8",
         "version": "2.16.8",
         "prerelease": false,
-        "publishedAt": "2026-11-22T19:41:27Z",
+        "publishedAt": null,
         "sha": "01314f4ee4c6f55d948e1d21a221dd86cb336d2c"
       }
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
       "ref": "origin/main",
-      "sha": "99a14dec6470ece7b31a66662109e531262a7c07",
+      "sha": "3e2344e1ed947af5d5029ba4b122866527a01ef1",
       "release": {
-        "tag": "v1.4.2",
-        "version": "1.4.2",
+        "tag": "v1.5.1",
+        "version": "1.5.1",
         "prerelease": false,
-        "publishedAt": "2026-11-22T20:04:32Z",
-        "sha": "ae56cc7ace6b9f9cf3f7785de47509fe78b3d60b"
+        "publishedAt": null,
+        "sha": "e0e312c6f2781d885373613f21025a3fbd39c5c8"
       }
     }
   },
@@ -869,7 +869,7 @@
       "group": "Start here",
       "title": "Where Cascade stands",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -880,7 +880,7 @@
       "group": "Use it",
       "title": "The editor",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -891,7 +891,7 @@
       "group": "Use it",
       "title": "Running Cascade",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "README.md",
       "release": false
@@ -924,7 +924,7 @@
       "group": "Use it",
       "title": "The MCP server",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "docs/MCP.md",
       "release": false
@@ -990,7 +990,7 @@
       "group": "Project",
       "title": "Cascade roadmap",
       "label": null,
-      "status": "changed",
+      "status": "released",
       "repo": "cascade",
       "source": "docs/ROADMAP.md",
       "release": false
@@ -1793,9 +1793,20 @@
       "group": "HotLoop Cascade",
       "title": "HotLoop Cascade 1.5.0 release notes",
       "label": "1.5.0",
-      "status": "next",
+      "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/1.5.0.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-1-5-1",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 1.5.1 release notes",
+      "label": "1.5.1",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/1.5.1.md",
       "release": true
     }
   ],
@@ -1812,6 +1823,7 @@
     "ar/edge-relay/embernet.md",
     "ar/edge-relay/install.md",
     "ar/edge-relay/overview.md",
+    "ar/flow/deploying.md",
     "ar/flow/embernet.md",
     "ar/flow/install.md",
     "ar/flow/overview.md",
@@ -1835,6 +1847,7 @@
     "bg/edge-relay/embernet.md",
     "bg/edge-relay/install.md",
     "bg/edge-relay/overview.md",
+    "bg/flow/deploying.md",
     "bg/flow/embernet.md",
     "bg/flow/install.md",
     "bg/flow/overview.md",
@@ -1866,6 +1879,7 @@
     "de/edge-relay/embernet.md",
     "de/edge-relay/install.md",
     "de/edge-relay/overview.md",
+    "de/flow/deploying.md",
     "de/flow/embernet.md",
     "de/flow/install.md",
     "de/flow/overview.md",
@@ -1895,6 +1909,7 @@
     "el/edge-relay/embernet.md",
     "el/edge-relay/install.md",
     "el/edge-relay/overview.md",
+    "el/flow/deploying.md",
     "el/flow/embernet.md",
     "el/flow/install.md",
     "el/flow/overview.md",
@@ -1918,6 +1933,7 @@
     "es/edge-relay/embernet.md",
     "es/edge-relay/install.md",
     "es/edge-relay/overview.md",
+    "es/flow/deploying.md",
     "es/flow/embernet.md",
     "es/flow/install.md",
     "es/flow/overview.md",
@@ -1943,6 +1959,7 @@
     "fr/edge-relay/embernet.md",
     "fr/edge-relay/install.md",
     "fr/edge-relay/overview.md",
+    "fr/flow/deploying.md",
     "fr/flow/embernet.md",
     "fr/flow/install.md",
     "fr/flow/overview.md",
@@ -1970,6 +1987,7 @@
     "hi/edge-relay/embernet.md",
     "hi/edge-relay/install.md",
     "hi/edge-relay/overview.md",
+    "hi/flow/deploying.md",
     "hi/flow/embernet.md",
     "hi/flow/install.md",
     "hi/flow/overview.md",
@@ -1997,6 +2015,7 @@
     "it/edge-relay/embernet.md",
     "it/edge-relay/install.md",
     "it/edge-relay/overview.md",
+    "it/flow/deploying.md",
     "it/flow/embernet.md",
     "it/flow/install.md",
     "it/flow/overview.md",
@@ -2020,6 +2039,7 @@
     "ja/edge-relay/embernet.md",
     "ja/edge-relay/install.md",
     "ja/edge-relay/overview.md",
+    "ja/flow/deploying.md",
     "ja/flow/embernet.md",
     "ja/flow/install.md",
     "ja/flow/overview.md",
@@ -2043,6 +2063,7 @@
     "ko/edge-relay/embernet.md",
     "ko/edge-relay/install.md",
     "ko/edge-relay/overview.md",
+    "ko/flow/deploying.md",
     "ko/flow/embernet.md",
     "ko/flow/install.md",
     "ko/flow/overview.md",
@@ -2066,6 +2087,7 @@
     "nb/edge-relay/embernet.md",
     "nb/edge-relay/install.md",
     "nb/edge-relay/overview.md",
+    "nb/flow/deploying.md",
     "nb/flow/embernet.md",
     "nb/flow/install.md",
     "nb/flow/overview.md",
@@ -2099,6 +2121,7 @@
     "vi/edge-relay/embernet.md",
     "vi/edge-relay/install.md",
     "vi/edge-relay/overview.md",
+    "vi/flow/deploying.md",
     "vi/flow/embernet.md",
     "vi/flow/install.md",
     "vi/flow/overview.md",
@@ -2122,6 +2145,7 @@
     "zh-hans/edge-relay/embernet.md",
     "zh-hans/edge-relay/install.md",
     "zh-hans/edge-relay/overview.md",
+    "zh-hans/flow/deploying.md",
     "zh-hans/flow/embernet.md",
     "zh-hans/flow/install.md",
     "zh-hans/flow/overview.md",

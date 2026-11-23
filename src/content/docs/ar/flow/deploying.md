@@ -46,7 +46,7 @@ kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base6
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Distroless بلا root بمعرّف uid 65532، ونظام ملفات جذر ل�
 **1. أبقِ السرّين خارج ملف الوحدة.** تعيش أسرار Podman خارجه، فيمكن نسخ الوحدة ورفعها ومراجعتها دون أن تحمل شيئًا مهمًا.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.16.6
+Image=ghcr.io/hotloop-io/hotloop-flow:2.16.8
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
 ثم افتح <http://localhost:1880>. سر بيانات الاعتماد هذا جديد في كل مرة تشغّل فيها الأمر، فلا يمكن قراءة بيانات اعتماد حُفظت في تشغيل في التشغيل التالي. هذا مناسب لإلقاء نظرة. وهذا بالضبط هو السبب في أن تثبيت Quadlet يحفظه في سر Podman.

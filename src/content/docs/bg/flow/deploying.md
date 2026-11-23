@@ -46,7 +46,7 @@ kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base6
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Service слуша на 8080 и препраща към 1880 на бинарни
 **1. Дръжте двете тайни извън unit файла.** Podman тайните живеят извън него, така че unit може да се копира, да се комитва и да се преглежда, без да носи нищо важно.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.16.6
+Image=ghcr.io/hotloop-io/hotloop-flow:2.16.8
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
 После отворете <http://localhost:1880>. Тази тайна за идентификационните данни е нова при всяко изпълнение на командата, така че идентификационни данни, запазени в едно изпълнение, не могат да се прочетат в следващото. Добре за надникване. Точно затова инсталацията с Quadlet я държи в Podman тайна.

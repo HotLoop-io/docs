@@ -46,7 +46,7 @@ kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base6
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Quadlet이 포함된 Podman이 필요합니다(`/usr/libexec/podman/quadlet`이 
 **1. 두 시크릿을 유닛 파일 밖에 두십시오.** Podman 시크릿은 유닛 파일 밖에 있으므로, 중요한 것을 담지 않은 채 유닛을 복사하고, 커밋하고, 검토할 수 있습니다.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.16.6
+Image=ghcr.io/hotloop-io/hotloop-flow:2.16.8
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ OT 세그먼트에서의 디스커버리에는 `Network=host`가 컨테이너에
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
 그런 다음 <http://localhost:1880>을 여십시오. 이 자격 증명 시크릿은 명령을 실행할 때마다 새로 만들어지므로, 한 번의 실행에서 저장한 자격 증명은 다음 실행에서 읽을 수 없습니다. 둘러보기에는 충분합니다. Quadlet 설치가 이를 Podman 시크릿에 보관하는 이유가 바로 이것입니다.

@@ -3,10 +3,6 @@ title: "Hoja de ruta de Cascade"
 description: "Lo que Cascade ya tiene construido, lo que trajo cada versión y lo que todavía no está construido ni programado."
 ---
 
-:::note[Incluye lo que viene]
-Esta página también recoge algunas cosas más nuevas que HotLoop Cascade 1.4.2, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
-:::
-
 En ninguna parte del código existe una comprobación de licencia. Cada fase termina cuando su lista «real» se ha hecho contra sistemas reales, no cuando el código compila.
 
 ## 0.1.0, el MVP

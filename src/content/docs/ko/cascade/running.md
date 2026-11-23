@@ -5,16 +5,12 @@ description: "Podman Quadlet 또는 k3s의 Helm으로 Cascade를 실행합니다
 editUrl: false
 ---
 
-:::note[앞으로 나올 내용 포함]
-이 페이지에는 최신 릴리스인 HotLoop Cascade 1.4.2보다 새로운 내용도 일부 들어 있습니다. 설치하신 버전에는 없는 부분이 있을 수 있습니다. 무엇이 바뀌었는지는 [릴리스 노트](/ko/releases/)에 나와 있습니다.
-:::
-
 Podman 호스트에서는 `deploy/quadlet`에 systemd 유닛이 들어 있습니다. 파일 하나와 볼륨 하나가 SQLite 기반 Cascade이고, `deploy/quadlet/postgres`는 서버, 워커, PostgreSQL을 별도의 네트워크에 둔 구성입니다. 둘 다 부팅 시 시작되고, 실패하면 다시 시작되며, 읽기 전용에 비루트로 모든 capability를 제거한 상태로 실행됩니다. 자세한 절차는 해당 README에 있습니다.
 
 버전을 직접 받으려면 다음과 같이 합니다.
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.1
 ```
 
 유닛은 `:stable`을 따르며 Podman의 자동 업데이트 타이머가 이를 갱신합니다.
@@ -22,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
 k3s에서는 `charts/hotloop-cascade`가 Helm 차트입니다.
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.0
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.1
 ```
 
 차트에는 EmberNet 대시보드가 읽는 레이블이 Service와 편집기를 제공하는 파드에 붙어 있어, App Store에서 배포한 Cascade가 Running Apps에 LAUNCH 버튼과 함께 표시됩니다. `gui.appName`, `gui.port`, `gui.displayName`으로 표시 내용을 바꿀 수 있습니다.

@@ -3,10 +3,6 @@ title: "Lộ trình của Cascade"
 description: "Những gì Cascade đã xây dựng, mỗi bản phát hành mang lại gì, và những gì chưa được xây dựng và chưa có lịch."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop Cascade 1.4.2, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Không có đoạn nào trong mã kiểm tra giấy phép. Mỗi giai đoạn kết thúc khi danh sách "thật" của nó đã được chạy trên các hệ thống thật, chứ không phải khi mã biên dịch được.
 
 ## 0.1.0, bản MVP

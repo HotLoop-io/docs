@@ -3,10 +3,6 @@ title: "L'editor di Cascade"
 description: "L'editor è incluso nel binario di Cascade: cartelle, canvas con esecuzione fin qui, esecuzioni tracciate passo per passo, credenziali, progetti, utenti, audit."
 ---
 
-:::note[Comprende ciò che sta arrivando]
-Questa pagina comprende anche alcune cose più recenti di HotLoop Cascade 1.4.2, l'ultima versione rilasciata. Una parte potrebbe non essere in ciò che hai installato. Le [note di rilascio](/it/releases/) dicono cosa è cambiato.
-:::
-
 L'editor è incluso nel binario, quindi non c'è nient'altro da eseguire e non scarica nulla da nessuna parte: si apre l'indirizzo su cui il server è in ascolto e si accede. È un'app Astro con isole Svelte, compilata in file statici durante la creazione dell'immagine, con gli stessi colori e lo stesso carattere di ogni altra schermata HotLoop, chiara o scura secondo il sistema finché non si sceglie.
 
 ![Flussi di lavoro, in cartelle](/synced/cascade/docs/screenshots/workflows.png)

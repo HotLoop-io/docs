@@ -3,10 +3,6 @@ title: "Le serveur MCP"
 description: "Cascade a un serveur MCP qui lit et écrit : 83 outils, chacun une route de l'API avec son propre gestionnaire, sa permission, un motif et une ligne d'audit."
 ---
 
-:::note[Couvre ce qui arrive]
-Cette page couvre aussi quelques éléments plus récents que HotLoop Cascade 1.4.2, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
-:::
-
 Cascade a un serveur MCP, et il lit et écrit. Il est livré activé, sur `/mcp`, à la même adresse que l'API et l'éditeur, et un agent qui s'y connecte peut faire ce que peut faire la personne qui détient sa clé, et rien de plus. Il n'y a pas de mode lecture seule à contourner, parce qu'un serveur qu'un agent peut regarder sans y toucher est une page d'état, et vous en avez déjà une.
 
 84 outils, et chacun est une route de l'API REST. Un appel ne passe pas à côté de la route, il passe par elle : le gestionnaire de la route vérifie lui-même la permission, valide le corps, fait la modification et écrit la ligne d'audit. Rien n'a été copié dans le serveur MCP qui puisse dériver, et rien n'en a été retiré pour contourner quoi que ce soit.
