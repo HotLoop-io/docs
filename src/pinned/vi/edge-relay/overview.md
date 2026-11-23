@@ -9,7 +9,7 @@ Edge Relay là loại không có giao diện. Nó nằm trên một Pi hoặc m�
 
 Bản phát hành hiện tại là {{hotloop}}: `ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}`, build cho amd64, arm64 và arm/v7 (một Pi 3 hoặc bản cài Pi OS 32 bit đúng là chiếc hộp mà một relay cuối cùng nằm trên), khoảng 15 MB, tải về không cần đăng nhập, và chart `hotloop-edge-relay` từ `https://hotloop.io/hotloop`. 4.16.0 là bản phát hành đầu tiên đăng nó, và arm/v7 đến cùng 4.18.10. Nó dùng chung số phiên bản với Gateway, và một bản phát hành từ chối ra mắt nếu cả hai chart không mang phiên bản của tag và unit Quadlet không theo `:stable`. Vì vậy relay nhận phiên bản mới ở mỗi lần phát hành, dù mã của nó có đổi hay không. Chỉ có một số phiên bản để hỏi, và chart của relay không bao giờ có thể trỏ tới một image chưa ai đẩy lên. [Cài đặt nó](/vi/edge-relay/install/).
 
-Đang nâng cấp một relay? [Nâng cấp từ 4.17.0](/vi/gateway/upgrading/#the-edge-relay-and-quadlet) và [nâng cấp từ 4.16.0](/vi/gateway/upgrading/#the-edge-relay) có phần của relay.
+Đang nâng cấp một relay? [Nâng cấp từ 4.17.0](/vi/gateway/upgrading/#edge-relay-và-quadlet) và [nâng cấp từ 4.16.0](/vi/gateway/upgrading/#edge-relay) có phần của relay.
 
 ## Nó không phải là gì
 

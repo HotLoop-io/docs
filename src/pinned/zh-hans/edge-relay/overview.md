@@ -9,7 +9,7 @@ Edge Relay 是没有界面的那一个。它装在机器旁边的 Pi 或小型�
 
 当前版本是 {{hotloop}}：`ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}`，为 amd64、arm64 和 arm/v7 构建（Pi 3 或 32 位 Pi OS 安装正是 Relay 最终落脚的那种盒子），约 15 MB，无需登录即可拉取，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-edge-relay`。4.16.0 是首个发布它的版本，arm/v7 随 4.18.10 加入。它与 Gateway 共用版本号，只有当两个图表都带有标签的版本、且 Quadlet 单元跟随 `:stable` 时，版本才允许发布。所以 Relay 每次发布都会有新版本，不管它的代码有没有变。只需要问一个版本号，Relay 图表也永远不会指向没人推送过的镜像。[安装它](/zh-hans/edge-relay/install/)。
 
-正在升级 Relay？[从 4.17.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay-and-quadlet)和[从 4.16.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay)里有 Relay 的部分。
+正在升级 Relay？[从 4.17.0 升级](/zh-hans/gateway/upgrading/#edge-relay-和-quadlet)和[从 4.16.0 升级](/zh-hans/gateway/upgrading/#edge-relay)里有 Relay 的部分。
 
 ## 它不是什么
 

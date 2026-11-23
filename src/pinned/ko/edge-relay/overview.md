@@ -9,7 +9,7 @@ Edge Relay는 화면이 없는 제품입니다. 기계 옆의 Pi나 작은 산�
 
 현재 릴리스는 {{hotloop}}입니다. `ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}`는 amd64, arm64, arm/v7용으로 빌드되었고(Pi 3이나 32비트 Pi OS 설치가 바로 릴레이가 놓이는 박스입니다) 약 15 MB이며 로그인 없이 받을 수 있고, 차트는 `https://hotloop.io/hotloop`의 `hotloop-edge-relay`입니다. 4.16.0이 이를 처음 게시한 릴리스였고 arm/v7은 4.18.10에서 추가되었습니다. 버전 번호는 Gateway와 같으며, 두 차트가 태그의 버전을 담고 있고 Quadlet 유닛이 `:stable`을 따르지 않으면 릴리스가 나가지 않습니다. 그래서 릴레이는 코드가 바뀌었든 아니든 릴리스마다 새 버전을 받습니다. 물어볼 버전 번호는 하나뿐이고, 릴레이 차트가 아무도 푸시하지 않은 이미지를 가리킬 일은 없습니다. [설치하세요](/ko/edge-relay/install/).
 
-릴레이를 업그레이드하나요? [4.17.0에서 업그레이드](/ko/gateway/upgrading/#the-edge-relay-and-quadlet)와 [4.16.0에서 업그레이드](/ko/gateway/upgrading/#the-edge-relay)에 릴레이 관련 내용이 있습니다.
+릴레이를 업그레이드하나요? [4.17.0에서 업그레이드](/ko/gateway/upgrading/#edge-relay와-quadlet)와 [4.16.0에서 업그레이드](/ko/gateway/upgrading/#edge-relay)에 릴레이 관련 내용이 있습니다.
 
 ## 아닌 것
 

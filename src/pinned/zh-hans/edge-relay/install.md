@@ -10,7 +10,7 @@ sidebar:
 无论走哪条路，中继都需要两样东西：一个用来发布的代理，以及一个 Sparkplug 组 id。镜像无需登录即可拉取。
 
 :::note[从 4.17.0 或 4.16.0 升级]
-从 4.17.0 起，请用 `--reset-then-reuse-values` 升级 chart，Quadlet 用户使用新的 `edge-relay.container`，它跟随 `:stable`，而不是固定在 4.17.0。中继相关的部分见[从 4.17.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay-and-quadlet)。4.16.0 的中继在下面两种安装方式中都无法接收推送的设备文件：Gateway 显示 `config pushed`，而推送却死在只读挂载上，`persistence.enabled=false` 甚至无法启动。4.17.0 修复了这两处，这部分内容见[从 4.16.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay)，其中包括代理在首次启动时可能返回的过期推送。
+从 4.17.0 起，请用 `--reset-then-reuse-values` 升级 chart，Quadlet 用户使用新的 `edge-relay.container`，它跟随 `:stable`，而不是固定在 4.17.0。中继相关的部分见[从 4.17.0 升级](/zh-hans/gateway/upgrading/#edge-relay-和-quadlet)。4.16.0 的中继在下面两种安装方式中都无法接收推送的设备文件：Gateway 显示 `config pushed`，而推送却死在只读挂载上，`persistence.enabled=false` 甚至无法启动。4.17.0 修复了这两处，这部分内容见[从 4.16.0 升级](/zh-hans/gateway/upgrading/#edge-relay)，其中包括代理在首次启动时可能返回的过期推送。
 :::
 
 ## 设备文件

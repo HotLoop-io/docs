@@ -10,7 +10,7 @@ sidebar:
 어느 쪽을 택하든 릴레이에는 두 가지가 필요합니다. 게시할 브로커와 Sparkplug 그룹 id입니다. 이미지는 로그인 없이 가져옵니다.
 
 :::note[4.17.0 또는 4.16.0에서 오시는 경우]
-4.17.0부터는 `--reset-then-reuse-values`로 차트를 업그레이드하고, Quadlet 사용자는 4.17.0을 고정하는 대신 `:stable`을 따르는 새 `edge-relay.container`를 받으세요. 릴레이에 관한 부분은 [4.17.0에서 업그레이드](/ko/gateway/upgrading/#the-edge-relay-and-quadlet)에 있습니다. 4.16.0의 릴레이는 아래 두 설치 어느 쪽에서도 푸시된 장치 파일을 받을 수 없었습니다. Gateway는 `config pushed`라고 표시하는데 푸시는 읽기 전용 마운트에서 실패했고, `persistence.enabled=false`는 부팅조차 되지 않았습니다. 4.17.0이 둘 다 고쳤으며, 첫 부팅 때 브로커가 돌려줄 수 있는 오래된 푸시를 포함한 그 부분은 [4.16.0에서 업그레이드](/ko/gateway/upgrading/#the-edge-relay)에 있습니다.
+4.17.0부터는 `--reset-then-reuse-values`로 차트를 업그레이드하고, Quadlet 사용자는 4.17.0을 고정하는 대신 `:stable`을 따르는 새 `edge-relay.container`를 받으세요. 릴레이에 관한 부분은 [4.17.0에서 업그레이드](/ko/gateway/upgrading/#edge-relay와-quadlet)에 있습니다. 4.16.0의 릴레이는 아래 두 설치 어느 쪽에서도 푸시된 장치 파일을 받을 수 없었습니다. Gateway는 `config pushed`라고 표시하는데 푸시는 읽기 전용 마운트에서 실패했고, `persistence.enabled=false`는 부팅조차 되지 않았습니다. 4.17.0이 둘 다 고쳤으며, 첫 부팅 때 브로커가 돌려줄 수 있는 오래된 푸시를 포함한 그 부분은 [4.16.0에서 업그레이드](/ko/gateway/upgrading/#edge-relay)에 있습니다.
 :::
 
 ## 장치 파일

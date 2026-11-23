@@ -1,0 +1,227 @@
+---
+title: "将 Gateway 升级到 {{hotloop}}"
+description: "从 4.22.1 升级只需一次 helm upgrade，会新增三个迁移。从 4.18.11 起，代理可以写入。从 4.18.10 起，数据库改用 PostgreSQL 17。"
+sidebar:
+  label: "升级"
+---
+
+升级到 {{hotloop}} 有六条路径，彼此毫不相同。从 4.22.1 升级是一次普通的 `helm upgrade`，它会新增三张表和若干列，并以只读方式挂载主机用于设备健康状态，所以请检查您的 Pod Security 配置。从 4.18.11 升级也是普通的 `helm upgrade`，但有两项变化会影响正在运行的工厂，请先阅读。从 4.18.10 升级时，数据库引擎会在您脚下更换，您需要在它发生之前就了解这一点。从 4.17.0 升级是普通的 `helm upgrade`，只是有几个默认值变了。从 4.16.0 升级要先经过 4.17.0，之后一个新的 Secret 会和数据库一样成为工厂数据的一部分。从 4.3.1 升级时，chart 已经改名，普通的 `helm upgrade` 无法处理，途中要经过 4.16.0 和 4.17.0。发布说明一次只讲一步，没有任何一份讲到跳过某个版本，所以本页不承诺那样能行。请找到属于您的那条路径，并在动正在运行的工厂之前通读一遍。
+
+:::caution[如果您从 4.20.2 或更早版本升级：使用 Basic256 的 OPC UA 客户端将无法连接]
+4.21.0 默认关闭了 `Basic128Rsa15` 和 `Basic256`，升级和全新安装都是如此。服务器不再列出它们，并会拒绝按名称请求它们的客户端。请检查您的 OPC UA 客户端（Ignition 的连接会显示）是否只支持不高于 `Basic256` 的策略，并把该客户端改用 `Basic256Sha256`。如果无法更改，`HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true`（chart 中为 `opcuaServer.allowDeprecatedPolicies: true`）可以恢复这两项策略，服务器会在启动时说明。4.21.0 还新增了迁移 0027，即一张新表，所以除此之外升级就是一次普通的 `helm upgrade`。发布检查曾在已迁移的数据库结构上启动 4.20.2，并且运行正常，所以这张表不会使回滚变得不安全。
+:::
+
+:::note[旧版 chart 通过 URL 获取]
+chart 仓库的索引保留了 Gateway 直到 4.16.0 的 chart，因此 `hotloop/hotloop --version 4.17.0` 可以解析，安装包也可以通过 URL 获取。下面 4.16.0 和 4.17.0 的命令用 URL 指定 chart，例如 `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`，两种方式都可以。IoT 和 Edge 从 4.18.10 开始。
+:::
+
+## 从 4.22.1 升级
+
+一次普通的 `helm upgrade`，设备上已有的内容都不会改变。首次启动时会运行三个迁移，每个都只做新增：`0028_unifi_port_cycles`、`0029_energy` 和 `0030_energy_demand`。在 4.22.1 上做的备份可以在这里恢复，在这里做的备份不能恢复到更早的版本，所以如果可能回退，请先做一次备份。
+
+- **chart 现在以只读方式挂载主机，用于设备健康状态。** Gateway 和 Edge 的 chart 会挂载主机的根目录和 `/proc`，让 EmberNet 仪表板可以读取设备的磁盘、CPU 和内存。不会增加任何权限。使用 restricted Pod Security 配置的集群会拒绝 hostPath，所以在那里请在升级前设置 `opcuaServer.dashboard.boxHealth.enabled: false`。具体取值见[安装 Gateway](/zh-hans/gateway/install/#机器健康状况和宿主机挂载)。
+- **已完成的功能现在默认开启。** 凡是 chart 里有该功能的地方，`broker.enabled`、`opcuaServer.enabled`、`reports.enabled`、`backup.enabled`（每天，`backup.interval: 24h`）、包含所有报警通道的 `notify.enabled`、`edgePublish.enabled`、`monitoring.serviceMonitor.enabled`（仅在安装了 Prometheus operator 的 CRD 时才生成）和 `ingress.enabled` 都为 true。Ingress 没有主机名，所以它会响应您的 ingress 类所服务的任何主机：设置 `ingress.hosts[0].host` 可把它固定到一个名称。没有发送目标的报警通道或 edge 发布器会等待并给出说明，管理员在设置的“报警和读数发往何处”中为它指定目标。您自己文件里设置的值仍然优先，每个设为 `false` 的项都不会生成监听器、Service、卷或 Ingress。
+- **新增一个只能读取的登录。** chart 在这个版本首次安装时创建 `embernet-dashboard-read` 及其 Secret `<release>-opcua-dashboard`，并且从不轮换它。
+- **UniFi 命令已存在，但默认关闭。** 五类点位可以向控制台下发命令，每一类在有人启用该变量之前都保持只读。控制台账户必须是本地管理员，这些命令才能工作。
+- **Quadlet 升级单元会自动跳过。** `hotloop-db-upgrade` 仅在卷里仍有 PostgreSQL 16 数据时才运行，所以在已经是 17 的设备上它显示为未激活，而不是失败。请从 `deploy/quadlet/` 获取新的单元文件。
+- **卸载时 chart 会保留凭据 Secret，** 与数据库卷一样。要从头开始，请把 Secret 和卷一起手动删除。
+
+## 从 4.18.11 升级
+
+为什么要升级：通过 MCP 的代理现在可以写入，写入带缩放的变量的值会按您的本意进入寄存器，CODESYS 运行时按编程人员给变量起的名字来读取，HotLoop 可以把读数和系统日志发送到 Kafka 代理，基于 UADP 的 OPC UA PubSub 双向可用，从商店安装后会以您本人的身份登录。[4.19.4 发布说明](/zh-hans/releases/hotloop-4-19-4/)有完整列表，[4.19.5](/zh-hans/releases/hotloop-4-19-5/) 是它的多架构构建，[4.19.8](/zh-hans/releases/hotloop-4-19-8/) 增加了对日志簿的一项修复，以及能在整个工厂范围内搜索的变量选择器。4.19.0 到 4.19.3、4.19.6 和 4.19.7 曾打过标签但从未发布，所以它们都不能作为升级的起点。
+
+```bash
+helm repo update
+helm upgrade hotloop hotloop/hotloop --version {{hotloop}} \
+  --namespace hotloop --reset-then-reuse-values
+```
+
+`hotloop-edge`、`hotloop-iot` 和 `hotloop-edge-relay` 同样如此。数据库从 4.18.11 起就已经是 PostgreSQL 17，这里没有任何内容会改变它，所以 `helm rollback` 回到 4.18.11 没有问题。
+
+- **代理可以写入。** `allowMcpWrites` 在代码和三个 chart 中默认开启。已开启 `allowWrites` 且从未设置 `allowMcpWrites` 的部署，会在这次升级时通过与界面相同的闸门获得代理写入能力。已保存 `allowMcpWrites: false` 的部署保持关闭。如果您希望代理只读，请在升级前把它设为 `false`。
+- **MCP 端点始终有令牌。** 从未设置令牌的独立二进制或 Quadlet 单元会在首次启动时自己生成一个，并保存在它的数据库里。`hotloop mcp-token` 会打印它，而指向 `/mcp` 却没有令牌的代理会停止工作，直到您把这个令牌给它。
+- **带缩放的变量。** 向缩放为 0.1 的变量写入 55.5，寄存器里得到的是 555，以前得到的是 55。如果有人为了绕开这个问题而输入原始计数值，现在会发送十倍的量。请检查每一个带缩放或偏移、且有人手动写入（来自自动化或配方）的变量，并在升级的同一步骤里把这些数值改成工程值。
+- **时间一律带 `Z`。** API 写出的每个时间都是 UTC。以前解析您本地偏移量的脚本现在得到的是 `Z`。
+- **一个迁移，** `0026`，给历史数据库目标新增一个 `options` 列，对所有已有的目标都是空值。
+
+## 从 4.18.10 升级
+
+为什么要升级：数据库现在是 PostgreSQL 17，设备会自己完成迁移。您还会获得 SNMP 和 BACnet/IP 的[集成](/zh-hans/iot/integrations/)、看板登录、报警升级，以及可以安装到手机上的界面。[4.18.11 发布说明](/zh-hans/releases/hotloop-4-18-11/)有完整列表。下面是容易出问题的部分。
+
+PostgreSQL 不会打开另一个主版本的数据目录，所以只换镜像会让每台现有设备留下一个无法启动的数据库。HotLoop 不要求您导出再导入。升级后的第一次启动会在数据库之前运行一个脚本，由这个脚本完成迁移。
+
+```bash
+helm repo update hotloop
+helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-values
+```
+
+`hotloop-edge` 和 `hotloop-iot` 同样如此。请先在 4.18.10 上做一次备份，并复制到设备之外。HotLoop 自己的备份是由运行中的应用通过运行中的数据库完成的，所以不能在数据库启动之前运行的那一步里做。
+
+### 从 4.18.10 首次启动时会发生什么
+
+- **数据库 Pod 停留在 `Init`，应用等待它。** 在 chart 中，这是数据库 Pod 上的两个 init 容器：旧镜像交出它的 PostgreSQL 16 安装，新镜像以复制模式运行 `pg_upgrade`，写入旧目录旁边的新目录。它会启动一次新服务器来证明能够打开，之后才交换名称。耗时取决于您的数据量，所以数据量大时第一次请查看日志：`kubectl logs <release>-postgresql-0 -c pg-upgrade`。在 Quadlet 上是 `hotloop-db-upgrade.container`，一个 oneshot 单元，数据库单元依赖它：`journalctl -u hotloop-db-upgrade`。
+- **它需要的空闲空间大致与您的数据量相当，并且在开始前先检查。** 如果空间不够，它会在 16 的数据保持原样、数据库未启动的情况下停止。请释放磁盘后重新开始。
+- **`pgdata.pg16` 会留在卷上，由您决定何时删除。** 旧目录被改名后留在原地。它是升级时刻完整的 PostgreSQL 16 数据库，既是您的备份，也是您的退路，大小与数据库相同。当设备已在 17 上运行了您想要的时长：
+
+  ```bash
+  # chart
+  kubectl -n hotloop exec hotloop-postgresql-0 -c postgresql -- rm -rf /var/lib/postgresql/data/pgdata.pg16
+  # Quadlet
+  sudo rm -rf "$(sudo podman volume inspect hotloop-db --format '{{.Mountpoint}}')/pgdata.pg16"
+  ```
+
+- **失败会让您回到原来的状态。** 如果在交换之前出了任何问题，16 的数据不会被触碰，数据库也不会在一个半成品目录上启动。在 chart 中，Pod 会停留在 `Init:Error`。在 Quadlet 上，升级单元失败，后面的数据库单元永远不会启动。按日志所说修复后再次启动。
+- **`helm rollback` 回到 4.18.10 时，它的数据库不会启动。** 这是需要注意的地方。回滚会把数据库镜像放回 PostgreSQL 16，而 16 无法打开 17 的目录。什么都没有丢，也没有任何东西改到一半，只是数据库启动不了。要恢复，需要 k3s 与 Helm 页面中[回退](/zh-hans/install/helm/#回退)里的那个交换：停止数据库，把 `pgdata` 移到 `pgdata.pg17`，把 `pgdata.pg16` 移到 `pgdata`。**这会丢掉升级之后在 17 上写入的所有内容，** 因为 `pgdata.pg16` 是当时的那个数据库。能向前走时就向前走。反向交换只能用一次，只要还有 `pgdata.pg16` 挡在那里，下一次升级就拒绝运行。这一点有文档说明，但没有被测试运行过。
+- **Quadlet 设备不受此影响。** Podman 的自动更新只回滚应用，从不回滚数据库，而且 4.18.10 的应用可以正常读取 PostgreSQL 17 的数据库，因为迁移只做新增。回滚了更新的 Quadlet 设备会继续运行。
+- **一个新的迁移，`0025_kiosk_pin`。** 它只新增列，每一列都有默认值，所以 4.18.10 可以在它留下的数据库结构上运行。
+- **现在每个安装都启用了锁定。** 连续十次输错密码或 PIN 会把该账户锁定 5 分钟，管理员可以解锁。重试错误密码超过十次的脚本会开始收到 `429`。`HOTLOOP_AUTH_LOCKOUT_ATTEMPTS=0` 可以关闭它。
+- **关闭升级。** `database.postgresql.upgrade.enabled: false` 会去掉 init 容器，此时仍在 16 上的卷会让数据库无法启动。请保持开启。开启时，全新安装仍然会在每个节点上拉取一次 PostgreSQL 16 镜像，因为 init 容器的镜像在运行之前就会被拉取。
+
+### Quadlet 和 Edge Relay
+
+把新的 `hotloop-db.container`、`hotloop-db-upgrade.container` 和 `hotloop-db-upgrade.sh` 从您产品在 `deploy/quadlet/` 中的目录复制到单元目录，运行 `systemctl daemon-reload`，然后重启 `hotloop-db.service`。数据库单元依赖升级单元，所以只拿到新数据库单元的设备不会在 16 的数据上启动，并会说明原因。Edge Relay 没有数据库，无需操作。它随 {{hotloop}} 一同发布，因为所有产品同步发布。
+
+### 从 4.18.10 起的 API 变化
+
+- **新路由：** `GET` 和 `PUT /api/notify/escalation`、`GET /manifest.webmanifest` 和 `GET /sw.js`（无需会话，因为手机在任何人登录之前就会请求）、`GET /api/integrations` 以及 `POST /api/integrations/{id}/probe` 和 `/setup`、`POST /api/auth/kiosk`、`POST /api/auth/activity`、`PUT` 和 `DELETE /api/users/{username}/pin`，以及 `DELETE /api/users/{username}/lockout`。
+- **新权限 `notify.escalation`，** 仅限管理员。查看者和操作员角色没有获得它。
+- **两个新协议，** `snmp` 和 `bacnet`，出现在 `GET /api/protocols` 中。报警轨迹新增两种事件类型，`escalated` 和 `escalation-ended`，假定旧列表的脚本会遇到它们。
+- **时间以 UTC 返回，** 历史接口返回的每一个都是。比较字符串的脚本会看到偏移量变成 `Z`。比较时刻的脚本则看不到任何变化。
+
+## 从 4.17.0 升级
+
+为什么要升级：Gateway 不再是唯一的镜像。IoT 和 Edge 是新增的，数据库成为一个设置，通过 MQTT 自我宣告的设备会自动出现，历史数据可以写入工厂自己的数据库，跟随 `:stable` 的设备会自行回滚有问题的更新。最后一点之所以可行，只是因为迁移只做新增。[4.18.10 发布说明](/zh-hans/releases/hotloop-4-18-10/)有完整列表。
+
+这是一次普通的 `helm upgrade`。我们用相同的取值把 4.17.0 和 {{hotloop}} 的 Gateway chart 并排渲染过：同样的八个对象、同样的选择器、同样的卷声明。
+
+```bash
+helm repo update hotloop
+helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-values
+```
+
+使用 `--reset-then-reuse-values`，或者用 `-f` 指定您的取值文件。单纯的 `--reuse-values` 这次恰好能渲染，但它会重放 4.17.0 的取值，丢掉这个版本新增的每个默认值，您就是这样在不知不觉中停留在下面所说的旧队列上限上的。
+
+### 从 4.17.0 首次启动时会发生什么
+
+- **迁移 0016 到 0025 会运行：** `0016_mqtt_discovery`、`0017_broker_logins`、`0018_mqtt_sources`、`0019_historian_targets`、`0020_net_finds`、`0021_mqtt_source_dialects`、`0022_mqtt_source_shelly`、`0023_dashboards`（保存您所建仪表板的表）、`0024_tag_no_data`（变量上的 `no_data` 列，对所有已有变量为空，这正是那些变量原本的行为），以及 `0025_kiosk_pin`（用于 PIN 哈希、会话空闲上限和锁定计数的列）。全部只做新增。和往常一样，先做 `pg_dump`。
+- **`edgePublish.queueMaxBytes` 默认为 64 MiB，而不是无限制。** 只有当您通过 Sparkplug 向上游发布时才有影响。超过上限后，最旧的读数会被丢弃并计数。无限制的队列在足够长的中断中会把卷填满，那更糟，但这确实是改变了的默认值。64 MiB 约为 248,000 个读数，按每秒 2,000 个读数算约两分钟，所以请根据自己的速率来定大小（每个读数约 240 字节），或设为 `0` 以保持旧行为。这样做时 HotLoop 会在启动时发出警告。用 `--reuse-values` 升级的发布会保留它原有的取值。
+- **代理登录。** 来自 `HOTLOOP_BROKER_USERS` 的登录仍然像以前一样什么都能做，因为谁也不应该升级到一个 Sparkplug 流量被自己从未写过的规则弹回的工厂里。您在设置、MQTT 中创建的登录会带有某个配置文件中的主题规则。没有 `HOTLOOP_BROKER_USERS` 的代理现在也能启动，只有 HotLoop 和在其中创建的登录才能进入。
+- **数据库在这次首次启动时从 PostgreSQL 16 迁到 17，** 自动完成，并且需要空闲磁盘。[4.18.10 一节](#从-41810-升级)说明了过程，那是最该先读的部分。
+- **回退到 4.17.0 现在是一次数据库交换，而不是 `helm rollback`。** 数据库结构只增不减，4.17.0 可以在上面运行，但 4.17.0 的数据库是 PostgreSQL 16，无法打开升级留下的 17 目录；反向交换见 4.18.10 一节。无论如何，升级前请先备份。从这里开始，应用还会计算它的数据库领先自己多远，一旦数据库领先两个版本，它会拒绝启动，并写明两个版本号。
+- **想换一个产品？** 从 IoT 到 Edge 再到 Gateway，每一个设备、变量、实体、自动化、报警、用户和每一小时的历史数据都会保留。先备份，然后在同一个发布上执行 `helm upgrade hotloop hotloop/hotloop-edge`。具体做法见[产品阵容](/zh-hans/products/)。在您在意的设备上，不要降到低一级的产品。
+
+### Edge Relay 和 Quadlet
+
+也请用 `--reset-then-reuse-values` 升级中继的 chart。Quadlet 用户请换上新的 `edge-relay.container`：它跟随 `:stable`，不再固定在 4.17.0，并带有让有问题的更新回滚的 healthcheck 和 `--sdnotify=healthy`。没有这两项，失效的更新会被报告为成功。从 Gateway 推送的设备文件现在会立即生效，无需重启，而在 4.17.0 上要等到重启。单元的完整内容见 [Edge Relay 安装页](/zh-hans/edge-relay/install/)。
+
+Gateway 现在有了 Quadlet 单元，4.17.0 没有。它们在 [Podman Quadlet](/zh-hans/install/quadlet/) 的 `gateway/` 目录中，步骤见 [Gateway 安装页](/zh-hans/gateway/install/#podman-quadlet)。
+
+### 从 4.17.0 起的 API 变化
+
+- **新路由：** `/api/discovery` 及其 `accept`、`ignore`、`unignore` 和 `review` 操作，`/api/network-discovery` 及其 `probe`、`accept`、`ignore` 和 `unignore`，`/api/mqtt/brokers`、`/api/broker/logins`、`/api/historian/targets`、`GET /api/entities/{entity_id}/image`，以及 `POST /api/fleet/{id}/update`（用于批准中继暂存的镜像更新）。没有任何内容被移除。
+- **`GET /api/status` 会返回 `product` 和 `features`，** 以及镜像摘要。脚本可以直接询问，而不用探测。对于产品没有的功能，其路由会返回 `404` 和 `{"error":...,"product":...,"feature":...}`。
+- **新权限：** `fleet.update`，仅限管理员。操作员角色没有变化。
+
+## 从 4.16.0 升级
+
+这是通往 4.17.0 的一步，从 4.17.0 起您按[上面一节](#从-4170-升级)继续升到 {{hotloop}}。下面的所有内容都已针对 4.17.0 验证过。
+
+为什么要升级：4.16.0 有一些可能让运行中的工厂碰到的缺陷，4.17.0 修复了它们。命令提示符可能吞掉一次 Set，于是操作员看着提示符关闭，以为设定值已发出，实际什么都没写入。在编辑器里保存规则，哪怕只是改名，也会悄悄把它的运行预算重置为五分钟。推送到 Edge Relay 的设备文件永远到不了，而 Gateway 却显示 `config pushed`。EmberNet 应用商店的部署还会丢失它的租户。除了这些修复，您还会得到[配方](/zh-hans/iot/recipes/)、[脚本](/zh-hans/iot/scripts/)、[蓝图](/zh-hans/iot/blueprints/)、[辅助项](/zh-hans/iot/helpers/)、[日志簿](/zh-hans/iot/logbook/)、新的[自动化](/zh-hans/iot/automations/)步骤、只读的 [UniFi](/zh-hans/iot/unifi/)，以及从 16 个工具增加到 25 个的 [MCP](/zh-hans/iot/mcp/)。
+
+这是一次普通的 `helm upgrade`。我们把两个 chart 在两个版本上都渲染过：每个选择器和每个卷声明都相同，唯一的新对象是密钥的 Secret。
+
+```bash
+helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.17.0.tgz --reset-then-reuse-values
+```
+
+使用 `--reset-then-reuse-values`，或者用 `-f` 指定您的取值文件。**不要用 `--reuse-values`。** 它会重放 4.16.0 的取值，丢掉这个 chart 新增的每个默认值，渲染会在它需要的第一个值上失败（来自 `secretKey` 的 `nil pointer evaluating interface {}.enabled`）。失败时集群上不会有任何改变，所以用正确的方式再运行一次即可。
+
+### 首次启动时会发生什么
+
+我们先在一个数据库上运行已发布的 4.16.0 镜像，再在同一个数据库上运行 4.17.0，以此验证。
+
+- **迁移 0009 到 0015 会运行：** `0009_helpers`、`0010_logbook`、`0011_scripts`、`0012_tag_device_class`、`0013_recipes`、`0014_blueprints` 和 `0015_unifi`。全部只做新增。在空工厂上只用了五分之一秒。在您那里，耗时取决于您的数据库大小。和往常一样，先做 `pg_dump`。
+- **您的设备密码会被加密。** chart 在这次升级时创建 `<release>-secret-key`（4.16.0 中没有），Gateway 在那次启动时把每一条已保存的凭据封存起来，并在日志中说明：`encrypted stored device credentials devices=N`。设备继续连接，没有人需要重新输入任何东西。
+- **从那以后，这把密钥就是您数据的一部分。** 没有它就启动 Gateway，每一个带封存密码的设备都会保持离线并不断重试，报错里会写明它需要的密钥名称。升级之后做的备份只能在挂载了这把密钥的地方恢复，在其他任何地方，`--restore-from` 都会点名拒绝。如果密钥彻底丢失，`--restore-keep-unreadable-credentials` 可以恢复其他所有内容，并让这些设备保持离线，直到有人重新输入密码。4.16.0 的备份可以恢复到任何地方，恢复完成后其中的凭据会立刻被封存。
+- **回退到 4.16.0** 在同一个数据库上可以启动（我们试过），但 4.16.0 对封存一无所知。它把封存后的文本当作密码交给每个设备，所以任何校验密码的环节都会拒绝它。如果必须回退，请恢复升级前做的 `pg_dump`。这正是当初要做它的原因。
+- **只渲染 chart 而不安装？** 密钥由一个 `lookup` 生成，只有真正的 `helm install` 或 `helm upgrade` 才能执行它。任何运行 `helm template` 再应用结果的做法，每次渲染都会得到新密钥，下一次同步就会把所有封存密码锁在门外。请用 `hotloop gen-secret-key` 生成您自己的密钥，放进您自己管理的 Secret，并设置 `secretKey.existingSecret`。Helm、Fleet 和 EmberNet 应用商店都是真正安装，不需要这样做。
+
+所以这次升级之后的新工作是：像备份集群里其他 Secret 那样备份 `<release>-secret-key`，并把它放在备份以外的地方。放在它所保护的备份旁边的密钥什么也保护不了。密钥覆盖的其他内容见[安装](/zh-hans/gateway/install/#在需要之前先备份密钥)。
+
+### Edge Relay
+
+中继同样是 4.17.0，从同一个标签发布。请用同样形式的 URL `https://hotloop.io/hotloop/hotloop-edge-relay-4.17.0.tgz` 把它的 chart 升级到 4.17.0，参数规则也一样：`--reset-then-reuse-values` 或您的取值文件。在中继上使用 `--reuse-values` 甚至不会报错。它会丢掉 chart 新增的 `pushedDevicesFile` 默认值，把该变量渲染为空，推送又会在只读挂载上失败。接下来请了解四件事。
+
+- **推送过来的设备文件位于 `/data/pushed-devices.json`**（`HOTLOOP_EDGE_RELAY_PUSHED_FILE`，chart 的 `pushedDevicesFile`），在中继的卷上。只要它存在，就优先于 chart 的 `devices`，重启、Pod 重新调度以及修改 `devices` 的 `helm upgrade` 都不会改变这一点。中继会在日志里记录它从哪个文件启动。要回到本地文件，请在中继保持连接时对 Gateway 执行 `DELETE /api/fleet/{id}/config`（`fleet.config`），然后重启它。这次重启是 4.17.0 的行为。从 4.18.10 起，已连接的中继会立即切换。
+- **旧的推送可能回来。** 您向 4.16.0 中继做的推送从未送达，但代理仍以 retained 方式保存着它，4.17.0 中继会在首次启动时取走并运行它。如果它已过时，请在升级后立即用同一个 `DELETE` 清除，并重启中继。从 4.18.10 起，清除会立即生效，不需要重启。
+- **Quadlet：换上新的 `edge-relay.container`。** 4.17.0 的单元固定在 4.17.0，并设置了 `HOTLOOP_EDGE_RELAY_PUSHED_FILE`，现在的单元也设置了它，但跟随 `:stable`。没有那一行，推送仍会在只读根目录上失败。单元的完整内容见 [Edge Relay 安装页](/zh-hans/edge-relay/install/#quadlet)。
+- **`persistence.enabled=false` 现在可以启动，** 使用上限为 `persistence.size` 的 emptyDir。选它之前请先了解代价：每次 Pod 被替换，您都会丢失转发队列、任何推送过来的设备文件以及 OPC UA 客户端证书。您在意的内容请使用 PVC，这也是默认设置。
+
+### 调用 API 的脚本会注意到的变化
+
+- **尚未发生的时间会被省略。** 不是 `null`，而是省略。4.16.0 会为从未运行过的规则或脚本的 `lastRun`、从未轮询过的设备的 `lastPoll` 和 `lastGood`、持续中的报警的 `clearedAt`、`ackedAt` 和 `shelvedUntil`、从未触发的报警的 `raisedAt`、实时推送中 `alarm` 事件的相同字段，以及其他一些字段发送 `0001-01-01T00:00:00Z`。这就是从未运行过的规则会显示“上次运行于 739887 天前”的原因。如果您的代码判断年份是否为一，请改为判断该字段是否存在。
+- **升级的那一刻，操作员就获得新权限：** `helpers.write`、`scripts.run`、`recipes.apply` 和 `blueprints.apply`。所以您的操作员可以立刻设置辅助项、运行脚本、应用配方，并用蓝图创建规则。编写脚本、配方和蓝图（`scripts.write`、`recipes.write`、`blueprints.write`）属于管理员。所有人都可以读取它们。配方也可以指定自己的 `recipes.apply.<name>`。
+- **新路由：** `/api/helpers`、`/api/logbook`、`/api/scripts`、`/api/recipes`、`/api/blueprints`、`POST /api/automations/{id}/blueprint-upgrade`、UniFi 的路由（`/api/devices/{id}/network` 和 `/api/unifi/{id}/...`），以及 `DELETE /api/fleet/{id}/config`。
+- **变量带有 `deviceClass`，** 并会传递到它们的实体。
+- **规则带有 `blueprintId`、`blueprintVersion` 和 `blueprintInputs`。** 手写的规则没有这些。保存规则仍然是整体替换，请求体不能把规则移到另一个蓝图或版本。
+
+## 从 4.3.1 升级
+
+4.3.1 发布于八月，在它之后直到 4.16.0 都没有再发布过任何版本。从 4.4.0 到 4.15.3 的内容都已合并但从未发布，所以离开 4.3.1 时，您要在一次跨越中接受全部变化：新的名称、新的镜像、新的 chart 和新的许可证。这一节带您升到 4.16.0，也就是这套流程所验证的版本。从那里开始，上面的[从 4.16.0 升级](#从-4160-升级)是升到 4.17.0 的普通升级，[从 4.17.0 升级](#从-4170-升级)是再往后的一步。在动运行中的工厂之前，请把这三节都读完。它们很短，比向厂长解释历史数据库为什么是空的要短得多。
+
+### 一切都换了新名称
+
+| 项目 | 4.3.1 | 4.16.0 及以后 |
+|---|---|---|
+| 镜像 | `ghcr.io/embernet-ai/industrial-iot` | `ghcr.io/hotloop-io/hotloop` |
+| chart 仓库 | 旧地址，现在是 404 | `https://hotloop.io/hotloop` |
+| chart | `industrial-iot` | `hotloop` |
+| 环境变量 | `IIOT_*` | `HOTLOOP_*`（自 4.9.0 起） |
+
+### 这不是普通的 helm upgrade
+
+chart 的名称写死在 Deployment 和 StatefulSet 的选择器里，而 Kubernetes 坚决拒绝原地修改选择器。把旧发布指向新 chart，它只会失败。保持发布名称和命名空间不变，然后：
+
+1. 对数据库执行 `pg_dump`。双重保险。您会庆幸自己做了。
+2. 删除旧的 Deployment（`<release>`）和 StatefulSet（`<release>-postgresql`）。数据库卷是独立的声明，会保留下来。
+3. 添加仓库，并用您运行 4.3.1 时的取值文件升级：
+
+   ```bash
+   helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.16.0.tgz \
+     -n <namespace> -f your-4.3.1-values.yaml
+   ```
+
+   这是用 URL 指定的 4.16.0 chart，在添加仓库之前也能用。升到 4.16.0 之后，请添加仓库（`helm repo add hotloop https://hotloop.io/hotloop`），用于后续的升级步骤。
+
+   那个文件里的任何内容都没有从 chart 中移除。请把 `extraEnv` 中每个 `IIOT_` 改名为 `HOTLOOP_`，如果有 `image.repository` 的覆盖，请去掉。不要使用 `--reuse-values`。它会跳过自 4.3.1 以来这个 chart 新增的每个默认值，那超过它一半的键，您会运行一个大部分是空洞的 chart。
+
+名称、Secret 中的数据库密码和卷声明的渲染结果与 4.3.1 完全一致，所以新的数据库 Pod 会挂载旧数据。Gateway 在启动时向前迁移数据库结构，并顺便把 TimescaleDB 从 2.29.1 更新到 2.30.1。
+
+我们是通过把两个 chart 并排渲染来验证的。第 1 步就是您的退路：如果升级出了意外，您手里有五分钟前的导出，我们也希望您通过 [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) 告诉我们。
+
+### 有哪些行为不同
+
+- **有了登录。** 4.4.0 之前根本没有。chart 在首次安装时创建一个 `admin` 账户；[安装](/zh-hans/gateway/install/#登录)中有读回密码的命令。
+- **写入默认关闭，** 包括代理，自 4.4.0 起。如果您 4.3.1 的取值文件从未设置 `safety.allowWrites`，那么您的操作员和规则以前做的每一次写入，在升级后都会被拒绝，直到您设置它。这是有意为之，也是提醒您在重新打开之前复查哪些内容已经启用。
+- **无法加载的时区会中止启动。** 把 `HOTLOOP_TIMEZONE` 或 `TZ` 设成无效值，以前会一声不响地按 UTC 运行，悄悄让每份报表、每个计划和每次交接班偏差好几个小时。
+- **设备凭据对每个角色读回的都是 `[redacted]`，** 包括管理员（4.15.1）。用这个占位符保存设备，会保留已存储的密码。
+- **轮询设置是 `HOTLOOP_POLL_INTERVAL`、`HOTLOOP_MIN_POLL_INTERVAL` 和 `HOTLOOP_POLL_TIMEOUT`。** 旧的设置界面让您设置 `HOTLOOP_POLL_INTERVAL_MS`、`HOTLOOP_MIN_POLL_INTERVAL_MS` 和 `HOTLOOP_TIMEOUT_MS`，但从来没有任何东西读取它们。如果您设置过它们，它们没有起任何作用。请改名。
+- **您导入的 OPC UA 变量保留导入时的类型。** 变量发现以前把每个节点都当作 float。现在它读取每个节点的真实类型，但之前导入的变量仍保持 `float`，而 HotLoop 自己的 OPC UA 服务器按声明的类型发布变量，所以文本变量到达 Ignition 时是 `Bad_TypeMismatch`。请把您的文本变量声明为 `string`。
+- **Edge 发布现在有了取值块。** 如果您通过 `extraEnv` 设置它，请把它移到 `edgePublish:` 并去掉那些变量，否则它们会被设置两次。
+- **OPC UA 服务器的制造商现在是 `HotLoop`，** 早期版本用的是另一个制造商名称。如果某个客户端或资产清单脚本按这个字符串匹配，请在它失效之前改掉。
+- **许可证。** 4.3.1 之后条款有了变化。当前条款见[许可证页面]({{LICENSE_URL}})。
+
+### 从 4.3.1 起的 API 变化
+
+如果您有针对 API 的脚本或集成，这就是清单。其余都是新增内容。[上面](#调用-api-的脚本会注意到的变化)从 4.16.0 到 4.17.0 的变化叠加在这些之上，[更上面](#从-4170-起的-api-变化)从 4.17.0 到 {{hotloop}} 的变化同样如此。
+
+- **空列表是 `[]`，绝不是 `null`，** 在每个响应和每个流事件中，不论嵌套多深。`GET /api/runs`、自动化、设备的变量、写入审计、用户、报警事件、迷你图，以及空的历史窗口，以前都返回 `null`。您仍然看到的 `null` 绝不是列表；它是文档中说明的可为空字段，例如实体的 `equipment_id`。
+- **没有良好读数的 `/api/history` 时间桶是 `null`，** 绘图时显示为间隙，不良读数不计入趋势平均值。同一小时的趋势和报表现在说的是同一回事。
+- **API 无法归类的错误是 500，** 并附带服务器日志的引用，而不是 400。写入或浏览时出错的设备是 502。[写入闸门](/zh-hans/gateway/write-gate/#每种拒绝的返回内容)列出了写入可能得到的每一种状态。
+- **`alarm.turn_on`，以及报警实体不接受的其他任何服务，返回 400**（"unknown service"）。以前它会回答成功却什么也不做，这是最糟糕的回答。
+- **对未被搁置的报警取消搁置返回 409。** 以前不管报警处于什么状态，它都会把报警设为正常，这可能把一条已恢复但未确认的报警从列表里抹掉，而这恰恰是 ISA-18.2 要求保留在列表上的报警。
+- **变量的 JSON 始终带有 `minValue`、`maxValue` 和 `hasRange`，** 只有 `hasRange` 说明是否存在范围。从 0 开始的范围，以前看起来像没有最小值。
+- **新增：`POST /api/services/{domain}/{service}` 上的 `?dry_run=true`。** 它执行闸门的检查，不写入、不审计，并返回真实调用会给出的拒绝。`dry_run` 只接受 `true` 或 `false`；`yes` 返回 400，因为往错误方向的猜测会把一次询问变成一条命令。
+- **`GET /api/settings`** 在 `envVar` 中给出某个值实际来自哪个变量，包括回退项，并且设为空字符串的变量视为未设置。
+
+[发布说明](https://hotloop.io/releases/core/)有其余的变化，逐个版本回溯到 4.4.0。升到 4.16.0 之后，如果历史数据库仍然是满的，请执行[从 4.16.0 升级](#从-4160-升级)，再执行[从 4.17.0 升级](#从-4170-升级)。

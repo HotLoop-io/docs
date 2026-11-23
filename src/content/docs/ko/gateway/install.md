@@ -20,7 +20,7 @@ helm install hotloop hotloop/hotloop --version 4.24.0 \
   --namespace hotloop --create-namespace
 ```
 
-이렇게 하면 Gateway와 함께 20 Gi 볼륨의 TimescaleDB 2.30.1이 옆에 배포되고 90일치 이력을 보관합니다. 데이터베이스는 설정 `database.type`으로 정합니다. `timescaledb`가 기본값이고, `postgresql`은 일반 PostgreSQL 17을, `sqlite`는 데이터베이스 파드 없이 파일 하나로 Gateway를 실행하며 복제본 하나와 로컬 스토리지만 쓰고 NFS는 절대 쓰지 않습니다. 나중에 서로 바꾸는 것은 백업과 복원입니다. 새 데이터베이스는 비어 있는 상태로 시작하기 때문입니다. 이미 PostgreSQL 16 데이터가 있는 박스는 아무것도 하지 않아도 다음 업그레이드 때 17로 올라가므로, 가동 중인 공장을 건드리기 전에 [그 과정을 읽어 보세요](/ko/gateway/upgrading/#upgrading-from-41810). 차트는 데이터베이스 비밀번호, MCP 토큰, 관리자 비밀번호를 만들어 릴리스 Secret에 넣고 업그레이드마다 다시 사용하므로, `helm upgrade`가 모르는 사이에 비밀번호를 바꾸거나 여러분을 자기 공장에서 로그아웃시키는 일은 없습니다.
+이렇게 하면 Gateway와 함께 20 Gi 볼륨의 TimescaleDB 2.30.1이 옆에 배포되고 90일치 이력을 보관합니다. 데이터베이스는 설정 `database.type`으로 정합니다. `timescaledb`가 기본값이고, `postgresql`은 일반 PostgreSQL 17을, `sqlite`는 데이터베이스 파드 없이 파일 하나로 Gateway를 실행하며 복제본 하나와 로컬 스토리지만 쓰고 NFS는 절대 쓰지 않습니다. 나중에 서로 바꾸는 것은 백업과 복원입니다. 새 데이터베이스는 비어 있는 상태로 시작하기 때문입니다. 이미 PostgreSQL 16 데이터가 있는 박스는 아무것도 하지 않아도 다음 업그레이드 때 17로 올라가므로, 가동 중인 공장을 건드리기 전에 [그 과정을 읽어 보세요](/ko/gateway/upgrading/#41810에서-업그레이드). 차트는 데이터베이스 비밀번호, MCP 토큰, 관리자 비밀번호를 만들어 릴리스 Secret에 넣고 업그레이드마다 다시 사용하므로, `helm upgrade`가 모르는 사이에 비밀번호를 바꾸거나 여러분을 자기 공장에서 로그아웃시키는 일은 없습니다.
 
 ## 필요해지기 전에 키를 백업하세요
 

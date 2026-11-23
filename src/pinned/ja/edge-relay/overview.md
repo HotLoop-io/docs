@@ -9,7 +9,7 @@ Edge Relay は画面を持たないタイプです。機械の隣の Pi や小�
 
 現在のリリースは {{hotloop}} です。`ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}` は amd64、arm64、arm/v7 向けにビルドされ(Pi 3 や 32 ビット Pi OS の環境こそ、リレーが最終的に置かれるボックスです)、約 15 MB で、ログインなしで取得でき、チャートは `https://hotloop.io/hotloop` の `hotloop-edge-relay` です。4.16.0 が最初に公開したリリースで、arm/v7 は 4.18.10 で加わりました。バージョン番号は Gateway と共通で、両方のチャートがタグのバージョンを持ち、Quadlet ユニットが `:stable` に従っていなければ、リリースは出ません。そのためリレーは、コードが変わったかどうかにかかわらず、リリースごとに新しいバージョンになります。確認すべきバージョン番号は 1 つで、リレーのチャートが誰もプッシュしていないイメージを指すことはありません。[インストールしてください](/ja/edge-relay/install/)。
 
-リレーをアップグレードしますか。[4.17.0 からのアップグレード](/ja/gateway/upgrading/#the-edge-relay-and-quadlet)と [4.16.0 からのアップグレード](/ja/gateway/upgrading/#the-edge-relay)にリレーの部分があります。
+リレーをアップグレードしますか。[4.17.0 からのアップグレード](/ja/gateway/upgrading/#edge-relay-と-quadlet)と [4.16.0 からのアップグレード](/ja/gateway/upgrading/#edge-relay)にリレーの部分があります。
 
 ## 何ではないか
 
