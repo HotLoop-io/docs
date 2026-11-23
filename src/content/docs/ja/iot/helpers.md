@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-`entity_id` は、指定しなければ名前から作られます(`input_number.batch_target`)。`PUT /api/helpers/{entity_id}` で名前、アイコン、単位、オプションを変更し、`DELETE /api/helpers/{entity_id}` で値ごと削除します。API 全体は [HTTP API](/ja/iot/api/#helpers)にあります。
+`entity_id` は、指定しなければ名前から作られます(`input_number.batch_target`)。`PUT /api/helpers/{entity_id}` で名前、アイコン、単位、オプションを変更し、`DELETE /api/helpers/{entity_id}` で値ごと削除します。API 全体は [HTTP API](/ja/iot/api/#ヘルパー)にあります。
 
 ヘルパーの現在の値がオプションの範囲外になる変更は拒否されます。範囲を値より狭くする、選択中の項目を削除する、といった場合です。先に値を設定するか、その値を含むオプションを選んでください。値が、合わせるために動かされることはありません。
 

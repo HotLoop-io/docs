@@ -192,7 +192,7 @@ Les recettes, chaque version et chaque application figurent dans les sauvegardes
 
 ## L'API
 
-[L'API HTTP](/fr/iot/api/#recipes) a chaque route. En bref :
+[L'API HTTP](/fr/iot/api/#recettes) a chaque route. En bref :
 
 | <span class="sr-only">Détails</span> | <span class="sr-only">Détails</span> |
 |---|---|

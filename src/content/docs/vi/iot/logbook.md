@@ -3,7 +3,7 @@ title: "Nhật ký"
 description: "Thay đổi trạng thái, thao tác ghi, báo động, lần chạy quy tắc và thay đổi cấu hình trên một dòng thời gian, cho cả nhà máy, một khu vực hay một thực thể."
 ---
 
-Một dòng thời gian duy nhất về những gì đã xảy ra trong nhà máy, mới nhất trước: máy bơm đã bật, ai đó ghi 180 vào điểm đặt của vùng 1, báo động nhiệt độ cao được kích hoạt rồi được xác nhận, tự động hóa làm nguội đã chạy, một thiết bị được cấu hình lại. Cho cả nhà máy, một vị trí trên cây thiết bị cùng mọi thứ bên dưới, hoặc một thực thể. Đó là tab Nhật ký, một mục trong ngăn kéo của mỗi thực thể, `GET /api/logbook` (xem [API HTTP](/vi/iot/api/#logbook)) và công cụ MCP `get_logbook` (xem [MCP](/vi/iot/mcp/)).
+Một dòng thời gian duy nhất về những gì đã xảy ra trong nhà máy, mới nhất trước: máy bơm đã bật, ai đó ghi 180 vào điểm đặt của vùng 1, báo động nhiệt độ cao được kích hoạt rồi được xác nhận, tự động hóa làm nguội đã chạy, một thiết bị được cấu hình lại. Cho cả nhà máy, một vị trí trên cây thiết bị cùng mọi thứ bên dưới, hoặc một thực thể. Đó là tab Nhật ký, một mục trong ngăn kéo của mỗi thực thể, `GET /api/logbook` (xem [API HTTP](/vi/iot/api/#nhật-ký-sự-kiện)) và công cụ MCP `get_logbook` (xem [MCP](/vi/iot/mcp/)).
 
 Câu hỏi đầu tiên khi có gì đó hỏng là "ngay trước đó đã xảy ra chuyện gì?", và cho đến nay câu trả lời nằm ở năm nơi: kiểm toán thao tác ghi, lịch sử báo động, các lần chạy tự động hóa, nhật ký hệ thống, và trí nhớ của không ai về những gì chính thiết bị đã làm. Nhật ký là năm thứ đó trong một danh sách.
 

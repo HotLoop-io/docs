@@ -92,7 +92,7 @@ Las credenciales se guardan como las de un dispositivo: selladas en reposo cuand
 
 ## Dónde encaja en el producto
 
-La sonda y la configuración alcanzan la red desde la caja de HotLoop, así que las dos necesitan `devices.write`, igual que guardar un dispositivo. Listar necesita `devices.read`. Todos los productos las incluyen. Las rutas están en [la API HTTP](/es/iot/api/#integrations).
+La sonda y la configuración alcanzan la red desde la caja de HotLoop, así que las dos necesitan `devices.write`, igual que guardar un dispositivo. Listar necesita `devices.read`. Todos los productos las incluyen. Las rutas están en [la API HTTP](/es/iot/api/#integraciones).
 
 ## Añadir una
 

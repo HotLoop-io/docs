@@ -21,7 +21,7 @@ Các cơ sở dữ liệu HotLoop ghi vào:
 
 ## Thêm một đích
 
-**Cài đặt, Đích của historian, Thêm đích**, hoặc `POST /api/historian/targets` (xem [HTTP API](/vi/iot/api/#historian-targets)). Chỉ dành cho quản trị viên, vì đích là nơi dữ liệu nhà máy đi tới, và quyết định đó thuộc về quản trị viên. Bất kỳ ai đọc được phần cài đặt đều thấy các đích và tình trạng của từng đích.
+**Cài đặt, Đích của historian, Thêm đích**, hoặc `POST /api/historian/targets` (xem [HTTP API](/vi/iot/api/#đích-historian)). Chỉ dành cho quản trị viên, vì đích là nơi dữ liệu nhà máy đi tới, và quyết định đó thuộc về quản trị viên. Bất kỳ ai đọc được phần cài đặt đều thấy các đích và tình trạng của từng đích.
 
 Một đích gồm loại, địa chỉ (`host` hoặc `host:port`), cơ sở dữ liệu, bảng và tài khoản đăng nhập. Mật khẩu được niêm phong bằng cùng khóa với thông tin xác thực của thiết bị (`HOTLOOP_SECRET_KEY_FILE`, xem [Sao lưu và khôi phục](/vi/iot/backup/)) và không bao giờ lấy ra được từ API. Không có khóa thì đích có mật khẩu bị từ chối: tài khoản cơ sở dữ liệu ở dạng rõ trong bản sao lưu chính là điều khóa này sinh ra để ngăn.
 

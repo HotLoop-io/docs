@@ -126,7 +126,7 @@ Kjøremodusen holdes per prosess. To prosesser kan hver starte én kjøring av e
 
 ## API-et
 
-Hver rute, dens rettighet og svarene dens står i [HTTP-API-et](/nb/iot/api/#scripts).
+Hver rute, dens rettighet og svarene dens står i [HTTP-API-et](/nb/iot/api/#skript).
 
 | Rettighet | leser | operatør | administrator |
 |---|---|---|---|

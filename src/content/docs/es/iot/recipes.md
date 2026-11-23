@@ -192,7 +192,7 @@ Las recetas, cada versión y cada aplicación están en las copias de seguridad 
 
 ## La API
 
-[La API HTTP](/es/iot/api/#recipes) tiene cada ruta. En resumen:
+[La API HTTP](/es/iot/api/#recetas) tiene cada ruta. En resumen:
 
 | <span class="sr-only">Detalles</span> | <span class="sr-only">Detalles</span> |
 |---|---|

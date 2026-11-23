@@ -83,7 +83,7 @@ Mỗi đầu vào được kiểm tra trước và **không bao giờ bị chỉ
 
 Tạo một quy tắc **không bao giờ thay thế một quy tắc khác**. Một id đã bị dùng, bởi quy tắc viết tay hoặc quy tắc tạo từ blueprint, sẽ bị từ chối.
 
-Qua API, đó là `POST /api/blueprints/{id}/instantiate`, với `?dry_run=true` để kiểm tra. Xem [API HTTP](/vi/iot/api/#blueprints).
+Qua API, đó là `POST /api/blueprints/{id}/instantiate`, với `?dry_run=true` để kiểm tra. Xem [API HTTP](/vi/iot/api/#blueprint).
 
 ## Các blueprint tích hợp sẵn
 

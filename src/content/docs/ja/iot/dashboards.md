@@ -199,7 +199,7 @@ Try again when the connection is back.
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-本文とエラーを含むリファレンスは、[HTTP API](/ja/iot/api/#dashboards)にあります。作成、保存、削除はすべて、サブジェクト `dashboard:<id>` への `config` イベントとして記録に残るので、パネルに表示される内容を誰が変えたかをログブックで確認できます。
+本文とエラーを含むリファレンスは、[HTTP API](/ja/iot/api/#ダッシュボード)にあります。作成、保存、削除はすべて、サブジェクト `dashboard:<id>` への `config` イベントとして記録に残るので、パネルに表示される内容を誰が変えたかをログブックで確認できます。
 
 テーブルは `dashboards` で、PostgreSQL、TimescaleDB、SQLite向けのマイグレーション0023で追加されました。追加するだけです（[マイグレーションは追加するだけ](/ja/iot/migrations/)）。ウォールボードの行は、マイグレーションではなく、アプリケーションが最初に要求されたときに作るので、ダッシュボードができる前に取ったバックアップから復元したデータベースにも、再び作られます。
 

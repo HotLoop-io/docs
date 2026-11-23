@@ -92,7 +92,7 @@ Le credenziali sono custodite come quelle di un dispositivo: sigillate a riposo 
 
 ## Dove si colloca nel prodotto
 
-La sonda e la configurazione attraversano la rete dalla macchina HotLoop, quindi entrambe richiedono `devices.write`, come salvare un dispositivo. Elencare richiede `devices.read`. Ogni prodotto le include. Le route sono nell'[API HTTP](/it/iot/api/#integrations).
+La sonda e la configurazione attraversano la rete dalla macchina HotLoop, quindi entrambe richiedono `devices.write`, come salvare un dispositivo. Elencare richiede `devices.read`. Ogni prodotto le include. Le route sono nell'[API HTTP](/it/iot/api/#integrazioni).
 
 ## Aggiungerne una
 

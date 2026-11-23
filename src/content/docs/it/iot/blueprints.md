@@ -83,7 +83,7 @@ Ogni ingresso viene controllato per primo e **mai adattato a forza**. 150 per un
 
 Creare una regola **non ne sostituisce mai una**. Un id già occupato, da una regola scritta a mano o creata da un blueprint, viene rifiutato.
 
-Tramite l'API è `POST /api/blueprints/{id}/instantiate`, con `?dry_run=true` per il controllo. Vedi [l'API HTTP](/it/iot/api/#blueprints).
+Tramite l'API è `POST /api/blueprints/{id}/instantiate`, con `?dry_run=true` per il controllo. Vedi [l'API HTTP](/it/iot/api/#blueprint).
 
 ## Quelli integrati
 

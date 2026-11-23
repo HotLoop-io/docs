@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-يُنشأ `entity_id` من الاسم (`input_number.batch_target`) ما لم تحدد واحدا بنفسك. يغيّر `PUT /api/helpers/{entity_id}` اسمه أو أيقونته أو وحدته أو خياراته؛ ويحذفه `DELETE /api/helpers/{entity_id}` مع قيمته. وواجهة API كاملة في [واجهة HTTP API](/ar/iot/api/#helpers).
+يُنشأ `entity_id` من الاسم (`input_number.batch_target`) ما لم تحدد واحدا بنفسك. يغيّر `PUT /api/helpers/{entity_id}` اسمه أو أيقونته أو وحدته أو خياراته؛ ويحذفه `DELETE /api/helpers/{entity_id}` مع قيمته. وواجهة API كاملة في [واجهة HTTP API](/ar/iot/api/#المساعدات).
 
 يُرفض تغيير الخيارات الذي يترك القيمة الحالية للمساعد خارجها: تضييق نطاق دون القيمة، أو إزالة الخيار المحدد. اضبط القيمة أولا، أو اختر خيارات تتضمنها. ولا تُنقل القيمة أبدا لتناسب.
 

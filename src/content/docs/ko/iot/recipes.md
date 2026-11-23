@@ -192,7 +192,7 @@ MCP에서는 `list_recipes`가 모든 레시피를 대상과 매개변수와 함
 
 ## API
 
-모든 경로는 [HTTP API](/ko/iot/api/#recipes)에 있습니다. 요약하면 다음과 같습니다.
+모든 경로는 [HTTP API](/ko/iot/api/#레시피)에 있습니다. 요약하면 다음과 같습니다.
 
 | <span class="sr-only">세부 정보</span> | <span class="sr-only">세부 정보</span> |
 |---|---|

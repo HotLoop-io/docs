@@ -92,7 +92,7 @@ Legitimasjon oppbevares som en enhets: forseglet i hvile når HotLoop har en for
 
 ## Hvor den sitter i produktet
 
-Probe og oppsett når over nettverket fra HotLoop-boksen, så begge trenger `devices.write`, det samme som å lagre en enhet. Å liste trenger `devices.read`. Alle produkter har dem. Rutene står i [HTTP-API-et](/nb/iot/api/#integrations).
+Probe og oppsett når over nettverket fra HotLoop-boksen, så begge trenger `devices.write`, det samme som å lagre en enhet. Å liste trenger `devices.read`. Alle produkter har dem. Rutene står i [HTTP-API-et](/nb/iot/api/#integrasjoner).
 
 ## Legge til en
 

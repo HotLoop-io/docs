@@ -21,7 +21,7 @@ Bases de données dans lesquelles HotLoop écrit :
 
 ## En ajouter une
 
-**Paramètres, Cibles de l'historien, Ajouter une cible**, ou `POST /api/historian/targets` (voir [l'API HTTP](/fr/iot/api/#historian-targets)). Réservé aux administrateurs, car une cible est un endroit où partent les données de l'usine, et choisir lequel est une décision d'administrateur. Toute personne qui peut lire les paramètres voit les cibles et l'état de chacune.
+**Paramètres, Cibles de l'historien, Ajouter une cible**, ou `POST /api/historian/targets` (voir [l'API HTTP](/fr/iot/api/#cibles-de-lhistorien)). Réservé aux administrateurs, car une cible est un endroit où partent les données de l'usine, et choisir lequel est une décision d'administrateur. Toute personne qui peut lire les paramètres voit les cibles et l'état de chacune.
 
 Une cible se compose d'un type, d'une adresse (`host` ou `host:port`), d'une base de données, d'une table et d'un identifiant de connexion. Le mot de passe est chiffré avec la même clé que les identifiants des appareils (`HOTLOOP_SECRET_KEY_FILE`, voir [Sauvegardes et restauration](/fr/iot/backup/)) et ne ressort jamais de l'API. Sans clé, une cible avec mot de passe est refusée : un identifiant de base de données en clair dans une sauvegarde est exactement ce que cette clé sert à empêcher.
 

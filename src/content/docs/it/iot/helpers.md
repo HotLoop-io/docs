@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-L'`entity_id` viene ricavato dal nome (`input_number.batch_target`) a meno che non ne indichiate uno. `PUT /api/helpers/{entity_id}` ne cambia nome, icona, unità o opzioni; `DELETE /api/helpers/{entity_id}` lo elimina insieme al suo valore. L'intera API è in [l'API HTTP](/it/iot/api/#helpers).
+L'`entity_id` viene ricavato dal nome (`input_number.batch_target`) a meno che non ne indichiate uno. `PUT /api/helpers/{entity_id}` ne cambia nome, icona, unità o opzioni; `DELETE /api/helpers/{entity_id}` lo elimina insieme al suo valore. L'intera API è in [l'API HTTP](/it/iot/api/#helper).
 
 Una modifica delle opzioni che lascerebbe il valore attuale dell'helper fuori da esse viene rifiutata: restringere un intervallo oltre il valore, o togliere la scelta selezionata. Impostate prima il valore, oppure scegliete opzioni che lo comprendano. Un valore non viene mai spostato per adattarlo.
 

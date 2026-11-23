@@ -199,7 +199,7 @@ Lire est le droit de tous les rôles, filtré par `roles`. Écrire est celui de 
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-La référence avec les corps et les erreurs se trouve dans [l'API HTTP](/fr/iot/api/#dashboards). Chaque création, enregistrement et suppression est consignée comme un événement `config` sur le sujet `dashboard:<id>`, si bien que le journal de bord dit qui a changé ce que montre un panneau.
+La référence avec les corps et les erreurs se trouve dans [l'API HTTP](/fr/iot/api/#tableaux-de-bord). Chaque création, enregistrement et suppression est consignée comme un événement `config` sur le sujet `dashboard:<id>`, si bien que le journal de bord dit qui a changé ce que montre un panneau.
 
 La table est `dashboards`, ajoutée dans la migration 0023 pour PostgreSQL, TimescaleDB et SQLite. Elle ne fait qu'ajouter ([Les migrations ne font qu'ajouter](/fr/iot/migrations/)). La ligne du tableau mural est créée par l'application la première fois qu'on la demande, pas par la migration, si bien qu'une base restaurée depuis une sauvegarde antérieure aux tableaux de bord la retrouve.
 

@@ -192,7 +192,7 @@ Các công thức, mọi phiên bản và mọi lần áp dụng đều nằm tr
 
 ## API
 
-[API HTTP](/vi/iot/api/#recipes) có mọi tuyến. Tóm tắt:
+[API HTTP](/vi/iot/api/#công-thức) có mọi tuyến. Tóm tắt:
 
 | <span class="sr-only">Chi tiết</span> | <span class="sr-only">Chi tiết</span> |
 |---|---|

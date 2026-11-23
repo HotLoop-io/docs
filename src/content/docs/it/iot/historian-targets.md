@@ -21,7 +21,7 @@ Database in cui scrive HotLoop:
 
 ## Aggiungerne una
 
-**Impostazioni, Destinazioni dello storico, Aggiungi una destinazione**, oppure `POST /api/historian/targets` (vedere [l'API HTTP](/it/iot/api/#historian-targets)). È solo per gli amministratori, perché una destinazione è un posto dove vanno i dati dell'impianto, e deciderlo spetta a un amministratore. Chiunque possa leggere le impostazioni vede le destinazioni e come sta andando ciascuna.
+**Impostazioni, Destinazioni dello storico, Aggiungi una destinazione**, oppure `POST /api/historian/targets` (vedere [l'API HTTP](/it/iot/api/#destinazioni-dello-storico)). È solo per gli amministratori, perché una destinazione è un posto dove vanno i dati dell'impianto, e deciderlo spetta a un amministratore. Chiunque possa leggere le impostazioni vede le destinazioni e come sta andando ciascuna.
 
 Una destinazione è un tipo, un indirizzo (`host` o `host:port`), un database, una tabella e un login. La password è cifrata con la stessa chiave delle credenziali dei dispositivi (`HOTLOOP_SECRET_KEY_FILE`, vedere [Backup e ripristino](/it/iot/backup/)) e non esce mai dall'API. Senza chiave, una destinazione con password viene rifiutata: un login di database in chiaro in un backup è esattamente ciò che quella chiave serve a evitare.
 

@@ -92,7 +92,7 @@ CODESYS 设备每秒读取一次，也就是驱动请求运行时的 OPC UA 服�
 
 ## 它在产品中的位置
 
-探测和设置从 HotLoop 主机跨网络访问，所以两者都需要 `devices.write`，与保存设备相同。列出需要 `devices.read`。每个产品都带有它们。路由见 [HTTP API](/zh-hans/iot/api/#integrations)。
+探测和设置从 HotLoop 主机跨网络访问，所以两者都需要 `devices.write`，与保存设备相同。列出需要 `devices.read`。每个产品都带有它们。路由见 [HTTP API](/zh-hans/iot/api/#集成)。
 
 ## 添加一个
 

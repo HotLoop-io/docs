@@ -3,7 +3,7 @@ title: "Das Logbuch"
 description: "Zustandsänderungen, Schreibvorgänge, Alarme, Regelläufe und Konfigurationsänderungen auf einer Zeitleiste, für das Werk, einen Bereich oder eine Entität."
 ---
 
-Eine einzige Zeitleiste dessen, was im Werk passiert ist, das Neueste zuerst: Die Pumpe ging an, jemand hat 180 in den Sollwert der Zone 1 geschrieben, der Alarm für hohe Temperatur wurde ausgelöst und quittiert, die Automatisierung zum Abkühlen lief, ein Gerät wurde umkonfiguriert. Für das ganze Werk, eine Stelle im Anlagenbaum samt allem darunter oder eine einzelne Entität. Es ist der Reiter Logbuch, ein Abschnitt in der Schublade jeder Entität, `GET /api/logbook` (siehe [die HTTP-API](/de/iot/api/#logbook)) und das MCP-Werkzeug `get_logbook` (siehe [MCP](/de/iot/mcp/)).
+Eine einzige Zeitleiste dessen, was im Werk passiert ist, das Neueste zuerst: Die Pumpe ging an, jemand hat 180 in den Sollwert der Zone 1 geschrieben, der Alarm für hohe Temperatur wurde ausgelöst und quittiert, die Automatisierung zum Abkühlen lief, ein Gerät wurde umkonfiguriert. Für das ganze Werk, eine Stelle im Anlagenbaum samt allem darunter oder eine einzelne Entität. Es ist der Reiter Logbuch, ein Abschnitt in der Schublade jeder Entität, `GET /api/logbook` (siehe [die HTTP-API](/de/iot/api/#logbuch)) und das MCP-Werkzeug `get_logbook` (siehe [MCP](/de/iot/mcp/)).
 
 Die erste Frage, wenn etwas schiefgeht, lautet „Was ist kurz davor passiert?“, und bisher lag die Antwort an fünf Stellen: im Schreibprotokoll, in der Alarmhistorie, in den Läufen der Automatisierungen, im Systemprotokoll und in niemandes Erinnerung daran, was die Anlage selbst getan hat. Das Logbuch sind diese fünf in einer Liste.
 

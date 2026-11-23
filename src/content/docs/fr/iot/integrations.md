@@ -92,7 +92,7 @@ Les identifiants sont conservés comme ceux d'un appareil : scellés au repos qu
 
 ## Sa place dans le produit
 
-La sonde et la configuration traversent le réseau depuis la machine HotLoop, donc les deux demandent `devices.write`, comme pour enregistrer un appareil. Lister demande `devices.read`. Chaque produit les possède. Les routes sont dans [l'API HTTP](/fr/iot/api/#integrations).
+La sonde et la configuration traversent le réseau depuis la machine HotLoop, donc les deux demandent `devices.write`, comme pour enregistrer un appareil. Lister demande `devices.read`. Chaque produit les possède. Les routes sont dans [l'API HTTP](/fr/iot/api/#intégrations).
 
 ## En ajouter une
 

@@ -199,7 +199,7 @@ Try again when the connection is back.
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-본문과 오류를 포함한 레퍼런스는 [HTTP API](/ko/iot/api/#dashboards)에 있습니다. 모든 생성, 저장, 삭제는 주체 `dashboard:<id>`에 대한 `config` 이벤트로 기록에 남으므로, 로그북에서 패널에 표시되는 내용을 누가 바꿨는지 알 수 있습니다.
+본문과 오류를 포함한 레퍼런스는 [HTTP API](/ko/iot/api/#대시보드)에 있습니다. 모든 생성, 저장, 삭제는 주체 `dashboard:<id>`에 대한 `config` 이벤트로 기록에 남으므로, 로그북에서 패널에 표시되는 내용을 누가 바꿨는지 알 수 있습니다.
 
 테이블은 `dashboards`이며 PostgreSQL, TimescaleDB, SQLite용 마이그레이션 0023에서 추가되었습니다. 추가만 합니다([마이그레이션은 추가만 합니다](/ko/iot/migrations/)). 월 보드의 행은 마이그레이션이 아니라 애플리케이션이 처음 요청받을 때 만들므로, 대시보드가 생기기 전에 만든 백업에서 복원한 데이터베이스에도 다시 생깁니다.
 

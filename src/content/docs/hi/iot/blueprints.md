@@ -83,7 +83,7 @@ Blueprint को संग्रहीत करने से पहले ज�
 
 नियम बनाना **कभी किसी को बदलता नहीं**। जो id ले लिया गया है, हाथ से लिखे नियम से या Blueprint से बने नियम से, वह अस्वीकार होता है।
 
-API से यह `POST /api/blueprints/{id}/instantiate` है, जाँच के लिए `?dry_run=true` के साथ। [HTTP API](/hi/iot/api/#blueprints) देखें।
+API से यह `POST /api/blueprints/{id}/instantiate` है, जाँच के लिए `?dry_run=true` के साथ। [HTTP API](/hi/iot/api/#ब्लूप्रिंट) देखें।
 
 ## अंतर्निहित Blueprints
 

@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-`entity_id` được tạo từ tên (`input_number.batch_target`) trừ khi bạn tự đặt. `PUT /api/helpers/{entity_id}` đổi tên, biểu tượng, đơn vị hoặc tùy chọn của nó; `DELETE /api/helpers/{entity_id}` xóa nó cùng giá trị. Toàn bộ API nằm trong [API HTTP](/vi/iot/api/#helpers).
+`entity_id` được tạo từ tên (`input_number.batch_target`) trừ khi bạn tự đặt. `PUT /api/helpers/{entity_id}` đổi tên, biểu tượng, đơn vị hoặc tùy chọn của nó; `DELETE /api/helpers/{entity_id}` xóa nó cùng giá trị. Toàn bộ API nằm trong [API HTTP](/vi/iot/api/#trợ-thủ).
 
 Một thay đổi tùy chọn khiến giá trị hiện tại của trợ thủ nằm ngoài các tùy chọn sẽ bị từ chối: thu hẹp một khoảng xuống dưới giá trị, hoặc bỏ lựa chọn đang được chọn. Hãy đặt giá trị trước, hoặc chọn các tùy chọn bao gồm nó. Một giá trị không bao giờ bị dịch chuyển cho vừa.
 

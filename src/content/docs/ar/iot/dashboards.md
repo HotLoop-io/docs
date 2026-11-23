@@ -199,7 +199,7 @@ Try again when the connection is back.
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-المرجع مع الأجسام والأخطاء في [واجهة HTTP API](/ar/iot/api/#dashboards). كل إنشاء وحفظ وحذف مسجّل كحدث `config` على الموضوع `dashboard:<id>`، فيقول سجل اليوميات من غيّر ما تعرضه اللوحة.
+المرجع مع الأجسام والأخطاء في [واجهة HTTP API](/ar/iot/api/#لوحات-المعلومات). كل إنشاء وحفظ وحذف مسجّل كحدث `config` على الموضوع `dashboard:<id>`، فيقول سجل اليوميات من غيّر ما تعرضه اللوحة.
 
 الجدول هو `dashboards`، أُضيف في الترحيل 0023 لـ PostgreSQL وTimescaleDB وSQLite. وهو يضيف فقط ([الترحيلات تضيف فقط](/ar/iot/migrations/)). صف لوحة الحائط يصنعه التطبيق حين يُطلب أول مرة، لا الترحيل، فقاعدة بيانات استُعيدت من نسخة احتياطية أُخذت قبل لوحات المعلومات تحصل عليه من جديد.
 

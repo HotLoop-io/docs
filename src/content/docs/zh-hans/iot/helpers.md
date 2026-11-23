@@ -33,7 +33,7 @@ POST /api/helpers
  "options": {"min": 0, "max": 5000, "step": 50, "initial": 1000}}
 ```
 
-除非您指定，`entity_id` 由名称生成（`input_number.batch_target`）。`PUT /api/helpers/{entity_id}` 修改它的名称、图标、单位或选项；`DELETE /api/helpers/{entity_id}` 把它连同它的值一起删除。完整的 API 在 [HTTP API](/zh-hans/iot/api/#helpers)中。
+除非您指定，`entity_id` 由名称生成（`input_number.batch_target`）。`PUT /api/helpers/{entity_id}` 修改它的名称、图标、单位或选项；`DELETE /api/helpers/{entity_id}` 把它连同它的值一起删除。完整的 API 在 [HTTP API](/zh-hans/iot/api/#辅助项)中。
 
 如果某次选项更改会让辅助项的当前值落在选项之外，就会被拒绝：比如把范围收窄到值以下，或者删除当前被选中的选项。请先设置值，或者选择包含该值的选项。值永远不会为了适应而被挪动。
 

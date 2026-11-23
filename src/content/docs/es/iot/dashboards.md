@@ -199,7 +199,7 @@ Leer es de todos los roles, filtrado por `roles`. Escribir es del administrador.
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-La referencia con cuerpos y errores está en [la API HTTP](/es/iot/api/#dashboards). Cada creación, guardado y eliminación queda registrada como un evento `config` sobre el sujeto `dashboard:<id>`, así que el libro de registro dice quién cambió lo que muestra un panel.
+La referencia con cuerpos y errores está en [la API HTTP](/es/iot/api/#paneles). Cada creación, guardado y eliminación queda registrada como un evento `config` sobre el sujeto `dashboard:<id>`, así que el libro de registro dice quién cambió lo que muestra un panel.
 
 La tabla es `dashboards`, añadida en la migración 0023 para PostgreSQL, TimescaleDB y SQLite. Solo añade ([Las migraciones solo añaden](/es/iot/migrations/)). La fila del tablero mural la crea la aplicación la primera vez que se le pide, no la migración, de modo que una base de datos restaurada desde una copia anterior a los dashboards la vuelve a tener.
 

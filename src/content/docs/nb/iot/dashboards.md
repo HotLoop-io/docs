@@ -199,7 +199,7 @@ Den samme testen tar serveren bort, for siden og workeren likt, og laster på ny
 | `GET` | `/api/dashboards/{id}/export` | `dashboards.read` |
 | `POST` | `/api/dashboards/import` | `dashboards.write` |
 
-Referansen med kropper og feil står i [HTTP-API-et](/nb/iot/api/#dashboards). Hver opprettelse, lagring og sletting står på protokollen som en `config`-hendelse på subjektet `dashboard:<id>`, så loggboken sier hvem som endret det et panel viser.
+Referansen med kropper og feil står i [HTTP-API-et](/nb/iot/api/#dashbord). Hver opprettelse, lagring og sletting står på protokollen som en `config`-hendelse på subjektet `dashboard:<id>`, så loggboken sier hvem som endret det et panel viser.
 
 Tabellen er `dashboards`, lagt til i migrering 0023 for PostgreSQL, TimescaleDB og SQLite. Den bare legger til ([Migreringer legger bare til](/nb/iot/migrations/)). Veggtavlas rad lages av applikasjonen første gang den blir bedt om, ikke av migreringen, så en database gjenopprettet fra en sikkerhetskopi tatt før dashbord har den igjen.
 

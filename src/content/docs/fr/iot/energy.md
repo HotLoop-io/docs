@@ -27,7 +27,7 @@ Un compteur lit un tag comme une quantité consommée. Il a l'un de deux modes.
 
 Un compteur `production` compte ce que la ligne a produit. Il n'a pas de tarif, et c'est lui par lequel on divise le coût d'une unité.
 
-Créez-en un sur l'écran Énergie (Nouveau compteur) ou avec `POST /api/energy/meters` (voir [l'API HTTP](/fr/iot/api/#energy)). Seul un administrateur crée, modifie ou supprime un compteur (`energy.write`) ; tout le monde lit (`energy.read`). Le tag doit exister et être un nombre. Si le tag est supprimé plus tard, le compteur indique qu'il attend, et reprend le tag quand il est recréé.
+Créez-en un sur l'écran Énergie (Nouveau compteur) ou avec `POST /api/energy/meters` (voir [l'API HTTP](/fr/iot/api/#énergie)). Seul un administrateur crée, modifie ou supprime un compteur (`energy.write`) ; tout le monde lit (`energy.read`). Le tag doit exister et être un nombre. Si le tag est supprimé plus tard, le compteur indique qu'il attend, et reprend le tag quand il est recréé.
 
 ## Comment il compte
 

@@ -92,7 +92,7 @@ Thông tin xác thực được giữ như của một thiết bị: được ni
 
 ## Vị trí trong sản phẩm
 
-Bộ thăm dò và bước thiết lập vươn ra mạng từ máy HotLoop, nên cả hai đều cần `devices.write`, giống như lưu một thiết bị. Việc liệt kê cần `devices.read`. Mọi sản phẩm đều có chúng. Các route nằm trong [HTTP API](/vi/iot/api/#integrations).
+Bộ thăm dò và bước thiết lập vươn ra mạng từ máy HotLoop, nên cả hai đều cần `devices.write`, giống như lưu một thiết bị. Việc liệt kê cần `devices.read`. Mọi sản phẩm đều có chúng. Các route nằm trong [HTTP API](/vi/iot/api/#tích-hợp).
 
 ## Thêm một tích hợp
 
