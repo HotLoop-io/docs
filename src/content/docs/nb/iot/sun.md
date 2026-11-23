@@ -38,7 +38,7 @@ Under midnattssolen eller i mørketiden kan neste solnedgang eller soloppgang v�
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` eller `dusk`, flyttet med `offsetSec` (negativ er før, høyst seks timer til hver side). Se [Automasjoner](/nb/iot/automations/#sun-triggers). `binary_sensor.sun_up` fungerer også med en vanlig `state`-utløser, og med `states['binary_sensor.sun_up'] == 'off'` i en betingelse, for «bare etter mørkets frembrudd».
+`dawn`, `sunrise`, `noon`, `sunset` eller `dusk`, flyttet med `offsetSec` (negativ er før, høyst seks timer til hver side). Se [Automasjoner](/nb/iot/automations/#solutløsere). `binary_sensor.sun_up` fungerer også med en vanlig `state`-utløser, og med `states['binary_sensor.sun_up'] == 'off'` i en betingelse, for «bare etter mørkets frembrudd».
 
 ## Hva tallene betyr
 

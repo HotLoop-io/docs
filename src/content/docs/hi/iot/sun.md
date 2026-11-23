@@ -38,7 +38,7 @@ HotLoop को बताइए कि प्लांट कहाँ है, �
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` या `dusk`, जिन्हें `offsetSec` से खिसकाया जाता है (ऋणात्मक का मतलब पहले, हर तरफ़ अधिकतम छह घंटे)। देखिए [ऑटोमेशन](/hi/iot/automations/#sun-triggers)। `binary_sensor.sun_up` सामान्य `state` ट्रिगर के साथ भी चलता है, और शर्त में `states['binary_sensor.sun_up'] == 'off'` के साथ भी, «केवल अँधेरा होने के बाद» के लिए।
+`dawn`, `sunrise`, `noon`, `sunset` या `dusk`, जिन्हें `offsetSec` से खिसकाया जाता है (ऋणात्मक का मतलब पहले, हर तरफ़ अधिकतम छह घंटे)। देखिए [ऑटोमेशन](/hi/iot/automations/#सूर्य-ट्रिगर)। `binary_sensor.sun_up` सामान्य `state` ट्रिगर के साथ भी चलता है, और शर्त में `states['binary_sensor.sun_up'] == 'off'` के साथ भी, «केवल अँधेरा होने के बाद» के लिए।
 
 ## संख्याओं का मतलब
 

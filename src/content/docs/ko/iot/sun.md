@@ -38,7 +38,7 @@ HotLoop에 공장이 어디 있는지 알려 주면 태양이 어디 있는지 �
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset`, `dusk` 중 하나를 `offsetSec`만큼 옮깁니다(음수는 이전, 양쪽 모두 최대 6시간). [자동화](/ko/iot/automations/#sun-triggers)를 참고하십시오. `binary_sensor.sun_up`은 일반 `state` 트리거에서도, 조건의 `states['binary_sensor.sun_up'] == 'off'`로도 쓸 수 있어 "해가 진 뒤에만"을 만들 수 있습니다.
+`dawn`, `sunrise`, `noon`, `sunset`, `dusk` 중 하나를 `offsetSec`만큼 옮깁니다(음수는 이전, 양쪽 모두 최대 6시간). [자동화](/ko/iot/automations/#태양-트리거)를 참고하십시오. `binary_sensor.sun_up`은 일반 `state` 트리거에서도, 조건의 `states['binary_sensor.sun_up'] == 'off'`로도 쓸 수 있어 "해가 진 뒤에만"을 만들 수 있습니다.
 
 ## 숫자의 뜻
 

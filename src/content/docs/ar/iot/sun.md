@@ -38,7 +38,7 @@ description: "الشروق والغروب والفجر والشفق وموضع �
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn` أو `sunrise` أو `noon` أو `sunset` أو `dusk`، مُزاحة بمقدار `offsetSec` (السالب يعني قبل، وبحد أقصى ست ساعات في كل اتجاه). انظر [الأتمتة](/ar/iot/automations/#sun-triggers). يعمل `binary_sensor.sun_up` أيضًا مع مشغّل `state` عادي، ومع `states['binary_sensor.sun_up'] == 'off'` في شرط، من أجل «بعد حلول الظلام فقط».
+`dawn` أو `sunrise` أو `noon` أو `sunset` أو `dusk`، مُزاحة بمقدار `offsetSec` (السالب يعني قبل، وبحد أقصى ست ساعات في كل اتجاه). انظر [الأتمتة](/ar/iot/automations/#مشغّلات-الشمس). يعمل `binary_sensor.sun_up` أيضًا مع مشغّل `state` عادي، ومع `states['binary_sensor.sun_up'] == 'off'` في شرط، من أجل «بعد حلول الظلام فقط».
 
 ## ماذا تعني الأرقام
 

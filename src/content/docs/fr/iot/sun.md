@@ -38,7 +38,7 @@ Sous le soleil de minuit ou dans la nuit polaire, le prochain coucher ou lever p
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` ou `dusk`, décalés de `offsetSec` (négatif pour avant, six heures au plus de chaque côté). Voir [Automatisations](/fr/iot/automations/#sun-triggers). `binary_sensor.sun_up` fonctionne aussi avec un déclencheur `state` ordinaire, et avec `states['binary_sensor.sun_up'] == 'off'` dans une condition, pour « seulement après la tombée de la nuit ».
+`dawn`, `sunrise`, `noon`, `sunset` ou `dusk`, décalés de `offsetSec` (négatif pour avant, six heures au plus de chaque côté). Voir [Automatisations](/fr/iot/automations/#déclencheurs-solaires). `binary_sensor.sun_up` fonctionne aussi avec un déclencheur `state` ordinaire, et avec `states['binary_sensor.sun_up'] == 'off'` dans une condition, pour « seulement après la tombée de la nuit ».
 
 ## Ce que veulent dire les nombres
 

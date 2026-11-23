@@ -52,7 +52,7 @@ Das Fundament. Jede Automatisierung, jeder Helfer, jedes Skript und jeder Bildsc
 - [x] Ein ISA-95-Anlagenbaum (Unternehmen, Standort, Bereich, Linie, Zelle, Einheit, Anlage), dazu Labels. Die Felder Standort / Bereich / Linie, die wir schon führen, funktionieren weiter
 - [x] Einheiten und Geräteklassen
 - [x] Entitäten in MCP, in den Automatisierungen und im Live-Feed sowie die Bildschirme Entitäten und Werk
-- [x] Eine `for:`-Dauer bei Entitäts-Zustandsauslösern („die Pumpe ist seit 5 Minuten aus“). In Phase 2 als `forSec` an einem `state`-Auslöser ausgeliefert; ein laufendes Halten übersteht keinen Neustart ([Automatisierungen](/de/iot/automations/#holding-a-state-forsec))
+- [x] Eine `for:`-Dauer bei Entitäts-Zustandsauslösern („die Pumpe ist seit 5 Minuten aus“). In Phase 2 als `forSec` an einem `state`-Auslöser ausgeliefert; ein laufendes Halten übersteht keinen Neustart ([Automatisierungen](/de/iot/automations/#einen-zustand-halten-forsec))
 
 ### Phase 2: Helfer, Skripte, Szenen, Logbuch
 

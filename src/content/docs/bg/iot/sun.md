@@ -38,7 +38,7 @@ description: "Изгрев, залез, зора, здрач и положени
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` или `dusk`, изместени с `offsetSec` (отрицателно е преди, най-много шест часа във всяка посока). Вижте [Автоматизации](/bg/iot/automations/#sun-triggers). `binary_sensor.sun_up` работи и с обикновен тригер `state`, и с `states['binary_sensor.sun_up'] == 'off'` в условие, за „само след мръкване“.
+`dawn`, `sunrise`, `noon`, `sunset` или `dusk`, изместени с `offsetSec` (отрицателно е преди, най-много шест часа във всяка посока). Вижте [Автоматизации](/bg/iot/automations/#слънчеви-тригери). `binary_sensor.sun_up` работи и с обикновен тригер `state`, и с `states['binary_sensor.sun_up'] == 'off'` в условие, за „само след мръкване“.
 
 ## Какво означават числата
 

@@ -38,7 +38,7 @@ description: "日出、日落、黎明、黄昏和太阳位置，由盒子根据
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`、`sunrise`、`noon`、`sunset` 或 `dusk`，按 `offsetSec` 平移（负数表示之前，每个方向最多六小时）。见[自动化](/zh-hans/iot/automations/#sun-triggers)。`binary_sensor.sun_up` 也能用于普通的 `state` 触发器，在条件中写 `states['binary_sensor.sun_up'] == 'off'`，就是“只在天黑之后”。
+`dawn`、`sunrise`、`noon`、`sunset` 或 `dusk`，按 `offsetSec` 平移（负数表示之前，每个方向最多六小时）。见[自动化](/zh-hans/iot/automations/#太阳触发器)。`binary_sensor.sun_up` 也能用于普通的 `state` 触发器，在条件中写 `states['binary_sensor.sun_up'] == 'off'`，就是“只在天黑之后”。
 
 ## 这些数字的含义
 

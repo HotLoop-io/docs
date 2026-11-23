@@ -52,7 +52,7 @@ Le fondamenta. Ogni automazione, helper, script e schermata di HotLoop parla di 
 - [x] Un solo albero di apparecchiature ISA-95 (azienda, sito, area, linea, cella, unità, apparecchiatura), più le etichette. I campi sito / area / linea che già portiamo continuano a funzionare
 - [x] Unità e classi di dispositivo
 - [x] Entità in MCP, nelle automazioni e nel flusso in tempo reale, e le schermate Entità e Stabilimento
-- [x] Una durata `for:` sui trigger di stato delle entità ("la pompa è spenta da 5 minuti"). Rilasciata nella fase 2 come `forSec` su un trigger `state`; un'attesa in corso non sopravvive a un riavvio ([Automazioni](/it/iot/automations/#holding-a-state-forsec))
+- [x] Una durata `for:` sui trigger di stato delle entità ("la pompa è spenta da 5 minuti"). Rilasciata nella fase 2 come `forSec` su un trigger `state`; un'attesa in corso non sopravvive a un riavvio ([Automazioni](/it/iot/automations/#mantenere-uno-stato-forsec))
 
 ### Fase 2: helper, script, scene, logbook
 
