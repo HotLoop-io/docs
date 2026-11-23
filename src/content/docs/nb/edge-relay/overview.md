@@ -11,7 +11,7 @@ Edge Relay er den uten grensesnitt. Den sitter på en Pi eller en liten industri
 
 Den gjeldende utgivelsen er 4.24.0: `ghcr.io/hotloop-io/hotloop-edge-relay:4.24.0`, bygget for amd64, arm64 og arm/v7 (en Pi 3 eller en 32-bits Pi OS-installasjon er nøyaktig den boksen et relé ender opp på), omtrent 15 MB, lastet ned uten innlogging, og chartet `hotloop-edge-relay` fra `https://hotloop.io/hotloop`. 4.16.0 var den første utgivelsen som publiserte det, og arm/v7 kom med 4.18.10. Det deler versjonsnummer med Gateway, og en utgivelse nekter å gå ut med mindre begge charts bærer taggens versjon og Quadlet-enheten følger `:stable`. Så releet får en ny versjon hver utgivelse, enten koden endret seg eller ikke. Ett versjonsnummer å spørre om, og et relé-chart kan aldri peke på et image ingen har pushet. [Installer det](/nb/edge-relay/install/).
 
-Oppgraderer du et relé? [Oppgradere fra 4.17.0](/nb/gateway/upgrading/#the-edge-relay-and-quadlet) og [oppgradere fra 4.16.0](/nb/gateway/upgrading/#the-edge-relay) har reléets del.
+Oppgraderer du et relé? [Oppgradere fra 4.17.0](/nb/gateway/upgrading/#edge-relay-og-quadlet) og [oppgradere fra 4.16.0](/nb/gateway/upgrading/#edge-relay) har reléets del.
 
 ## Hva det ikke er
 

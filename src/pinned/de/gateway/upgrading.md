@@ -1,0 +1,227 @@
+---
+title: "HotLoop Gateway auf {{hotloop}} aktualisieren"
+description: "Ab 4.22.1 ist es ein helm upgrade mit drei zusätzlichen Migrationen. Ab 4.18.11 können Agenten schreiben. Ab 4.18.10 wechselt die Datenbank auf PostgreSQL 17."
+sidebar:
+  label: "Aktualisieren"
+---
+
+Sechs Wege auf {{hotloop}}, und sie haben nichts miteinander zu tun. Ab 4.22.1 ist es ein einfaches `helm upgrade`, das drei Tabellen und Spalten hinzufügt und den Host schreibgeschützt für den Zustand des Geräts einbindet, prüfen Sie also Ihr Pod-Security-Profil. Ab 4.18.11 ist es ein einfaches `helm upgrade`, aber zwei Dinge ändern, was eine laufende Anlage tut, lesen Sie sie also zuerst. Ab 4.18.10 ändert sich die Datenbank-Engine unter Ihnen, und das sollten Sie wissen, bevor es passiert. Ab 4.17.0 ist es ein einfaches `helm upgrade`, mit ein paar Standardwerten, die sich verschoben haben. Ab 4.16.0 gehen Sie zuerst über 4.17.0, und danach gehört ein neues Secret genauso zu den Daten Ihrer Anlage wie die Datenbank. Ab 4.3.1 ist es ein umbenanntes Chart, das ein einfaches `helm upgrade` nicht anfassen kann, und Sie gehen unterwegs über 4.16.0 und 4.17.0. Die Versionshinweise decken einen Schritt auf einmal ab, und keiner deckt das Überspringen einer Version ab, deshalb verspricht diese Seite nicht, dass das funktioniert. Suchen Sie den Weg, der Ihrer ist, und lesen Sie ihn ganz, bevor Sie eine laufende Anlage anfassen.
+
+:::caution[Von 4.20.2 oder früher: Ein OPC-UA-Client mit Basic256 verbindet sich nicht mehr]
+4.21.0 hat `Basic128Rsa15` und `Basic256` standardmäßig abgeschaltet, bei Aktualisierungen wie bei Neuinstallationen. Der Server listet sie nicht mehr auf und weist einen Client ab, der eine davon namentlich verlangt. Prüfen Sie, ob einer Ihrer OPC-UA-Clients (die Verbindung in Ignition zeigt es) nichts Neueres als `Basic256` spricht, und stellen Sie ihn auf `Basic256Sha256` um. Wenn er nicht umstellen kann, holt `HOTLOOP_OPCUA_SERVER_ALLOW_DEPRECATED_POLICIES=true` (Chart `opcuaServer.allowDeprecatedPolicies: true`) die beiden zurück, und der Server sagt es beim Start. 4.21.0 fügt außerdem die Migration 0027 hinzu, eine neue Tabelle, die Aktualisierung ist sonst also ein einfaches `helm upgrade`. Die Release-Prüfung hat 4.20.2 auf dem migrierten Schema gestartet und es lief, die Tabelle ist also kein Grund, warum ein Rollback unsicher wäre.
+:::
+
+:::note[Ältere Charts werden per URL geholt]
+Der Index des Chart-Repositorys führt die Charts des Gateways bis 4.16.0 zurück, `hotloop/hotloop --version 4.17.0` wird also aufgelöst, und die Archive werden ebenfalls per URL ausgeliefert. Die Befehle unten für 4.16.0 und 4.17.0 nennen das Chart über seine URL, etwa `https://hotloop.io/hotloop/hotloop-4.17.0.tgz`, und das funktioniert in beiden Fällen. IoT und Edge beginnen bei 4.18.10.
+:::
+
+## Aktualisieren ab 4.22.1
+
+Ein einfaches `helm upgrade`, und nichts, was schon auf dem Gerät liegt, ändert sich. Beim ersten Start laufen drei Migrationen, und jede fügt nur hinzu: `0028_unifi_port_cycles`, `0029_energy` und `0030_energy_demand`. Eine Sicherung von 4.22.1 lässt sich hier wiederherstellen, eine hier erstellte lässt sich nicht auf einer älteren Version wiederherstellen, machen Sie also zuerst eine Sicherung, falls Sie zurückgehen könnten.
+
+- **Das Chart bindet den Host jetzt schreibgeschützt für den Gerätezustand ein.** Die Charts von Gateway und Edge binden das Root des Hosts und `/proc` ein, damit das EmberNet-Dashboard Datenträger, CPU und Speicher des Geräts lesen kann. Es wird kein Privileg hinzugefügt. Ein Cluster mit dem Pod-Security-Profil restricted lehnt einen hostPath ab, setzen Sie dort also vor der Aktualisierung `opcuaServer.dashboard.boxHealth.enabled: false`. [Das Gateway installieren](/de/gateway/install/#boxzustand-und-host-mount) nennt die Werte.
+- **Fertige Funktionen sind jetzt standardmäßig an.** Überall, wo ein Chart die Funktion hat, sind `broker.enabled`, `opcuaServer.enabled`, `reports.enabled`, `backup.enabled` (täglich, `backup.interval: 24h`), `notify.enabled` mit jedem Alarmkanal, `edgePublish.enabled`, `monitoring.serviceMonitor.enabled` (nur gerendert, wo die CRDs des Prometheus-Operators installiert sind) und `ingress.enabled` true. Der Ingress hat keinen Hostnamen und antwortet daher auf jeden Host, den Ihre Ingress-Klasse bedient: Setzen Sie `ingress.hosts[0].host`, um ihn auf einen Namen festzulegen. Ein Alarmkanal oder der Edge-Publisher ohne Ziel wartet und sagt es, und ein Administrator gibt ihm unter Einstellungen, "Wohin Alarme und Messwerte gehen", ein Ziel. Ein Wert, den Ihre eigene Datei setzt, gilt weiterhin, und jeder auf `false` gesetzte rendert keinen Listener, kein Service, kein Volume und keinen Ingress.
+- **Ein neuer Zugang, der lesen kann und sonst nichts.** Das Chart erstellt `embernet-dashboard-read` und sein Secret `<release>-opcua-dashboard` bei der ersten Installation dieser Version und rotiert es nie.
+- **UniFi-Befehle gibt es und sie sind aus.** Fünf Arten von Punkten können eine Konsole steuern, und jede bleibt schreibgeschützt, bis eine Person diesen Tag scharf schaltet. Das Konto der Konsole muss lokaler Administrator sein, damit sie funktionieren.
+- **Die Quadlet-Aktualisierungseinheit überspringt sich selbst.** `hotloop-db-upgrade` läuft nur, wenn das Volume noch PostgreSQL-16-Daten enthält, auf einem Gerät, das schon auf 17 ist, steht sie also auf inaktiv, nicht auf fehlgeschlagen. Nehmen Sie die neuen Unit-Dateien aus `deploy/quadlet/`.
+- **Die Charts behalten das Zugangsdaten-Secret beim Deinstallieren,** wie das Volume der Datenbank. Um sauber neu zu beginnen, löschen Sie das Secret von Hand zusammen mit dem Volume.
+
+## Aktualisieren ab 4.18.11
+
+Warum sich das lohnt: Agenten über MCP können jetzt schreiben, ein Wert, den Sie in einen skalierten Tag schreiben, landet im Register so, wie Sie es meinten, eine CODESYS-Runtime wird über die Namen gelesen, die ihr Programmierer den Variablen gegeben hat, HotLoop kann Messwerte und das Systemprotokoll an einen Kafka-Broker senden, OPC UA PubSub über UADP funktioniert in beide Richtungen, und eine Installation aus dem Store meldet Sie als Sie selbst an. [Die Versionshinweise zu 4.19.4](/de/releases/hotloop-4-19-4/) haben die ganze Liste, [4.19.5](/de/releases/hotloop-4-19-5/) ist der Multi-Architektur-Build davon, und [4.19.8](/de/releases/hotloop-4-19-8/) bringt eine Korrektur im Logbuch und Tag-Auswahlen, die die ganze Anlage durchsuchen. 4.19.0 bis 4.19.3, 4.19.6 und 4.19.7 wurden getaggt und nie veröffentlicht, keine davon existiert also als Ausgangspunkt.
+
+```bash
+helm repo update
+helm upgrade hotloop hotloop/hotloop --version {{hotloop}} \
+  --namespace hotloop --reset-then-reuse-values
+```
+
+Dasselbe gilt für `hotloop-edge`, `hotloop-iot` und `hotloop-edge-relay`. Die Datenbank ist seit 4.18.11 schon PostgreSQL 17, und nichts hier ändert sie, ein `helm rollback` auf 4.18.11 ist also in Ordnung.
+
+- **Agenten können schreiben.** `allowMcpWrites` ist im Code und in allen drei Charts standardmäßig an. Ein Deployment, das `allowWrites` an hat und `allowMcpWrites` nie gesetzt hat, bekommt bei dieser Aktualisierung Agenten-Schreibzugriffe, durch dasselbe Gate wie der Bildschirm. Ein Deployment, das `allowMcpWrites: false` gespeichert hat, bleibt aus. Wenn Sie Agenten nur lesen lassen wollen, setzen Sie es vor der Aktualisierung auf `false`.
+- **Der MCP-Endpunkt hat immer ein Token.** Eine einzelne Binärdatei oder eine Quadlet-Unit, die nie eines gesetzt hat, erzeugt beim ersten Start ein eigenes und behält es in ihrer Datenbank. `hotloop mcp-token` gibt es aus, und ein Agent, der ohne Token auf `/mcp` zeigt, funktioniert nicht mehr, bis Sie ihm dieses geben.
+- **Skalierte Tags.** Schreiben Sie 55.5 in einen Tag mit Skalierung 0.1, landet 555 im Register, wo früher 55 landete. Wenn jemand Rohwerte eingetippt hat, um das zu umgehen, sendet das jetzt das Zehnfache. Gehen Sie jeden Tag mit Skalierung oder Offset durch, den jemand von Hand beschreibt, aus einer Automatisierung oder einem Rezept, und ändern Sie diese Zahlen im selben Schritt wie die Aktualisierung auf technische Werte.
+- **Zeiten sind `Z`.** Jede Zeit, die die API schreibt, ist UTC. Ein Skript, das Ihren lokalen Offset gelesen hat, bekommt jetzt `Z`.
+- **Eine Migration,** `0026`, fügt den Historian-Zielen eine Spalte `options` hinzu, leer für jedes vorhandene Ziel.
+
+## Aktualisieren ab 4.18.10
+
+Warum sich das lohnt: Die Datenbank ist jetzt PostgreSQL 17, und das Gerät zieht selbst um. Dazu bekommen Sie [Integrationen](/de/iot/integrations/) mit SNMP und BACnet/IP, Kiosk-Anmeldung, Alarm-Eskalation und eine Oberfläche, die sich auf dem Handy installieren lässt. [Die Versionshinweise zu 4.18.11](/de/releases/hotloop-4-18-11/) haben die Liste. Was folgt, ist der Teil, der beißt.
+
+PostgreSQL öffnet das Datenverzeichnis einer anderen Hauptversion nicht, ein bloßer Image-Wechsel hätte also jedes vorhandene Gerät mit einer Datenbank zurückgelassen, die nicht starten kann. HotLoop verlangt von Ihnen kein Dump und Neuladen. Der erste Start nach der Aktualisierung führt vor der Datenbank ein Skript aus, und das Skript macht den Umzug.
+
+```bash
+helm repo update hotloop
+helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-values
+```
+
+Dasselbe gilt für `hotloop-edge` und `hotloop-iot`. Machen Sie zuerst auf 4.18.10 eine Sicherung und kopieren Sie sie vom Gerät. Die Sicherung von HotLoop macht die laufende App über die laufende Datenbank, sie lässt sich also nicht in dem Schritt erstellen, der vor dem Start der Datenbank läuft.
+
+### Was beim ersten Start ab 4.18.10 passiert
+
+- **Der Datenbank-Pod bleibt in `Init`, und die App wartet darauf.** Im Chart sind das zwei Init-Container im Datenbank-Pod: Das alte Image übergibt seine PostgreSQL-16-Installation, und das neue Image führt `pg_upgrade` im Kopiermodus in ein neues Verzeichnis neben dem alten aus. Es startet den neuen Server einmal, um zu beweisen, dass er sich öffnet, und tauscht erst dann die Namen. Wie lange das dauert, hängt von Ihren Daten ab, beobachten Sie bei einer großen Datenbank beim ersten Mal also das Protokoll: `kubectl logs <release>-postgresql-0 -c pg-upgrade`. Unter Quadlet ist es `hotloop-db-upgrade.container`, eine Oneshot-Unit, die die Datenbank-Unit voraussetzt: `journalctl -u hotloop-db-upgrade`.
+- **Es braucht ungefähr so viel freien Platz, wie Ihre Daten belegen, und prüft das vor dem Start.** Ist nicht genug da, hält es an, mit den 16er-Daten genau so, wie sie waren, und der Datenbank nicht gestartet. Schaffen Sie Platz auf dem Datenträger und starten Sie es erneut.
+- **`pgdata.pg16` bleibt auf dem Volume, und Sie entscheiden, wann es gelöscht wird.** Das alte Verzeichnis wird umbenannt und dort gelassen. Es ist die ganze PostgreSQL-16-Datenbank, wie sie bei der Aktualisierung war, also Ihre Sicherung und Ihr Weg zurück, und es ist so groß wie die Datenbank. Wenn das Gerät so lange auf 17 gelaufen ist, wie Sie möchten:
+
+  ```bash
+  # chart
+  kubectl -n hotloop exec hotloop-postgresql-0 -c postgresql -- rm -rf /var/lib/postgresql/data/pgdata.pg16
+  # Quadlet
+  sudo rm -rf "$(sudo podman volume inspect hotloop-db --format '{{.Mountpoint}}')/pgdata.pg16"
+  ```
+
+- **Ein Fehler lässt Sie dort, wo Sie waren.** Schlägt vor dem Tausch etwas fehl, sind die 16er-Daten unberührt, und die Datenbank startet nicht auf einem halb gebauten Verzeichnis. Im Chart bleibt der Pod in `Init:Error`. Unter Quadlet schlägt die Aktualisierungs-Unit fehl, und die Datenbank-Unit dahinter startet nie. Beheben Sie, was das Protokoll sagt, und starten Sie erneut.
+- **`helm rollback` auf 4.18.10 startet seine Datenbank nicht.** Das ist der Haken. Ein Rollback setzt das Datenbank-Image zurück auf PostgreSQL 16, und 16 öffnet kein 17er-Verzeichnis. Nichts geht verloren und nichts ist halb geändert, die Datenbank startet nur nicht. Sie zurückzubekommen heißt den Tausch unter [Zurückgehen](/de/install/helm/#zurückgehen) auf der Seite zu k3s und Helm: Datenbank anhalten, `pgdata` nach `pgdata.pg17` und `pgdata.pg16` nach `pgdata` verschieben. **Das verwirft jeden Schreibvorgang auf 17 seit der Aktualisierung,** denn `pgdata.pg16` ist die Datenbank, wie sie in diesem Moment war. Gehen Sie vorwärts, wenn Sie können. Der Tausch zurück funktioniert einmal, und die nächste Aktualisierung verweigert sich, solange ein `pgdata.pg16` im Weg ist. Es ist dokumentiert, nicht von einem Test ausgeführt.
+- **Quadlet-Geräte trifft das nicht.** Das automatische Update von Podman rollt nur die App zurück, nie die Datenbank, und die App 4.18.10 liest eine PostgreSQL-17-Datenbank problemlos, weil Migrationen nur hinzufügen. Ein Quadlet-Gerät, das ein Update zurückrollt, läuft weiter.
+- **Eine neue Migration, `0025_kiosk_pin`.** Sie fügt nur Spalten hinzu, jede mit einem Standardwert, 4.18.10 läuft also auf dem Schema, das sie hinterlässt.
+- **Eine Sperre ist jetzt aktiv, bei jeder Installation.** Zehn falsche Passwörter oder PINs hintereinander sperren dieses eine Konto für 5 Minuten, und ein Administrator kann es entsperren. Ein Skript, das ein falsches Passwort öfter als zehnmal wiederholt, bekommt `429`. `HOTLOOP_AUTH_LOCKOUT_ATTEMPTS=0` schaltet sie ab.
+- **Die Aktualisierung abschalten.** `database.postgresql.upgrade.enabled: false` entfernt die Init-Container, und ein Volume, das noch auf 16 ist, hindert die Datenbank dann am Start. Lassen Sie es an. Mit aktiver Option holt eine Neuinstallation das PostgreSQL-16-Image trotzdem einmal pro Node, weil das Image eines Init-Containers vor seiner Ausführung geholt wird.
+
+### Quadlet und das Edge Relay
+
+Kopieren Sie die neuen `hotloop-db.container`, `hotloop-db-upgrade.container` und `hotloop-db-upgrade.sh` aus dem Verzeichnis Ihres Produkts in `deploy/quadlet/` in das Unit-Verzeichnis, führen Sie `systemctl daemon-reload` aus und starten Sie `hotloop-db.service` neu. Die Datenbank-Unit setzt die Aktualisierungs-Unit voraus, ein Gerät, das nur die neue Datenbank-Unit bekommen hat, startet also nicht auf 16er-Daten und sagt, warum. Das Edge Relay hat keine Datenbank und nichts zu tun. Es erscheint als {{hotloop}}, weil jedes Produkt im Gleichschritt erscheint.
+
+### API-Änderungen ab 4.18.10
+
+- **Neue Routen:** `GET` und `PUT /api/notify/escalation`, `GET /manifest.webmanifest` und `GET /sw.js` (ohne Sitzung, weil ein Handy sie anfragt, bevor sich jemand angemeldet hat), `GET /api/integrations` mit `POST /api/integrations/{id}/probe` und `/setup`, `POST /api/auth/kiosk`, `POST /api/auth/activity`, `PUT` und `DELETE /api/users/{username}/pin` sowie `DELETE /api/users/{username}/lockout`.
+- **Eine neue Berechtigung, `notify.escalation`,** nur für Administratoren. Die Rollen Betrachter und Bediener haben sie nicht bekommen.
+- **Zwei neue Protokolle,** `snmp` und `bacnet`, in `GET /api/protocols`. Das Alarmprotokoll hat zwei neue Ereignistypen, `escalated` und `escalation-ended`, und ein Skript, das die alte Liste voraussetzt, wird ihnen begegnen.
+- **Zeiten kommen in UTC zurück,** jede, die der Verlauf liefert. Ein Skript, das die Zeichenketten verglichen hat, sieht den Offset zu `Z` werden. Eines, das Zeitpunkte vergleicht, sieht nichts.
+
+## Aktualisieren ab 4.17.0
+
+Warum sich das lohnt: Das Gateway ist nicht mehr das einzige Image. IoT und Edge sind neu, die Datenbank ist eine Einstellung, Geräte, die sich über MQTT melden, erscheinen von selbst, der Verlauf lässt sich in die eigene Datenbank der Anlage schreiben, und ein Gerät, das `:stable` folgt, rollt ein schlechtes Update selbst zurück. Das Letzte funktioniert nur, weil Migrationen nur hinzufügen. [Die Versionshinweise zu 4.18.10](/de/releases/hotloop-4-18-10/) haben die Liste.
+
+Es ist ein einfaches `helm upgrade`. Wir haben die Gateway-Charts 4.17.0 und {{hotloop}} mit denselben Werten nebeneinander gerendert: dieselben acht Objekte, dieselben Selektoren, dieselben Volume Claims.
+
+```bash
+helm repo update hotloop
+helm upgrade <release> hotloop/hotloop --version {{hotloop}} --reset-then-reuse-values
+```
+
+`--reset-then-reuse-values` oder Ihre Werte-Datei mit `-f`. Ein bloßes `--reuse-values` rendert diesmal zufällig, spielt aber die Werte von 4.17.0 ein und verwirft jeden Standardwert, den diese Version hinzugefügt hat, und so landen Sie ungewollt beim alten Warteschlangenlimit weiter unten.
+
+### Was beim ersten Start ab 4.17.0 passiert
+
+- **Die Migrationen 0016 bis 0025 laufen:** `0016_mqtt_discovery`, `0017_broker_logins`, `0018_mqtt_sources`, `0019_historian_targets`, `0020_net_finds`, `0021_mqtt_source_dialects`, `0022_mqtt_source_shelly`, `0023_dashboards` (die Tabelle, in der die Dashboards gespeichert werden, die Sie bauen) und `0024_tag_no_data` (eine Spalte `no_data` an Tags, leer für jeden vorhandenen Tag, was diese Tags ohnehin schon taten) und `0025_kiosk_pin` (Spalten für einen PIN-Hash, das Leerlauflimit einer Sitzung und die Sperrzähler). Alle additiv. Erst `pg_dump`, wie immer.
+- **`edgePublish.queueMaxBytes` hat standardmäßig 64 MiB, nicht unbegrenzt.** Es zählt nur, wenn Sie per Sparkplug nach oben veröffentlichen. Über dem Limit werden die ältesten Messwerte verworfen und gezählt. Eine unbegrenzte Warteschlange füllt bei einem langen genug Ausfall das Volume, was schlimmer ist, aber es ist ein geänderter Standardwert. 64 MiB sind etwa 248,000 Messwerte, etwa zwei Minuten bei 2,000 Messwerten pro Sekunde, richten Sie es also nach Ihrer eigenen Rate (etwa 240 Byte pro Messwert), oder setzen Sie es auf `0` für das alte Verhalten. HotLoop warnt beim Start, wenn Sie das tun. Ein mit `--reuse-values` aktualisiertes Release behält, was es hatte.
+- **Broker-Zugänge.** Zugänge aus `HOTLOOP_BROKER_USERS` dürfen weiterhin alles, wie zuvor, weil niemand in eine Anlage hinein aktualisieren sollte, deren Sparkplug-Verkehr an Regeln abprallt, die er nie geschrieben hat. Zugänge, die Sie unter Einstellungen, MQTT anlegen, tragen Topic-Regeln aus einem Profil. Ein Broker ohne `HOTLOOP_BROKER_USERS` startet jetzt, und nur HotLoop und die darin angelegten Zugänge kommen hinein.
+- **Die Datenbank zieht bei diesem ersten Start von PostgreSQL 16 auf 17 um,** von selbst, und braucht freien Speicherplatz. [Der Abschnitt zu 4.18.10](#aktualisieren-ab-41810) sagt, wie das abläuft, und das ist der Teil, den man zuerst lesen sollte.
+- **Zurück auf 4.17.0 ist jetzt ein Datenbanktausch, kein `helm rollback`.** Das Schema ist nur gewachsen, und 4.17.0 läuft darauf, aber die Datenbank von 4.17.0 ist PostgreSQL 16 und öffnet das 17er-Verzeichnis nicht, das die Aktualisierung hinterlassen hat; der Tausch zurück steht im Abschnitt zu 4.18.10. Machen Sie trotzdem vor der Aktualisierung eine Sicherung. Von hier an zählt die App auch, wie weit ihre Datenbank voraus ist, und verweigert den Start, wobei sie beide Versionen nennt, sobald die Datenbank zwei Releases voraus ist.
+- **Ein anderes Produkt gewünscht?** Von IoT zu Edge zum Gateway bleiben jedes Gerät, jeder Tag, jede Entität, Automatisierung, jeder Alarm, Benutzer und jede Stunde Verlauf erhalten. Machen Sie eine Sicherung, dann `helm upgrade hotloop hotloop/hotloop-edge` auf demselben Release. [Die Produktpalette](/de/products/) erklärt das Wie. Ein Produkt wieder herunterzustufen ist nichts für ein Gerät, an dem Ihnen etwas liegt.
+
+### Das Edge Relay und Quadlet
+
+Aktualisieren Sie auch das Chart des Relays mit `--reset-then-reuse-values`. Quadlet-Nutzer nehmen die neue `edge-relay.container`: Sie folgt `:stable`, statt 4.17.0 festzunageln, und trägt den Healthcheck und `--sdnotify=healthy`, die ein schlechtes Update zurückrollen lassen. Ohne diese beiden wird ein totes Update als Erfolg gemeldet. Eine vom Gateway geschickte Geräte-Datei wird jetzt live angewendet, ohne Neustart, wo sie unter 4.17.0 auf einen wartete. [Die Installationsseite des Edge Relay](/de/edge-relay/install/) hat die Unit vollständig.
+
+Das Gateway hat jetzt Quadlet-Units, die 4.17.0 nicht hatte. Sie liegen im Verzeichnis `gateway/` von [Podman Quadlet](/de/install/quadlet/), und [die Installationsseite des Gateways](/de/gateway/install/#podman-quadlet) hat die Schritte.
+
+### API-Änderungen ab 4.17.0
+
+- **Neue Routen:** `/api/discovery` und seine Aktionen `accept`, `ignore`, `unignore` und `review`, `/api/network-discovery` und seine `probe`, `accept`, `ignore` und `unignore`, `/api/mqtt/brokers`, `/api/broker/logins`, `/api/historian/targets`, `GET /api/entities/{entity_id}/image` und `POST /api/fleet/{id}/update`, das das Image-Update freigibt, das ein Relay zurückhält. Nichts wurde entfernt.
+- **`GET /api/status` nennt `product` und `features`,** und den Image-Digest. Ein Skript fragt, statt zu sondieren. Eine Route für eine Funktion, die das Produkt nicht hat, antwortet `404` mit `{"error":...,"product":...,"feature":...}`.
+- **Neue Berechtigung:** `fleet.update`, nur Administrator. Die Rolle Bediener hat sich nicht geändert.
+
+## Aktualisieren ab 4.16.0
+
+Das ist der Schritt auf 4.17.0, und von 4.17.0 geht es mit [dem Abschnitt oben](#aktualisieren-ab-4170) weiter auf {{hotloop}}. Alles unten wurde gegen 4.17.0 belegt.
+
+Warum sich das lohnt: 4.16.0 hat Fehler, über die eine laufende Anlage stolpern kann, und 4.17.0 behebt sie. Die Befehlszeile kann ein Set verschlucken, ein Bediener sieht die Zeile sich schließen, hält den Sollwert für gesendet, und nichts wurde geschrieben. Das Speichern einer Regel im Editor, selbst nur zum Umbenennen, setzt ihr Laufzeitbudget stillschweigend auf fünf Minuten zurück. Eine an ein Edge Relay geschickte Geräte-Datei kommt nie an, während das Gateway `config pushed` meldet. Und ein Deployment aus dem EmberNet App Store verliert seinen Tenant. Zu den Korrekturen bekommen Sie [Rezepte](/de/iot/recipes/), [Skripte](/de/iot/scripts/), [Blueprints](/de/iot/blueprints/), [Helfer](/de/iot/helpers/), das [Logbuch](/de/iot/logbook/), die neuen [Automatisierungs](/de/iot/automations/)-Schritte, [UniFi](/de/iot/unifi/) nur lesend, und [MCP](/de/iot/mcp/) von 16 Werkzeugen auf 25.
+
+Es ist ein einfaches `helm upgrade`. Wir haben beide Charts in beiden Versionen gerendert: Jeder Selektor und jeder Volume Claim ist identisch, und das einzige neue Objekt ist das Secret des Schlüssels.
+
+```bash
+helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.17.0.tgz --reset-then-reuse-values
+```
+
+`--reset-then-reuse-values` oder Ihre Werte-Datei mit `-f`. **Nicht `--reuse-values`.** Das spielt die Werte von 4.16.0 ein und verwirft jeden Standardwert, den dieses Chart hinzugefügt hat, und das Rendern stirbt am ersten, den es braucht (`nil pointer evaluating interface {}.enabled`, von `secretKey`). Auf dem Cluster ändert sich dabei nichts, führen Sie es also einfach richtig noch einmal aus.
+
+### Was beim ersten Start passiert
+
+Wir haben das geprüft, indem wir das veröffentlichte Image 4.16.0 auf einer Datenbank liefen ließen und danach 4.17.0 auf derselben.
+
+- **Die Migrationen 0009 bis 0015 laufen:** `0009_helpers`, `0010_logbook`, `0011_scripts`, `0012_tag_device_class`, `0013_recipes`, `0014_blueprints` und `0015_unifi`. Alle additiv. Auf einer leeren Anlage brauchten sie eine Fünftelsekunde. Auf Ihrer brauchen sie so lange wie Ihre Datenbank. Erst `pg_dump`, wie immer.
+- **Die Passwörter Ihrer Geräte werden verschlüsselt.** Das Chart erstellt bei dieser Aktualisierung `<release>-secret-key` (in 4.16.0 gab es das nicht), und das Gateway versiegelt bei diesem Start jede gespeicherte Zugangsdaten und sagt das in seinem Protokoll: `encrypted stored device credentials devices=N`. Die Geräte verbinden sich weiter, und niemand muss etwas neu eintippen.
+- **Von da an gehört dieser Schlüssel zu Ihren Daten.** Starten Sie das Gateway ohne ihn, bleibt jedes Gerät mit versiegeltem Passwort unten, versucht es weiter, mit einem Fehler, der den Schlüssel nennt, den es braucht. Eine Sicherung nach der Aktualisierung lässt sich nur dort wiederherstellen, wo dieser Schlüssel eingebunden ist, und `--restore-from` weist sie anderswo namentlich ab. Ist der Schlüssel für immer weg, holt `--restore-keep-unreadable-credentials` alles andere zurück und lässt diese Geräte unten, bis jemand die Passwörter neu eintippt. Eine Sicherung von 4.16.0 lässt sich überall wiederherstellen, und ihre Zugangsdaten werden versiegelt, sobald die Wiederherstellung fertig ist.
+- **Zurück auf 4.16.0** auf derselben Datenbank startet (wir haben es versucht), aber 4.16.0 weiß nichts vom Versiegeln. Es reicht jedem Gerät den versiegelten Text als Passwort, alles, was ein Passwort prüft, lehnt es also ab. Wenn Sie zurück müssen, stellen Sie den `pg_dump` wieder her, den Sie vor der Aktualisierung gemacht haben. Dafür war er da.
+- **Das Chart rendern statt installieren?** Der Schlüssel wird von einem `lookup` erzeugt, den nur ein echtes `helm install` oder `helm upgrade` ausführen kann. Alles, was `helm template` ausführt und das Ergebnis anwendet, bekommt bei jedem Rendern einen neuen Schlüssel, und die nächste Synchronisierung sperrt jedes versiegelte Passwort aus. Erzeugen Sie Ihren eigenen Schlüssel mit `hotloop gen-secret-key`, legen Sie ihn in ein Secret, das Sie selbst verwalten, und setzen Sie `secretKey.existingSecret`. Helm, Fleet und der EmberNet App Store installieren wirklich und brauchen das nicht.
+
+Die neue Aufgabe nach dieser Aktualisierung also: Sichern Sie `<release>-secret-key` so, wie Sie die übrigen Secrets des Clusters sichern, und bewahren Sie ihn woanders auf als neben Ihren Sicherungen. Ein Schlüssel neben den Sicherungen, die er schützt, schützt nichts. [Installieren](/de/gateway/install/#sichern-sie-den-schlüssel-bevor-sie-ihn-brauchen) nennt den Rest dessen, was der Schlüssel abdeckt.
+
+### Das Edge Relay
+
+Das Relay ist ebenfalls 4.17.0, aus demselben Tag veröffentlicht. Aktualisieren Sie sein Chart auf 4.17.0, über dieselbe Art URL, `https://hotloop.io/hotloop/hotloop-edge-relay-4.17.0.tgz`, und mit derselben Flag-Regel: `--reset-then-reuse-values` oder Ihre Werte-Datei. `--reuse-values` schlägt beim Relay nicht einmal fehl. Es verwirft den neuen Standardwert `pushedDevicesFile` des Charts, rendert die Variable leer, und ein Push stirbt gleich wieder am schreibgeschützten Mount. Dann wissen Sie vier Dinge.
+
+- **Eine geschickte Geräte-Datei liegt in `/data/pushed-devices.json`** (`HOTLOOP_EDGE_RELAY_PUSHED_FILE`, das `pushedDevicesFile` des Charts), auf dem Volume des Relays. Sie hat Vorrang vor den `devices` des Charts, solange sie existiert, über Neustarts, Neuplanungen und ein `helm upgrade`, das `devices` ändert, hinweg. Das Relay protokolliert, von welcher Datei es gestartet ist. Um zur lokalen Datei zurückzukehren, `DELETE /api/fleet/{id}/config` am Gateway (`fleet.config`), solange das Relay verbunden ist, und es dann neu starten. Dieser Neustart gilt für 4.17.0. Ab 4.18.10 schaltet ein verbundenes Relay sofort zurück.
+- **Ein alter Push kann zurückkommen.** Ein Push an ein 4.16.0-Relay ist nie angekommen, aber der Broker hält ihn noch, retained, und ein 4.17.0-Relay holt ihn beim ersten Start ab und führt ihn aus. Ist er veraltet, löschen Sie ihn gleich nach der Aktualisierung mit demselben `DELETE` und starten das Relay neu. Ab 4.18.10 wirkt das Löschen live und der Neustart ist nicht nötig.
+- **Quadlet: Nehmen Sie die neue `edge-relay.container`.** Die Unit von 4.17.0 nagelte 4.17.0 fest und setzte `HOTLOOP_EDGE_RELAY_PUSHED_FILE`, und die aktuelle setzt es auch, folgt aber `:stable`. Ohne diese Zeile scheitert ein Push weiterhin am schreibgeschützten Root. [Die Installationsseite des Edge Relay](/de/edge-relay/install/#quadlet) hat die Unit vollständig.
+- **`persistence.enabled=false` startet jetzt,** auf einem emptyDir, begrenzt auf `persistence.size`. Wissen Sie, was es kostet, bevor Sie es wählen: Jedes Mal, wenn der Pod ersetzt wird, verlieren Sie die Weiterleitungs-Warteschlange, jede geschickte Geräte-Datei und das OPC-UA-Client-Zertifikat. Alles, woran Ihnen liegt, bekommt ein PVC, und das ist der Standard.
+
+### Was ein Skript gegen die API bemerken wird
+
+- **Eine Zeit, die nicht stattgefunden hat, wird weggelassen.** Nicht `null`, weggelassen. 4.16.0 sendete `0001-01-01T00:00:00Z` für `lastRun` bei einer Regel oder einem Skript, das nie lief, `lastPoll` und `lastGood` bei einem nie abgefragten Gerät, `clearedAt`, `ackedAt` und `shelvedUntil` bei einem stehenden Alarm, `raisedAt` bei einem nie ausgelösten, dieselben Felder im `alarm`-Ereignis des Live-Feeds und ein paar weitere. So sagte eine Regel, die nie gelaufen war, "Zuletzt vor 739887 T". Wenn Ihr Code auf das Jahr eins prüft, prüfen Sie stattdessen, ob das Feld da ist.
+- **Bediener bekommen neue Berechtigungen, sobald Sie aktualisieren:** `helpers.write`, `scripts.run`, `recipes.apply` und `blueprints.apply`. Ihre Bediener können also sofort Helfer setzen, Skripte ausführen, Rezepte anwenden und Regeln aus Blueprints erstellen. Skripte, Rezepte und Blueprints schreiben (`scripts.write`, `recipes.write`, `blueprints.write`) ist Administratorsache. Alle lesen sie. Ein Rezept kann außerdem sein eigenes `recipes.apply.<name>` nennen.
+- **Neue Routen:** `/api/helpers`, `/api/logbook`, `/api/scripts`, `/api/recipes`, `/api/blueprints`, `POST /api/automations/{id}/blueprint-upgrade`, die UniFi-Routen (`/api/devices/{id}/network` und `/api/unifi/{id}/...`) und `DELETE /api/fleet/{id}/config`.
+- **Tags tragen `deviceClass`**, und es wird an ihre Entitäten weitergereicht.
+- **Regeln tragen `blueprintId`, `blueprintVersion` und `blueprintInputs`.** Eine von Hand geschriebene Regel hat keines davon. Das Speichern einer Regel ersetzt sie weiterhin komplett, und ein Body kann eine Regel nicht zu einem anderen Blueprint oder einer anderen Version verschieben.
+
+## Aktualisieren ab 4.3.1
+
+4.3.1 wurde im August veröffentlicht, und danach wurde nichts mehr veröffentlicht bis 4.16.0. Alles von 4.4.0 bis 4.15.3 wurde gemergt und nie veröffentlicht, wer 4.3.1 verlässt, nimmt also alles in einem Sprung mit, unter neuem Namen, mit neuem Image, neuem Chart und neuer Lizenz. Dieser Abschnitt bringt Sie auf 4.16.0, das Release, gegen das dieses Verfahren belegt wurde. Von dort ist [Aktualisieren ab 4.16.0](#aktualisieren-ab-4160) oben die einfache Aktualisierung auf 4.17.0, und [Aktualisieren ab 4.17.0](#aktualisieren-ab-4170) ist die danach. Lesen Sie alle drei, bevor Sie eine laufende Anlage anfassen. Sie sind kurz, und kürzer, als dem Werksleiter zu erklären, warum der Historian leer ist.
+
+### Neuer Name für alles
+
+| Was | 4.3.1 | 4.16.0 und später |
+|---|---|---|
+| Image | `ghcr.io/embernet-ai/industrial-iot` | `ghcr.io/hotloop-io/hotloop` |
+| Chart-Repository | die alte Adresse, jetzt ein 404 | `https://hotloop.io/hotloop` |
+| Chart | `industrial-iot` | `hotloop` |
+| Umgebungsvariablen | `IIOT_*` | `HOTLOOP_*` (seit 4.9.0) |
+
+### Es ist kein einfaches helm upgrade
+
+Der Name des Charts steckt in den Selektoren des Deployments und des StatefulSets, und Kubernetes weigert sich glatt, einen Selektor an Ort und Stelle zu ändern. Zeigen Sie das alte Release auf das neue Chart, und es schlägt einfach fehl. Behalten Sie den Release-Namen und den Namespace, und:
+
+1. Machen Sie einen `pg_dump` der Datenbank. Doppelt hält besser. Sie werden froh sein.
+2. Löschen Sie das alte Deployment (`<release>`) und das StatefulSet (`<release>-postgresql`). Das Volume der Datenbank ist ein eigener Claim und bleibt bestehen.
+3. Fügen Sie das Repository hinzu und aktualisieren Sie mit der Werte-Datei, mit der Sie 4.3.1 betrieben haben:
+
+   ```bash
+   helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.16.0.tgz \
+     -n <namespace> -f your-4.3.1-values.yaml
+   ```
+
+   Das ist das Chart 4.16.0 über seine URL, was funktioniert, bevor das Repository hinzugefügt ist. Sobald Sie auf 4.16.0 sind, fügen Sie das Repository hinzu (`helm repo add hotloop https://hotloop.io/hotloop`) für die Schritte danach.
+
+   Nichts in dieser Datei wurde aus dem Chart entfernt. Benennen Sie jedes `IIOT_` in `extraEnv` in `HOTLOOP_` um und entfernen Sie eine Überschreibung von `image.repository`, falls Sie eine hatten. Verwenden Sie nicht `--reuse-values`. Es überspringt jeden Standardwert, den dieses Chart seit 4.3.1 hinzugefügt hat, mehr als die Hälfte seiner Schlüssel, und Sie hätten ein Chart laufen, das hauptsächlich aus Löchern besteht.
+
+Die Namen, das Datenbankpasswort des Secrets und der Volume Claim rendern identisch zu 4.3.1, der neue Datenbank-Pod bindet also die alten Daten ein. Das Gateway migriert das Schema beim Start vorwärts und aktualisiert dabei TimescaleDB von 2.29.1 auf 2.30.1.
+
+Wir haben das geprüft, indem wir beide Charts nebeneinander gerendert haben. Schritt 1 ist Ihr Weg zurück: Wenn Sie die Aktualisierung überrascht, haben Sie einen Dump von vor fünf Minuten, und wir wollen es unter [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) hören.
+
+### Was sich anders verhält
+
+- **Es gibt eine Anmeldung.** Vor 4.4.0 gab es gar keine. Das Chart erstellt bei der ersten Installation ein Konto `admin`; [Installieren](/de/gateway/install/#anmelden) hat den Befehl, der das Passwort zurückliest.
+- **Schreibzugriffe sind standardmäßig aus**, Agenten eingeschlossen, seit 4.4.0. Wenn Ihre Werte-Datei von 4.3.1 `safety.allowWrites` nie gesetzt hat, wird nach der Aktualisierung jeder Schreibvorgang Ihrer Bediener und Regeln abgelehnt, bis Sie es setzen. Das ist Absicht, und es ist Ihr Anlass, zu prüfen, was scharf ist, bevor Sie es wieder anschalten.
+- **Eine Zeitzone, die sich nicht laden lässt, stoppt den Start.** `HOTLOOP_TIMEZONE` oder `TZ` auf etwas Ungültiges gesetzt lief früher wortlos auf UTC, was stillschweigend jeden Bericht, Zeitplan und Schichtwechsel um Stunden verschiebt.
+- **Gerätezugangsdaten werden als `[redacted]` zurückgelesen,** für jede Rolle, Administrator eingeschlossen (4.15.1). Ein Gerät mit dem Platzhalter zu speichern behält das gespeicherte Passwort.
+- **Die Abfrage-Einstellungen sind `HOTLOOP_POLL_INTERVAL`, `HOTLOOP_MIN_POLL_INTERVAL` und `HOTLOOP_POLL_TIMEOUT`.** Der alte Einstellungsbildschirm sagte, `HOTLOOP_POLL_INTERVAL_MS`, `HOTLOOP_MIN_POLL_INTERVAL_MS` und `HOTLOOP_TIMEOUT_MS` zu setzen, die nie jemand gelesen hat. Wenn Sie die gesetzt haben, taten sie nichts. Benennen Sie sie um.
+- **Importierte OPC-UA-Tags behalten den Typ, mit dem sie importiert wurden.** Discover tags hielt jeden Knoten für einen Float. Es liest jetzt den echten Typ jedes Knotens, aber vorher importierte Tags behalten `float`, und der OPC-UA-Server von HotLoop veröffentlicht einen Tag mit seinem deklarierten Typ, ein Text-Tag kommt bei Ignition also als `Bad_TypeMismatch` an. Deklarieren Sie Ihre Text-Tags als `string`.
+- **Edge publish hat jetzt einen Werte-Block.** Wenn Sie ihn über `extraEnv` gesetzt haben, verschieben Sie ihn nach `edgePublish:` und entfernen die Variablen, sonst sind sie doppelt gesetzt.
+- **Der OPC-UA-Server nennt als Hersteller `HotLoop`,** wo frühere Versionen einen anderen Herstellernamen verwendeten. Wenn ein Client oder ein Inventarskript auf diese Zeichenkette prüft, ändern Sie es, bevor es nicht mehr passt.
+- **Die Lizenz.** Die Bedingungen haben sich nach 4.3.1 geändert. Die aktuellen stehen auf [der Seite Lizenz]({{LICENSE_URL}}).
+
+### API-Änderungen ab 4.3.1
+
+Wenn Sie ein Skript oder eine Integration gegen die API haben, ist das die Liste. Alles andere sind Ergänzungen. Die Änderungen von 4.16.0 auf 4.17.0 [oben](#was-ein-skript-gegen-die-api-bemerken-wird) kommen dazu, ebenso die von 4.17.0 auf {{hotloop}} [darüber](#api-änderungen-ab-4170).
+
+- **Leere Listen sind `[]`, nie `null`,** in jeder Antwort und jedem Stream-Ereignis, in jeder Tiefe. `GET /api/runs`, Automatisierungen, die Tags eines Geräts, das Schreib-Audit, Benutzer, Alarmereignisse, Sparklines und ein leeres Verlaufsfenster antworteten früher `null`. Ein `null`, das Sie noch sehen, ist nie eine Liste; es ist ein dokumentiertes nullbares Feld, wie die `equipment_id` einer Entität.
+- **Buckets von `/api/history` ohne gute Messung sind `null`,** und werden als Lücken gezeichnet, und schlechte Messwerte bleiben aus den Trend-Mittelwerten heraus. Ein Trend und ein Bericht über dieselbe Stunde sagen jetzt dasselbe.
+- **Ein Fehler, den die API nicht zuordnen kann, ist ein 500** mit einem Verweis ins Server-Protokoll, kein 400. Ein Gerät, das bei einem Schreibvorgang oder einem Browse einen Fehler liefert, ist ein 502. [Das Schreib-Gate](/de/gateway/write-gate/#was-jede-ablehnung-antwortet) nennt jeden Status, den ein Schreibvorgang bekommen kann.
+- **`alarm.turn_on` und jeder andere Dienst, den eine Alarm-Entität nicht annimmt, ist ein 400** ("unknown service"). Es antwortete früher mit Erfolg und tat nichts, die schlimmstmögliche Antwort.
+- **Das Aufheben der Zurückstellung eines Alarms, der nicht zurückgestellt ist, ist ein 409.** Es setzte den Alarm früher auf normal, egal was er gerade tat, was einen zurückgegangenen, nicht quittierten Alarm aus der Liste löschen konnte, genau den Alarm, den ISA-18.2 auf ihr halten will.
+- **Tag-JSON trägt immer `minValue`, `maxValue` und `hasRange`,** und `hasRange` allein sagt, ob es einen Bereich gibt. Ein Bereich, der bei 0 begann, sah früher aus wie kein Minimum.
+- **Neu: `?dry_run=true` bei `POST /api/services/{domain}/{service}`.** Es führt die Prüfungen des Gates aus, schreibt nichts, auditiert nichts und antwortet mit der Ablehnung, die der echte Aufruf geben würde. `dry_run` nimmt `true` oder `false` und sonst nichts; `yes` ist ein 400, weil ein Raten in die falsche Richtung aus einer Frage einen Befehl macht.
+- **`GET /api/settings`** nennt in `envVar` die Variable, aus der ein Wert tatsächlich kam, Fallbacks eingeschlossen, und eine auf eine leere Zeichenkette gesetzte Variable gilt als nicht gesetzt.
+
+Die [Versionshinweise](https://hotloop.io/releases/core/) haben den Rest dessen, was sich geändert hat, Version für Version bis 4.4.0. Sobald Sie auf 4.16.0 sind und der Historian noch voll ist, gehen Sie zu [Aktualisieren ab 4.16.0](#aktualisieren-ab-4160) und danach zu [Aktualisieren ab 4.17.0](#aktualisieren-ab-4170).

@@ -11,7 +11,7 @@ El Edge Relay es el que no tiene interfaz. Se instala en una Pi o en un pequeño
 
 La versión actual es la 4.24.0: `ghcr.io/hotloop-io/hotloop-edge-relay:4.24.0`, compilada para amd64, arm64 y arm/v7 (una Pi 3 o una instalación de Pi OS de 32 bits es justo la caja en la que acaba un relay), de unos 15 MB, descargable sin iniciar sesión, y el chart `hotloop-edge-relay` de `https://hotloop.io/hotloop`. La 4.16.0 fue la primera versión que lo publicó, y arm/v7 llegó con la 4.18.10. Comparte número de versión con el Gateway, y una versión se niega a salir si los dos charts no llevan la versión de la etiqueta y la unidad Quadlet no sigue `:stable`. Así que el relay recibe una versión nueva en cada lanzamiento, haya cambiado su código o no. Hay un solo número de versión por el que preguntar, y un chart de relay nunca puede apuntar a una imagen que nadie publicó. [Instálelo](/es/edge-relay/install/).
 
-¿Va a actualizar un relay? [Actualizar desde la 4.17.0](/es/gateway/upgrading/#the-edge-relay-and-quadlet) y [actualizar desde la 4.16.0](/es/gateway/upgrading/#the-edge-relay) tienen la parte del relay.
+¿Va a actualizar un relay? [Actualizar desde la 4.17.0](/es/gateway/upgrading/#el-edge-relay-y-quadlet) y [actualizar desde la 4.16.0](/es/gateway/upgrading/#el-edge-relay) tienen la parte del relay.
 
 ## Lo que no es
 

@@ -9,7 +9,7 @@ Edge Relay هو الذي بلا واجهة. يجلس على جهاز Pi أو ح�
 
 الإصدار الحالي هو {{hotloop}}: `ghcr.io/hotloop-io/hotloop-edge-relay:{{hotloop}}` مبنية لمعماريات amd64 وarm64 وarm/v7 (جهاز Pi 3 أو تثبيت Pi OS بنظام 32 بت هو بالضبط الصندوق الذي ينتهي إليه الـ relay)، بحجم نحو 15 ميغابايت، تُسحب دون تسجيل دخول، والمخطط `hotloop-edge-relay` من `https://hotloop.io/hotloop`. كان 4.16.0 أول إصدار نشره، وجاء arm/v7 مع 4.18.10. يشارك رقم الإصدار مع Gateway، ويرفض الإصدار أن يصدر ما لم يحمل المخططان إصدار الوسم وما لم تتبع وحدة Quadlet الوسم `:stable`. فيحصل الـ relay على إصدار جديد مع كل إصدار، سواء تغيّر كوده أم لم يتغير. رقم إصدار واحد للسؤال عنه، ولا يمكن لمخطط relay أن يشير إلى صورة لم يدفعها أحد. [ثبّته](/ar/edge-relay/install/).
 
-هل تحدّث relay؟ [الترقية من 4.17.0](/ar/gateway/upgrading/#the-edge-relay-and-quadlet) و[الترقية من 4.16.0](/ar/gateway/upgrading/#the-edge-relay) فيهما جزء الـ relay.
+هل تحدّث relay؟ [الترقية من 4.17.0](/ar/gateway/upgrading/#edge-relay-وquadlet) و[الترقية من 4.16.0](/ar/gateway/upgrading/#edge-relay) فيهما جزء الـ relay.
 
 ## ما ليس عليه
 

@@ -10,7 +10,7 @@ Due modi supportati, entrambi con container, entrambi con avvio al boot e riavvi
 Qualunque strada scelga, il relay ha bisogno di due cose: un broker su cui pubblicare e un id di gruppo Sparkplug. L'immagine si scarica senza login.
 
 :::note[Se arriva dalla 4.17.0 o dalla 4.16.0]
-Dalla 4.17.0, aggiorni il chart con `--reset-then-reuse-values`, e chi usa Quadlet prende il nuovo `edge-relay.container`, che segue `:stable` invece di fissare la 4.17.0. [Aggiornare dalla 4.17.0](/it/gateway/upgrading/#the-edge-relay-and-quadlet) contiene la parte del relay. Il relay della 4.16.0 non poteva accettare un file di dispositivi inviato in nessuna delle due installazioni qui sotto: l'invio falliva su un mount in sola lettura mentre il Gateway diceva `config pushed`, e `persistence.enabled=false` non partiva nemmeno. La 4.17.0 ha corretto entrambe, e [Aggiornare dalla 4.16.0](/it/gateway/upgrading/#the-edge-relay) contiene quella parte, compreso l'invio obsoleto che il broker può restituire al primo avvio.
+Dalla 4.17.0, aggiorni il chart con `--reset-then-reuse-values`, e chi usa Quadlet prende il nuovo `edge-relay.container`, che segue `:stable` invece di fissare la 4.17.0. [Aggiornare dalla 4.17.0](/it/gateway/upgrading/#ledge-relay-e-quadlet) contiene la parte del relay. Il relay della 4.16.0 non poteva accettare un file di dispositivi inviato in nessuna delle due installazioni qui sotto: l'invio falliva su un mount in sola lettura mentre il Gateway diceva `config pushed`, e `persistence.enabled=false` non partiva nemmeno. La 4.17.0 ha corretto entrambe, e [Aggiornare dalla 4.16.0](/it/gateway/upgrading/#ledge-relay) contiene quella parte, compreso l'invio obsoleto che il broker può restituire al primo avvio.
 :::
 
 ## Il file dei dispositivi

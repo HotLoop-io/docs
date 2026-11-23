@@ -18,7 +18,7 @@ helm install hotloop hotloop/hotloop --version {{hotloop}} \
   --namespace hotloop --create-namespace
 ```
 
-这会部署 Gateway，并在旁边部署一个 20 Gi 卷上的 TimescaleDB 2.30.1，保留 90 天的历史。数据库是一项设置 `database.type`：`timescaledb` 是默认值，`postgresql` 运行普通的 PostgreSQL 17，`sqlite` 则让 Gateway 运行在一个文件上，完全没有数据库 Pod，只用一个副本和本地存储，绝不用 NFS。以后在它们之间切换是一次备份加一次恢复，因为新数据库从空开始。已经存有 PostgreSQL 16 数据的机器会在下一次升级时自动升到 17，无需你做任何事，所以在动一个正在运行的工厂之前，请[先读这个过程](/zh-hans/gateway/upgrading/#upgrading-from-41810)。图表会在发布的 Secret 中生成数据库密码、MCP 令牌和管理员密码，并在每次升级时重复使用，所以 `helm upgrade` 绝不会在你不知情时换掉密码，也不会把你从自己的工厂登出。
+这会部署 Gateway，并在旁边部署一个 20 Gi 卷上的 TimescaleDB 2.30.1，保留 90 天的历史。数据库是一项设置 `database.type`：`timescaledb` 是默认值，`postgresql` 运行普通的 PostgreSQL 17，`sqlite` 则让 Gateway 运行在一个文件上，完全没有数据库 Pod，只用一个副本和本地存储，绝不用 NFS。以后在它们之间切换是一次备份加一次恢复，因为新数据库从空开始。已经存有 PostgreSQL 16 数据的机器会在下一次升级时自动升到 17，无需你做任何事，所以在动一个正在运行的工厂之前，请[先读这个过程](/zh-hans/gateway/upgrading/#从-41810-升级)。图表会在发布的 Secret 中生成数据库密码、MCP 令牌和管理员密码，并在每次升级时重复使用，所以 `helm upgrade` 绝不会在你不知情时换掉密码，也不会把你从自己的工厂登出。
 
 ## 在需要之前先备份密钥
 

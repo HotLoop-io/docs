@@ -12,7 +12,7 @@ To støttede måter, begge med containere, begge starter ved oppstart og starter
 Uansett hvilken vei du velger, trenger releet to ting: en broker å publisere til og en Sparkplug-gruppe-id. Bildet hentes uten innlogging.
 
 :::note[Kommer du fra 4.17.0 eller 4.16.0]
-Fra 4.17.0 oppgraderer du chartet med `--reset-then-reuse-values`, og Quadlet-brukere tar den nye `edge-relay.container`, som følger `:stable` i stedet for å feste 4.17.0. [Oppgradering fra 4.17.0](/nb/gateway/upgrading/#the-edge-relay-and-quadlet) har releets del. Releet i 4.16.0 kunne ikke ta imot en pushet enhetsfil i noen av de to installasjonene under: pushen døde på en skrivebeskyttet montering mens Gateway sa `config pushed`, og `persistence.enabled=false` startet ikke engang. 4.17.0 rettet begge, og [Oppgradering fra 4.16.0](/nb/gateway/upgrading/#the-edge-relay) har den delen, inkludert den utdaterte pushen brokeren kan gi tilbake ved første oppstart.
+Fra 4.17.0 oppgraderer du chartet med `--reset-then-reuse-values`, og Quadlet-brukere tar den nye `edge-relay.container`, som følger `:stable` i stedet for å feste 4.17.0. [Oppgradering fra 4.17.0](/nb/gateway/upgrading/#edge-relay-og-quadlet) har releets del. Releet i 4.16.0 kunne ikke ta imot en pushet enhetsfil i noen av de to installasjonene under: pushen døde på en skrivebeskyttet montering mens Gateway sa `config pushed`, og `persistence.enabled=false` startet ikke engang. 4.17.0 rettet begge, og [Oppgradering fra 4.16.0](/nb/gateway/upgrading/#edge-relay) har den delen, inkludert den utdaterte pushen brokeren kan gi tilbake ved første oppstart.
 :::
 
 ## Enhetsfilen

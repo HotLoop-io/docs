@@ -10,7 +10,7 @@ Có hai cách được hỗ trợ, cả hai đều là container, đều khởi 
 Dù chọn cách nào, relay cần hai thứ: một broker để phát hành tới và một id nhóm Sparkplug. Ảnh được kéo về mà không cần đăng nhập.
 
 :::note[Nếu bạn đến từ 4.17.0 hoặc 4.16.0]
-Từ 4.17.0, hãy nâng cấp chart với `--reset-then-reuse-values`, và người dùng Quadlet lấy `edge-relay.container` mới, bản này theo `:stable` thay vì ghim 4.17.0. [Nâng cấp từ 4.17.0](/vi/gateway/upgrading/#the-edge-relay-and-quadlet) có phần về relay. Relay của 4.16.0 không thể nhận tệp thiết bị được đẩy ở cả hai kiểu cài đặt dưới đây: lệnh đẩy chết ở một mount chỉ đọc trong khi Gateway báo `config pushed`, và `persistence.enabled=false` thậm chí không khởi động được. 4.17.0 đã sửa cả hai, và [Nâng cấp từ 4.16.0](/vi/gateway/upgrading/#the-edge-relay) có phần đó, gồm cả lệnh đẩy cũ mà broker có thể trả lại ở lần khởi động đầu.
+Từ 4.17.0, hãy nâng cấp chart với `--reset-then-reuse-values`, và người dùng Quadlet lấy `edge-relay.container` mới, bản này theo `:stable` thay vì ghim 4.17.0. [Nâng cấp từ 4.17.0](/vi/gateway/upgrading/#edge-relay-và-quadlet) có phần về relay. Relay của 4.16.0 không thể nhận tệp thiết bị được đẩy ở cả hai kiểu cài đặt dưới đây: lệnh đẩy chết ở một mount chỉ đọc trong khi Gateway báo `config pushed`, và `persistence.enabled=false` thậm chí không khởi động được. 4.17.0 đã sửa cả hai, và [Nâng cấp từ 4.16.0](/vi/gateway/upgrading/#edge-relay) có phần đó, gồm cả lệnh đẩy cũ mà broker có thể trả lại ở lần khởi động đầu.
 :::
 
 ## Tệp thiết bị

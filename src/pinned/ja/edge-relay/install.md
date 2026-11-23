@@ -10,7 +10,7 @@ sidebar:
 どちらの方法でも、リレーには 2 つのものが必要です。発行先のブローカーと、Sparkplug のグループ id です。イメージはログインなしで取得できます。
 
 :::note[4.17.0 または 4.16.0 から移行する場合]
-4.17.0 以降は、チャートを `--reset-then-reuse-values` でアップグレードしてください。Quadlet を使っている場合は、4.17.0 に固定せず `:stable` に追従する新しい `edge-relay.container` を使います。リレーに関する部分は[4.17.0 からのアップグレード](/ja/gateway/upgrading/#the-edge-relay-and-quadlet)にあります。4.16.0 のリレーは、以下のどちらの導入方法でも、プッシュされたデバイスファイルを受け取れませんでした。Gateway は `config pushed` と表示するのに、プッシュは読み取り専用のマウントで失敗し、`persistence.enabled=false` は起動すらしませんでした。4.17.0 で両方を修正しており、初回起動時にブローカーが返すことのある古いプッシュを含むその部分は、[4.16.0 からのアップグレード](/ja/gateway/upgrading/#the-edge-relay)にあります。
+4.17.0 以降は、チャートを `--reset-then-reuse-values` でアップグレードしてください。Quadlet を使っている場合は、4.17.0 に固定せず `:stable` に追従する新しい `edge-relay.container` を使います。リレーに関する部分は[4.17.0 からのアップグレード](/ja/gateway/upgrading/#edge-relay-と-quadlet)にあります。4.16.0 のリレーは、以下のどちらの導入方法でも、プッシュされたデバイスファイルを受け取れませんでした。Gateway は `config pushed` と表示するのに、プッシュは読み取り専用のマウントで失敗し、`persistence.enabled=false` は起動すらしませんでした。4.17.0 で両方を修正しており、初回起動時にブローカーが返すことのある古いプッシュを含むその部分は、[4.16.0 からのアップグレード](/ja/gateway/upgrading/#edge-relay)にあります。
 :::
 
 ## デバイスファイル
