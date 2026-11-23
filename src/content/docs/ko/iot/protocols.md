@@ -3,6 +3,10 @@ title: "프로토콜과 드라이버"
 description: "OPC UA, Modbus, MQTT와 Sparkplug B, EtherNet/IP, S7comm, MTConnect, HTTP를 지원하며, 각 드라이버의 실제 장비 검증 범위를 설명합니다."
 ---
 
+:::note[앞으로 나올 내용 포함]
+이 페이지에는 최신 릴리스인 HotLoop core 4.24.0보다 새로운 내용도 일부 들어 있습니다. 설치하신 버전에는 없는 부분이 있을 수 있습니다. 무엇이 바뀌었는지는 [릴리스 노트](/ko/releases/)에 나와 있습니다.
+:::
+
 이 문서는 게이트웨이가 정확히 어떤 프로토콜을 사용하는지, 각 드라이버를 어디까지 검증했는지, 그 밖의 프로토콜은 어떻게 해야 하는지를 설명합니다. 가장 먼저 읽을 문서이며, 다른 내용과 다를 때 이 문서를 기준으로 삼으십시오.
 
 네이티브 프로토콜 목록은 바이너리에 컴파일된 드라이버에서 만들어집니다. `/api/protocols`, 프로토콜 화면, MCP `describe_protocol` 도구가 모두 같은 레지스트리를 읽으므로, 카탈로그에는 바이너리에 없는 프로토콜이 나오지 않습니다.
@@ -255,14 +259,29 @@ HotLoop의 Sparkplug 에지 노드와 Edge Relay를 Ignition의 MQTT Engine과 �
 | `HOTLOOP_UADP_PUBLISH_KEY_FRAME_EVERY` | `10` | key frame 사이의 간격은 최대 이 횟수 |
 | `HOTLOOP_UADP_PUBLISH_DATAVALUE` | `false` | Variant 대신 DataValue 필드(값, 상태, 시각) |
 | `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES` | `false` | 바뀐 DataSet을 key frame 사이에 delta frame(바뀐 필드만)으로 전송 |
+| `HOTLOOP_UADP_PUBLISH_METADATA_EVERY` | `10` | 각 DataSet의 필드 이름과 유형을 이 횟수의 간격마다 알립니다. `0`은 전혀 보내지 않습니다 |
 | `HOTLOOP_UADP_PUBLISH_INTERFACE`, `_TTL` | 시스템 기본값, `1` | 멀티캐스트가 나가는 카드와 홉 제한 |
 
-각 DataSet은 자신의 DataSetWriter에서 NetworkMessage 하나로 나갑니다. 값이 바뀐 DataSet은 key frame(모든 필드)으로, 바뀌지 않은 DataSet은 keep alive로 나가며, 늦게 가입한 구독자도 따라잡을 수 있도록 key frame은 최소한 `KEY_FRAME_EVERY` 간격마다 나갑니다. Delta frame은 기본값이 꺼짐입니다. key frame은 완전하므로 데이터그램이 유실되어도 한 간격의 손실로 끝나고 틀린 값이 남지 않기 때문입니다. `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true`이면 바뀐 DataSet은 delta frame으로 나가며, 마지막 메시지 이후 바뀐 필드와 그 위치만 담습니다. key frame은 여전히 최소한 `KEY_FRAME_EVERY` 간격마다 나가고, 유실된 delta는 최대 그 간격만큼 필드가 오래된 값으로 남게 만듭니다. 이것이 느린 링크에서 메시지를 작게 하는 대가입니다. HotLoop 자체 구독자는 delta frame을 읽습니다. value. bad인 태그는 마지막 값이 아니라 그 상태로 게시되며, 아직 읽은 적이 없는 태그는 `BadWaitingForInitialData`로 게시됩니다. 값은 게시되는 타입에 맞게 잘리며 감겨 넘어가지 않습니다. 메시지 보안은 지원하지 않으므로 공장이 신뢰하는 네트워크에서 사용해야 합니다. 같은 레이아웃의 태그를 다른 박스의 HotLoop 자체 구독자로 읽을 수 있습니다.
+각 DataSet은 자체 DataSetWriter로, 각각 NetworkMessage 하나씩 나갑니다. 값이 바뀐 DataSet은 key frame(모든 필드)으로, 바뀌지 않은 DataSet은 keep alive로 나가며, 늦게 합류한 구독자가 수렴하도록 key frame은 최소한 `KEY_FRAME_EVERY` 간격마다 나갑니다. key frame은 완전하므로 데이터그램을 잃어도 한 간격이 손실될 뿐 잘못된 값이 되지는 않습니다. `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true`이면 바뀐 DataSet은 대신 마지막 메시지 이후 바뀐 필드와 그 위치만 담은 delta frame으로 나가고, key frame은 여전히 최소한 `KEY_FRAME_EVERY` 간격마다 나갑니다. 그러면 delta 하나를 잃을 때 최대 그만큼의 간격 동안 오래된 필드가 남으며, 이것이 느린 링크에서 더 작은 메시지를 얻는 대가입니다. HotLoop 자체 구독자는 delta frame을 읽습니다. value. 불량인 태그는 마지막 값이 아니라 상태로 게시되고, 아직 아무것도 읽지 못한 태그는 `BadWaitingForInitialData`로 게시됩니다. 값은 게시된 유형에 맞게 제한되며 넘치지 않습니다. 메시지 보안은 지원하지 않으므로 공장이 신뢰하는 네트워크에서 사용해야 합니다. 같은 배치의 태그는 다른 장비의 HotLoop 자체 구독자가 읽을 수 있습니다.
 
-**검증된 내용.** 독립된 OPC UA PubSub 스택이 HotLoop의 구독자에게 게시하고 HotLoop의 퍼블리셔를 멀티캐스트로 구독하며, HotLoop의 퍼블리셔는 HotLoop 자체 구독자가 올바르게 읽습니다.
+**증명된 내용.** 독립적인 OPC UA PubSub 스택이 HotLoop 구독자에게 게시하고 멀티캐스트로 HotLoop 게시자를 구독하며, HotLoop 게시자는 HotLoop 자체 구독자가 올바르게 읽습니다. **메시지 보안.** 구독자 장치는 게시자의 NetworkMessage가 서명되거나 서명과 암호화가 되어 있기를 요구할 수 있습니다(OPC 10000-14 7.2.4.4.3). 사양이 정의한 두 정책은 `PubSub-Aes128-CTR`과 `PubSub-Aes256-CTR`입니다.
+
+```json
+{"publisherId":"2234","security":{"mode":"signAndEncrypt","policy":"PubSub-Aes128-CTR",
+ "keys":[{"keyId":1,"signingKey":"<64 hex digits>","encryptingKey":"<32 hex digits>","keyNonce":"<8 hex digits>"}]}}
+```
+
+키는 정적입니다. 양쪽에 SecurityTokenId(`keyId`)와 함께 16진수 또는 base64로 설정합니다. 키는 시크릿이므로 `[redacted]`로 표시되고 저장할 때 유지됩니다. 키를 두 개 가진 장치는 한 키에서 다른 키로 옮겨 가는 게시자를 받아들입니다. `security`가 설정되어 있으면 서명되지 않았거나(`signAndEncrypt`에서는 암호화되지 않았거나), 다른 키로 서명되었거나, 전송 중 변경된 메시지는 내용을 읽기 전에 거부되고 집계됩니다(`unsecured`, `signature`, `security_key`). Security Key Service(GetSecurityKeys, 키 순환)는 구현되어 있지 않습니다. 게시자는 `HOTLOOP_UADP_PUBLISH_SECURITY_MODE`(`sign` 또는 `signAndEncrypt`), `_POLICY`, `_KEY_ID`, `_SIGNING_KEY`, `_ENCRYPTING_KEY`, `_KEY_NONCE`로 서명합니다.
+
+**메타데이터와 탐색.** 게시자는 DataSet의 이름과 구성을 DataSetMetaData를 담은 탐색 응답으로 알리며, 클 때는 청크로 나눕니다(7.2.4.4.4, 7.2.4.6). 구독자 장치는 이를 읽습니다. 필드는 Browse에서 이름이 붙고(`writer1001_<field name>`), 메타데이터가 배치를 알려 주므로 RawData DataSet은 구성에 `dataSets` 유형이 필요 없으며, 구성 버전을 바꾼 DataSet은 다음 key frame부터 다시 시작합니다. 둘 다 있을 때는 구성의 `dataSets`가 여전히 우선합니다. 구독자의 탐색 요청은 보내지 않으며, 게시자도 응답하지 않습니다.
+
+**구조체 필드, 이벤트.** 메타데이터가 구조체라고 하는 필드는 멤버로 읽히며, 태그는 이를 `1001/0.Value`(구조체 배열의 요소는 `1001/7[2].Angle`)로 지정합니다. Variant로 보낸 구조체는 메타데이터가 설명할 때 읽습니다. 선택적 필드가 있는 구조체와 공용체는 추측하지 않고 이름으로 보고합니다. Event DataSetMessage는 담고 있는 필드와 같이 적용되고 나머지는 건드리지 않으며(장치 통계의 `Events`), 배치는 key frame의 것(7.2.4.5.7)이고 사양에서 읽었을 뿐 다른 스택으로 확인하지는 않았습니다. 일부 게시자는 RawData key frame 앞에 FieldCount를 쓰는데 사양은 그렇게 하지 않으며, 장치에는 `"rawFieldCount":true`로 알려 줍니다.
+
 ### CODESYS
 
 CODESYS Control 런타임(Linux SL, ARM64, Raspberry Pi, Windows, 가상 PLC)을 실행하는 PLC를 프로그래머가 변수에 붙인 이름으로 읽고 씁니다. 노드 ID가 아니라 `Application.GVL_Line.rTemp`입니다. CODESYS PLC에 필요한 것을 얹은 OPC UA 드라이버이므로, [OPC UA: 보안과 자격 증명](#opc-ua-보안과-자격-증명)의 모든 내용이 이 드라이버에도 적용되며 옵션도 같습니다.
+
+**PLC 자체의 알람.** Alarm Configuration이 있는 프로젝트는 알람을 PLC의 알람 관리자에 보관합니다. 프로젝트에 HotLoop Alarms 라이브러리의 블록이 있으면(CODESYS alarms 참조) HotLoop은 장치가 연결된 순간부터 그 알람을 알람 목록에 표시하고, HotLoop에서 한 확인 응답은 알람 관리자로 돌아갑니다. 실제 CODESYS Control for Linux SL 4.22.0.0 런타임으로 실시간 검증했습니다. 발생, 확인 응답, 리셋, 확인입니다. 알람 관리자 자체의 텍스트 목록과 시험한 두 가지 외의 클래스는 검증하지 않았습니다.
 
 **왜 OPC UA 서버인가, 그리고 PLC에는 무엇을 뜻하는가.** CODESYS가 서드파티에 문서화한 컨트롤러 변수 읽기 방법은 하나이며, 런타임 자체의 OPC UA 서버입니다. 애플리케이션의 Symbol Configuration(CODESYS 3.5 SP18부터는 Communication Manager 아래의 IEC Symbol Set)이 어떤 변수를 어떤 접근 권한으로 게시할지 정하고 서버가 그것을 제공합니다. CODESYS Gateway의 채널 프로토콜은 서드파티용으로 문서화되어 있지 않으며 이 드라이버는 그것을 사용하지 않습니다. 따라서 보고 싶은 것을 PLC가 게시해야 합니다.
 
@@ -289,7 +308,7 @@ nsu=CODESYSSPV3/3S/IecVarAccess;s=|var|CODESYS Control for Linux SL.Application.
 
 배열은 처음 32개 요소(`arrayElements`)만 나열합니다. 요소가 천 개인 버퍼는 대시보드에서 천 가지 항목이 아니기 때문이며, 태그는 심볼로 어떤 요소든 지정할 수 있습니다. 목록은 `browseMaxNodes`에서 멈추고 그렇다고 알려 줍니다. `browseRoot`를 심볼(`Application.GVL_Demo`)로 설정하면 애플리케이션의 한 부분을 나열합니다. 탐색은 너비 우선이므로 목록의 변수가 그 배열의 요소보다 먼저 나오며, 응답은 런타임이 받아들이는 크기로 제한됩니다(천 개 요소 배열 백 개의 응답에서는 런타임이 연결을 닫습니다).
 
-설정: OPC UA 옵션과, `device`(PLC의 이름이며 런타임이 둘 이상 나열할 때만), `application`(Application이라는 이름이 없을 때만), `arrayElements`. 잘못 쓴 옵션은 유효한 옵션을 나열한 오류가 됩니다. 비밀번호는 시크릿이며, 모든 장치 시크릿과 마찬가지로 저장되고 가려집니다.
+구성: OPC UA 옵션과 `device`(PLC의 이름, 런타임에 둘 이상 있을 때만), `application`(Application이라는 이름이 없을 때만), `arrayElements`, `alarmSymbol`(HotLoop Alarms 블록, 검색을 건너뛰는 용도로만). 철자가 틀린 옵션은 유효한 옵션을 나열하는 오류가 됩니다. 비밀번호는 시크릿이며 모든 장치 시크릿처럼 저장되고 가려집니다.
 
 **런타임이 클라이언트에 요구하는 것.** 런타임은 요청당 읽기, 탐색, 모니터링 항목에 대해 100의 `OperationLimits`를 게시하고, 더 큰 요청은 `BadTooManyOperations`로 거부합니다. 드라이버는 연결할 때 이 한도를 읽고 모든 OPC UA 장치에서 모든 요청을 그 한도에 맞게 나눕니다(CODESYS 런타임이 처음으로 문제가 된 사례였습니다. 그전에는 드라이버가 발견한 모든 태그를 float로 보고했고, 변수가 100개를 넘는 장치의 태그는 하나도 읽지 못했습니다). 샘플링은 기본 1초, 큐는 항목 하나입니다. PLC에는 지켜야 할 스캔이 있고 이미 PLC를 읽고 있는 Ignition 게이트웨이가 그것을 빼앗겨서는 안 되기 때문이며, 더 많이 요청하려면 `samplingIntervalMs`를 설정하십시오.
 
@@ -411,11 +430,37 @@ $.data.temperature            a leading $. is accepted
 
 ### 박스 상태
 
-HotLoop이 실행되는 머신을 읽기 전용 장치로 제공합니다. `cpu_util_pct`(마지막 읽기 이후 유휴가 아닌 CPU 시간), `mem_util_pct`(MemTotal 대비 MemAvailable), `disk_util_pct`(박스의 디스크이며, `diskPath`에 읽기 전용으로 마운트된 호스트 루트의 statfs, 기본값 `/host`), `data_util_pct`(`dataPath`의 볼륨, `/data`), 그리고 `jitterFile`이 실시간 에이전트가 다시 쓰는 JSON 파일 `{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}`을 가리킬 때 `rtos_jitter_core1_us`부터 `core3_us`까지(5분보다 오래된 파일은 bad로 읽힘)입니다. CPU와 메모리는 `procRoot`(`/proc`, 호스트의 것이 마운트되어 있으면 `/host/proc`)에서 가져옵니다. 읽을 수 없는 값은 사유와 함께 bad 품질이 되며 0이 되는 일은 없습니다. 이 장치는 `HOTLOOP_BOX_HEALTH_NODE`가 만듭니다([OPC UA 서버](/ko/edge/opc-ua-server/#embernet-대시보드를-위한-장비-상태)).
+HotLoop이 실행되는 장비를 읽기 전용 장치로 제공합니다. `cpu_util_pct`(마지막 읽기 이후 유휴가 아닌 CPU 시간), `mem_util_pct`(MemTotal 대비 MemAvailable), `disk_util_pct`(장비의 디스크, `diskPath`에 읽기 전용으로 마운트된 호스트 루트의 statfs, 기본값 `/host`), `data_util_pct`(`dataPath`의 볼륨 `/data`, 아직 마운트된 것이 없으면 그 위에서 가장 가까운 기존 폴더), 그리고 `jitterFile`이 실시간 에이전트가 다시 쓰는 JSON 파일 `{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}`을 가리킬 때 `rtos_jitter_core1_us`부터 `core3_us`까지(5분보다 오래된 파일은 불량으로 읽힘). CPU와 메모리는 `procRoot`(`/proc`, 또는 호스트의 것이 마운트되어 있으면 `/host/proc`)에서 가져옵니다. 읽을 수 없는 값은 사유와 함께 불량 품질이며 0이 되지 않습니다. 장치는 `HOTLOOP_BOX_HEALTH_NODE`가 만듭니다([OPC UA 서버](/ko/edge/opc-ua-server/#embernet-대시보드를-위한-장비-상태)).
+
+### Shelly
+
+모든 세대의 Shelly에 중간 브로커 없이 직접 연결합니다. SHELLY.md를 참조하십시오. 프로토콜 `shelly`와 장치 주소로 장치를 추가하며, 로그인이 설정되어 있으면 `{"password":"..."}`를 지정합니다(사용자는 `admin`이며, Gen2 이상 장치는 SHA-256 다이제스트 챌린지로, Gen1 장치는 Basic으로 응답받습니다). `/shelly`가 어느 세대인지 알려 줍니다. Gen2, Gen3, Gen4 장치는 `Shelly.GetStatus`(`POST /rpc`)로 읽으며, 장치가 보고하는 모든 구성 요소는 스스로 추가되는 태그가 되고 사람이 무장하기 전까지는 읽기 전용입니다. `switch:0.output`, `switch:0.apower`, `switch:0.aenergy.total`, `switch:0.temperature.tC`, `input:0.state`, `cover:0.current_pos`, `pm1:0.apower`, `em:0.total_act_power`, `temperature:100.tC`, `humidity:100.rh`, 그리고 장치의 `sys.uptime`과 `wifi.rssi`입니다. 장치가 보내지 않은 필드는 태그가 되지 않습니다. 스위치의 출력(`Switch.Set`), 조명의 출력과 밝기, 커버의 위치(`Cover.GoToPosition`), 온도 조절기의 목표값은 쓰기용으로 무장할 수 있습니다.
+
+Gen2 이상 장치는 웹소켓(`ws://<device>/rpc`)도 사용합니다. 드라이버는 장치가 알림을 보내기 전에 Shelly의 RPC 채널 문서가 요구하는 대로 `src`가 있는 요청 프레임 하나를 보내고, 401 프레임에는 문서화된 `auth` 객체(`dummy_method:dummy_uri`에 대한 SHA-256)로 응답하며, `NotifyStatus`와 `NotifyFullStatus`를 상태의 자체 사본에 합칩니다. 그래서 변경이 태그에 즉시 도달하고 그 사이의 폴링은 장치 대신 사본을 읽습니다. `NotifyEvent`(버튼 누름, 구성 변경)는 장치 아래 로그북에 기록됩니다. 웹소켓이 끊겼거나 최근에 상태를 확인하지 못했을 때(프레임이나 pong 없이 45초, 전체 읽기 없이 2분) 폴링은 HTTP로 장치를 읽습니다.
+
+Gen1 장치(`/status`와 단순한 GET 제어 경로, Basic 로그인)는 자체 용어로 같은 형태의 태그를 제공합니다. `relay:0.output`, `meter:0.power`, `meter:0.total`(와트분을 Wh로 변환), `light:0.output`과 `.brightness`, `roller:0.current_pos`, `input:0.state`, `temperature:0.tC`, 그리고 에너지 미터와 센서의 `emeter:0.power`, `humidity:0.rh`, `flood:0.alarm`입니다. 릴레이는 `/relay/<id>?turn=on|off`로, 조명은 `/light/<id>?turn=&brightness=`로, 롤러는 `/roller/<id>?go=to_pos&roller_pos=`로 씁니다. Shelly가 공개한 Gen1과 Gen2 문서로 구축했고 실제 장치(Plus 1, Plug S, Vintage 전구)의 녹화 기록으로 시험했으며, 시험대의 장치로는 아직 시험하지 않았습니다. Gen1의 에너지 미터, 습도, 배터리, 침수 필드는 문서에서 가져온 것이며 녹화 기록이 없습니다.
+
+### Firmata
+
+Arduino 또는 Firmata 펌웨어를 실행하는 모든 보드를 USB 시리얼이나 TCP로 연결하며, 중간에 호스트 프로그램이 없습니다. FIRMATA.md를 참조하십시오. 프로토콜 `firmata`와 시리얼 포트(`/dev/ttyACM0`, `serial:/dev/ttyUSB0`) 또는 `host:port`로 장치를 추가하며, 옵션은 `{"baudRate":57600,"samplingMs":19,"bootWaitMs":5000}`입니다. 드라이버는 보드의 프로토콜 버전을 기다리고(300 ms마다 요청), 펌웨어, 기능, 아날로그 맵을 요청하며, 보드가 가진 모든 디지털 핀과 아날로그 입력에 읽기 전용 태그를 만듭니다. 태그의 주소는 핀으로 무엇을 할지 알려 줍니다. `D13`, `D2:in`, `D2:pullup`, `D13:out`, `D9:pwm`, `D10:servo`, `A0`, `I2C:0x48:0x00:2`입니다. 디지털 입력은 보드가 변경 시 보내는 포트 리포트이고, 아날로그는 샘플링 간격마다의 리포트이며, 폴링마다 프로토콜 버전을 요청해서 사라진 보드는 한 번의 폴링 안에 발견됩니다. 요청하지 않았는데 도착한 펌웨어 리포트는 재시작한 보드입니다. 태그가 언급하지 않은 핀은 건드리지 않으며, 단순한 `D<n>` 태그는 드라이버가 연결될 때 핀을 입력으로, 처음 쓸 때 출력으로 설정합니다. 프로토콜 2.8.0(github.com/firmata/protocol의 protocol.md와 i2c.md)으로 구축했고 시뮬레이션한 ATmega328P의 StandardFirmata 2.5.9를 상대로 실행했습니다. 디지털 핀, 풀업, 0, 2.5, 5 V의 아날로그 입력, PWM 비교 레지스터, 서보의 핀, I2C 장치의 레지스터를 모두 드라이버가 아니라 칩에서 다시 읽었습니다. 실물 보드에서는 실행하지 않았습니다.
+
+### ONVIF
+
+IP 카메라, 인코더 또는 NVR입니다. ONVIF.md를 참조하십시오. 프로토콜 `onvif`, 카메라 주소, `{"username":"...","password":"..."}`로 장치를 추가합니다. 드라이버는 먼저 GetSystemDateAndTime을 읽어 카메라 자체의 시계로 WS-Security UsernameToken에 타임스탬프를 찍고(Core Specification 5.12: 다이제스트는 `base64(SHA-1(nonce + created + password))`), GetDeviceInformation과 GetServices(오래된 카메라는 GetCapabilities)를 읽으며, 카메라가 Media2를 나열하면 Media2를, 아니면 Media를 사용하고, 모든 프로필의 인코더, 해상도, 스트림 주소, 스냅샷 주소를 읽습니다. SOAP post에서 HTTP Digest나 Basic을 요구하는 카메라에는 그 방식으로 응답합니다. 서비스 주소는 `"keepXAddrHosts":true`가 아니면 장치를 추가할 때 사용한 호스트로 접근합니다. PTZ 프로필은 GetStatus로 `ptz.<token>.pan`, `.tilt`, `.zoom`, `.moving`을 추가하고, 무장할 수 있는 명령 `.move`(ContinuousMove, 선택적 타임아웃), `.absolute`(AbsoluteMove), `.goto_preset`(GotoPreset, 토큰 또는 이름), `.stop`, `.home`을 추가합니다. 이벤트는 pull point(CreatePullPointSubscription, PullMessages, Renew, Unsubscribe)에서 와서 스스로 추가되는 태그 `event.<topic>|<source>|<item>`이 되고, 모든 변경이 로그북에 남습니다. 스냅샷은 `GET /api/onvif/<device>/profiles/<token>/snapshot`이고 탐색은 `POST /api/onvif/discover`입니다(WS-Discovery, `NetworkVideoTransmitter`에 대한 멀티캐스트 Probe).
+
+ONVIF Core, Media, Media2, PTZ, Event 사양(onvif.org/specs)으로 구축했습니다. 보내는 모든 요청은 ONVIF의 WSDL과 XSD 파일에 대해 유효합니다(xmllint, 고유 입자 귀속 때문에 libxml2가 거부하는 33개 유형과 요소 하나는 완화했으며 요청이 쓰는 것은 없습니다). 그리고 WS-Security 헤더를 해석하지만 검사하지는 않는 독립적인 ONVIF 스택 onvif_srvd를 상대로 실행하므로, 로그인의 다이제스트는 대신 zeep 4.3.3의 것과 대조합니다. 이벤트 서비스와 WS-Discovery에는 사양을 보고 작성한 스크립트만 있습니다. 실물 카메라에서는 실행하지 않았습니다.
 
 ### UniFi Network
 
 공장 네트워크를 장치로 제공합니다. UniFi 콘솔 하나의 사이트 하나, 스위치, 모든 스위치 포트, PoE 소비량, WAN 링크, 사이트 상태가 장비가 어댑트되는 대로 스스로 만들어지는 태그가 되며, 활성화하기 전에는 읽기 전용입니다. 콘솔마다 로그인 한 번, 인증서는 고정되고, 콘솔 비밀번호는 데이터베이스에서 암호화됩니다. 사람이 활성화하는 몇 가지 명령 태그(위치 확인 LED, 재시작, 포트의 PoE 전원 사이클. UNIFI.md 참조)로만 콘솔을 바꿉니다. 콘솔의 이벤트 웹소켓도 수신하므로 스위치가 끊어지면 그 즉시 로그북에 기록되며, 아래에서는 여전히 폴링이 기준입니다. UniFi 탭은 개요, 지도, 전면 패널, 클라이언트, 네트워크, WiFi를 그립니다. 모든 내용은 [UniFi Network](/ko/iot/unifi/)에 있습니다.
+
+### UniFi Protect
+
+Protect NVR의 카메라, 센서, 조명, 사이렌을 콘솔의 Integrations 페이지에서 받은 API 키로 Protect Integration API를 통해 다룹니다(키는 `{"apiKey":"..."}`에 넣고 콘솔 비밀번호처럼 봉인되며, 인증서는 UniFi Network처럼 `certFingerprint`로 고정합니다). 프로토콜 `unifi-protect`와 콘솔 주소로 장치를 추가합니다. 태그는 스스로 추가되며 무장하기 전까지 읽기 전용입니다. `cam.<id>.online`, `.motion`, 카메라가 지원하는 종류에 따른 `.smart_person`, `.smart_vehicle`, `.smart_package`, `.smart_licensePlate`, `.smart_face`, `.smart_animal`, 그리고 `sen.<id>.online`, `.open`, `.motion`, `.leak`, `.tamper`, `.temp_c`, `.humidity_pct`, `.light_lux`, `light.<id>.online`, `.on`, `.motion`, `siren.<id>.online`입니다. 카메라의 움직임과 스마트 감지는 REST 레코드에 없으므로 콘솔의 이벤트 웹소켓에서 오며, 웹소켓이 끊겨 있는 동안에는 "움직임 없음"이 아니라 불량으로 읽힙니다. 모든 이벤트는 장치 아래 로그북에 있습니다. 사이렌의 `.play`는 쓰기용으로 무장되어 있고(`true`는 울림, `false`는 중지), `alarm.<trigger>.fire`도 마찬가지입니다. 이것은 사람이 Protect에서 만든 트리거 id에 대한 알람 관리자의 웹훅을 보내므로, 이를 쓰는 HotLoop 알람이 카메라를 녹화하게 합니다. 카메라의 스냅샷은 `GET /api/unifi-protect/<device>/cameras/<camera>/snapshot`이며, 요청할 때 가져오는 JPEG입니다. Protect 7.4.102에 대한 Ubiquiti의 OpenAPI 문서로 구축했으며 아직 콘솔을 상대로 실행하지는 않았습니다. [UniFi Network](/ko/iot/unifi/#unifi-protect)를 참조하십시오.
+
+### UniFi Access
+
+Access 콘솔의 문을 포트 12445의 Access 개발자 API로 다루며, 고급 설정에서 받은 API 토큰을 사용합니다(`{"token":"..."}`, 봉인됨). 프로토콜 `unifi-access`와 콘솔 주소로 장치를 추가합니다. 문마다 `door.<id>.open`(위치 센서이며, 센서가 없는 문은 닫힘이 아니라 불량으로 읽힘), `door.<id>.unlocked`(잠금 릴레이), 그리고 `door.<id>.unlock`이 있습니다. 마지막 것은 사람이 무장하며 `true`를 쓰면 문을 열고, 쓰기 게이트를 거치고 모든 쓰기처럼 감사됩니다. 콘솔은 자체 규칙에 따라 다시 잠급니다. 알림 웹소켓은 폴링 사이에 위치와 잠금을 최신으로 유지하며, 모든 변경("1F - Front: opened", "unlocked")은 장치 아래 로그북에 있습니다. 관리되는 오픈 클라이언트(py-unifi-access, MIT)가 사용하는 API를 기준으로 구축했으며 아직 콘솔을 상대로 실행하지는 않았습니다. [UniFi Network](/ko/iot/unifi/#unifi-access)를 참조하십시오.
 
 ### SNMP
 

@@ -3,6 +3,10 @@ title: "プロトコルとドライバー"
 description: "OPC UA、Modbus、MQTT と Sparkplug B、EtherNet/IP、S7comm、MTConnect、HTTP に対応。各ドライバーを実機でどこまで検証したかも説明します。"
 ---
 
+:::note[これから来る内容も含みます]
+このページには、最新リリースであるHotLoop core 4.24.0より新しい内容も一部含まれています。お使いのバージョンには入っていない部分があるかもしれません。何が変わったかは[リリースノート](/ja/releases/)をご覧ください。
+:::
+
 このドキュメントは、ゲートウェイが何を話せるのか、各ドライバーをどこまで検証したのか、それ以外のものにはどう対処するのかを正確に説明します。最初に読むべきドキュメントであり、他の記述と食い違うときに信頼すべきものです。
 
 ネイティブプロトコルの一覧は、バイナリにコンパイルされたドライバーから導かれます。`/api/protocols`、プロトコル画面、MCP の `describe_protocol` ツールはすべて同じレジストリを読むため、カタログがバイナリにないプロトコルを載せることはありません。
@@ -255,14 +259,29 @@ HotLoop の Sparkplug エッジノードと Edge Relay を Ignition の MQTT Eng
 | `HOTLOOP_UADP_PUBLISH_KEY_FRAME_EVERY` | `10` | key frame の間隔は最大でこの回数 |
 | `HOTLOOP_UADP_PUBLISH_DATAVALUE` | `false` | Variant の代わりに DataValue フィールド(値、ステータス、時刻) |
 | `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES` | `false` | 変化した DataSet を、key frame の間は delta frame(変化したフィールドだけ)として送信 |
+| `HOTLOOP_UADP_PUBLISH_METADATA_EVERY` | `10` | 各DataSetのフィールド名と型を、この回数の間隔ごとに通知します。`0`は何も送りません |
 | `HOTLOOP_UADP_PUBLISH_INTERFACE`, `_TTL` | システムの既定値、`1` | マルチキャストが出ていくカードと、そのホップ制限 |
 
-各 DataSet は自分の DataSetWriter から、NetworkMessage 1 つとして送られます。値が変化した DataSet は key frame(全フィールド)として、変化しなかったものは keep alive として送られ、遅れて参加したサブスクライバーが追いつけるよう、key frame は少なくとも `KEY_FRAME_EVERY` 間隔ごとに送られます。Delta frame は既定ではオフです。key frame は完全なので、データグラムが失われても 1 間隔分の損失で済み、誤った値は残りません。`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true` にすると、変化した DataSet は代わりに delta frame として送られ、最後のメッセージ以降に変化したフィールドとその位置だけを運びます。key frame は引き続き少なくとも `KEY_FRAME_EVERY` 間隔ごとに送られ、失われた delta は最大その間隔分、フィールドが古い値のままになります。これが、遅いリンクでメッセージを小さくする代償です。HotLoop 自身のサブスクライバーは delta frame を読み取ります。value。bad のタグは最後の値ではなくそのステータスとして公開され、まだ何も読まれていないものは `BadWaitingForInitialData` として公開されます。値は公開される型に収まるよう制限され、折り返されません。メッセージのセキュリティはサポートされていないため、プラントが信頼するネットワーク上で使ってください。同じレイアウトのタグは、別のボックスの HotLoop 自身のサブスクライバーで読み取れます。
+各DataSetは自分専用のDataSetWriterから、NetworkMessageを1つずつ送り出します。値が変わったDataSetはキーフレーム（全フィールド）として、変わらなかったものはキープアライブとして送られ、遅れて参加したサブスクライバーが追いつけるように、キーフレームは少なくとも`KEY_FRAME_EVERY`間隔ごとに送られます。キーフレームは完全なので、データグラムを失っても失うのは1間隔分で、誤った値にはなりません。`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true`にすると、変わったDataSetは代わりに、直前のメッセージ以降に変わったフィールドとその位置だけを運ぶデルタフレームとして送られ、キーフレームは引き続き少なくとも`KEY_FRAME_EVERY`間隔ごとに送られます。デルタを失うと、最大でその間隔の数だけ古いフィールドが残り、これが遅い回線で小さなメッセージを得る代償です。HotLoop自身のサブスクライバーはデルタフレームを読みます。value。不良のタグは最後の値ではなくそのステータスとして公開され、まだ何も読めていないタグは`BadWaitingForInitialData`として公開されます。値は公開された型に収まるよう制限され、折り返しはされません。メッセージのセキュリティはサポートされていないため、工場が信頼するネットワークで使ってください。同じレイアウトのタグは、別の機器のHotLoop自身のサブスクライバーが読めます。
 
-**検証した内容。**独立した OPC UA PubSub スタックが HotLoop のサブスクライバーにパブリッシュし、HotLoop のパブリッシャーをマルチキャストでサブスクライブします。HotLoop のパブリッシャーは HotLoop 自身のサブスクライバーに正しく読み取られます。
+**証明したこと。**独立したOPC UA PubSubスタックがHotLoopのサブスクライバーに公開し、マルチキャストでHotLoopのパブリッシャーを購読し、HotLoopのパブリッシャーはHotLoop自身のサブスクライバーに正しく読み取られます。**メッセージのセキュリティ。**サブスクライバーデバイスは、パブリッシャーのNetworkMessageが署名されている、または署名と暗号化がされていることを必要とできます（OPC 10000-14 7.2.4.4.3）。仕様が定める2つのポリシーは`PubSub-Aes128-CTR`と`PubSub-Aes256-CTR`です。
+
+```json
+{"publisherId":"2234","security":{"mode":"signAndEncrypt","policy":"PubSub-Aes128-CTR",
+ "keys":[{"keyId":1,"signingKey":"<64 hex digits>","encryptingKey":"<32 hex digits>","keyNonce":"<8 hex digits>"}]}}
+```
+
+キーは静的です。両側でSecurityTokenId（`keyId`）の下に、16進またはbase64で設定します。キーはシークレットで、`[redacted]`と表示され、保存時に保持されます。2つのキーを持つデバイスは、一方から他方へ切り替わるパブリッシャーを受け入れます。`security`が設定されていると、署名されていない（`signAndEncrypt`では暗号化されていない）メッセージ、別のキーで署名されたメッセージ、途中で変更されたメッセージは、中身を読む前に拒否されて数えられます（`unsecured`、`signature`、`security_key`）。Security Key Service（GetSecurityKeys、キーのローテーション）は実装されていません。パブリッシャーは`HOTLOOP_UADP_PUBLISH_SECURITY_MODE`（`sign`または`signAndEncrypt`）、`_POLICY`、`_KEY_ID`、`_SIGNING_KEY`、`_ENCRYPTING_KEY`、`_KEY_NONCE`で署名します。
+
+**メタデータとディスカバリー。**パブリッシャーは、自分のDataSetの名前と構成を、DataSetMetaDataを載せたディスカバリー応答として通知し、大きいときはチャンクに分けます（7.2.4.4.4、7.2.4.6）。サブスクライバーデバイスはそれを読みます。フィールドはBrowseで名前が付き（`writer1001_<field name>`）、メタデータがレイアウトを示すのでRawData DataSetには設定に`dataSets`の型が不要で、構成バージョンを変えたDataSetは次のキーフレームからやり直します。両方があるときは、設定の`dataSets`が引き続き優先されます。サブスクライバーのディスカバリー要求は送られず、パブリッシャーもそれには応答しません。
+
+**構造体フィールド、イベント。**メタデータが構造体だと示すフィールドはそのメンバーとして読まれ、タグはそれを`1001/0.Value`（構造体の配列の要素なら`1001/7[2].Angle`）として指定します。Variantで送られた構造体は、メタデータが記述しているときに読まれます。オプションのフィールドを持つ構造体と共用体は、推測せずに名前で報告されます。Event DataSetMessageは、運んでいるフィールドと同じように適用され、残りには触れません（デバイスの統計の`Events`）。そのレイアウトはキーフレームのもの（7.2.4.5.7）で、仕様から読んだだけで、別のスタックでは確認していません。一部のパブリッシャーはRawDataキーフレームの前にFieldCountを書きますが、仕様では書きません。デバイスには`"rawFieldCount":true`で伝えます。
+
 ### CODESYS
 
 CODESYS Control ランタイム(Linux SL、ARM64、Raspberry Pi、Windows、仮想 PLC)を実行する PLC を、プログラマーが変数に付けた名前で読み書きします。ノード ID ではなく `Application.GVL_Line.rTemp` です。CODESYS の PLC に必要なものを足した OPC UA ドライバーなので、[OPC UA: セキュリティと認証情報](#opc-ua-セキュリティと認証情報)の内容はすべてこれにも当てはまり、そのオプションがそのまま使えます。
+
+**PLC自身のアラーム。**Alarm Configurationを持つプロジェクトは、アラームをPLCのアラームマネージャーに保持します。プロジェクトにHotLoop Alarmsライブラリのブロックがあれば（CODESYS alarmsを参照）、HotLoopはデバイスが接続された時点からそれらのアラームをアラームリストに表示し、HotLoopで行った確認応答はアラームマネージャーに戻ります。実機のCODESYS Control for Linux SL 4.22.0.0ランタイムでリアルタイムに検証済みです。発生、確認応答、リセット、確認です。アラームマネージャー自身のテキストリストと、試した2つ以外のクラスは検証していません。
 
 **なぜ OPC UA サーバーなのか、そして PLC には何を意味するのか。**CODESYS がサードパーティにコントローラーの変数の読み取り方として文書化しているのは 1 つで、ランタイム自身の OPC UA サーバーです。アプリケーションの Symbol Configuration(CODESYS 3.5 SP18 以降は Communication Manager の下の IEC Symbol Set)が、どの変数をどのアクセスで公開するかを決め、サーバーがそれを提供します。CODESYS Gateway のチャネルプロトコルはサードパーティ向けに文書化されておらず、このドライバーはそれを話しません。そのため、見たいものを PLC が公開する必要があります。
 
@@ -289,7 +308,7 @@ nsu=CODESYSSPV3/3S/IecVarAccess;s=|var|CODESYS Control for Linux SL.Application.
 
 配列は最初の 32 要素(`arrayElements`)を一覧します。1000 要素のバッファはダッシュボードにとって 1000 個の項目ではないからで、タグはシンボルで任意の要素を指定できます。一覧は `browseMaxNodes` で止まり、そのことを伝えます。`browseRoot` にシンボル(`Application.GVL_Demo`)を指定すると、アプリケーションの一部を一覧します。ブラウズは幅優先なので、リストの変数はその配列の要素より先に来ます。応答は、ランタイムが受け付けるサイズに収められます(1000 要素の配列が 100 個ある応答では、ランタイムは接続を閉じます)。
 
-設定: OPC UA のオプションに加え、`device`(PLC の名前で、ランタイムが複数を一覧する場合のみ)、`application`(Application という名前のものがない場合のみ)、`arrayElements`。綴りを誤ったオプションは、有効なものを列挙したエラーになります。パスワードはシークレットで、すべてのデバイスのシークレットと同様に保存され、伏せられます。
+設定：OPC UAのオプションと、`device`（PLCの名前。ランタイムが複数を列挙するときだけ）、`application`（Applicationという名前のものがないときだけ）、`arrayElements`、`alarmSymbol`（HotLoop Alarmsブロック。探索を省くためだけ）。綴りを間違えたオプションは、有効なものを列挙するエラーになります。パスワードはシークレットで、すべてのデバイスのシークレットと同様に保存され、伏せ字になります。
 
 **ランタイムがクライアントに求めること。**ランタイムは、読み取り、ブラウズ、モニターアイテムについて、1 リクエストあたり 100 の `OperationLimits` を公開し、それより大きいリクエストは `BadTooManyOperations` で拒否します。ドライバーは接続時にこの制限を読み、すべての OPC UA デバイスで、すべてのリクエストをそれに合わせて分割します(CODESYS ランタイムが最初に問題になったケースでした。それ以前は、ドライバーは検出したすべてのタグを float として報告し、100 を超える変数を持つデバイスのタグは 1 つも読めませんでした)。サンプリングの既定は 1 秒、キューは 1 項目です。PLC には守るべきスキャンがあり、すでに読み取っている Ignition ゲートウェイからそれを奪うべきではないからです。もっと多く求めるには `samplingIntervalMs` を設定してください。
 
@@ -411,11 +430,37 @@ $.data.temperature            a leading $. is accepted
 
 ### ボックスの状態
 
-HotLoop が動いているマシンを、読み取り専用のデバイスとして公開します。`cpu_util_pct`(最後の読み取り以降の、アイドルでない CPU 時間)、`mem_util_pct`(MemTotal に対する MemAvailable)、`disk_util_pct`(ボックスのディスクで、`diskPath` に読み取り専用でマウントされたホストのルートの statfs、既定は `/host`)、`data_util_pct`(`dataPath` のボリューム、`/data`)、そして `jitterFile` がリアルタイムエージェントが書き換える JSON ファイル `{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}` を指す場合の `rtos_jitter_core1_us` から `core3_us`(5 分より古いファイルは bad と読まれます)です。CPU とメモリは `procRoot`(`/proc`、ホストのものがマウントされている場合は `/host/proc`)から取ります。読み取れない値は理由付きの bad の品質になり、0 にはなりません。このデバイスは `HOTLOOP_BOX_HEALTH_NODE` が作ります([OPC UA サーバー](/ja/edge/opc-ua-server/#embernet-ダッシュボード向けのボックスの状態))。
+HotLoopが動いている機器を、読み取り専用のデバイスとして提供します。`cpu_util_pct`（前回の読み取り以降のアイドルでないCPU時間）、`mem_util_pct`（MemTotalに対するMemAvailable）、`disk_util_pct`（機器のディスク。`diskPath`に読み取り専用でマウントしたホストのルートのstatfs、既定は`/host`）、`data_util_pct`（`dataPath`のボリューム`/data`。まだ何もマウントされていなければ、その上にある最も近い既存のフォルダー）、そして`jitterFile`がリアルタイムエージェントの書き換えるJSONファイル`{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}`を指しているときの`rtos_jitter_core1_us`から`core3_us`（5分より古いファイルは不良として読まれます）です。CPUとメモリは`procRoot`（`/proc`、またはホストのものがマウントされていれば`/host/proc`）から取得します。読み取れない値は、理由とともに不良の品質となり、決して0にはなりません。デバイスは`HOTLOOP_BOX_HEALTH_NODE`によって作られます（[OPC UAサーバー](/ja/edge/opc-ua-server/#embernet-ダッシュボード向けのボックスの状態)）。
+
+### Shelly
+
+あらゆる世代のShellyに、間にブローカーを挟まず直接接続します。SHELLY.mdを参照してください。プロトコル`shelly`とデバイスのアドレスでデバイスを追加し、ログインが設定されていれば`{"password":"..."}`を指定します（ユーザーは`admin`。Gen2以降のデバイスにはSHA-256ダイジェストのチャレンジで、Gen1デバイスにはBasicで応答されます）。`/shelly`がどの世代かを示します。Gen2、Gen3、Gen4のデバイスは`Shelly.GetStatus`（`POST /rpc`）で読まれ、デバイスが報告するすべてのコンポーネントが、自動で追加されるタグになり、人が武装するまでは読み取り専用です。`switch:0.output`、`switch:0.apower`、`switch:0.aenergy.total`、`switch:0.temperature.tC`、`input:0.state`、`cover:0.current_pos`、`pm1:0.apower`、`em:0.total_act_power`、`temperature:100.tC`、`humidity:100.rh`、そしてデバイスの`sys.uptime`と`wifi.rssi`です。デバイスが送らなかったフィールドはタグになりません。スイッチの出力（`Switch.Set`）、照明の出力と明るさ、カバーの位置（`Cover.GoToPosition`）、サーモスタットの目標値は、書き込み用に武装できます。
+
+Gen2以降のデバイスにはウェブソケット（`ws://<device>/rpc`）も使われます。ドライバーは、デバイスが通知する前にShellyのRPCチャネルのページが求めるとおり`src`付きのリクエストフレームを1つ送り、401フレームには文書化された`auth`オブジェクト（`dummy_method:dummy_uri`に対するSHA-256）で応答し、`NotifyStatus`と`NotifyFullStatus`をステータスの自分のコピーに取り込みます。そのため変更はすぐにタグに届き、その間のポーリングはデバイスの代わりにコピーを読みます。`NotifyEvent`（ボタンの押下、設定の変更）はデバイスの下のログブックに記録されます。ウェブソケットが落ちている、または最近ステータスを確認できていない（フレームもpongもない状態が45秒、完全な読み取りがない状態が2分）場合、ポーリングはHTTPでデバイスを読みます。
+
+Gen1デバイス（`/status`と単純なGETの制御パス、Basicログイン）は、自身の用語で同じ形のタグを提供します。`relay:0.output`、`meter:0.power`、`meter:0.total`（ワット分をWhに換算）、`light:0.output`と`.brightness`、`roller:0.current_pos`、`input:0.state`、`temperature:0.tC`、そしてエネルギーメーターとセンサーでは`emeter:0.power`、`humidity:0.rh`、`flood:0.alarm`です。リレーは`/relay/<id>?turn=on|off`、照明は`/light/<id>?turn=&brightness=`、ローラーは`/roller/<id>?go=to_pos&roller_pos=`で書き込みます。Shellyが公開しているGen1とGen2のドキュメントから構築し、実機（Plus 1、Plug S、Vintage電球）の録画データに対して試験しています。検証台の実機に対してはまだです。Gen1のエネルギーメーター、湿度、バッテリー、浸水のフィールドはドキュメントによるもので、裏付けとなる録画データはありません。
+
+### Firmata
+
+ArduinoまたはFirmataファームウェアを動かす任意のボードを、USBシリアルまたはTCPで、間にホストプログラムを挟まず接続します。FIRMATA.mdを参照してください。プロトコル`firmata`とシリアルポート（`/dev/ttyACM0`、`serial:/dev/ttyUSB0`）または`host:port`でデバイスを追加し、オプションは`{"baudRate":57600,"samplingMs":19,"bootWaitMs":5000}`です。ドライバーはボードのプロトコルバージョンを待ち（300 msごとに問い合わせ）、ファームウェア、機能、アナログマップを問い合わせ、ボードにあるすべてのデジタルピンとアナログ入力に読み取り専用のタグを作ります。タグのアドレスは、ピンをどうするかを示します。`D13`、`D2:in`、`D2:pullup`、`D13:out`、`D9:pwm`、`D10:servo`、`A0`、`I2C:0x48:0x00:2`です。デジタル入力はボードが変化時に送るポートレポート、アナログはサンプリング間隔ごとのレポートで、ポーリングのたびにプロトコルバージョンを問い合わせるので、いなくなったボードは1回のポーリングで分かります。問い合わせていないのに届いたファームウェアのレポートは、再起動したボードです。タグが言及しないピンには触れず、単純な`D<n>`タグは、ドライバーの接続時にそのピンを入力に、最初の書き込みで出力に設定します。プロトコル2.8.0（github.com/firmata/protocolのprotocol.mdとi2c.md）から構築し、シミュレートしたATmega328P上のStandardFirmata 2.5.9を相手に実行しました。デジタルピン、プルアップ、0、2.5、5 Vのアナログ入力、PWMコンペアレジスター、サーボのピン、I2Cデバイスのレジスターを、いずれもドライバーからではなくチップから読み戻しました。実機のボードでは実行していません。
+
+### ONVIF
+
+IPカメラ、エンコーダー、またはNVRです。ONVIF.mdを参照してください。プロトコル`onvif`、カメラのアドレス、`{"username":"...","password":"..."}`でデバイスを追加します。ドライバーはまずGetSystemDateAndTimeを読み、カメラ自身の時計でWS-Security UsernameTokenにタイムスタンプを付け（Core Specification 5.12：ダイジェストは`base64(SHA-1(nonce + created + password))`）、GetDeviceInformationとGetServices（古いカメラではGetCapabilities）を読み、カメラがMedia2を挙げていればMedia2を、そうでなければMediaを使い、すべてのプロファイルのエンコーダー、解像度、ストリームのアドレス、スナップショットのアドレスを読みます。SOAPのpostでHTTP DigestやBasicを求めるカメラには、その方式で応答します。サービスのアドレスは、`"keepXAddrHosts":true`でない限り、デバイスを追加したときのホストで到達します。PTZプロファイルはGetStatusから`ptz.<token>.pan`、`.tilt`、`.zoom`、`.moving`を追加し、武装できるコマンド`.move`（ContinuousMove、任意のタイムアウト付き）、`.absolute`（AbsoluteMove）、`.goto_preset`（GotoPreset、トークンまたは名前）、`.stop`、`.home`を追加します。イベントはプルポイント（CreatePullPointSubscription、PullMessages、Renew、Unsubscribe）から来て、自動で追加されるタグ`event.<topic>|<source>|<item>`になり、すべての変化がログブックに残ります。スナップショットは`GET /api/onvif/<device>/profiles/<token>/snapshot`、ディスカバリーは`POST /api/onvif/discover`です（WS-Discovery、`NetworkVideoTransmitter`に対するマルチキャストProbe）。
+
+ONVIFのCore、Media、Media2、PTZ、Event仕様（onvif.org/specs）から構築しています。送信するすべてのリクエストは、ONVIFのWSDLとXSDファイルに対して有効です（xmllint。libxml2が一意な粒子の帰属を理由に拒否する33個の型と1つの要素は緩和していますが、リクエストが使うものはありません）。また、WS-Securityヘッダーを解析するが検証はしない独立したONVIFスタックであるonvif_srvdを相手に実行するため、ログインのダイジェストは代わりにzeep 4.3.3のものと照合しています。イベントサービスとWS-Discoveryには、仕様から書いたスクリプトで実行した結果しかありません。実機のカメラでは実行していません。
 
 ### UniFi Network
 
 プラントのネットワークをデバイスとして扱います。UniFi コンソール 1 台の 1 サイト、そのスイッチ、すべてのスイッチポート、PoE の消費、WAN リンク、サイトの状態が、機器がアダプトされるにつれて自動的に作られるタグになり、有効化するまでは読み取り専用です。コンソールごとにログイン 1 つ、証明書は固定され、コンソールのパスワードはデータベースで暗号化されます。コンソールを変更するのは、人が有効化するいくつかのコマンドタグ(位置確認 LED、再起動、ポートの PoE 電源サイクル。UNIFI.md を参照)に限られます。コンソールのイベント websocket も待ち受けるため、スイッチが落ちるとその時点でログブックに記録されます。その下では引き続きポーリングが真実です。UniFi タブは、概要、マップ、フェイスプレート、クライアント、ネットワーク、WiFi を描画します。詳細は [UniFi Network](/ja/iot/unifi/) にあります。
+
+### UniFi Protect
+
+Protect NVRのカメラ、センサー、ライト、サイレンを、コンソールのIntegrationsページで取得したAPIキーを使い、Protect Integration API経由で扱います（キーは`{"apiKey":"..."}`に入れ、コンソールのパスワードと同様に封印され、証明書はUniFi Networkと同じく`certFingerprint`で固定します）。プロトコル`unifi-protect`とコンソールのアドレスでデバイスを追加します。タグは自動で追加され、武装するまでは読み取り専用です。`cam.<id>.online`、`.motion`、そしてカメラが対応する種類に応じた`.smart_person`、`.smart_vehicle`、`.smart_package`、`.smart_licensePlate`、`.smart_face`、`.smart_animal`、さらに`sen.<id>.online`、`.open`、`.motion`、`.leak`、`.tamper`、`.temp_c`、`.humidity_pct`、`.light_lux`、`light.<id>.online`、`.on`、`.motion`、`siren.<id>.online`です。カメラの動きとスマート検知は、RESTのレコードにはないため、コンソールのイベントのウェブソケットから来ます。そのため、ウェブソケットが落ちている間は「動きなし」ではなく不良として読まれます。すべてのイベントは、デバイスの下のログブックにあります。サイレンの`.play`は書き込み用に武装されており（`true`で鳴動、`false`で停止）、`alarm.<trigger>.fire`も同様です。これは、人がProtectで作ったトリガーidに対するアラームマネージャーのWebhookを送るので、これを書き込むHotLoopのアラームがカメラに録画させます。カメラのスナップショットは`GET /api/unifi-protect/<device>/cameras/<camera>/snapshot`で、要求されたときに取得するJPEGです。UbiquitiのProtect 7.4.102向けOpenAPIドキュメントから構築しており、コンソールに対してはまだ実行していません。[UniFi Network](/ja/iot/unifi/#unifi-protect)を参照してください。
+
+### UniFi Access
+
+Accessコンソールのドアを、ポート12445のAccess開発者API経由で、詳細設定で取得したAPIトークンを使って扱います（`{"token":"..."}`、封印）。プロトコル`unifi-access`とコンソールのアドレスでデバイスを追加します。ドアごとに、`door.<id>.open`（位置センサー。センサーのないドアは閉ではなく不良として読まれます）、`door.<id>.unlocked`（錠のリレー）、そして`door.<id>.unlock`があります。最後のものは人が武装し、`true`を書き込むとドアを解錠します。書き込みゲートを通り、ほかの書き込みと同様に監査されます。コンソールは自身のルールに従って再び施錠します。通知のウェブソケットは、ポーリングの間も位置と錠の状態を最新に保ち、すべての変化（「1F - Front: opened」、「unlocked」）がデバイスの下のログブックにあります。保守されているオープンなクライアント（py-unifi-access、MIT）が話すAPIに合わせて構築しており、コンソールに対してはまだ実行していません。[UniFi Network](/ja/iot/unifi/#unifi-access)を参照してください。
 
 ### SNMP
 
