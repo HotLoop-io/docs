@@ -9,7 +9,7 @@ HotLoop에 공장이 어디 있는지 알려 주면 태양이 어디 있는지 �
 
 변수 두 개이며, 십진 도 단위이고 북쪽과 동쪽이 양수입니다.
 
-| 변수 | 예 | <span class="sr-only">상세</span> |
+| 변수 | 예 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | 북쪽이 양수 |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | 동쪽이 양수이므로 아메리카 대륙 전체가 음수 |
@@ -20,7 +20,7 @@ HotLoop에 공장이 어디 있는지 알려 주면 태양이 어디 있는지 �
 
 ## 엔티티
 
-| 엔티티 | 상태 | <span class="sr-only">상세</span> |
+| 엔티티 | 상태 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | 일출부터 일몰까지 `on` | 속성 `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, 현장의 시간대 기준 |
 | `sensor.sun_elevation` | 수평선 위의 도, 아래는 음수 | 정수 도 |

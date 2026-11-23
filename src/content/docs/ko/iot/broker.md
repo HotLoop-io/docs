@@ -62,7 +62,7 @@ SMTP 채널이 단일 연결 안에서 STARTTLS로 업그레이드하는 것과 
 
 ## 구성
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | 이 값을 설정하기 전까지 기능이 꺼져 있음 |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | 평문 TCP 리스너 |

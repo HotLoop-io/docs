@@ -286,7 +286,7 @@ JSON 스키마 조명의 상태 메시지는 스키마가 변경된 것만 보�
 
 디스커버리는 내장 브로커에서 실행되며([내장 MQTT 브로커](/ko/iot/broker/) 참고), 브로커가 켜져 있으면 기본으로 켜집니다. HotLoop 자체 클라이언트는 시작할 때마다 만들어져 메모리에만 보관되는 로그인으로 접속하므로, 설정할 것도, 백업에 유출될 것도 없습니다. 자체적으로 게시하는 것은 birth(`<prefix>/status` = `online`) 하나뿐이며, 이를 수신하는 퍼블리셔가 다시 알리게 합니다.
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | 내장 브로커에서 알림 수신 |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | 알림이 도착하는 토픽 프리픽스 |

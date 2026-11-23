@@ -71,7 +71,7 @@ URL은 서버만 가리킵니다. 토픽은 URL이 아니라 별도 설정에 �
 
 도착하는 내용은 다음과 같습니다.
 
-| <span class="sr-only">상세</span> | <span class="sr-only">상세</span> |
+| <span class="sr-only">세부 정보</span> | <span class="sr-only">세부 정보</span> |
 |---|---|
 | 제목 | 알람 이름 |
 | 본문 | 알람 메시지, 우선순위, 발생 위치(`device/tag`), 발생 시각 |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### 도착하는 내용
 
-| <span class="sr-only">상세</span> | <span class="sr-only">상세</span> |
+| <span class="sr-only">세부 정보</span> | <span class="sr-only">세부 정보</span> |
 |---|---|
 | 텍스트 | `[Critical] Boiler Trip`이며 휴대폰 푸시 알림에 표시되는 내용입니다. 위험 알람에는 앞에 설정된 역할 호출이 붙습니다 |
 | 임베드 제목 | 같은 내용이며, `HOTLOOP_PUBLIC_URL`이 설정되어 있으면 HotLoop 알람 목록으로 연결됩니다 |
@@ -305,7 +305,7 @@ ntfy 알림의 확인 버튼은 `HOTLOOP_PUBLIC_URL`의 `POST /api/notify/ack/{t
 
 ### 정책
 
-| 필드 | <span class="sr-only">상세</span> |
+| 필드 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `enabled` | 켜기 전에는 꺼져 있습니다. 꺼진 정책은 아무것도 에스컬레이션하지 않습니다 |
 | `minPriority` | 에스컬레이션되는 가장 낮은 심각도의 알람: `critical`, `high`, `medium`, `low`. 기본값은 `high`. 한 시간 동안 방치된 보통 알람은 작업 지시이지 새벽 3시의 전화가 아닙니다 |
@@ -412,7 +412,7 @@ TLS 전용 리스너를 가진 실제 SMTP 서버 라이브러리와, 고정된 
 
 ## 설정
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | 이것을 설정하기 전에는 기능이 꺼져 있습니다 |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ Helm 차트에서는 `notify.ntfy`, `notify.gotify`, `notify.discordWebhook`, `n
 
 ## API
 
-| 경로 | 권한 | <span class="sr-only">상세</span> |
+| 경로 | 권한 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | 설정된 모든 채널로 합성 테스트 알림을 지금 바로 보냅니다 |
 | `POST /api/notify/ack/{token}` | 없음. 토큰이 인증입니다 | 토큰이 발급된 알람 발생을 확인합니다. "확인 링크"를 참고하십시오 |

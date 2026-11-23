@@ -398,7 +398,7 @@ POST /api/services/number/set_value
 
 ### 역할
 
-| 도메인 | 역할 | 태그 유형 | <span class="sr-only">상세</span> |
+| 도메인 | 역할 | 태그 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|---|
 | `select` | `state` | any | 필수. 피드백: 읽어서 옵션을 찾음 |
 | | `command` | any | 필수, 활성화. 옵션의 원시 값으로 씀. `state`와 같은 태그일 수 있음 |
@@ -429,7 +429,7 @@ POST /api/services/number/set_value
 
 ### 옵션
 
-| 옵션 | 도메인 | <span class="sr-only">상세</span> |
+| 옵션 | 도메인 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `select_options` | `select` | 필수: `[{"option": "low", "value": 1}, ...]`, 화면이 제공하는 순서대로. 이름은 고유, 값도 고유(한 값에 옵션이 둘이면 상태가 추측이 됨), 각 값은 숫자, bool 또는 문자열 |
 | `press_value`, `release_value` | `button` | 함께 쓰거나 둘 다 쓰지 않음. bool 태그에서 생략하면 `true`와 `false`이며, 버튼이 하는 일이 기록에 남도록 옵션에 기록됨. 다른 태그 유형에서는 둘 다 필요 |
@@ -512,7 +512,7 @@ POST /api/services/number/set_value
 
 알린 장치에 대해 [MQTT 검색](/ko/iot/mqtt-discovery/)이 만들며, 검색이 그 장치를 위해 만든 태그에 바인딩됩니다. PLC 태그로 이것들을 만드는 사람은 없으므로 `POST /api/entities`는 받지 않습니다. 모든 복합 엔티티와 같은 규칙입니다. 상태는 HotLoop이 마지막에 보낸 것이 아니라 피드백이 말하는 것이고, 모든 서비스는 게이트를 거치는 쓰기이며, 각 태그는 먼저 사람이 활성화합니다.
 
-| 도메인 | 역할 | 태그 유형 | <span class="sr-only">상세</span> |
+| 도메인 | 역할 | 태그 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|---|
 | `light` | `state` | bool | 피드백: 켜짐 또는 꺼짐 |
 | | `command` | bool | 활성화. `turn_on`은 true, `turn_off`는 false를 씀. `state`와 같은 태그 |
@@ -577,7 +577,7 @@ POST /api/services/number/set_value
 
 상태는 알람 엔진이 가진 ISA-18.2 상태이며, 엔티티 상태의 표기 방식으로 쓰입니다.
 
-| 알람 엔진 | 엔티티 상태 | <span class="sr-only">상세</span> |
+| 알람 엔진 | 엔티티 상태 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `normal` | `normal` | 조건 해소, 남은 것 없음 |
 | `unack-active` | `active_unack` | 조건 참, 아무도 확인하지 않음 |
