@@ -1,0 +1,20 @@
+---
+title: "Utgivelsesnotater HotLoop for CODESYS 0.3.1"
+description: "Chart 0.3.1 for HotLoop for CODESYS: provisioneren finner HotLoops Service og Secret ut fra utgivelsesnavnet, så alle utgivelsesnavn installeres."
+sidebar:
+  label: "0.3.1"
+---
+
+## Hva som er endret
+
+0.3.1 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-05, og var chartet å installere frem til [0.3.2](/nb/releases/codesys-0-3-2/). Det omslutter fortsatt HotLoop 4.19.4 og kjører provisioner 0.3.0, som lastes ned uten pålogging.
+
+- **Alle utgivelsesnavn installeres.** Provisioneren finner nå HotLoops Service og dens Secret med påloggingsdata ut fra navngivingen HotLoops eget chart bruker, som er utgivelsesnavnet. Den gamle regelen gjettet et annet navn for en utgivelse uten `hotloop-codesys` i seg, og HotLoop-poden hadde ikke det navnet.
+- **Eksempelprofilen er riktig.** `example-devices.json` lister ikke lenger Variant som en RawData-type, for det er den ikke.
+- **Alt i [0.3.0](/nb/releases/codesys-0-3-0/) er fortsatt her**, ingenting skriver til PLS-en, og hvert tidligere chart blir i indeksen.
+
+Hva det betyr for deg: gi utgivelsen hvilket navn du vil, og provisioneren finner det den skal snakke med.
+
+## Hva som ble sjekket
+
+Chartet rendres fra den levende indeksen med Helm, og det er kjørt på bare metal (2026-11-17). [Hvor det står](/nb/codesys/where-it-stands/) sier hva det ble kjørt mot.

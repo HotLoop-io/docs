@@ -1,0 +1,20 @@
+---
+title: "Notes de HotLoop for CODESYS 0.3.1"
+description: "Chart 0.3.1 de HotLoop for CODESYS : le provisioner trouve le Service et le Secret de HotLoop par le nom de la release, donc tout nom de release s'installe."
+sidebar:
+  label: "0.3.1"
+---
+
+## Ce qui a changé
+
+0.3.1 est dans l'index `{{codesysChartRepo}}`, publié le 2026-11-05, et c'était le chart à installer jusqu'à [0.3.2](/fr/releases/codesys-0-3-2/). Il enveloppe toujours HotLoop 4.19.4 et exécute le provisioner 0.3.0, qui se télécharge sans connexion.
+
+- **Tout nom de release s'installe.** Le provisioner trouve désormais le Service de HotLoop et son Secret d'identifiants par la convention de nommage du chart propre de HotLoop, qui est le nom de la release. L'ancienne règle devinait un autre nom pour une release sans `hotloop-codesys` dedans, et le pod HotLoop n'avait pas ce nom.
+- **Le profil d'exemple est correct.** `example-devices.json` ne liste plus Variant comme un type RawData, car ce n'en est pas un.
+- **Tout ce qui est dans [0.3.0](/fr/releases/codesys-0-3-0/) est toujours là**, rien n'écrit dans l'automate, et chaque chart antérieur reste dans l'index.
+
+Ce que cela change pour vous : nommez la release comme vous voulez, et le provisioner trouve ce avec quoi il doit parler.
+
+## Ce qui a été vérifié
+
+Le chart se rend depuis l'index en ligne avec Helm, et il a été exécuté sur du matériel réel (2026-11-17). [Où il en est](/fr/codesys/where-it-stands/) dit contre quoi il a été exécuté.

@@ -1,0 +1,18 @@
+---
+title: "CODESYS 0.3.3 发布说明"
+description: "HotLoop for CODESYS chart 0.3.3:封装 HotLoop 4.20.0,让新的 Web 界面和 MCP 工具送到测试人员手中。"
+sidebar:
+  label: "0.3.3"
+---
+
+## 变更内容
+
+0.3.3 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-15。provisioner 与 0.3.2 运行的相同。
+
+- **它封装 HotLoop 4.20.0。** 新的 Web 界面是 `/` 处的页面,代理可以通过 MCP 在写入门之后更改它能读取的一切。
+
+这对您意味着什么:运行 0.3.3 的盒子只需升级 chart 就能得到新界面和 MCP 工具,别无他事。
+
+## 检查了什么
+
+从 0.3.1 升级到已应用配置文件的 0.3.3,旁边是 CODESYS Control for Linux SL 4.22.0.0 运行时:4.20.0 上的一个新 pod 启动了,设备及其 2232 个标签仍在,监听器重新连接。已在裸机上运行(2026-11-17)。

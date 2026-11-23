@@ -1,0 +1,18 @@
+---
+title: "Notes de HotLoop for CODESYS 0.3.3"
+description: "Chart 0.3.3 de HotLoop for CODESYS : enveloppe HotLoop 4.20.0, si bien que la nouvelle interface web et les outils MCP atteignent les testeurs."
+sidebar:
+  label: "0.3.3"
+---
+
+## Ce qui a changé
+
+0.3.3 est dans l'index `{{codesysChartRepo}}`, publié le 2026-11-15. Le provisioner est le même que celui qu'exécutait 0.3.2.
+
+- **Il enveloppe HotLoop 4.20.0.** La nouvelle interface web est la page à `/`, et un agent peut modifier tout ce qu'il peut lire via MCP, derrière la porte d'écriture.
+
+Ce que cela change pour vous : un boîtier en 0.3.3 reçoit la nouvelle interface et les outils MCP avec une mise à jour du chart et rien d'autre.
+
+## Ce qui a été vérifié
+
+Une mise à jour de 0.3.1 avec un profil appliqué à 0.3.3, à côté d'un runtime CODESYS Control for Linux SL 4.22.0.0 : un nouveau pod en 4.20.0 est monté, les appareils et leurs 2232 tags étaient toujours là, et les écouteurs se sont reconnectés. Il a été exécuté sur du matériel réel (2026-11-17).

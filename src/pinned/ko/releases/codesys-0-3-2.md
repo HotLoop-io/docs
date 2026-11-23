@@ -1,0 +1,21 @@
+---
+title: "CODESYS 0.3.2 릴리스 노트"
+description: "HotLoop for CODESYS 차트 0.3.2: HotLoop 4.19.11을 감싸며, HotLoop은 노드 네트워크의 런타임 옆에서 돌 수 있도록 포트 8090을 씁니다."
+sidebar:
+  label: "0.3.2"
+---
+
+## 바뀐 내용
+
+0.3.2는 2026-11-15에 `{{codesysChartRepo}}` 인덱스에 게시되었으며, 실행하는 provisioner 이미지는 로그인 없이 받을 수 있습니다. PLC에는 아무것도 쓰지 않습니다.
+
+- **HotLoop 4.19.11을 감싸고** provisioner 0.3.1을 실행합니다.
+- **HotLoop의 페이지가 파드 안에서 8090으로 듣습니다.** 노드 네트워크의 런타임이 호스트 포트 8080을 쓰고 있어, 스케줄러가 HotLoop 페이지를 그 옆에 배치하기를 거부했습니다. Service는 8080에 그대로 있으므로 App Store 타일과 provisioner는 전처럼 HotLoop에 닿습니다. 8080으로 파드와 직접 통신하던 것은 8090으로 옮겨야 합니다.
+- **provisioner는 OPC UA PubSub 리스너 둘을 한 UDP 포트에 두는 프로필을 거부합니다.** HotLoop은 포트를 단독으로 바인딩하므로, 두 번째 장치가 "address already in use"로 연결 중에 머물렀습니다. 이제 provisioner가 처음부터 그렇게 알려 줍니다.
+- **이전 차트는 모두 인덱스에 남아 있습니다.**
+
+이것이 의미하는 바: 노드 자체 네트워크의 CODESYS 런타임과 HotLoop이 한 노드에서 나란히 돕니다.
+
+## 확인한 것
+
+차트는 라이브 인덱스에서 Helm으로 렌더링되며, 베어메탈에서 실행했습니다(2026-11-17). [현재 상태](/ko/codesys/where-it-stands/)에 무엇을 상대로 실행했는지 적혀 있습니다.

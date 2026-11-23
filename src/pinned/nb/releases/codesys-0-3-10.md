@@ -1,0 +1,23 @@
+---
+title: "Utgivelsesnotater HotLoop for CODESYS 0.3.10"
+description: "Chart 0.3.10 for HotLoop for CODESYS: omslutter HotLoop 4.24.0 og kjører provisioner 0.4.1, så en profil kan ha med flere skjermbilder."
+sidebar:
+  label: "0.3.10"
+---
+
+## Hva som er endret
+
+0.3.10 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-23. Det er den du skal installere, og den bærer alt 0.3.9 la til.
+
+- **Det omslutter HotLoop 4.24.0,** som viser en CODESYS-PLS-s egne alarmer i alarmlisten og tegner skjermbilder som P&ID.
+- **Det kjører provisioner 0.4.1.** En profil tar en liste over skjermbilder ved siden av det ene, så et prosjekt med flere WebVisu-sider kommer tilbake helt.
+- **Eksempelprofilen kobler til med en gang.** Tagsene bruker OPC UA PubSub-feltindeksen, så enheten den lager prøver ikke tilkoblingen på nytt.
+- **Chartet utelater alarmkanalene Gotify og Discord til de har en legitimasjon,** så poden starter på en enkel installasjon. Sett `enabled` på en kanal til true med token eller URL for å bruke den.
+
+Hva det betyr for deg: installer denne. En oppgradering fra 0.3.8 beholder enheten og tagsene.
+
+## Hva som ble sjekket
+
+Installert fra indeksen på en ekte klynge med en profil av én OPC UA PubSub-lytter og to skjermbilder: provisioneren laget enheten, dens to tags og begge skjermbildene uten håndarbeid, enheten leste tilkoblet, og HotLoop-loggen hadde ingen advarsler eller feil. Å slette begge podene fikk dem tilbake av seg selv med enheten fortsatt konfigurert, en oppgradering fra [0.3.8](/nb/releases/codesys-0-3-8/) beholdt enheten og tagsene, og en installasjon uten profil ga bare HotLoop.
+
+Imaget 4.24.0 er bygget for amd64, så på en arm64-node må du feste HotLoop til en amd64-node.

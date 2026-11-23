@@ -1,0 +1,19 @@
+---
+title: "Ghi chú phát hành HotLoop for CODESYS 0.3.5"
+description: "Chart 0.3.5 của HotLoop for CODESYS: bao bọc HotLoop 4.20.2, chart mới nhất trong chỉ mục."
+sidebar:
+  label: "0.3.5"
+---
+
+## Có gì thay đổi
+
+0.3.5 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-16, và là chart nên cài.
+
+- **Nó bao bọc HotLoop 4.20.2,** mang bản sửa lô EtherNet/IP và lệnh `version` in ra mà không cần cấu hình. Provisioner vẫn ở 0.3.1.
+- **Mọi thứ từ [0.3.2](/vi/releases/codesys-0-3-2/) đến [0.3.4](/vi/releases/codesys-0-3-4/) vẫn còn đây,** không có gì ghi vào PLC, và mọi chart trước đó vẫn nằm trong chỉ mục.
+
+Điều này có nghĩa với bạn: đây là bản nên cài, và nâng cấp từ 0.3.4 giữ thiết bị và các tag của bạn.
+
+## Đã kiểm tra những gì
+
+Nâng cấp từ 0.3.4 với hồ sơ áp dụng cho 0.3.5, với runtime CODESYS Control for Linux SL 4.22.0.0 trên mạng của nút bên cạnh: một pod mới trên 4.20.2 chạy lên, thiết bị và 44 tag của nó vẫn còn và không tag nào ghi được, trang trả lời, và nhật ký HotLoop không có cảnh báo hay lỗi. Xóa cả hai pod và khởi động lại runtime: cả ba tự trở lại. Nó đã được chạy trên máy thật (2026-11-17).

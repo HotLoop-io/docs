@@ -1,0 +1,19 @@
+---
+title: "Notas de versión: HotLoop for CODESYS 0.3.7"
+description: "Chart 0.3.7 de HotLoop for CODESYS: envuelve HotLoop 4.22.0 y ejecuta el provisioner 0.3.2."
+sidebar:
+  label: "0.3.7"
+---
+
+## Qué cambió
+
+0.3.7 está en el índice `{{codesysChartRepo}}`, publicada el 2026-11-19.
+
+- **Envuelve HotLoop 4.22.0,** que da a cada dispositivo OPC UA PubSub de una misma dirección y puerto un socket compartido, de modo que dos oyentes pueden estar en un mismo puerto UDP.
+- **El provisioner admite dos oyentes en un puerto.** El provisioner 0.3.2 ya no rechaza un perfil que pone dos dispositivos `opcua-pubsub` en un mismo puerto.
+
+Lo que esto significa para usted: un perfil con varios publicadores PubSub en un mismo puerto se instala y se lee.
+
+## Qué se comprobó
+
+Una instalación nueva con un perfil del propio dispositivo del runtime, dos oyentes PubSub en el mismo puerto UDP, una alarma y una pantalla, junto a un runtime real CODESYS Control for Linux SL 4.22.0.0 con la biblioteca Transmitter: todo se creó sin pasos manuales, las variables del PLC se leyeron bien, la alarma se disparó con el propio valor del PLC, y ambos oyentes se leyeron conectados. Contra un publicador real en ambas codificaciones, cada uno de los 32 campos se leyó bien e igual al PLC. Con ambos pods eliminados y el runtime reiniciado: HotLoop volvió por sí solo con sus tres dispositivos.

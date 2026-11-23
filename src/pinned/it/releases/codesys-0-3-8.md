@@ -1,0 +1,19 @@
+---
+title: "Note di rilascio: HotLoop for CODESYS 0.3.8"
+description: "Chart 0.3.8 di HotLoop for CODESYS: l'immagine del provisioner che esegue è la 0.3.3, compilata per amd64 e arm64."
+sidebar:
+  label: "0.3.8"
+---
+
+## Cosa è cambiato
+
+0.3.8 è nell'indice `{{codesysChartRepo}}`, pubblicato il 2026-11-19.
+
+- **Esegue il provisioner 0.3.3,** la prima immagine del provisioner compilata per amd64 e per arm64, così il chart si installa su un nodo arm64.
+- **Nient'altro è cambiato.** I template, i valori e l'HotLoop che avvolge (4.22.0) sono quelli di [0.3.7](/it/releases/codesys-0-3-7/).
+
+Cosa significa per te: installa questo. Su un nodo amd64 non cambia nulla.
+
+## Cosa è stato verificato
+
+I valori del chart pubblicato leggono il provisioner 0.3.3 e HotLoop 4.22.0, e l'indice dell'immagine 0.3.3 elenca amd64 e arm64. Il chart non è stato reinstallato su un cluster per questa versione, perché si è mosso solo il tag dell'immagine.

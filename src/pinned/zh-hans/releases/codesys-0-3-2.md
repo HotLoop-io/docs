@@ -1,0 +1,21 @@
+---
+title: "CODESYS 0.3.2 发布说明"
+description: "HotLoop for CODESYS chart 0.3.2:封装 HotLoop 4.19.11,HotLoop 使用端口 8090,以便与节点网络上的运行时并行运行。"
+sidebar:
+  label: "0.3.2"
+---
+
+## 变更内容
+
+0.3.2 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-15,它运行的 provisioner 镜像无需登录即可拉取。其中没有任何内容向 PLC 写入。
+
+- **它封装 HotLoop 4.19.11,** 并运行 provisioner 0.3.1。
+- **HotLoop 的页面在 pod 内监听 8090。** 节点网络上的运行时占用了主机端口 8080,调度器拒绝把 HotLoop 的页面放在它旁边。Service 仍在 8080,所以 App Store 磁贴和 provisioner 像以前一样访问 HotLoop。任何直接以 8080 与 pod 通信的内容都要改用 8090。
+- **provisioner 会拒绝把两个 OPC UA PubSub 监听器放在同一 UDP 端口的配置文件。** HotLoop 独占绑定端口,所以第二个设备一直停在连接中,报 "address already in use"。现在 provisioner 会提前说明。
+- **每个更早的 chart 都保留在索引中。**
+
+这对您意味着什么:节点自身网络上的 CODESYS 运行时和 HotLoop 可以在同一节点上并排运行。
+
+## 检查了什么
+
+该 chart 能用 Helm 从线上索引渲染,并已在裸机上运行(2026-11-17)。[现状](/zh-hans/codesys/where-it-stands/)说明了它针对什么运行。

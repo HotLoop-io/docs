@@ -1,0 +1,20 @@
+---
+title: "CODESYS 0.3.1 发布说明"
+description: "HotLoop for CODESYS chart 0.3.1:provisioner 按发布名称找到 HotLoop 的 Service 和 Secret,所以任何发布名称都能安装。"
+sidebar:
+  label: "0.3.1"
+---
+
+## 变更内容
+
+0.3.1 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-05,在 [0.3.2](/zh-hans/releases/codesys-0-3-2/) 之前一直是应安装的 chart。它仍封装 HotLoop 4.19.4 并运行 provisioner 0.3.0,无需登录即可拉取。
+
+- **任何发布名称都能安装。** provisioner 现在按 HotLoop 自己的 chart 使用的命名,也就是发布名称,找到 HotLoop 的 Service 和它的凭据 Secret。旧规则会为名称中不含 `hotloop-codesys` 的发布猜一个不同的名称,而 HotLoop 的 pod 并没有那个名称。
+- **示例配置文件已正确。** `example-devices.json` 不再把 Variant 列为 RawData 类型,因为它不是。
+- **[0.3.0](/zh-hans/releases/codesys-0-3-0/) 中的一切仍然在这里**,不向 PLC 写入任何内容,每个更早的 chart 都保留在索引中。
+
+这对您意味着什么:随意给发布命名,provisioner 会找到它要对话的对象。
+
+## 检查了什么
+
+该 chart 能用 Helm 从线上索引渲染,并已在裸机上运行(2026-11-17)。[现状](/zh-hans/codesys/where-it-stands/)说明了它针对什么运行。
