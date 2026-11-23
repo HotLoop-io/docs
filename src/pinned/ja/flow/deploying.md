@@ -1,0 +1,246 @@
+---
+title: "Flow のデプロイ"
+description: "Helm で Kubernetes に、Podman と Quadlet のあるマシンに、または単純な podman run で Flow をデプロイする方法と、バックアップ、失ってはならない 1 つのシークレット。"
+---
+
+入り口は 3 つあり、どれも amd64 と arm64 向けにビルドされた同じイメージ `ghcr.io/hotloop-io/hotloop-flow` を使います。
+
+| お使いの環境 | 使うもの |
+|---|---|
+| Kubernetes クラスター(Pi 上の k3s を含む) | [Helm](#kubernetes) |
+| systemd が動く Linux マシン 1 台 | [Quadlet 付きの Podman](#quadlet-付きの-podman) |
+| 10 分と好奇心 | [`podman run`](#podman-run) |
+
+Docker Compose ファイルはなく、今後も作りません。Quadlet はコンテナを systemd に任せます。systemd はすでに、再起動、ネットワークの後への順序付け、ログの保持の方法を知っています。その上に 2 つ目のスーパーバイザーを載せても、必要なときに止まっているかもしれないものが 1 つ増えるだけです。
+
+## すべてのインストールに必要なもの
+
+どの方法でも、Flow は 3 つのものがなければ起動しません。この拒否はすべて意図的です。
+
+- **管理者アカウント。** ユーザー名と、そのパスワードの **bcrypt ハッシュ**で、パスワードそのものではありません。`hotloop-flow hash-password -password '...'` で作成でき、イメージに実行させることもできます。bcrypt ハッシュでないものは起動エラーになるので、平文のパスワードがうっかり設定ファイルに入ることはありません。
+- **資格情報シークレット。** フローが保持するすべてのブローカーのパスワードとデータベースのログインを暗号化します。**失うとそれらの資格情報は消え**、MQTT が認証を止めるまでは、まったく問題ない起動に見えます。一度だけ生成し、マシンより長く残る場所に保管し、何にも再生成させないでください。
+- **`/data` が置かれる場所。** フロー、資格情報、3 世代のバックアップがそこに入ります。ボリュームのないコンテナは、再起動するまでは問題なく動きます。
+
+コンテキスト(フロー、グローバル、ノード)は、同じボリュームにある SQLite ファイル `state.db` に保持され、どのようにデプロイしても再起動後も残ります。耐久ワイヤーの背後のキューも同じです。ボリュームのないコンテナはほかのすべてとともにファイルを失うので、コンテキストはコンテナが置き換わるまでしか保持されません。何がどのくらいの頻度で書かれ、フラッシュカードにどれだけの負担になるかは、[耐久状態の実測](/ja/flow/durable-state/)にあります。
+
+---
+
+## Kubernetes
+
+```bash
+helm repo add hotloop-flow https://hotloop.io/hotloop-flow/
+helm install line3-flows hotloop-flow/hotloop-flow
+```
+
+どのクラスターでも、インストールはこれだけです。チャートは初回インストール時に管理者パスワードと資格情報シークレットを生成し、両方をリリース名の Secret に保存します。パスワードは次で読み戻せます。
+
+```bash
+kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base64 -d
+```
+
+**アップグレード時は、新しく作る代わりに、その Secret から両方を読み戻します。** これがアップグレードと、PVC 上のすべての資格情報を失うことの境目です。(生成されたパスワードは 2.0.2 より前はまったく動きませんでした。アプリが確認するハッシュが、チャートが保存したものとは別の乱数パスワードから作られていたためです。修正済みで、この不具合のまま入れたリリースは、アップグレードするだけで、パスワードも資格情報シークレットも変えずにその場で直ります。)
+
+代わりに自分で選ぶには:
+
+```bash
+helm install line3-flows hotloop-flow/hotloop-flow \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
+```
+
+`auth.password` は平文のパスワードを受け取り、インストール時にハッシュします。そのほうがよければこちらを使ってください。両方が設定されている場合は `auth.passwordHash` が優先されます。
+
+### 1 インスタンス、1 ポッド
+
+複数インスタンスとは複数の**リリース**のことで、複数のレプリカではなく、チャートは意図的に `replicaCount: 1` に固定しています。Flow はフローの状態とブローカーや PLC への開いた接続を保持するので、1 つの Service の背後に 2 つのポッドがあると、両方がサブスクライブして両方が書き込み、ヒストリアンは黙ってすべてを 2 回受け取ります。もっと必要な場合は、独自のフローを持つ 2 つ目のリリースをインストールしてください。
+
+### リソース
+
+生の数値ではなくプリセットです。`resources.preset` は `small`(既定)、`medium`、`large`、`custom` のいずれかです。
+
+| プリセット | リクエスト | 制限 |
+|---|---|---|
+| `small` | 10m CPU, 64Mi | 500m CPU, 256Mi |
+| `medium` | 50m CPU, 128Mi | 1 CPU, 512Mi |
+| `large` | 200m CPU, 512Mi | 2 CPU, 2Gi |
+
+アイドル時、プロセスは約 16.6 MiB の常駐メモリを使うので(方法とコマンドは [docs/bench/](/ja/flow/benchmarks/#メモリ))、`small` は 64Mi の余裕があるエッジノードにもスケジュールできます。
+
+Flow は起動時にコンテナのメモリ制限を読み取り、Go ランタイムにヒープをその 85% 未満に保つよう求めます。そのため、ヒープが 2 倍になって強制終了されるのを待つのではなく、制限に近づくにつれてコレクターがより懸命に働きます。ログは起動時にそのことを伝えます(`memory limit for the collector`)。`GOMEMLIMIT` を自分で設定すると、そちらが優先されます。制限は、生きているものの分の余地を残す必要があります。約 13,000 ノードのフローファイルは約 800 MiB を保持するので、それほど大きな工場は `custom` で 3Gi 以上にしてください。
+
+### ネットワークモード
+
+これが、Flow が工場の現場に居場所を得る理由です。クラスターが経路を渡したものしか見えないフローエンジンでは、OT セグメントの棚卸しはできません。
+
+| `network.mode` | 得られるもの | ノードあたりのインスタンス数 |
+|---|---|---|
+| `cluster` | ClusterIP。クラスターが経路を渡すもの。既定で、L2 が必要でなければこれが正解です。 | 無制限 |
+| `host` | ノードのインターフェース、ARP テーブル、ブロードキャストドメイン。 | 1 つ、ポートはノードのもの |
+| `macvlan` | 対象 VLAN 上の**独自の MAC と IP**で、PLC のいるセグメントに直接つながります。Multus が必要です。 | 無制限 |
+
+`macvlan` が興味深いものです。各インスタンスが独自のアドレスを持つのでポートの衝突がなく、1 つのノード**と** OT セグメントの両方で、複数を安全に実行できます。`network.macvlan.master` をその VLAN 上のノードのインターフェースに設定し、`network.macvlan.ipam` を埋めてください。
+
+### ポッドに許されること
+
+uid 65532 の distroless nonroot、読み取り専用のルートファイルシステム、権限昇格なし、`RuntimeDefault` の seccomp、すべての capability を削除。ディスカバリーも含みます。`scan` は capability を必要としない TCP 接続だけを行い、PLC に半開きの接続を残さずにハンドシェイクを完了します。
+
+capability を追加する値が 1 つあり、設定したときだけ有効です。`bindToInterface.netRaw` です。ノードは、接続を 1 つのネットワークインターフェースに結び付けられます(`SO_BINDTODEVICE`)。これは、ポートが機械ごとの VLAN を運び、すべて同じサブネットになっているマシンのためのものです。Linux 5.7 以降では capability は不要で、値は `false` のままです。それより古いカーネルでは `CAP_NET_RAW` が必要です。`true` にすると、ポッドはその 1 つの capability だけを追加し、ほかはすべて削除されたままです。ポッドはホストのインターフェースも見える必要があり、それが `network.mode: host` です。タブがインターフェースを選ぶ方法は node-red-types.md にあります。
+
+### 機械ごとに VLAN がある工場
+
+マシン 1 台、ポート 1 つ、乾燥機ごとに 1 つの VLAN があり、どの VLAN も同じ `192.168.1.0/24` と同じ機器アドレスを持ちます。`network.mode: host` で Flow を 1 つ動かし、各乾燥機のタブに環境変数 `FLOW_NETWORK_INTERFACE`(`enp2s0.14`、`enp2s0.15` など)を与えると、そのタブのすべてのクライアントは自分の VLAN にだけ到達します。Podman と Quadlet では `Network=host` で、`AddCapability=NET_RAW` は 5.7 より古いカーネルでのみ必要です。詳細、ノードがインターフェースを選ぶ順序、実証した内容は node-red-types.md にあります。
+
+### EmberCORE ダッシュボードからのサインイン
+
+ダッシュボードが App Store から Flow をデプロイするとき、チャートに自分の公開キー(`embernetSignin.publicKey`)を渡し、以降はダッシュボードが入り口になります。ダッシュボードは、プロキシするすべてのリクエスト(エディターの websocket を含む)の `X-Embernet-Assertion` に自分が署名したトークンを載せ、Flow はそのキーで確認します。署名(ES256)、発行者(`embernet-dashboard`)、このテナントのこのアプリ向けに作られたこと(audience は `<tenant>/<release>` なので、別のアプリ向けのトークンはここでは何も開けません)、そして有効期限(約 1 分なので、取り消すものがなく、ダッシュボードで変更したロールは次のリクエストで反映されます)です。
+
+権限はダッシュボードのテナントのロールマップから来ます。`*` は完全なアクセス、`read` は読み取り専用(フロー、パレット、設定、ステータスは見られ、それらを変更するものはなく、デプロイログも inject もなし)です。どちらでもないロール、またはロールなしは、アクセスできません。この方法でサインインした人は、デプロイログと監査記録に `dashboard:<email>` として表示されます。
+
+キーを設定しない限りオフです。キーがなければ、Flow はヘッダーを無視して従来どおり動作します。キーがあると、不正なトークンは即座に拒否され、リクエストのほかの何もそれを救いません。管理者ログインとベアラートークンはその横で引き続き使え、これはスタッフと自動化のための非常口で、エディターは独自のサインインフォームの代わりに "Open this from the EmberCORE dashboard" を表示します(`embernetSignin.hideLoginForm`)。
+
+自分で動かすポッドでは、PEM をマウントして `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE` と `HOTLOOP_FLOW_ASSERTION_AUDIENCE` を設定してください。読めないキーや audience なしでは、Flow は起動を拒否します。
+
+### 実際に触る値
+
+| 値 | 既定値 | 用途 |
+|---|---|---|
+| `image.tag` | チャートのアプリバージョン | 固定してください。明示的なタグが更新の仕組みです。 |
+| `persistence.size`, `persistence.storageClass` | `2Gi`、クラスターの既定 | `/data` の置き場所。 |
+| `store.context.persist`, `store.context.flushInterval` | オン、`30s` | 再起動をまたぐコンテキストと、変更された値が書き込まれるまで待つ時間。kill -9 ではその分が失われます。 |
+| `store.durable.maxBytes`, `store.durable.ackFlush` | 256 MiB、`100ms` | 耐久ワイヤーのディスククォータと、配信済みメッセージが完了としてマークされるまで待つ時間。 |
+| `store.synchronous` | `normal` | `full` は、すべてのコミットを fsync します。停電に強く、カードには負担が大きくなります。 |
+| `trace.enabled`, `trace.perSecond` | オン、`1000` | メッセージトレースで、デバッグメッセージをクリックしてどこへ行ったかを見られる機能の土台です。`perSecond` は 1 秒あたりの新しいトレース数を制限し、速いラインがそのコストを払わないようにします。`0` はすべてのメッセージをトレースします。 |
+| `trace.traces`, `trace.maxHops`, `trace.maxMessageBytes`, `trace.maxBytes` | `256`, `512`, `16384`, `16777216` | メモリ上に保持するトレースの量で、それ以上は決して保持しません。再起動するとリストは最初からになります。 |
+| `trace.otlp.endpoint` | 空 | OpenTelemetry コレクターの OTLP/HTTP アドレス(例: `http://collector:4318`)。空ならエクスポートしません。`trace.otlp.serviceName` と `trace.otlp.interval` がこれに付属します。 |
+| `trace.otlp.headersSecret.name`, `.key` | 空、`headers` | コレクターのヘッダーを、カンマ区切りの `Name=value` の組で収めた Secret で、ホスト型コレクターの API キー用です。ポッドには環境変数として渡され、ConfigMap には決して触れません。 |
+| `history.retain` | `100` | `/data/deployments` に保持するデプロイ記録の数。`0` はすべて保持し、各記録がフローファイルのコピーなので、ディスクに関する判断になります。 |
+| `history.git.url` | 空 | すべてのデプロイを、デプロイした人のコミットとして git リポジトリにミラーします。空ならオフです。`history.git.branch`、`.path`、`.emailDomain`、`.username` が付属し、空のままならバイナリ自身の既定値になります。 |
+| `history.git.passwordSecret.name`, `.key` | 空、`password` | そのリポジトリのアクセストークンを収めた Secret。ポッドには `HOTLOOP_FLOW_GIT_PASSWORD` として渡され、ConfigMap には決して触れません。 |
+| `stations.dashboardUrl`, `stations.tenant`, `stations.dashboardTokenSecret.name`, `.key`, `stations.deployTokenSecret.name`, `.key` | 空、空、空、`token`、空、`token` | 1 つのフローファイルを、テナントが EmberNet で動かしているすべての Flow に、毎回確認しながらプッシュします([テナントのステーションへプッシュ](/ja/flow/stations/))。ダッシュボード、テナント、2 つの Secret 名の 4 つの値はすべて設定するか、すべて設定しないかで、一部だけ設定したレンダリングは拒否されます。各 Secret にはトークンが 1 つ入り、ファイルとしてマウントされ、ConfigMap には決して入れません。デプロイトークンはステーションが受け付けるもので、`flows.read`、`flows.write`、`status.read` が必要です。 |
+| `failover.urlSecret.name`, `.key`, `failover.name`, `failover.ttl`, `failover.renewEvery`, `failover.writeMargin` | 空、`url`、`flow`、`15s`、ttl の 3 分の 1、`5s` | フェイルオーバーのペアです。2 つのインストールが PostgreSQL のリースを共有し、1 つは設備に書き込み、もう 1 つは引き継ぐまで書き込みを保留します([リースによるウォームスタンバイ](/ja/flow/failover/))。Secret に名前を付けるまではオフです。Secret のキーに PostgreSQL URL が入り、ファイルとしてマウントされ、ConfigMap には決して入れません。 |
+| `audit.maxBytes`, `audit.keep` | 16 MiB、`4` | `/data/audit.log` がローテーションする条件と、その横に残るローテーション済みファイルの数。 |
+| `tests.gate`, `tests.timeout` | オフ、`2m` | `true` にすると、フローが `/data/flows.test.yaml` に失敗するデプロイを拒否します。既定はオフです。誰も求めていないゲートは、午前 3 時に、当直の誰も聞いたことのない理由でデプロイを失敗させるからです。 |
+| `discovery.enabled`, `discovery.allowedCIDRs` | オフ、空 | scan ノード。空のリストのまま有効にすると、起動を拒否します。 |
+| `exec.enabled`, `exec.allowedCommands` | オフ、空 | exec ノード。同じ規則です。 |
+| `files.allowedPaths` | 空 | ファイルノードが `/data` を超えて到達できる追加のツリー。 |
+| `secrets.mounts` | 空 | 読み取り専用でマウントする Secret で、それぞれ `{secretName, mountPath}`、tls-config のファイルと `ew_credentialFiles` 用です。各パスはシークレットの範囲に入り、ファイルノードの範囲には決して入りません。 |
+| `plugins.enabled` | オフ | [プラグイン](/ja/flow/plugins/)。オフなら何もレンダリングしません。オンで `plugins.trustedKeys` が空なら、すべてのプラグインが拒否されます。 |
+| `plugins.trustedKeys`, `plugins.grants` | 空 | 信頼する発行者キーと、各プラグインが名前で使えるもの(`clock`、`random`、`context.flow`、`context.global`)。より多くを求めるプラグインを使うフローは、デプロイに失敗します。 |
+| `plugins.maxMemoryMiB`, `plugins.maxTimeout` | `64`, `5s` | 1 つのプラグインノードに与えられる最大のメモリと最長の時間。 |
+| `plugins.volume`, `plugins.mountPath`, `plugins.dir` | 空、`/etc/hotloop-flow/plugins`、空 | プラグインファイルの届け方。ボリュームなし: データボリューム上の `plugins/` にコピーします。ボリュームは Kubernetes の任意のボリュームソース(既存のクレーム、ConfigMap、Secret)で、`mountPath` に読み取り専用でマウントされ、`dir` がそれに続きます。 |
+| `metrics.serviceMonitor.enabled` | オフ | Prometheus Operator によるスクレイピング。 |
+| `ingress.enabled` | オフ | クラスターの外から到達できるようにしたい場合。 |
+
+既定のレンダリングも、バイナリ自身の既定値と一致する必要があるので、`values.yaml` の設定は、プロセス内で常に書かれたとおりに動作します。
+
+Service は 8080 で待ち受け、バイナリの 1880 に転送します。そのほかはすべて、`charts/hotloop-flow/values.yaml` の値の横に記載されています。
+
+---
+
+## Quadlet 付きの Podman
+
+Kubernetes を動かさない単独のマシン向けです。産業用 PC、ゲートウェイ、ヒストリアンの隣の VM などです。Quadlet は短いユニットファイルを、コンテナを実行する systemd サービスに変えるので、Flow は起動時に始まり、落ちたら再起動し、マシン上のほかのすべてと同じようにジャーナルに記録します。
+
+Quadlet を同梱する Podman が必要です(`/usr/libexec/podman/quadlet` が存在すること)。以下の手順は、書かれたとおりに、root で、Podman 4.9.3 と 2.0.5 のイメージで実行しました。起動し、ログインを受け付け、デプロイを受け付け、`systemctl restart` の後にフローと暗号化された資格情報が無傷のまま戻りました。
+
+**1. 2 つのシークレットをユニットファイルの外に置きます。** Podman のシークレットはその外にあるので、重要なものを含まないまま、ユニットをコピーし、コミットし、レビューできます。
+
+```bash
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} \
+  hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
+printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
+```
+
+`printf '%s' "$(...)"` は末尾の改行を取り除きます。これがないと、改行がシークレットの一部になり、末尾に改行のあるハッシュはどれにも一致しません。
+
+**2. ユニット。** `/etc/containers/systemd/hotloop-flow.container`:
+
+```ini
+[Unit]
+Description=HotLoop Flow
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=hotloop-flow
+Image=ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+PublishPort=1880:1880
+Volume=hotloop-flow-data:/data
+Environment=HOTLOOP_FLOW_ADMIN_USER=admin
+Environment=HOTLOOP_FLOW_LOG_FORMAT=json
+Secret=hotloop-flow-admin-hash,type=env,target=HOTLOOP_FLOW_ADMIN_PASSWORD_HASH
+Secret=hotloop-flow-credential-secret,type=env,target=HOTLOOP_FLOW_CREDENTIAL_SECRET
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+
+[Service]
+Restart=always
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**3. 起動します。**
+
+```bash
+systemctl daemon-reload
+systemctl start hotloop-flow.service
+journalctl -u hotloop-flow -f
+```
+
+Quadlet は `daemon-reload` でサービスを生成し、`[Install]` セクションが起動時に開始させます。`systemctl enable` の手順はありません。Podman 自身のドキュメントによれば、生成されたユニットは enable できず、ジェネレーターが `[Install]` を自分で適用します。
+
+rootless も同様に動きます。ファイルは `~/.config/containers/systemd/` に置き、`systemctl` の代わりに `systemctl --user` を使い、`WantedBy=default.target` にします。`loginctl enable-linger <user>` も実行してください。そうしないと、そのユーザーがログアウトしたときに systemd がサービスを止め、Flow も止まります。これは [Podman](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) と systemd のドキュメントどおりの動作です。上の rootful のユニットが、私たちが実行したものです。
+
+このユニットから**テナントのほかのステーションへプッシュ**するには、4 つの設定と、ファイルとしてマウントされる 2 つの Podman シークレットが必要です([テナントのステーションへプッシュ](/ja/flow/stations/)を参照)。シークレットは `podman secret create` で作り、`[Container]` に次を追加します。
+
+```ini
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_URL=https://dashboard.example
+Environment=HOTLOOP_FLOW_STATIONS_TENANT=acme
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_TOKEN_FILE=/run/secrets/stations-dashboard-token
+Environment=HOTLOOP_FLOW_STATIONS_DEPLOY_TOKEN_FILE=/run/secrets/stations-deploy-token
+Secret=hotloop-flow-dashboard-token,type=mount,target=stations-dashboard-token
+Secret=hotloop-flow-station-token,type=mount,target=stations-deploy-token
+```
+
+4 つの設定をすべて使うか、まったく使わないかです。一部だけだと Flow は起動を拒否します。デプロイトークンは `hotloop-flow token` で作り、各ステーションに `flows.read`、`flows.write`、`status.read` を持つ API トークンとして渡します。
+
+**フェイルオーバーのペア**は、このようなユニット 2 つで、それぞれ独自のボリュームを持ち、各 `[Container]` セクションに同じ 3 行があります([リースによるウォームスタンバイ](/ja/flow/failover/)を参照)。2 つ目のユニットのホスト名はそれ自身のものなので、2 つが保持者名を共有することはありません。
+
+```ini
+Environment=HOTLOOP_FLOW_FAILOVER_URL_FILE=/run/secrets/flow-lease-url
+Environment=HOTLOOP_FLOW_FAILOVER_NAME=line3
+Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
+```
+
+**アップグレード**は、`Image=` のタグを変え、`daemon-reload` と `restart` を行うことです。フロー、資格情報、シークレットは元の場所に残ります。タグは固定してください。工場の現場で `:latest` は、何が変わったかを壊れたときに知ることを意味します。
+
+**機能をオンにする**には、`Environment=` の行を追加します。`HOTLOOP_FLOW_EXEC_ENABLED` と `HOTLOOP_FLOW_EXEC_ALLOWED_COMMANDS`、`HOTLOOP_FLOW_DISCOVERY_ENABLED` と `HOTLOOP_FLOW_DISCOVERY_CIDRS`、そして [README](/ja/flow/configuration/#環境変数による上書き) の表の残りです。ファイル専用の設定(セッション TTL、バックアップの世代数、タイムアウト)は、YAML ファイルをマウントして `HOTLOOP_FLOW_CONFIG` でそれを指してください。
+
+OT セグメントでのディスカバリーでは、`Network=host` がコンテナにマシン自身のインターフェースを与えます。Kubernetes の `host` モードと同じトレードオフで、ポートごとにインスタンスは 1 つです。
+
+---
+
+## `podman run`
+
+試すためのもので、ラインを運用するためのものではありません。
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+そのあと <http://localhost:1880> を開いてください。この資格情報シークレットはコマンドを実行するたびに新しくなるので、ある実行で保存した資格情報は次の実行では読めません。ちょっと見てみるにはそれで十分です。Quadlet のインストールがこれを Podman シークレットに保持する理由が、まさにそれです。
+
+イメージはシェルのない distroless nonroot なので、`exec` で入る先がなく、コード実行を得た人が足がかりにできるものもありません。
+
+---
+
+## バックアップ
+
+残す価値のあるものはすべて `/data` にあります。`flows.json`、`credentials.json`、`flows.json.bak.1` から `.bak.3`、`deployments/` のデプロイログ(デプロイごとに 1 ファイル)、`audit.log` の監査記録、`mfa.json` の 2 要素認証の登録情報、`sessions.json` のサインインセッションです。ログの記録と登録情報は資格情報と同じシークレットで暗号化されており、セッションはハッシュです。`git-mirror/` は単なるクローンで、失われてもリポジトリから再構築されます。ディレクトリと資格情報シークレットを**別々に**バックアップしてください。資格情報ファイルはシークレットがなければ役に立たず、それが狙いです。両方を 1 か所に保持するバックアップは、盗んだ人に両方を渡すバックアップです。

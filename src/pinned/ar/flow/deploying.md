@@ -1,0 +1,246 @@
+---
+title: "نشر Flow"
+description: "Flow على Kubernetes مع Helm، أو على جهاز فيه Podman وQuadlet، أو بأمر podman run بسيط، مع النسخ الاحتياطية والسر الوحيد الذي يجب ألا تفقده."
+---
+
+ثلاث طرق للدخول، كلها من الصورة نفسها، `ghcr.io/hotloop-io/hotloop-flow`، المبنية لمعماريتَي amd64 وarm64:
+
+| لديك | استخدم |
+|---|---|
+| عنقود Kubernetes، بما فيه k3s على Pi | [Helm](#kubernetes) |
+| جهاز Linux واحد يشغّل systemd | [Podman مع Quadlet](#podman-مع-quadlet) |
+| عشر دقائق وفضول | [`podman run`](#podman-run) |
+
+لا يوجد ملف Docker Compose، ولن يوجد. يسلّم Quadlet الحاوية إلى systemd، الذي يعرف أصلًا كيف يعيد تشغيل الأشياء ويرتبها بعد الشبكة ويحتفظ بسجلاتها. ومشرف ثانٍ فوق ذلك ليس سوى شيء آخر يمكن أن يكون متوقفًا حين تحتاج إليه.
+
+## ما يحتاج إليه كل تثبيت
+
+أيًّا كانت الطريقة التي تختارها، لا يبدأ Flow بدون ثلاثة أشياء، وكل رفض من هذه مقصود:
+
+- **حساب مسؤول.** اسم مستخدم و**تجزئة bcrypt** لكلمة مروره، وليس كلمة المرور نفسها أبدًا. ينتج `hotloop-flow hash-password -password '...'` واحدة، ويمكن للصورة أن تشغّله نيابة عنك. وأي شيء ليس تجزئة bcrypt هو خطأ في بدء التشغيل، فلا يمكن لكلمة مرور نصية أن تنتهي في ملف إعدادات بالخطأ.
+- **سر بيانات الاعتماد.** يشفّر كل كلمة مرور وسيط وكل تسجيل دخول قاعدة بيانات تحملها تدفقاتك. **إذا فقدته ضاعت تلك البيانات**، ويبدو الأمر كبدء تشغيل نظيف تمامًا إلى أن يتوقف MQTT عن المصادقة. أنشئه مرة واحدة، واحفظه في مكان يبقى بعد الجهاز، ولا تدع أي شيء يعيد إنشاءه أبدًا.
+- **مكان يعيش فيه `/data`.** تذهب إليه التدفقات وبيانات الاعتماد وثلاثة أجيال من النسخ الاحتياطية. تعمل الحاوية بلا وحدة تخزين تمامًا إلى أن تعاد تشغيلها.
+
+يُحفظ السياق (التدفق والعام والعقدة) في ملف SQLite هو `state.db` على وحدة التخزين نفسها، وينجو من إعادة التشغيل أيًّا كانت طريقة النشر. وكذلك الطوابير خلف الأسلاك الدائمة. وتفقد الحاوية بلا وحدة تخزين الملف مع كل شيء آخر، فلا تحتفظ بالسياق إلا إلى أن تُستبدل الحاوية. وما يُكتب وكم مرة وما يكلّفه ذلك بطاقة فلاش مذكور في [الحالة الدائمة، مقيسة](/ar/flow/durable-state/).
+
+---
+
+## Kubernetes
+
+```bash
+helm repo add hotloop-flow https://hotloop.io/hotloop-flow/
+helm install line3-flows hotloop-flow/hotloop-flow
+```
+
+هذا هو التثبيت كله، على أي عنقود. ينشئ المخطط كلمة مرور المسؤول وسر بيانات الاعتماد عند أول تثبيت ويحفظهما معًا في Secret باسم الإصدار. اقرأ كلمة المرور من جديد بـ:
+
+```bash
+kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base64 -d
+```
+
+**عند الترقية يقرأ الاثنين من ذلك Secret بدلًا من إنشاء جديدين.** وهذا هو الخط الفاصل بين ترقية وفقدان كل بيانات الاعتماد على PVC. (لم تكن كلمة المرور المولّدة تعمل إطلاقًا قبل 2.0.2: فالتجزئة التي فحصها التطبيق صُنعت من كلمة مرور عشوائية مختلفة عن التي حفظها المخطط. أُصلح ذلك، وإصدار ثُبّت مع هذا الخلل يُصلح في مكانه بالترقية، دون تغيير كلمة المرور أو سر بيانات الاعتماد.)
+
+لاختيار بيانات خاصة بك بدلًا من ذلك:
+
+```bash
+helm install line3-flows hotloop-flow/hotloop-flow \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
+```
+
+يقبل `auth.password` كلمة مرور نصية ويجزّئها عند التثبيت، إن فضّلت ذلك. ويتغلب `auth.passwordHash` حين يُضبط الاثنان.
+
+### مثيل واحد، pod واحد
+
+تعدد المثيلات يعني عدة **إصدارات** لا عدة نسخ متماثلة، ويثبّت المخطط `replicaCount: 1` عن قصد. يحتفظ Flow بحالة التدفقات واتصالات مفتوحة بالوسطاء وPLC، فلو كان هناك pod ان خلف Service واحدة لاشتركا معًا وكتبا معًا، ولتلقى سجل بياناتك كل شيء مرتين بصمت. تحتاج إلى أكثر؟ ثبّت إصدارًا ثانيًا بتدفقاته الخاصة.
+
+### الموارد
+
+إعدادات مسبقة، لا أرقام خام. `resources.preset` هو `small` (الافتراضي) أو `medium` أو `large` أو `custom`:
+
+| الإعداد المسبق | الطلبات | الحدود |
+|---|---|---|
+| `small` | 10m CPU, 64Mi | 500m CPU, 256Mi |
+| `medium` | 50m CPU, 128Mi | 1 CPU, 512Mi |
+| `large` | 200m CPU, 512Mi | 2 CPU, 2Gi |
+
+في وضع الخمول تحتفظ العملية بنحو 16.6 MiB مقيمة (الطريقة والأمر في [docs/bench/](/ar/flow/benchmarks/#الذاكرة))، فيُجدول `small` على عقدة حافة يتبقى فيها 64Mi.
+
+يقرأ Flow حد ذاكرة الحاوية عند البدء ويطلب من وقت تشغيل Go إبقاء الكومة تحت 85% منه، فيعمل الجامع بجهد أكبر كلما اقتربت الكومة من الحد بدلًا من تركها تتضاعف ثم يُقتل. ويذكر السجل ذلك عند الإقلاع (`memory limit for the collector`). اضبط `GOMEMLIMIT` بنفسك فيتغلب. ويجب أن يترك الحد مكانًا لما هو حي: ملف تدفقات من نحو 13,000 عقدة يحتفظ بنحو 800 MiB، فاضبط مصنعًا بهذا الحجم على 3Gi أو أكثر باستخدام `custom`.
+
+### أوضاع الشبكة
+
+هذا هو سبب استحقاق Flow مكانًا في أرضية المصنع أصلًا. محرك تدفقات لا يرى إلا ما يوجّهه العنقود إليه لا يستطيع جرد مقطع OT.
+
+| `network.mode` | ما يحصل عليه | المثيلات لكل عقدة |
+|---|---|---|
+| `cluster` | ClusterIP. كل ما يوجّهه العنقود. الافتراضي، وهو الإجابة الصحيحة ما لم تحتج إلى L2. | غير محدودة |
+| `host` | واجهات العقدة وجدول ARP ونطاق البث فيها. | واحد، والمنفذ للعقدة |
+| `macvlan` | **عنوان MAC وIP خاصان به** على VLAN الهدف، مباشرة على المقطع الذي فيه PLC. يحتاج إلى Multus. | غير محدودة |
+
+`macvlan` هو الأكثر إثارة: آمن تشغيل عدة منه على عقدة واحدة **وعلى** مقطع OT، بلا تصادم منافذ لأن لكل مثيل عنوانه الخاص. اضبط `network.macvlan.master` على واجهة العقدة على ذلك VLAN واملأ `network.macvlan.ipam`.
+
+### ما يُسمح للـ pod بفعله
+
+Distroless بلا root بمعرّف uid 65532، ونظام ملفات جذر للقراءة فقط، ولا رفع صلاحيات، وseccomp `RuntimeDefault`، وكل capability مُسقطة. ويشمل ذلك الاكتشاف: يجري `scan` اتصالات TCP فقط، وهي لا تحتاج إلى أي capability، ويُكمل المصافحة بدلًا من ترك اتصالات نصف مفتوحة على PLC.
+
+قيمة واحدة تضيف capability، ولا تفعل ذلك إلا حين تضبطها: `bindToInterface.netRaw`. يمكن لعقدة ربط اتصالاتها بواجهة شبكة واحدة (`SO_BINDTODEVICE`)، لجهاز يحمل منفذه VLAN لكل آلة بالشبكة الفرعية نفسها على الجميع. على Linux 5.7 وما بعده لا يحتاج ذلك إلى capability وتبقى القيمة `false`. وعلى نواة أقدم يحتاج إلى `CAP_NET_RAW`: اضبطها على `true` فيضيف الـ pod تلك الـ capability الواحدة وحدها، وتبقى كل الأخرى مُسقطة. ويجب أن يرى الـ pod أيضًا واجهات المضيف، وهذا هو `network.mode: host`. وكيف يختار التبويب واجهته مذكور في node-red-types.md.
+
+### مصانع فيها VLAN لكل آلة
+
+جهاز واحد، منفذ واحد، VLAN لكل مجفف، وكل VLAN بالشبكة `192.168.1.0/24` نفسها وعناوين الأجهزة نفسها. شغّل Flow واحدة بـ `network.mode: host`، وأعطِ تبويب كل مجفف متغير البيئة `FLOW_NETWORK_INTERFACE` (`enp2s0.14` و`enp2s0.15` وهكذا)، فيصل كل عميل على ذلك التبويب إلى VLAN الخاص به فقط. مع Podman وQuadlet، `Network=host`، و`AddCapability=NET_RAW` فقط على نواة أقدم من 5.7. والتفاصيل وترتيب اختيار العقدة لواجهتها وما ثبت موجودة في node-red-types.md.
+
+### تسجيل الدخول من لوحة معلومات EmberCORE
+
+حين تنشر لوحة المعلومات Flow من App Store تسلّم المخطط مفتاحها العام (`embernetSignin.publicKey`)، ومن بعدها تصبح لوحة المعلومات هي الطريق إلى الدخول. تضع رمزًا وقّعته في `X-Embernet-Assertion` على كل طلب تمرره عبر الوكيل، بما فيه websocket المحرر، ويفحصه Flow بذلك المفتاح: التوقيع (ES256)، والمُصدِر (`embernet-dashboard`)، وأنه صُنع لهذا التطبيق في هذا المستأجر (الجمهور هو `<tenant>/<release>`، فرمز لتطبيق آخر لا يفتح هنا شيئًا)، وانتهاء صلاحيته (نحو دقيقة، فلا شيء يُلغى ويسري الدور الذي يتغير في لوحة المعلومات عند الطلب التالي).
+
+تأتي الصلاحية من خريطة أدوار المستأجر في لوحة المعلومات: `*` وصول كامل، و`read` للقراءة فقط (التدفقات واللوحة والإعدادات والحالة، ولا شيء يغيّرها، ولا سجل نشر ولا inject). والدور الذي ليس أيًّا منهما، أو غياب الدور، لا وصول له. ومن سجّل الدخول بهذه الطريقة يظهر في سجل النشر وسجل التدقيق باسم `dashboard:<email>`.
+
+معطّل ما لم يُضبط المفتاح. بلا مفتاح يتجاهل Flow الترويسة ويتصرف كما كان دائمًا. ومع المفتاح يُرفض الرمز السيئ رفضًا قاطعًا ولا ينقذه شيء آخر في الطلب. ويستمر تسجيل دخول المسؤول والرموز الحاملة بجانبه، وهو منفذ الطوارئ للموظفين والأتمتة، ويعرض المحرر "Open this from the EmberCORE dashboard" بدلًا من نموذج تسجيل الدخول الخاص به (`embernetSignin.hideLoginForm`).
+
+على pod تشغّله بنفسك، ركّب ملف PEM واضبط `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE` و`HOTLOOP_FLOW_ASSERTION_AUDIENCE`؛ يرفض Flow البدء بمفتاح لا يستطيع قراءته أو بلا audience.
+
+### القيم التي ستلمسها فعلًا
+
+| القيمة | الافتراضي | الغرض منها |
+|---|---|---|
+| `image.tag` | إصدار تطبيق المخطط | ثبّته. الوسم الصريح هو آلية التحديث. |
+| `persistence.size`, `persistence.storageClass` | `2Gi`، افتراضي العنقود | مكان `/data`. |
+| `store.context.persist`, `store.context.flushInterval` | مفعّل، `30s` | السياق عبر إعادات التشغيل، ومدة انتظار القيمة المتغيرة قبل كتابتها. يفقد kill -9 هذا القدر. |
+| `store.durable.maxBytes`, `store.durable.ackFlush` | 256 MiB، `100ms` | حصة القرص للأسلاك الدائمة، ومدة انتظار الرسالة المسلَّمة قبل أن تُعلَّم منتهية. |
+| `store.synchronous` | `normal` | `full` يجري fsync لكل commit. أقوى ضد انقطاع الكهرباء، وأشق على البطاقة. |
+| `trace.enabled`, `trace.perSecond` | مفعّل، `1000` | تتبع الرسائل، وهو ما يقف وراء النقر على رسالة تصحيح لمعرفة إلى أين ذهبت. يحدّ `perSecond` من التتبعات الجديدة في الثانية حتى لا يدفع خط سريع ثمن ذلك؛ و`0` يتتبع كل رسالة. |
+| `trace.traces`, `trace.maxHops`, `trace.maxMessageBytes`, `trace.maxBytes` | `256`, `512`, `16384`, `16777216` | كم من التتبع يُحفظ، في الذاكرة، ولا أكثر أبدًا. وتبدأ إعادة التشغيل القائمة من جديد. |
+| `trace.otlp.endpoint` | فارغ | عنوان OTLP/HTTP لجامع OpenTelemetry، مثل `http://collector:4318`. الفارغ يعني بلا تصدير. ويأتي معه `trace.otlp.serviceName` و`trace.otlp.interval`. |
+| `trace.otlp.headersSecret.name`, `.key` | فارغ، `headers` | Secret يحوي ترويسات الجامع كأزواج `Name=value` مفصولة بفواصل، لمفتاح API لجامع مستضاف. يصل إلى الـ pod كمتغير بيئة ولا يلمس ConfigMap أبدًا. |
+| `history.retain` | `100` | كم سجل نشر يُحتفظ به تحت `/data/deployments`. `0` يحتفظ بكل سجل، وهذا قرار يخص القرص، لأن كل سجل نسخة من ملف التدفقات. |
+| `history.git.url` | فارغ | يعكس كل نشر إلى مستودع git كـ commit ممن نشر. الفارغ يعني معطّلًا. ويأتي معه `history.git.branch` و`.path` و`.emailDomain` و`.username`، وإذا تُركت فارغة أخذت افتراضات الملف التنفيذي نفسه. |
+| `history.git.passwordSecret.name`, `.key` | فارغ، `password` | Secret يحوي رمز الوصول لذلك المستودع. يصل إلى الـ pod باسم `HOTLOOP_FLOW_GIT_PASSWORD` ولا يلمس ConfigMap أبدًا. |
+| `stations.dashboardUrl`, `stations.tenant`, `stations.dashboardTokenSecret.name`, `.key`, `stations.deployTokenSecret.name`, `.key` | فارغ، فارغ، فارغ، `token`، فارغ، `token` | يدفع ملف تدفقات واحدًا إلى كل تثبيت Flow يشغّله المستأجر في EmberNet، مع فحص بعد كل واحد ([الدفع إلى محطات مستأجر](/ar/flow/stations/)). القيم الأربع كلها، لوحة المعلومات والمستأجر واسما Secret، إما تُضبط أو لا تُضبط أي منها؛ ويُرفض عرض فيه بعضها. يحوي كل Secret رمزًا واحدًا ويُركَّب كملف ولا يوضع في ConfigMap أبدًا. رمز النشر هو الذي تقبله المحطات ويحتاج إلى `flows.read` و`flows.write` و`status.read`. |
+| `failover.urlSecret.name`, `.key`, `failover.name`, `failover.ttl`, `failover.renewEvery`, `failover.writeMargin` | فارغ، `url`، `flow`، `15s`، ثلث ttl، `5s` | زوج للتحويل عند الفشل: تثبيتان يتشاركان عقد إيجار في PostgreSQL، أحدهما يكتب إلى المعدات والآخر يحجز كتاباته حتى يتولى ([احتياطي ساخن بعقد إيجار](/ar/flow/failover/)). معطّل حتى يُسمّى Secret. يحوي مفتاح Secret عنوان URL لـ PostgreSQL ويُركَّب كملف ولا يوضع في ConfigMap أبدًا. |
+| `audit.maxBytes`, `audit.keep` | 16 MiB، `4` | متى يدور `/data/audit.log`، وكم ملفًا مدوّرًا يبقى بجانبه. |
+| `tests.gate`, `tests.timeout` | معطّل، `2m` | `true` يرفض نشرًا تفشل تدفقاته في `/data/flows.test.yaml`. معطّل افتراضيًا، لأن بوابة لم يطلبها أحد تُفشل نشرًا في الثالثة فجرًا لسبب لم يسمع به أحد في المناوبة. |
+| `discovery.enabled`, `discovery.allowedCIDRs` | معطّل، فارغ | عقد scan. إذا فُعّلت بقائمة فارغة رفض البدء. |
+| `exec.enabled`, `exec.allowedCommands` | معطّل، فارغ | عقدة exec. القاعدة نفسها. |
+| `files.allowedPaths` | فارغ | أشجار إضافية يمكن لعقد الملفات الوصول إليها خارج `/data`. |
+| `secrets.mounts` | فارغ | أسرار تُركَّب للقراءة فقط، كل منها `{secretName, mountPath}`، لملفات tls-config و`ew_credentialFiles`. ينضم كل مسار إلى نطاق الأسرار ولا ينضم أبدًا إلى نطاق عقد الملفات. |
+| `plugins.enabled` | معطّل | [الإضافات](/ar/flow/plugins/). المعطّل لا يعرض شيئًا. والمفعّل مع `plugins.trustedKeys` فارغ يرفض كل إضافة. |
+| `plugins.trustedKeys`, `plugins.grants` | فارغ | مفاتيح الناشرين الموثوقة، وما يمكن لكل إضافة استخدامه بالاسم (`clock` و`random` و`context.flow` و`context.global`). والتدفق الذي يستخدم إضافة تطلب أكثر يُفشل النشر. |
+| `plugins.maxMemoryMiB`, `plugins.maxTimeout` | `64`, `5s` | أكبر ذاكرة وأطول وقت يمكن منحهما لأي عقدة إضافة. |
+| `plugins.volume`, `plugins.mountPath`, `plugins.dir` | فارغ، `/etc/hotloop-flow/plugins`، فارغ | كيف تصل ملفات الإضافات. بلا وحدة تخزين: انسخها إلى `plugins/` على وحدة البيانات. ووحدة التخزين هي أي مصدر وحدة تخزين في Kubernetes (مطالبة موجودة أو ConfigMap أو Secret)، تُركَّب للقراءة فقط عند `mountPath`، ويتبعها `dir`. |
+| `metrics.serviceMonitor.enabled` | معطّل | الجمع بواسطة Prometheus Operator. |
+| `ingress.enabled` | معطّل | إذا أردته قابلًا للوصول من خارج العنقود. |
+
+ويجب أن يساوي العرض الافتراضي أيضًا افتراضات الملف التنفيذي نفسه، حتى يفعل أي إعداد في `values.yaml` دائمًا في العملية ما يقوله.
+
+تستمع Service على 8080 وتحوّل إلى 1880 في الملف التنفيذي. وكل ما عدا ذلك موثّق بجانب القيمة في `charts/hotloop-flow/values.yaml`.
+
+---
+
+## Podman مع Quadlet
+
+لجهاز مفرد لا يشغّل Kubernetes: حاسوب صناعي أو بوابة أو آلة افتراضية بجانب سجل البيانات. يحوّل Quadlet ملف وحدة قصيرًا إلى خدمة systemd تشغّل الحاوية، فيبدأ Flow عند الإقلاع ويعيد التشغيل عند الموت ويسجل في journal كأي شيء آخر على الجهاز.
+
+تحتاج إلى Podman يأتي مع Quadlet (`/usr/libexec/podman/quadlet` موجود). نُفّذت الخطوات أدناه تمامًا كما كُتبت، بصلاحية root، على Podman 4.9.3 مع الصورة 2.0.5: بدأ، وقبل تسجيل دخول، وقبل نشرًا، وعاد بعد `systemctl restart` والتدفقات وبيانات الاعتماد المشفرة سليمة.
+
+**1. أبقِ السرّين خارج ملف الوحدة.** تعيش أسرار Podman خارجه، فيمكن نسخ الوحدة ورفعها ومراجعتها دون أن تحمل شيئًا مهمًا.
+
+```bash
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} \
+  hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
+printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
+```
+
+يزيل `printf '%s' "$(...)"` السطر الجديد الأخير. وبدونه يصبح السطر الجديد جزءًا من السر، والتجزئة التي في آخرها سطر جديد لا تطابق شيئًا.
+
+**2. الوحدة.** `/etc/containers/systemd/hotloop-flow.container`:
+
+```ini
+[Unit]
+Description=HotLoop Flow
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=hotloop-flow
+Image=ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+PublishPort=1880:1880
+Volume=hotloop-flow-data:/data
+Environment=HOTLOOP_FLOW_ADMIN_USER=admin
+Environment=HOTLOOP_FLOW_LOG_FORMAT=json
+Secret=hotloop-flow-admin-hash,type=env,target=HOTLOOP_FLOW_ADMIN_PASSWORD_HASH
+Secret=hotloop-flow-credential-secret,type=env,target=HOTLOOP_FLOW_CREDENTIAL_SECRET
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+
+[Service]
+Restart=always
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**3. شغّلها.**
+
+```bash
+systemctl daemon-reload
+systemctl start hotloop-flow.service
+journalctl -u hotloop-flow -f
+```
+
+ينشئ Quadlet الخدمة عند `daemon-reload`، وقسم `[Install]` هو ما يبدؤها عند الإقلاع. لا توجد خطوة `systemctl enable`: تقول وثائق Podman نفسها إن الوحدة المولَّدة لا يمكن تمكينها، والمولِّد يطبّق `[Install]` بنفسه.
+
+يعمل Rootless بالطريقة نفسها مع الملف في `~/.config/containers/systemd/`، و`systemctl --user` بدل `systemctl`، و`WantedBy=default.target`. وشغّل `loginctl enable-linger <user>` أيضًا، وإلا أوقف systemd خدمات ذلك المستخدم حين يسجّل خروجه، ويتوقف Flow معها. هذا هو السلوك الموثّق لـ [Podman](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) وsystemd. والوحدة بصلاحية root أعلاه هي التي شغّلناها.
+
+**الدفع إلى محطات المستأجر الأخرى** من هذه الوحدة هو أربعة إعدادات وسرّان من أسرار Podman مركّبان كملفين (انظر [الدفع إلى محطات مستأجر](/ar/flow/stations/)). أنشئ الأسرار بـ `podman secret create`، ثم أضف إلى `[Container]`:
+
+```ini
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_URL=https://dashboard.example
+Environment=HOTLOOP_FLOW_STATIONS_TENANT=acme
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_TOKEN_FILE=/run/secrets/stations-dashboard-token
+Environment=HOTLOOP_FLOW_STATIONS_DEPLOY_TOKEN_FILE=/run/secrets/stations-deploy-token
+Secret=hotloop-flow-dashboard-token,type=mount,target=stations-dashboard-token
+Secret=hotloop-flow-station-token,type=mount,target=stations-deploy-token
+```
+
+الإعدادات الأربعة كلها أو لا شيء: يرفض Flow البدء مع بعضها. ويُنشأ رمز النشر بـ `hotloop-flow token` ويُعطى لكل محطة كرمز API يحمل `flows.read` و`flows.write` و`status.read`.
+
+**زوج التحويل عند الفشل** هو وحدتان مثل هذه، لكل منهما وحدة تخزين خاصة بها، والأسطر الثلاثة نفسها في كل قسم `[Container]` (انظر [احتياطي ساخن بعقد إيجار](/ar/flow/failover/))؛ واسم مضيف الوحدة الثانية خاص بها، فلا تتشارك الاثنتان اسم حائز أبدًا:
+
+```ini
+Environment=HOTLOOP_FLOW_FAILOVER_URL_FILE=/run/secrets/flow-lease-url
+Environment=HOTLOOP_FLOW_FAILOVER_NAME=line3
+Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
+```
+
+**الترقية** هي تغيير الوسم في `Image=`، ثم `daemon-reload` و`restart`. تبقى التدفقات وبيانات الاعتماد والسر حيث كانت. ثبّت الوسم. و`:latest` في أرضية المصنع يعني أنك تعرف ما تغيّر حين ينكسر.
+
+**تشغيل الأشياء** هو أسطر `Environment=` إضافية: `HOTLOOP_FLOW_EXEC_ENABLED` و`HOTLOOP_FLOW_EXEC_ALLOWED_COMMANDS`، و`HOTLOOP_FLOW_DISCOVERY_ENABLED` و`HOTLOOP_FLOW_DISCOVERY_CIDRS`، وبقية الجدول في [README](/ar/flow/configuration/#التجاوز-عبر-متغيرات-البيئة). وللإعدادات التي في الملف فقط (مدة صلاحية الجلسة وأجيال النسخ الاحتياطي والمهلات)، ركّب ملف YAML ووجّه `HOTLOOP_FLOW_CONFIG` إليه.
+
+للاكتشاف على مقطع OT، يعطي `Network=host` الحاوية واجهات الجهاز نفسه. والمقايضة نفسها كوضع `host` على Kubernetes: مثيل واحد لكل منفذ.
+
+---
+
+## `podman run`
+
+للتجربة، لا لتشغيل خط إنتاج عليه:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+ثم افتح <http://localhost:1880>. سر بيانات الاعتماد هذا جديد في كل مرة تشغّل فيها الأمر، فلا يمكن قراءة بيانات اعتماد حُفظت في تشغيل في التشغيل التالي. هذا مناسب لإلقاء نظرة. وهذا بالضبط هو السبب في أن تثبيت Quadlet يحفظه في سر Podman.
+
+الصورة distroless بلا root وبلا shell، فلا يوجد ما يُنفَّذ فيه `exec`، ولا ما يتنقل به من يحصل على تنفيذ شيفرة.
+
+---
+
+## النسخ الاحتياطية
+
+كل ما يستحق الحفظ في `/data`: `flows.json` و`credentials.json` و`flows.json.bak.1` إلى `.bak.3`، وسجل النشر في `deployments/` (ملف لكل نشر)، وسجل التدقيق في `audit.log`، وتسجيلات العاملين الاثنين في `mfa.json`، وجلسات تسجيل الدخول في `sessions.json`. وسجلات السجل والتسجيلات مشفرة بالسر نفسه الذي تُشفَّر به بيانات الاعتماد، والجلسات قيم تجزئة. و`git-mirror/` مجرد نسخة مستنسخة، تُعاد بناؤها من المستودع إذا ضاعت. انسخ احتياطيًا الدليل وسر بيانات الاعتماد **كلًّا على حدة**. ملف بيانات الاعتماد عديم النفع بدون السر، وهذا هو المقصود، والنسخة الاحتياطية التي تحمل الاثنين في مكان واحد هي نسخة تسلّم الاثنين لمن يسرقها.

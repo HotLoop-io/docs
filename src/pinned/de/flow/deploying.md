@@ -1,0 +1,246 @@
+---
+title: "Flow bereitstellen"
+description: "Flow auf Kubernetes mit Helm, auf einer Maschine mit Podman und Quadlet oder per podman run, dazu Backups und das eine Geheimnis, das nie verloren gehen darf."
+---
+
+Drei Wege hinein, alle mit demselben Image, `ghcr.io/hotloop-io/hotloop-flow`, gebaut für amd64 und arm64:
+
+| Sie haben | Nutzen Sie |
+|---|---|
+| Einen Kubernetes-Cluster, auch k3s auf einem Pi | [Helm](#kubernetes) |
+| Eine Linux-Maschine mit systemd | [Podman mit Quadlet](#podman-mit-quadlet) |
+| Zehn Minuten und Neugier | [`podman run`](#podman-run) |
+
+Keine Docker-Compose-Datei, und es wird auch keine geben. Quadlet übergibt den Container an systemd, das bereits weiß, wie man Dinge neu startet, nach dem Netzwerk ordnet und ihre Logs aufbewahrt. Ein zweiter Supervisor obendrauf ist nur eine weitere Sache, die ausgefallen sein kann, wenn Sie sie brauchen.
+
+## Was jede Installation braucht
+
+Welchen Weg Sie auch wählen: Flow startet nicht ohne drei Dinge, und jede dieser Verweigerungen ist Absicht:
+
+- **Ein Administratorkonto.** Ein Benutzername und ein **bcrypt-Hash** seines Passworts, nie das Passwort selbst. `hotloop-flow hash-password -password '...'` erzeugt einen, und das Image kann das für Sie ausführen. Alles, was kein bcrypt-Hash ist, ist ein Startfehler, sodass ein Klartextpasswort nicht versehentlich in einer Konfigurationsdatei landen kann.
+- **Ein Zugangsdaten-Geheimnis.** Es verschlüsselt jedes Broker-Passwort und jeden Datenbank-Login, die Ihre Flows enthalten. **Gehen Sie es verloren, sind diese Zugangsdaten weg**, und es sieht nach einem völlig sauberen Start aus, bis MQTT aufhört, sich zu authentifizieren. Erzeugen Sie es einmal, bewahren Sie es an einem Ort auf, der die Maschine überlebt, und lassen Sie nie etwas es neu erzeugen.
+- **Ein Ort, an dem `/data` liegt.** Flows, Zugangsdaten und drei Generationen von Backups kommen dorthin. Ein Container ohne Volume funktioniert genau bis zum Neustart.
+
+Der Kontext (Flow, global und Knoten) wird in einer SQLite-Datei, `state.db`, auf demselben Volume gehalten und übersteht einen Neustart, wie auch immer Sie bereitstellen. Ebenso die Warteschlangen hinter dauerhaften Leitungen. Ein Container ohne Volume verliert die Datei mit allem anderen, hält den Kontext also nur, bis der Container ersetzt wird. Was geschrieben wird, wie oft und was es eine Flash-Karte kostet, steht in [Dauerhafter Zustand, gemessen](/de/flow/durable-state/).
+
+---
+
+## Kubernetes
+
+```bash
+helm repo add hotloop-flow https://hotloop.io/hotloop-flow/
+helm install line3-flows hotloop-flow/hotloop-flow
+```
+
+Das ist die ganze Installation, auf jedem Cluster. Das Chart erzeugt bei der ersten Installation das Administratorpasswort und das Zugangsdaten-Geheimnis und speichert beide in einem Secret, das nach dem Release benannt ist. Das Passwort lesen Sie zurück mit:
+
+```bash
+kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base64 -d
+```
+
+**Beim Upgrade liest es beide aus diesem Secret zurück, statt neue zu erzeugen.** Das ist die Grenze zwischen einem Upgrade und dem Verlust aller Zugangsdaten auf dem PVC. (Das erzeugte Passwort funktionierte vor 2.0.2 gar nicht: Der Hash, den die App prüfte, entstand aus einem anderen Zufallspasswort als dem, das das Chart speicherte. Behoben, und ein Release, das mit dem Fehler installiert wurde, wird durch ein Upgrade an Ort und Stelle repariert, ohne Passwort oder Zugangsdaten-Geheimnis zu ändern.)
+
+Um stattdessen eigene zu wählen:
+
+```bash
+helm install line3-flows hotloop-flow/hotloop-flow \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
+```
+
+`auth.password` nimmt ein Klartextpasswort und hasht es bei der Installation, falls Sie das vorziehen. `auth.passwordHash` hat Vorrang, wenn beide gesetzt sind.
+
+### Eine Instanz, ein Pod
+
+Mehrere Instanzen bedeutet mehrere **Releases**, nicht mehrere Replikas, und das Chart legt `replicaCount: 1` mit Absicht fest. Flow hält Flow-Zustand und offene Verbindungen zu Brokern und SPSen, sodass zwei Pods hinter einem Service beide abonnieren und beide schreiben würden und Ihr Historian stillschweigend alles doppelt bekäme. Brauchen Sie mehr? Installieren Sie ein zweites Release mit eigenen Flows.
+
+### Ressourcen
+
+Voreinstellungen, keine rohen Zahlen. `resources.preset` ist `small` (der Standard), `medium`, `large` oder `custom`:
+
+| Voreinstellung | Requests | Limits |
+|---|---|---|
+| `small` | 10m CPU, 64Mi | 500m CPU, 256Mi |
+| `medium` | 50m CPU, 128Mi | 1 CPU, 512Mi |
+| `large` | 200m CPU, 512Mi | 2 CPU, 2Gi |
+
+Im Leerlauf belegt der Prozess etwa 16,6 MiB resident (Methode und Befehl in [docs/bench/](/de/flow/benchmarks/#speicher)), sodass `small` auf einem Edge-Knoten mit 64Mi Reserve eingeplant wird.
+
+Flow liest beim Start das Speicherlimit des Containers und bittet die Go-Laufzeit, den Heap unter 85 % davon zu halten, sodass der Collector härter arbeitet, je näher der Heap dem Limit kommt, statt ihn sich verdoppeln und töten zu lassen. Das Log sagt das beim Start (`memory limit for the collector`). Setzen Sie `GOMEMLIMIT` selbst, gewinnt das. Das Limit muss Platz für das Lebendige lassen: Eine Flow-Datei mit etwa 13.000 Knoten belegt grob 800 MiB, dimensionieren Sie ein Werk dieser Größe also mit `custom` auf 3Gi oder mehr.
+
+### Netzwerkmodi
+
+Deshalb verdient Flow überhaupt einen Platz in der Fertigung. Eine Flow-Engine, die nur sieht, was der Cluster ihr zuleitet, kann ein OT-Segment nicht inventarisieren.
+
+| `network.mode` | Was es bekommt | Instanzen pro Knoten |
+|---|---|---|
+| `cluster` | ClusterIP. Was der Cluster routet. Der Standard, und die richtige Antwort, außer Sie brauchen L2. | unbegrenzt |
+| `host` | Die Schnittstellen, ARP-Tabelle und Broadcast-Domäne des Knotens. | eine, der Port gehört dem Knoten |
+| `macvlan` | Seine **eigene MAC und IP** im Ziel-VLAN, direkt im Segment mit den SPSen. Braucht Multus. | unbegrenzt |
+
+`macvlan` ist die interessante: Es ist sicher, mehrere davon auf einem Knoten **und** im OT-Segment zu betreiben, ohne Portkollisionen, weil jede Instanz ihre eigene Adresse hat. Setzen Sie `network.macvlan.master` auf die Schnittstelle des Knotens in diesem VLAN und füllen Sie `network.macvlan.ipam` aus.
+
+### Was der Pod darf
+
+Distroless nonroot als uid 65532, schreibgeschütztes Root-Dateisystem, keine Rechteausweitung, seccomp `RuntimeDefault`, alle Capabilities entfernt. Discovery eingeschlossen: `scan` macht nur TCP-Verbindungen, die keine Capability brauchen, und schließt den Handshake ab, statt halb offene Verbindungen auf einer SPS zu hinterlassen.
+
+Ein Wert fügt eine Capability hinzu, und nur wenn Sie ihn setzen: `bindToInterface.netRaw`. Ein Knoten kann seine Verbindungen an eine Netzwerkschnittstelle binden (`SO_BINDTODEVICE`), für eine Maschine, deren Port für jede Anlage ein VLAN mit demselben Subnetz führt. Ab Linux 5.7 braucht das keine Capability, und der Wert bleibt `false`. Auf einem älteren Kernel braucht es `CAP_NET_RAW`: Setzen Sie ihn auf `true`, und der Pod fügt genau diese eine Capability hinzu, alle anderen bleiben entfernt. Der Pod muss außerdem die Schnittstellen des Hosts sehen, das ist `network.mode: host`. Wie ein Tab seine Schnittstelle wählt, steht in node-red-types.md.
+
+### Werke mit einem VLAN je Maschine
+
+Eine Maschine, ein Port, ein VLAN je Trockner, jedes VLAN mit demselben `192.168.1.0/24` und denselben Geräteadressen. Betreiben Sie ein Flow mit `network.mode: host`, geben Sie dem Tab jedes Trockners die Umgebungsvariable `FLOW_NETWORK_INTERFACE` (`enp2s0.14`, `enp2s0.15` und so weiter), und jeder Client auf diesem Tab erreicht nur sein eigenes VLAN. Mit Podman und Quadlet `Network=host`, und `AddCapability=NET_RAW` nur auf einem Kernel älter als 5.7. Die Details, die Reihenfolge, in der ein Knoten seine Schnittstelle wählt, und was belegt wurde, stehen in node-red-types.md.
+
+### Anmeldung über das EmberCORE-Dashboard
+
+Wenn das Dashboard Flow aus dem App Store bereitstellt, übergibt es dem Chart seinen öffentlichen Schlüssel (`embernetSignin.publicKey`), und von da an ist das Dashboard der Zugang. Es setzt ein von ihm signiertes Token in `X-Embernet-Assertion` auf jede Anfrage, die es weiterleitet, einschließlich des Websockets des Editors, und Flow prüft es mit diesem Schlüssel: die Signatur (ES256), den Aussteller (`embernet-dashboard`), dass es für diese App in diesem Tenant erstellt wurde (die Audience ist `<tenant>/<release>`, ein Token für eine andere App öffnet hier also nichts) und sein Ablaufen (etwa eine Minute, sodass nichts zu widerrufen ist und eine im Dashboard geänderte Rolle bei der nächsten Anfrage ankommt).
+
+Die Berechtigung kommt aus der Rollenzuordnung des Tenants im Dashboard: `*` ist voller Zugriff, `read` ist nur lesend (die Flows, die Palette, die Einstellungen und der Status, und nichts, was sie ändert, kein Deployment-Log und kein inject). Eine Rolle, die keines von beiden ist, oder keine, bekommt keinen Zugriff. Wer sich so anmeldet, erscheint im Deployment-Log und im Audit-Protokoll als `dashboard:<email>`.
+
+Aus, solange der Schlüssel nicht gesetzt ist. Ohne Schlüssel ignoriert Flow den Header und verhält sich wie immer. Mit Schlüssel wird ein schlechtes Token rundweg abgelehnt, und nichts anderes an der Anfrage rettet es. Die Admin-Anmeldung und Bearer-Tokens funktionieren daneben weiter, das ist der Notzugang für Personal und Automatisierung, und der Editor zeigt „Open this from the EmberCORE dashboard“ statt seines eigenen Anmeldeformulars (`embernetSignin.hideLoginForm`).
+
+Binden Sie auf einem Pod, den Sie selbst betreiben, die PEM-Datei ein und setzen Sie `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE` und `HOTLOOP_FLOW_ASSERTION_AUDIENCE`; Flow verweigert den Start mit einem Schlüssel, den es nicht lesen kann, oder ohne Audience.
+
+### Die Werte, die Sie wirklich anfassen
+
+| Wert | Standard | Wofür er da ist |
+|---|---|---|
+| `image.tag` | die App-Version des Charts | Pinnen Sie sie. Das explizite Tag ist der Update-Mechanismus. |
+| `persistence.size`, `persistence.storageClass` | `2Gi`, Cluster-Standard | Wo `/data` liegt. |
+| `store.context.persist`, `store.context.flushInterval` | an, `30s` | Kontext über Neustarts hinweg, und wie lange ein geänderter Wert wartet, bevor er geschrieben wird. Ein kill -9 verliert so viel. |
+| `store.durable.maxBytes`, `store.durable.ackFlush` | 256 MiB, `100ms` | Das Plattenkontingent für dauerhafte Leitungen, und wie lange eine zugestellte Nachricht darauf wartet, als erledigt markiert zu werden. |
+| `store.synchronous` | `normal` | `full` macht bei jedem Commit fsync. Stärker gegen einen Stromausfall, härter für die Karte. |
+| `trace.enabled`, `trace.perSecond` | an, `1000` | Nachrichtenverfolgung, das, was dahintersteckt, wenn man auf eine Debug-Nachricht klickt, um zu sehen, wohin sie ging. `perSecond` begrenzt neue Verfolgungen pro Sekunde, damit eine schnelle Linie dafür nicht zahlt; `0` verfolgt jede Nachricht. |
+| `trace.traces`, `trace.maxHops`, `trace.maxMessageBytes`, `trace.maxBytes` | `256`, `512`, `16384`, `16777216` | Wie viel Verfolgung im Speicher behalten wird, und nie mehr. Ein Neustart beginnt die Liste neu. |
+| `trace.otlp.endpoint` | leer | Die OTLP/HTTP-Adresse eines OpenTelemetry-Collectors, etwa `http://collector:4318`. Leer bedeutet kein Export. `trace.otlp.serviceName` und `trace.otlp.interval` gehören dazu. |
+| `trace.otlp.headersSecret.name`, `.key` | leer, `headers` | Ein Secret mit den Headern des Collectors als `Name=value`-Paare, durch Kommas getrennt, für den API-Schlüssel eines gehosteten Collectors. Es erreicht den Pod als Umgebungsvariable und berührt nie die ConfigMap. |
+| `history.retain` | `100` | Wie viele Deployment-Einträge unter `/data/deployments` aufbewahrt werden. `0` behält jeden, was eine Entscheidung über den Datenträger ist, da jeder Eintrag eine Kopie der Flow-Datei ist. |
+| `history.git.url` | leer | Spiegelt jedes Deployment in ein Git-Repository als Commit desjenigen, der deployt hat. Leer ist aus. `history.git.branch`, `.path`, `.emailDomain` und `.username` gehören dazu, und leer gelassen bekommen sie die Standardwerte des Binaries. |
+| `history.git.passwordSecret.name`, `.key` | leer, `password` | Ein Secret mit dem Zugriffstoken für dieses Repository. Es erreicht den Pod als `HOTLOOP_FLOW_GIT_PASSWORD` und berührt nie die ConfigMap. |
+| `stations.dashboardUrl`, `stations.tenant`, `stations.dashboardTokenSecret.name`, `.key`, `stations.deployTokenSecret.name`, `.key` | leer, leer, leer, `token`, leer, `token` | Sendet eine Flow-Datei an jede Flow-Installation, die der Tenant in EmberNet betreibt, mit einer Prüfung nach jeder ([Senden an die Stationen eines Tenants](/de/flow/stations/)). Alle vier Werte, Dashboard, Tenant und die beiden Secret-Namen, sind gesetzt oder keiner; ein Rendering mit einigen davon wird abgelehnt. Jedes Secret enthält ein Token und wird als Datei eingehängt, nie in die ConfigMap gelegt. Das Deploy-Token ist das, das die Stationen akzeptieren, und braucht `flows.read`, `flows.write` und `status.read`. |
+| `failover.urlSecret.name`, `.key`, `failover.name`, `failover.ttl`, `failover.renewEvery`, `failover.writeMargin` | leer, `url`, `flow`, `15s`, ein Drittel der ttl, `5s` | Ein Failover-Paar: Zwei Installationen teilen ein Lease in einem PostgreSQL, eine schreibt auf Anlagen, die andere hält ihre Schreibvorgänge zurück, bis sie übernimmt ([Warmer Standby mit Lease](/de/flow/failover/)). Aus, bis das Secret benannt ist. Der Schlüssel des Secrets enthält die PostgreSQL-URL und wird als Datei eingehängt, nie in die ConfigMap gelegt. |
+| `audit.maxBytes`, `audit.keep` | 16 MiB, `4` | Wann `/data/audit.log` rotiert, und wie viele rotierte Dateien daneben bleiben. |
+| `tests.gate`, `tests.timeout` | aus, `2m` | `true` lehnt ein Deployment ab, dessen Flows `/data/flows.test.yaml` nicht bestehen. Standardmäßig aus, denn ein Gate, das niemand verlangt hat, lässt um 3 Uhr nachts ein Deployment aus einem Grund scheitern, von dem niemand in der Schicht je gehört hat. |
+| `discovery.enabled`, `discovery.allowedCIDRs` | aus, leer | Die scan-Knoten. Aktiviert mit leerer Liste verweigert der Start. |
+| `exec.enabled`, `exec.allowedCommands` | aus, leer | Der exec-Knoten. Dieselbe Regel. |
+| `files.allowedPaths` | leer | Zusätzliche Verzeichnisbäume, die die Datei-Knoten über `/data` hinaus erreichen dürfen. |
+| `secrets.mounts` | leer | Secrets, die schreibgeschützt eingehängt werden, jeweils `{secretName, mountPath}`, für die Dateien einer tls-config und `ew_credentialFiles`. Jeder Pfad tritt dem Geheimnis-Geltungsbereich bei und nie dem der Datei-Knoten. |
+| `plugins.enabled` | aus | [Plugins](/de/flow/plugins/). Aus rendert nichts. An, mit leerem `plugins.trustedKeys`, wird jedes Plugin abgelehnt. |
+| `plugins.trustedKeys`, `plugins.grants` | leer | Die Herausgeberschlüssel, denen geglaubt wird, und was jedes Plugin namentlich nutzen darf (`clock`, `random`, `context.flow`, `context.global`). Ein Flow mit einem Plugin, das mehr verlangt, lässt das Deployment scheitern. |
+| `plugins.maxMemoryMiB`, `plugins.maxTimeout` | `64`, `5s` | Der meiste Speicher und die längste Zeit, die ein einzelner Plugin-Knoten bekommen kann. |
+| `plugins.volume`, `plugins.mountPath`, `plugins.dir` | leer, `/etc/hotloop-flow/plugins`, leer | Wie die Plugin-Dateien ankommen. Kein Volume: Kopieren Sie sie nach `plugins/` auf dem Datenvolume. Ein Volume ist jede Kubernetes-Volume-Quelle (ein bestehender Claim, eine ConfigMap, ein Secret), schreibgeschützt bei `mountPath` eingehängt, und `dir` folgt ihr. |
+| `metrics.serviceMonitor.enabled` | aus | Scraping über den Prometheus Operator. |
+| `ingress.enabled` | aus | Wenn Sie es von außerhalb des Clusters erreichbar haben wollen. |
+
+Auch ein Standard-Rendering muss den Standardwerten des Binaries entsprechen, sodass eine Einstellung in `values.yaml` im Prozess immer tut, was sie sagt.
+
+Der Service lauscht auf 8080 und leitet an 1880 des Binaries weiter. Alles andere ist neben dem Wert in `charts/hotloop-flow/values.yaml` dokumentiert.
+
+---
+
+## Podman mit Quadlet
+
+Für eine einzelne Maschine ohne Kubernetes: ein Industrie-PC, ein Gateway, eine VM neben dem Historian. Quadlet macht aus einer kurzen Unit-Datei einen systemd-Dienst, der den Container ausführt, sodass Flow beim Booten startet, bei einem Absturz neu startet und wie alles andere auf der Maschine ins Journal schreibt.
+
+Sie brauchen ein Podman, das Quadlet mitbringt (`/usr/libexec/podman/quadlet` existiert). Die folgenden Schritte wurden genau wie geschrieben ausgeführt, als root, auf Podman 4.9.3 mit dem Image 2.0.5: Es startete, nahm eine Anmeldung an, nahm ein Deployment an und kam nach `systemctl restart` mit den Flows und den verschlüsselten Zugangsdaten unversehrt zurück.
+
+**1. Halten Sie die beiden Geheimnisse aus der Unit-Datei heraus.** Podman-Secrets liegen außerhalb, sodass die Unit herumkopiert, eingecheckt und geprüft werden kann, ohne etwas Wichtiges mitzuführen.
+
+```bash
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} \
+  hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
+printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
+```
+
+Das `printf '%s' "$(...)"` entfernt den abschließenden Zeilenumbruch. Ohne es wird der Zeilenumbruch Teil des Geheimnisses, und ein Hash mit Zeilenumbruch am Ende passt zu nichts.
+
+**2. Die Unit.** `/etc/containers/systemd/hotloop-flow.container`:
+
+```ini
+[Unit]
+Description=HotLoop Flow
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=hotloop-flow
+Image=ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+PublishPort=1880:1880
+Volume=hotloop-flow-data:/data
+Environment=HOTLOOP_FLOW_ADMIN_USER=admin
+Environment=HOTLOOP_FLOW_LOG_FORMAT=json
+Secret=hotloop-flow-admin-hash,type=env,target=HOTLOOP_FLOW_ADMIN_PASSWORD_HASH
+Secret=hotloop-flow-credential-secret,type=env,target=HOTLOOP_FLOW_CREDENTIAL_SECRET
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+
+[Service]
+Restart=always
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**3. Starten Sie sie.**
+
+```bash
+systemctl daemon-reload
+systemctl start hotloop-flow.service
+journalctl -u hotloop-flow -f
+```
+
+Quadlet erzeugt den Dienst bei `daemon-reload`, und der Abschnitt `[Install]` startet ihn beim Booten. Es gibt keinen Schritt `systemctl enable`: Podmans eigene Dokumentation sagt, eine erzeugte Unit kann nicht aktiviert werden, und der Generator wendet `[Install]` selbst an.
+
+Rootless funktioniert genauso mit der Datei in `~/.config/containers/systemd/`, `systemctl --user` statt `systemctl` und `WantedBy=default.target`. Führen Sie auch `loginctl enable-linger <user>` aus, sonst beendet systemd die Dienste dieses Benutzers bei der Abmeldung, und Flow mit ihnen. Das ist das dokumentierte Verhalten von [Podman](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) und systemd. Die Rootful-Unit oben ist die, die wir ausgeführt haben.
+
+**Das Senden an die anderen Stationen des Tenants** aus dieser Unit sind vier Einstellungen und zwei als Dateien eingehängte Podman-Secrets (siehe [Senden an die Stationen eines Tenants](/de/flow/stations/)). Erzeugen Sie die Secrets mit `podman secret create` und fügen Sie dann zu `[Container]` hinzu:
+
+```ini
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_URL=https://dashboard.example
+Environment=HOTLOOP_FLOW_STATIONS_TENANT=acme
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_TOKEN_FILE=/run/secrets/stations-dashboard-token
+Environment=HOTLOOP_FLOW_STATIONS_DEPLOY_TOKEN_FILE=/run/secrets/stations-deploy-token
+Secret=hotloop-flow-dashboard-token,type=mount,target=stations-dashboard-token
+Secret=hotloop-flow-station-token,type=mount,target=stations-deploy-token
+```
+
+Alle vier Einstellungen oder keine: Flow verweigert den Start mit einigen davon. Das Deploy-Token wird mit `hotloop-flow token` erzeugt und jeder Station als API-Token mit `flows.read`, `flows.write` und `status.read` gegeben.
+
+**Ein Failover-Paar** sind zwei Units wie diese, jede mit eigenem Volume, und dieselben drei Zeilen in jedem Abschnitt `[Container]` (siehe [Warmer Standby mit Lease](/de/flow/failover/)); der Hostname der zweiten Unit ist ihr eigener, sodass die beiden nie einen Inhabernamen teilen:
+
+```ini
+Environment=HOTLOOP_FLOW_FAILOVER_URL_FILE=/run/secrets/flow-lease-url
+Environment=HOTLOOP_FLOW_FAILOVER_NAME=line3
+Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
+```
+
+**Ein Upgrade** ist das Ändern des Tags in `Image=`, dann `daemon-reload` und `restart`. Flows, Zugangsdaten und das Geheimnis bleiben, wo sie waren. Pinnen Sie das Tag. `:latest` in der Fertigung heißt, dass Sie erfahren, was sich geändert hat, wenn es kaputtgeht.
+
+**Dinge einschalten** sind weitere `Environment=`-Zeilen: `HOTLOOP_FLOW_EXEC_ENABLED` und `HOTLOOP_FLOW_EXEC_ALLOWED_COMMANDS`, `HOTLOOP_FLOW_DISCOVERY_ENABLED` und `HOTLOOP_FLOW_DISCOVERY_CIDRS`, und der Rest der Tabelle im [README](/de/flow/configuration/#überschreibung-per-umgebungsvariablen). Für die nur in der Datei möglichen Einstellungen (Sitzungs-TTL, Backup-Generationen, Timeouts) hängen Sie eine YAML-Datei ein und zeigen mit `HOTLOOP_FLOW_CONFIG` darauf.
+
+Für Discovery in einem OT-Segment gibt `Network=host` dem Container die eigenen Schnittstellen der Maschine. Derselbe Kompromiss wie der `host`-Modus auf Kubernetes: eine Instanz pro Port.
+
+---
+
+## `podman run`
+
+Zum Ausprobieren, nicht um eine Linie darauf zu betreiben:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+Öffnen Sie dann <http://localhost:1880>. Dieses Zugangsdaten-Geheimnis ist bei jedem Ausführen des Befehls neu, sodass eine in einem Lauf gespeicherte Zugangsdate im nächsten nicht gelesen werden kann. Für einen ersten Blick in Ordnung. Genau deshalb hält die Quadlet-Installation es in einem Podman-Secret.
+
+Das Image ist distroless nonroot ohne Shell, es gibt also nichts, in das man per `exec` hineinkäme, und nichts, worüber jemand mit Codeausführung weiterspringen könnte.
+
+---
+
+## Backups
+
+Alles Erhaltenswerte liegt in `/data`: `flows.json`, `credentials.json`, `flows.json.bak.1` bis `.bak.3`, das Deployment-Log in `deployments/` (eine Datei pro Deployment), das Audit-Protokoll in `audit.log`, Zwei-Faktor-Registrierungen in `mfa.json` und Anmeldesitzungen in `sessions.json`. Die Einträge des Logs und die Registrierungen sind unter demselben Geheimnis wie die Zugangsdaten verschlüsselt, und die Sitzungen sind Hashes. `git-mirror/` ist nur ein Klon, der bei Verlust aus dem Repository neu aufgebaut wird. Sichern Sie das Verzeichnis und das Zugangsdaten-Geheimnis **getrennt**. Die Zugangsdatendatei ist ohne das Geheimnis nutzlos, und das ist der Sinn, und ein Backup, das beides an einem Ort hält, ist ein Backup, das beides jedem übergibt, der es stiehlt.
