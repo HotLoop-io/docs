@@ -3,9 +3,13 @@ title: "Der MCP-Server"
 description: "Cascade hat einen MCP-Server, der liest und schreibt: 83 Werkzeuge, jedes eine API-Route mit eigenem Handler, eigener Berechtigung, Begründung und Audit-Zeile."
 ---
 
+:::note[Enthält, was kommt]
+Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop Cascade 1.4.2, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
+:::
+
 Cascade hat einen MCP-Server, und er liest und schreibt. Er wird eingeschaltet ausgeliefert, unter `/mcp` auf derselben Adresse wie die API und der Editor, und ein Agent, der sich verbindet, kann tun, was die Person hinter seinem Schlüssel tun kann, und nicht mehr. Es gibt keinen Nur-Lese-Modus, den man umgehen müsste, denn ein Server, den ein Agent ansehen, aber nicht anfassen kann, ist eine Statusseite, und die haben Sie schon.
 
-83 Werkzeuge, und jedes davon ist eine Route der REST-API. Ein Aufruf läuft nicht neben der Route, sondern durch sie: Der Handler der Route prüft selbst die Berechtigung, validiert den Body, nimmt die Änderung vor und schreibt die Audit-Zeile. Nichts wurde in den MCP-Server kopiert, das abdriften könnte, und nichts blieb draußen, das man umgehen könnte.
+84 Werkzeuge, und jedes davon ist eine Route der REST-API. Ein Aufruf geht nicht neben der Route vorbei, er geht durch sie: Der Handler der Route prüft selbst die Berechtigung, validiert den Body, macht die Änderung und schreibt die Audit-Zeile. Nichts wurde in den MCP-Server kopiert, was auseinanderlaufen könnte, und nichts wurde weggelassen, um etwas zu umgehen.
 
 Was das für Sie heißt: Wenn Sie einen Workflow, Zugangsdaten, ein Projekt oder eine Person im Editor ändern können, kann ein Agent mit Ihrem Schlüssel das auch, mit den Grenzen Ihrer Rolle, und das Audit-Log vermerkt, dass es ein Agent war und welcher.
 
@@ -160,6 +164,7 @@ Werkzeuge mit Body nehmen einen `body`, dasselbe JSON, das die REST-API nimmt. `
 | `list_users` | `GET /api/v1/users` | `user.manage` | lesen |
 | `create_user` | `POST /api/v1/users` | `user.manage` | schreiben |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | schreiben |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | Schreiben, nur Eigentümer |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | lesen |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | lesen |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | lesen |

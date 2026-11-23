@@ -69,7 +69,7 @@ Póngalos en un archivo de valores e instale con `-f`.
 | `database.postgresql.persistence.size` | `10Gi` | Aquí vive su historial. Dimensiónelo según el número de tags y la retención anterior. |
 | `secretKey.existingSecret` | vacío | Un Secret que usted gestiona con la clave de contraseñas de dispositivo. Póngalo si genera el chart con `helm template`, que no puede generar una clave estable. |
 | `opcuaClient.persistence.enabled` | `false` | Actívelo antes de añadir un dispositivo OPC UA seguro, para que los certificados del cliente sobrevivan a un reinicio. |
-| `ingress` | desactivado | Solo si lo quiere accesible desde fuera del clúster por un nombre. |
+| `ingress` | activado, cualquier host | El Ingress responde a cualquier host que sirva su clase de ingress. Fije `ingress.hosts[0].host` para limitarlo a un nombre, o `ingress.enabled: false` para no tener ninguno. |
 
 ## Podman Quadlet
 

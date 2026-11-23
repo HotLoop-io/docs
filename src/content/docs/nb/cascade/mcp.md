@@ -3,9 +3,13 @@ title: "MCP-serveren"
 description: "Cascade har en MCP-server som leser og skriver: 83 verktøy, hvert en API-rute med sin egen behandler, sin tillatelse, en begrunnelse og en revisjonsrad."
 ---
 
+:::note[Tar med det som kommer]
+Denne siden tar også med noen ting som er nyere enn HotLoop Cascade 1.4.2, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
+:::
+
 Cascade har en MCP-server, og den leser og skriver. Den leveres på, på `/mcp` på samme adresse som API-et og editoren, og en agent som kobler til den, kan gjøre det personen bak nøkkelen kan gjøre, og ingenting utover det. Det finnes ingen skrivebeskyttet modus å komme seg rundt, for en server en agent kan se på men ikke røre, er en statusside, og den har du allerede.
 
-83 verktøy, og hvert eneste er en rute i REST-API-et. Et kall går ikke ved siden av ruten, det går gjennom den: rutens egen behandler sjekker tillatelsen, validerer innholdet, gjør endringen og skriver revisjonsraden. Ingenting er kopiert inn i MCP-serveren som kan drive av gårde, og ingenting er utelatt som kan hoppes over.
+84 verktøy, og hvert av dem er en rute i REST-API-et. Et kall går ikke ved siden av ruten, det går gjennom den: rutens egen behandler sjekker tillatelsen, validerer innholdet, gjør endringen og skriver revisjonsraden. Ingenting ble kopiert inn i MCP-serveren som kan drive av gårde, og ingenting ble utelatt fra den for å hoppe over noe.
 
 Hva det betyr for deg: hvis en arbeidsflyt, en legitimasjon, et prosjekt eller en person er noe du kan endre fra editoren, kan en agent med nøkkelen din endre det også, innenfor rollens grenser, og revisjonsloggen sier at det var en agent og hvilken.
 
@@ -160,6 +164,7 @@ Verktøy med innhold tar en `body`, den samme JSON-en REST-API-et tar. `describe
 | `list_users` | `GET /api/v1/users` | `user.manage` | lesing |
 | `create_user` | `POST /api/v1/users` | `user.manage` | skriving |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | skriving |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | skriving, bare eier |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | lesing |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | lesing |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | lesing |

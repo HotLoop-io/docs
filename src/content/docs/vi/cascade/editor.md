@@ -3,6 +3,10 @@ title: "Trình soạn thảo của Cascade"
 description: "Trình soạn thảo nằm trong tệp nhị phân Cascade: thư mục, canvas có Chạy tới đây, các lần chạy vẽ từng bước, thông tin đăng nhập, dự án, người dùng, kiểm toán."
 ---
 
+:::note[Có cả những gì sắp tới]
+Trang này cũng nói về một vài thứ mới hơn HotLoop Cascade 1.4.2, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
+:::
+
 Trình soạn thảo được tích hợp sẵn trong tệp nhị phân, nên không có gì khác phải chạy và nó không tải gì từ bất cứ đâu: mở địa chỉ mà máy chủ đang lắng nghe rồi đăng nhập. Đó là một ứng dụng Astro với các island Svelte, được dựng thành tệp tĩnh khi xây dựng image, cùng màu sắc và phông chữ với mọi màn hình HotLoop khác, sáng hoặc tối theo hệ thống của bạn cho đến khi bạn chọn.
 
 ![Các quy trình, trong thư mục](/synced/cascade/docs/screenshots/workflows.png)
@@ -25,7 +29,7 @@ Một lần chạy được vẽ cùng kết quả của từng bước. Hãy th
 
 Phần còn lại của công việc quản trị nằm trong Cài đặt: vai trò và ai nắm giữ chúng, chính sách che dữ liệu (một quy trình chọn một chính sách trong phần cài đặt của nó, từ trình soạn thảo), nhà cung cấp bí mật bên ngoài, chuyển tiếp nhật ký, cùng đăng nhập và SCIM. Chủ sở hữu hoặc quản trị viên thay đổi các mục này; những người khác chỉ đọc những gì họ được phép, không bao giờ được hiện một nút mà máy chủ sẽ từ chối, và máy chủ vẫn từ chối nó.
 
-Có bốn màn hình nằm cạnh các quy trình. Thông tin đăng nhập được tạo, mở, sửa, chia sẻ với dự án khác và xóa ngay trong dự án của chúng; một trường bí mật chỉ nhập một lần và màn hình chỉ cho biết nó đã được đặt. Dự án cho biết ai ở trong từng dự án và với vai trò gì, cùng các khóa tài khoản dịch vụ mà một tích hợp thường trực dùng để đăng nhập. Tài khoản của bạn (địa chỉ trên thanh trên cùng) tạo và thu hồi khóa API của bạn, là thứ mà REST API và máy chủ MCP dùng để đăng nhập, và đổi mật khẩu của bạn. Với chủ sở hữu và quản trị viên, Cài đặt có các cài đặt chung (yếu tố thứ hai, quy trình xử lý lỗi), Người dùng tạo người dùng và tắt họ, còn nhật ký kiểm toán được đọc, lọc và kiểm tra xem có bị can thiệp hay không tại đó. Đăng nhập vẫn là chính trình soạn thảo, ở `/login`, và giữ đăng nhập một lần (SSO), đăng nhập qua thư mục, passkey và mã khôi phục.
+Có bốn màn hình nằm cạnh các quy trình. Thông tin đăng nhập được tạo, mở, sửa, chia sẻ với dự án khác và xóa ngay trong dự án của chúng; một trường bí mật chỉ nhập một lần và màn hình chỉ cho biết nó đã được đặt. Dự án cho biết ai ở trong từng dự án và với vai trò gì, cùng các khóa tài khoản dịch vụ mà một tích hợp thường trực dùng để đăng nhập. Tài khoản của bạn (địa chỉ trên thanh trên cùng) tạo và thu hồi khóa API của bạn, là thứ mà REST API và máy chủ MCP dùng để đăng nhập, và đổi mật khẩu của bạn. Với chủ sở hữu và quản trị viên, Cài đặt có các cài đặt chung (yếu tố thứ hai, quy trình xử lý lỗi), Người dùng tạo người dùng, tắt họ và cho phép chủ sở hữu xóa một người (đăng nhập và khóa của họ mất đi, các quy trình của họ vẫn còn), còn nhật ký kiểm toán được đọc, lọc và kiểm tra xem có bị can thiệp hay không tại đó. Đăng nhập vẫn là chính trình soạn thảo, ở `/login`, và giữ đăng nhập một lần (SSO), đăng nhập qua thư mục, passkey và mã khôi phục.
 
 ![Thông tin đăng nhập, bí mật không bao giờ hiển thị](/synced/cascade/docs/screenshots/credentials.png)
 ![Dự án và ai ở trong một dự án](/synced/cascade/docs/screenshots/projects.png)

@@ -67,7 +67,7 @@ Giờ hãy thêm một thiết bị, khám phá các tag của nó và thử ghi
 | `database.postgresql.persistence.size` | `10Gi` | Lịch sử của bạn nằm ở đây. Chọn cỡ theo số tag và thời gian giữ ở trên. |
 | `secretKey.existingSecret` | trống | Một Secret do bạn quản lý chứa khóa mật khẩu thiết bị. Đặt nếu bạn dựng chart bằng `helm template`, vốn không tạo được khóa ổn định. |
 | `opcuaClient.persistence.enabled` | `false` | Bật trước khi thêm thiết bị OPC UA có bảo mật, để chứng chỉ của máy khách sống sót qua khởi động lại. |
-| `ingress` | tắt | Chỉ khi bạn muốn truy cập được từ ngoài cụm bằng một tên. |
+| `ingress` | bật, mọi host | Ingress trả lời mọi host mà lớp ingress của bạn phục vụ. Đặt `ingress.hosts[0].host` để cố định vào một tên, hoặc `ingress.enabled: false` để không dùng. |
 
 ## Podman Quadlet
 

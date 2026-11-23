@@ -3,7 +3,7 @@ title: "Báo cáo theo lịch"
 description: "Số liệu historian theo lịch dưới dạng CSV hoặc HTML, được lưu và gửi email: chỉ tính các số đọc tốt và mỗi dòng cho biết đã loại bao nhiêu số đọc."
 ---
 
-Báo cáo theo lịch, từ 4.14.0, chạy theo lịch các báo cáo do vận hành viên định nghĩa: truy vấn historian, xuất kết quả thành CSV và HTML, lưu vào một volume, và tùy chọn gửi qua email. Nó tương đương module Reporting của Ignition ở phần mà một nhà máy dùng nhiều nhất, một bảng số liệu giao đúng giờ. Mặc định tắt (`HOTLOOP_REPORTS_ENABLED`).
+Báo cáo theo lịch, từ 4.14.0, chạy các báo cáo do người vận hành định nghĩa theo lịch: nó truy vấn historian, kết xuất kết quả thành CSV và HTML, lưu vào một volume và tùy chọn gửi qua email. Đây là phần tương ứng với module Reporting của Ignition cho phần mà một nhà máy dùng nhiều nhất, một bảng số liệu được giao đúng giờ. Mặc định bật (`HOTLOOP_REPORTS_ENABLED`), trong tệp nhị phân và trong Helm chart. Báo cáo được lưu dưới `HOTLOOP_REPORTS_DIR`, mặc định là `reports` trong thư mục dữ liệu của HotLoop: `HOTLOOP_DATA_DIR` nếu được đặt, `/data` khi nó tồn tại và ghi được (một volume của container), và nếu không thì `~/.local/share/hotloop` (hoặc `$XDG_DATA_HOME/hotloop`), nên một tệp nhị phân chạy riêng không cần gắn gì cả.
 
 ## Nó là gì và không là gì
 

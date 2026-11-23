@@ -69,7 +69,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `database.postgresql.persistence.size` | `10Gi` | Εδώ ζει το ιστορικό σας. Μεγεθύνετέ το ανάλογα με τον αριθμό των tags και τη διατήρηση παραπάνω. |
 | `secretKey.existingSecret` | κενό | Ένα Secret που διαχειρίζεστε εσείς, με το κλειδί των κωδικών συσκευών. Ορίστε το αν αποδίδετε το chart με `helm template`, που δεν μπορεί να δημιουργήσει σταθερό κλειδί. |
 | `opcuaClient.persistence.enabled` | `false` | Ενεργοποιήστε το πριν προσθέσετε ασφαλισμένη συσκευή OPC UA, ώστε τα πιστοποιητικά του client να επιβιώνουν από επανεκκίνηση. |
-| `ingress` | ανενεργό | Μόνο αν το θέλετε προσβάσιμο εκτός του cluster με όνομα. |
+| `ingress` | ενεργό, οποιοδήποτε host | Το Ingress απαντά σε οποιοδήποτε host εξυπηρετεί η κλάση ingress σας. Ορίστε `ingress.hosts[0].host` για να το περιορίσετε σε ένα όνομα, ή `ingress.enabled: false` για να μην υπάρχει κανένα. |
 
 ## Podman Quadlet
 

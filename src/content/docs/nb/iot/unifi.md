@@ -85,15 +85,20 @@ Edge Relay kan også polle en konsoll. Den leser taggene enhetsfilen deklarerer 
 
 ## Kommandoer
 
-Fem typer punkter er kommandoer. Hver lages skrivebeskyttet som alle andre tags, og gjør ingenting før noen markerer den som skrivbar. Kontoen HotLoop logger inn med, må være lokal Administrator for disse; som View Only svarer konsollen HTTP 403, HotLoop sier det, og ingenting endres.
+Seks typer punkter er kommandoer. Hver opprettes skrivebeskyttet som alle andre tagger, og gjør ingenting før noen markerer den som skrivbar. Kontoen HotLoop logger på med må være lokal administrator for disse; som View Only svarer konsollen HTTP 403 og HotLoop sier det, og ingenting endres.
 
 | Tag | Skriv | Hva konsollen gjør |
 |---|---|---|
 | `d.<mac>.locate` | `true` eller `false` | Blinker enhetens LED til den slås av. Leser tilbake det konsollen sier. |
 | `d.<mac>.restart` | `true` | Starter enheten på nytt neste gang den melder seg. `false` gjør ingenting. Leser 0. |
 | `p.<mac>.<nn>.power_cycle` | `true` | Slår portens PoE av og på. `false` gjør ingenting. Leser 0. |
+| `p.<mac>.<nn>.poe_mode` | `auto`, `off`, `pasv24` eller `passthrough` | Setter PoE-modus på porten. Switchens andre portinnstillinger leses først og sendes tilbake med endringen, så ingen går tapt. `off` avvises på en port som bærer nettverket, det samme som en strømsyklus. |
 | `w.<id>.enabled` | `true` eller `false` | Slår et trådløst nettverk på eller av. Bare det feltet sendes, så passordfrasen og alle andre innstillinger blir. `<id>` er konsollens id for nettverket, som ikke endres av å gi det nytt navn. |
 | `c.<mac>.blocked` | `true` eller `false` | Blokkerer en overvåket klient fra nettverket, eller slipper den inn igjen. Punktet finnes for en klient konsollen har sett. |
+
+Den har ingen lokalisering, ingen PoE-modus og ingen portdeaktivering, klienthandlingene er bare gjestegodkjenning (ingen blokkering), og en oppdatering av Wifi Broadcast erstatter hele nettverket. Den krever også en API-nøkkel, en andre legitimasjon. Så HotLoop sender alt dette gjennom konsollens egne kommandoer, én økt og én pålogging for alt, slik webgrensesnittet gjør.
+
+Det publiserte API-et har ingen portkonfigurasjon å skrive. Så det finnes ingen måte HotLoop kan slå av en port på 10.6 som er sett å holde, og den sender ingen. Det trengs webgrensesnittets egen forespørsel for "Disabled", fanget fra en ekte konsoll.
 
 En strømsyklus kan skade et anlegg (en automasjon som slår en PLS av og på hvert andre minutt koker strømforsyningen), så to regler gjelder uansett hvem som ber om det: en port sykles høyst én gang per 15 minutter (tidspunktet for siste syklus lagres i databasen, så en omstart glemmer det ikke, og en syklus der tidspunktet ikke kan sjekkes, avvises), og en port som bærer nettverket sykles aldri. Det er en opplenke, og enhver port annet utstyr henger på, etter konsollens egen topologi; porten som forsyner en 5G-reserve er en av dem. Et avslag sier hvilken regel det var. En kommando konsollen selv avviser, bruker ikke opp ventetiden.
 
@@ -188,6 +193,27 @@ Konsollens hendelses-websocket (`/proxy/network/wss/s/<site>/events` på UniFi O
 Kontrolleren flagger hendelsene som betyr at noe gikk galt (`is_negative`: en svitsj som mister kontakten er en, en klient som kobler fra er det ikke), og disse er advarsler i loggboken. Alt annet er informasjon, også nøkler HotLoop aldri har sett.
 
 **En død websocket koster fart, aldri korrekthet.** Den kobler til igjen med en backoff fra to sekunder opp til ett minutt. Den pinger, og en strøm som ikke svarer på 90 sekunder er død uansett hva nettverket sier, så den lukkes og åpnes på nytt. Mens den er nede, leser `site.events_live` 0, Oversikt sier «polling only» med grunnen, og pollingen fortsetter akkurat som før.
+## SmartPower PDU-uttak
+
+En SmartPower PDU tas i bruk i Network Application som en hvilken som helst enhet, og dens `outlet_table` lager taggene til uttakene, i samme enhet. Et uttak er `o.<mac>.<nn>.…`:
+
+| Tag | Skriving | Hva det er |
+|---|---|---|
+| `o.<mac>.<nn>.on` | `true` eller `false` | Uttakets relé. Å skrive den slår uttaket om: hele `outlet_overrides`-arrayet til PDU-en leses først og sendes tilbake med den ene endringen (konsollens PUT erstatter arrayet, så ellers ville navnet på et uttak gå tapt). |
+| `o.<mac>.<nn>.cycle` | `true` | Slår uttaket av, venter fem sekunder og slår det på igjen. Uttaket slås alltid på igjen, selv om forespørselen avbrytes midt i. Høyst én gang per 15 minutter, den samme nedkjølingen en ports strømsyklus har, holdt på samme måte. Leser 0. |
+| `o.<mac>.<nn>.power_w`, `.current_a`, `.voltage_v`, `.pf` | | Det uttaket måler. |
+| `d.<mac>.pdu_power_w` | | PDU-ens totale forbruk, som mater energiarbeidet. |
+
+Et uttak kan være en maskin, så ingenting her slår om et uttak med mindre en person har armert den taggen, og hver skriving går gjennom porten. Uttakets egen syklus (PDU-ens automatiske gjenoppretting, `cycle_enabled`) røres ikke. PDU-testene kjører mot en konsoll som holder tilstand og tar PUT, og en konsoll lærer uttakstabellen til en PDU bare fra enhetens egen inform, så testene gir den det på den måten.
+
+## UniFi Protect
+
+En egen enhet, protokoll `unifi-protect`, fordi Protect har sitt eget API og sin egen nøkkel. Se [Protokoller og drivere](/nb/iot/protocols/#unifi-protect) for taggene, hendelsesstrømmen og skrivingene. Integration API er den konsollen dokumenterer (`/proxy/protect/integration/v1`, nøkkelen i `X-API-KEY`-headeren), og nøkkelen lages på konsollens Integrations-side; den kan tilbakekalles alene, noe som ikke berører Network-påloggingen. Sertifikatet festes som for Network-enheten. Kamerabevegelse trenger hendelses-websocketen: mens den er nede, leses kameraets bevegelse som dårlig og `site.events_live` leser 0. Sensorenes egen tilstand ligger i REST-posten og forblir god.
+
+## UniFi Access
+
+En egen enhet, protokoll `unifi-access`, med sitt API-token og port 12445. Se [Protokoller og drivere](/nb/iot/protocols/#unifi-access). Å låse opp er en skriving som alle andre: en person armerer `door.<id>.unlock`, og skriveporten og revisjonen gjelder, fra skjermen, en automasjon eller MCP likt.
+
 ## Hva som er verifisert
 
 UniFi-driveren og skjermbildene er kjørt mot ekte UniFi Network Applications og UniFi OS-konsoller, skrivebeskyttet som en View Only-konto, og på ekte maskinvare 2026-11-17: innloggingen og den ene sesjonen, tagene for enhet, port, PoE, WAN og klient, den levende hendelsesstrømmen og skjermbildene bygget på dem.

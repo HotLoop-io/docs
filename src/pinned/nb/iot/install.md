@@ -67,7 +67,7 @@ Legg disse i en verdifil og installer med `-f`.
 | `database.postgresql.persistence.size` | `10Gi` | Her bor historikken din. Dimensjoner den etter antall tags og oppbevaringen over. |
 | `secretKey.existingSecret` | tom | En Secret du styrer selv, med nøkkelen til enhetspassordene. Sett den hvis du rendrer chartet med `helm template`, som ikke kan generere en stabil nøkkel. |
 | `opcuaClient.persistence.enabled` | `false` | Slå den på før du legger til en sikret OPC UA-enhet, slik at klientens sertifikater overlever en omstart. |
-| `ingress` | av | Bare hvis du vil ha den tilgjengelig utenfra clusteret med et navn. |
+| `ingress` | på, hvilken som helst vert | Ingress svarer på hvilken som helst vert ingress-klassen din betjener. Sett `ingress.hosts[0].host` for å låse den til ett navn, eller `ingress.enabled: false` for ingen. |
 
 ## Podman Quadlet
 

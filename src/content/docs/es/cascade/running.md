@@ -5,12 +5,16 @@ description: "Ejecute Cascade con Podman Quadlet o con Helm en k3s, sobre SQLite
 editUrl: false
 ---
 
+:::note[Incluye lo que viene]
+Esta página también recoge algunas cosas más nuevas que HotLoop Cascade 1.4.2, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
+:::
+
 En un host con Podman, `deploy/quadlet` contiene unidades de systemd. Un archivo y un volumen son Cascade sobre SQLite; `deploy/quadlet/postgres` es el servidor, un worker y PostgreSQL en una red propia. Ambos arrancan con el sistema, se reinician si fallan y se ejecutan en solo lectura, sin root y sin ninguna capability. Su README lo explica paso a paso.
 
 Para descargar una versión a mano:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
 ```
 
 Las unidades siguen `:stable` y el temporizador de actualización automática de Podman las mueve.
@@ -18,7 +22,7 @@ Las unidades siguen `:stable` y el temporizador de actualización automática de
 En k3s, `charts/hotloop-cascade` es el chart de Helm:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.0
 ```
 
 El chart incluye las etiquetas que lee el panel de EmberNet, en el Service y en los pods que sirven el editor, de modo que un Cascade desplegado desde el App Store aparece en Running Apps con un botón LAUNCH. `gui.appName`, `gui.port` y `gui.displayName` cambian lo que muestra.

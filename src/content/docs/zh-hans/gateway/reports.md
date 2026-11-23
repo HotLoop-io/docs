@@ -3,7 +3,7 @@ title: "Gateway 定时报表"
 description: "按计划生成历史库数据，输出为 CSV 或 HTML，保存并通过邮件发送：只统计质量良好的读数，每一行都写明剔除了多少条。"
 ---
 
-定时报表自 4.14.0 起，按计划运行由操作员定义的报表：查询历史库，把结果生成 CSV 和 HTML，保存到卷上，并可选地通过邮件发送。它对应 Ignition 的 Reporting 模块中工厂最常用的那一部分，也就是按时送达的一张数据表。默认关闭（`HOTLOOP_REPORTS_ENABLED`）。
+定时报表自 4.14.0 起可用，按计划运行由操作员定义的报表：它查询历史数据库，把结果渲染为 CSV 和 HTML，存放在一个卷上，还可以选择通过电子邮件发送。它对应于 Ignition 的 Reporting 模块中工厂最常用的那一部分，也就是按时送达的数字表格。默认开启（`HOTLOOP_REPORTS_ENABLED`），二进制和 Helm chart 都是如此。报表保存在 `HOTLOOP_REPORTS_DIR` 下，默认是 HotLoop 数据目录中的 `reports`：如果设置了 `HOTLOOP_DATA_DIR` 就用它，`/data` 存在且可写时（容器卷）用它，否则用 `~/.local/share/hotloop`（或 `$XDG_DATA_HOME/hotloop`），所以单独的二进制不需要挂载任何东西。
 
 ## 它是什么，不是什么
 

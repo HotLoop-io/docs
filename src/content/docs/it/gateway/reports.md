@@ -3,7 +3,7 @@ title: "Report pianificati"
 description: "I numeri dello storico a calendario, in CSV o HTML, salvati e inviati via e-mail: contano solo le letture buone e ogni riga dice quante sono state scartate."
 ---
 
-I report pianificati, dalla 4.14.0, eseguono a calendario report definiti dall'operatore: interrogano lo storico (historian), producono il risultato in CSV e HTML, lo salvano su un volume e, facoltativamente, lo inviano via e-mail. Sono l'equivalente del modulo Reporting di Ignition per la parte di quel modulo che un impianto usa più spesso, una tabella di numeri consegnata in orario. Disattivati di default (`HOTLOOP_REPORTS_ENABLED`).
+I report programmati, da 4.14.0, eseguono report definiti dall'operatore secondo una pianificazione: interrogano l'historian, producono il risultato in CSV e HTML, lo salvano su un volume e, facoltativamente, lo inviano per email. È la controparte del modulo Reporting di Ignition per la parte di quel modulo che uno stabilimento usa più spesso, una tabella di numeri consegnata in orario. Attivo per impostazione predefinita (`HOTLOOP_REPORTS_ENABLED`), nel binario e nel chart Helm. I report sono conservati in `HOTLOOP_REPORTS_DIR`, che per impostazione predefinita è `reports` nella directory dati di HotLoop: `HOTLOOP_DATA_DIR` se impostata, `/data` quando esiste e vi si può scrivere (un volume di container), e altrimenti `~/.local/share/hotloop` (o `$XDG_DATA_HOME/hotloop`), così un binario da solo non ha bisogno di nulla di montato.
 
 ## Cosa sono e cosa non sono
 

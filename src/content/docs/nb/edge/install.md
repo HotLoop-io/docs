@@ -38,15 +38,15 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 Åpne `http://localhost:8080`. Skriving leveres avslått: hver tag er skrivebeskyttet til noen slår den på, og `safety.allowWrites` forblir `false` til du bestemmer at denne boksen får flytte maskineri. [Skriveporten](/nb/gateway/write-gate/) har hver sjekk, i rekkefølge.
 
-### Hva Edge legger til, og hvordan du slår det på
+### Hva Edge legger til, og hvor du peker den
 
-Begge er av som standard, fordi det å åpne en lytter eller en opplink på et anleggsnettverk er noe en installasjon gjør med vilje.
+Begge er på fra første installasjon, og hver hviler til den har det den trenger, så ingen av dem stopper installasjonen eller starten. Sett en av dem til `false`, og den lager ingen listener, Service, volum eller Ingress.
 
-**OPC UA-serveren** er `opcuaServer.enabled: true`, på port 4840. Sett `opcuaServer.endpointHost` til navnet en klient når boksen på, slik at sertifikatet stemmer. [OPC UA-serveren](/nb/edge/opc-ua-server/) har sikkerhetsmodellen, og den er skrivebeskyttet.
+**OPC UA-serveren** er på (`opcuaServer.enabled`), på port 4840, med autentisering på og en generert `opcua-reader`-pålogging som en administrator ser under Innstillinger. Sett `opcuaServer.endpointHost` til navnet en klient når maskinen på, slik at sertifikatet stemmer. [OPC UA-serveren](/nb/edge/opc-ua-server/) har sikkerhetsmodellen, og den er skrivebeskyttet.
 
 **Boksens helse og vertsmonteringen.** OPC UA-serveren i chartet leverer også helsen til denne boksen (CPU, minne, disk og sanntidsjitter når en agent skriver filen) til EmberNet-dashbordet, og lager en innlogging for dashbordet som kan lese tags og verdier og ingenting annet. Det er på som standard: chartet monterer vertens rot på `/host` og dens `/proc` på `/host/proc`, begge skrivebeskyttet, og legger ikke til noen rettigheter. Et cluster som håndhever den begrensede Pod Security-profilen avviser en hostPath, og der setter du `opcuaServer.dashboard.boxHealth.enabled: false` for ingen enhet og ingen monteringer, eller `opcuaServer.dashboard.boxHealth.hostMount: false` for å beholde enheten, med disk- og CPU-avlesningen merket som dårlig og med beskjed om hva som må monteres. [OPC UA-serveren](/nb/edge/opc-ua-server/#maskinhelse-for-embernet-dashbordet) har resten.
 
-**Sparkplug-publisering** er `edgePublish.enabled: true`, der `edgePublish.broker` og `edgePublish.group` er påkrevd. Sett også `edgePublish.node`, ellers er node-ID-en releasenavnet. Videresendingskøen ligger på et volum på 1 Gi, `edgePublish.queueMaxBytes` er 64 MiB som standard (omtrent 248 000 målinger: omtrent to minutter ved 2 000 målinger i sekundet, ved omtrent 240 byte per måling), og utover det forkastes de eldste målingene og telles. `0` er ubegrenset, og et langt nok avbrudd fyller da volumet. Edge-publisering krever `replicaCount` 1, og chartet nekter å rendre ellers. [Edge-publisering og lagring og videresending](/nb/edge/edge-publish/) forklarer hva den gjør når opplinken dør.
+**Sparkplug-publisering** er på (`edgePublish.enabled`) og venter på et mål. Sett `edgePublish.broker` og `edgePublish.group`, eller la en administrator legge dem inn under Innstillinger, "Hvor alarmer og målinger går" (det som er lagret der gjelder foran verdiene, og edge-publisereren henter det ved neste omstart). Sett også `edgePublish.node`, ellers er node-id-en utgivelsesnavnet. Videresendingskøen ligger på et volum på 1 Gi, `edgePublish.queueMaxBytes` er som standard 64 MiB (omtrent 248 000 målinger: omtrent to minutter ved 2 000 målinger i sekundet, ved omtrent 240 byte per måling), og over det droppes de eldste målingene og telles. `0` er ubegrenset, og et langt nok avbrudd fyller da volumet. Edge-publisering krever `replicaCount` 1, og chartet nekter å rendre ellers. [Edge-publisering og store-and-forward](/nb/edge/edge-publish/) har det den gjør når opplenken dør.
 
 ### Hva du bør sette før et ekte anlegg ser det
 
@@ -86,7 +86,7 @@ curl -s localhost:8080/api/status
 
 Åpne så `http://<this box>:8080` og logg inn som `admin`. Ta vare på en kopi av nøkkelen et sted som ikke er denne boksen, for å miste den betyr å skrive inn hvert enhetspassord på nytt.
 
-Enheten publiserer bare port 8080. Når du slår på OPC UA-serveren (4840) eller den innebygde MQTT-brokeren (1883), legger du til en `PublishPort=`-linje for den i `hotloop.container`. Quadlet-enheten beholder 90 dagers historikk som standard, akkurat som chartet.
+Enheten publiserer bare port 8080. OPC UA-serveren (4840) og den innebygde MQTT-brokeren (1883) er på inne i containeren. For å nå en av dem utenfra maskinen legger du til en `PublishPort=`-linje for den i `hotloop.container`. Quadlet-enheten beholder 90 dagers historikk som standard, det samme som chartet.
 
 Vil du ha vanlig PostgreSQL på Edge? Det er TimescaleDB-enheten med `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` lagt til i `hotloop.container`. Vil du ha en SQLite-fil? Bruk filene i `edge/sqlite/` og ingenting fra mappen over, fordi de deler enhetsnavn: det er `hotloop.container` og `hotloop-data.volume`, og to secrets, `hotloop-secret-key` og `hotloop-admin-password-hash`.
 

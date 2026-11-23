@@ -69,7 +69,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `database.postgresql.persistence.size` | `10Gi` | आपका इतिहास यहाँ रहता है। इसे अपने टैग की संख्या और ऊपर की अवधि के हिसाब से तय करें। |
 | `secretKey.existingSecret` | खाली | आपका अपना प्रबंधित Secret, जिसमें डिवाइस पासवर्ड की कुंजी हो। चार्ट को `helm template` से रेंडर करें तो इसे सेट करें, जो स्थिर कुंजी नहीं बना सकता। |
 | `opcuaClient.persistence.enabled` | `false` | सुरक्षित OPC UA डिवाइस जोड़ने से पहले इसे चालू करें, ताकि क्लाइंट के प्रमाणपत्र रीस्टार्ट के बाद भी बचे रहें। |
-| `ingress` | बंद | केवल तब, जब आप इसे क्लस्टर के बाहर से किसी नाम से पहुँचने योग्य रखना चाहें। |
+| `ingress` | चालू, कोई भी होस्ट | Ingress उस हर होस्ट को जवाब देता है जिसे आपकी ingress क्लास सेवा देती है। इसे एक नाम पर बांधने के लिए `ingress.hosts[0].host` सेट करें, या कोई न चाहिए तो `ingress.enabled: false` सेट करें। |
 
 ## Podman Quadlet
 

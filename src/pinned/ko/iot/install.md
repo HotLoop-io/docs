@@ -67,7 +67,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `database.postgresql.persistence.size` | `10Gi` | 이력이 저장되는 곳입니다. 태그 수와 위의 보관 기간에 맞춰 크기를 정하세요. |
 | `secretKey.existingSecret` | 비어 있음 | 직접 관리하며 장치 비밀번호 키를 담은 Secret입니다. 안정적인 키를 생성할 수 없는 `helm template`으로 차트를 렌더링한다면 설정하세요. |
 | `opcuaClient.persistence.enabled` | `false` | 보안이 적용된 OPC UA 장치를 추가하기 전에 켜서, 재시작 후에도 클라이언트 인증서가 유지되게 합니다. |
-| `ingress` | 꺼짐 | 클러스터 밖에서 이름으로 접근하게 하려는 경우에만 씁니다. |
+| `ingress` | 켜짐, 모든 호스트 | Ingress는 사용 중인 ingress 클래스가 처리하는 모든 호스트에 응답합니다. 하나의 이름으로 고정하려면 `ingress.hosts[0].host`를 설정하고, 쓰지 않으려면 `ingress.enabled: false`로 설정합니다. |
 
 ## Podman Quadlet
 

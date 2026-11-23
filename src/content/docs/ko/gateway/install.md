@@ -71,7 +71,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `edgePublish.queueMaxBytes` | `67108864` | Sparkplug로 상위에 게시할 때 중단 대기열의 한도로 64 MiB입니다. 넘으면 가장 오래된 측정값부터 버려지고 집계됩니다. `0`은 제한이 없으며, 중단이 충분히 길면 볼륨이 가득 찹니다. |
 | `database.postgresql.enabled` | `true` | `false`로 설정하고 `database.external`을 채우면 직접 운영하는 PostgreSQL을 씁니다. TimescaleDB 확장이 있으면 하이퍼테이블, 없으면 기본 파티셔닝을 사용합니다. |
 | `opcuaClient.persistence.enabled` | `false` | 보안이 적용된 OPC UA 장치를 추가하기 전에 켜세요. 켜지 않으면 클라이언트 인증서가 재시작 뒤에 남을 곳이 없고, 장치는 재배포할 때마다 양쪽에서 신뢰를 다시 승인하게 하는 대신 연결을 거부합니다. |
-| `ingress` | 꺼짐 | 클러스터 밖에서 이름으로 접근하게 하려는 경우에만 씁니다. |
+| `ingress` | 켜짐, 모든 호스트 | Ingress는 사용 중인 ingress 클래스가 처리하는 모든 호스트에 응답합니다. 하나의 이름으로 고정하려면 `ingress.hosts[0].host`를 설정하고, 쓰지 않으려면 `ingress.enabled: false`로 설정합니다. |
 
 쓰기는 꺼진 채 제공되며, 그것이 핵심입니다. `safety.allowWrites`가 켜져 있어도 태그는 따로 활성화하기 전까지 읽기 전용이고, 모든 값은 태그의 범위와 대조해 검사하여 거부하며 절대 잘라내지 않습니다. [쓰기 관문](/ko/gateway/write-gate/)에 모든 검사가 순서대로 나와 있습니다.
 

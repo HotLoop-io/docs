@@ -85,15 +85,20 @@ Auch das Edge Relay kann eine Konsole abfragen. Es liest die Tags, die seine Ger
 
 ## Befehle
 
-Fünf Arten von Punkten sind Befehle. Jeder wird wie jeder andere Tag schreibgeschützt angelegt und tut nichts, bis jemand ihn als beschreibbar markiert. Das Konto, mit dem sich HotLoop anmeldet, muss dafür lokaler Administrator sein; mit View Only antwortet die Konsole mit HTTP 403, HotLoop sagt das, und nichts ändert sich.
+Sechs Arten von Punkten sind Befehle. Jeder wird wie jedes andere Tag schreibgeschützt angelegt und tut nichts, bis jemand ihn als beschreibbar markiert. Das Konto, mit dem sich HotLoop anmeldet, muss dafür lokaler Administrator sein; als View Only antwortet die Konsole mit HTTP 403, und HotLoop sagt das, und nichts ändert sich.
 
 | Tag | Schreiben | Was die Konsole tut |
 |---|---|---|
 | `d.<mac>.locate` | `true` oder `false` | Lässt die LED des Geräts blinken, bis sie ausgeschaltet wird. Liest zurück, was die Konsole sagt. |
 | `d.<mac>.restart` | `true` | Startet das Gerät neu, wenn es sich das nächste Mal meldet. `false` tut nichts. Liest 0. |
 | `p.<mac>.<nn>.power_cycle` | `true` | Schaltet das PoE des Ports aus und wieder ein. `false` tut nichts. Liest 0. |
+| `p.<mac>.<nn>.poe_mode` | `auto`, `off`, `pasv24` oder `passthrough` | Setzt den PoE-Modus des Ports. Die übrigen Porteinstellungen des Switches werden zuerst gelesen und mit der Änderung zurückgeschickt, sodass keine verloren geht. `off` wird an einem Port abgelehnt, der das Netzwerk trägt, so wie ein Power-Cycle. |
 | `w.<id>.enabled` | `true` oder `false` | Schaltet ein WLAN ein oder aus. Es wird nur dieses eine Feld gesendet, sodass die Passphrase und alle anderen Einstellungen bleiben. `<id>` ist die Kennung des Netzwerks auf der Konsole, die eine Umbenennung nicht ändert. |
 | `c.<mac>.blocked` | `true` oder `false` | Sperrt einen beobachteten Client im Netzwerk oder lässt ihn wieder hinein. Der Punkt existiert für einen Client, den die Konsole gesehen hat. |
+
+Sie hat kein Locate, keinen PoE-Modus und kein Deaktivieren von Ports, ihre Client-Aktionen sind nur die Gastfreigabe (kein Blockieren), und ein Update von Wifi Broadcast ersetzt das ganze Netzwerk. Außerdem verlangt sie einen API-Schlüssel, eine zweite Zugangsberechtigung. Deshalb schickt HotLoop all das über die eigenen Befehle der Konsole, eine Sitzung und ein Login für alles, wie es die Weboberfläche tut.
+
+Die veröffentlichte API hat keine Port-Konfiguration zum Schreiben. Also gibt es keine Möglichkeit, wie HotLoop auf 10.6 einen Port ausschalten könnte, von dem man gesehen hat, dass es hält, und es sendet keine. Es braucht die eigene Anfrage der Weboberfläche für "Disabled", mitgeschnitten von einer echten Konsole.
 
 Ein Power-Cycle kann einem Werk schaden (eine Automatisierung, die alle zwei Minuten eine SPS neu startet, brät deren Netzteil), daher gelten zwei Regeln, wer auch fragt: Ein Port wird höchstens einmal in 15 Minuten zyklisch geschaltet (der Zeitpunkt des letzten Zyklus liegt in der Datenbank, ein Neustart vergisst ihn also nicht, und ein Zyklus, dessen Zeitpunkt sich nicht prüfen lässt, wird abgewiesen), und ein Port, der das Netzwerk trägt, wird nie zyklisch geschaltet. Das ist ein Uplink und jeder Port, an dem ein anderes Gerät hängt, laut der Topologie der Konsole selbst; der Port, der ein 5G-Backup speist, ist einer davon. Eine Ablehnung nennt die Regel. Ein Befehl, den die Konsole selbst ablehnt, verbraucht die Sperrzeit nicht.
 
@@ -188,6 +193,27 @@ Der Ereignis-Websocket der Konsole (`/proxy/network/wss/s/<site>/events` auf Uni
 Der Controller kennzeichnet die Ereignisse, die bedeuten, dass etwas schiefgegangen ist (`is_negative`: Ein Switch, der den Kontakt verliert, ist eines, ein Client, der sich trennt, nicht), und diese sind Warnungen im Logbuch. Alles andere ist Information, auch Schlüssel, die HotLoop noch nie gesehen hat.
 
 **Ein toter Websocket kostet Geschwindigkeit, nie Korrektheit.** Er verbindet sich neu mit einem Backoff von zwei Sekunden bis zu einer Minute. Er pingt, und ein Strom, der 90 Sekunden nichts antwortet, ist tot, was das Netzwerk auch sagt, also wird er geschlossen und neu geöffnet. Solange er unten ist, liest `site.events_live` 0, die Übersicht sagt »polling only« mit dem Grund, und die Abfrage läuft genau wie zuvor weiter.
+## SmartPower-PDU-Steckdosen
+
+Eine SmartPower-PDU wird wie jedes Gerät in die Network Application übernommen, und ihre `outlet_table` erzeugt die Tags ihrer Steckdosen, im selben Gerät. Eine Steckdose ist `o.<mac>.<nn>.…`:
+
+| Tag | Schreiben | Was es ist |
+|---|---|---|
+| `o.<mac>.<nn>.on` | `true` oder `false` | Das Relais der Steckdose. Es zu schreiben schaltet die Steckdose um: Das gesamte Array `outlet_overrides` der PDU wird zuerst gelesen und mit der einen Änderung zurückgeschickt (das PUT der Konsole ersetzt das Array, sodass sonst der Name einer Steckdose verloren ginge). |
+| `o.<mac>.<nn>.cycle` | `true` | Schaltet die Steckdose aus, wartet fünf Sekunden und schaltet sie wieder ein. Die Steckdose wird immer wieder eingeschaltet, auch wenn die Anfrage mittendrin abgebrochen wird. Höchstens einmal in 15 Minuten, dieselbe Abkühlzeit wie beim Power-Cycle eines Ports, auf dieselbe Weise geführt. Liest 0. |
+| `o.<mac>.<nn>.power_w`, `.current_a`, `.voltage_v`, `.pf` | | Was die Steckdose misst. |
+| `d.<mac>.pdu_power_w` | | Die Gesamtaufnahme der PDU, die in die Energiearbeit einfließt. |
+
+Eine Steckdose kann eine Maschine sein, also schaltet hier nichts eine um, wenn nicht eine Person dieses Tag scharf gemacht hat, und jeder Schreibzugriff geht durch das Tor. Der eigene Zyklus der Steckdose (die automatische Wiederherstellung der PDU, `cycle_enabled`) wird nicht angefasst. Die PDU-Tests laufen gegen eine Konsole, die den Zustand hält und das PUT annimmt, und eine Konsole lernt die Steckdosentabelle einer PDU nur aus dem eigenen Inform des Geräts, sodass die Tests es ihr so geben.
+
+## UniFi Protect
+
+Ein eigenes Gerät, Protokoll `unifi-protect`, weil Protect seine eigene API und seinen eigenen Schlüssel hat. Siehe [Protokolle und Treiber](/de/iot/protocols/#unifi-protect) für die Tags, den Ereignisstrom und die Schreibzugriffe. Die Integration API ist die, die die Konsole dokumentiert (`/proxy/protect/integration/v1`, der Schlüssel im Header `X-API-KEY`), und der Schlüssel wird auf der Seite Integrations der Konsole erzeugt; er lässt sich für sich widerrufen, was das Network-Login nicht berührt. Das Zertifikat wird wie beim Network-Gerät angeheftet. Kamerabewegung braucht den Events-Websocket: Solange er unten ist, liest sich die Bewegung der Kamera als schlecht und `site.events_live` liest 0. Der eigene Zustand der Sensoren steht im REST-Datensatz und bleibt gut.
+
+## UniFi Access
+
+Ein eigenes Gerät, Protokoll `unifi-access`, mit seinem API-Token und Port 12445. Siehe [Protokolle und Treiber](/de/iot/protocols/#unifi-access). Entriegeln ist ein Schreibzugriff wie jeder andere: Eine Person macht `door.<id>.unlock` scharf, und das Schreib-Tor und das Audit gelten, vom Bildschirm, aus einer Automatisierung oder über MCP gleichermaßen.
+
 ## Was verifiziert ist
 
 Der UniFi-Treiber und die Bildschirme wurden gegen echte UniFi Network Applications und UniFi-OS-Konsolen betrieben, schreibgeschützt mit einem View-Only-Konto, und am 2026-11-17 auf echter Hardware: die Anmeldung und ihre eine Sitzung, die Tags für Gerät, Port, PoE, WAN und Client, der Live-Ereignisstrom und die darauf aufbauenden Bildschirme.

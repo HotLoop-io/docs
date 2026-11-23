@@ -5,6 +5,8 @@ description: "Alles, was ein Gerät liest, als Sparkplug-B-Edge-Knoten an ein ze
 
 Edge Publish macht HotLoop seit 4.5.0 zu einem Sparkplug-B-**Edge-Knoten**, der alles, was er liest, per MQTT an ein zentrales Gateway veröffentlicht, in die entgegengesetzte Richtung wie der bestehende MQTT-Treiber, der Sparkplug als primärer Host verbraucht. Das bedeutet es, ihn zu betreiben.
 
+Edge Publish ist im Gateway und in Edge standardmäßig an und bleibt untätig, bis es einen Broker und eine Sparkplug-Gruppe hat, aus dem Chart oder der Umgebung oder von einem Administrator unter Einstellungen, "Wohin Alarme und Messwerte gehen" eingetragen (siehe [Alarmbenachrichtigungen](/de/iot/notifications/#where-alarms-go-settings)). Was dort gespeichert ist, gilt, und es wird beim Start von HotLoop gelesen, weil der Publisher die Warteschlangendatei und den Knoten besitzt. Ohne Angaben veröffentlicht er nichts und hindert HotLoop nicht am Start.
+
 Eingeschaltet läuft er im selben Gateway-Prozess und bleibt mit TimescaleDB verbunden. Das ist nützlich, wenn ein Standort die Oberfläche und die Historie des vollständigen Gateways lokal haben will und zusätzlich eine Uplink-Verbindung zu einem zentralen. Die Flottenverwaltung für viele Edge Relays kam mit 4.7.0 (Verfolgung anhand ihrer Births und Deaths) und 4.8.0 (Konfigurations-Push); siehe die Seite zur Flottenverwaltung.
 
 ## Einschalten

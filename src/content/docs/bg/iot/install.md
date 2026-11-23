@@ -69,7 +69,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `database.postgresql.persistence.size` | `10Gi` | Тук живее вашата история. Оразмерете го според броя тагове и срока по-горе. |
 | `secretKey.existingSecret` | празно | Secret, който управлявате сами, с ключа за паролите на устройствата. Задайте го, ако изграждате чарта с `helm template`, който не може да генерира стабилен ключ. |
 | `opcuaClient.persistence.enabled` | `false` | Включете го, преди да добавите защитено OPC UA устройство, за да оцелеят сертификатите на клиента след рестарт. |
-| `ingress` | изключено | Само ако го искате достъпен отвън на клъстера по име. |
+| `ingress` | включен, всеки хост | Ingress отговаря на всеки хост, който обслужва вашият ingress клас. Задайте `ingress.hosts[0].host`, за да го ограничите до едно име, или `ingress.enabled: false`, за да няма такъв. |
 
 ## Podman Quadlet
 

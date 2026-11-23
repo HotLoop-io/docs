@@ -69,7 +69,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `edgePublish.queueMaxBytes` | `67108864` | 通过 Sparkplug 向上发布时，断线队列的上限，64 MiB。超过后最旧的读数会被丢弃并计数。`0` 表示不限，足够长的断线随后会把卷写满。 |
 | `database.postgresql.enabled` | `true` | 设为 `false` 并填写 `database.external`，即可使用你自己的 PostgreSQL。有 TimescaleDB 扩展时得到超表，没有时用原生分区。 |
 | `opcuaClient.persistence.enabled` | `false` | 在添加带安全设置的 OPC UA 设备之前打开它。不打开的话，客户端证书重启后无处留存，设备会拒绝连接，而不是让你在每次重新部署后在两端重新批准信任。 |
-| `ingress` | 关闭 | 只有当你想让它能从集群外按名称访问时才用。 |
+| `ingress` | 开启，任意主机 | Ingress 会响应您的 ingress 类所服务的任何主机。设置 `ingress.hosts[0].host` 可将其固定为一个名称，设置 `ingress.enabled: false` 则不使用。 |
 
 写入默认是关闭的，这正是重点。即使 `safety.allowWrites` 打开，标签在你单独启用之前仍是只读的，每个值都要对照标签的范围检查，超出就拒绝，绝不截断。[写入关口](/zh-hans/gateway/write-gate/)按顺序列出了每一项检查。
 

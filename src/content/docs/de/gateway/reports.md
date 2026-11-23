@@ -3,7 +3,7 @@ title: "Geplante Berichte"
 description: "Historian-Zahlen nach Zeitplan als CSV oder HTML, gespeichert und verschickt: Nur gute Messwerte zählen, und jede Zeile nennt die Zahl der verworfenen."
 ---
 
-Geplante Berichte führen seit 4.14.0 vom Bediener definierte Berichte nach Zeitplan aus: Sie fragen den Historian ab, rendern das Ergebnis als CSV und HTML, speichern es auf einem Volume und verschicken es optional per E-Mail. Sie sind das Gegenstück zum Reporting-Modul von Ignition für den Teil dieses Moduls, den eine Anlage am häufigsten nutzt: eine Tabelle mit Zahlen, pünktlich geliefert. Standardmäßig aus (`HOTLOOP_REPORTS_ENABLED`).
+Geplante Berichte, seit 4.14.0, führen vom Bediener definierte Berichte nach Zeitplan aus: Sie fragen den Historian ab, rendern das Ergebnis als CSV und HTML, speichern es auf einem Volume und senden es auf Wunsch per E-Mail. Das ist das Gegenstück zum Reporting-Modul von Ignition für den Teil dieses Moduls, den ein Werk am häufigsten braucht, eine Tabelle mit Zahlen, pünktlich geliefert. Standardmäßig an (`HOTLOOP_REPORTS_ENABLED`), in der Binärdatei und im Helm-Chart. Berichte liegen unter `HOTLOOP_REPORTS_DIR`, standardmäßig `reports` im Datenverzeichnis von HotLoop: `HOTLOOP_DATA_DIR`, wenn gesetzt, `/data`, wenn es existiert und beschreibbar ist (ein Container-Volume), und sonst `~/.local/share/hotloop` (oder `$XDG_DATA_HOME/hotloop`), sodass eine nackte Binärdatei nichts Eingehängtes braucht.
 
 ## Was es ist und was nicht
 

@@ -3,7 +3,7 @@ title: "Sikkerhetskopier og gjenoppretting"
 description: "Logiske øyeblikksbilder av databasen, gjenopprettinger som avviser et nyere skjema, og hvorfor nøkkelen til enhetspassordene må sikkerhetskopieres for seg."
 ---
 
-HotLoop tar logiske øyeblikksbilder av historianen, med bare tabelldata, og gjenoppretter dem, siden 4.12.0. Av som standard (`HOTLOOP_BACKUP_ENABLED`): en installasjon som ikke har satt opp et sikkerhetskopivolum, skal ikke ha denne prosessen skrivende i det flyktige filsystemet til en container uten at noen merker det.
+HotLoop tar logiske øyeblikksbilder av historikeren, bare tabelldata, og gjenoppretter dem, siden 4.12.0. På som standard, daglig (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), i binærfilen og i Helm-chartet. Sikkerhetskopier går under `HOTLOOP_BACKUP_DIR`, som som standard er `backups` i HotLoops datakatalog (`HOTLOOP_DATA_DIR`, ellers `/data` når den kan skrives til, ellers `~/.local/share/hotloop`): en utrulling som ikke har konfigurert et sikkerhetskopivolum bør ikke ha denne prosessen til å skrive i det stille inn i en containers flyktige filsystem.
 
 ## Hva dette er
 

@@ -71,7 +71,7 @@ Mettez cela dans un fichier de valeurs et installez avec `-f`. Ne comptez pas su
 | `edgePublish.queueMaxBytes` | `67108864` | La limite de la file de coupure quand vous publiez vers l'amont en Sparkplug, 64 MiB. Au-delà, les lectures les plus anciennes sont abandonnées et comptées. `0` signifie illimité, et une coupure assez longue remplit alors le volume. |
 | `database.postgresql.enabled` | `true` | Mettez `false` et remplissez `database.external` pour utiliser votre propre PostgreSQL. Avec l'extension TimescaleDB vous avez une hypertable, sans elle un partitionnement natif. |
 | `opcuaClient.persistence.enabled` | `false` | Activez-le avant d'ajouter un appareil OPC UA sécurisé. Sans lui, les certificats du client n'ont nulle part où survivre à un redémarrage, et l'appareil refuse de se connecter plutôt que de vous faire réapprouver la confiance des deux côtés après chaque redéploiement. |
-| `ingress` | désactivé | Seulement si vous le voulez joignable de l'extérieur du cluster par un nom. |
+| `ingress` | activé, tout hôte | L'Ingress répond à tout hôte que sert votre classe d'ingress. Fixez `ingress.hosts[0].host` pour le limiter à un nom, ou `ingress.enabled: false` pour n'en avoir aucun. |
 
 Les écritures sont désactivées à la livraison, et c'est tout l'intérêt. Même avec `safety.allowWrites` activé, un tag est en lecture seule tant que vous ne l'armez pas séparément, et chaque valeur est vérifiée par rapport à la plage du tag, refusée et jamais écrêtée. [Le sas d'écriture](/fr/gateway/write-gate/) détaille chaque contrôle, dans l'ordre.
 

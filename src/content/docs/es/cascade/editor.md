@@ -3,6 +3,10 @@ title: "El editor de Cascade"
 description: "El editor viene en el binario de Cascade: carpetas, un lienzo con ejecutar hasta aquí, ejecuciones paso a paso, credenciales, proyectos, usuarios y auditoría."
 ---
 
+:::note[Incluye lo que viene]
+Esta página también recoge algunas cosas más nuevas que HotLoop Cascade 1.4.2, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
+:::
+
 El editor está integrado en el binario, así que no hay nada más que ejecutar y no descarga nada de ningún sitio: abra la dirección en la que escucha el servidor e inicie sesión. Es una aplicación Astro con islas de Svelte, compilada a archivos estáticos al construir la imagen, con los mismos colores y tipografía que cualquier otra pantalla de HotLoop, en claro u oscuro según su sistema hasta que elija.
 
 ![Flujos de trabajo, en carpetas](/synced/cascade/docs/screenshots/workflows.png)
@@ -25,7 +29,7 @@ Una ejecución se dibuja con el resultado de cada paso. Reinténtela desde el pa
 
 El resto del trabajo de gobernanza está en Ajustes: roles y quién los tiene, políticas de redacción (un flujo de trabajo elige una en sus ajustes, desde el editor), proveedores de secretos externos, envío de registros, e inicio de sesión y SCIM. Un propietario o administrador cambia esos ajustes; todos los demás leen lo que se les permite, nunca ven un botón que el servidor vaya a rechazar, y el servidor lo sigue rechazando.
 
-Cuatro pantallas están junto a los flujos de trabajo. Las credenciales se crean, abren, cambian, comparten con otros proyectos y eliminan en su propio proyecto; un campo secreto se introduce una vez y la pantalla solo dice que está definido. Proyectos recoge quién está en cada uno y con qué papel, y las claves de cuenta de servicio con las que inicia sesión una integración permanente. Su cuenta (la dirección en la barra superior) crea y revoca sus claves de API, que son con las que inician sesión la API REST y el servidor MCP, y cambia su contraseña. Para propietarios y administradores, Ajustes tiene los ajustes generales (segundo factor, el flujo de trabajo de error), Usuarios crea personas y las desactiva, y el registro de auditoría se lee, se filtra y se comprueba allí que no haya sido manipulado. El inicio de sesión es el mismo editor, en `/login`, y conserva el inicio de sesión único, el inicio de sesión con directorio, las passkeys y los códigos de recuperación.
+Cuatro pantallas acompañan a los workflows. Las credenciales se crean, se abren, se cambian, se comparten con otros proyectos y se eliminan en su propio proyecto; un campo secreto se introduce una sola vez y la pantalla solo dice que está definido. Proyectos recoge quién está en cada uno y con qué rol, y las claves de cuenta de servicio con las que inicia sesión una integración permanente. Su cuenta (la dirección de la barra superior) crea y revoca sus claves de API, con las que inician sesión la API REST y el servidor MCP, y cambia su contraseña. Para propietarios y administradores, Ajustes tiene los ajustes generales (segundo factor, el workflow de error), Usuarios crea personas, las desactiva y deja que un propietario elimine a una (sus inicios de sesión y claves desaparecen, sus workflows se quedan), y el registro de auditoría se lee, se filtra y se comprueba contra manipulaciones ahí. El inicio de sesión es el mismo editor, en `/login`, y mantiene el inicio de sesión único, el inicio de sesión con directorio, las passkeys y los códigos de recuperación.
 
 ![Credenciales, sin mostrar nunca el secreto](/synced/cascade/docs/screenshots/credentials.png)
 ![Proyectos y quién está en uno](/synced/cascade/docs/screenshots/projects.png)

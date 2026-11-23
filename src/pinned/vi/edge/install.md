@@ -36,15 +36,15 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 Mở `http://localhost:8080`. Thao tác ghi được giao ở trạng thái tắt: mọi tag chỉ đọc cho đến khi ai đó kích hoạt, và `safety.allowWrites` giữ `false` cho đến khi bạn quyết định hộp này được phép điều khiển máy móc. [Cổng ghi](/vi/gateway/write-gate/) có từng bước kiểm tra, theo thứ tự.
 
-### Edge bổ sung gì và cách bật
+### Edge bổ sung gì, và trỏ nó về đâu
 
-Cả hai đều tắt theo mặc định, vì mở một cổng lắng nghe hay một đường lên trong mạng nhà máy là việc một bản triển khai phải làm có chủ ý.
+Cả hai đều bật từ lần cài đầu tiên, và mỗi cái nghỉ cho đến khi có thứ nó cần, nên không cái nào ngăn việc cài đặt hay khởi động. Đặt một trong hai thành `false` và nó không tạo listener, Service, volume hay Ingress.
 
-**Máy chủ OPC UA** là `opcuaServer.enabled: true`, trên cổng 4840. Đặt `opcuaServer.endpointHost` thành tên mà máy khách dùng để tới hộp, để chứng chỉ khớp. [Máy chủ OPC UA](/vi/edge/opc-ua-server/) có mô hình bảo mật, và nó chỉ đọc.
+**Máy chủ OPC UA** được bật (`opcuaServer.enabled`), ở cổng 4840, bật xác thực và có tài khoản `opcua-reader` được sinh tự động mà quản trị viên xem được trong Cài đặt. Đặt `opcuaServer.endpointHost` thành tên mà client dùng để vào máy, để chứng chỉ khớp. [Máy chủ OPC UA](/vi/edge/opc-ua-server/) có mô hình bảo mật, và nó chỉ đọc.
 
 **Sức khỏe của hộp và việc gắn kết máy chủ.** Máy chủ OPC UA của chart cũng cung cấp tình trạng của chính hộp này (CPU, bộ nhớ, đĩa, và độ rung thời gian thực khi một tác nhân ghi tệp) cho bảng điều khiển EmberNet, và tạo một tài khoản cho bảng điều khiển chỉ đọc được tag và giá trị, không hơn. Mặc định là bật: chart gắn gốc của máy chủ vào `/host` và `/proc` của nó vào `/host/proc`, cả hai chỉ đọc, và không thêm đặc quyền nào. Một cụm áp dụng hồ sơ Pod Security restricted sẽ từ chối hostPath, và ở đó bạn đặt `opcuaServer.dashboard.boxHealth.enabled: false` để không có thiết bị và không có gắn kết, hoặc `opcuaServer.dashboard.boxHealth.hostMount: false` để giữ thiết bị với số đọc đĩa và CPU được đánh dấu là xấu và nói rõ cần gắn gì. [Máy chủ OPC UA](/vi/edge/opc-ua-server/#tình-trạng-máy-cho-bảng-điều-khiển-embernet) có phần còn lại.
 
-**Phát hành Sparkplug** là `edgePublish.enabled: true`, với `edgePublish.broker` và `edgePublish.group` là bắt buộc. Đặt cả `edgePublish.node`, nếu không id của nút là tên bản phát hành. Hàng đợi chuyển tiếp nằm trên volume 1 Gi, `edgePublish.queueMaxBytes` mặc định 64 MiB (khoảng 248.000 giá trị đọc: khoảng hai phút ở 2.000 giá trị mỗi giây, với khoảng 240 byte mỗi giá trị), và vượt qua đó các giá trị cũ nhất bị bỏ và được đếm. `0` là không giới hạn, và một đợt gián đoạn đủ dài sẽ làm đầy volume. Phát hành từ Edge cần `replicaCount` bằng 1, và chart từ chối dựng nếu khác. [Phát hành từ Edge và lưu rồi chuyển tiếp](/vi/edge/edge-publish/) nói nó làm gì khi đường lên chết.
+**Phát hành Sparkplug** được bật (`edgePublish.enabled`) và chờ một đích. Đặt `edgePublish.broker` và `edgePublish.group`, hoặc nhờ quản trị viên nhập chúng trong Cài đặt, "Nơi báo động và số đọc được gửi tới" (những gì lưu ở đó được ưu tiên hơn các giá trị, và edge publisher nhận chúng ở lần khởi động lại tiếp theo). Hãy đặt cả `edgePublish.node`, nếu không id của nút là tên release. Hàng đợi chuyển tiếp nằm trên một volume 1 Gi, `edgePublish.queueMaxBytes` mặc định là 64 MiB (khoảng 248.000 số đọc: khoảng hai phút ở 2.000 số đọc mỗi giây, với khoảng 240 byte mỗi số đọc), và vượt mức đó thì các số đọc cũ nhất bị bỏ và được đếm. `0` là không giới hạn, và một sự cố đủ dài sẽ làm đầy volume. Edge publish cần `replicaCount` 1, và chart từ chối render nếu không. [Edge publish và store-and-forward](/vi/edge/edge-publish/) có những gì nó làm khi đường truyền lên bị đứt.
 
 ### Cần đặt gì trước khi một nhà máy thật nhìn thấy nó
 
@@ -84,7 +84,7 @@ curl -s localhost:8080/api/status
 
 Sau đó mở `http://<this box>:8080` và đăng nhập bằng `admin`. Giữ một bản sao khóa ở nơi không phải hộp này, vì mất nó nghĩa là phải gõ lại mọi mật khẩu thiết bị.
 
-Unit chỉ phát hành cổng 8080. Khi bạn bật máy chủ OPC UA (4840) hoặc broker MQTT nhúng (1883), hãy thêm một dòng `PublishPort=` cho nó vào `hotloop.container`. Unit Quadlet giữ 90 ngày lịch sử theo mặc định, giống chart.
+Unit chỉ công bố cổng 8080. Máy chủ OPC UA (4840) và broker MQTT nhúng (1883) được bật bên trong container. Để vào một trong hai từ bên ngoài máy, hãy thêm một dòng `PublishPort=` cho nó vào `hotloop.container`. Unit Quadlet giữ 90 ngày lịch sử theo mặc định, giống chart.
 
 Muốn PostgreSQL thường trên Edge? Đó là unit TimescaleDB với `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` thêm vào `hotloop.container`. Muốn tệp SQLite? Dùng các tệp trong `edge/sqlite/` và không lấy gì từ thư mục bên trên, vì chúng dùng chung tên unit: đó là `hotloop.container` và `hotloop-data.volume`, cùng hai secret, `hotloop-secret-key` và `hotloop-admin-password-hash`.
 

@@ -69,7 +69,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `edgePublish.queueMaxBytes` | `67108864` | Sparkplug で上位へ公開する際の、断線時キューの上限で 64 MiB です。超えると古い読み取り値から捨てられ、数えられます。`0` は無制限で、十分長い断線ではボリュームが埋まります。 |
 | `database.postgresql.enabled` | `true` | `false` にして `database.external` を埋めると、自前の PostgreSQL を使います。TimescaleDB 拡張があればハイパーテーブル、なければネイティブのパーティショニングになります。 |
 | `opcuaClient.persistence.enabled` | `false` | セキュリティ付きの OPC UA 機器を追加する前にオンにしてください。オフだとクライアント証明書が再起動を越えて残る場所がなく、機器は再デプロイのたびに両側で信頼を承認し直させる代わりに、接続を拒否します。 |
-| `ingress` | オフ | クラスターの外から名前で到達できるようにしたい場合だけ使います。 |
+| `ingress` | オン、任意のホスト | Ingressは、お使いのingressクラスが扱うあらゆるホストに応答します。1つの名前に固定するには`ingress.hosts[0].host`を設定し、使わない場合は`ingress.enabled: false`を設定します。 |
 
 書き込みはオフの状態で出荷されます。それが狙いです。`safety.allowWrites` をオンにしても、タグは個別に有効にするまで読み取り専用で、すべての値はタグの範囲と照合され、範囲外なら拒否されて、丸め込まれることはありません。[書き込みゲート](/ja/gateway/write-gate/)に、すべてのチェックが順番に載っています。
 

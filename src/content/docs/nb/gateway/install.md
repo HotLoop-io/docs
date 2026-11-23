@@ -71,7 +71,7 @@ Legg dette i en verdifil og installer med `-f`. Ikke stol på `--set` for noe du
 | `edgePublish.queueMaxBytes` | `67108864` | Grensen for avbruddskøen når du publiserer oppover over Sparkplug, 64 MiB. Utover den kastes de eldste målingene og telles. `0` er ubegrenset, og et langt nok avbrudd fyller da volumet. |
 | `database.postgresql.enabled` | `true` | Sett `false` og fyll ut `database.external` for å bruke din egen PostgreSQL. Med TimescaleDB-utvidelsen får du en hypertabell, uten den innebygd partisjonering. |
 | `opcuaClient.persistence.enabled` | `false` | Slå den på før du legger til en sikret OPC UA-enhet. Uten den har klientens sertifikater ingen plass å overleve en omstart, og enheten nekter å koble til i stedet for å la deg godkjenne tilliten på begge sider på nytt etter hver ny utrulling. |
-| `ingress` | av | Bare hvis du vil ha den tilgjengelig utenfra clusteret med et navn. |
+| `ingress` | på, hvilken som helst vert | Ingress svarer på hvilken som helst vert ingress-klassen din betjener. Sett `ingress.hosts[0].host` for å låse den til ett navn, eller `ingress.enabled: false` for ingen. |
 
 Skriving leveres avslått, og det er poenget. Selv med `safety.allowWrites` på er en tag skrivebeskyttet til du slår den på for seg, og hver verdi sjekkes mot tagens område, avvises og klippes aldri. [Skriveporten](/nb/gateway/write-gate/) har hver sjekk, i rekkefølge.
 

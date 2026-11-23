@@ -3,28 +3,25 @@ title: "Langues de l'interface web"
 description: "L'interface web en anglais et treize autres langues, l'arabe étant disposé de droite à gauche, à choisir dans la barre du haut ou sur la carte de connexion."
 ---
 
+:::note[Couvre ce qui arrive]
+Cette page couvre aussi quelques éléments plus récents que HotLoop core 4.24.0, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
+:::
+
 L'interface web de HotLoop IoT, Edge et Gateway (et de HotLoop for CODESYS, qui exécute l'interface d'Edge) existe en anglais et en 13 autres langues : espagnol (es), français (fr), italien (it), allemand (de), norvégien bokmål (nb), bulgare (bg), grec (el), coréen (ko), japonais (ja), vietnamien (vi), hindi (hi), chinois simplifié (zh-Hans) et arabe (ar, disposé de droite à gauche).
 
 Choisissez-en une dans la liste des langues de la barre du haut, ou sur la carte de connexion. Le choix est conservé dans ce navigateur. Sans choix, la page prend la première des langues du navigateur que HotLoop propose, et l'anglais si aucune ne correspond. Une langue n'apparaît dans la liste que lorsque son fichier est complet.
 
 Ce qui suit la langue : chaque mot de chaque écran, l'ordre et les signes des nombres (une virgule décimale en allemand, en français et en espagnol), les dates et les heures (horloge de 24 heures), les formes du pluriel (l'arabe en a six) et le sens de la page. Les noms de produits et de protocoles (HotLoop, Modbus, OPC UA, MQTT, Sparkplug, CODESYS, UniFi) restent tels qu'écrits. Les valeurs de l'usine, comme les noms de tags, les noms d'appareils, les messages d'alarme saisis par quelqu'un et le texte d'erreur renvoyé par le serveur, sont affichées telles quelles.
 
-## Comment ça marche
+## Pensé pour ceux qui l'utilisent
 
-* [i18next](https://www.i18next.com/) 27 cherche le message, remplit `{{name}}` et choisit la forme du pluriel. Il interroge `Intl.PluralRules` du navigateur lui-même, donc les règles de pluriel sont celles d'Unicode CLDR. Les nombres et les dates utilisent `Intl.NumberFormat` et `Intl.DateTimeFormat` via `web/src/lib/format.ts`.
-* Les messages se trouvent dans `web/src/i18n/locales/<language>.json`, à plat, une clé par message. `en.json` est la source. Chaque autre fichier a exactement ses clés.
-* Dans un modèle ou un script, écrivez `tl('area.key')` ou `tl('area.key', { name })`. Un message avec un compte a une clé par forme du pluriel (`key_one`, `key_other`, et `key_few`, `key_many`, `key_two`, `key_zero` là où une langue en a) et se demande par la clé seule avec `count` : `tl('overview.tags_count', { count: n })`.
-* L'anglais fait partie de la page. Une autre langue est un fichier à part, récupéré quand quelqu'un la choisit.
-* `web/src/i18n/index.svelte.ts` garde la langue ; la changer redessine tous les écrans. Un mot gardé dans une constante en haut d'un fichier `.ts` est lu une seule fois au chargement du fichier et n'est pas traduit : écrivez-le comme un getter (`get label() { return tl('x.y'); }`) ou gardez la clé et appelez `tl()` à l'endroit où il est dessiné.
-* La page définit `<html lang dir>`. Le CSS utilise des propriétés logiques (`margin-inline-start`, `inset-inline-end`, `text-align: start`), donc la mise en page se retourne toute seule pour l'arabe.
+* Chaque écran est dessiné à partir d'un message par phrase, si bien qu'une langue n'est jamais une demi-page de ses propres mots et une demi-page d'anglais. Une langue n'apparaît dans le sélecteur que lorsque chaque écran est complet.
+* Les pluriels suivent les règles CLDR d'Unicode pour chaque langue, si bien que "1 appareil", "2 appareils" et les six formes de l'arabe se lisent comme un locuteur natif s'y attend.
+* Les nombres et les dates viennent du formatage propre au navigateur pour la langue choisie, si bien qu'un lecteur allemand voit 1.234,5 et un lecteur américain voit 1,234.5.
+* Changer de langue redessine tous les écrans d'un coup, sans rechargement. L'anglais fait partie de la page et se charge avec elle ; chaque autre langue n'est récupérée que quand quelqu'un la choisit, si bien qu'une usine qui travaille dans une seule langue ne télécharge jamais les douze autres.
+* La mise en page se retourne toute seule pour l'arabe : marges, alignement et espacement s'inversent avec la langue.
 
-## Ajouter ou changer un mot
-
-1. Ajoutez le message à `en.json` et écrivez-le dans le code avec `tl()`.
-2. Ajoutez-le à chaque autre fichier de langue, rédigé par une personne qui lit cette langue, en suivant la base de termes partagée du codex (`work/notes/i18n/glossary/`). Des phrases courtes et claires. Les noms de produits et de protocoles restent en anglais.
-3. Lancez `cd web && npm run check:i18n`. Il échoue quand un fichier de langue n'a pas une clé, a un `{{placeholder}}` différent de l'anglais ou n'a pas une forme de pluriel dont sa langue a besoin ; quand une clé n'est pas utilisée ; et quand de l'anglais est écrit dans un modèle ou dans le code sans passer par `tl()`. Il s'exécute avant chaque `npm run build` et dans `npm run typecheck`, donc la suite complète et la compilation de la version s'arrêtent dessus. L'anglais qui doit rester (un nom, un exemple de code) va dans `web/i18n/allow.json` avec la raison.
-
-Définissez `HOTLOOP_TEST_BROWSER_GALLERY` et `HOTLOOP_TEST_BROWSER_ARTIFACTS` pour garder une capture de chacun.
+Un test de navigateur de la suite complète le prouve sur la vraie page. Il ouvre HotLoop dans chaque langue à une largeur de bureau et de téléphone et parcourt tous les écrans. Le sens est correct, rien ne défile sur le côté, aucun message ne s'affiche comme un espace réservé, les nombres se lisent à la manière de la langue, et le choix survit à un rechargement.
 
 ## Ce qui n'est pas traduit
 

@@ -5,6 +5,8 @@ description: "Publiez tout ce qu'un équipement lit vers un Gateway central en n
 
 Edge Publish, depuis la 4.5.0, fait de HotLoop un **nœud de périphérie** Sparkplug B qui publie tout ce qu'il lit vers un Gateway central par MQTT, dans le sens inverse du pilote MQTT existant, qui consomme Sparkplug comme hôte principal. Voilà ce que veut dire l'exécuter.
 
+La publication edge est activée par défaut dans le Gateway et dans Edge, et reste inactive tant qu'elle n'a pas de broker et de groupe Sparkplug, par le chart ou l'environnement, ou saisis par un administrateur sous Paramètres, "Où vont les alarmes et les mesures" (voir [Notifications d'alarme](/fr/iot/notifications/#where-alarms-go-settings)). Ce qui y est enregistré l'emporte, et c'est lu au démarrage de HotLoop, parce que le publieur possède le fichier de la file et le nœud. Sans rien de renseigné, il ne publie rien et n'empêche pas HotLoop de démarrer.
+
 Une fois activé, il tourne dans le même processus Gateway, toujours connecté à TimescaleDB, ce qui est utile quand un site veut l'interface et l'historique du Gateway complet en local, en plus d'une liaison montante vers un Gateway central. La gestion de parc pour de nombreux Edge Relay est arrivée en 4.7.0 (suivi, à partir de leurs births et deaths) et en 4.8.0 (envoi de configuration) ; voir la page de gestion de parc.
 
 ## L'activer

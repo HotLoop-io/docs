@@ -3,7 +3,7 @@ title: "Sao lưu và khôi phục"
 description: "Ảnh chụp logic của cơ sở dữ liệu, bản khôi phục từ chối schema mới hơn, và lý do khóa mật khẩu thiết bị phải được sao lưu riêng."
 ---
 
-HotLoop chụp ảnh logic của historian, chỉ gồm dữ liệu bảng, và khôi phục chúng, từ bản 4.12.0. Mặc định tắt (`HOTLOOP_BACKUP_ENABLED`): một triển khai chưa cấu hình ổ lưu bản sao lưu không nên có tiến trình này lặng lẽ ghi vào hệ thống tệp tạm thời của container.
+HotLoop chụp các bản sao logic của historian, chỉ dữ liệu bảng, và khôi phục chúng, từ 4.12.0. Mặc định bật, hằng ngày (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), trong tệp nhị phân và trong Helm chart. Các bản sao lưu nằm dưới `HOTLOOP_BACKUP_DIR`, mặc định là `backups` trong thư mục dữ liệu của HotLoop (`HOTLOOP_DATA_DIR`, nếu không thì `/data` khi ghi được, nếu không thì `~/.local/share/hotloop`): một lần triển khai chưa cấu hình volume sao lưu không nên để tiến trình này lặng lẽ ghi vào hệ thống tệp tạm của container.
 
 ## Đây là gì
 

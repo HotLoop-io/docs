@@ -3,7 +3,7 @@ title: "Rapports planifiés"
 description: "Chiffres de l'historian selon un calendrier, en CSV ou HTML, stockés et envoyés : seules les bonnes lectures comptent, chaque ligne dit combien sont écartées."
 ---
 
-Les rapports planifiés, depuis la 4.14.0, exécutent selon un calendrier des rapports définis par l'opérateur : ils interrogent l'historian, produisent le résultat en CSV et en HTML, le stockent sur un volume et, en option, l'envoient par e-mail. C'est l'équivalent du module Reporting d'Ignition pour la partie de ce module qu'une usine utilise le plus souvent, un tableau de chiffres livré à l'heure. Désactivés par défaut (`HOTLOOP_REPORTS_ENABLED`).
+Les rapports planifiés, depuis 4.14.0, exécutent des rapports définis par l'opérateur selon un calendrier : ils interrogent l'historien, produisent le résultat en CSV et en HTML, le stockent sur un volume et, en option, l'envoient par e-mail. C'est le pendant du module Reporting d'Ignition pour la part de ce module qu'une usine utilise le plus souvent, un tableau de chiffres livré à l'heure. Activé par défaut (`HOTLOOP_REPORTS_ENABLED`), dans le binaire et dans le chart Helm. Les rapports sont gardés sous `HOTLOOP_REPORTS_DIR`, qui vaut par défaut `reports` dans le répertoire de données de HotLoop : `HOTLOOP_DATA_DIR` s'il est défini, `/data` quand il existe et qu'on peut y écrire (un volume de conteneur), et sinon `~/.local/share/hotloop` (ou `$XDG_DATA_HOME/hotloop`), si bien qu'un binaire seul n'a besoin de rien de monté.
 
 ## Ce que c'est, et ce que ce n'est pas
 

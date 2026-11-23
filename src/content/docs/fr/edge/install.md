@@ -38,15 +38,15 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 Ouvrez `http://localhost:8080`. Les écritures sont désactivées à la livraison : chaque tag est en lecture seule tant que personne ne l'arme, et `safety.allowWrites` reste à `false` jusqu'à ce que vous décidiez que ce boîtier peut déplacer des machines. [La porte d'écriture](/fr/gateway/write-gate/) détaille chaque contrôle, dans l'ordre.
 
-### Ce qu'Edge ajoute, et comment l'activer
+### Ce qu'ajoute Edge, et où le pointer
 
-Les deux sont désactivés par défaut, car ouvrir un port d'écoute ou une liaison montante sur un réseau d'usine est un acte volontaire d'un déploiement.
+Les deux sont activés dès la première installation, et chacun reste inactif tant qu'il n'a pas ce qu'il lui faut, si bien qu'aucun n'empêche l'installation ni le démarrage. Mettez l'un ou l'autre à `false` et il ne génère ni listener, ni Service, ni volume, ni Ingress.
 
-**Le serveur OPC UA** se règle par `opcuaServer.enabled: true`, sur le port 4840. Mettez dans `opcuaServer.endpointHost` le nom sous lequel un client joint le boîtier, pour que le certificat corresponde. [Le serveur OPC UA](/fr/edge/opc-ua-server/) décrit le modèle de sécurité, et il est en lecture seule.
+**Le serveur OPC UA** est activé (`opcuaServer.enabled`), sur le port 4840, avec l'authentification activée et un identifiant `opcua-reader` généré qu'un administrateur voit sous Paramètres. Fixez `opcuaServer.endpointHost` au nom par lequel un client joint la machine, pour que le certificat y corresponde. [Le serveur OPC UA](/fr/edge/opc-ua-server/) explique le modèle de sécurité, et il est en lecture seule.
 
 **La santé du boîtier et le montage de l'hôte.** Le serveur OPC UA du chart sert aussi la santé de ce boîtier (CPU, mémoire, disque, et gigue temps réel quand un agent écrit le fichier) pour le tableau de bord EmberNet, et il crée pour le tableau de bord un identifiant qui peut lire les tags et les valeurs, rien d'autre. C'est activé par défaut : le chart monte la racine de l'hôte sur `/host` et son `/proc` sur `/host/proc`, tous deux en lecture seule, sans ajouter de privilège. Un cluster qui applique le profil Pod Security restreint refuse un hostPath, et il faut alors mettre `opcuaServer.dashboard.boxHealth.enabled: false` pour ne plus avoir ni périphérique ni montage, ou `opcuaServer.dashboard.boxHealth.hostMount: false` pour garder le périphérique, avec la lecture du disque et du CPU signalée comme mauvaise en indiquant quoi monter. [Le serveur OPC UA](/fr/edge/opc-ua-server/#santé-de-la-machine-pour-le-tableau-de-bord-embernet) donne le reste.
 
-**La publication Sparkplug** se règle par `edgePublish.enabled: true`, avec `edgePublish.broker` et `edgePublish.group` obligatoires. Renseignez aussi `edgePublish.node`, sinon l'identifiant du nœud est le nom de la release. La file de retransmission vit sur un volume de 1 Gi, `edgePublish.queueMaxBytes` vaut 64 MiB par défaut (environ 248 000 lectures : environ deux minutes à 2 000 lectures par seconde, à environ 240 octets par lecture), et au-delà les lectures les plus anciennes sont abandonnées et comptées. `0` veut dire illimité, et une coupure assez longue remplit alors le volume. La publication Edge exige `replicaCount` à 1, et le chart refuse de se générer sinon. [La publication Edge et le stockage et retransmission](/fr/edge/edge-publish/) explique ce qu'il fait quand la liaison montante tombe.
+**La publication Sparkplug** est activée (`edgePublish.enabled`) et attend une destination. Fixez `edgePublish.broker` et `edgePublish.group`, ou faites-les saisir par un administrateur sous Paramètres, "Où vont les alarmes et les mesures" (ce qui y est enregistré l'emporte sur les valeurs, et le publieur edge le prend au prochain redémarrage). Fixez aussi `edgePublish.node`, sinon l'id du nœud est le nom de la release. La file d'envoi différé vit sur un volume de 1 Gi, `edgePublish.queueMaxBytes` vaut par défaut 64 MiB (environ 248 000 mesures : environ deux minutes à 2 000 mesures par seconde, à environ 240 octets la mesure), et au-delà les plus anciennes mesures sont abandonnées et comptées. `0` signifie sans limite, et une panne assez longue remplit alors le volume. La publication edge demande `replicaCount` 1, et le chart refuse de se générer sinon. [Publication edge et store-and-forward](/fr/edge/edge-publish/) explique ce qu'elle fait quand la liaison montante tombe.
 
 ### Ce qu'il faut régler avant qu'une vraie usine le voie
 
@@ -86,7 +86,7 @@ curl -s localhost:8080/api/status
 
 Ouvrez ensuite `http://<this box>:8080` et connectez-vous en tant que `admin`. Gardez une copie de la clé ailleurs que sur ce boîtier, car la perdre oblige à ressaisir chaque mot de passe d'appareil.
 
-L'unité ne publie que le port 8080. Quand vous activez le serveur OPC UA (4840) ou le broker MQTT intégré (1883), ajoutez une ligne `PublishPort=` correspondante à `hotloop.container`. L'unité Quadlet garde 90 jours d'historique par défaut, comme le chart.
+L'unité ne publie que le port 8080. Le serveur OPC UA (4840) et le broker MQTT intégré (1883) sont activés dans le conteneur. Pour joindre l'un ou l'autre depuis l'extérieur de la machine, ajoutez une ligne `PublishPort=` pour lui dans `hotloop.container`. L'unité Quadlet garde 90 jours d'historique par défaut, comme le chart.
 
 Vous voulez PostgreSQL simple sur Edge ? C'est l'unité TimescaleDB avec `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` ajouté à `hotloop.container`. Vous voulez un fichier SQLite ? Utilisez les fichiers de `edge/sqlite/` et rien du répertoire du dessus, car ils partagent les noms d'unités : ce sont `hotloop.container` et `hotloop-data.volume`, et deux secrets, `hotloop-secret-key` et `hotloop-admin-password-hash`.
 

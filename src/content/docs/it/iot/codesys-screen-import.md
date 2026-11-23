@@ -37,6 +37,8 @@ Il rapporto ha i consueti `problems`, `warnings` e `remapped`, e un `conversion`
 | Interruttore a bilanciere, interruttore a levetta, pulsante | una lampada che mostra lo stato e una scheda pulsante: acceso e spento per un interruttore, il valore unico per un tocco |
 | Poligono, polilinea e forme senza testo e senza variabile (le tubazioni, il serbatoio, le cornici) | l'immagine dietro i simboli, disegnata dai loro punti e colori |
 | Gruppo | i suoi membri, posizionati a partire dall'angolo del gruppo |
+| La variabile **Invisible** di un elemento (`bInvisible`), o quella del suo gruppo | una regola `show` sul simbolo: viene disegnato solo finché la variabile dice che l'elemento sarebbe visibile (`NOT x` lo capovolge) |
+| La variabile **Toggle color** di un elemento | una regola `colors` sul simbolo: finché la variabile è attiva viene dipinto con il tono più vicino al colore di allarme dell'elemento (il rosso è `bad`, il giallo e l'arancione `warn`, il blu `info`, il verde `ok`; un elemento senza un proprio colore di allarme è `bad`, come la cornice di allarme predefinita di CODESYS è rossa) |
 
 Ogni elemento mantiene la sua posizione in pixel: la pagina è la scheda dei simboli, disegnata come un'unica immagine scalata, quindi la schermata mantiene la sua forma a qualsiasi dimensione e su un telefono.
 
@@ -46,7 +48,8 @@ Detto nell'importazione, una riga ciascuno, mai scartato in silenzio:
 
 * un tipo di elemento senza simbolo HotLoop (un grafico di tracce, una tabella, un cursore, un elemento immagine e il resto della casella degli strumenti),
 * una variabile che è un'espressione (`Temp * 2`, `a AND b`, un elemento di array): HotLoop mostra un tag, quindi aggiungete un tag per l'espressione e puntate una lettura su di esso,
-* una regola di visibilità, colore o movimento guidata da un valore del PLC: il simbolo è sempre lì e non cambia colore,
+* una variabile di invisibilità o di cambio colore su una forma disegnata nell'immagine di sfondo (una tubazione, un recipiente, una cornice): l'immagine è una sola, quindi la forma c'è sempre e mantiene il suo colore. Detto nell'importazione, con la variabile,
+* qualsiasi altra impostazione guidata da un valore del PLC (una variabile di colore per riempimento, cornice o testo, un movimento, un lampeggio, un elenco di testi): il simbolo c'è com'era disegnato, e la regola viene segnalata quando la sua variabile è una variabile semplice,
 * una curva di Bézier viene disegnata come linee rette tra i suoi punti, e un elemento ruotato non viene ruotato,
 * la dimensione della pagina, che l'esportazione non contiene: la pagina è grande quanto l'elemento più esterno, più un margine,
 * il testo più lungo di 40 caratteri viene tagliato, e i quadranti sono numeri, non quadranti.
@@ -55,8 +58,19 @@ Gli stili di testo, i caratteri e i colori dello stile CODESYS sono quelli di Ho
 
 ## Come legge il file
 
-CODESYS documenta che l'esportazione nativa esiste ed è XML, e non documenta cosa contiene. Il lettore qui segue ciò che scrive l'IDE stesso (CODESYS 3.5 SP22, Visualization 4.10): ogni elemento memorizza le sue impostazioni come un elenco di membri numerati, e il numero è il CRC-32 del percorso del membro nella descrizione dell'elemento, come `m_StaticPosition.iX`, che l'IDE installa accanto a sé. I test contengono valori letti dall'esportazione dell'IDE stesso. Un'impostazione che porta una variabile e non viene letta viene segnalata come sopra, così una schermata non viene mai importata come completa quando non lo è.
+CODESYS documenta che l'esportazione nativa esiste ed è XML, e non documenta cosa contiene. Il lettore qui segue ciò che scrive l'IDE stesso (CODESYS 3.5 SP22, Visualization 4.10): ogni elemento memorizza le sue impostazioni come un elenco di membri numerati, e il numero è il CRC-32 del percorso del membro nella descrizione dell'elemento, come `m_StaticPosition.iX`, che l'IDE installa accanto a sé. Gli alberi degli elementi dell'IDE elencano ogni percorso con il suo id (`ITypeNode.CompletePath` e `CRCIdNumber`); gli id della variabile di invisibilità (`m_pStateVariables..State.bInvisible`, 2880254039) e della variabile di cambio colore (`m_pColorVariables..ToggleColor`, 1999528970) vengono da lì, e il primo è l'id con cui l'esempio Refrigerator di CODESYS memorizza il `NOT Glob_Var.DoorOpen` del suo gruppo. I test contengono valori letti dall'esportazione dell'IDE stesso. Un'impostazione che porta una variabile e non viene letta è segnalata come sopra, così una schermata non viene mai importata come completa quando non lo è.
 
 ## Il passo successivo
 
 Aprite la schermata, controllate le letture rispetto all'impianto e mettete le schede setpoint e pulsante dove i vostri operatori se le aspettano. Una schermata costruita a mano e una importata sono la stessa cosa da qui in poi: si esporta come [file di schermata](/it/iot/screen-file/), si versiona a ogni salvataggio e passa a un'altra installazione allo stesso modo.
+
+## Visualizzazioni TwinCAT (.TcVIS)
+
+Un file `.TcVIS` di TwinCAT è la stessa visualizzazione nell'XML d'archivio degli oggetti dell'IDE, con gli stessi tipi di elemento e gli stessi id dei membri, quindi passa per lo stesso convertitore. Verificato con il vero esempio PackML di TwinCAT.
+
+- Pulsanti: ogni semplice assegnazione nell'azione di input di un pulsante (`X := 5`, `X := TRUE`, `X := E_PMLCommand.ePMLCommand_Start`) diventa una scheda pulsante che scrive quel valore in X, e la didascalia passa come etichetta. Un input Toggle configurato diventa la coppia di pulsanti, acceso e spento. Il codice che è più di un'assegnazione (una condizione, una chiamata, un calcolo) viene segnalato con il suo testo.
+- Enumerazioni: i membri OMAC PackML (`E_PMLCommand`, `E_PMLUnitMode`) sono noti, con i numeri della configurazione PackML_HMI_Example di Beckhoff e della dichiarazione `E_PMLUnitMode` di SPT-Libraries. Qualsiasi altra enumerazione va negli `enums` dell'importazione (`{"E_Own.eOwn_Go": 7}`). Un membro senza numero noto viene scritto con il suo nome e il rapporto lo dice.
+- Espressioni: la variabile di una lampada e una variabile di invisibilità possono essere un confronto di un tag con un numero, TRUE, FALSE o un membro di enumerazione (`=`, `<>`, `<`, `<=`, `>`, `>=`), NOT, AND e OR, con parentesi. Diventano una regola del simbolo (vedi DASHBOARDS.md: la regola `lit` di una lampada, le regole `show` e `colors` di un simbolo, che possono combinare regole con `all` e `any`). Un confronto tra due tag, un calcolo e le chiamate non si possono esprimere e vengono segnalati con la parte che non si è potuta.
+- Cornici: una cornice mostra un'altra visualizzazione. Invia gli altri file del progetto insieme al primo (`codesysRelated` nell'API; nella finestra di dialogo, scegli più file e il primo è la schermata). La visualizzazione della cornice viene collocata nella cornice, con ogni input che prende collegato alla variabile data alla cornice (l'`HMI` di V_Module diventa `MAIN.VFFSDemo.Sealer.PackMLBaseModule_HMI`). Una cornice la cui visualizzazione non è tra i file viene segnalata con il suo nome.
+
+L'insieme PackML (V_Main con V_Module e V_MachineModule): 60 elementi mappati, nessuno non mappato.

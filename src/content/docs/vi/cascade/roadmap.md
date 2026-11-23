@@ -3,6 +3,10 @@ title: "Lộ trình của Cascade"
 description: "Những gì Cascade đã xây dựng, mỗi bản phát hành mang lại gì, và những gì chưa được xây dựng và chưa có lịch."
 ---
 
+:::note[Có cả những gì sắp tới]
+Trang này cũng nói về một vài thứ mới hơn HotLoop Cascade 1.4.2, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
+:::
+
 Không có đoạn nào trong mã kiểm tra giấy phép. Mỗi giai đoạn kết thúc khi danh sách "thật" của nó đã được chạy trên các hệ thống thật, chứ không phải khi mã biên dịch được.
 
 ## 0.1.0, bản MVP
@@ -24,6 +28,14 @@ Một quy trình đã lưu hôm nay tuân theo những gì: tệp ghi rõ địn
 ## 1.3.0, trình soạn thảo bằng 14 ngôn ngữ
 
 Đã xây dựng. Tiếng Anh, Tây Ban Nha, Pháp, Ý, Đức, Na Uy Bokmål, Bulgaria, Hy Lạp, Hàn, Nhật, Việt, Hindi, Trung giản thể và Ả Rập. Có bộ chọn ngôn ngữ trên thanh trên cùng và trên trang đăng nhập; mọi màn hình, tiêu đề và trợ giúp của các bước, cùng các lời từ chối của máy chủ đều được dịch; ngày, số và khoảng thời gian theo ngôn ngữ; tiếng Ả Rập viết từ phải sang trái, còn khung vẽ và mã vẫn từ trái sang phải. Mỗi ngôn ngữ được thử trên mọi màn hình, ở chiều rộng máy tính và điện thoại, trong trình duyệt thật, và bản dựng từ chối ngôn ngữ nào thiếu một dòng. Các từ lấy từ bảng thuật ngữ chung của HotLoop.
+
+## 1.5.0, xóa một người
+
+Đã xây xong. Chủ sở hữu của phiên bản có thể xóa một người từ Người dùng, REST API (`DELETE /api/v1/users/{user}`) hoặc máy chủ MCP (`delete_user`). Tài khoản, phiên, passkey, danh tính đăng nhập và khóa API của họ mất đi, còn nhật ký kiểm toán giữ lại ai đã làm và điều gì đã mất. Các quy trình, thông tin đăng nhập và lần chạy của họ vẫn còn: dự án cá nhân trở thành dự án dùng chung mang tên họ kèm "(removed)", để chủ sở hữu hoặc quản trị viên chuyển công việc đi hoặc giao lại cho người khác. Không ai có thể xóa tài khoản của chính mình, và chủ sở hữu cuối cùng không thể bị xóa. Tắt một người vẫn còn đó, cho lúc bạn muốn giữ tài khoản.
+
+## 1.4.2, trang đăng nhập
+
+Đã xây xong. Trang đăng nhập là một thẻ căn giữa trên một trang yên tĩnh, có dấu hiệu và tên sản phẩm phía trên, nút chính màu cam HotLoop, và các cách vào khác (passkey, đăng nhập một lần) là những nút đơn giản bên cạnh, ở giao diện sáng, tối và trên điện thoại. Nút đăng nhập một lần mang biểu tượng của nhà cung cấp khi nhà cung cấp là Vord. Mọi trường, id và đường dẫn đăng nhập vẫn như trước.
 
 ## 1.4.1, trang Cài đặt
 

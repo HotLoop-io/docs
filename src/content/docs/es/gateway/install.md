@@ -71,7 +71,7 @@ Ponga esto en un archivo de valores e instale con `-f`. No confíe en `--set` pa
 | `edgePublish.queueMaxBytes` | `67108864` | El límite de la cola de cortes cuando publica hacia arriba por Sparkplug, 64 MiB. Pasado ese punto se descartan las lecturas más antiguas y se cuentan. `0` es sin límite, y un corte lo bastante largo llena entonces el volumen. |
 | `database.postgresql.enabled` | `true` | Póngalo en `false` y rellene `database.external` para usar su propio PostgreSQL. Con la extensión TimescaleDB obtiene una hypertable, sin ella particionado nativo. |
 | `opcuaClient.persistence.enabled` | `false` | Actívelo antes de añadir un dispositivo OPC UA seguro. Sin él, los certificados del cliente no tienen dónde sobrevivir a un reinicio, y el dispositivo se niega a conectar en lugar de obligarle a volver a aprobar la confianza en ambos extremos tras cada redespliegue. |
-| `ingress` | desactivado | Solo si lo quiere accesible desde fuera del clúster por un nombre. |
+| `ingress` | activado, cualquier host | El Ingress responde a cualquier host que sirva su clase de ingress. Fije `ingress.hosts[0].host` para limitarlo a un nombre, o `ingress.enabled: false` para no tener ninguno. |
 
 Las escrituras vienen desactivadas, y ese es el objetivo. Incluso con `safety.allowWrites` activado, un tag es de solo lectura hasta que lo arma por separado, y cada valor se comprueba contra el rango del tag, se rechaza y nunca se recorta. [La puerta de escritura](/es/gateway/write-gate/) tiene cada comprobación, en orden.
 

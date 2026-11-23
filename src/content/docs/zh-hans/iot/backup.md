@@ -3,7 +3,7 @@ title: "备份与恢复"
 description: "数据库的逻辑快照、会拒绝更新架构的恢复，以及设备密码密钥为什么必须与备份分开保存。"
 ---
 
-HotLoop 自 4.12.0 起为历史库制作仅含表数据的逻辑快照，并可恢复它们。默认关闭（`HOTLOOP_BACKUP_ENABLED`）：没有配置备份卷的部署，不应让这个进程悄悄写入容器的临时文件系统。
+HotLoop 自 4.12.0 起会对历史数据库做逻辑快照（仅表数据）并可恢复。默认开启，每天一次（`HOTLOOP_BACKUP_ENABLED`，`HOTLOOP_BACKUP_INTERVAL` 24h），二进制和 Helm chart 都是如此。备份保存在 `HOTLOOP_BACKUP_DIR` 下，默认是 HotLoop 数据目录中的 `backups`（`HOTLOOP_DATA_DIR`，否则在 `/data` 可写时用它，否则用 `~/.local/share/hotloop`）：没有配置备份卷的部署，不应让这个进程悄悄写进容器的临时文件系统。
 
 ## 这是什么
 

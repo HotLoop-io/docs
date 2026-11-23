@@ -3,6 +3,10 @@ title: "واجهة HTTP البرمجية"
 description: "كل استدعاء يردّ عليه HotLoop عبر HTTP، وما يحتاجه وما يقبله وما يعيده. واجهة الويب لا تستخدم شيئاً غيره."
 ---
 
+:::note[يشمل أيضًا ما هو قادم]
+تشمل هذه الصفحة أيضًا بعض الأمور الأحدث من HotLoop core 4.24.0، وهو أحدث إصدار. قد لا يكون بعضها في ما ثبّتّه. تبيّن [ملاحظات الإصدار](/ar/releases/) ما الذي تغيّر.
+:::
+
 كل استدعاء يجيب عنه Gateway عبر HTTP، وما يحتاجه، وما يقبله، وما يعيده. واجهة الويب لا تستخدم شيئًا غير ذلك: لا توجد واجهة برمجية خاصة خلف الشاشات، فكل ما تستطيع الواجهة فعله يستطيع سكربت فعله بالاستدعاءات نفسها والصلاحيات نفسها.
 
 تُفحص هذه الصفحة مقابل الشيفرة. لذلك فإن قائمة المسارات ومن يحق له استدعاؤها ليست وصفًا لواجهة برمجية كما كانت يومًا. أُخذت أشكال الطلبات والاستجابات أدناه من Gateway قيد التشغيل؛ والاختبارات لا تفحصها، فإذا غيّرت معالجًا فغيّر قسمه هنا أيضًا.
@@ -256,6 +260,9 @@ HTTP/1.1 403 Forbidden
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ HTTP/1.1 403 Forbidden
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 ```
 
 `kept` هي الإنذارات التي تطلبها المجموعة وكانت موجودة أصلًا: الخاصة بها من ضغطة سابقة، أو إنذار لشخص ما على الوسم نفسه. لذلك فمن الآمن الضغط مرة أخرى بعد اعتماد مزيد من المعدات، ولا يضيف إلا ما يخص المعدات الجديدة. إنذارات شبكة OT والإنذارات الخاصة بالخروج من الشبكة ليست جزءًا منها؛ فهي تأتي مع تعليم شبكة على أنها OT ومراقبة جهاز. `503` إلى أن تُقرأ وحدة التحكم مرة واحدة.
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+الصورة الحالية لكاميرا Protect، بصيغة JPEG (`Content-Type: image/jpeg` و`Cache-Control: no-store`)، تُجلب من وحدة التحكم عند طلبها؛ وهذا هو مسار UniFi الوحيد الذي يرسل طلبًا من تلقاء نفسه. `{id}` جهاز بالبروتوكول `unifi-protect` و`{camera}` المعرّف الذي تعطيه وحدة التحكم للكاميرا (الجزء `<id>` في وسمها `cam.<id>.online`). ويُعاد `404` عندما لا يكون الجهاز جهاز Protect متصلًا، و`502` مع سبب وحدة التحكم عندما تكون الكاميرا غير متصلة أو ترفض وحدة التحكم المفتاح. انظر [البروتوكولات والمشغّلات](/ar/iot/protocols/#unifi-protect).
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+الصورة الحالية لملف تعريف كاميرا ONVIF، بصيغة JPEG (`Content-Type` كما أرسلته الكاميرا و`Cache-Control: no-store`)، تُجلب من الكاميرا عند طلبها، بتسجيل الدخول الخاص بالكاميرا نفسها. `{id}` جهاز بالبروتوكول `onvif` و`{profile}` الرمز الذي تعطيه الكاميرا لملف تعريف الوسائط (الجزء `<token>` في وسمها `profile.<token>.snapshot_uri`). ويُعاد `404` عندما لا يكون الجهاز جهاز ONVIF متصلًا، و`502` مع سبب الكاميرا عندما لا تعطي صورة. انظر ONVIF.md.
+
+### `POST /api/onvif/discover`
+
+يستكشف الشبكة بحثًا عن كاميرات ONVIF (WS-Discovery، استكشاف بالبث المتعدد من كل واجهة) ويردّ بـ `{"cameras":[...]}` تضم كل كاميرا ردّت: `endpoint` الخاص بها و`xaddrs` و`address` الذي تُضاف به، و`name` و`hardware` و`location` و`profiles` التي تذكرها scopes الخاصة بها. و`?wait=` هو عدد الثواني التي يُنصَت فيها، من 1 إلى 15، والافتراضي 3. لا يضيف شيئًا؛ إذ يضيف شخص الكاميرا كجهاز بالبروتوكول `onvif`.
 
 ## اكتشاف MQTT
 
@@ -2134,6 +2156,24 @@ extruder-1,Temperature,C,2026-09-27T19:29:54+00:00,2026-09-27T20:29:54+00:00,19.
 أعداد موقع لا يمكن الوصول إليه لا معنى لها وتُترك خارج المجموع: عدّ موقع لا تصل إليه كأنه صفر إنذارات سيكون أخطر ما يمكن أن تفعله هذه الشاشة. مع عدم ضبط أي مواقع: `{"configured":false,"sites":[]}`.
 
 ## الإعدادات
+
+### `GET /api/destinations`
+
+أين تذهب الإنذارات وقراءات الحافة، بإدخال واحد لكل نوع: `webhook` و`smtp` و`ntfy` و`gotify` و`discord_webhook` و`discord_bot` و`edge_publish`. لكل إدخال `fields` الخاصة به (المفتاح والتسمية والنوع وكونه سريًا أو مطلوبًا) و`enabled` و`state` (`active`: يرسل؛ `needs`: مفعّل وينتظر وجهته، و`missing` يسمّي ما ينتظره؛ `off`؛ `needs-restart`: محفوظ، ويطبّقه ناشر الحافة عند إعادة تشغيل HotLoop) و`values` الصريحة، و`set` الذي يبيّن أي الحقول السرية لها قيمة. لا تُعاد قيمة السر أبدًا. و`source` هو `saved` عندما حفظه مسؤول في الإعدادات و`environment` عندما أعطاه الـ chart أو البيئة. كل نوع مفعّل افتراضيًا ويبقى خاملًا إلى أن يجد مكانًا يرسل إليه؛ ولا يرفض أيٌّ منها البدء.
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+ما الذي يفعله خادم OPC UA وكيف يسجّل العميل الدخول. `state` هو `active` أو `idle` (مصادقة HotLoop معطّلة فلا مستخدمين لتسجيل الدخول بهم؛ ويذكر `reason` ذلك) أو `off` أو `unavailable` (لا يوجد الخادم في هذا المنتج). وعندما يكون مفعّلًا، فإن `endpoint` هو عنوان URL الذي يتصل به العميل، ومع تفعيل المصادقة يكون `username` و`password` حساب الدخول الذي أنشأه HotLoop لعملاء OPC UA (`opcua-reader`، الذي يقرأ الوسوم والقيم ولا يفعل شيئًا آخر، بكلمة مرور مولَّدة). يحتاج إلى `users.manage` لأن كلمة المرور فيه. الخادم مفعّل افتراضيًا؛ ويمكن تغيير كلمة مروره كما تُغيَّر كلمة مرور أي مستخدم، ويجعل البدء التالي كلمة المرور المعروضة هنا تعمل من جديد.
+
+### `PUT /api/destinations/{kind}`
+
+يحفظ وجهة واحدة ويردّ بالقائمة كما يعطيها `GET`. الجسم هو `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`، وكل جزء اختياري. السر المتروك فارغًا يبقي ما هو مخزَّن، و`clear` يزيل واحدًا. وتُفحص النتيجة بالطريقة التي تُفحص بها البيئة عند البدء قبل تخزين أي شيء، فتكون الوجهة الخاطئة `400` يبيّن ما الخطأ (وليس القيمة أبدًا) ولا يغيّر شيئًا. وتُطبَّق قنوات الإنذار فورًا؛ أما وجهة ناشر الحافة فتُطبَّق عند إعادة تشغيل HotLoop. وتُختم الأسرار في قاعدة البيانات عندما يكون لدى HotLoop مفتاح سري. يحتاج إلى `settings.write`.
 
 ### `GET /api/settings`
 

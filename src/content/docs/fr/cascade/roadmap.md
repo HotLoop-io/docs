@@ -3,6 +3,10 @@ title: "Feuille de route de Cascade"
 description: "Ce que Cascade a déjà construit, ce que chaque version a apporté, et ce qui n'est ni construit ni planifié."
 ---
 
+:::note[Couvre ce qui arrive]
+Cette page couvre aussi quelques éléments plus récents que HotLoop Cascade 1.4.2, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
+:::
+
 Aucune vérification de licence n'existe nulle part dans le code. Chaque phase se termine quand sa liste « réelle » a été exécutée sur de vrais systèmes, pas quand le code compile.
 
 ## 0.1.0, le MVP
@@ -24,6 +28,14 @@ Ce que respecte aujourd'hui un flux de travail enregistré : le fichier indique 
 ## 1.3.0, l'éditeur en 14 langues
 
 Construit. Anglais, espagnol, français, italien, allemand, norvégien bokmål, bulgare, grec, coréen, japonais, vietnamien, hindi, chinois simplifié et arabe. Un sélecteur de langue dans la barre du haut et sur la page de connexion ; chaque écran, les titres et l'aide des étapes, et les refus du serveur sont traduits ; les dates, les nombres et les durées suivent la langue ; l'arabe s'écrit de droite à gauche, avec le canevas et le code de gauche à droite. Chaque langue est essayée sur chaque écran en largeur de bureau et de téléphone dans un vrai navigateur, et la compilation refuse une langue à laquelle il manque une ligne. Les mots viennent du glossaire HotLoop partagé.
+
+## 1.5.0, supprimer une personne
+
+Réalisé. Un propriétaire de l'instance peut supprimer une personne depuis Utilisateurs, l'API REST (`DELETE /api/v1/users/{user}`) ou le serveur MCP (`delete_user`). Son compte, ses sessions, ses passkeys, ses identités de connexion et ses clés d'API disparaissent, et le journal d'audit garde qui l'a fait et ce qui est parti. Ses workflows, ses identifiants et ses exécutions restent : le projet personnel devient un projet partagé portant son nom avec "(removed)", pour qu'un propriétaire ou un administrateur déplace le travail ou le confie à quelqu'un d'autre. Personne ne peut supprimer son propre compte, et le dernier propriétaire ne peut pas être supprimé. Désactiver quelqu'un existe toujours pour quand vous voulez garder le compte.
+
+## 1.4.2, la page de connexion
+
+Réalisé. La page de connexion est une carte centrée sur une page sobre, avec la marque et le nom du produit au-dessus, le bouton principal en orange HotLoop, et les autres moyens d'entrer (une passkey, l'authentification unique) en simples boutons à côté, en clair et en sombre et sur un téléphone. Le bouton d'authentification unique porte l'icône de son fournisseur quand le fournisseur est Vord. Chaque champ, chaque id et chaque chemin de connexion est resté tel qu'il était.
 
 ## 1.4.1, la page Paramètres
 

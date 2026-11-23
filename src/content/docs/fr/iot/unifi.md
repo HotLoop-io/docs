@@ -85,15 +85,20 @@ Le Edge Relay peut lui aussi interroger une console. Il lit les tags que déclar
 
 ## Commandes
 
-Cinq types de points sont des commandes. Chacun est créé en lecture seule comme tout autre tag, et ne fait rien tant que quelqu'un ne l'a pas marqué comme modifiable. Le compte avec lequel HotLoop se connecte doit être Administrator local pour cela ; en View Only, la console répond HTTP 403, HotLoop le dit, et rien ne change.
+Six types de points sont des commandes. Chacun est créé en lecture seule comme tout autre tag, et ne fait rien tant que quelqu'un ne le marque pas comme inscriptible. Le compte avec lequel HotLoop se connecte doit être Administrateur local pour ceux-ci ; en View Only la console répond HTTP 403 et HotLoop le dit, et rien ne change.
 
 | Tag | Écriture | Ce que fait la console |
 |---|---|---|
 | `d.<mac>.locate` | `true` ou `false` | Fait clignoter la LED de l'appareil jusqu'à ce qu'on l'éteigne. Relit ce que dit la console. |
 | `d.<mac>.restart` | `true` | Redémarre l'appareil à sa prochaine communication. `false` ne fait rien. Lit 0. |
 | `p.<mac>.<nn>.power_cycle` | `true` | Coupe puis rétablit le PoE du port. `false` ne fait rien. Lit 0. |
+| `p.<mac>.<nn>.poe_mode` | `auto`, `off`, `pasv24` ou `passthrough` | Fixe le mode PoE du port. Les autres réglages du port du switch sont lus d'abord et renvoyés avec le changement, si bien qu'aucun n'est perdu. `off` est refusé sur un port qui porte le réseau, comme l'est un cycle d'alimentation. |
 | `w.<id>.enabled` | `true` ou `false` | Active ou désactive un réseau sans fil. Seul ce champ est envoyé : la phrase secrète et tous les autres réglages restent. `<id>` est l'identifiant du réseau côté console, qu'un renommage ne change pas. |
 | `c.<mac>.blocked` | `true` ou `false` | Bloque un client surveillé sur le réseau, ou le laisse revenir. Le point existe pour un client que la console a déjà vu. |
+
+Il n'a ni localisation, ni mode PoE, ni désactivation de port, ses actions sur les clients se limitent à l'autorisation d'invités (pas de blocage), et une mise à jour de Wifi Broadcast remplace tout le réseau. Il demande aussi une clé d'API, un second identifiant. HotLoop envoie donc tout cela par les propres commandes de la console, une session et une connexion pour tout, comme le fait l'interface web.
+
+L'API publiée n'a pas de configuration de port à écrire. Il n'y a donc aucun moyen pour HotLoop d'éteindre un port sur 10.6 dont on ait vu qu'il tienne, et il n'en envoie pas. Il faut la propre requête de l'interface web pour "Disabled", capturée sur une vraie console.
 
 Un cycle d'alimentation peut abîmer une usine (une automatisation qui redémarre un automate toutes les deux minutes grille son alimentation), donc deux règles tiennent quel que soit le demandeur : un port est redémarré au plus une fois toutes les 15 minutes (l'heure du dernier cycle est conservée dans la base de données, un redémarrage ne l'oublie donc pas, et un cycle dont l'heure ne peut pas être vérifiée est refusé), et un port qui porte le réseau n'est jamais redémarré. C'est une liaison montante, et tout port auquel un autre équipement est raccordé, d'après la topologie de la console elle-même ; le port qui alimente un secours 5G en fait partie. Un refus dit quelle règle l'a causé. Une commande que la console elle-même refuse n'use pas le délai de repos.
 
@@ -188,6 +193,27 @@ Le websocket d'événements de la console (`/proxy/network/wss/s/<site>/events` 
 Le contrôleur marque les événements qui signifient qu'un problème est survenu (`is_negative` : un switch qui perd le contact en est un, un client qui se déconnecte n'en est pas un), et ceux-là sont des avertissements dans le journal. Tout le reste est de l'information, y compris les clés que HotLoop n'a jamais vues.
 
 **Un websocket mort coûte de la vitesse, jamais de l'exactitude.** Il se reconnecte avec une attente de deux secondes jusqu'à une minute. Il envoie des pings, et un flux qui ne répond rien pendant 90 secondes est mort quoi que dise le réseau : il est donc fermé puis rouvert. Pendant qu'il est tombé, `site.events_live` lit 0, la vue d'ensemble affiche « polling only » avec la raison, et l'interrogation continue exactement comme avant.
+## Prises de PDU SmartPower
+
+Une PDU SmartPower est adoptée dans la Network Application comme n'importe quel appareil, et son `outlet_table` crée les tags de ses prises, dans le même appareil. Une prise est `o.<mac>.<nn>.…` :
+
+| Tag | Écriture | Ce que c'est |
+|---|---|---|
+| `o.<mac>.<nn>.on` | `true` ou `false` | Le relais de la prise. L'écrire commute la prise : le tableau `outlet_overrides` entier de la PDU est lu d'abord et renvoyé avec le seul changement (le PUT de la console remplace le tableau, si bien que le nom d'une prise serait perdu autrement). |
+| `o.<mac>.<nn>.cycle` | `true` | Éteint la prise, attend cinq secondes, et la rallume. La prise est toujours rallumée, même si la requête est annulée en cours de route. Au plus une fois par 15 minutes, le même délai de repos que le cycle d'alimentation d'un port, tenu de la même façon. Lit 0. |
+| `o.<mac>.<nn>.power_w`, `.current_a`, `.voltage_v`, `.pf` | | Ce que mesure la prise. |
+| `d.<mac>.pdu_power_w` | | La consommation totale de la PDU, qui alimente le travail sur l'énergie. |
+
+Une prise peut être une machine, donc rien ici n'en commute une sauf si une personne a armé ce tag, et chaque écriture passe par le sas. Le propre cycle de la prise (la récupération automatique de la PDU, `cycle_enabled`) n'est pas touché. Les tests de la PDU tournent contre une console qui garde l'état et accepte le PUT, et une console n'apprend la table de prises d'une PDU que par le propre inform de l'appareil, si bien que les tests le lui donnent ainsi.
+
+## UniFi Protect
+
+Un appareil à part, de protocole `unifi-protect`, parce que Protect a sa propre API et sa propre clé. Voir [Protocoles et drivers](/fr/iot/protocols/#unifi-protect) pour les tags, le flux d'événements et les écritures. L'Integration API est celle que documente la console (`/proxy/protect/integration/v1`, la clé dans l'en-tête `X-API-KEY`), et la clé se crée dans la page Integrations de la console ; elle peut être révoquée séparément, ce qui ne touche pas la connexion Network. Le certificat est épinglé comme pour l'appareil Network. Le mouvement des caméras demande le websocket d'événements : tant qu'il est coupé, le mouvement de la caméra lit mauvais et `site.events_live` lit 0. L'état propre des capteurs est dans l'enregistrement REST et reste bon.
+
+## UniFi Access
+
+Un appareil à part, de protocole `unifi-access`, avec son jeton d'API et le port 12445. Voir [Protocoles et drivers](/fr/iot/protocols/#unifi-access). Déverrouiller est une écriture comme une autre : une personne arme `door.<id>.unlock`, et le sas d'écriture et l'audit s'appliquent, depuis l'écran, une automatisation ou MCP indifféremment.
+
 ## Ce qui est vérifié
 
 Le pilote UniFi et les écrans ont été exécutés contre de vraies Network Applications UniFi et de vraies consoles UniFi OS, en lecture seule avec un compte View Only, et sur du matériel réel le 2026-11-17 : la connexion et sa session unique, les tags d'appareil, de port, de PoE, de WAN et de client, le flux d'événements en direct et les écrans construits dessus.

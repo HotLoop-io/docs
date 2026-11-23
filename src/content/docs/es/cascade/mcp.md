@@ -3,9 +3,13 @@ title: "El servidor MCP"
 description: "Cascade tiene un servidor MCP que lee y escribe: 83 herramientas, cada una una ruta de la API con su propio manejador, permiso, motivo y fila de auditoría."
 ---
 
+:::note[Incluye lo que viene]
+Esta página también recoge algunas cosas más nuevas que HotLoop Cascade 1.4.2, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
+:::
+
 Cascade tiene un servidor MCP, y lee y escribe. Se entrega activado, en `/mcp`, en la misma dirección que la API y el editor, y un agente que se conecta a él puede hacer lo que puede hacer la persona dueña de su clave y nada más. No hay un modo de solo lectura que rodear, porque un servidor que un agente puede mirar y no tocar es una página de estado, y ya tiene una.
 
-83 herramientas, y cada una es una ruta de la API REST. Una llamada no va junto a la ruta, va a través de ella: el propio manejador de la ruta comprueba el permiso, valida el cuerpo, hace el cambio y escribe la fila de auditoría. No se copió nada en el servidor MCP que pueda desviarse, y no se dejó fuera nada que se pueda esquivar.
+84 herramientas, y cada una de ellas es una ruta de la API REST. Una llamada no va junto a la ruta, va a través de ella: el propio manejador de la ruta comprueba el permiso, valida el cuerpo, hace el cambio y escribe la fila de auditoría. No se copió nada en el servidor MCP que pueda desviarse, y no se dejó nada fuera de él para saltarse algo.
 
 Lo que significa para usted: si un flujo de trabajo, una credencial, un proyecto o una persona es algo que puede cambiar desde el editor, un agente con su clave también puede cambiarlo, con los límites de su rol, y el registro de auditoría dice que fue un agente y cuál.
 
@@ -160,6 +164,7 @@ Las herramientas con cuerpo reciben un `body`, el mismo JSON que acepta la API R
 | `list_users` | `GET /api/v1/users` | `user.manage` | lectura |
 | `create_user` | `POST /api/v1/users` | `user.manage` | escritura |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | escritura |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | escritura, solo el propietario |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | lectura |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | lectura |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | lectura |

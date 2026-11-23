@@ -3,7 +3,7 @@ title: "Den innebygde MQTT-brokeren"
 description: "En broker i samme prosess, slik at én liten boks kan være hele installasjonen, med lyttere, kontoer og innstillingene som slår den på."
 ---
 
-HotLoop kan kjøre sin egen MQTT-broker i prosessen, siden 4.11.0, slik at en liten HotLoop-installasjon på én boks ikke har noe ekstra å rulle ut. Av som standard (`HOTLOOP_BROKER_ENABLED`): en installasjon som allerede kjører Mosquitto eller EMQX har ikke noe å peke denne mot, og å starte en ekstra broker ved siden av en som allerede finnes er ikke en trygg standard å gjette seg til.
+HotLoop kan kjøre sin egen MQTT-broker i prosessen, siden 4.11.0, så en liten HotLoop-installasjon på én maskin har ingenting ekstra å deploye. På som standard (`HOTLOOP_BROKER_ENABLED`), i binærfilen og i Helm-chartet. Den lytter på :1883; hvis den porten er tatt av en annen broker på maskinen, hviler den innebygde brokeren og sier det i loggen, og HotLoop starter (sett `HOTLOOP_BROKER_LISTEN_ADDR` til en ledig adresse, eller slå den av). En port du har valgt som ikke kan bindes er fortsatt en feil: en utrulling som allerede kjører Mosquitto eller EMQX har ingenting å peke dette på, og å starte en ny broker ved siden av en som allerede finnes er ikke en trygg standard å gjette seg til.
 
 ## Hvorfor den finnes
 

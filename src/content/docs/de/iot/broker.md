@@ -3,7 +3,7 @@ title: "Der eingebettete MQTT-Broker"
 description: "Ein Broker im selben Prozess, sodass eine kleine Box die ganze Installation sein kann, mit seinen Listenern, Konten und den Einstellungen, die ihn einschalten."
 ---
 
-HotLoop kann seit 4.11.0 einen eigenen MQTT-Broker im Prozess ausführen, sodass eine kleine HotLoop-Installation auf einer einzigen Box nichts zusätzlich bereitstellen muss. Standardmäßig aus (`HOTLOOP_BROKER_ENABLED`): Eine Installation, die bereits Mosquitto oder EMQX betreibt, hat nichts, worauf sie ihn richten könnte, und einen zweiten Broker neben einem bestehenden zu starten ist kein sicherer Standard, den man einfach unterstellen dürfte.
+HotLoop kann seit 4.11.0 seinen eigenen MQTT-Broker im Prozess betreiben, sodass eine kleine HotLoop-Installation auf einer einzigen Maschine nichts Zusätzliches bereitstellen muss. Standardmäßig an (`HOTLOOP_BROKER_ENABLED`), in der Binärdatei und im Helm-Chart. Er lauscht auf :1883; wenn dieser Port von einem anderen Broker auf der Maschine belegt ist, bleibt der eingebettete Broker untätig und sagt das im Log, und HotLoop startet (setzen Sie `HOTLOOP_BROKER_LISTEN_ADDR` auf eine freie Adresse oder schalten Sie ihn aus). Ein von Ihnen gewählter Port, der nicht gebunden werden kann, bleibt ein Fehler: Eine Bereitstellung, die schon Mosquitto oder EMQX betreibt, hat nichts, worauf sie das richten könnte, und einen zweiten Broker neben einem bereits vorhandenen zu starten ist kein sicherer Standard, den man erraten sollte.
 
 ## Warum es ihn gibt
 

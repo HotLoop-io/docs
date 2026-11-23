@@ -3,7 +3,7 @@ title: "Il broker MQTT integrato"
 description: "Un broker nello stesso processo, così una piccola macchina può essere l'intera installazione, con listener, account e le impostazioni che lo attivano."
 ---
 
-HotLoop può eseguire un proprio broker MQTT nello stesso processo, dalla 4.11.0, così un'installazione HotLoop piccola, su una sola macchina, non ha nulla in più da distribuire. Disattivato per impostazione predefinita (`HOTLOOP_BROKER_ENABLED`): un'installazione che esegue già Mosquitto o EMQX non ha nulla a cui puntarlo, e avviare un secondo broker accanto a uno già esistente non è un'impostazione predefinita sicura da dare per scontata.
+HotLoop può eseguire un proprio broker MQTT nel processo, da 4.11.0, così un'installazione HotLoop piccola, su una sola macchina, non ha nulla in più da distribuire. Attivo per impostazione predefinita (`HOTLOOP_BROKER_ENABLED`), nel binario e nel chart Helm. Ascolta su :1883; se quella porta è occupata da un altro broker sulla macchina, il broker incorporato resta inattivo e lo dice nel log, e HotLoop si avvia (imposta `HOTLOOP_BROKER_LISTEN_ADDR` a un indirizzo libero, oppure disattivalo). Una porta che hai scelto e che non si può aprire resta un errore: un deployment che esegue già Mosquitto o EMQX non ha nulla a cui puntare questo, e avviare un secondo broker accanto a uno che esiste già non è un'impostazione predefinita sicura da indovinare.
 
 ## Perché esiste
 

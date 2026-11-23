@@ -3,6 +3,10 @@ title: "L'editor di Cascade"
 description: "L'editor è incluso nel binario di Cascade: cartelle, canvas con esecuzione fin qui, esecuzioni tracciate passo per passo, credenziali, progetti, utenti, audit."
 ---
 
+:::note[Comprende ciò che sta arrivando]
+Questa pagina comprende anche alcune cose più recenti di HotLoop Cascade 1.4.2, l'ultima versione rilasciata. Una parte potrebbe non essere in ciò che hai installato. Le [note di rilascio](/it/releases/) dicono cosa è cambiato.
+:::
+
 L'editor è incluso nel binario, quindi non c'è nient'altro da eseguire e non scarica nulla da nessuna parte: si apre l'indirizzo su cui il server è in ascolto e si accede. È un'app Astro con isole Svelte, compilata in file statici durante la creazione dell'immagine, con gli stessi colori e lo stesso carattere di ogni altra schermata HotLoop, chiara o scura secondo il sistema finché non si sceglie.
 
 ![Flussi di lavoro, in cartelle](/synced/cascade/docs/screenshots/workflows.png)
@@ -25,7 +29,7 @@ Un'esecuzione viene disegnata con l'esito di ogni passaggio. La si può riprovar
 
 Il resto del lavoro di governance è in Impostazioni: i ruoli e chi li ha, i criteri di oscuramento (un flusso di lavoro ne sceglie uno nelle proprie impostazioni, dall'editor), i provider di segreti esterni, l'invio dei log, e accesso e SCIM. Le modifiche le fa un proprietario o un amministratore; tutti gli altri leggono ciò che possono, non vedono mai un pulsante che il server rifiuterebbe, e il server lo rifiuta comunque.
 
-Quattro schermate stanno accanto ai flussi di lavoro. Le credenziali si creano, aprono, modificano, condividono con altri progetti ed eliminano nel proprio progetto; un campo segreto si inserisce una volta e la schermata dice soltanto che è impostato. Progetti elenca chi c'è in ciascuno e con quale ruolo, e le chiavi dell'account di servizio con cui accede un'integrazione stabile. Il proprio account (l'indirizzo nella barra in alto) crea e revoca le chiavi API, con cui accedono l'API REST e il server MCP, e cambia la password. Per proprietari e amministratori, Impostazioni ha le impostazioni generali (secondo fattore, flusso di lavoro di errore), Utenti crea le persone e le disattiva, e il registro di controllo vi si legge, si filtra e si verifica che non sia stato manomesso. L'accesso è lo stesso editor, in `/login`, e mantiene il single sign-on, l'accesso tramite directory, le passkey e i codici di recupero.
+Quattro schermate affiancano i workflow. Le credenziali si creano, si aprono, si modificano, si condividono con altri progetti e si eliminano nel loro progetto; un campo segreto si inserisce una sola volta e la schermata dice soltanto che è impostato. Progetti contiene chi c'è in ciascuno e con quale ruolo, e le chiavi dell'account di servizio con cui accede un'integrazione permanente. Il tuo account (l'indirizzo nella barra in alto) crea e revoca le tue chiavi API, con cui accedono l'API REST e il server MCP, e cambia la tua password. Per proprietari e amministratori, Impostazioni contiene le impostazioni generali (secondo fattore, il workflow di errore), Utenti crea le persone, le disattiva e permette a un proprietario di eliminarne una (i suoi accessi e le sue chiavi spariscono, i suoi workflow restano), e il registro di controllo si legge, si filtra e si verifica contro le manomissioni lì. L'accesso è lo stesso editor, su `/login`, e mantiene l'accesso unico, l'accesso con directory, le passkey e i codici di recupero.
 
 ![Credenziali, con il segreto mai mostrato](/synced/cascade/docs/screenshots/credentials.png)
 ![Progetti, e chi ne fa parte](/synced/cascade/docs/screenshots/projects.png)

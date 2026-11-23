@@ -5,6 +5,8 @@ description: "장비가 읽은 모든 값을 Sparkplug B 엣지 노드로서 중
 
 Edge Publish는 4.5.0부터 HotLoop을 Sparkplug B **엣지 노드**로 바꿔, 읽은 모든 값을 MQTT를 통해 중앙 Gateway에 게시합니다. Sparkplug를 기본 호스트로서 소비하는 기존 MQTT 드라이버와는 반대 방향입니다. 이것을 실행한다는 것은 이런 뜻입니다.
 
+엣지 퍼블리시는 Gateway와 Edge에서 기본으로 켜져 있으며, 차트나 환경 변수로, 또는 관리자가 설정의 "알람과 측정값이 가는 곳"에 입력해 브로커와 Sparkplug 그룹이 생길 때까지 대기합니다([알람 알림](/ko/iot/notifications/#where-alarms-go-settings) 참조). 거기에 저장한 값이 우선하며, HotLoop이 시작할 때 읽습니다. 퍼블리셔가 큐 파일과 노드를 소유하기 때문입니다. 아무것도 지정하지 않으면 아무것도 퍼블리시하지 않으며 HotLoop의 시작을 막지도 않습니다.
+
 이 기능을 켜면 같은 Gateway 프로세스 안에서 실행되며 여전히 TimescaleDB에 연결되어 있으므로, 현장에서 전체 Gateway의 UI와 이력을 로컬에서도 쓰면서 중앙 Gateway로의 업링크도 원할 때 유용합니다. 여러 Edge Relay의 플릿 관리는 4.7.0(Birth와 Death로 추적)과 4.8.0(구성 푸시)에서 추가되었습니다. 플릿 관리 페이지를 참조하십시오.
 
 ## 켜기

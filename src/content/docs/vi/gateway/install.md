@@ -71,7 +71,7 @@ Máy chủ OPC UA của chart cũng phục vụ tình trạng của chính hộp
 | `edgePublish.queueMaxBytes` | `67108864` | Giới hạn của hàng đợi khi mất kết nối lúc bạn phát hành lên trên qua Sparkplug, 64 MiB. Vượt mức đó thì các số đọc cũ nhất bị bỏ và được đếm. `0` là không giới hạn, và một lần mất kết nối đủ dài khi ấy sẽ làm đầy volume. |
 | `database.postgresql.enabled` | `true` | Đặt `false` và điền `database.external` để dùng PostgreSQL của riêng bạn. Có phần mở rộng TimescaleDB thì bạn có hypertable, không có thì dùng phân vùng gốc. |
 | `opcuaClient.persistence.enabled` | `false` | Hãy bật trước khi thêm một thiết bị OPC UA có bảo mật. Nếu không, chứng chỉ của client không có chỗ để sống sót qua một lần khởi động lại, và thiết bị từ chối kết nối thay vì bắt bạn phê duyệt lại độ tin cậy ở cả hai đầu sau mỗi lần triển khai lại. |
-| `ingress` | tắt | Chỉ khi bạn muốn truy cập được từ ngoài cụm bằng một tên. |
+| `ingress` | bật, mọi host | Ingress trả lời mọi host mà lớp ingress của bạn phục vụ. Đặt `ingress.hosts[0].host` để cố định vào một tên, hoặc `ingress.enabled: false` để không dùng. |
 
 Thao tác ghi được giao ở trạng thái tắt, và đó chính là mục đích. Kể cả khi `safety.allowWrites` bật, một tag vẫn chỉ đọc cho đến khi bạn kích hoạt riêng nó, và mọi giá trị đều được kiểm tra với dải của tag, bị từ chối và không bao giờ bị cắt gọt. [Cổng ghi](/vi/gateway/write-gate/) có từng bước kiểm tra, theo thứ tự.
 
