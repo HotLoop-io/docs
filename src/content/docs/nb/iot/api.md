@@ -1003,7 +1003,7 @@ Punktene sjekkes mot enheten slik den er nå, ikke mot det en klient sier den fa
 
 ## MQTT-brokere
 
-Andre brokere enn HotLoops egen som oppdagelsen lytter til: et anleggs Mosquitto, brokeren en Zigbee2MQTT-boks hadde med seg. Se [MQTT-oppdagelse](/nb/iot/mqtt-discovery/#other-brokers). Passordene deres er forseglet med enhetspåloggingsnøkkelen (`HOTLOOP_SECRET_KEY_FILE`) og returneres aldri; `passwordSet` sier om ett er lagret, og `passwordProblem` hvorfor et lagret ikke lar seg åpne. Hver endring havner i loggen og får virkning med en gang: lytteren og enhetene fra den brokeren kobler til på nytt.
+Andre brokere enn HotLoops egen som oppdagelsen lytter til: et anleggs Mosquitto, brokeren en Zigbee2MQTT-boks hadde med seg. Se [MQTT-oppdagelse](/nb/iot/mqtt-discovery/#andre-meglere). Passordene deres er forseglet med enhetspåloggingsnøkkelen (`HOTLOOP_SECRET_KEY_FILE`) og returneres aldri; `passwordSet` sier om ett er lagret, og `passwordProblem` hvorfor et lagret ikke lar seg åpne. Hver endring havner i loggen og får virkning med en gang: lytteren og enhetene fra den brokeren kobler til på nytt.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ Oppretter taggen hvis `deviceId` og `name` er nye, og erstatter den ellers.
 
 Svarer med den lagrede taggen. Å lagre en med `writable: true` logges som sådan: å armere en tag er en sikkerhetsbeslutning og får et navn ved siden av. Taggens entiteter opprettes eller oppdateres før svaret, så en klient kan be om dem med en gang.
 
-En tag på en oppdaget enhet ingen har godtatt, kan ikke armeres: `400`, «accept the device first». Se [MQTT-oppdagelse](/nb/iot/mqtt-discovery/#commands).
+En tag på en oppdaget enhet ingen har godtatt, kan ikke armeres: `400`, «accept the device first». Se [MQTT-oppdagelse](/nb/iot/mqtt-discovery/#kommandoer).
 
 ### `DELETE /api/tags/{device}/{name}`
 

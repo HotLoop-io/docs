@@ -1003,7 +1003,7 @@ mDNS、SSDP、DHCP でプラントのネットワーク上に聞こえたデバ�
 
 ## MQTT ブローカー
 
-HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブローカーです。プラントの Mosquitto や、Zigbee2MQTT の機器が持ち込んだブローカーなどです。[MQTT ディスカバリー](/ja/iot/mqtt-discovery/#other-brokers)を参照してください。パスワードはデバイス認証情報キー(`HOTLOOP_SECRET_KEY_FILE`)で封印され、返されることはありません。`passwordSet` は保存済みのものがあるか、`passwordProblem` は保存済みのものが開けない理由を示します。変更はすべてログに残り、すぐに有効になります。そのブローカーのリスナーとデバイスが再接続します。
+HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブローカーです。プラントの Mosquitto や、Zigbee2MQTT の機器が持ち込んだブローカーなどです。[MQTT ディスカバリー](/ja/iot/mqtt-discovery/#他のブローカー)を参照してください。パスワードはデバイス認証情報キー(`HOTLOOP_SECRET_KEY_FILE`)で封印され、返されることはありません。`passwordSet` は保存済みのものがあるか、`passwordProblem` は保存済みのものが開けない理由を示します。変更はすべてログに残り、すぐに有効になります。そのブローカーのリスナーとデバイスが再接続します。
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブロ
 
 保存されたタグを返します。`writable: true` で保存すると、そのとおりにログに残ります。タグを有効化するのは安全に関わる判断なので、名前が付きます。タグのエンティティはレスポンスの前に作成または更新されるので、クライアントはすぐに要求できます。
 
-誰も受け入れていない発見済みデバイスのタグは、有効化できません。`400`、「accept the device first」です。[MQTT ディスカバリー](/ja/iot/mqtt-discovery/#commands)を参照してください。
+誰も受け入れていない発見済みデバイスのタグは、有効化できません。`400`、「accept the device first」です。[MQTT ディスカバリー](/ja/iot/mqtt-discovery/#コマンド)を参照してください。
 
 ### `DELETE /api/tags/{device}/{name}`
 

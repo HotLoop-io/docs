@@ -1003,7 +1003,7 @@ Les points sont vérifiés par rapport à l'appareil tel qu'il est maintenant, p
 
 ## Brokers MQTT
 
-Des brokers autres que celui de HotLoop que la découverte écoute : le Mosquitto d'une usine, le broker qu'une boîte Zigbee2MQTT a apporté. Voir [Découverte MQTT](/fr/iot/mqtt-discovery/#other-brokers). Leurs mots de passe sont scellés avec la clé d'identifiants des appareils (`HOTLOOP_SECRET_KEY_FILE`) et jamais renvoyés ; `passwordSet` dit si l'un est stocké, et `passwordProblem` pourquoi un mot de passe stocké ne peut pas être ouvert. Chaque changement est journalisé et prend effet aussitôt : l'écouteur et les appareils de ce broker se reconnectent.
+Des brokers autres que celui de HotLoop que la découverte écoute : le Mosquitto d'une usine, le broker qu'une boîte Zigbee2MQTT a apporté. Voir [Découverte MQTT](/fr/iot/mqtt-discovery/#autres-brokers). Leurs mots de passe sont scellés avec la clé d'identifiants des appareils (`HOTLOOP_SECRET_KEY_FILE`) et jamais renvoyés ; `passwordSet` dit si l'un est stocké, et `passwordProblem` pourquoi un mot de passe stocké ne peut pas être ouvert. Chaque changement est journalisé et prend effet aussitôt : l'écouteur et les appareils de ce broker se reconnectent.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ Crée le tag si `deviceId` et `name` sont nouveaux, le remplace sinon.
 
 Répond avec le tag enregistré. En enregistrer un avec `writable: true` est journalisé comme tel : armer un tag est une décision de sécurité et reçoit un nom en face. Les entités du tag sont créées ou mises à jour avant la réponse, donc un client peut les demander tout de suite.
 
-Un tag d'un appareil découvert que personne n'a accepté ne peut pas être armé : `400`, « accept the device first ». Voir [Découverte MQTT](/fr/iot/mqtt-discovery/#commands).
+Un tag d'un appareil découvert que personne n'a accepté ne peut pas être armé : `400`, « accept the device first ». Voir [Découverte MQTT](/fr/iot/mqtt-discovery/#commandes).
 
 ### `DELETE /api/tags/{device}/{name}`
 
