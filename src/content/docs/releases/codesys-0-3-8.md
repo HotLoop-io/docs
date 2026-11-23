@@ -9,7 +9,7 @@ editUrl: false
 
 ## What changed
 
-0.3.8 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-23.
+0.3.8 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-19.
 
 - **It runs provisioner 0.3.3,** the first provisioner image built for amd64 and for arm64, so the chart installs on an arm64 node.
 - **Nothing else changed.** The templates, the values and the HotLoop it wraps (4.22.0) are those of [0.3.7](/releases/codesys-0-3-7/).
