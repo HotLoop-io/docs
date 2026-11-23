@@ -168,7 +168,7 @@ Une règle ou un script en applique une avec une étape `apply_recipe` (voir [Au
 
 Elle l'applique sous le nom de la règle, `automation:<id>`, ou du script, `script:<id>`, avec la source de cette exécution sur chaque écriture, et le parent de l'application est l'exécution. L'étape échoue sauf si chaque cible a été écrite ; une valeur non confirmée ne la fait pas échouer, et la trace dit `NOT confirmed by read-back`. L'essai à blanc d'un script vérifie aussi la recette.
 
-Par MCP, `list_recipes` montre chaque recette avec ses cibles et ses paramètres, `validate_recipe` demande si elle s'appliquerait maintenant, et `apply_recipe` l'applique, avec une raison **obligatoire**. Les écritures d'un agent portent la source `mcp`, donc la barrière s'applique à chacune d'elles, et avec les écritures désactivées (`HOTLOOP_ALLOW_WRITES`) `apply_recipe` est refusé avant que quoi que ce soit ne soit vérifié. Voir [MCP](/fr/iot/mcp/#recipes).
+Par MCP, `list_recipes` montre chaque recette avec ses cibles et ses paramètres, `validate_recipe` demande si elle s'appliquerait maintenant, et `apply_recipe` l'applique, avec une raison **obligatoire**. Les écritures d'un agent portent la source `mcp`, donc la barrière s'applique à chacune d'elles, et avec les écritures désactivées (`HOTLOOP_ALLOW_WRITES`) `apply_recipe` est refusé avant que quoi que ce soit ne soit vérifié. Voir [MCP](/fr/iot/mcp/#recettes).
 
 ## Son entité
 

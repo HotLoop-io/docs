@@ -2122,7 +2122,7 @@ HTML は `sandbox` の Content-Security-Policy で提供されます。レポー
 
 ### `GET /api/sites`
 
-Gateway が連携しているすべてのサイトに、MCP でプラントの状態を並列に問い合わせます。サイトごとに 6 秒なので、止まったサイト1つが残りを待たせることはありません。サイトは設定にある外向きの MCP サーバーです。[MCP](/ja/iot/mcp/#federating-sites)を参照してください。
+Gateway が連携しているすべてのサイトに、MCP でプラントの状態を並列に問い合わせます。サイトごとに 6 秒なので、止まったサイト1つが残りを待たせることはありません。サイトは設定にある外向きの MCP サーバーです。[MCP](/ja/iot/mcp/#サイトの連携)を参照してください。
 
 ```json
 {"configured":true,

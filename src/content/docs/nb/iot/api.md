@@ -2122,7 +2122,7 @@ HTML leveres med en `sandbox`-Content-Security-Policy: en rapport er et dokument
 
 ### `GET /api/sites`
 
-Hver lokasjon Gatewayen føderer, spurt om anleggsstatusen sin over MCP parallelt, 6 sekunder hver, slik at én død lokasjon ikke kan holde opp resten. Lokasjonene er de utgående MCP-serverne i konfigurasjonen. Se [MCP](/nb/iot/mcp/#federating-sites).
+Hver lokasjon Gatewayen føderer, spurt om anleggsstatusen sin over MCP parallelt, 6 sekunder hver, slik at én død lokasjon ikke kan holde opp resten. Lokasjonene er de utgående MCP-serverne i konfigurasjonen. Se [MCP](/nb/iot/mcp/#føderere-anlegg).
 
 ```json
 {"configured":true,

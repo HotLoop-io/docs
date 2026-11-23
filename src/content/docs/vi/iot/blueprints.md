@@ -118,7 +118,7 @@ Việc xóa một blueprint mà bất kỳ quy tắc nào đã được tạo t�
 
 ## Tác nhân
 
-Một tác nhân được cấp `list_blueprints`, `preview_blueprint` và `instantiate_blueprint` (cùng `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` và `delete_blueprint`): nó tìm blueprint phù hợp, tính ra các đầu vào, cho xem quy tắc sẽ làm gì, và tạo nó, qua cùng đường mà màn hình dùng, với cùng các bước kiểm tra đầu vào và tên tác nhân được ghi trong nhật ký sự kiện. Một quy tắc là mệnh lệnh thường trực điều khiển thiết bị mỗi khi điều kiện kích hoạt của nó xảy ra, nên bản xem trước đi trước, và mỗi lệnh ghi mà quy tắc thực hiện sau đó đều gặp cổng kiểm soát ghi. Xem [MCP](/vi/iot/mcp/#blueprints).
+Một tác nhân được cấp `list_blueprints`, `preview_blueprint` và `instantiate_blueprint` (cùng `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` và `delete_blueprint`): nó tìm blueprint phù hợp, tính ra các đầu vào, cho xem quy tắc sẽ làm gì, và tạo nó, qua cùng đường mà màn hình dùng, với cùng các bước kiểm tra đầu vào và tên tác nhân được ghi trong nhật ký sự kiện. Một quy tắc là mệnh lệnh thường trực điều khiển thiết bị mỗi khi điều kiện kích hoạt của nó xảy ra, nên bản xem trước đi trước, và mỗi lệnh ghi mà quy tắc thực hiện sau đó đều gặp cổng kiểm soát ghi. Xem [MCP](/vi/iot/mcp/#blueprint).
 
 ## Mọi thứ nằm ở đâu
 

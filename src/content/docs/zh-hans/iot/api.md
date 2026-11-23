@@ -2122,7 +2122,7 @@ HTML 以 `sandbox` Content-Security-Policy 提供:报表是用来阅读的文档
 
 ### `GET /api/sites`
 
-Gateway 联合的每个站点,通过 MCP 并行询问其工厂状态,每个 6 秒,这样一个失联的站点就不会拖住其余站点。站点就是配置中的出站 MCP 服务器。参见 [MCP](/zh-hans/iot/mcp/#federating-sites)。
+Gateway 联合的每个站点,通过 MCP 并行询问其工厂状态,每个 6 秒,这样一个失联的站点就不会拖住其余站点。站点就是配置中的出站 MCP 服务器。参见 [MCP](/zh-hans/iot/mcp/#站点联合)。
 
 ```json
 {"configured":true,

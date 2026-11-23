@@ -118,7 +118,7 @@ API では `POST /api/blueprints/{id}/instantiate` で、確認には `?dry_run=
 
 ## エージェント
 
-エージェントには `list_blueprints`、`preview_blueprint`、`instantiate_blueprint`(および `upgrade_blueprint_automation`、`create_blueprint`、`update_blueprint`、`delete_blueprint`)が与えられます。適切なブループリントを見つけ、入力を割り出し、ルールが何をするかを示し、画面が使うのと同じ経路で、同じ入力検査を経てルールを作り、ログブックにはエージェントの名前が残ります。ルールは、トリガーが発火するたびに設備へコマンドを出し続ける常設の指示なので、プレビューが先に来ます。ルールがその後に行う書き込みはすべて、書き込みゲートに出会います。[MCP](/ja/iot/mcp/#blueprints) を参照してください。
+エージェントには `list_blueprints`、`preview_blueprint`、`instantiate_blueprint`(および `upgrade_blueprint_automation`、`create_blueprint`、`update_blueprint`、`delete_blueprint`)が与えられます。適切なブループリントを見つけ、入力を割り出し、ルールが何をするかを示し、画面が使うのと同じ経路で、同じ入力検査を経てルールを作り、ログブックにはエージェントの名前が残ります。ルールは、トリガーが発火するたびに設備へコマンドを出し続ける常設の指示なので、プレビューが先に来ます。ルールがその後に行う書き込みはすべて、書き込みゲートに出会います。[MCP](/ja/iot/mcp/#ブループリント) を参照してください。
 
 ## すべての保存先
 

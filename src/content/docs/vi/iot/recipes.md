@@ -168,7 +168,7 @@ Một quy tắc hoặc một script áp dụng một công thức bằng bước
 
 Nó áp dụng với tư cách quy tắc, `automation:<id>`, hoặc script, `script:<id>`, kèm nguồn của lần chạy đó trên mọi lệnh ghi, và cha của lần áp dụng là lần chạy. Bước này thất bại trừ khi mọi đích đã được ghi; một giá trị chưa xác nhận không làm nó thất bại, và dấu vết ghi `NOT confirmed by read-back`. Lần chạy thử của một script cũng kiểm tra công thức.
 
-Qua MCP, `list_recipes` hiển thị mọi công thức cùng các đích và tham số của chúng, `validate_recipe` hỏi liệu một công thức có áp dụng được ngay bây giờ không, và `apply_recipe` áp dụng nó, với một lý do **bắt buộc**. Các lệnh ghi của một tác nhân mang nguồn `mcp`, nên cổng áp dụng cho từng lệnh, và khi ghi bị tắt (`HOTLOOP_ALLOW_WRITES`) thì `apply_recipe` bị từ chối trước khi kiểm tra bất cứ điều gì. Xem [MCP](/vi/iot/mcp/#recipes).
+Qua MCP, `list_recipes` hiển thị mọi công thức cùng các đích và tham số của chúng, `validate_recipe` hỏi liệu một công thức có áp dụng được ngay bây giờ không, và `apply_recipe` áp dụng nó, với một lý do **bắt buộc**. Các lệnh ghi của một tác nhân mang nguồn `mcp`, nên cổng áp dụng cho từng lệnh, và khi ghi bị tắt (`HOTLOOP_ALLOW_WRITES`) thì `apply_recipe` bị từ chối trước khi kiểm tra bất cứ điều gì. Xem [MCP](/vi/iot/mcp/#công-thức).
 
 ## Thực thể của công thức
 

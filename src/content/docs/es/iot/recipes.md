@@ -168,7 +168,7 @@ Una regla o un script aplica una con un paso `apply_recipe` (consulte [Automatiz
 
 La aplica como la regla, `automation:<id>`, o el script, `script:<id>`, con el origen de esa ejecución en cada escritura, y el padre de la aplicación es la ejecución. El paso falla a menos que se haya escrito cada destino; un valor sin confirmar no lo hace fallar, y la traza dice `NOT confirmed by read-back`. La prueba de un script también comprueba la receta.
 
-Por MCP, `list_recipes` muestra cada receta con sus destinos y parámetros, `validate_recipe` pregunta si una se aplicaría ahora mismo y `apply_recipe` la aplica, con un motivo **obligatorio**. Las escrituras de un agente llevan el origen `mcp`, así que la puerta se aplica a cada una de ellas, y con las escrituras desactivadas (`HOTLOOP_ALLOW_WRITES`) `apply_recipe` se rechaza antes de comprobar nada. Consulte [MCP](/es/iot/mcp/#recipes).
+Por MCP, `list_recipes` muestra cada receta con sus destinos y parámetros, `validate_recipe` pregunta si una se aplicaría ahora mismo y `apply_recipe` la aplica, con un motivo **obligatorio**. Las escrituras de un agente llevan el origen `mcp`, así que la puerta se aplica a cada una de ellas, y con las escrituras desactivadas (`HOTLOOP_ALLOW_WRITES`) `apply_recipe` se rechaza antes de comprobar nada. Consulte [MCP](/es/iot/mcp/#recetas).
 
 ## Su entidad
 

@@ -108,7 +108,7 @@ Ogni modifica finisce nel log di sistema, categoria `config`, oggetto `equipment
 
 ## MCP
 
-`list_devices` e `describe_device` rispondono dal testo, come sempre, e il loro output non cambia. Un test lo fissa byte per byte a ciò che rispondeva la versione prima dell'albero, poi riorganizza l'albero attorno al dispositivo (un'impresa sopra il suo sito, una cella sotto la sua linea, un'etichetta) e verifica che nulla di ciò che vede un agente si sia mosso. Quando l'albero cambia il testo, per esempio con una ridenominazione, l'agente vede il testo nuovo, come se qualcuno lo avesse digitato nel dispositivo. `list_entities` è il punto in cui gli agenti vedono l'albero: filtra per un nodo e tutto ciò che sta sotto, e dà il posto di ogni entità. Vedi [MCP](/it/iot/mcp/#entities).
+`list_devices` e `describe_device` rispondono dal testo, come sempre, e il loro output non cambia. Un test lo fissa byte per byte a ciò che rispondeva la versione prima dell'albero, poi riorganizza l'albero attorno al dispositivo (un'impresa sopra il suo sito, una cella sotto la sua linea, un'etichetta) e verifica che nulla di ciò che vede un agente si sia mosso. Quando l'albero cambia il testo, per esempio con una ridenominazione, l'agente vede il testo nuovo, come se qualcuno lo avesse digitato nel dispositivo. `list_entities` è il punto in cui gli agenti vedono l'albero: filtra per un nodo e tutto ciò che sta sotto, e dà il posto di ogni entità. Vedi [MCP](/it/iot/mcp/#entità).
 
 ## Backup e ripristino
 

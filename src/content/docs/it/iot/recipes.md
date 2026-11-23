@@ -168,7 +168,7 @@ Una regola o uno script ne applica una con un passo `apply_recipe` (vedi [Automa
 
 La applica come la regola, `automation:<id>`, o lo script, `script:<id>`, con la sorgente di quell'esecuzione su ogni scrittura, e il genitore dell'applicazione è l'esecuzione. Il passo fallisce a meno che ogni destinazione sia stata scritta; un valore non confermato non lo fa fallire, e la traccia dice `NOT confirmed by read-back`. Anche la prova a vuoto di uno script controlla la ricetta.
 
-Tramite MCP, `list_recipes` mostra ogni ricetta con le sue destinazioni e i suoi parametri, `validate_recipe` chiede se una verrebbe applicata adesso e `apply_recipe` la applica, con un motivo **obbligatorio**. Le scritture di un agente portano la sorgente `mcp`, quindi il cancello si applica a ognuna di esse, e con le scritture disattivate (`HOTLOOP_ALLOW_WRITES`) `apply_recipe` viene rifiutato prima di controllare qualsiasi cosa. Vedi [MCP](/it/iot/mcp/#recipes).
+Tramite MCP, `list_recipes` mostra ogni ricetta con le sue destinazioni e i suoi parametri, `validate_recipe` chiede se una verrebbe applicata adesso e `apply_recipe` la applica, con un motivo **obbligatorio**. Le scritture di un agente portano la sorgente `mcp`, quindi il cancello si applica a ognuna di esse, e con le scritture disattivate (`HOTLOOP_ALLOW_WRITES`) `apply_recipe` viene rifiutato prima di controllare qualsiasi cosa. Vedi [MCP](/it/iot/mcp/#ricette).
 
 ## La sua entità
 

@@ -108,7 +108,7 @@ Chaque modification arrive dans le journal système, catégorie `config`, sujet 
 
 ## MCP
 
-`list_devices` et `describe_device` répondent à partir du texte, comme toujours, et leur sortie ne change pas. Un test la fige octet pour octet sur ce que répondait la version d'avant l'arbre, puis réorganise l'arbre autour de l'appareil (une entreprise au-dessus de son site, une cellule sous sa ligne, un libellé) et vérifie que rien de ce que voit un agent n'a bougé. Quand l'arbre change bien le texte, un renommage par exemple, l'agent voit le nouveau texte, comme si quelqu'un l'avait saisi dans l'appareil. `list_entities` est l'endroit où les agents voient l'arbre : il filtre par un nœud et tout ce qui est en dessous, et donne la place de chaque entité. Voir [MCP](/fr/iot/mcp/#entities).
+`list_devices` et `describe_device` répondent à partir du texte, comme toujours, et leur sortie ne change pas. Un test la fige octet pour octet sur ce que répondait la version d'avant l'arbre, puis réorganise l'arbre autour de l'appareil (une entreprise au-dessus de son site, une cellule sous sa ligne, un libellé) et vérifie que rien de ce que voit un agent n'a bougé. Quand l'arbre change bien le texte, un renommage par exemple, l'agent voit le nouveau texte, comme si quelqu'un l'avait saisi dans l'appareil. `list_entities` est l'endroit où les agents voient l'arbre : il filtre par un nœud et tout ce qui est en dessous, et donne la place de chaque entité. Voir [MCP](/fr/iot/mcp/#entités).
 
 ## Sauvegarde et restauration
 

@@ -108,7 +108,7 @@ Mọi thay đổi đều vào nhật ký hệ thống, danh mục `config`, ch�
 
 ## MCP
 
-`list_devices` và `describe_device` trả lời từ văn bản, như trước nay, và đầu ra của chúng không đổi. Một bài kiểm thử cố định nó từng byte theo những gì phiên bản trước khi có cây đã trả lời, rồi sắp xếp lại cây quanh thiết bị (một doanh nghiệp phía trên địa điểm của nó, một ô dưới dây chuyền của nó, một nhãn) và kiểm tra rằng không có gì mà tác tử nhìn thấy bị xê dịch. Khi cây thật sự đổi văn bản, chẳng hạn do đổi tên, tác tử thấy văn bản mới, y như khi ai đó nhập nó vào thiết bị. `list_entities` là nơi tác tử nhìn thấy cây: nó lọc theo một nút và mọi thứ bên dưới, và cho biết vị trí của từng thực thể. Xem [MCP](/vi/iot/mcp/#entities).
+`list_devices` và `describe_device` trả lời từ văn bản, như trước nay, và đầu ra của chúng không đổi. Một bài kiểm thử cố định nó từng byte theo những gì phiên bản trước khi có cây đã trả lời, rồi sắp xếp lại cây quanh thiết bị (một doanh nghiệp phía trên địa điểm của nó, một ô dưới dây chuyền của nó, một nhãn) và kiểm tra rằng không có gì mà tác tử nhìn thấy bị xê dịch. Khi cây thật sự đổi văn bản, chẳng hạn do đổi tên, tác tử thấy văn bản mới, y như khi ai đó nhập nó vào thiết bị. `list_entities` là nơi tác tử nhìn thấy cây: nó lọc theo một nút và mọi thứ bên dưới, và cho biết vị trí của từng thực thể. Xem [MCP](/vi/iot/mcp/#thực-thể).
 
 ## Sao lưu và khôi phục
 

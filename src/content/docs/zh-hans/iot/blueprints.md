@@ -118,7 +118,7 @@ Blueprint 在存储之前就会被检查，而不是等有人试用时：
 
 ## 代理
 
-代理会获得 `list_blueprints`、`preview_blueprint` 和 `instantiate_blueprint`（以及 `upgrade_blueprint_automation`、`create_blueprint`、`update_blueprint` 和 `delete_blueprint`）：它找到合适的 Blueprint，推算出各个输入，展示规则会做什么，并创建规则，走的是屏幕所用的同一条路径，使用相同的输入检查，并在事件日志中记下代理的名字。规则是每当触发器触发就对设备下发命令的长期指令，所以预览在先，规则之后做的每一次写入都要面对写入闸门。参见 [MCP](/zh-hans/iot/mcp/#blueprints)。
+代理会获得 `list_blueprints`、`preview_blueprint` 和 `instantiate_blueprint`（以及 `upgrade_blueprint_automation`、`create_blueprint`、`update_blueprint` 和 `delete_blueprint`）：它找到合适的 Blueprint，推算出各个输入，展示规则会做什么，并创建规则，走的是屏幕所用的同一条路径，使用相同的输入检查，并在事件日志中记下代理的名字。规则是每当触发器触发就对设备下发命令的长期指令，所以预览在先，规则之后做的每一次写入都要面对写入闸门。参见 [MCP](/zh-hans/iot/mcp/#蓝图)。
 
 ## 一切存放在哪里
 

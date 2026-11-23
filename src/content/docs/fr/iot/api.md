@@ -2122,7 +2122,7 @@ Le HTML est servi avec une Content-Security-Policy `sandbox` : un rapport est un
 
 ### `GET /api/sites`
 
-Chaque site que le Gateway fédère, interrogé sur son état d'usine par MCP en parallèle, 6 secondes chacun, pour qu'un site mort ne retienne pas les autres. Les sites sont les serveurs MCP sortants de la config. Voir [MCP](/fr/iot/mcp/#federating-sites).
+Chaque site que le Gateway fédère, interrogé sur son état d'usine par MCP en parallèle, 6 secondes chacun, pour qu'un site mort ne retienne pas les autres. Les sites sont les serveurs MCP sortants de la config. Voir [MCP](/fr/iot/mcp/#fédérer-des-sites).
 
 ```json
 {"configured":true,

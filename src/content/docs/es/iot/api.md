@@ -2122,7 +2122,7 @@ El HTML se sirve con una Content-Security-Policy `sandbox`: un informe es un doc
 
 ### `GET /api/sites`
 
-Cada sitio que el Gateway federa, al que se le pide su estado de planta por MCP en paralelo, 6 segundos cada uno, para que un sitio caído no retenga a los demás. Los sitios son los servidores MCP salientes de la configuración. Véase [MCP](/es/iot/mcp/#federating-sites).
+Cada sitio que el Gateway federa, al que se le pide su estado de planta por MCP en paralelo, 6 segundos cada uno, para que un sitio caído no retenga a los demás. Los sitios son los servidores MCP salientes de la configuración. Véase [MCP](/es/iot/mcp/#federar-sitios).
 
 ```json
 {"configured":true,
