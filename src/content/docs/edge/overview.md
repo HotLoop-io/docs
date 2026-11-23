@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge is out, first released in 4.18.10]
-The image is `ghcr.io/hotloop-io/hotloop-edge:4.23.2` built for amd64, arm64 and arm/v7, about 37 MB on amd64 and 34 MB on arm, and the chart is `hotloop-edge` from `https://hotloop.io/hotloop`. Both pull with no login. The Quadlet units are the `edge/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/edge/install/). Before 4.18.10 the Gateway could run at the edge and publish Sparkplug upstream, and it has since 4.5.0, but it was the whole Gateway to do it.
+The image is `ghcr.io/hotloop-io/hotloop-edge:4.24.0` built for amd64, arm64 and arm/v7, about 37 MB on amd64 and 34 MB on arm, and the chart is `hotloop-edge` from `https://hotloop.io/hotloop`. Both pull with no login. The Quadlet units are the `edge/` directory of [Podman Quadlet](/install/quadlet/). [Install it](/edge/install/). Before 4.18.10 the Gateway could run at the edge and publish Sparkplug upstream, and it has since 4.5.0, but it was the whole Gateway to do it.
 :::
 
 Edge is a box bolted next to a line. It reads the machine, runs the rules on the machine, keeps working when the WAN goes down, and tells the rest of the plant what it saw. It runs on the same write gate as everything else.
@@ -18,7 +18,7 @@ It has everything [IoT](/iot/overview/) has, and two things on top.
 ## What Edge adds
 
 - **[Edge publish and store-and-forward](/edge/edge-publish/).** It publishes everything it reads upstream as a Sparkplug B edge node. When the link dies it buffers to disk and replays in order when the link comes back, so the historian upstream gets the outage backfilled and not a hole, as long as the outage fits the queue. The queue is 64 MiB by default, about 248,000 readings: about 41 minutes at 100 readings a second, about two minutes at 2,000. Past it the oldest readings go first, every one counted, and `edgePublish.queueMaxBytes` raises it. Readings go to memory while the broker confirms them and to disk only when it stops, and a test cuts the uplink under load, kills the process mid-outage and counts every reading. A hard kill with the link up can still cost about one poll of readings, and the page says so, with the numbers.
-- **[The OPC UA server](/edge/opc-ua-server/).** Read-only and secured. The SCADA you already own sees every tag with no new driver, and Ignition 8.3.9 has read it end to end. It is off until you turn it on.
+- **[The OPC UA server](/edge/opc-ua-server/).** Read-only and secured. The SCADA you already own sees every tag with no new driver, and Ignition 8.3.9 has read it end to end. It is on from the first start, on port 4840.
 
 The local screens and logic keep running with the uplink down, and a test boots the real binary against a link that swallows everything to prove it. A box that reboots during a WAN outage comes up with its screens and its alarms, where before 4.18.10 it crash-looped with no screens and no alarms until the WAN came back. Dashboards are the screens, and they're in [IoT](/iot/dashboards/). An HMI write that names a human, a PIN, or a badge on a shared panel, isn't built yet. It's on [the roadmap](/roadmap/).
 

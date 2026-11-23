@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS는 CODESYS 런타임과 같은 노드에 HotLoop Edge와 프로비저너를 설치하는 Helm 차트 `hotloop-codesys`입니다. 차트는 `{{codesysChartRepo}}`에 게시되며 최신 버전은 {{codesys}}이고, 프로비저너 이미지는 로그인 없이 받을 수 있습니다. EmberNet에서는 App Store 앱입니다. EmberNet이 없으면 k3s의 Helm입니다.
+HotLoop for CODESYS는 CODESYS 런타임과 같은 노드에 HotLoop Edge와 프로비저너를 설치하는 Helm 차트 `hotloop-codesys`입니다. 차트는 `https://hotloop.io/hotloop-codesys/`에 게시되며 최신 버전은 0.3.8이고, 프로비저너 이미지는 로그인 없이 받을 수 있습니다. EmberNet에서는 App Store 앱입니다. EmberNet이 없으면 k3s의 Helm입니다.
 
 ## 노드에 먼저 필요한 것
 
 - **같은 노드에서 포트 4840으로 OPC UA 서버를 게시하는 CODESYS 런타임.** 프로비저너는 Kubernetes에서 노드 자신의 주소를 알아내 `<node address>:4840`을 읽습니다. 런타임 자체의 차트가 그 포트를 호스트에 게시합니다.
 - **PLC 프로그램의 Symbol Configuration.** *Support OPC UA features*를 켜고 보려는 변수를 나열하거나, 선언에서 해당 변수에 `{attribute 'symbol' := 'read'}`를 붙입니다. Symbol Configuration이 없는 PLC는 설정 요청에 추가하라는 메시지로 응답합니다. PLC 프로젝트에서 바꾸는 것은 이것뿐입니다.
-- **HotLoop {{codesysNeeds}}**, 차트가 감싸는 대상입니다. CODESYS 커넥터는 HotLoop 4.19.4와 함께 들어왔습니다. 차트는 `~{{codesysNeeds}}` 라인의 `hotloop-edge` 차트에 의존합니다.
+- **HotLoop 4.22.0**, 차트가 감싸는 대상입니다. CODESYS 커넥터는 HotLoop 4.19.4와 함께 들어왔습니다. 차트는 `~4.22.0` 라인의 `hotloop-edge` 차트에 의존합니다.
 - **프로필.** 키가 하나인 Secret 하나입니다. [프로필 페이지](/ko/codesys/profile/)에 형식이 있습니다.
 
 ## EmberCORE App Store에서
@@ -24,9 +24,9 @@ HotLoop for CODESYS는 CODESYS 런타임과 같은 노드에 HotLoop Edge와 프
 
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
-helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
 ```
 
 Secret의 이름을 `<release>-profile`로 하거나, 차트가 찾는 이름을 `profile.existingSecret`(Secret)과 `profile.key`(키, 기본값 `profile.json`)로 바꿉니다. 설치를 런타임의 노드에 고정하려면 `nodeSelector`를 설정합니다. 프로필 없이 HotLoop만 설치해 직접 설정하려면 `--set provisioner.enabled=false`로 설치합니다.
@@ -36,7 +36,7 @@ Secret의 이름을 `<release>-profile`로 하거나, 차트가 찾는 이름을
 `network.hostNetwork=true`로 자체 차트에서 설치한 런타임은 WebVisu를 위해 호스트 포트 8080을 점유하므로, HotLoop 페이지는 그곳에서 8080으로 함께 수신할 수 없습니다. 차트는 HotLoop 페이지가 파드 안에서 8090으로 수신하게 하고 Service는 8080으로 유지하므로, App Store 타일과 프로비저너는 이전처럼 접속합니다. 둘 다 호스트 네트워크를 켜고 설치합니다.
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

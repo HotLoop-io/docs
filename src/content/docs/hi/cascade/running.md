@@ -10,7 +10,7 @@ Podman होस्ट पर `deploy/quadlet` में systemd यूनिट
 किसी संस्करण को हाथ से खींचने के लिए:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 यूनिट `:stable` का अनुसरण करती हैं और Podman का ऑटो-अपडेट टाइमर उन्हें आगे बढ़ाता है।
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 k3s पर `charts/hotloop-cascade` Helm चार्ट है:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 चार्ट पर वे लेबल लगे होते हैं जिन्हें EmberNet डैशबोर्ड पढ़ता है, Service पर और एडिटर परोसने वाले पॉड पर, इसलिए App Store से डिप्लॉय किया गया Cascade Running Apps में LAUNCH बटन के साथ दिखता है। `gui.appName`, `gui.port` और `gui.displayName` बदलने से जो दिखता है वह बदल जाता है।

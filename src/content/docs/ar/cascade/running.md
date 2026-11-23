@@ -10,7 +10,7 @@ editUrl: false
 لسحب إصدار يدويًا:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 تتبع الوحدات `:stable`، ويقوم مؤقّت التحديث التلقائي في Podman بتحريكها.
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 على k3s، يكون `charts/hotloop-cascade` هو Helm chart:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 يحمل الـ chart الوسوم التي تقرؤها لوحة تحكم EmberNet، على Service وعلى الـ pods التي تقدّم المحرر، ولذلك يظهر Cascade المنشور من App Store تحت Running Apps مع زر LAUNCH. وتغيّر `gui.appName` و`gui.port` و`gui.displayName` ما يعرضه.

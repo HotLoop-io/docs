@@ -10,7 +10,7 @@ Trên máy chủ Podman, `deploy/quadlet` có các unit systemd. Một tệp và
 Để tải một phiên bản bằng tay:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 Các unit theo `:stable` và bộ hẹn giờ tự động cập nhật của Podman sẽ cập nhật chúng.
@@ -18,7 +18,7 @@ Các unit theo `:stable` và bộ hẹn giờ tự động cập nhật của Po
 Trên k3s, `charts/hotloop-cascade` là Helm chart:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 Chart mang các nhãn mà bảng điều khiển EmberNet đọc, trên Service và trên các pod phục vụ trình soạn thảo, nên một Cascade triển khai từ App Store hiện trong Running Apps cùng nút LAUNCH. `gui.appName`, `gui.port` và `gui.displayName` thay đổi những gì nó hiển thị.

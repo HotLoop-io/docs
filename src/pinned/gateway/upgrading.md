@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.23.2
+reviewed: hotloop=4.24.0
 title: "Upgrading HotLoop Gateway to {{hotloop}}"
 description: "From 4.22.1 it is a helm upgrade with three added migrations. From 4.18.11 agents can write. From 4.18.10 the database moves to PostgreSQL 17."
 sidebar:
@@ -21,6 +21,7 @@ The chart repository's index keeps the Gateway's charts back to 4.16.0, so `hotl
 A plain `helm upgrade`, and nothing already on the box changes. Three migrations run at the first start and each only adds: `0028_unifi_port_cycles`, `0029_energy` and `0030_energy_demand`. A backup taken on 4.22.1 restores here, and one taken here does not restore onto an older release, so take a backup first if you may go back.
 
 - **The chart now mounts the host read-only for box health.** The Gateway and Edge charts mount the host's root and `/proc` so the EmberNet dashboard can read the box's disk, CPU and memory. No privilege is added. A cluster on the restricted Pod Security profile refuses a hostPath, so set `opcuaServer.dashboard.boxHealth.enabled: false` there before you upgrade. [Install the Gateway](/gateway/install/#box-health-and-the-host-mount) has the values.
+- **Finished features now ship on.** Wherever a chart has the feature, `broker.enabled`, `opcuaServer.enabled`, `reports.enabled`, `backup.enabled` (daily, `backup.interval: 24h`), `notify.enabled` with every alarm channel, `edgePublish.enabled`, `monitoring.serviceMonitor.enabled` (rendered only where the Prometheus operator's CRDs are installed) and `ingress.enabled` are true. The Ingress has no hostname, so it answers any host your ingress class serves: set `ingress.hosts[0].host` to pin it to one name. An alarm channel or the edge publisher with nowhere to send waits and says so, and an admin gives it a destination under Settings, "Where alarms and readings go". A value your own file sets still wins, and each one set to `false` renders no listener, Service, volume or Ingress.
 - **One new login that can read and nothing else.** The chart makes `embernet-dashboard-read` and its Secret `<release>-opcua-dashboard` at the first install of this version and never rotates it.
 - **UniFi commands exist and are off.** Five kinds of point can command a console, and each stays read-only until a person arms that tag. The console account has to be a local Administrator for them to work.
 - **The Quadlet upgrade unit skips itself.** `hotloop-db-upgrade` runs only when the volume still holds PostgreSQL 16 data, so on a box already on 17 it shows inactive, not failed. Take the new unit files from `deploy/quadlet/`.

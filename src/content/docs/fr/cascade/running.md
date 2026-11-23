@@ -10,7 +10,7 @@ Sur un hôte Podman, `deploy/quadlet` contient des unités systemd. Un fichier e
 Pour récupérer une version à la main :
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 Les unités suivent `:stable` et le minuteur de mise à jour automatique de Podman les met à jour.
@@ -18,7 +18,7 @@ Les unités suivent `:stable` et le minuteur de mise à jour automatique de Podm
 Sur k3s, `charts/hotloop-cascade` est le chart Helm :
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 Le chart porte les labels que lit le tableau de bord EmberNet, sur le Service et sur les pods qui servent l'éditeur : un Cascade déployé depuis l'App Store apparaît donc dans Running Apps avec un bouton LAUNCH. `gui.appName`, `gui.port` et `gui.displayName` changent ce qui s'affiche.

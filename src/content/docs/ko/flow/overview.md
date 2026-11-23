@@ -19,7 +19,7 @@ HotLoop Flow는 Go로 작성된 생산 현장용 시각적 플로 엔진입니�
 
 기존 플로도 그대로 실행합니다. 이것은 핵심이 아니라 기능이므로 [아래](/ko/flow/migrating-from-node-red/)에서 다룹니다.
 
-현재 릴리스는 `2.16.6`입니다. 이미지는 amd64용 `ghcr.io/hotloop-io/hotloop-flow:2.16.6`이며(arm64는 다음 패치 릴리스에서 제공됩니다), Helm 저장소는 `https://hotloop.io/hotloop-flow/`이고, [Flow 배포](/ko/flow/deploying/)에서 Kubernetes, Podman, Quadlet을 다룹니다. 메시지용 노드 유형이 117개, FlowLab 다이어그램용이 39개 있습니다. 가정과 연구실에서의 사용은 무료이고, 학교, 비영리 단체, 정부 기관의 사용도 무료이며, 파트너 플랫폼인 EmberNet을 통한 사용은 기업용을 포함해 제한이 없습니다. HotLoop Source License Agreement를 따릅니다.
+현재 릴리스는 `2.16.8`입니다. 이미지는 amd64용 `ghcr.io/hotloop-io/hotloop-flow:2.16.8`이며(arm64는 다음 패치 릴리스에서 제공됩니다), Helm 저장소는 `https://hotloop.io/hotloop-flow/`이고, [Flow 배포](/ko/flow/deploying/)에서 Kubernetes, Podman, Quadlet을 다룹니다. 메시지용 노드 유형이 117개, FlowLab 다이어그램용이 39개 있습니다. 가정과 연구실에서의 사용은 무료이고, 학교, 비영리 단체, 정부 기관의 사용도 무료이며, 파트너 플랫폼인 EmberNet을 통한 사용은 기업용을 포함해 제한이 없습니다. HotLoop Source License Agreement를 따릅니다.
 
 ## 수치
 

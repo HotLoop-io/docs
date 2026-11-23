@@ -10,7 +10,7 @@ Podman 호스트에서는 `deploy/quadlet`에 systemd 유닛이 들어 있습니
 버전을 직접 받으려면 다음과 같이 합니다.
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 유닛은 `:stable`을 따르며 Podman의 자동 업데이트 타이머가 이를 갱신합니다.
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 k3s에서는 `charts/hotloop-cascade`가 Helm 차트입니다.
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 차트에는 EmberNet 대시보드가 읽는 레이블이 Service와 편집기를 제공하는 파드에 붙어 있어, App Store에서 배포한 Cascade가 Running Apps에 LAUNCH 버튼과 함께 표시됩니다. `gui.appName`, `gui.port`, `gui.displayName`으로 표시 내용을 바꿀 수 있습니다.

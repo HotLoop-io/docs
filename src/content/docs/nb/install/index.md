@@ -21,12 +21,12 @@ Det er to måter å kjøre et HotLoop-produkt på for alvor: Helm på k3s eller 
 
 | Produkt | Siste utgivelse | Helm | Quadlet | Start her |
 |---|---|---|---|---|
-| [HotLoop IoT](/nb/iot/overview/) | 4.23.2 | Ja | Ja | [Installer IoT](/nb/iot/install/) |
-| [HotLoop Edge](/nb/edge/overview/) | 4.23.2 | Ja | Ja | [Installer Edge](/nb/edge/install/) |
-| [HotLoop Gateway](/nb/gateway/overview/) | 4.23.2 | Ja | Ja | [Installer Gateway](/nb/gateway/install/) |
-| [HotLoop Edge Relay](/nb/edge-relay/overview/) | 4.23.2 | Ja | Ja | [Installer Edge Relay](/nb/edge-relay/install/) |
-| [HotLoop Flow](/nb/flow/overview/) | 2.16.6 | Ja | Ja | [Installer Flow](/nb/flow/install/) |
-| [HotLoop Cascade](/nb/cascade/overview/) | 1.4.1 | Ja, uten innlogging | Ja, uten innlogging, se [Cascade med Podman Quadlet](/nb/cascade/quadlet/) | [Kjøre Cascade](/nb/cascade/running/) |
+| [HotLoop IoT](/nb/iot/overview/) | 4.24.0 | Ja | Ja | [Installer IoT](/nb/iot/install/) |
+| [HotLoop Edge](/nb/edge/overview/) | 4.24.0 | Ja | Ja | [Installer Edge](/nb/edge/install/) |
+| [HotLoop Gateway](/nb/gateway/overview/) | 4.24.0 | Ja | Ja | [Installer Gateway](/nb/gateway/install/) |
+| [HotLoop Edge Relay](/nb/edge-relay/overview/) | 4.24.0 | Ja | Ja | [Installer Edge Relay](/nb/edge-relay/install/) |
+| [HotLoop Flow](/nb/flow/overview/) | 2.16.8 | Ja | Ja | [Installer Flow](/nb/flow/install/) |
+| [HotLoop Cascade](/nb/cascade/overview/) | 1.4.2 | Ja, uten innlogging | Ja, uten innlogging, se [Cascade med Podman Quadlet](/nb/cascade/quadlet/) | [Kjøre Cascade](/nb/cascade/running/) |
 | [HotLoop for CODESYS](/nb/codesys/overview/) | 0.3.8 | Ja, eller EmberCORE App Store | Nei | [Installer HotLoop for CODESYS](/nb/codesys/install/) |
 | [HotLoop Transmitter](/nb/transmitter/overview/) | 1.1.0 | Nei, det er et CODESYS-bibliotek | Nei, det er et CODESYS-bibliotek | [Installer Transmitter](/nb/transmitter/install/) |
 

@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
-Générez le hash avec `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long'`. L'image est distroless, non root, sans shell : il n'y a rien dans quoi faire un `exec` et rien sur quoi rebondir pour qui obtiendrait une exécution de code.
+Générez le hash avec `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. L'image est distroless, non root, sans shell : il n'y a rien dans quoi faire un `exec` et rien sur quoi rebondir pour qui obtiendrait une exécution de code.
 
 Ouvrez ensuite <http://localhost:1880>. Déposez un `flows.json` dans le répertoire de données et redémarrez, ou construisez simplement le flux dans l'éditeur. L'éditeur est Astro avec des îlots Svelte sur un canevas en TypeScript pur et SVG natif, compilé en fichiers statiques dans le binaire : 190.7 kB de JS et 30.1 kB de CSS minifiés, 62.5 kB et 6.8 kB en gzip, lus dans `web/dist/_astro` après `npm run build`. Rien n'y est téléchargé de nulle part, donc il fonctionne sur une machine sans internet.
 

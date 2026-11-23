@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.23.2 ya está disponible]
-Cuatro productos desde una misma etiqueta: [IoT](/es/iot/overview/), [Edge](/es/edge/overview/), el Gateway y el [Edge Relay](/es/edge-relay/overview/), cada uno con su propia imagen y su propio chart. Los cuatro se compilan para amd64 y arm64 en 4.23.2, y los tres pequeños también para arm/v7. El Gateway conserva `ghcr.io/hotloop-io/hotloop:4.23.2` y el chart `hotloop` de `https://hotloop.io/hotloop`, y ambos se descargan sin iniciar sesión. [Instálelo](/es/gateway/install/). ¿Está en 4.18.11? Es un `helm upgrade`, y después los agentes pueden escribir, así que lea los dos cambios. ¿Está en 4.17.0? Es un `helm upgrade` normal, pero sin `--reuse-values`, y un par de valores por defecto cambiaron. ¿Está en 4.16.0 o 4.3.1? Pase primero por 4.17.0. En cualquier caso, [lea antes la guía de actualización](/es/gateway/upgrading/). Mejor enterarse aquí que por un despliegue atascado.
+:::note[4.24.0 ya está disponible]
+Cuatro productos desde una misma etiqueta: [IoT](/es/iot/overview/), [Edge](/es/edge/overview/), el Gateway y el [Edge Relay](/es/edge-relay/overview/), cada uno con su propia imagen y su propio chart. Los cuatro se compilan para amd64 y arm64 en 4.24.0, y los tres pequeños también para arm/v7. El Gateway conserva `ghcr.io/hotloop-io/hotloop:4.24.0` y el chart `hotloop` de `https://hotloop.io/hotloop`, y ambos se descargan sin iniciar sesión. [Instálelo](/es/gateway/install/). ¿Está en 4.18.11? Es un `helm upgrade`, y después los agentes pueden escribir, así que lea los dos cambios. ¿Está en 4.17.0? Es un `helm upgrade` normal, pero sin `--reuse-values`, y un par de valores por defecto cambiaron. ¿Está en 4.16.0 o 4.3.1? Pase primero por 4.17.0. En cualquier caso, [lea antes la guía de actualización](/es/gateway/upgrading/). Mejor enterarse aquí que por un despliegue atascado.
 :::
 
 HotLoop Gateway lee su planta. Consulta PLC y servidores en su propio protocolo, guarda cada lectura con su calidad en un historiador, genera alarmas ISA-18.2 que pueden avisar a un teléfono, ejecuta automatizaciones sobre todo ello y entrega la planta completa a los agentes por MCP. Un sitio ejecuta un solo chart, el Gateway y su base de datos, en lugar de un historiador, un servidor de alarmas, un motor de reglas y un montón de código de enlace, cada uno fallando a su propio ritmo.
@@ -19,7 +19,7 @@ Está escrito en Go, desde cero: un binario estático sobre una base distroless,
 
 ## Por dónde empezar
 
-Lo básico, en 4.23.2 y en todas las versiones hasta la 4.16.0:
+Lo básico, en 4.24.0 y en todas las versiones hasta la 4.16.0:
 
 - [Instalación](/es/gateway/install/) es Helm desde el chart publicado o Podman Quadlet en un equipo, la clave que debe respaldar y los pocos valores que conviene fijar antes de que una planta real lo vea.
 - [Actualización](/es/gateway/upgrading/) es el procedimiento que conserva sus datos, desde 4.17.0, 4.16.0 o 4.3.1, y cada cambio de la API con el que tropezará un script.
@@ -64,7 +64,7 @@ Novedades de 4.17.0 respecto a 4.16.0:
 
 HotLoop es una sola base de código que se entrega como cuatro productos, todos publicados juntos desde una misma etiqueta: IoT, Edge, el Gateway y el Edge Relay. El Gateway es la cima: todo lo de IoT y Edge, más gestión de flota, resúmenes multisitio e informes programados. Las funciones separan los productos. Los protocolos jamás: todos los productos hablan todos los protocolos que tenemos, para que nadie tenga que subir de nivel para leer el PLC de su banco de pruebas. [La gama](/es/products/) detalla qué incluye cada uno.
 
-Los cuatro se pueden instalar hoy, todos en 4.23.2. El relay tiene su propia imagen y su propio chart, unos 15 MB frente a los 37 del Gateway, sin base de datos ni interfaz. La gestión de flota del Gateway sigue y ordena a cada relay registrado, y es solo API (`/api/fleet`): no hay pantalla de Flota en la interfaz.
+Los cuatro se pueden instalar hoy, todos en 4.24.0. El relay tiene su propia imagen y su propio chart, unos 15 MB frente a los 37 del Gateway, sin base de datos ni interfaz. La gestión de flota del Gateway sigue y ordena a cada relay registrado, y es solo API (`/api/fleet`): no hay pantalla de Flota en la interfaz.
 
 ¿Lo va a usar en una planta? [Usar HotLoop en una empresa](/es/business/) explica las licencias y cómo contactarnos.
 

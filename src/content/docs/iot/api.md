@@ -5,6 +5,10 @@ description: "Every call HotLoop answers over HTTP, what it needs, what it takes
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Every call the Gateway answers over HTTP, what it needs, what it takes and what
 it gives back. The web UI uses nothing else: there is no private API behind the
 screens, so anything the UI can do, a script can do with the same calls and the
@@ -358,6 +362,9 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -502,6 +509,9 @@ see [Not in this product](#not-in-this-product).
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -787,7 +797,7 @@ binary and a Helm install can't) and is left out otherwise.
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -1099,6 +1109,35 @@ earlier press, or someone's own alarm on the same tag. So it is safe to press
 again after adopting more gear, and it only adds the new gear. The OT-network
 and off-the-network alarms are not part of it; they come with marking a
 network OT and watching a device. `503` until the console has been read once.
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+A Protect camera's current picture, a JPEG (`Content-Type: image/jpeg`,
+`Cache-Control: no-store`), fetched from the console when it is asked for; this is
+the one UniFi route that makes a request of its own. `{id}` is a device with the
+protocol `unifi-protect` and `{camera}` the console's id for the camera (the
+`<id>` in its `cam.<id>.online` tag). `404` when the device is not a connected
+Protect device, and `502` with the console's reason when the camera is offline or
+the console refuses the key. See [Protocols and drivers](/iot/protocols/#unifi-protect).
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+An ONVIF camera profile's current picture, a JPEG (`Content-Type` as the camera
+sent it, `Cache-Control: no-store`), fetched from the camera when it is asked for,
+with the camera's own login. `{id}` is a device with the protocol `onvif` and
+`{profile}` the camera's token for the media profile (the `<token>` in its
+`profile.<token>.snapshot_uri` tag). `404` when the device is not a connected ONVIF
+device, and `502` with the camera's reason when it will not give one. See
+ONVIF.md.
+
+### `POST /api/onvif/discover`
+
+Probes the network for ONVIF cameras (WS-Discovery, a multicast probe from every
+interface) and answers `{"cameras":[...]}` with each one that replied: its
+`endpoint`, `xaddrs`, the `address` to add it with, and the `name`, `hardware`,
+`location` and `profiles` its scopes say. `?wait=` is how many seconds to listen,
+1 to 15, default 3. It adds nothing; a person adds the camera as a device with
+protocol `onvif`.
 
 ## MQTT discovery
 
@@ -3089,6 +3128,48 @@ dangerous thing this screen could do. With no sites configured:
 `{"configured":false,"sites":[]}`.
 
 ## Settings
+
+### `GET /api/destinations`
+
+Where alarms and edge readings go, one entry per kind: `webhook`, `smtp`, `ntfy`,
+`gotify`, `discord_webhook`, `discord_bot` and `edge_publish`. Each has its
+`fields` (key, label, type, whether it is a secret or required), `enabled`,
+a `state` (`active`: it sends; `needs`: on and waiting for its destination, with
+`missing` naming what it waits for; `off`; `needs-restart`: saved, and the edge
+publisher applies it when HotLoop restarts), the plain `values`, and `set`, which
+says which secret fields have a value. A secret's value is never returned.
+`source` is `saved` when an admin saved it under Settings and `environment` when
+the chart or the environment gave it. Every kind is on by default and idle until
+it has somewhere to send; none refuses startup.
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+What the OPC UA server is doing and how a client logs in. `state` is `active`,
+`idle` (HotLoop authentication is off, so there are no users to log in as; `reason`
+says so), `off` or `unavailable` (this product does not have the server). When it
+is on, `endpoint` is the URL a client connects to, and with authentication on,
+`username` and `password` are the login HotLoop made for OPC UA clients
+(`opcua-reader`, who may read tags and values and nothing else, with a generated
+password). Needs `users.manage`, because the password is in it. The server is on by
+default; its password can be changed like any user's, and the next start makes the
+one shown here work again.
+
+### `PUT /api/destinations/{kind}`
+
+Saves one destination and answers with the list as `GET` gives it. The body is
+`{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`, every
+part optional. A secret left blank keeps what is stored, and `clear` removes one.
+The result is checked the way the environment is at startup before anything is
+stored, so a wrong destination is a `400` that says what is wrong (never the
+value) and changes nothing. The alarm channels apply at once; the edge publisher's
+destination applies when HotLoop restarts. Secrets are sealed in the database
+when HotLoop has a secret key. Needs `settings.write`.
 
 ### `GET /api/settings`
 

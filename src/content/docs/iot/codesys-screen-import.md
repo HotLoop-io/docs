@@ -56,6 +56,8 @@ The report has the usual `problems`, `warnings` and `remapped`, and a
 | Rocker switch, toggle, push button | a lamp showing the state, and a button card: on and off for a toggle, the one value for a tap |
 | Polygon, polyline, and shapes with no text and no variable (the pipes, the vessel, the frames) | the picture behind the symbols, drawn from their points and colors |
 | Group | its members, placed from the group's corner |
+| An element's **Invisible** variable (`bInvisible`), or its group's | a `show` rule on the symbol: it is drawn only while the variable says the element would be visible (`NOT x` turns it over) |
+| An element's **Toggle color** variable | a `colors` rule on the symbol: while the variable is on it is painted in the tone nearest the element's own alarm color (red is `bad`, yellow and orange `warn`, blue `info`, green `ok`; an element with no alarm color of its own is `bad`, as CODESYS's default alarm frame is red) |
 
 Every element keeps its pixel place: the page is the symbols card, drawn as one
 scaled picture, so the screen holds its shape at any size and on a phone.
@@ -68,8 +70,12 @@ Said in the import, one line each, never dropped quietly:
   element, and the rest of the toolbox),
 * a variable that is an expression (`Temp * 2`, `a AND b`, an array element):
   HotLoop shows a tag, so add a tag for the expression and point a readout at it,
-* a visibility, color or movement rule driven by a PLC value: the symbol is
-  there all the time and does not change color,
+* an invisible or toggle color variable on a shape that is drawn into the
+  background picture (a pipe, a vessel, a frame): the picture is one image, so the
+  shape is always there and keeps its color. Said in the import, with the variable,
+* any other setting driven by a PLC value (a color variable for the fill, frame or
+  text, a movement, a blink, a text list): the symbol is there as it was drawn,
+  and the rule is reported when its variable is a plain one,
 * a bezier curve is drawn as straight lines between its points, and a rotated
   element is not rotated,
 * the page size, which the export does not hold: the page is as big as the
@@ -86,7 +92,12 @@ what is in it. The reader here follows what the IDE itself writes (CODESYS 3.5
 SP22, Visualization 4.10): every element stores its settings as a list of
 numbered members, and the number is the CRC-32 of the member's path in the
 element's description, such as `m_StaticPosition.iX`, which the IDE installs next
-to itself. The tests hold values read from the IDE's own export. A setting that
+to itself. The IDE's own element trees list every path with its id
+(`ITypeNode.CompletePath` and `CRCIdNumber`); the ids of the invisible variable
+(`m_pStateVariables..State.bInvisible`, 2880254039) and the toggle color variable
+(`m_pColorVariables..ToggleColor`, 1999528970) come from there, and the first is
+the id the CODESYS Refrigerator example stores its group's `NOT Glob_Var.DoorOpen`
+at. The tests hold values read from the IDE's own export. A setting that
 carries a variable and is not read is reported as above, so a screen is never
 imported as complete when it is not.
 
@@ -97,3 +108,14 @@ button cards where your operators expect them. A screen you built by hand and a
 screen you imported are the same thing from here: it exports as a
 [screen file](/iot/screen-file/), versions with every save, and goes to another
 install the same way.
+
+## TwinCAT visualizations (.TcVIS)
+
+A TwinCAT `.TcVIS` file is the same visualization in the IDE's object archive XML, with the same element types and the same member ids, so it goes through the same converter. Checked against the real TwinCAT PackML example.
+
+- Buttons: every plain assignment in a button's input action (`X := 5`, `X := TRUE`, `X := E_PMLCommand.ePMLCommand_Start`) becomes a button card that writes that value to X, and the caption comes over as a label. A configured Toggle input becomes the pair of buttons, on and off. Code that is more than an assignment (a condition, a call, arithmetic) is reported with its text.
+- Enumerations: the OMAC PackML members (`E_PMLCommand`, `E_PMLUnitMode`) are known, with the numbers from Beckhoff's PackML_HMI_Example configuration and the SPT-Libraries `E_PMLUnitMode` declaration. Any other enumeration goes in the import's `enums` (`{"E_Own.eOwn_Go": 7}`). A member with no known number is written by its name and the report says so.
+- Expressions: a lamp's variable and an invisible variable can be a comparison of one tag with a number, TRUE, FALSE or an enumeration member (`=`, `<>`, `<`, `<=`, `>`, `>=`), NOT, AND and OR, with brackets. They become a symbol rule (see DASHBOARDS.md: a lamp's `lit` rule, a symbol's `show` and `colors` rules, which can combine rules with `all` and `any`). A comparison of two tags, arithmetic, and calls cannot be said and are reported with the part that could not.
+- Frames: a frame shows another visualization. Send the other files of the project with the first (`codesysRelated` in the API; in the dialog, pick several files and the first is the screen). The frame's visualization is placed in the frame, with each input it takes bound to the variable the frame was given (V_Module's `HMI` becomes `MAIN.VFFSDemo.Sealer.PackMLBaseModule_HMI`). A frame whose visualization is not among the files is reported with its name.
+
+The PackML set (V_Main with V_Module and V_MachineModule): 60 elements mapped, none unmapped.

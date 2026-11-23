@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
-Lag hashen med `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long'`. Imaget er distroless uten root og har ingen shell, så det er ingenting å kjøre `exec` inn i og ingenting for noen som får kjørt kode å bruke til å komme videre.
+Lag hashen med `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. Imaget er distroless uten root og har ingen shell, så det er ingenting å kjøre `exec` inn i og ingenting for noen som får kjørt kode å bruke til å komme videre.
 
 Åpne deretter <http://localhost:1880>. Legg en `flows.json` i datamappen og start på nytt, eller bygg flyten rett i editoren. Editoren er Astro med Svelte-øyer over et lerret av ren TypeScript og innebygd SVG, bygget til statiske filer inni binæren: 190.7 kB JS og 30.1 kB CSS minifisert, 62.5 kB og 6.8 kB med gzip, lest fra `web/dist/_astro` etter `npm run build`. Ingenting i den hentes noe sted fra, så den fungerer på en maskin uten internett.
 
