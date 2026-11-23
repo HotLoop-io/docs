@@ -30,7 +30,7 @@ helm install hotloop hotloop/hotloop --version {{hotloop}} \
 
 **インストールせずにチャートをレンダリングするだけですか。自前のキーを持ち込んでください。** キーは、本物の `helm install` か `helm upgrade` にしかできない `lookup` で生成されます。`helm template` を実行してその結果を適用する方法では、レンダリングのたびに新しいキーができ、次の同期で封印されたパスワードがすべて開かなくなります。`hotloop gen-secret-key` でキーを作り、自分で管理する Secret のキー `secret.key` に入れて、その Secret を `secretKey.existingSecret` に指定してください。Helm、Fleet、EmberNet の App Store はいずれも実際にインストールするので、これは不要です。
 
-URL(`mqtt://user:pass@host`)や自由記述の中に書いた認証情報は平文のままです。`password` に入れてください。何が暗号化されるかの一覧は[機器の認証情報](/ja/iot/protocols/#device-credentials)にあります。
+URL(`mqtt://user:pass@host`)や自由記述の中に書いた認証情報は平文のままです。`password` に入れてください。何が暗号化されるかの一覧は[機器の認証情報](/ja/iot/protocols/#デバイスの認証情報)にあります。
 
 ## サインイン
 

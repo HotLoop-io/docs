@@ -47,7 +47,7 @@ Edge Relay는 4.6.0부터 별도의 두 번째 바이너리로 단독 실행됩�
 }
 ```
 
-태그는 Gateway의 태그가 지원하는 모든 것을 지원하며 `noData`도 포함됩니다. 이는 "측정값 없음"을 뜻하는 원시 값의 목록(레코더의 0x8005 등)으로, 각각 이유가 붙어 있어서 죽은 채널이 숫자로 보이지 않고 Relay와 Sparkplug 스트림에서 불량으로 읽힙니다. [데이터 없음 값](/ko/iot/protocols/#no-data-values)을 참조하십시오.
+태그는 Gateway의 태그가 지원하는 모든 것을 지원하며 `noData`도 포함됩니다. 이는 "측정값 없음"을 뜻하는 원시 값의 목록(레코더의 0x8005 등)으로, 각각 이유가 붙어 있어서 죽은 채널이 숫자로 보이지 않고 Relay와 Sparkplug 스트림에서 불량으로 읽힙니다. [데이터 없음 값](/ko/iot/protocols/#데이터-없음-값)을 참조하십시오.
 
 Gateway의 프로토콜 드라이버 일곱 가지가 모두 포함되어 있습니다. OPC UA, Modbus, MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect, HTTP입니다. 장치 파일 형식에는 Edge Relay 전용인 부분이 없습니다.
 
@@ -90,7 +90,7 @@ Relay는 들은 내용을 아무것도 보관하지 않습니다. `homeassistant
 
 ### 장치 파일의 자격 증명 (4.15.0)
 
-Relay의 OPC UA 드라이버는 Gateway의 것이므로 장치는 `config` 블록에 OPC UA `username`과 `password`(그리고 [프로토콜과 드라이버](/ko/iot/protocols/#opc-ua-security-and-credentials)의 보안 옵션)를 담을 수 있고, 다른 프로토콜의 장치도 마찬가지입니다(MQTT와 HTTP 비밀번호, HTTP 헤더, 주소 안의 자격 증명). 이 값들은 장치 파일에 평문으로 들어 있고 Relay에는 이를 가려 줄 API가 없으므로(4.15.1에서 Gateway에 추가된 API 가림 처리는 Relay에 적용되지 않습니다. [인증과 사용자](/ko/iot/authentication/#자격-증명이-여전히-평문인-곳) 참조), 파일을 어디에 두는지가 중요합니다.
+Relay의 OPC UA 드라이버는 Gateway의 것이므로 장치는 `config` 블록에 OPC UA `username`과 `password`(그리고 [프로토콜과 드라이버](/ko/iot/protocols/#opc-ua-보안과-자격-증명)의 보안 옵션)를 담을 수 있고, 다른 프로토콜의 장치도 마찬가지입니다(MQTT와 HTTP 비밀번호, HTTP 헤더, 주소 안의 자격 증명). 이 값들은 장치 파일에 평문으로 들어 있고 Relay에는 이를 가려 줄 API가 없으므로(4.15.1에서 Gateway에 추가된 API 가림 처리는 Relay에 적용되지 않습니다. [인증과 사용자](/ko/iot/authentication/#자격-증명이-여전히-평문인-곳) 참조), 파일을 어디에 두는지가 중요합니다.
 
 - **Helm 차트에서는 `devicesSecret`을 사용하십시오.** 차트의 `devices`와 `tags` 값에 설정한 장치는 ConfigMap으로 렌더링되며, 네임스페이스에서 ConfigMap을 읽을 수 있는 누구나 읽을 수 있고 Helm 릴리스 기록에도 남습니다. 자격 증명이 있는 장치라면 장치 파일 전체를 `devices.json` 키로 Secret에 넣고 `devicesSecret`에 그 이름을 지정하십시오. 그러면 ConfigMap 대신 Secret이 마운트되고 ConfigMap은 만들어지지 않습니다.
 - **푸시한 장치 파일에도 들어 있습니다.** `POST /api/fleet/{id}/config`로 푸시한 파일은 MQTT 토픽에 retained로 게시되므로, 브로커는 TLS를 사용해야 하고 `hotloop/edge-relay-config/#`를 읽을 수 있는 대상을 제한해야 합니다. 그렇지 않으면 이 토픽을 구독할 수 있는 누구나 그 안의 모든 자격 증명을 읽을 수 있습니다. Relay는 푸시된 파일을 데이터 볼륨의 `0600` 모드로 기록합니다(차트와 Quadlet 유닛 모두 `/data/pushed-devices.json`). 따라서 Secret이 아니라 PVC에도 남습니다.

@@ -126,7 +126,7 @@ opcuaClient:
     size: 64Mi
 ```
 
-Một thiết bị kết nối tới máy chủ OPC UA bảo mật, hoặc đăng nhập bằng tên người dùng và mật khẩu mà máy chủ yêu cầu mã hóa, giữ một chứng chỉ và một kho tin cậy các chứng chỉ máy chủ đã duyệt (`HOTLOOP_OPCUA_CLIENT_PKI_DIR`, `/data/opcua-client-pki`). Hãy bật tính năng này trước khi thêm thiết bị như vậy: hệ thống tệp gốc chỉ đọc, nên nếu không có volume, thiết bị báo một lỗi nói rõ điều đó thay vì kết nối bằng chứng chỉ sẽ mất ở lần khởi động lại tiếp theo. Nó tắt theo mặc định vì thêm một PersistentVolumeClaim vào bản cài sẵn có, sẽ nằm ở Pending trên cụm không có StorageClass mặc định. Các thiết bị ẩn danh trên kênh không bảo mật không dùng nó. Việc duyệt chứng chỉ của một máy chủ, và mọi điều khác về các thiết bị này, nằm ở [Giao thức và driver](/vi/iot/protocols/#opc-ua-security-and-credentials).
+Một thiết bị kết nối tới máy chủ OPC UA bảo mật, hoặc đăng nhập bằng tên người dùng và mật khẩu mà máy chủ yêu cầu mã hóa, giữ một chứng chỉ và một kho tin cậy các chứng chỉ máy chủ đã duyệt (`HOTLOOP_OPCUA_CLIENT_PKI_DIR`, `/data/opcua-client-pki`). Hãy bật tính năng này trước khi thêm thiết bị như vậy: hệ thống tệp gốc chỉ đọc, nên nếu không có volume, thiết bị báo một lỗi nói rõ điều đó thay vì kết nối bằng chứng chỉ sẽ mất ở lần khởi động lại tiếp theo. Nó tắt theo mặc định vì thêm một PersistentVolumeClaim vào bản cài sẵn có, sẽ nằm ở Pending trên cụm không có StorageClass mặc định. Các thiết bị ẩn danh trên kênh không bảo mật không dùng nó. Việc duyệt chứng chỉ của một máy chủ, và mọi điều khác về các thiết bị này, nằm ở [Giao thức và driver](/vi/iot/protocols/#opc-ua-bảo-mật-và-thông-tin-xác-thực).
 
 ### Mạng
 

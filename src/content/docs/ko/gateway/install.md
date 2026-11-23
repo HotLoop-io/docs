@@ -32,7 +32,7 @@ helm install hotloop hotloop/hotloop --version 4.23.2 \
 
 **설치하지 않고 차트를 렌더링만 하시나요? 직접 만든 키를 가져오세요.** 키는 실제 `helm install`이나 `helm upgrade`만 할 수 있는 `lookup`으로 생성됩니다. `helm template`을 실행하고 그 결과를 적용하는 방식은 렌더링할 때마다 새 키를 받고, 다음 동기화 때 봉인된 모든 비밀번호가 잠겨 버립니다. `hotloop gen-secret-key`로 키를 만들어 직접 관리하는 Secret의 `secret.key` 항목에 넣고, 그 Secret을 `secretKey.existingSecret`에 지정하세요. Helm, Fleet, EmberNet App Store는 모두 실제로 설치하므로 이 작업이 필요 없습니다.
 
-URL(`mqtt://user:pass@host`)이나 자유 텍스트에 적은 자격 증명은 평문으로 남습니다. `password`에 넣으세요. 무엇이 암호화되는지는 [장치 자격 증명](/ko/iot/protocols/#device-credentials)에 전체 목록이 있습니다.
+URL(`mqtt://user:pass@host`)이나 자유 텍스트에 적은 자격 증명은 평문으로 남습니다. `password`에 넣으세요. 무엇이 암호화되는지는 [장치 자격 증명](/ko/iot/protocols/#장치-자격-증명)에 전체 목록이 있습니다.
 
 ## 로그인
 

@@ -47,7 +47,7 @@ Edge Relay 自 4.6.0 起是第二个二进制文件，独立运行：一个轮�
 }
 ```
 
-变量具备 Gateway 变量的一切能力，包括 `noData`：一份表示“没有测量值”的原始值列表（例如记录仪的 0x8005），每个值带一个原因，因此失效的通道在 Relay 上和 Sparkplug 数据流里显示为质量不良，而不是一个数字。见[无数据值](/zh-hans/iot/protocols/#no-data-values)。
+变量具备 Gateway 变量的一切能力，包括 `noData`：一份表示“没有测量值”的原始值列表（例如记录仪的 0x8005），每个值带一个原因，因此失效的通道在 Relay 上和 Sparkplug 数据流里显示为质量不良，而不是一个数字。见[无数据值](/zh-hans/iot/protocols/#无数据值)。
 
 Gateway 的七个协议驱动全部编译在内：OPC UA、Modbus、MQTT/Sparkplug B、EtherNet/IP、S7comm、MTConnect 和 HTTP。设备文件格式中没有任何专属于 Edge Relay 的部分。
 
@@ -90,7 +90,7 @@ Relay 不保存它听到的任何内容。`homeassistant/` 和 Tasmota 的配置
 
 ### 设备文件中的凭据 (4.15.0)
 
-Relay 的 OPC UA 驱动就是 Gateway 的驱动，所以设备可以在其 `config` 块中携带 OPC UA 的 `username` 和 `password`（以及[协议与驱动](/zh-hans/iot/protocols/#opc-ua-security-and-credentials)中的安全选项），任何其他协议的设备也可以（MQTT 和 HTTP 密码、HTTP 头、地址中的凭据）。这些内容在设备文件里是明文的，而 Relay 没有可用来遮盖它们的 API（4.15.1 为 Gateway 增加的 API 脱敏不适用于它；见[认证与用户](/zh-hans/iot/authentication/#凭据仍是明文的地方)），所以文件放在哪里很重要：
+Relay 的 OPC UA 驱动就是 Gateway 的驱动，所以设备可以在其 `config` 块中携带 OPC UA 的 `username` 和 `password`（以及[协议与驱动](/zh-hans/iot/protocols/#opc-ua安全与凭据)中的安全选项），任何其他协议的设备也可以（MQTT 和 HTTP 密码、HTTP 头、地址中的凭据）。这些内容在设备文件里是明文的，而 Relay 没有可用来遮盖它们的 API（4.15.1 为 Gateway 增加的 API 脱敏不适用于它；见[认证与用户](/zh-hans/iot/authentication/#凭据仍是明文的地方)），所以文件放在哪里很重要：
 
 - **在 Helm 图表中，请使用 `devicesSecret`。** 在图表的 `devices` 和 `tags` 值中设置的设备会渲染成 ConfigMap，命名空间内任何有权读取 ConfigMap 的人都能读到，并且它们还会保存在 Helm 发布记录中。对于带凭据的设备，请把整个设备文件放进一个 Secret，键为 `devices.json`，并在 `devicesSecret` 中写上它的名字；Secret 会替代 ConfigMap 被挂载，此时不会创建 ConfigMap。
 - **推送的设备文件同样带有这些凭据。** 用 `POST /api/fleet/{id}/config` 推送的文件，会以 retained 方式发布到一个 MQTT 主题，所以代理必须启用 TLS，并限制谁可以读取 `hotloop/edge-relay-config/#`，否则任何能订阅它的人都能读到其中的每一项凭据。Relay 以 `0600` 权限把推送的文件写到它的数据卷上（图表和 Quadlet 单元里都是 `/data/pushed-devices.json`），所以它也在 PVC 上，而不是在 Secret 里。

@@ -126,7 +126,7 @@ opcuaClient:
     size: 64Mi
 ```
 
-连接到受保护的 OPC UA 服务器，或使用服务器要求加密的用户名和密码登录的设备，会保留一个证书和一个已批准服务器证书的信任库（`HOTLOOP_OPCUA_CLIENT_PKI_DIR`,`/data/opcua-client-pki`）。添加这类设备之前请先开启它：根文件系统是只读的，所以没有这个卷，设备会报告一个说明此事的错误，而不是用下次重启就会丢失的证书去连接。它默认关闭，因为它会给现有安装增加一个 PersistentVolumeClaim，在没有默认 StorageClass 的集群上会一直处于 Pending。不安全通道上的匿名设备不使用它。批准服务器证书以及关于这些设备的其他一切，见[协议和驱动](/zh-hans/iot/protocols/#opc-ua-security-and-credentials)。
+连接到受保护的 OPC UA 服务器，或使用服务器要求加密的用户名和密码登录的设备，会保留一个证书和一个已批准服务器证书的信任库（`HOTLOOP_OPCUA_CLIENT_PKI_DIR`,`/data/opcua-client-pki`）。添加这类设备之前请先开启它：根文件系统是只读的，所以没有这个卷，设备会报告一个说明此事的错误，而不是用下次重启就会丢失的证书去连接。它默认关闭，因为它会给现有安装增加一个 PersistentVolumeClaim，在没有默认 StorageClass 的集群上会一直处于 Pending。不安全通道上的匿名设备不使用它。批准服务器证书以及关于这些设备的其他一切，见[协议和驱动](/zh-hans/iot/protocols/#opc-ua安全与凭据)。
 
 ### 网络
 
