@@ -5,28 +5,25 @@ description: "The web UI in English and thirteen more languages, with Arabic lai
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The web UI of HotLoop IoT, Edge and Gateway (and HotLoop for CODESYS, which runs the Edge UI) comes in English and 13 more languages: Spanish (es), French (fr), Italian (it), German (de), Norwegian Bokmal (nb), Bulgarian (bg), Greek (el), Korean (ko), Japanese (ja), Vietnamese (vi), Hindi (hi), Simplified Chinese (zh-Hans) and Arabic (ar, laid out right to left).
 
 Pick one in the language box in the top bar, or on the sign-in card. The choice is kept in this browser. With nothing chosen, the page uses the first of the browser's languages that HotLoop has, and English when none matches. A language is in the picker only when its file is complete.
 
 What follows the language: every word on every screen, the order and marks of numbers (a decimal comma in German, French and Spanish), dates and times (24 hour clock), plural forms (Arabic has six), and the direction of the page. Product and protocol names (HotLoop, Modbus, OPC UA, MQTT, Sparkplug, CODESYS, UniFi) stay as written. Values from the plant, such as tag names, device names, alarm messages somebody typed and error text sent back by the server, are shown as they are.
 
-## How it works
+## Built for the people who use it
 
-* [i18next](https://www.i18next.com/) 27 looks the message up, fills `{{name}}` and picks the plural form. It asks the browser's own `Intl.PluralRules`, so the plural rules are the Unicode CLDR ones. Numbers and dates use `Intl.NumberFormat` and `Intl.DateTimeFormat` through `web/src/lib/format.ts`.
-* Messages live in `web/src/i18n/locales/<language>.json`, flat, one key per message. `en.json` is the source. Every other file has exactly its keys.
-* In a template or a script, write `tl('area.key')` or `tl('area.key', { name })`. A message with a count has one key per plural form (`key_one`, `key_other`, and `key_few`, `key_many`, `key_two`, `key_zero` where a language has them) and is asked for by the bare key with `count`: `tl('overview.tags_count', { count: n })`.
-* English is part of the page. Another language is a separate file, fetched when somebody picks it.
-* `web/src/i18n/index.svelte.ts` keeps the language; changing it draws every screen again. A word kept in a constant at the top of a `.ts` file is read once when the file loads and is not translated: write it as a getter (`get label() { return tl('x.y'); }`) or keep the key and call `tl()` where it is drawn.
-* The page sets `<html lang dir>`. The CSS uses logical properties (`margin-inline-start`, `inset-inline-end`, `text-align: start`), so the layout turns round by itself for Arabic.
+* Every screen is drawn from one message per sentence, so a language is never half a page of its own words and half English. A language appears in the picker only when every screen is complete.
+* Plurals follow the Unicode CLDR rules for each language, so "1 device", "2 devices" and Arabic's six forms all read the way a native speaker expects.
+* Numbers and dates come from the browser's own formatting for the language you picked, so a German reader sees 1.234,5 and a US reader sees 1,234.5.
+* Switching language redraws every screen at once, with no reload. English is part of the page and loads with it; each other language is fetched only when somebody picks it, so a plant that runs in one language never downloads the other twelve.
+* The layout turns round by itself for Arabic: margins, alignment and spacing all flip with the language.
 
-## Adding or changing a word
-
-1. Add the message to `en.json` and write it in the code with `tl()`.
-2. Add it to every other language file, written by a person who reads that language, following the shared term base in the codex (`work/notes/i18n/glossary/`). Short, plain sentences. Product and protocol names stay in English.
-3. Run `cd web && npm run check:i18n`. It fails when a language file is missing a key, has a different `{{placeholder}}` than English, or lacks a plural form its language needs; when a key is not used; and when English is written in a template or in code without going through `tl()`. It runs before every `npm run build` and in `npm run typecheck`, so the full suite and the release build stop on it. English that is meant to stay (a name, a code example) goes in `web/i18n/allow.json` with the reason.
-
-Set `HOTLOOP_TEST_BROWSER_GALLERY` and `HOTLOOP_TEST_BROWSER_ARTIFACTS` to keep a screenshot of each.
+A browser test in the full suite proves it on the real page. It opens HotLoop in each language at a desktop and a phone width and walks every screen. The direction is right, nothing scrolls sideways, no message shows as a placeholder, numbers read the language's way, and the choice survives a reload.
 
 ## What is not translated
 

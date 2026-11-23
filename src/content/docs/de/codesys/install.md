@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS ist ein Helm-Chart, `hotloop-codesys`, das HotLoop Edge und einen Provisioner auf demselben Knoten wie eine CODESYS-Runtime installiert. Das Chart ist unter `{{codesysChartRepo}}` veröffentlicht, mit {{codesys}} als der neuesten, und das Provisioner-Image lässt sich ohne Anmeldung laden. Auf EmberNet ist es eine App im App Store. Ohne EmberNet ist es Helm auf k3s.
+HotLoop for CODESYS ist ein Helm-Chart, `hotloop-codesys`, das HotLoop Edge und einen Provisioner auf demselben Knoten wie eine CODESYS-Runtime installiert. Das Chart ist unter `https://hotloop.io/hotloop-codesys/` veröffentlicht, mit 0.3.8 als der neuesten, und das Provisioner-Image lässt sich ohne Anmeldung laden. Auf EmberNet ist es eine App im App Store. Ohne EmberNet ist es Helm auf k3s.
 
 ## Was der Knoten zuerst braucht
 
 - **Eine CODESYS-Runtime auf demselben Knoten, die ihren OPC-UA-Server auf Port 4840 veröffentlicht.** Der Provisioner ermittelt die Adresse des eigenen Knotens aus Kubernetes und liest `<node address>:4840`. Das Chart der Runtime veröffentlicht diesen Port auf dem Host.
 - **Eine Symbol Configuration im SPS-Programm** mit eingeschaltetem *Support OPC UA features*, die die Variablen auflistet, die Sie sehen wollen, oder `{attribute 'symbol' := 'read'}` an ihnen in der Deklaration. Eine SPS ohne Symbol Configuration beantwortet die Einrichtung mit einer Meldung, die sagt, dass eine hinzuzufügen ist. Das ist die einzige Änderung am SPS-Projekt.
-- **HotLoop {{codesysNeeds}}**, das das Chart umhüllt. Der CODESYS-Konnektor kam mit HotLoop 4.19.4. Das Chart hängt vom Chart `hotloop-edge` auf der Linie `~{{codesysNeeds}}` ab.
+- **HotLoop 4.22.0**, das das Chart umhüllt. Der CODESYS-Konnektor kam mit HotLoop 4.19.4. Das Chart hängt vom Chart `hotloop-edge` auf der Linie `~4.22.0` ab.
 - **Ein Profil.** Ein Secret mit einem Schlüssel. [Die Profilseite](/de/codesys/profile/) zeigt seine Form.
 
 ## Aus dem EmberCORE App Store
@@ -24,9 +24,9 @@ Das Chart ist für Mitarbeitende markiert, deshalb listet der Store es für das 
 
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
-helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
 ```
 
 Nennen Sie das Secret `<release>-profile`, oder ändern Sie, wonach das Chart sucht, mit `profile.existingSecret` (das Secret) und `profile.key` (der Schlüssel, standardmäßig `profile.json`). Um die Installation an den Knoten der Runtime zu binden, setzen Sie `nodeSelector`. Für HotLoop allein ohne Profil, zum Einrichten von Hand, installieren Sie mit `--set provisioner.enabled=false`.
@@ -36,7 +36,7 @@ Nennen Sie das Secret `<release>-profile`, oder ändern Sie, wonach das Chart su
 Eine Runtime, die aus ihrem Chart mit `network.hostNetwork=true` installiert wurde, belegt den Host-Port 8080 für WebVisu, deshalb kann die HotLoop-Seite dort nicht ebenfalls auf 8080 lauschen. Das Chart lässt die HotLoop-Seite im Pod auf 8090 lauschen und hält den Service auf 8080, sodass die App-Store-Kachel und der Provisioner sie wie zuvor erreichen. Installieren Sie mit eingeschaltetem Host-Netzwerk für beide:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

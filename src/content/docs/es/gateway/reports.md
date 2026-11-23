@@ -3,7 +3,7 @@ title: "Informes programados"
 description: "Cifras del historian según un calendario, en CSV o HTML, guardadas y enviadas: solo cuentan las lecturas buenas y cada fila dice cuántas se descartaron."
 ---
 
-Los informes programados, desde 4.14.0, ejecutan según un calendario informes definidos por el operador: consultan el historian, generan el resultado en CSV y HTML, lo guardan en un volumen y, opcionalmente, lo envían por correo. Es el equivalente del módulo Reporting de Ignition para la parte de ese módulo que una planta usa más a menudo, una tabla de números entregada a tiempo. Desactivados por defecto (`HOTLOOP_REPORTS_ENABLED`).
+Los informes programados, desde 4.14.0, ejecutan informes definidos por el operador según una programación: consulta el historian, genera el resultado como CSV y HTML, lo guarda en un volumen y, si se quiere, lo envía por correo. Es la contraparte del módulo Reporting de Ignition para la parte de ese módulo que una planta usa con más frecuencia, una tabla de números entregada a tiempo. Activado por defecto (`HOTLOOP_REPORTS_ENABLED`), en el binario y en el chart de Helm. Los informes se guardan en `HOTLOOP_REPORTS_DIR`, que por defecto es `reports` dentro del directorio de datos de HotLoop: `HOTLOOP_DATA_DIR` si está definido, `/data` cuando existe y se puede escribir (un volumen de contenedor), y en otro caso `~/.local/share/hotloop` (o `$XDG_DATA_HOME/hotloop`), así que un binario suelto no necesita nada montado.
 
 ## Qué es y qué no es
 

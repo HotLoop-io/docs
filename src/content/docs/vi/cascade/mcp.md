@@ -3,9 +3,13 @@ title: "Máy chủ MCP"
 description: "Cascade có máy chủ MCP vừa đọc vừa ghi: 83 công cụ, mỗi công cụ là một tuyến API chạy qua trình xử lý riêng, có quyền, lý do và một dòng kiểm toán."
 ---
 
+:::note[Có cả những gì sắp tới]
+Trang này cũng nói về một vài thứ mới hơn HotLoop Cascade 1.4.2, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
+:::
+
 Cascade có một máy chủ MCP, và nó vừa đọc vừa ghi. Nó được phát hành ở trạng thái bật, tại `/mcp` cùng địa chỉ với API và trình soạn thảo, và một tác tử kết nối vào đó có thể làm những gì người giữ khóa của nó làm được, không hơn. Không có chế độ chỉ đọc nào để bạn phải đi vòng, vì một máy chủ mà tác tử chỉ nhìn được mà không chạm được thì chỉ là một trang trạng thái, và bạn đã có sẵn một trang như vậy rồi.
 
-83 công cụ, và mỗi công cụ đều là một tuyến của REST API. Một lời gọi không đi bên cạnh tuyến, nó đi xuyên qua tuyến: trình xử lý của chính tuyến kiểm tra quyền, xác thực nội dung, thực hiện thay đổi và ghi dòng kiểm toán. Không có gì được sao chép vào máy chủ MCP để rồi lệch đi, và không có gì bị bỏ ra ngoài để người ta lách qua.
+84 công cụ, và mỗi công cụ đều là một route của REST API. Một lời gọi không đi bên cạnh route, nó đi xuyên qua route: bộ xử lý của chính route kiểm tra quyền, kiểm tra nội dung gửi lên, thực hiện thay đổi và ghi dòng kiểm toán. Không có gì được sao chép vào máy chủ MCP để rồi lệch đi, và không có gì bị bỏ ra khỏi nó để bị bỏ qua.
 
 Điều đó có nghĩa là: nếu một quy trình, thông tin đăng nhập, dự án hay con người là thứ bạn đổi được từ trình soạn thảo, thì một tác tử cầm khóa của bạn cũng đổi được, trong giới hạn vai trò của bạn, và nhật ký kiểm toán ghi rằng đó là một tác tử và là tác tử nào.
 
@@ -160,6 +164,7 @@ Các công cụ có nội dung nhận một `body`, cùng JSON mà REST API nh�
 | `list_users` | `GET /api/v1/users` | `user.manage` | đọc |
 | `create_user` | `POST /api/v1/users` | `user.manage` | ghi |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | ghi |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | ghi, chỉ chủ sở hữu |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | đọc |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | đọc |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | đọc |

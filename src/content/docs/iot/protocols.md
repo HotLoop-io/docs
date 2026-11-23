@@ -5,6 +5,10 @@ description: "OPC UA, Modbus, MQTT and Sparkplug B, EtherNet/IP, S7comm, MTConne
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 This document says exactly what the gateway speaks, exactly how far each driver
 has been verified, and what to do about everything else. It is the first thing
 to read and the one to trust when something disagrees with it.
@@ -564,13 +568,13 @@ names:
 | `HOTLOOP_UADP_PUBLISH_KEY_FRAME_EVERY` | `10` | at most this many intervals between key frames |
 | `HOTLOOP_UADP_PUBLISH_DATAVALUE` | `false` | DataValue fields (value, status, time) instead of Variants |
 | `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES` | `false` | a DataSet that changed goes out as a delta frame (only the changed fields) between key frames |
+| `HOTLOOP_UADP_PUBLISH_METADATA_EVERY` | `10` | each DataSet's field names and types announced every this many intervals; `0` sends none |
 | `HOTLOOP_UADP_PUBLISH_INTERFACE`, `_TTL` | system's, `1` | the card multicast leaves by, and its hop limit |
 
 Each DataSet goes out on its own DataSetWriter, one NetworkMessage each. A
 DataSet whose values changed goes out as a key frame (every field), one that
 didn't as a keep alive, and a key frame at least every `KEY_FRAME_EVERY`
-intervals so a subscriber that joined late converges. Delta frames are off
-by default: a key frame is complete, so a lost datagram costs one interval and
+intervals so a subscriber that joined late converges. A key frame is complete, so a lost datagram costs one interval and
 not a wrong value. With `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true` a DataSet that
 changed goes out as a delta frame instead, carrying only the fields that changed
 since the last message and their positions, and the key frame still comes at
@@ -585,6 +589,19 @@ plant trusts. The same layout's tags can be read by HotLoop's own subscriber
 on another box.
 
 **What was proven.** An independent OPC UA PubSub stack publishes to HotLoop's subscriber and subscribes to HotLoop's publisher over multicast, and HotLoop's publisher is read correctly by HotLoop's own subscriber.
+**Message security.** A subscriber device can need its publisher's NetworkMessages signed, or signed and encrypted (OPC 10000-14 7.2.4.4.3), with the two policies the specification defines, `PubSub-Aes128-CTR` and `PubSub-Aes256-CTR`:
+
+```json
+{"publisherId":"2234","security":{"mode":"signAndEncrypt","policy":"PubSub-Aes128-CTR",
+ "keys":[{"keyId":1,"signingKey":"<64 hex digits>","encryptingKey":"<32 hex digits>","keyNonce":"<8 hex digits>"}]}}
+```
+
+The keys are static: set on both sides under a SecurityTokenId (`keyId`), in hex or base64. They are secrets, shown as `[redacted]` and kept on a save. A device that holds two keys takes a publisher that moves from one to the other. With `security` set, a message that is not signed (or not encrypted, under `signAndEncrypt`), that is signed under another key, or that was changed on the way is refused and counted (`unsecured`, `signature`, `security_key`) before anything in it is read. A Security Key Service (GetSecurityKeys, rotating keys) is not implemented. The publisher signs with `HOTLOOP_UADP_PUBLISH_SECURITY_MODE` (`sign` or `signAndEncrypt`), `_POLICY`, `_KEY_ID`, `_SIGNING_KEY`, `_ENCRYPTING_KEY` and `_KEY_NONCE`.
+
+**Metadata and discovery.** A publisher announces what its DataSets are called and made of as a discovery response carrying a DataSetMetaData, in chunks when it is large (7.2.4.4.4, 7.2.4.6). A subscriber device reads them: the fields are named in Browse (`writer1001_<field name>`), a RawData DataSet needs no `dataSets` types in the configuration because the metadata lays it out, and a DataSet that changes its configuration version starts over from its next key frame. The configuration's `dataSets` still win when both are there. A subscriber's discovery request is not sent, and a publisher does not answer one.
+
+**Structure fields, events.** A field the metadata says is a structure is read as its members, which a tag addresses as `1001/0.Value` (and `1001/7[2].Angle` for an element of an array of structures); a structure sent in a Variant is read when the metadata describes it. Structures with optional fields and unions are reported by name, not guessed. An Event DataSetMessage is applied like the fields it carries and leaves the rest alone (`Events` in the device's stats); its layout is that of a key frame (7.2.4.5.7), read from the specification and not checked against another stack. Some publishers write a FieldCount ahead of a RawData key frame, which the specification does not; the device is told with `"rawFieldCount":true`.
+
 ### CODESYS
 
 A PLC that runs a CODESYS Control runtime (Linux SL, ARM64, Raspberry Pi, Windows,
@@ -593,6 +610,12 @@ variables: `Application.GVL_Line.rTemp`, not a node id. It is the OPC UA driver
 with the things a CODESYS PLC needs on top, so everything under
 [OPC UA: security and credentials](#opc-ua-security-and-credentials) holds for it
 and its options are those options.
+
+**The PLC's own alarms.** A project with an Alarm Configuration keeps its alarms in the PLC's alarm manager. With the
+HotLoop Alarms library's block in the project (see CODESYS alarms) HotLoop shows those alarms in its
+alarm list, from the moment the device is connected, and an acknowledge made in HotLoop goes back to the alarm manager.
+Verified live against a real CODESYS Control for Linux SL 4.22.0.0 runtime: trip, acknowledge, reset and confirm. The
+alarm manager's own text lists and a class other than the two tried are not verified.
 
 **Why the OPC UA server, and what that means for the PLC.** CODESYS documents one
 way for a third party to read a controller's variables, and it is the runtime's
@@ -661,7 +684,7 @@ thousand elements).
 
 Configuration: the OPC UA options, and `device` (the PLC's name, only if the
 runtime lists more than one), `application` (only if none is called Application),
-`arrayElements`. A misspelled option is an error that lists the valid ones. The
+`arrayElements`, `alarmSymbol` (the HotLoop Alarms block, only to skip the search for it). A misspelled option is an error that lists the valid ones. The
 password is a secret, stored and redacted like every device secret.
 
 **What the runtime asks of a client.** It publishes `OperationLimits` of 100 for
@@ -874,13 +897,31 @@ reports every scalar with the path that reaches it.
 The machine HotLoop runs on, as a read-only device: `cpu_util_pct` (CPU time not
 idle since the last read), `mem_util_pct` (MemTotal against MemAvailable),
 `disk_util_pct` (the box's disk, a statfs of the host's root mounted read-only at
-`diskPath`, `/host` by default), `data_util_pct` (the volume at `dataPath`, `/data`),
+`diskPath`, `/host` by default), `data_util_pct` (the volume at `dataPath`, `/data`, or the nearest folder above it that exists when nothing is mounted there yet),
 and `rtos_jitter_core1_us` to `core3_us` when `jitterFile` names the JSON file
 `{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}` that a real-time agent rewrites
 (a file older than five minutes reads bad). CPU and memory come from `procRoot`
 (`/proc`, or `/host/proc` when the host's is mounted). A value that cannot be read
 is bad quality with the reason, never zero. The device is made by
 `HOTLOOP_BOX_HEALTH_NODE` ([The OPC UA server](/edge/opc-ua-server/#box-health-for-the-embernet-dashboard)).
+
+### Shelly
+
+A Shelly of any generation spoken to directly, with no broker between. See SHELLY.md. Add a device with the protocol `shelly` and the device's address; if it has a login set, `{"password":"..."}` (the user is `admin`; a Gen2 or later device is answered with its SHA-256 digest challenge and a Gen1 device with Basic). `/shelly` says which generation it is. A Gen2, Gen3 or Gen4 device is read with `Shelly.GetStatus` (`POST /rpc`) and every component it reports becomes tags that add themselves, read-only until a person arms them: `switch:0.output`, `switch:0.apower`, `switch:0.aenergy.total`, `switch:0.temperature.tC`, `input:0.state`, `cover:0.current_pos`, `pm1:0.apower`, `em:0.total_act_power`, `temperature:100.tC`, `humidity:100.rh`, and the device's `sys.uptime` and `wifi.rssi`. A field the device did not send is not made a tag. A switch's output (`Switch.Set`), a light's output and brightness, a cover's position (`Cover.GoToPosition`) and a thermostat's target can be armed for writing.
+
+A Gen2 or later device also gets a websocket (`ws://<device>/rpc`): the driver sends one request frame with a `src`, as Shelly's RPC channel page requires before a device notifies, answers a 401 frame with the documented `auth` object (SHA-256 over `dummy_method:dummy_uri`), and folds `NotifyStatus` and `NotifyFullStatus` into its copy of the status, so a change reaches the tag at once and the poll between reads the copy instead of the device. `NotifyEvent` (a button press, a config change) is filed in the logbook under the device. When the websocket is down, or has not confirmed the status lately (45 seconds without a frame or pong, 2 minutes without a full read), the poll reads the device over HTTP.
+
+A Gen1 device (`/status` and plain GET control paths, Basic login) gets the same shape of tags from its own words: `relay:0.output`, `meter:0.power`, `meter:0.total` (Watt-minutes converted to Wh), `light:0.output` and `.brightness`, `roller:0.current_pos`, `input:0.state`, `temperature:0.tC`, and for energy meters and sensors `emeter:0.power`, `humidity:0.rh`, `flood:0.alarm`. A relay is written with `/relay/<id>?turn=on|off`, a light with `/light/<id>?turn=&brightness=`, a roller with `/roller/<id>?go=to_pos&roller_pos=`. Built from Shelly's published Gen1 and Gen2 documentation and tested against recordings of real devices (a Plus 1, a Plug S and a Vintage bulb); not yet against a device on a bench. The Gen1 energy meter, humidity, battery and flood fields are from the documentation and have no recording behind them.
+
+### Firmata
+
+An Arduino, or any board running a Firmata firmware, over USB serial or TCP, with no host program between. See FIRMATA.md. Add a device with the protocol `firmata` and the serial port (`/dev/ttyACM0`, `serial:/dev/ttyUSB0`) or `host:port`; options `{"baudRate":57600,"samplingMs":19,"bootWaitMs":5000}`. The driver waits for the board's protocol version (asking every 300 ms), asks its firmware, capabilities and analog map, and makes a read-only tag for every digital pin and analog input the board has. A tag's address says what to do with a pin: `D13`, `D2:in`, `D2:pullup`, `D13:out`, `D9:pwm`, `D10:servo`, `A0`, `I2C:0x48:0x00:2`. Digital input is the port report the board sends on a change, analog is the report every sampling interval, and every poll asks for the protocol version so a gone board is seen within one poll; a firmware report that arrives unasked is a board that restarted. A pin the tags do not mention is not touched, and a plain `D<n>` tag sets its pin to input when the driver connects, and to output on its first write. Built from protocol 2.8.0 (protocol.md and i2c.md in github.com/firmata/protocol) and run against StandardFirmata 2.5.9 on a simulated ATmega328P: its digital pins, pull-ups, analog inputs at 0, 2.5 and 5 V, PWM compare registers, a servo's pin and an I2C device's registers were each read back from the chip, not from the driver. Not run on a physical board.
+
+### ONVIF
+
+An IP camera, encoder or NVR. See ONVIF.md. Add a device with the protocol `onvif`, the camera's address and `{"username":"...","password":"..."}`. The driver reads GetSystemDateAndTime first and stamps its WS-Security UsernameToken with the camera's own clock (Core Specification 5.12: the digest is `base64(SHA-1(nonce + created + password))`), reads GetDeviceInformation and GetServices (GetCapabilities for an older camera), uses Media2 when the camera lists it and Media when it does not, and reads every profile's encoder, resolution, stream address and snapshot address. A camera that wants HTTP Digest or Basic on the SOAP post is answered with that. Service addresses are reached at the host the device was added with unless `"keepXAddrHosts":true`. A PTZ profile adds `ptz.<token>.pan`, `.tilt`, `.zoom` and `.moving` from GetStatus, and the armable commands `.move` (ContinuousMove, with an optional timeout), `.absolute` (AbsoluteMove), `.goto_preset` (GotoPreset, by token or name), `.stop` and `.home`. Events come from a pull point (CreatePullPointSubscription, PullMessages, Renew, Unsubscribe) and become tags `event.<topic>|<source>|<item>` that add themselves, with every change in the logbook. A snapshot is `GET /api/onvif/<device>/profiles/<token>/snapshot` and discovery is `POST /api/onvif/discover` (WS-Discovery, a multicast Probe for `NetworkVideoTransmitter`).
+
+Built from the ONVIF Core, Media, Media2, PTZ and Event specifications (onvif.org/specs). Every request it sends is valid against ONVIF's WSDL and XSD files (xmllint, with the 33 types and one element libxml2 refuses for unique particle attribution relaxed, none of them one a request uses), and it is run against onvif_srvd, an independent ONVIF stack that parses the WS-Security header but does not check it, so the login's digest is held to zeep 4.3.3's instead. The events service and WS-Discovery have only scripts written from the specification to run against. Not run on a physical camera.
 
 ### UniFi Network
 
@@ -894,6 +935,14 @@ so a switch dropping off is in the logbook when it happens, with polling still
 the truth underneath, and the UniFi tab draws the overview, the map, the
 faceplates, the clients, the networks and the WiFi. Everything about it is in
 [UniFi Network](/iot/unifi/).
+
+### UniFi Protect
+
+A Protect NVR's cameras, sensors, lights and sirens, through the Protect Integration API with an API key from the console's Integrations page (the key goes in `{"apiKey":"..."}`, sealed like a console password, and the certificate is pinned with `certFingerprint` as for UniFi Network). Add a device with the protocol `unifi-protect` and the console's address. Tags add themselves, read-only until armed: `cam.<id>.online`, `.motion`, and `.smart_person`, `.smart_vehicle`, `.smart_package`, `.smart_licensePlate`, `.smart_face` and `.smart_animal` for the kinds a camera supports; `sen.<id>.online`, `.open`, `.motion`, `.leak`, `.tamper`, `.temp_c`, `.humidity_pct`, `.light_lux`; `light.<id>.online`, `.on`, `.motion`; `siren.<id>.online`. A camera's motion and smart detections come from the console's events websocket, since the REST record has none, so they read bad, never "no motion", while it is down. Every event is in the logbook under the device. A siren's `.play` is armed for writing (`true` plays, `false` stops), and so is `alarm.<trigger>.fire`, which sends the alarm manager's webhook for the trigger id the person made in Protect, so a HotLoop alarm that writes it makes the cameras record. A camera's snapshot is `GET /api/unifi-protect/<device>/cameras/<camera>/snapshot`, a JPEG fetched when asked for. Built from Ubiquiti's OpenAPI document for Protect 7.4.102; not yet run against a console. See [UniFi Network](/iot/unifi/#unifi-protect).
+
+### UniFi Access
+
+An Access console's doors, through the Access developer API on port 12445 with an API token from its Advanced settings (`{"token":"..."}`, sealed). Add a device with the protocol `unifi-access` and the console's address. Per door, `door.<id>.open` (the position sensor; a door with none reads bad, never closed), `door.<id>.unlocked` (the lock relay), and `door.<id>.unlock`, which a person arms and which unlocks the door when written `true`, through the write gate and audited like any write; the console locks it again by its own rule. The notifications websocket keeps the position and lock current between polls, and every change ("1F - Front: opened", "unlocked") is in the logbook under the device. Built from the API as the maintained open client (py-unifi-access, MIT) speaks it; not yet run against a console. See [UniFi Network](/iot/unifi/#unifi-access).
 
 ### SNMP
 

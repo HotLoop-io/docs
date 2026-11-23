@@ -3,6 +3,10 @@ title: "Roadmap von Cascade"
 description: "Was Cascade schon gebaut hat, was jedes Release gebracht hat und was weder gebaut noch geplant ist."
 ---
 
+:::note[Enthält, was kommt]
+Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop Cascade 1.4.2, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
+:::
+
 Nirgendwo im Code gibt es eine Lizenzprüfung. Jede Phase endet, wenn ihre „echte“ Liste gegen echte Systeme abgearbeitet ist, nicht wenn der Code kompiliert.
 
 ## 0.1.0, das MVP
@@ -24,6 +28,14 @@ Woran sich ein gespeicherter Workflow heute hält: Die Datei sagt, in welcher Ve
 ## 1.3.0, der Editor in 14 Sprachen
 
 Gebaut. Englisch, Spanisch, Französisch, Italienisch, Deutsch, Norwegisch Bokmål, Bulgarisch, Griechisch, Koreanisch, Japanisch, Vietnamesisch, Hindi, Vereinfachtes Chinesisch und Arabisch. Eine Sprachauswahl in der oberen Leiste und auf der Anmeldeseite; jeder Bildschirm, die Schritttitel und die Hilfe sowie die Ablehnungen des Servers sind übersetzt; Datumsangaben, Zahlen und Dauern richten sich nach der Sprache; Arabisch wird von rechts nach links geschrieben, mit Canvas und Code von links nach rechts. Jede Sprache wird auf jedem Bildschirm in Desktop- und Telefonbreite in einem echten Browser geprüft, und der Build weist eine Sprache ab, in der eine Zeile fehlt. Die Wörter stammen aus dem gemeinsamen HotLoop-Glossar.
+
+## 1.5.0, eine Person löschen
+
+Gebaut. Ein Eigentümer der Instanz kann eine Person über Benutzer, die REST-API (`DELETE /api/v1/users/{user}`) oder den MCP-Server (`delete_user`) löschen. Ihr Konto, ihre Sitzungen, Passkeys, Anmeldeidentitäten und API-Schlüssel verschwinden, und das Audit-Protokoll hält fest, wer es getan hat und was gegangen ist. Ihre Workflows, Zugangsdaten und Ausführungen bleiben: Das persönliche Projekt wird zu einem gemeinsamen Projekt, das nach ihr benannt ist und "(removed)" trägt, damit ein Eigentümer oder Administrator die Arbeit verschiebt oder weitergibt. Niemand kann sein eigenes Konto löschen, und der letzte Eigentümer kann nicht gelöscht werden. Jemanden abzuschalten gibt es weiterhin, für den Fall, dass Sie das Konto behalten wollen.
+
+## 1.4.2, die Anmeldeseite
+
+Gebaut. Die Anmeldeseite ist eine zentrierte Karte auf einer ruhigen Seite, mit dem Produktzeichen und -namen darüber, der Hauptschaltfläche in HotLoop-Orange und den anderen Wegen hinein (ein Passkey, Single Sign-on) als schlichte Schaltflächen daneben, in hell und dunkel und auf einem Telefon. Die Single-Sign-on-Schaltfläche trägt das Symbol ihres Anbieters, wenn der Anbieter Vord ist. Jedes Feld, jede ID und jeder Anmeldepfad ist, was er war.
 
 ## 1.4.1, die Seite Einstellungen
 

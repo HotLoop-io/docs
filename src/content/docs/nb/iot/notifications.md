@@ -3,7 +3,7 @@ title: "Alarmvarsler"
 description: "ntfy, Gotify, Discord, webhooks og e-post. Trykk Kvitter på telefonen, så er alarmen kvittert, signert og kan bare brukes én gang."
 ---
 
-Alarmvarsler, siden 4.10.0, varsler en telefon når en alarm utløses klokken 03:00. Når en alarm **utløses**, sender HotLoop et varsel gjennom hver konfigurerte og aktiverte kanal der alarmen når prioritetsgrensen. Av som standard (`HOTLOOP_NOTIFY_ENABLED`): Et anlegg uten noen å varsle har ingenting å konfigurere her.
+Alarmvarsler, siden 4.10.0, ringer en telefon når en alarm utløses klokken 03:00. Når en alarm **utløses**, sender HotLoop et varsel gjennom hver konfigurert, aktivert kanal hvis prioritetsgrense alarmen når. På i Helm-chartet siden 4.23.6 (`HOTLOOP_NOTIFY_ENABLED`), og sender ingenting før en kanal er slått på med målet sitt: en utrulling uten noen å varsle har ingenting å konfigurere her.
 
 ## Hvorfor bare "utløst"
 
@@ -24,6 +24,17 @@ Seks, og det er hele listen (se "Varsler" i [veikartet for HotLoop](/nb/roadmap/
 
 - **Webhook**: en POST med HotLoops egen JSON-kropp (`alarmId`, `name`, `priority`, `priorityLabel`, `message`, `deviceId`, `tagName`, `raisedAt`, `event`, som er `raised`, eller `escalated` for en eskalering) til en konfigurert URL. Den fungerer med alt som tar imot den JSON-en du sender: ditt eget skript bak en liten HTTP-lytter, Node-RED, n8n eller en "hvilken som helst webhook"-trigger i et arbeidsflytverktøy. (Rettet mot et ntfy-emne varsler den, med rå JSON som tekst; bruk ntfy-kanalen over i stedet.) En oppsummering (se "Hastighetsgrenser og oppsummeringer") har `event` satt til `summary` og en `alarms`-liste som navngir hver alarm i den. Den fungerer ikke med tjenester som vil ha kroppen i sin egen form. Discord svarer 400 fordi det mangler `content` eller `embeds`. Slack, Teams og Google Chat vil ha sitt eget tekstfelt. Pushover vil ha feltene `token`, `user` og `message`, og PagerDutys Events API vil ha en `routing_key`, en `event_action` og en `payload`. Rett webhooken mot en av disse, så mislykkes hvert varsel. Discord har egne kanaler som bygger kroppen Discord venter; bruk dem.
 - **E-post over SMTP**: sendt gjennom det relaiet operatøren allerede har (en e-postserver i bedriften, SMTP-endepunktet til en leverandør av transaksjonsbaserte e-poster, et selvhostet relé). Ingen API-nøkkel, ingen leverandørbibliotek: `net/smtp` og en håndbygd ren tekstmelding. Mange telefoner viser allerede e-post som push-varsel av seg selv, og mange vaktverktøy godtar en e-post-til-SMS-adresse som "kontaktmetode", så denne ene kanalen dekker en betydelig del av "varsle en telefon" uten noen betalt avhengighet.
+
+## Hvor alarmer går: Innstillinger
+
+Hver kanal er på som standard og hviler til den har et sted å sende. En aktivert kanal uten mål hindrer aldri HotLoop i å starte, den venter og sier det. En administrator gir hver sitt mål under Innstillinger, "Hvor alarmer og målinger går": webhook-URL-en, e-postreléet og mottakerne, ntfy-serveren og emnet, Gotify-serveren og tokenet, Discord-webhook-URL-en, tokenet og kanalen til Discord-boten, og brokeren og Sparkplug-gruppen til edge-publisereren. Hver viser hva den gjør (sender, venter på et mål, av) og hva den mangler.
+
+- Alarmkanalene gjelder i det øyeblikket innstillingen lagres: dispatcheren bygges om på stedet, det de gamle kanalene holdt tilbake går ut først, og Discord-botens tilkobling lukkes før en ny åpnes. **Send en test** (`POST /api/notify/test`) når da kanalen som nettopp ble lagret.
+- Edge-publisereren eier en køfil og en Sparkplug-node, så målet leses når HotLoop starter. Skjermen sier "Saved, applies when HotLoop restarts".
+- Det som er lagret der gjelder foran chartet eller miljøet, som bare gir startverdier. En verdi som lades stå tom beholder det som er lagret; Fjern fjerner den. En hemmelighet (en webhook-URL, et ntfy-emne, et token, et passord) vises aldri igjen, bare om den er satt, og forsegles i databasen når HotLoop har en hemmelig nøkkel.
+- Et mål sjekkes slik miljøet sjekkes ved oppstart, før noe lagres, og et feil mål avvises med hva som er galt (aldri verdien).
+- En bryter per kanal slår den av for godt: av betyr ingen kanal, ingen sending.
+- `GET /api/destinations` og `PUT /api/destinations/{kind}` er rutene; PUT krever `settings.write`. Se [HTTP-API-et](/nb/iot/api/).
 
 ## Webhook-URL-en blir aldri skrevet ut
 

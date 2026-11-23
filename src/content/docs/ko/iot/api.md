@@ -3,6 +3,10 @@ title: "HTTP API 안내"
 description: "HotLoop이 HTTP로 응답하는 모든 호출과 필요한 것, 받는 것, 돌려주는 것을 담았습니다. 웹 UI는 이것 외에는 아무것도 쓰지 않습니다."
 ---
 
+:::note[앞으로 나올 내용 포함]
+이 페이지에는 최신 릴리스인 HotLoop core 4.24.0보다 새로운 내용도 일부 들어 있습니다. 설치하신 버전에는 없는 부분이 있을 수 있습니다. 무엇이 바뀌었는지는 [릴리스 노트](/ko/releases/)에 나와 있습니다.
+:::
+
 Gateway가 HTTP로 응답하는 모든 호출과 각 호출에 필요한 것, 받는 것, 돌려주는 것을 정리한 문서입니다. 웹 UI는 이것만 사용합니다. 화면 뒤에 숨은 비공개 API는 없으므로, UI에서 할 수 있는 일은 스크립트가 같은 호출과 같은 권한으로 모두 할 수 있습니다.
 
 이 페이지는 코드와 대조해 검사합니다. 따라서 경로 목록과 호출 가능한 사용자는 예전 API를 설명한 것이 아닙니다. 아래의 요청과 응답 형식은 실행 중인 Gateway에서 가져온 것이며 테스트는 이를 검사하지 않으므로, 핸들러를 바꾸면 이 페이지의 해당 섹션도 함께 바꾸십시오.
@@ -256,6 +260,9 @@ HotLoop은 하나의 코드베이스에서 IoT, Edge, Gateway, Edge Relay로 제
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ HotLoop은 하나의 코드베이스에서 IoT, Edge, Gateway, Edge Relay로 제
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ OPC UA 서버 로그인을 위해 사용자에 연결된 모든 X.509 인증서�
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ HotLoop이 연결된 이후 콘솔이 보고한 최신 이벤트를 최신순으
 ```
 
 `kept`는 이 기능이 요구하는 알람 중 이미 있던 것입니다. 이전에 눌렀을 때 자신이 만든 것이거나, 같은 태그에 누군가 만든 알람입니다. 그래서 장비를 더 채택한 뒤 다시 눌러도 안전하며, 새 장비에 대한 것만 추가됩니다. OT 네트워크 알람과 네트워크 이탈 알람은 여기에 포함되지 않습니다. 이들은 네트워크를 OT로 표시하고 장치를 감시할 때 함께 생깁니다. 콘솔을 한 번 읽기 전에는 `503`입니다.
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Protect 카메라의 현재 이미지이며 JPEG입니다(`Content-Type: image/jpeg`, `Cache-Control: no-store`). 요청할 때 콘솔에서 가져오며, 스스로 요청을 보내는 유일한 UniFi 라우트입니다. `{id}`는 프로토콜이 `unifi-protect`인 장치이고 `{camera}`는 콘솔이 카메라에 붙인 ID입니다(`cam.<id>.online` 태그의 `<id>`). 장치가 연결된 Protect 장치가 아니면 `404`, 카메라가 오프라인이거나 콘솔이 키를 거부하면 콘솔이 알려 준 사유와 함께 `502`를 반환합니다. [프로토콜과 드라이버](/ko/iot/protocols/#unifi-protect)를 참조하십시오.
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+ONVIF 카메라 프로필의 현재 이미지이며 JPEG입니다(`Content-Type`은 카메라가 보낸 그대로, `Cache-Control: no-store`). 요청할 때 카메라에서 가져오며, 카메라 자체의 로그인을 사용합니다. `{id}`는 프로토콜이 `onvif`인 장치이고 `{profile}`은 카메라가 미디어 프로필에 붙인 토큰입니다(`profile.<token>.snapshot_uri` 태그의 `<token>`). 장치가 연결된 ONVIF 장치가 아니면 `404`, 카메라가 이미지를 주지 않으면 카메라가 알려 준 사유와 함께 `502`를 반환합니다. ONVIF.md를 참조하십시오.
+
+### `POST /api/onvif/discover`
+
+네트워크에서 ONVIF 카메라를 탐색하고(WS-Discovery, 모든 인터페이스에서 멀티캐스트 탐색) 응답한 카메라마다 `endpoint`, `xaddrs`, 추가할 때 쓸 `address`, 카메라의 scopes가 알려 주는 `name`, `hardware`, `location`, `profiles`를 담아 `{"cameras":[...]}`로 응답합니다. `?wait=`는 대기할 초이며 1에서 15, 기본값은 3입니다. 아무것도 추가하지 않으며, 사람이 프로토콜 `onvif` 장치로 카메라를 추가합니다.
 
 ## MQTT 디스커버리
 
@@ -2134,6 +2156,24 @@ Gateway가 연합하는 모든 사이트에 MCP로 공장 상태를 병렬로 �
 연결할 수 없는 사이트의 수치는 의미가 없으므로 합계에서 제외합니다. 닿지 않는 사이트를 알람 0건으로 세는 것은 이 화면이 할 수 있는 가장 위험한 일일 것입니다. 구성된 사이트가 없으면 `{"configured":false,"sites":[]}`.
 
 ## 설정
+
+### `GET /api/destinations`
+
+알람과 엣지 측정값이 가는 곳이며, 종류마다 항목이 하나씩 있습니다: `webhook`, `smtp`, `ntfy`, `gotify`, `discord_webhook`, `discord_bot`, `edge_publish`. 각 항목에는 `fields`(키, 레이블, 유형, 시크릿 여부와 필수 여부), `enabled`, `state`(`active`: 전송 중, `needs`: 켜져 있으며 대상을 기다리는 중이고 `missing`이 기다리는 것을 알려 줌, `off`, `needs-restart`: 저장되었으며 엣지 퍼블리셔는 HotLoop이 재시작될 때 반영), 일반 `values`, 그리고 어떤 시크릿 필드에 값이 있는지 알려 주는 `set`이 있습니다. 시크릿의 값은 절대 반환되지 않습니다. `source`는 관리자가 설정에서 저장했으면 `saved`, 차트나 환경이 지정했으면 `environment`입니다. 모든 종류가 기본으로 켜져 있고 보낼 곳이 생길 때까지 대기하며, 어느 것도 시작을 막지 않습니다.
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+OPC UA 서버가 무엇을 하고 있으며 클라이언트가 어떻게 로그인하는지 알려 줍니다. `state`는 `active`, `idle`(HotLoop 인증이 꺼져 있어 로그인할 사용자가 없음, `reason`이 그렇게 알려 줌), `off`, `unavailable`(이 제품에는 서버가 없음) 중 하나입니다. 켜져 있으면 `endpoint`는 클라이언트가 접속하는 URL이고, 인증이 켜져 있으면 `username`과 `password`는 HotLoop이 OPC UA 클라이언트용으로 만든 로그인입니다(`opcua-reader`, 태그와 값만 읽을 수 있고 다른 것은 할 수 없으며 비밀번호는 자동 생성). 비밀번호가 들어 있으므로 `users.manage`가 필요합니다. 서버는 기본으로 켜져 있으며, 비밀번호는 다른 사용자와 마찬가지로 바꿀 수 있고, 다음에 시작하면 여기 표시된 비밀번호가 다시 작동합니다.
+
+### `PUT /api/destinations/{kind}`
+
+대상 하나를 저장하고, `GET`이 주는 형태의 목록으로 응답합니다. 본문은 `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`이며 각 부분은 모두 선택 사항입니다. 비워 둔 시크릿은 저장된 값을 유지하고, `clear`는 시크릿을 지웁니다. 저장하기 전에 시작할 때 환경을 검사하는 것과 같은 방식으로 결과를 검사하므로, 잘못된 대상은 무엇이 잘못되었는지(값은 절대 아님) 알려 주는 `400`이 되며 아무것도 바뀌지 않습니다. 알람 채널은 즉시 적용되고, 엣지 퍼블리셔의 대상은 HotLoop이 재시작될 때 적용됩니다. HotLoop에 비밀 키가 있으면 시크릿은 데이터베이스에 봉인되어 저장됩니다. `settings.write`가 필요합니다.
 
 ### `GET /api/settings`
 

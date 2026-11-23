@@ -3,7 +3,7 @@ title: "Sicherungen und Wiederherstellung"
 description: "Logische Momentaufnahmen der Datenbank, Wiederherstellungen, die ein neueres Schema ablehnen, und warum der Gerätepasswort-Schlüssel getrennt gesichert wird."
 ---
 
-HotLoop erstellt seit 4.12.0 logische Momentaufnahmen des Historians, die nur Tabellendaten enthalten, und stellt sie wieder her. Standardmäßig aus (`HOTLOOP_BACKUP_ENABLED`): Ein Deployment, das kein Sicherungsvolume eingerichtet hat, soll diesen Prozess nicht still in das flüchtige Dateisystem eines Containers schreiben lassen.
+HotLoop erstellt seit 4.12.0 logische Snapshots des Historians, nur der Tabellendaten, und stellt sie wieder her. Standardmäßig an, täglich (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), in der Binärdatei und im Helm-Chart. Backups gehen nach `HOTLOOP_BACKUP_DIR`, standardmäßig `backups` im Datenverzeichnis von HotLoop (`HOTLOOP_DATA_DIR`, sonst `/data`, wenn beschreibbar, sonst `~/.local/share/hotloop`): Eine Bereitstellung, die kein Backup-Volume konfiguriert hat, sollte diesen Prozess nicht stillschweigend in das flüchtige Dateisystem eines Containers schreiben lassen.
 
 ## Was das ist
 

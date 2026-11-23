@@ -3,9 +3,13 @@ title: "MCP 서버"
 description: "Cascade에는 읽고 쓰는 MCP 서버가 있습니다. 83개 도구는 각각 자체 핸들러를 거치는 API 경로이며 권한, 사유, 감사 행이 함께합니다."
 ---
 
+:::note[앞으로 나올 내용 포함]
+이 페이지에는 최신 릴리스인 HotLoop Cascade 1.4.2보다 새로운 내용도 일부 들어 있습니다. 설치하신 버전에는 없는 부분이 있을 수 있습니다. 무엇이 바뀌었는지는 [릴리스 노트](/ko/releases/)에 나와 있습니다.
+:::
+
 Cascade에는 MCP 서버가 있으며, 읽기와 쓰기를 모두 합니다. 기본으로 켜져 있고 API, 편집기와 같은 주소의 `/mcp`에 있으며, 여기에 연결한 에이전트는 키를 가진 사람이 할 수 있는 일을 할 수 있고 그 이상은 할 수 없습니다. 돌아가야 할 읽기 전용 모드는 없습니다. 에이전트가 볼 수만 있고 손댈 수 없는 서버는 상태 페이지이고, 상태 페이지는 이미 있기 때문입니다.
 
-도구는 83개이고, 모두 REST API의 경로입니다. 호출은 경로 옆으로 가지 않고 경로를 통과합니다. 경로 자체의 핸들러가 권한을 확인하고, 본문을 검증하고, 변경을 수행하고, 감사 행을 기록합니다. 어긋날 만한 것을 MCP 서버에 복사해 두지 않았고, 건너뛸 만한 것을 빼놓지도 않았습니다.
+도구 84개이며, 모두 REST API의 라우트입니다. 호출은 라우트 옆으로 가지 않고 라우트를 통과합니다. 라우트 자체의 핸들러가 권한을 확인하고, 본문을 검증하고, 변경을 수행하고, 감사 행을 기록합니다. MCP 서버에 복사되어 어긋날 수 있는 것은 없고, 건너뛸 수 있도록 빠진 것도 없습니다.
 
 이것이 의미하는 바는 다음과 같습니다. 편집기에서 바꿀 수 있는 워크플로, 자격 증명, 프로젝트, 사용자는 당신의 키를 가진 에이전트도 당신 역할의 한도 안에서 바꿀 수 있으며, 감사 로그에는 에이전트가 했다는 사실과 어느 에이전트인지가 남습니다.
 
@@ -160,6 +164,7 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `list_users` | `GET /api/v1/users` | `user.manage` | 읽기 |
 | `create_user` | `POST /api/v1/users` | `user.manage` | 쓰기 |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | 쓰기 |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | 쓰기, 소유자 전용 |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | 읽기 |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | 읽기 |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | 읽기 |

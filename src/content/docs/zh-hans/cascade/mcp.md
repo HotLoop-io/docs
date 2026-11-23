@@ -3,9 +3,13 @@ title: "MCP 服务器"
 description: "Cascade 内置可读可写的 MCP 服务器：83 个工具，每个都是经过自身处理程序的 API 路由，带有权限、理由和一条审计记录。"
 ---
 
+:::note[也涵盖即将推出的内容]
+本页也涵盖了一些比最新版本 HotLoop Cascade 1.4.2 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
+:::
+
 Cascade 有一个 MCP 服务器，既能读也能写。它默认开启，位于 `/mcp`，与 API 和编辑器在同一个地址，连接它的智能体能做的，就是持有该密钥的人能做的，不会更多。这里没有需要绕开的只读模式，因为智能体只能看、不能碰的服务器，其实就是一个状态页，而您已经有一个了。
 
-共 83 个工具，每一个都是 REST API 的一条路由。调用不会绕过路由，而是经过路由：路由自己的处理程序检查权限、校验请求体、执行修改并写入审计记录。没有任何东西被复制进 MCP 服务器而可能走样，也没有任何东西被排除在外而可以被绕过。
+84 个工具，每一个都是 REST API 的一条路由。调用不会绕过路由，而是经过路由：路由自己的处理程序检查权限、校验请求体、完成修改并写入审计记录。没有任何东西被复制进 MCP 服务器而可能产生偏差，也没有任何东西被排除在外以便被绕过。
 
 这对您意味着：如果某个工作流、凭据、项目或用户是您可以在编辑器里修改的，那么持有您密钥的智能体也能修改，受您角色的限制，并且审计日志会记录这是智能体所为，以及是哪一个。
 
@@ -160,6 +164,7 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `list_users` | `GET /api/v1/users` | `user.manage` | 读取 |
 | `create_user` | `POST /api/v1/users` | `user.manage` | 写入 |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | 写入 |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | 写入，仅所有者 |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | 读取 |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | 读取 |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | 读取 |

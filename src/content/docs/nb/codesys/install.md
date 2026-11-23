@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS er et Helm-chart, `hotloop-codesys`, som installerer HotLoop Edge og en klargjører på samme node som en CODESYS-kjøretid. Chartet er publisert på `{{codesysChartRepo}}`, med {{codesys}} som den nyeste, og klargjørerens image hentes uten innlogging. På EmberNet er det en App Store-app. Uten EmberNet er det Helm på k3s.
+HotLoop for CODESYS er et Helm-chart, `hotloop-codesys`, som installerer HotLoop Edge og en klargjører på samme node som en CODESYS-kjøretid. Chartet er publisert på `https://hotloop.io/hotloop-codesys/`, med 0.3.8 som den nyeste, og klargjørerens image hentes uten innlogging. På EmberNet er det en App Store-app. Uten EmberNet er det Helm på k3s.
 
 ## Hva noden trenger først
 
 - **En CODESYS-kjøretid på samme node som publiserer OPC UA-serveren sin på port 4840.** Klargjøreren finner nodens egen adresse fra Kubernetes og leser `<node address>:4840`. Kjøretidens eget chart publiserer den porten på verten.
 - **En Symbol Configuration i PLS-programmet** med *Support OPC UA features* slått på, som lister variablene du vil se, eller `{attribute 'symbol' := 'read'}` på dem i deklarasjonen. En PLS uten Symbol Configuration svarer på oppsettet med en melding som sier at du må legge til en. Dette er den eneste endringen i PLS-prosjektet.
-- **HotLoop {{codesysNeeds}}**, som chartet pakker inn. CODESYS-koblingen kom med HotLoop 4.19.4. Chartet avhenger av `hotloop-edge`-chartet på linjen `~{{codesysNeeds}}`.
+- **HotLoop 4.22.0**, som chartet pakker inn. CODESYS-koblingen kom med HotLoop 4.19.4. Chartet avhenger av `hotloop-edge`-chartet på linjen `~4.22.0`.
 - **En profil.** Én Secret med én nøkkel. [Profilsiden](/nb/codesys/profile/) har formen.
 
 ## Fra EmberCORE App Store
@@ -24,9 +24,9 @@ Chartet er merket for ansatte, så Store lister det for EmberNet-ansatte, som in
 
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
-helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
 ```
 
 Gi Secret navnet `<release>-profile`, eller endre det chartet leter etter med `profile.existingSecret` (Secret) og `profile.key` (nøkkelen, `profile.json` som standard). For å feste installasjonen til kjøretidens node, sett `nodeSelector`. For HotLoop alene uten profil, for å sette opp for hånd, installer med `--set provisioner.enabled=false`.
@@ -36,7 +36,7 @@ Gi Secret navnet `<release>-profile`, eller endre det chartet leter etter med `p
 En kjøretid installert fra sitt chart med `network.hostNetwork=true` holder vertsport 8080 for WebVisu, så HotLoops side kan ikke også lytte på 8080 der. Chartet får HotLoops side til å lytte på 8090 inne i podden og beholder Service på 8080, slik at App Store-flisen og klargjøreren når den som før. Installer med vertsnettverket på for begge:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

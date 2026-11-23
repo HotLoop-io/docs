@@ -3,6 +3,10 @@ title: "HTTP API 接口"
 description: "HotLoop 通过 HTTP 响应的每个调用,它需要什么、接受什么、返回什么。Web 界面只使用这些调用,不使用其他任何接口。"
 ---
 
+:::note[也涵盖即将推出的内容]
+本页也涵盖了一些比最新版本 HotLoop core 4.24.0 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
+:::
+
 Gateway 通过 HTTP 响应的每一个调用，以及每个调用需要什么、接收什么、返回什么。Web 界面只用这些调用：界面背后没有私有 API，所以界面能做的事，脚本用同样的调用和同样的权限都能做。
 
 本页会与代码对照检查。因此路由列表以及谁可以调用它们，并不是对某个旧版 API 的描述。下面的请求和响应格式取自一个正在运行的 Gateway，测试并不检查这些格式，所以如果您修改了某个处理程序，请同时修改本页中对应的部分。
@@ -256,6 +260,9 @@ HotLoop 以 IoT、Edge、Gateway 和 Edge Relay 的形式由同一套代码发�
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ HotLoop 以 IoT、Edge、Gateway 和 Edge Relay 的形式由同一套代码发�
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 ```
 
 `kept` 是这组报警要求而已经存在的那些：它自己上一次点击创建的，或别人在同一变量上建的报警。因此在纳管更多设备后再次点击是安全的，它只会为新设备添加。OT 网络报警和脱离网络报警不属于它；它们随着把网络标记为 OT 和监视设备而来。控制台被读取一次之前返回 `503`。
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Protect 摄像头的当前画面，一张 JPEG（`Content-Type: image/jpeg`，`Cache-Control: no-store`），在被请求时从控制台获取；这是唯一会自己发出请求的 UniFi 路由。`{id}` 是协议为 `unifi-protect` 的设备，`{camera}` 是控制台给摄像头的 id（其变量 `cam.<id>.online` 中的 `<id>`）。当设备不是已连接的 Protect 设备时返回 `404`；当摄像头离线或控制台拒绝密钥时返回 `502` 并附上控制台给出的原因。参见[协议与驱动](/zh-hans/iot/protocols/#unifi-protect)。
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄像头发送的一致，`Cache-Control: no-store`），在被请求时用摄像头自己的登录账户从摄像头获取。`{id}` 是协议为 `onvif` 的设备，`{profile}` 是摄像头给媒体配置文件的令牌（其变量 `profile.<token>.snapshot_uri` 中的 `<token>`）。当设备不是已连接的 ONVIF 设备时返回 `404`；当摄像头不提供画面时返回 `502` 并附上摄像头给出的原因。参见 ONVIF.md。
+
+### `POST /api/onvif/discover`
+
+在网络中探测 ONVIF 摄像头（WS-Discovery，从每个接口发出多播探测），并以 `{"cameras":[...]}` 作答，其中包含每个应答的摄像头：其 `endpoint`、`xaddrs`、用于添加它的 `address`，以及其 scopes 所给出的 `name`、`hardware`、`location` 和 `profiles`。`?wait=` 是监听的秒数，1 到 15，默认 3。它不会添加任何东西；由人把摄像头作为协议为 `onvif` 的设备添加。
 
 ## MQTT 发现
 
@@ -2134,6 +2156,24 @@ Gateway 联合的每个站点,通过 MCP 并行询问其工厂状态,每个 6 �
 无法到达的站点的计数没有意义,会从汇总中去掉:把一个联系不上的站点算作零个报警,将是这个屏幕能做的最危险的事。未配置任何站点时:`{"configured":false,"sites":[]}`。
 
 ## 设置
+
+### `GET /api/destinations`
+
+报警和边缘读数发往何处，每种类型一条：`webhook`、`smtp`、`ntfy`、`gotify`、`discord_webhook`、`discord_bot` 和 `edge_publish`。每条都有其 `fields`（键、标签、类型、是否为密钥或必填）、`enabled`、一个 `state`（`active`：正在发送；`needs`：已开启并在等待其目的地，`missing` 指出它在等什么；`off`；`needs-restart`：已保存，边缘发布器在 HotLoop 重启时应用）、明文的 `values`，以及 `set`，它说明哪些密钥字段有值。密钥的值绝不会返回。当管理员在设置中保存时 `source` 为 `saved`，当由 chart 或环境变量提供时为 `environment`。每种类型默认开启，并在有地方可发送之前保持空闲；没有哪一种会拒绝启动。
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+OPC UA 服务器正在做什么，以及客户端如何登录。`state` 是 `active`、`idle`（HotLoop 认证已关闭，因此没有可登录的用户；`reason` 会这样说明）、`off` 或 `unavailable`（此产品没有该服务器）。开启时，`endpoint` 是客户端连接的 URL，并且在开启认证时，`username` 和 `password` 是 HotLoop 为 OPC UA 客户端创建的登录账户（`opcua-reader`，只能读取变量和值，别的什么都不能做，密码为自动生成）。需要 `users.manage`，因为密码就在其中。该服务器默认开启；其密码可以像任何用户的密码一样修改，下次启动会让这里显示的密码重新生效。
+
+### `PUT /api/destinations/{kind}`
+
+保存一个目的地，并以 `GET` 给出的列表作答。请求体是 `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`，每一部分都是可选的。留空的密钥会保留已存储的内容，`clear` 会移除一个。在存储任何内容之前，会按启动时检查环境变量的方式检查结果，所以错误的目的地会返回 `400`，说明哪里不对（绝不包含值）且不会改变任何东西。报警通道立即生效；边缘发布器的目的地在 HotLoop 重启时生效。当 HotLoop 有密钥时，密钥会在数据库中加密封存。需要 `settings.write`。
 
 ### `GET /api/settings`
 

@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 HotLoop takes logical, table-data-only snapshots of the historian and restores
-them, since 4.12.0. Off by default (`HOTLOOP_BACKUP_ENABLED`):
+them, since 4.12.0. On by default, daily (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), in the binary and in the Helm chart. Backups go under `HOTLOOP_BACKUP_DIR`, which defaults to `backups` in HotLoop's data directory (`HOTLOOP_DATA_DIR`, else `/data` when it can be written, else `~/.local/share/hotloop`):
 a deployment that has not configured a backup volume should not have this
 process quietly writing into an ephemeral container filesystem.
 

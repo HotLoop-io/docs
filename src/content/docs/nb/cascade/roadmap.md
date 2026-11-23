@@ -3,6 +3,10 @@ title: "Veikart for Cascade"
 description: "Hva Cascade har bygget, hva hver utgivelse leverte, og hva som verken er bygget eller planlagt."
 ---
 
+:::note[Tar med det som kommer]
+Denne siden tar også med noen ting som er nyere enn HotLoop Cascade 1.4.2, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
+:::
+
 Ingen steder i koden finnes en lisenssjekk. Hver fase er ferdig når den «ekte» listen er gjennomført mot ekte systemer, ikke når koden kompilerer.
 
 ## 0.1.0, MVP-en
@@ -24,6 +28,14 @@ Hva en lagret arbeidsflyt holder seg til i dag: filen sier hvilken versjon av fo
 ## 1.3.0, editoren på 14 språk
 
 Bygget. Engelsk, spansk, fransk, italiensk, tysk, norsk bokmål, bulgarsk, gresk, koreansk, japansk, vietnamesisk, hindi, forenklet kinesisk og arabisk. En språkvelger i toppfeltet og på innloggingssiden; hver skjerm, trinntitlene og hjelpen og serverens avslag er oversatt; datoer, tall og varigheter følger språket; arabisk skrives fra høyre mot venstre, med lerretet og koden fra venstre mot høyre. Hvert språk er prøvd på hver skjerm i skrivebords- og telefonbredde i en ekte nettleser, og bygget avviser et språk som mangler en linje. Ordene kommer fra den felles HotLoop-ordlisten.
+
+## 1.5.0, slette en person
+
+Bygget. En eier av instansen kan slette en person fra Brukere, REST-API-et (`DELETE /api/v1/users/{user}`) eller MCP-serveren (`delete_user`). Kontoen, øktene, passkeys, innloggingsidentitetene og API-nøklene deres forsvinner, og revisjonsloggen beholder hvem som gjorde det og hva som gikk. Arbeidsflytene, legitimasjonen og kjøringene deres blir: det personlige prosjektet blir et delt prosjekt oppkalt etter dem med "(removed)", slik at en eier eller administrator kan flytte arbeidet eller gi det videre. Ingen kan slette sin egen konto, og den siste eieren kan ikke slettes. Å slå av noen finnes fortsatt, for når du vil beholde kontoen.
+
+## 1.4.2, påloggingssiden
+
+Bygget. Påloggingssiden er et sentrert kort på en rolig side, med produktmerket og navnet over, hovedknappen i HotLoop-oransje og de andre måtene inn (en passkey, enkel pålogging) som vanlige knapper ved siden av, i lyst og mørkt og på en telefon. Knappen for enkel pålogging har ikon fra leverandøren sin når leverandøren er Vord. Hvert felt, hver id og hver påloggingssti er som den var.
 
 ## 1.4.1, innstillingssiden
 

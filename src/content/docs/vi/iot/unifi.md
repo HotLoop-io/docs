@@ -85,15 +85,20 @@ Edge Relay cũng có thể thăm dò bảng điều khiển. Nó đọc các tag
 
 ## Lệnh
 
-Năm loại điểm là lệnh. Mỗi loại được tạo ở chế độ chỉ đọc như mọi tag khác, và không làm gì cho đến khi ai đó đánh dấu nó là ghi được. Tài khoản mà HotLoop dùng để đăng nhập phải là Administrator cục bộ cho các lệnh này; với View Only, bảng điều khiển trả lời HTTP 403, HotLoop báo như vậy, và không có gì thay đổi.
+Sáu loại điểm là lệnh. Mỗi loại được tạo ở chế độ chỉ đọc như mọi tag khác, và không làm gì cho đến khi ai đó đánh dấu nó là có thể ghi. Tài khoản mà HotLoop đăng nhập phải là Quản trị viên cục bộ cho các lệnh này; với View Only, console trả lời HTTP 403 và HotLoop nói rõ điều đó, và không có gì thay đổi.
 
 | Tag | Ghi | Bảng điều khiển làm gì |
 |---|---|---|
 | `d.<mac>.locate` | `true` hoặc `false` | Nhấp nháy đèn LED của thiết bị cho đến khi tắt. Đọc lại điều bảng điều khiển báo. |
 | `d.<mac>.restart` | `true` | Khởi động lại thiết bị vào lần tới nó báo về. `false` không làm gì. Đọc 0. |
 | `p.<mac>.<nn>.power_cycle` | `true` | Tắt rồi bật PoE của cổng. `false` không làm gì. Đọc 0. |
+| `p.<mac>.<nn>.poe_mode` | `auto`, `off`, `pasv24` hoặc `passthrough` | Đặt chế độ PoE của cổng. Các cài đặt cổng khác của switch được đọc trước và gửi lại cùng thay đổi, nên không mất cài đặt nào. `off` bị từ chối trên một cổng đang mang mạng, giống như một chu kỳ cấp điện. |
 | `w.<id>.enabled` | `true` hoặc `false` | Bật hoặc tắt một mạng không dây. Chỉ trường đó được gửi đi, nên mật khẩu wifi và mọi cài đặt khác được giữ nguyên. `<id>` là mã của mạng trong bảng điều khiển, đổi tên không làm nó thay đổi. |
 | `c.<mac>.blocked` | `true` hoặc `false` | Chặn một client đang được theo dõi khỏi mạng, hoặc cho nó vào lại. Điểm này tồn tại cho client mà bảng điều khiển đã từng thấy. |
+
+Nó không có định vị, không có chế độ PoE và không có tắt cổng, các hành động trên client chỉ là cấp quyền cho khách (không chặn), và một lần cập nhật Wifi Broadcast thay thế cả mạng. Nó cũng cần một khóa API, một thông tin đăng nhập thứ hai. Vì vậy HotLoop gửi tất cả những điều này qua các lệnh riêng của console, một phiên và một lần đăng nhập cho mọi thứ, như giao diện web vẫn làm.
+
+API đã công bố không có cấu hình cổng nào để ghi. Vì vậy HotLoop không có cách nào tắt một cổng trên 10.6 mà đã thấy là giữ được, và nó không gửi lệnh nào. Cần chính yêu cầu "Disabled" của giao diện web, được bắt từ một console thật.
 
 Một chu kỳ nguồn có thể gây hại cho nhà máy (một tự động hóa tắt bật PLC cứ hai phút một lần sẽ làm cháy bộ nguồn của nó), nên hai quy tắc được áp dụng bất kể ai yêu cầu: một cổng được tắt bật nhiều nhất một lần trong 15 phút (thời điểm của chu kỳ cuối được lưu trong cơ sở dữ liệu, nên khởi động lại không làm quên, và chu kỳ mà thời điểm không thể kiểm tra sẽ bị từ chối), và cổng đang mang mạng không bao giờ bị tắt bật. Đó là một uplink, và mọi cổng mà thiết bị khác đang gắn vào, theo cấu trúc mạng của chính bảng điều khiển; cổng cấp nguồn cho đường dự phòng 5G là một trong số đó. Lời từ chối nói rõ là quy tắc nào. Một lệnh mà chính bảng điều khiển từ chối không làm mất thời gian chờ.
 
@@ -188,6 +193,27 @@ Websocket sự kiện của bảng điều khiển (`/proxy/network/wss/s/<site>
 Bộ điều khiển gắn cờ các sự kiện có nghĩa là có gì đó sai (`is_negative`: switch mất liên lạc là một sự kiện như vậy, client ngắt kết nối thì không), và đó là các cảnh báo trong nhật ký. Mọi thứ khác là thông tin, kể cả những khóa HotLoop chưa từng thấy.
 
 **Websocket chết tốn tốc độ, không bao giờ tốn tính đúng đắn.** Nó kết nối lại với khoảng lùi từ hai giây tới một phút. Nó gửi ping, và một luồng không trả lời gì trong 90 giây là đã chết dù mạng nói gì, nên nó được đóng và mở lại. Khi đang ngừng, `site.events_live` đọc 0, Tổng quan hiện "polling only" kèm lý do, và việc thăm dò tiếp tục y như trước.
+## Ổ cắm của PDU SmartPower
+
+Một PDU SmartPower được tiếp nhận vào Network Application như mọi thiết bị, và `outlet_table` của nó tạo ra các tag cho các ổ cắm, trong cùng thiết bị. Một ổ cắm là `o.<mac>.<nn>.…`:
+
+| Tag | Ghi | Nó là gì |
+|---|---|---|
+| `o.<mac>.<nn>.on` | `true` hoặc `false` | Rơ-le của ổ cắm. Ghi vào nó sẽ chuyển ổ cắm: toàn bộ mảng `outlet_overrides` của PDU được đọc trước và gửi lại cùng một thay đổi (PUT của console thay thế cả mảng, nên nếu không tên của một ổ cắm sẽ bị mất). |
+| `o.<mac>.<nn>.cycle` | `true` | Tắt ổ cắm, chờ năm giây, rồi bật lại. Ổ cắm luôn được bật lại, kể cả khi yêu cầu bị hủy giữa chừng. Tối đa một lần trong 15 phút, cùng khoảng nghỉ mà chu kỳ cấp điện của một cổng có, được giữ theo cùng cách. Đọc ra 0. |
+| `o.<mac>.<nn>.power_w`, `.current_a`, `.voltage_v`, `.pf` | | Những gì ổ cắm đo được. |
+| `d.<mac>.pdu_power_w` | | Tổng mức tiêu thụ của PDU, đưa vào phần việc về năng lượng. |
+
+Một ổ cắm có thể là một cỗ máy, nên ở đây không có gì chuyển một ổ cắm trừ khi một người đã lên cò tag đó, và mọi lần ghi đều đi qua cổng. Chu kỳ riêng của ổ cắm (tự phục hồi của PDU, `cycle_enabled`) không bị đụng tới. Các bài kiểm thử PDU chạy với một console giữ trạng thái và nhận PUT, và một console chỉ biết bảng ổ cắm của PDU từ chính inform của thiết bị, nên các bài kiểm thử cũng đưa nó theo cách đó.
+
+## UniFi Protect
+
+Một thiết bị riêng, giao thức `unifi-protect`, vì Protect có API riêng và khóa riêng. Xem [Giao thức và driver](/vi/iot/protocols/#unifi-protect) về các tag, luồng sự kiện và các lần ghi. Integration API là API mà console ghi tài liệu (`/proxy/protect/integration/v1`, khóa trong header `X-API-KEY`), và khóa được tạo ở trang Integrations của console; nó có thể bị thu hồi riêng, điều này không ảnh hưởng đến đăng nhập Network. Chứng chỉ được ghim giống như với thiết bị Network. Chuyển động của camera cần websocket sự kiện: khi nó ngừng, chuyển động của camera đọc ra lỗi và `site.events_live` đọc ra 0. Trạng thái riêng của các cảm biến nằm trong bản ghi REST và vẫn tốt.
+
+## UniFi Access
+
+Một thiết bị riêng, giao thức `unifi-access`, với token API của nó và cổng 12445. Xem [Giao thức và driver](/vi/iot/protocols/#unifi-access). Mở khóa là một lần ghi như mọi lần ghi khác: một người lên cò `door.<id>.unlock`, và cổng ghi cùng kiểm toán áp dụng, từ màn hình, một tự động hóa hay MCP đều như nhau.
+
 ## Những gì đã được xác minh
 
 Trình điều khiển UniFi và các màn hình đã được chạy với UniFi Network Application và bảng điều khiển UniFi OS thật, chỉ đọc bằng tài khoản View Only, và trên phần cứng thật vào 2026-11-17: lần đăng nhập và phiên duy nhất của nó, các tag thiết bị, cổng, PoE, WAN và client, luồng sự kiện trực tiếp, và các màn hình xây dựng trên chúng.

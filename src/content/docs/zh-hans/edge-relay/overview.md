@@ -9,7 +9,7 @@ editUrl: false
 
 Edge Relay 是没有界面的那一个。它装在机器旁边的 Pi 或小型工业 PC 上，用 Gateway 所用的同样驱动轮询这些机器，并把每一条读数通过 Sparkplug B 转发给某处带真正数据库的 Gateway。上行链路中断时，它把数据排队写到磁盘，链路恢复后再回放，所以只要中断时长没有超出队列容量（默认上限 64 MiB），上游的历史数据库得到的就是补全的中断时段，而不是一个空洞。没有数据库，没有网页界面，没有用户，没有写入路径，而这每一样缺失的东西，都是凌晨 3 点不会出故障的东西。
 
-当前版本是 4.23.2：`ghcr.io/hotloop-io/hotloop-edge-relay:4.23.2`，为 amd64、arm64 和 arm/v7 构建（Pi 3 或 32 位 Pi OS 安装正是 Relay 最终落脚的那种盒子），约 15 MB，无需登录即可拉取，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-edge-relay`。4.16.0 是首个发布它的版本，arm/v7 随 4.18.10 加入。它与 Gateway 共用版本号，只有当两个图表都带有标签的版本、且 Quadlet 单元跟随 `:stable` 时，版本才允许发布。所以 Relay 每次发布都会有新版本，不管它的代码有没有变。只需要问一个版本号，Relay 图表也永远不会指向没人推送过的镜像。[安装它](/zh-hans/edge-relay/install/)。
+当前版本是 4.24.0：`ghcr.io/hotloop-io/hotloop-edge-relay:4.24.0`，为 amd64、arm64 和 arm/v7 构建（Pi 3 或 32 位 Pi OS 安装正是 Relay 最终落脚的那种盒子），约 15 MB，无需登录即可拉取，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-edge-relay`。4.16.0 是首个发布它的版本，arm/v7 随 4.18.10 加入。它与 Gateway 共用版本号，只有当两个图表都带有标签的版本、且 Quadlet 单元跟随 `:stable` 时，版本才允许发布。所以 Relay 每次发布都会有新版本，不管它的代码有没有变。只需要问一个版本号，Relay 图表也永远不会指向没人推送过的镜像。[安装它](/zh-hans/edge-relay/install/)。
 
 正在升级 Relay？[从 4.17.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay-and-quadlet)和[从 4.16.0 升级](/zh-hans/gateway/upgrading/#the-edge-relay)里有 Relay 的部分。
 

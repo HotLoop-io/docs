@@ -3,6 +3,10 @@ title: "Die HTTP-API"
 description: "Jeder Aufruf, den HotLoop über HTTP beantwortet, was er braucht, was er annimmt und was er zurückgibt. Die Web-Oberfläche nutzt nichts anderes."
 ---
 
+:::note[Enthält, was kommt]
+Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop core 4.24.0, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
+:::
+
 Jeder Aufruf, den das Gateway über HTTP beantwortet, was er braucht, was er annimmt und was er zurückgibt. Die Weboberfläche nutzt nichts anderes: Hinter den Bildschirmen steckt keine private API, also kann ein Skript alles, was die Oberfläche kann, mit denselben Aufrufen und denselben Berechtigungen.
 
 Diese Seite wird gegen den Code geprüft. Die Liste der Routen und wer sie aufrufen darf, beschreibt also keine API, wie sie einmal war. Die Formen der Anfragen und Antworten unten stammen von einem laufenden Gateway; die Tests prüfen sie nicht. Wenn Sie einen Handler ändern, ändern Sie deshalb auch seinen Abschnitt hier.
@@ -256,6 +260,9 @@ Die Spalte Produkt nennt das kleinste HotLoop, das die Route hat: `all` ist IoT,
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ Die Spalte Produkt nennt das kleinste HotLoop, das die Route hat: `all` ist IoT,
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ Die Kopfleiste: Laufzeitzähler, die Alarmübersicht, der Name der Anlage und we
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ Legt die üblichen Alarme für den Standort aus dem an, was die Konsole jetzt ha
 ```
 
 `kept` sind Alarme, die der Satz verlangt und die schon da waren: seine eigenen von einem früheren Druck oder der Alarm von jemandem auf demselben Tag. Man kann also nach der Übernahme weiterer Geräte sicher erneut drücken, und es fügt nur die neuen Geräte hinzu. Die Alarme für OT-Netzwerke und für Geräte außerhalb des Netzwerks gehören nicht dazu; sie kommen mit dem Markieren eines Netzwerks als OT und dem Überwachen eines Geräts. `503`, bis die Konsole einmal gelesen wurde.
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Das aktuelle Bild einer Protect-Kamera, ein JPEG (`Content-Type: image/jpeg`, `Cache-Control: no-store`), von der Konsole geholt, wenn es angefordert wird; das ist die einzige UniFi-Route, die selbst eine Anfrage stellt. `{id}` ist ein Gerät mit dem Protokoll `unifi-protect` und `{camera}` die ID, die die Konsole der Kamera gibt (die `<id>` in ihrem Tag `cam.<id>.online`). `404`, wenn das Gerät kein verbundenes Protect-Gerät ist, und `502` mit dem Grund der Konsole, wenn die Kamera offline ist oder die Konsole den Schlüssel ablehnt. Siehe [Protokolle und Treiber](/de/iot/protocols/#unifi-protect).
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+Das aktuelle Bild eines ONVIF-Kameraprofils, ein JPEG (`Content-Type` so, wie die Kamera ihn gesendet hat, `Cache-Control: no-store`), von der Kamera geholt, wenn es angefordert wird, mit dem eigenen Login der Kamera. `{id}` ist ein Gerät mit dem Protokoll `onvif` und `{profile}` das Token, das die Kamera dem Medienprofil gibt (das `<token>` in ihrem Tag `profile.<token>.snapshot_uri`). `404`, wenn das Gerät kein verbundenes ONVIF-Gerät ist, und `502` mit dem Grund der Kamera, wenn sie keines liefert. Siehe ONVIF.md.
+
+### `POST /api/onvif/discover`
+
+Durchsucht das Netzwerk nach ONVIF-Kameras (WS-Discovery, eine Multicast-Suche von jeder Schnittstelle) und antwortet mit `{"cameras":[...]}`, mit jeder, die geantwortet hat: ihr `endpoint`, `xaddrs`, die `address`, mit der sie hinzugefügt wird, und die `name`, `hardware`, `location` und `profiles`, die ihre Scopes angeben. `?wait=` ist, wie viele Sekunden zugehört wird, 1 bis 15, standardmäßig 3. Es fügt nichts hinzu; eine Person fügt die Kamera als Gerät mit dem Protokoll `onvif` hinzu.
 
 ## MQTT-Erkennung
 
@@ -2134,6 +2156,24 @@ Jeder Standort, den das Gateway föderiert, nach seinem Anlagenstatus über MCP 
 Die Zähler eines unerreichbaren Standorts bedeuten nichts und werden aus der Summe herausgelassen: Einen Standort, den man nicht erreicht, als null Alarme zu zählen, wäre das Gefährlichste, was dieser Bildschirm tun könnte. Ohne konfigurierte Standorte: `{"configured":false,"sites":[]}`.
 
 ## Einstellungen
+
+### `GET /api/destinations`
+
+Wohin Alarme und Edge-Messwerte gehen, ein Eintrag pro Art: `webhook`, `smtp`, `ntfy`, `gotify`, `discord_webhook`, `discord_bot` und `edge_publish`. Jeder hat seine `fields` (Schlüssel, Beschriftung, Typ, ob geheim oder erforderlich), `enabled`, einen `state` (`active`: sendet; `needs`: an und wartet auf sein Ziel, wobei `missing` nennt, worauf er wartet; `off`; `needs-restart`: gespeichert, und der Edge-Publisher wendet es beim Neustart von HotLoop an), die `values` im Klartext und `set`, das sagt, welche geheimen Felder einen Wert haben. Der Wert eines Geheimnisses wird nie zurückgegeben. `source` ist `saved`, wenn ein Administrator es unter Einstellungen gespeichert hat, und `environment`, wenn das Chart oder die Umgebung es gegeben hat. Jede Art ist standardmäßig an und untätig, bis sie ein Ziel zum Senden hat; keine verhindert den Start.
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+Was der OPC-UA-Server tut und wie sich ein Client anmeldet. `state` ist `active`, `idle` (die HotLoop-Authentifizierung ist aus, also gibt es keine Benutzer, mit denen man sich anmelden könnte; `reason` sagt das), `off` oder `unavailable` (dieses Produkt hat den Server nicht). Wenn er an ist, ist `endpoint` die URL, mit der sich ein Client verbindet, und bei eingeschalteter Authentifizierung sind `username` und `password` der Login, den HotLoop für OPC-UA-Clients angelegt hat (`opcua-reader`, der Tags und Werte lesen darf und sonst nichts, mit einem erzeugten Passwort). Braucht `users.manage`, weil das Passwort darin steht. Der Server ist standardmäßig an; sein Passwort lässt sich wie das jedes Benutzers ändern, und der nächste Start lässt das hier gezeigte wieder funktionieren.
+
+### `PUT /api/destinations/{kind}`
+
+Speichert ein Ziel und antwortet mit der Liste, wie `GET` sie gibt. Der Body ist `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`, jeder Teil optional. Ein leer gelassenes Geheimnis behält, was gespeichert ist, und `clear` entfernt eines. Das Ergebnis wird so geprüft wie die Umgebung beim Start, bevor etwas gespeichert wird, sodass ein falsches Ziel ein `400` ist, das sagt, was falsch ist (nie den Wert), und nichts ändert. Die Alarmkanäle gelten sofort; das Ziel des Edge-Publishers gilt, wenn HotLoop neu startet. Geheimnisse werden in der Datenbank versiegelt, wenn HotLoop einen geheimen Schlüssel hat. Braucht `settings.write`.
 
 ### `GET /api/settings`
 

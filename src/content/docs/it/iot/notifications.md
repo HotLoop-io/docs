@@ -3,7 +3,7 @@ title: "Notifiche degli allarmi"
 description: "ntfy, Gotify, Discord, webhook ed e-mail. Premi Riconosci sul telefono e l'allarme risulta riconosciuto, firmato e valido una sola volta."
 ---
 
-Le notifiche degli allarmi, dalla versione 4.10.0, avvisano un telefono quando scatta un allarme alle 03:00. Quando un allarme viene **attivato**, HotLoop invia una notifica su ogni canale configurato e abilitato la cui soglia di priorità è raggiunta dall'allarme. Disattivate per impostazione predefinita (`HOTLOOP_NOTIFY_ENABLED`): un'installazione senza nessuno da avvisare non ha nulla da configurare qui.
+Le notifiche di allarme, da 4.10.0, avvisano un telefono quando un allarme scatta alle 3 di notte. Quando un allarme **scatta**, HotLoop invia una notifica attraverso ogni canale configurato e attivo la cui soglia di priorità l'allarme raggiunge. Attive nel chart Helm da 4.23.6 (`HOTLOOP_NOTIFY_ENABLED`), non inviano nulla finché un canale non è attivato con la sua destinazione: un deployment senza nessuno da avvisare non ha nulla da configurare qui.
 
 ## Perché solo "attivato"
 
@@ -24,6 +24,17 @@ Sono sei, e questa è la lista (vedi "Notifiche" nella [roadmap di HotLoop](/it/
 
 - **Webhook**: un POST del corpo JSON proprio di HotLoop (`alarmId`, `name`, `priority`, `priorityLabel`, `message`, `deviceId`, `tagName`, `raisedAt`, `event`, che vale `raised`, oppure `escalated` per un'escalation) verso un URL configurato. Funziona con qualsiasi cosa accetti il JSON che gli invii: un tuo script dietro un piccolo ascoltatore HTTP, Node-RED, n8n o un trigger "qualsiasi webhook" in uno strumento di flussi. (Puntato a un topic ntfy avvisa, con il JSON grezzo come testo; usa invece il canale ntfy qui sopra.) Un riepilogo (vedi "Limiti di frequenza e riepiloghi") ha `event` impostato su `summary` e un elenco `alarms` che nomina ogni allarme incluso. Non funziona con i servizi che vogliono il corpo nella loro forma. Discord risponde 400 perché mancano `content` ed `embeds`. Slack, Teams e Google Chat vogliono un proprio campo di testo. Pushover vuole i campi `token`, `user` e `message`, e l'API Events di PagerDuty vuole un `routing_key`, un `event_action` e un `payload`. Punta il webhook a uno di questi e ogni avviso fallisce. Discord ha canali propri che costruiscono il corpo che Discord si aspetta; usa quelli.
 - **E-mail via SMTP**: inviata tramite il relay che l'operatore ha già (un server di posta aziendale, l'endpoint SMTP di un fornitore di e-mail transazionali, un relay self-hosted). Nessuna chiave API, nessuna libreria di fornitore: `net/smtp` e un messaggio in testo semplice costruito a mano. Molti telefoni mostrano già l'e-mail come notifica push, e molti strumenti di reperibilità accettano un indirizzo ponte da e-mail a SMS come "metodo di contatto", quindi questo solo canale copre una parte consistente di "avvisare un telefono" senza alcuna dipendenza a pagamento.
+
+## Dove vanno gli allarmi: Impostazioni
+
+Ogni canale è attivo per impostazione predefinita e inattivo finché non ha dove inviare. Un canale attivo senza destinazione non impedisce mai l'avvio di HotLoop, aspetta e lo dice. Un amministratore dà a ciascuno la sua destinazione in Impostazioni, "Dove vanno gli allarmi e le letture": l'URL del webhook, il relay email e i destinatari, il server e il topic ntfy, il server e il token Gotify, l'URL del webhook Discord, il token e il canale del bot Discord, e il broker e il gruppo Sparkplug del publisher edge. Ognuno mostra cosa sta facendo (invia, aspetta una destinazione, spento) e cosa gli manca.
+
+- I canali di allarme si applicano nel momento in cui l'impostazione viene salvata: il dispatcher viene ricostruito sul posto, ciò che i vecchi canali trattenevano parte per primo, e la connessione del bot Discord viene chiusa prima che se ne apra una nuova. **Invia un test** (`POST /api/notify/test`) raggiunge poi il canale appena salvato.
+- Il publisher edge possiede un file di coda e un nodo Sparkplug, quindi la sua destinazione viene letta all'avvio di HotLoop. La schermata dice "Saved, applies when HotLoop restarts".
+- Ciò che è salvato lì prevale sul chart o sull'ambiente, che servono solo a inizializzarlo. Un valore lasciato vuoto mantiene ciò che è memorizzato; Cancella lo rimuove. Un segreto (un URL di webhook, un topic ntfy, un token, una password) non viene più mostrato, solo se è impostato, ed è sigillato nel database quando HotLoop ha una chiave segreta.
+- Una destinazione viene controllata come l'ambiente all'avvio, prima che venga memorizzato qualcosa, e una sbagliata viene rifiutata dicendo cosa non va (mai il valore).
+- Un interruttore per canale lo spegne del tutto: spento significa nessun canale, nessun invio.
+- `GET /api/destinations` e `PUT /api/destinations/{kind}` sono le route; il PUT richiede `settings.write`. Vedi [l'API HTTP](/it/iot/api/).
 
 ## L'URL del webhook non viene mai stampato
 

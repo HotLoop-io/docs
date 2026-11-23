@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.23.2 đã ra mắt]
-Bốn sản phẩm từ một tag: [IoT](/vi/iot/overview/), [Edge](/vi/edge/overview/), Gateway và [Edge Relay](/vi/edge-relay/overview/), mỗi sản phẩm có image và chart riêng. Cả bốn đều được build cho amd64 và arm64 trong 4.23.2, và ba sản phẩm nhỏ còn build cho cả arm/v7. Gateway giữ nguyên `ghcr.io/hotloop-io/hotloop:4.23.2` và chart `hotloop` từ `https://hotloop.io/hotloop`, cả hai đều tải về mà không cần đăng nhập. [Cài đặt](/vi/gateway/install/). Đang dùng 4.18.11? Đó là một lệnh `helm upgrade`, và sau đó các tác tử có thể ghi, nên hãy đọc hai thay đổi này. Đang dùng 4.17.0? Đó là một lệnh `helm upgrade` thông thường, nhưng không dùng `--reuse-values`, và vài giá trị mặc định đã đổi. Đang dùng 4.16.0 hoặc 4.3.1? Bạn đi qua 4.17.0 trước. Dù thế nào, hãy [đọc phần nâng cấp trước](/vi/gateway/upgrading/). Biết điều này ở đây vẫn hơn là biết qua một lần triển khai bị kẹt.
+:::note[4.24.0 đã ra mắt]
+Bốn sản phẩm từ một tag: [IoT](/vi/iot/overview/), [Edge](/vi/edge/overview/), Gateway và [Edge Relay](/vi/edge-relay/overview/), mỗi sản phẩm có image và chart riêng. Cả bốn đều được build cho amd64 và arm64 trong 4.24.0, và ba sản phẩm nhỏ còn build cho cả arm/v7. Gateway giữ nguyên `ghcr.io/hotloop-io/hotloop:4.24.0` và chart `hotloop` từ `https://hotloop.io/hotloop`, cả hai đều tải về mà không cần đăng nhập. [Cài đặt](/vi/gateway/install/). Đang dùng 4.18.11? Đó là một lệnh `helm upgrade`, và sau đó các tác tử có thể ghi, nên hãy đọc hai thay đổi này. Đang dùng 4.17.0? Đó là một lệnh `helm upgrade` thông thường, nhưng không dùng `--reuse-values`, và vài giá trị mặc định đã đổi. Đang dùng 4.16.0 hoặc 4.3.1? Bạn đi qua 4.17.0 trước. Dù thế nào, hãy [đọc phần nâng cấp trước](/vi/gateway/upgrading/). Biết điều này ở đây vẫn hơn là biết qua một lần triển khai bị kẹt.
 :::
 
 HotLoop Gateway đọc nhà máy của bạn. Nó thăm dò PLC và máy chủ bằng giao thức riêng của chúng, lưu từng giá trị đọc cùng chất lượng vào một Historian, phát báo động ISA-18.2 có thể gọi vào điện thoại, chạy tự động hóa trên toàn bộ dữ liệu và đưa cả nhà máy cho các tác tử qua MCP. Một địa điểm chỉ chạy một chart, gồm Gateway và cơ sở dữ liệu của nó, thay vì một Historian, một máy chủ báo động, một bộ máy quy tắc và một đống keo dán, mỗi thứ hỏng theo lịch riêng.
@@ -19,7 +19,7 @@ Nó được viết bằng Go, từ đầu: một tệp nhị phân tĩnh trên 
 
 ## Bắt đầu từ đâu
 
-Phần nền tảng, trong 4.23.2 và mọi bản phát hành về tới 4.16.0:
+Phần nền tảng, trong 4.24.0 và mọi bản phát hành về tới 4.16.0:
 
 - [Cài đặt](/vi/gateway/install/) là Helm từ chart đã công bố hoặc Podman Quadlet trên một máy, khóa cần sao lưu và vài giá trị cần đặt trước khi một nhà máy thật nhìn thấy nó.
 - [Nâng cấp](/vi/gateway/upgrading/) là quy trình giữ nguyên dữ liệu của bạn, từ 4.17.0, 4.16.0 hoặc 4.3.1, cùng mọi thay đổi API mà một script sẽ vấp phải.
@@ -64,7 +64,7 @@ Mới trong 4.17.0, không có trong 4.16.0:
 
 HotLoop là một mã nguồn được giao thành bốn sản phẩm, tất cả phát hành cùng nhau từ một tag: IoT, Edge, Gateway và Edge Relay. Gateway là đỉnh của dòng này: mọi thứ trong IoT và Edge, cộng với quản lý đội thiết bị, tổng hợp nhiều địa điểm và báo cáo theo lịch. Tính năng phân chia các sản phẩm. Giao thức thì không bao giờ: mọi sản phẩm nói mọi giao thức chúng tôi có, để không ai phải mua bậc cao hơn chỉ để đọc PLC trên bàn thử của mình. [Dòng sản phẩm](/vi/products/) cho biết mỗi sản phẩm có gì.
 
-Cả bốn đều cài đặt được ngay hôm nay, tất cả là 4.23.2. Relay có image và chart riêng, khoảng 15 MB so với 37 MB của Gateway, không có cơ sở dữ liệu và không có giao diện. Phần quản lý đội thiết bị của Gateway theo dõi và ra lệnh cho mọi relay đã đăng ký, và chỉ qua API (`/api/fleet`): giao diện không có màn hình Đội thiết bị.
+Cả bốn đều cài đặt được ngay hôm nay, tất cả là 4.24.0. Relay có image và chart riêng, khoảng 15 MB so với 37 MB của Gateway, không có cơ sở dữ liệu và không có giao diện. Phần quản lý đội thiết bị của Gateway theo dõi và ra lệnh cho mọi relay đã đăng ký, và chỉ qua API (`/api/fleet`): giao diện không có màn hình Đội thiết bị.
 
 Dùng ở nhà máy? [Dùng HotLoop trong doanh nghiệp](/vi/business/) nói về giấy phép và cách liên hệ với chúng tôi.
 
@@ -72,7 +72,10 @@ Dùng ở nhà máy? [Dùng HotLoop trong doanh nghiệp](/vi/business/) nói v�
 
 Mỗi bản phát hành có ghi chú riêng, và chi tiết nằm trong ghi chú, nên chúng ở một nơi chứ không phải hai.
 
-- [4.23.2](/vi/releases/hotloop-4-23-2/): hình ảnh hóa CODESYS được nhập thành màn hình, máy báo cáo tình trạng của chính nó lên bảng điều khiển EmberNet sau một tài khoản chỉ đọc được và không làm gì khác, và đồng hồ đo điện có thể mang phí nhu cầu. Bản build này chỉ có amd64, và phiên bản kế tiếp là bản nhỏ build các image arm.
+- [4.24.0](/vi/releases/hotloop-4-24-0/): màn hình là P&ID, với bồn chứa, bơm và van nối bằng các đường ống tự dò đường đi theo góc vuông, mang một môi chất và dò lại đường khi một ký hiệu được di chuyển; báo động riêng của một PLC CODESYS hiện trong danh sách báo động và một lần xác nhận được gửi về PLC; một lần chạy script luôn kết thúc, và volume dữ liệu của máy luôn đọc được. Bản dựng này chỉ dành cho amd64, và phiên bản tiếp theo là bước nhỏ dựng các image arm.
+- [4.23.6](/vi/releases/hotloop-4-23-6/): UniFi Protect, Access và ổ cắm của PDU, một thiết bị Shelly, bảo mật và siêu dữ liệu của OPC UA PubSub, một thiết bị Modbus im lặng bị đọc lỗi ở mọi điểm, và các tính năng đã hoàn thiện bật từ lần khởi động đầu tiên, với các kênh báo động và edge publisher chờ một đích trong Cài đặt. Nó mang cả thay đổi của 4.23.4 và 4.23.5, vì cả hai chưa từng được phát hành. Bản dựng này chỉ dành cho amd64, và phiên bản tiếp theo là bước nhỏ dựng các image arm.
+- [4.23.3](/vi/releases/hotloop-4-23-3/): mọi ký hiệu trên mọi màn hình đều có thể được hiển thị và tô màu bằng một quy tắc trên một tag, và một màn hình WebVisu giữ việc ẩn và màu báo động của nó khi được chuyển sang. Bản dựng này chỉ dành cho amd64.
+- [4.23.2](/vi/releases/hotloop-4-23-2/): một hình hiển thị CODESYS được nhập thành màn hình, máy báo cáo tình trạng của chính nó lên bảng điều khiển EmberNet qua một tài khoản chỉ đọc được và không làm gì khác, và một đồng hồ điện có thể mang phí công suất cực đại. Bản dựng này chỉ dành cho amd64, và phiên bản tiếp theo là bước nhỏ dựng các image arm.
 - [4.23.1](/vi/releases/hotloop-4-23-1/): trạm thời tiết và đồng hồ đo điện, giao diện web thêm mười ba ngôn ngữ, bảng điều khiển xuất ra tệp và nhập vào bản cài khác, và những lệnh đầu tiên tới một bảng điều khiển UniFi. 4.23.0 đã được gắn tag và chưa bao giờ được công bố, nên bản phát hành này mang những gì ghi chú của nó liệt kê. Bản build này chỉ có amd64.
 - [4.22.1](/vi/releases/hotloop-4-22-1/): bản build đa kiến trúc của 4.22.0, không đổi gì ở sản phẩm.
 - [4.22.0](/vi/releases/hotloop-4-22-0/): trang bảng điều khiển lấp đầy màn hình từ mép này sang mép kia ở mọi kích thước, màn hình Báo động nhập tệp Export Alarms của CODESYS, và các thiết bị OPC UA PubSub trên cùng địa chỉ và cổng dùng chung một socket. Bản build này chỉ có amd64, và 4.22.1 là bản nhỏ build các image arm.

@@ -3,7 +3,7 @@ title: "Sauvegardes et restauration"
 description: "Instantanés logiques de la base de données, restaurations qui refusent un schéma plus récent, et pourquoi la clé des mots de passe se sauvegarde à part."
 ---
 
-HotLoop réalise des instantanés logiques, limités aux données des tables, de l'historien et les restaure, depuis la 4.12.0. Désactivé par défaut (`HOTLOOP_BACKUP_ENABLED`) : un déploiement qui n'a pas configuré de volume de sauvegarde ne doit pas avoir ce processus qui écrit discrètement dans le système de fichiers éphémère d'un conteneur.
+HotLoop prend des instantanés logiques de l'historien, des données de tables seulement, et les restaure, depuis 4.12.0. Activé par défaut, tous les jours (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), dans le binaire et dans le chart Helm. Les sauvegardes vont sous `HOTLOOP_BACKUP_DIR`, qui vaut par défaut `backups` dans le répertoire de données de HotLoop (`HOTLOOP_DATA_DIR`, sinon `/data` quand on peut y écrire, sinon `~/.local/share/hotloop`) : un déploiement qui n'a pas configuré de volume de sauvegarde ne devrait pas voir ce processus écrire en silence dans le système de fichiers éphémère d'un conteneur.
 
 ## De quoi il s'agit
 

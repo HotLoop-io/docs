@@ -5,6 +5,10 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -186,10 +190,21 @@ This is where "better and cooler" has to be obvious from across the room.
       [Network discovery](/iot/network-discovery/)
 - [x] CODESYS, the PLC's variables by the names the programmer gave them, through the runtime's own OPC UA server: discovery of what the application exports, reads and writes, a first dashboard from the setup, and a reconnect with no hands after a restart or a download. Proven against a 4.22.0.0 runtime in a container running HotLoop's lab program and a second, much larger program, and on bare metal (2026-11-17). See [CODESYS](/iot/protocols/#codesys)
 - [x] BACnet/IP and SNMP, read-only, see [Protocols and drivers](/iot/protocols/)
-- [ ] ONVIF cameras, Shelly native
-- [ ] **Firmata**, for Arduinos on USB. Verified on real boards only: Arduinos
-      and a few other Firmata devices are on the way to the bench, and a
-      Firmata emulator would just be us agreeing with ourselves
+- [x] ONVIF cameras: discovery (WS-Discovery), device information, every media
+      profile's stream and snapshot address (Media and Media2), PTZ position and
+      commands, and the camera's own events as tags and logbook lines. Run
+      against onvif_srvd, an ONVIF stack generated from ONVIF's own WSDL files, and
+      every request held to ONVIF's schemas; no physical camera has been on the
+      bench. See ONVIF.md and [Protocols and drivers](/iot/protocols/#onvif)
+- [x] Shelly native: Gen2 and later over RPC and a live websocket (a change and a
+      button press arrive the moment they happen), and Gen1 over its own HTTP
+      interface. Held to recordings of real devices; no Shelly has been on the
+      bench. See SHELLY.md and [Protocols and drivers](/iot/protocols/#shelly)
+- [x] **Firmata**, for Arduinos over USB serial or TCP: digital and analog I/O, PWM,
+      servo and I2C. Run against the Arduino project's own StandardFirmata on a
+      simulated Uno (the firmware answers, not a program of ours); no physical
+      board has been on the bench. See FIRMATA.md and
+      [Protocols and drivers](/iot/protocols/#firmata)
 - [ ] UniFi, see [UniFi](#unifi)
 - [x] Sun, for anything outdoors: `binary_sensor.sun_up`, the sun's elevation
       and azimuth, and `sun` triggers at dawn, sunrise, noon, sunset and dusk
@@ -326,24 +341,39 @@ In order. Nothing in here writes to a controller until U5.
       cook a power supply. Protected ports come from the topology: HotLoop will
       not cycle an uplink or the port powering the 5G backup, no matter who
       asks. Device restart is a plain button: press it, the device restarts, no
-      confirmation, still audited
+      confirmation, still audited.
+      Built and proven in testing: locate, restart, power cycle, PoE mode, WLAN
+      on and off and client block. Port disable waits: Network 10.6 stores no
+      port setting that turns a port off, see [UniFi Network](/iot/unifi/#commands)
 - [ ] **U6: self-healing.** A built-in blueprint: device silent for N minutes,
-      cycle its port once, then alarm. Once, not forever
+      cycle its port once, then alarm. Once, not forever.
+      Built: the `device_silent_cycle_its_port` blueprint, on top of the port
+      power cycle with its 15 minute cooldown and its protected ports, see
+      [Blueprints](/iot/blueprints/). The box stays unticked until it has cycled
+      a real PoE device's port on a real switch
 
 ### Protect, Access, and power
 
-Built from Ubiquiti's docs, and each one merges when it's run against real gear
-on the bench, not before.
+Built from Ubiquiti's published APIs. Each one is out in 4.23.6, and the bench run
+on real gear follows at the office.
 
-- [ ] **Protect.** Cameras as entities, motion and smart detections as binary
+- [x] **Protect.** Cameras as entities, motion and smart detections as binary
       sensors and automation triggers, snapshots on demand and attached to
       alarm notifications. A HotLoop alarm can fire a Protect alarm trigger so
-      the cameras record. Live video comes with the Phase 3 camera card
-- [ ] **Access.** Door position, door events into the logbook, and unlock as a
+      the cameras record. Live video comes with the Phase 3 camera card.
+      Built to the OpenAPI document for 7.4.102, with every path matching it: the `unifi-protect` device, cameras, sensors, lights and
+      sirens as tags, motion and smart detections from the events stream, the
+      siren and the alarm trigger as writes, and a snapshot route. Left: a
+      snapshot attached to an alarm notification. See [Protocols and drivers](/iot/protocols/#unifi-protect)
+- [x] **Access.** Door position, door events into the logbook, and unlock as a
       write through the gate. Unlock from MCP is allowed through the write gate
-      like any other write, and audited like any other write
-- [ ] **SmartPower PDU.** Outlet power, on, off and cycle as tags, feeding the
-      Phase 5 energy work
+      like any other write, and audited like any other write.
+      Built to what the maintained open client records: the `unifi-access` device, each door's position
+      and lock as tags, door events in the logbook, and unlock as a write. See
+      [Protocols and drivers](/iot/protocols/#unifi-access)
+- [x] **SmartPower PDU.** Outlet power, on, off and cycle as tags, feeding the
+      Phase 5 energy work. Built to the console's own outlet API: outlet on, power, current, voltage and cycle as tags of the UniFi
+      Network device. See [UniFi Network](/iot/unifi/#smartpower-pdu-outlets)
 
 ## Historian targets
 
@@ -380,13 +410,19 @@ back up and patch, and they are not adopting ours to get a trend.
 - [x] A CODESYS publisher against it: HotLoop Transmitter 1.1.0, the CODESYS
       UADP publisher library, read by this subscriber (4.19.2) against a live
       CODESYS Control for Linux SL runtime
-- [ ] Message security (signed and encrypted NetworkMessages)
+- [ ] Message security (signed and encrypted NetworkMessages). Left: a Security Key Service (keys are static), and a
+      Siemens or Beckhoff publisher. See [Protocols and drivers](/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Delta frames from the publisher, as an option (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): only
       the changed fields between key frames. See
       [Protocols and drivers](/iot/protocols/)
 - [ ] DataSetMetaData and discovery messages
       so a subscriber can name the fields; array and structure fields in what
-      the publisher sends, and structure fields in what the subscriber reads; events
+      the publisher sends, and structure fields in what the subscriber reads; events.
+      Built: chunks, discovery responses and DataSetMetaData read and written, the
+      subscriber's structure fields, RawData laid out from the metadata, Event
+      messages, the publisher's announcements; read against a real Siemens publisher's
+      captured frames. Left: array and structure fields in what HotLoop publishes
+      (a tag is one number or one text), sending and answering discovery requests
 - [ ] Against a Siemens or Beckhoff publisher, and over a router (multicast
       routing and the TTL)
 

@@ -3,7 +3,7 @@ title: "Copias de seguridad y restauración"
 description: "Instantáneas lógicas de la base de datos, restauraciones que rechazan un esquema más nuevo y por qué la clave de las contraseñas se guarda aparte."
 ---
 
-HotLoop hace instantáneas lógicas, solo con los datos de las tablas, del historiador y las restaura, desde la 4.12.0. Está desactivado por defecto (`HOTLOOP_BACKUP_ENABLED`): un despliegue que no ha configurado un volumen de copias no debería tener este proceso escribiendo en silencio en el sistema de archivos efímero de un contenedor.
+HotLoop hace instantáneas lógicas del historian, solo de los datos de las tablas, y las restaura, desde 4.12.0. Activado por defecto, a diario (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), en el binario y en el chart de Helm. Las copias se guardan en `HOTLOOP_BACKUP_DIR`, que por defecto es `backups` dentro del directorio de datos de HotLoop (`HOTLOOP_DATA_DIR`, si no `/data` cuando se puede escribir, si no `~/.local/share/hotloop`): un despliegue que no ha configurado un volumen de copias no debería tener este proceso escribiendo sin avisar en el sistema de archivos efímero de un contenedor.
 
 ## Qué es esto
 

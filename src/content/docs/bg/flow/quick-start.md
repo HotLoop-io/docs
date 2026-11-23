@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
-Генерирайте хеша с `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long'`. Образът е distroless без root и в него няма shell, така че няма къде да се прави `exec` и няма на какво да се опре някой, получил изпълнение на код.
+Генерирайте хеша с `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. Образът е distroless без root и в него няма shell, така че няма къде да се прави `exec` и няма на какво да се опре някой, получил изпълнение на код.
 
 След това отворете <http://localhost:1880>. Сложете `flows.json` в директорията с данни и рестартирайте или просто изградете потока в редактора. Редакторът е Astro със Svelte острови върху платно от чист TypeScript и роден SVG, изграден като статични файлове вътре в бинарния файл: 190.7 kB JS и 30.1 kB CSS минимизирани, 62.5 kB и 6.8 kB с gzip, прочетени от `web/dist/_astro` след `npm run build`. Нищо от него не се тегли отникъде, така че работи на машина без интернет.
 

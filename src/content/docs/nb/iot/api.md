@@ -3,6 +3,10 @@ title: "HTTP-APIet"
 description: "Hvert kall HotLoop svarer på over HTTP, hva det trenger, hva det tar imot og hva det gir tilbake. Nettgrensesnittet bruker ingenting annet."
 ---
 
+:::note[Tar med det som kommer]
+Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
+:::
+
 Hvert kall Gateway svarer på over HTTP, hva det trenger, hva det tar imot og hva det gir tilbake. Nettgrensesnittet bruker ikke noe annet: det finnes ikke noe privat API bak skjermbildene, så alt grensesnittet kan gjøre, kan et skript gjøre med de samme kallene og de samme tillatelsene.
 
 Denne siden kontrolleres mot koden. Listen over ruter og hvem som kan kalle dem er derfor ikke en beskrivelse av API-et slik det en gang var. Formene på forespørslene og svarene nedenfor er hentet fra en Gateway som kjørte; testene sjekker dem ikke, så hvis du endrer en handler, endre seksjonen dens her også.
@@ -256,6 +260,9 @@ Produktkolonnen viser den minste HotLoop som har ruten: `all` er IoT, Edge og Ga
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ Produktkolonnen viser den minste HotLoop som har ruten: `all` er IoT, Edge og Ga
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ Toppraden: kjøretidstellere, alarmoppsummeringen, anleggets navn og hvilket pro
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ Lager de vanlige alarmene for lokasjonen ut fra det konsollen har nå, som vanli
 ```
 
 `kept` er alarmer settet krever og som allerede var der: dets egne fra et tidligere trykk, eller noens egen alarm på samme tag. Det er derfor trygt å trykke igjen etter å ha adoptert mer utstyr, og det legger bare til det nye utstyret. Alarmene for OT-nettverk og for av-nettverket er ikke med; de kommer når du merker et nettverk som OT og overvåker en enhet. `503` til konsollen er lest én gang.
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Det aktuelle bildet fra et Protect-kamera, en JPEG (`Content-Type: image/jpeg`, `Cache-Control: no-store`), hentet fra konsollen når det blir bedt om; dette er den ene UniFi-ruten som gjør en forespørsel på egen hånd. `{id}` er en enhet med protokollen `unifi-protect` og `{camera}` konsollens id for kameraet (`<id>` i taggen `cam.<id>.online`). `404` når enheten ikke er en tilkoblet Protect-enhet, og `502` med konsollens grunn når kameraet er frakoblet eller konsollen avviser nøkkelen. Se [Protokoller og drivere](/nb/iot/protocols/#unifi-protect).
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+Det aktuelle bildet fra en ONVIF-kameraprofil, en JPEG (`Content-Type` slik kameraet sendte den, `Cache-Control: no-store`), hentet fra kameraet når det blir bedt om, med kameraets egen pålogging. `{id}` er en enhet med protokollen `onvif` og `{profile}` kameraets token for medieprofilen (`<token>` i taggen `profile.<token>.snapshot_uri`). `404` når enheten ikke er en tilkoblet ONVIF-enhet, og `502` med kameraets grunn når det ikke vil gi et. Se ONVIF.md.
+
+### `POST /api/onvif/discover`
+
+Sonderer nettverket etter ONVIF-kameraer (WS-Discovery, en multicast-sondering fra hvert grensesnitt) og svarer med `{"cameras":[...]}` med hvert som svarte: `endpoint`, `xaddrs`, `address` det legges til med, og `name`, `hardware`, `location` og `profiles` scopene dets sier. `?wait=` er hvor mange sekunder det lyttes, 1 til 15, standard 3. Den legger ikke til noe; en person legger til kameraet som en enhet med protokollen `onvif`.
 
 ## MQTT-oppdagelse
 
@@ -2134,6 +2156,24 @@ Hver lokasjon Gatewayen føderer, spurt om anleggsstatusen sin over MCP parallel
 Tallene fra en lokasjon som ikke kan nås betyr ingenting og utelates fra summen: å telle en lokasjon man ikke når som null alarmer ville vært det farligste dette skjermbildet kunne gjort. Uten lokasjoner konfigurert: `{"configured":false,"sites":[]}`.
 
 ## Innstillinger
+
+### `GET /api/destinations`
+
+Hvor alarmer og edge-målinger går, én oppføring per type: `webhook`, `smtp`, `ntfy`, `gotify`, `discord_webhook`, `discord_bot` og `edge_publish`. Hver har sine `fields` (nøkkel, etikett, type, om den er hemmelig eller påkrevd), `enabled`, en `state` (`active`: den sender; `needs`: på og venter på målet sitt, med `missing` som sier hva den venter på; `off`; `needs-restart`: lagret, og edge-publisereren bruker det når HotLoop starter på nytt), de vanlige `values`, og `set`, som sier hvilke hemmelige felt som har en verdi. Verdien til en hemmelighet returneres aldri. `source` er `saved` når en administrator lagret den under Innstillinger og `environment` når chartet eller miljøet ga den. Hver type er på som standard og hviler til den har et sted å sende; ingen nekter oppstart.
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+Hva OPC UA-serveren gjør og hvordan en klient logger på. `state` er `active`, `idle` (HotLoop-autentisering er av, så det finnes ingen brukere å logge på som; `reason` sier det), `off` eller `unavailable` (dette produktet har ikke serveren). Når den er på, er `endpoint` URL-en en klient kobler til, og med autentisering på er `username` og `password` påloggingen HotLoop lagde for OPC UA-klienter (`opcua-reader`, som kan lese tagger og verdier og ingenting annet, med et generert passord). Krever `users.manage`, fordi passordet står i svaret. Serveren er på som standard; passordet kan endres som hvilken som helst brukers, og neste oppstart får det som vises her til å virke igjen.
+
+### `PUT /api/destinations/{kind}`
+
+Lagrer ett mål og svarer med listen slik `GET` gir den. Innholdet er `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`, hver del valgfri. En hemmelighet som lades stå tom beholder det som er lagret, og `clear` fjerner en. Resultatet sjekkes slik miljøet sjekkes ved oppstart før noe lagres, så et feil mål er en `400` som sier hva som er galt (aldri verdien) og ikke endrer noe. Alarmkanalene brukes med en gang; målet til edge-publisereren brukes når HotLoop starter på nytt. Hemmeligheter forsegles i databasen når HotLoop har en hemmelig nøkkel. Krever `settings.write`.
 
 ### `GET /api/settings`
 

@@ -5,6 +5,10 @@ description: "What Cascade has built, what each release shipped, and what is not
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.4.2, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 No license check exists anywhere in the code. Each phase ends when
 its "real" list has been done against real systems, not when the code compiles.
 
@@ -57,6 +61,14 @@ language; Arabic is written right to left with the canvas and code left to right
 Each language is tried on every screen at desktop and phone width in a real browser,
 and the build refuses a language with a line missing. The words come from the shared
 HotLoop glossary.
+
+## 1.5.0, deleting a person
+
+Built. An instance owner can delete a person from Users, the REST API (`DELETE /api/v1/users/{user}`) or the MCP server (`delete_user`). Their account, sessions, passkeys, sign-in identities and API keys go, and the audit log keeps who did it and what went. Their workflows, credentials and runs stay: the personal project becomes a shared project named for them with "(removed)", for an owner or admin to move the work or hand it on. Nobody can delete their own account, and the last owner can't be deleted. Turning someone off is still there for when you want the account kept.
+
+## 1.4.2, the sign-in page
+
+Built. The sign-in page is a centered card on a quiet page, with the product mark and name above it, the main button in HotLoop orange, and the other ways in (a passkey, single sign-on) as plain buttons beside it, in light and dark and on a phone. The single sign-on button carries its provider's icon when the provider is Vord. Every field, id and sign-in path is what it was.
 
 ## 1.4.1, the Settings page
 

@@ -19,7 +19,7 @@ HotLoop Flow は、Go で書かれた現場向けのビジュアルなフロー�
 
 既存のフローもそのまま実行できます。これは要点ではなく機能のひとつなので、[後ほど](/ja/flow/migrating-from-node-red/)説明します。
 
-現在のリリースは `2.16.6` です。イメージは amd64 向けの `ghcr.io/hotloop-io/hotloop-flow:2.16.6` で(arm64 は次のパッチリリースで提供されます)、Helm リポジトリは `https://hotloop.io/hotloop-flow/` です。[Flow のデプロイ](/ja/flow/deploying/)では Kubernetes、Podman、Quadlet を扱います。メッセージ用のノードタイプが117種類、FlowLab ダイアグラム用が39種類あります。家庭や研究室での利用は無料で、学校、非営利団体、官公庁の利用も無料です。パートナープラットフォームである EmberNet 経由の利用は、事業利用を含めて制限がなく、HotLoop Source License Agreement に従います。
+現在のリリースは`2.16.8`です。イメージはamd64向けの`ghcr.io/hotloop-io/hotloop-flow:2.16.8`（arm64は2.16.9で提供）、Helmリポジトリは`https://hotloop.io/hotloop-flow/`で、[Flowのデプロイ](/ja/flow/deploying/)にKubernetes、Podman、Quadletがあります。メッセージ用のノードタイプが117、FlowLabの図用が39あります。家庭と研究室での利用は無料で、学校、非営利団体、官公庁の利用も無料です。パートナープラットフォームであるEmberNet経由の利用は、業務利用を含めて制限がなく、HotLoop Source License Agreementに基づきます。
 
 ## 数値
 

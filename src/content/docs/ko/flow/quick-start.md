@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
-`podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long'`로 해시를 생성합니다. 이미지는 루트가 아닌 distroless이고 셸이 없으므로, `exec`로 들어갈 곳이 없고 코드 실행 권한을 얻은 사람이 발판으로 삼을 것도 없습니다.
+`podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`로 해시를 생성합니다. 이미지는 루트가 아닌 distroless이고 셸이 없으므로, `exec`로 들어갈 곳이 없고 코드 실행 권한을 얻은 사람이 발판으로 삼을 것도 없습니다.
 
 그다음 <http://localhost:1880>을 엽니다. 데이터 디렉터리에 `flows.json`을 넣고 재시작하거나, 편집기에서 바로 플로를 만드십시오. 편집기는 순수 TypeScript와 네이티브 SVG 캔버스 위에 Svelte 아일랜드를 얹은 Astro이며, 바이너리 안의 정적 파일로 빌드됩니다. 최소화한 JS 190.7 kB와 CSS 30.1 kB, gzip 시 62.5 kB와 6.8 kB이며, `npm run build` 후 `web/dist/_astro`에서 읽은 값입니다. 어떤 것도 외부에서 가져오지 않으므로 인터넷이 없는 장비에서도 동작합니다.
 

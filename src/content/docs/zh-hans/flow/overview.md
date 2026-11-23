@@ -19,7 +19,7 @@ HotLoop Flow 是面向工厂现场的可视化流程引擎，用 Go 编写。您
 
 它也能原样运行您现有的流程。这部分在[后面](/zh-hans/flow/migrating-from-node-red/)，因为它是一项功能，不是重点。
 
-当前版本是 `2.16.6`。镜像是适用于 amd64 的 `ghcr.io/hotloop-io/hotloop-flow:2.16.6`（arm64 随下一个补丁版本提供），Helm 仓库是 `https://hotloop.io/hotloop-flow/`，[部署 Flow](/zh-hans/flow/deploying/)涵盖 Kubernetes、Podman 和 Quadlet。它有 117 种消息节点类型和 39 种 FlowLab 图表节点类型。家庭和实验室使用免费，学校、非营利组织和政府机构使用同样免费，通过合作伙伴平台 EmberNet 使用，包括商业使用，不受限制，遵循 HotLoop Source License Agreement。
+当前版本是 `2.16.8`。镜像是用于 amd64 的 `ghcr.io/hotloop-io/hotloop-flow:2.16.8`（arm64 随 2.16.9 提供），Helm 仓库是 `https://hotloop.io/hotloop-flow/`，[部署 Flow](/zh-hans/flow/deploying/)介绍了 Kubernetes、Podman 和 Quadlet。它有 117 种用于消息的节点类型，以及 39 种用于 FlowLab 图表的节点类型。家庭和实验室使用免费，学校、非营利组织和政府机构使用也免费，通过合作伙伴平台 EmberNet 的使用（包括商业使用）不受限制，依据 HotLoop Source License Agreement。
 
 ## 数据
 

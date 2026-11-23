@@ -17,7 +17,7 @@ Trong một đêm tồi tệ, điều đó có nghĩa là:
 
 Nó cũng chạy nguyên vẹn các luồng hiện có của bạn. Phần đó ở [bên dưới](/vi/flow/migrating-from-node-red/), vì đó là một tính năng, không phải điểm chính.
 
-Bản phát hành hiện tại là `{{flow}}`. Image là `ghcr.io/hotloop-io/hotloop-flow:{{flow}}` cho amd64 (arm64 có trong bản vá kế tiếp), kho Helm là `https://hotloop.io/hotloop-flow/`, và [Triển khai Flow](/vi/flow/deploying/) có Kubernetes, Podman và Quadlet. Có 117 loại nút cho thông điệp và 39 loại cho sơ đồ FlowLab. Dùng tại nhà và trong phòng thí nghiệm là miễn phí, trường học, tổ chức phi lợi nhuận và cơ quan nhà nước cũng vậy, và dùng qua EmberNet, một nền tảng đối tác, kể cả dùng cho doanh nghiệp, không bị hạn chế, theo HotLoop Source License Agreement.
+Bản phát hành hiện tại là `2.16.8`. Image là `ghcr.io/hotloop-io/hotloop-flow:2.16.8` cho amd64 (arm64 theo sau ở 2.16.9), kho Helm là `https://hotloop.io/hotloop-flow/`, và [Triển khai Flow](/vi/flow/deploying/) có Kubernetes, Podman và Quadlet. Nó có 117 loại nút cho thông điệp và 39 cho sơ đồ FlowLab. Dùng tại nhà và trong phòng thí nghiệm là miễn phí, cũng như việc dùng bởi trường học, tổ chức phi lợi nhuận và cơ quan nhà nước, và việc dùng qua EmberNet, một nền tảng đối tác, kể cả dùng cho kinh doanh, là không hạn chế, theo HotLoop Source License Agreement.
 
 ## Các con số
 

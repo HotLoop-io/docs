@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS 是一个 Helm Chart，名为 `hotloop-codesys`，它在运行 CODESYS 运行时的同一节点上安装 HotLoop Edge 和一个配置器。Chart 发布在 `{{codesysChartRepo}}`，最新版本是 {{codesys}}，配置器镜像无需登录即可拉取。在 EmberNet 上它是 App Store 应用。没有 EmberNet 时，它就是 k3s 上的 Helm。
+HotLoop for CODESYS 是一个 Helm Chart，名为 `hotloop-codesys`，它在运行 CODESYS 运行时的同一节点上安装 HotLoop Edge 和一个配置器。Chart 发布在 `https://hotloop.io/hotloop-codesys/`，最新版本是 0.3.8，配置器镜像无需登录即可拉取。在 EmberNet 上它是 App Store 应用。没有 EmberNet 时，它就是 k3s 上的 Helm。
 
 ## 节点首先需要什么
 
 - **同一节点上的 CODESYS 运行时，并在 4840 端口发布它的 OPC UA 服务器。** 配置器从 Kubernetes 获取节点自己的地址，并读取 `<node address>:4840`。运行时自己的 Chart 会在主机上发布该端口。
 - **PLC 程序中的 Symbol Configuration**，开启 *Support OPC UA features*，列出你想看到的变量，或者在声明中给它们加上 `{attribute 'symbol' := 'read'}`。没有 Symbol Configuration 的 PLC 会用一条提示添加的消息回应设置请求。这是对 PLC 项目唯一的改动。
-- **HotLoop {{codesysNeeds}}**，由该 Chart 封装。CODESYS 连接器随 HotLoop 4.19.4 一起提供。该 Chart 依赖 `~{{codesysNeeds}}` 系列的 `hotloop-edge` Chart。
+- **HotLoop 4.22.0**，由该 Chart 封装。CODESYS 连接器随 HotLoop 4.19.4 一起提供。该 Chart 依赖 `~4.22.0` 系列的 `hotloop-edge` Chart。
 - **一个配置文件。** 一个带一个键的 Secret。[配置文件页面](/zh-hans/codesys/profile/)里有它的格式。
 
 ## 通过 EmberCORE App Store
@@ -24,9 +24,9 @@ HotLoop for CODESYS 是一个 Helm Chart，名为 `hotloop-codesys`，它在运�
 
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
-helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
 ```
 
 把 Secret 命名为 `<release>-profile`，或用 `profile.existingSecret`（Secret）和 `profile.key`（键，默认 `profile.json`）更改 Chart 查找的内容。要把安装固定在运行时所在的节点，设置 `nodeSelector`。如果只要 HotLoop、不要配置文件、想手动设置，用 `--set provisioner.enabled=false` 安装。
@@ -36,7 +36,7 @@ helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n 
 用自己的 Chart 并设置 `network.hostNetwork=true` 安装的运行时，会为 WebVisu 占用主机的 8080 端口，所以 HotLoop 的页面在那里不能同时监听 8080。该 Chart 让 HotLoop 的页面在 pod 内监听 8090，并让 Service 保持在 8080，所以 App Store 图块和配置器仍像以前一样访问它。安装时对两者都开启主机网络：
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

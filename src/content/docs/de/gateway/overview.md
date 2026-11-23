@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.23.2 ist da]
-Vier Produkte aus einem Tag: [IoT](/de/iot/overview/), [Edge](/de/edge/overview/), das Gateway und das [Edge Relay](/de/edge-relay/overview/), jedes mit eigenem Image und eigenem Chart. Alle vier werden in 4.23.2 für amd64 und arm64 gebaut, die drei kleinen auch für arm/v7. Das Gateway behält `ghcr.io/hotloop-io/hotloop:4.23.2` und das Chart `hotloop` von `https://hotloop.io/hotloop`, und beide lassen sich ohne Anmeldung laden. [Installieren Sie es](/de/gateway/install/). Sie sind auf 4.18.11? Das ist ein `helm upgrade`, und danach dürfen Agenten schreiben, lesen Sie also die beiden Änderungen. Sie sind auf 4.17.0? Das ist ein einfaches `helm upgrade`, aber nicht mit `--reuse-values`, und ein paar Standardwerte haben sich verschoben. Sie sind auf 4.16.0 oder 4.3.1? Dann zuerst über 4.17.0. In jedem Fall gilt: [Lesen Sie zuerst die Upgrade-Anleitung](/de/gateway/upgrading/). Das erfahren Sie besser hier als bei einem hängenden Rollout.
+:::note[4.24.0 ist da]
+Vier Produkte aus einem Tag: [IoT](/de/iot/overview/), [Edge](/de/edge/overview/), das Gateway und das [Edge Relay](/de/edge-relay/overview/), jedes mit eigenem Image und eigenem Chart. Alle vier werden in 4.24.0 für amd64 und arm64 gebaut, die drei kleinen auch für arm/v7. Das Gateway behält `ghcr.io/hotloop-io/hotloop:4.24.0` und das Chart `hotloop` von `https://hotloop.io/hotloop`, und beide lassen sich ohne Anmeldung laden. [Installieren Sie es](/de/gateway/install/). Sie sind auf 4.18.11? Das ist ein `helm upgrade`, und danach dürfen Agenten schreiben, lesen Sie also die beiden Änderungen. Sie sind auf 4.17.0? Das ist ein einfaches `helm upgrade`, aber nicht mit `--reuse-values`, und ein paar Standardwerte haben sich verschoben. Sie sind auf 4.16.0 oder 4.3.1? Dann zuerst über 4.17.0. In jedem Fall gilt: [Lesen Sie zuerst die Upgrade-Anleitung](/de/gateway/upgrading/). Das erfahren Sie besser hier als bei einem hängenden Rollout.
 :::
 
 HotLoop Gateway liest Ihr Werk. Es fragt SPS und Server in deren eigenem Protokoll ab, speichert jeden Messwert samt Qualität in einem Historian, löst ISA-18.2-Alarme aus, die ein Telefon anrufen können, führt Automatisierungen über alles aus und reicht das ganze Werk per MCP an Agenten weiter. Ein Standort betreibt ein einziges Chart, das Gateway mit seiner Datenbank, statt eines Historians, eines Alarmservers, einer Regel-Engine und eines Haufens Klebecode, die jeder in eigenem Takt ausfallen.
@@ -19,7 +19,7 @@ Es ist von Grund auf in Go geschrieben: eine statische Binärdatei auf einer Dis
 
 ## Wo Sie anfangen
 
-Das Fundament, in 4.23.2 und in jedem Release bis zurück zu 4.16.0:
+Das Fundament, in 4.24.0 und in jedem Release bis zurück zu 4.16.0:
 
 - [Installation](/de/gateway/install/) ist Helm aus dem veröffentlichten Chart oder Podman Quadlet auf einer Box, der zu sichernde Schlüssel und die wenigen Werte, die Sie setzen, bevor ein echtes Werk es sieht.
 - [Upgrade](/de/gateway/upgrading/) ist das Verfahren, das Ihre Daten behält, ab 4.17.0, 4.16.0 oder 4.3.1, und jede API-Änderung, über die ein Skript stolpern wird.
@@ -64,7 +64,7 @@ Neu in 4.17.0 gegenüber 4.16.0:
 
 HotLoop ist eine Codebasis, die als vier Produkte ausgeliefert wird, alle gemeinsam aus einem Tag veröffentlicht: IoT, Edge, das Gateway und das Edge Relay. Das Gateway ist die Spitze: alles aus IoT und Edge, dazu Flottenverwaltung, standortübergreifende Zusammenfassungen und geplante Berichte. Funktionen trennen die Produkte. Protokolle nie: Jedes Produkt spricht jedes Protokoll, das wir haben, damit niemand eine Stufe höher kaufen muss, um die SPS auf dem eigenen Prüfstand zu lesen. [Die Produktreihe](/de/products/) zeigt, was jedes mitbringt.
 
-Alle vier sind heute installierbar, alle in 4.23.2. Das Relay hat ein eigenes Image und ein eigenes Chart, etwa 15 MB gegenüber 37 beim Gateway, ohne Datenbank und ohne Oberfläche. Die Flottenverwaltung des Gateways verfolgt und steuert jedes registrierte Relay und ist nur über die API erreichbar (`/api/fleet`): In der Oberfläche gibt es keinen Flotten-Bildschirm.
+Alle vier sind heute installierbar, alle in 4.24.0. Das Relay hat ein eigenes Image und ein eigenes Chart, etwa 15 MB gegenüber 37 beim Gateway, ohne Datenbank und ohne Oberfläche. Die Flottenverwaltung des Gateways verfolgt und steuert jedes registrierte Relay und ist nur über die API erreichbar (`/api/fleet`): In der Oberfläche gibt es keinen Flotten-Bildschirm.
 
 Im Einsatz in einem Werk? [HotLoop im Unternehmen nutzen](/de/business/) behandelt die Lizenzierung und wie Sie uns erreichen.
 
@@ -72,7 +72,10 @@ Im Einsatz in einem Werk? [HotLoop im Unternehmen nutzen](/de/business/) behande
 
 Jedes Release hat eigene Notes, und dort steht das Detail, damit es an einer Stelle steht und nicht an zwei.
 
-- [4.23.2](/de/releases/hotloop-4-23-2/): Eine CODESYS-Visualisierung wird als Bildschirm importiert, die Box meldet ihren eigenen Zustand an das EmberNet-Dashboard hinter einem Login, der lesen kann und sonst nichts, und ein Energiezähler kann ein Leistungsentgelt tragen. Dieser Build ist nur amd64, und die nächste Version ist der eine kleine Schritt, der die arm-Images baut.
+- [4.24.0](/de/releases/hotloop-4-24-0/): Bildschirme sind P&IDs, mit Tanks, Pumpen und Ventilen, verbunden durch Rohrleitungen, die ihren Weg selbst in rechten Winkeln legen, ein Medium führen und sich neu legen, wenn ein Symbol sich bewegt; die eigenen Alarme einer CODESYS-SPS erscheinen in der Alarmliste, und eine Quittierung geht an die SPS zurück; ein Skriptlauf endet immer, und das Datenvolume einer Maschine lässt sich immer lesen. Dieser Build ist nur für amd64, und die nächste Version ist der eine kleine Schritt, der die arm-Images baut.
+- [4.23.6](/de/releases/hotloop-4-23-6/): UniFi Protect, Access und PDU-Steckdosen, ein Shelly-Gerät, OPC-UA-PubSub-Sicherheit und -Metadaten, ein stummes Modbus-Gerät, das jeden Punkt als schlecht liest, und die fertigen Funktionen vom ersten Start an an, mit den Alarmkanälen und dem Edge-Publisher, die unter Einstellungen auf ein Ziel warten. Sie enthält auch die Änderungen von 4.23.4 und 4.23.5, weil keine von beiden veröffentlicht wurde. Dieser Build ist nur für amd64, und die nächste Version ist der eine kleine Schritt, der die arm-Images baut.
+- [4.23.3](/de/releases/hotloop-4-23-3/): Jedes Symbol auf jedem Bildschirm kann durch eine Regel auf einem Tag angezeigt und eingefärbt werden, und ein WebVisu-Bildschirm behält beim Import sein Ausblenden und seine Alarmfarben. Dieser Build ist nur für amd64.
+- [4.23.2](/de/releases/hotloop-4-23-2/): Eine CODESYS-Visualisierung wird als Bildschirm importiert, die Maschine meldet ihren eigenen Zustand an das EmberNet-Dashboard hinter einem Login, der lesen kann und sonst nichts, und ein Energiezähler kann einen Leistungspreis tragen. Dieser Build ist nur für amd64, und die nächste Version ist der eine kleine Schritt, der die arm-Images baut.
 - [4.23.1](/de/releases/hotloop-4-23-1/): Wetterstationen und Energiezähler, die Weboberfläche in dreizehn weiteren Sprachen, Dashboards, die in eine Datei exportiert und in eine andere Installation importiert werden, und die ersten Befehle an eine UniFi-Konsole. 4.23.0 wurde getaggt und nie veröffentlicht, deshalb enthält dieses Release, was seine Notes auflisten. Dieser Build ist nur amd64.
 - [4.22.1](/de/releases/hotloop-4-22-1/): der Multi-Arch-Build von 4.22.0, ohne Änderung am Produkt.
 - [4.22.0](/de/releases/hotloop-4-22-0/): Eine Panel-Seite füllt ihren Bildschirm in jeder Größe von Rand zu Rand, der Alarme-Bildschirm importiert eine CODESYS-Export-Alarms-Datei, und OPC-UA-PubSub-Geräte auf derselben Adresse und demselben Port teilen sich einen Socket. Dieser Build ist nur amd64, und 4.22.1 ist der eine kleine Schritt, der die arm-Images baut.

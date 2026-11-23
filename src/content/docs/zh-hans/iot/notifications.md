@@ -3,7 +3,7 @@ title: "报警通知与升级"
 description: "支持 ntfy、Gotify、Discord、Webhook 和电子邮件。在手机上点按确认，报警即被确认，签名且仅限使用一次。"
 ---
 
-报警通知自 4.10.0 起，会在凌晨 03:00 报警触发时呼叫手机。报警**触发**时，HotLoop 会通过每个已配置且已启用、且该报警达到其优先级下限的渠道发送通知。默认关闭（`HOTLOOP_NOTIFY_ENABLED`）：没有人可呼叫的部署，在这里也无需配置任何内容。
+报警通知自 4.10.0 起，会在凌晨 03:00 触发报警时给手机发出提醒。当报警被**触发**时，HotLoop 会通过每个已配置且已开启、且报警达到其优先级下限的渠道发送通知。自 4.23.6 起在 Helm chart 中默认开启（`HOTLOOP_NOTIFY_ENABLED`），在某个渠道连同其目的地一起被启用之前不会发送任何东西：没有人可通知的部署，在这里没有什么需要配置的。
 
 ## 为什么只在“触发”时通知
 
@@ -24,6 +24,17 @@ description: "支持 ntfy、Gotify、Discord、Webhook 和电子邮件。在手�
 
 - **Webhook**：向配置的 URL 发送 HotLoop 自己的 JSON 正文的 POST 请求（`alarmId`、`name`、`priority`、`priorityLabel`、`message`、`deviceId`、`tagName`、`raisedAt`、`event`，其值为 `raised`，升级时为 `escalated`）。它适用于任何接收您所发 JSON 的东西：放在小型 HTTP 监听器后面的您自己的脚本、Node-RED、n8n，或工作流工具里的“捕获任意 webhook”触发器。（如果指向 ntfy 主题，也会通知，但原始 JSON 会作为文本；请改用上面的 ntfy 渠道。）摘要（参见“速率限制与摘要”）的 `event` 为 `summary`，并带有一个列出其中每个报警名称的 `alarms` 列表。它不适用于要求正文采用其自有格式的服务。Discord 会返回 400，因为没有 `content` 或 `embeds`。Slack、Teams 和 Google Chat 需要它们自己的文本字段。Pushover 需要它的 `token`、`user` 和 `message` 字段，PagerDuty 的 Events API 需要 `routing_key`、`event_action` 和 `payload`。把 webhook 指向其中任何一个，每次通知都会失败。Discord 有专门的渠道来构造 Discord 期望的正文，请使用那些渠道。
 - **通过 SMTP 发送电子邮件**：经由操作员已有的任何中继发送（企业邮件服务器、事务邮件服务商的 SMTP 端点、自托管中继）。不需要 API 密钥，不需要厂商库：只有 `net/smtp` 和一封手工构造的纯文本邮件。许多手机已经会把电子邮件显示为推送通知，许多呼叫工具也接受邮件转短信的桥接地址作为“联系方式”，所以仅这一个渠道，就无需任何付费依赖地覆盖了“呼叫手机”的相当一部分需求。
+
+## 报警发往何处：设置
+
+每个渠道默认开启，在有地方可发送之前保持空闲。已开启但没有目的地的渠道绝不会阻止 HotLoop 启动，它会等待并说明这一点。管理员在设置的“报警和读数发往何处”中为每个渠道指定目的地：Webhook URL、邮件中继和收件人、ntfy 服务器和主题、Gotify 服务器和令牌、Discord Webhook URL、Discord 机器人的令牌和频道，以及边缘发布器的 broker 和 Sparkplug 组。每个渠道都会显示它正在做什么（发送中、等待目的地、已关闭）以及缺少什么。
+
+- 报警渠道在设置保存的那一刻生效：分发器就地重建，旧渠道扣留的内容先发出去，Discord 机器人的连接在打开新连接之前关闭。随后**发送测试**（`POST /api/notify/test`）会到达刚保存的渠道。
+- 边缘发布器拥有一个队列文件和一个 Sparkplug 节点，所以它的目的地在 HotLoop 启动时读取。界面显示“Saved, applies when HotLoop restarts”。
+- 那里保存的内容优先于 chart 或环境变量，后者只是提供初始值。留空的值会保留已存储的内容；清除会将其移除。密钥（Webhook URL、ntfy 主题、令牌、密码）绝不会再次显示，只显示是否已设置，并且在 HotLoop 有密钥时会在数据库中加密封存。
+- 目的地在存储任何内容之前，会按启动时检查环境变量的方式检查，错误的目的地会被拒绝并说明哪里不对（绝不包含值）。
+- 每个渠道有一个开关可将其彻底关闭：关闭意味着没有渠道，不发送。
+- `GET /api/destinations` 和 `PUT /api/destinations/{kind}` 是相关路由；PUT 需要 `settings.write`。参见 [HTTP API](/zh-hans/iot/api/)。
 
 ## Webhook URL 永远不会被打印
 

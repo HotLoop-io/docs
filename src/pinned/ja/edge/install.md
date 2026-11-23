@@ -36,15 +36,15 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 `http://localhost:8080` を開きます。書き込みは無効の状態で出荷されます。誰かが有効にするまですべてのタグは読み取り専用で、このボックスに機械を動かさせると決めるまで `safety.allowWrites` は `false` のままです。[書き込みゲート](/ja/gateway/write-gate/)にすべてのチェックが順番に載っています。
 
-### Edge が加えるものと、有効にする方法
+### Edgeが加えるものと、その向け先
 
-どちらも既定では無効です。工場のネットワークでリスナーや上位回線を開くのは、デプロイが意図して行うことだからです。
+どちらもインストール直後からオンで、それぞれ必要なものが揃うまで待機するため、インストールや起動を妨げません。どちらかを`false`にすると、リスナー、Service、ボリューム、Ingressは作られません。
 
-**OPC UA サーバー**は `opcuaServer.enabled: true` で、ポートは 4840 です。証明書が一致するように、`opcuaServer.endpointHost` にクライアントがボックスへ接続する名前を設定します。セキュリティモデルは [OPC UA サーバー](/ja/edge/opc-ua-server/)にあり、読み取り専用です。
+**OPC UAサーバー**はオン（`opcuaServer.enabled`）で、ポート4840、認証オン、管理者が設定で確認できる自動生成の`opcua-reader`ログイン付きです。証明書が一致するように、`opcuaServer.endpointHost`にはクライアントが機器に接続する名前を設定してください。[OPC UAサーバー](/ja/edge/opc-ua-server/)にセキュリティモデルがあり、読み取り専用です。
 
 **ボックスの状態とホストのマウント。** チャートの OPC UA サーバーは、EmberNet ダッシュボード向けにこのボックス自身の状態(CPU、メモリ、ディスク、エージェントがファイルを書き込む場合はリアルタイムジッター)も提供し、ダッシュボード用にタグと値だけを読めるログインを作ります。これは既定で有効です。チャートはホストのルートを `/host` に、`/proc` を `/host/proc` に、どちらも読み取り専用でマウントし、権限は追加しません。制限付き Pod Security プロファイルを適用するクラスターは hostPath を拒否するため、そこでは、デバイスもマウントも不要なら `opcuaServer.dashboard.boxHealth.enabled: false` を、デバイスは残しつつディスクと CPU の値を不良として表示し何をマウントすべきか示すなら `opcuaServer.dashboard.boxHealth.hostMount: false` を設定します。残りは [OPC UA サーバー](/ja/edge/opc-ua-server/#embernet-ダッシュボード向けのボックスの状態)にあります。
 
-**Sparkplug 発行**は `edgePublish.enabled: true` で、`edgePublish.broker` と `edgePublish.group` が必須です。`edgePublish.node` も設定してください。しないと、ノード ID はリリース名になります。転送キューは 1 Gi のボリュームにあり、`edgePublish.queueMaxBytes` の既定は 64 MiB です(1 件約 240 バイトで約 248,000 件、毎秒 2,000 件なら約 2 分)。超えると古い値から破棄され、数えられます。`0` は無制限で、停止が十分長いとボリュームがいっぱいになります。Edge の発行には `replicaCount` が 1 であることが必要で、そうでなければチャートはレンダリングを拒否します。上位回線が切れたときの動作は [Edge 発行と蓄積転送](/ja/edge/edge-publish/)にあります。
+**Sparkplugパブリッシュ**はオン（`edgePublish.enabled`）で、送り先が指定されるのを待ちます。`edgePublish.broker`と`edgePublish.group`を設定するか、管理者に設定の「アラームと測定値の送り先」へ入力してもらいます（そこに保存された内容は値より優先され、エッジパブリッシャーは次の再起動で反映します）。`edgePublish.node`も設定してください。設定しない場合、ノードIDはリリース名になります。転送キューは1 Giのボリューム上にあり、`edgePublish.queueMaxBytes`のデフォルトは64 MiB（約248,000件の測定値。1秒あたり2,000件なら約2分、1件約240バイト）で、それを超えると古い測定値から破棄されて数えられます。`0`は無制限で、障害が十分長いとボリュームが満杯になります。エッジパブリッシュには`replicaCount`が1である必要があり、そうでないとチャートはレンダリングを拒否します。[エッジパブリッシュとストアアンドフォワード](/ja/edge/edge-publish/)に、アップリンクが切れたときの動作があります。
 
 ### 本番の工場に見せる前に設定すること
 
@@ -84,7 +84,7 @@ curl -s localhost:8080/api/status
 
 続いて `http://<this box>:8080` を開き、`admin` でログインします。鍵のコピーは、このボックス以外の場所に保管してください。失うと、すべてのデバイスのパスワードを入力し直すことになります。
 
-ユニットが公開するのはポート 8080 だけです。OPC UA サーバー(4840)や内蔵 MQTT ブローカー(1883)を有効にするときは、`hotloop.container` にそのための `PublishPort=` 行を追加します。Quadlet ユニットも、チャートと同じく既定で履歴を 90 日保持します。
+ユニットが公開するのはポート8080だけです。OPC UAサーバー（4840）と組み込みのMQTTブローカー（1883）はコンテナ内でオンになっています。機器の外からどちらかに接続するには、`hotloop.container`にそのための`PublishPort=`行を追加します。Quadletユニットは、チャートと同じく既定で90日分の履歴を保持します。
 
 Edge で通常の PostgreSQL を使いたい場合は、TimescaleDB のユニットの `hotloop.container` に `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false` を追加します。SQLite ファイルを使いたい場合は、`edge/sqlite/` のファイルだけを使い、上のディレクトリのものは使わないでください。ユニット名が同じだからです。`hotloop.container` と `hotloop-data.volume`、それに 2 つのシークレット `hotloop-secret-key` と `hotloop-admin-password-hash` です。
 

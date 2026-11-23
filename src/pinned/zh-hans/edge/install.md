@@ -36,15 +36,15 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 
 打开 `http://localhost:8080`。写入出厂时是关闭的：在有人启用之前，每个变量都是只读，`safety.allowWrites` 保持 `false`，直到你决定这个盒子可以驱动机械。[写入关口](/zh-hans/gateway/write-gate/)按顺序列出了每一项检查。
 
-### Edge 增加了什么，以及如何启用
+### Edge 增加了什么，以及把它指向哪里
 
-两者默认都是关闭的，因为在工厂网络上打开监听端口或上行链路，是部署时应当有意去做的事。
+两者从首次安装起就是开启的，并且各自在拥有所需内容之前保持空闲，所以都不会阻止安装或启动。把其中任何一个设为 `false`，它就不会生成监听器、Service、卷或 Ingress。
 
-**OPC UA 服务器**是 `opcuaServer.enabled: true`，端口 4840。把 `opcuaServer.endpointHost` 设为客户端访问这个盒子所用的名称，这样证书才能匹配。安全模型见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/)，它是只读的。
+**OPC UA 服务器**是开启的（`opcuaServer.enabled`），端口 4840，开启认证，并带有自动生成的 `opcua-reader` 登录账户，管理员可在设置中看到。请把 `opcuaServer.endpointHost` 设为客户端访问该设备所用的名称，使证书与之匹配。[OPC UA 服务器](/zh-hans/edge/opc-ua-server/)介绍了安全模型，并且它是只读的。
 
 **盒子健康状态与主机挂载。** 图表的 OPC UA 服务器还会为 EmberNet 仪表板提供这个盒子自身的健康状态（CPU、内存、磁盘，以及代理写入文件时的实时抖动），并为仪表板创建一个只能读取变量和值的登录。它默认是开启的：图表把主机的根目录挂载到 `/host`，把它的 `/proc` 挂载到 `/host/proc`，两者都是只读，也不增加任何权限。执行受限 Pod Security 配置的集群会拒绝 hostPath，在那里你可以设置 `opcuaServer.dashboard.boxHealth.enabled: false`，不要设备也不要挂载，或设置 `opcuaServer.dashboard.boxHealth.hostMount: false`，保留设备，但磁盘和 CPU 读数会标为异常并说明需要挂载什么。其余内容见 [OPC UA 服务器](/zh-hans/edge/opc-ua-server/#设备健康面向-embernet-仪表板)。
 
-**Sparkplug 发布**是 `edgePublish.enabled: true`，`edgePublish.broker` 和 `edgePublish.group` 必填。也要设置 `edgePublish.node`，否则节点 ID 就是发行版名称。转发队列放在 1 Gi 的卷上，`edgePublish.queueMaxBytes` 默认为 64 MiB（每条读数约 240 字节时约 248,000 条，每秒 2,000 条时约两分钟），超出后最旧的读数会被丢弃并计数。`0` 表示不限，足够长的中断会把卷写满。Edge 发布要求 `replicaCount` 为 1，否则图表拒绝渲染。上行链路中断时它的行为见 [Edge 发布与存储转发](/zh-hans/edge/edge-publish/)。
+**Sparkplug 发布**是开启的（`edgePublish.enabled`），并等待一个目的地。设置 `edgePublish.broker` 和 `edgePublish.group`，或者让管理员在设置的“报警和读数发往何处”中填写（那里保存的内容优先于这些值，边缘发布器在下次重启时采用）。也请设置 `edgePublish.node`，否则节点 id 就是发布名称。转发队列位于一个 1 Gi 的卷上，`edgePublish.queueMaxBytes` 默认为 64 MiB（约 248,000 条读数：以每秒 2,000 条读数、每条约 240 字节计，约两分钟），超过后最旧的读数会被丢弃并计数。`0` 表示不限，足够长的中断随后会把卷占满。边缘发布要求 `replicaCount` 为 1，否则 chart 会拒绝渲染。[边缘发布与 store-and-forward](/zh-hans/edge/edge-publish/) 介绍了上行链路中断时它的行为。
 
 ### 在真正的工厂看到它之前要设置什么
 
@@ -84,7 +84,7 @@ curl -s localhost:8080/api/status
 
 然后打开 `http://<this box>:8080`，以 `admin` 登录。把密钥的副本保存在这个盒子以外的地方，因为丢失它就意味着要重新输入每一个设备密码。
 
-这个单元只发布 8080 端口。启用 OPC UA 服务器（4840）或内嵌 MQTT 代理（1883）时，要在 `hotloop.container` 中为它加一行 `PublishPort=`。Quadlet 单元和图表一样，默认保留 90 天历史。
+该单元只发布端口 8080。OPC UA 服务器（4840）和内嵌的 MQTT broker（1883）在容器内是开启的。若要从机器外部访问其中任何一个，请在 `hotloop.container` 中为它添加一行 `PublishPort=`。Quadlet 单元默认保留 90 天历史，与 chart 相同。
 
 想在 Edge 上用普通 PostgreSQL？就是 TimescaleDB 单元，再在 `hotloop.container` 里加上 `Environment=HOTLOOP_HISTORIAN_TIMESCALE=false`。想用 SQLite 文件？只用 `edge/sqlite/` 里的文件，不要用上一级目录里的，因为它们的单元名相同：即 `hotloop.container` 和 `hotloop-data.volume`，以及两个 secret，`hotloop-secret-key` 和 `hotloop-admin-password-hash`。
 

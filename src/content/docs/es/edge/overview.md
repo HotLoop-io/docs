@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge ya está disponible, desde la versión 4.18.10]
-La imagen es `ghcr.io/hotloop-io/hotloop-edge:4.23.2`, compilada para amd64, arm64 y arm/v7, de unos 37 MB en amd64 y 34 MB en arm, y el chart es `hotloop-edge` de `https://hotloop.io/hotloop`. Ambos se descargan sin iniciar sesión. Las unidades Quadlet están en el directorio `edge/` de [Podman Quadlet](/es/install/quadlet/). [Instálelo](/es/edge/install/). Antes de la 4.18.10, el Gateway podía funcionar en el borde y publicar Sparkplug hacia arriba, y lo hace desde la 4.5.0, pero había que usar el Gateway completo para ello.
+La imagen es `ghcr.io/hotloop-io/hotloop-edge:4.24.0`, compilada para amd64, arm64 y arm/v7, de unos 37 MB en amd64 y 34 MB en arm, y el chart es `hotloop-edge` de `https://hotloop.io/hotloop`. Ambos se descargan sin iniciar sesión. Las unidades Quadlet están en el directorio `edge/` de [Podman Quadlet](/es/install/quadlet/). [Instálelo](/es/edge/install/). Antes de la 4.18.10, el Gateway podía funcionar en el borde y publicar Sparkplug hacia arriba, y lo hace desde la 4.5.0, pero había que usar el Gateway completo para ello.
 :::
 
 Edge es una caja atornillada junto a una línea. Lee la máquina, ejecuta las reglas en la máquina, sigue funcionando cuando cae la WAN y cuenta al resto de la planta lo que vio. Funciona con la misma puerta de escritura que todo lo demás.
@@ -18,7 +18,7 @@ Tiene todo lo que tiene [IoT](/es/iot/overview/), y dos cosas más.
 ## Lo que añade Edge
 
 - **[Publicación de Edge y almacenamiento y reenvío](/es/edge/edge-publish/).** Publica hacia arriba todo lo que lee como un nodo de borde Sparkplug B. Cuando el enlace se cae, guarda en disco y reenvía en orden cuando vuelve, de modo que el historian de arriba recibe la interrupción rellenada y no un hueco, siempre que la interrupción quepa en la cola. La cola es de 64 MiB por defecto, unas 248.000 lecturas: unos 41 minutos a 100 lecturas por segundo, unos dos minutos a 2.000. Pasado ese límite se descartan primero las lecturas más antiguas, y cada una se cuenta, y `edgePublish.queueMaxBytes` lo aumenta. Las lecturas van a memoria mientras el broker las confirma y a disco solo cuando deja de hacerlo, y una prueba corta el enlace con carga, mata el proceso en plena interrupción y cuenta cada lectura. Un corte brusco con el enlace activo aún puede costar una lectura de sondeo, y la página lo dice, con las cifras.
-- **[El servidor OPC UA](/es/edge/opc-ua-server/).** Solo lectura y protegido. El SCADA que ya tiene ve cada tag sin un driver nuevo, e Ignition 8.3.9 lo ha leído de principio a fin. Está desactivado hasta que usted lo active.
+- **[El servidor OPC UA](/es/edge/opc-ua-server/).** De solo lectura y seguro. El SCADA que ya tiene ve cada tag sin ningún driver nuevo, y Ignition 8.3.9 lo ha leído de principio a fin. Está activado desde el primer arranque, en el puerto 4840.
 
 Las pantallas locales y la lógica siguen funcionando sin enlace, y una prueba arranca el binario real contra un enlace que se traga todo para demostrarlo. Una caja que se reinicia durante una caída de la WAN arranca con sus pantallas y sus alarmas, mientras que antes de la 4.18.10 entraba en bucle de fallos sin pantallas ni alarmas hasta que volvía la WAN. Los paneles son las pantallas, y están en [IoT](/es/iot/dashboards/). Una escritura de HMI que nombre a una persona, un PIN o una credencial en un panel compartido aún no está construida. Está en [la hoja de ruta](/es/roadmap/).
 

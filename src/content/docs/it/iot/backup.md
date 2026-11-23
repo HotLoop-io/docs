@@ -3,7 +3,7 @@ title: "Backup e ripristino"
 description: "Istantanee logiche del database, ripristini che rifiutano uno schema più recente e perché la chiave delle password dei dispositivi va salvata a parte."
 ---
 
-HotLoop crea istantanee logiche, con i soli dati delle tabelle, dello storico e le ripristina, dalla 4.12.0. Disattivato per impostazione predefinita (`HOTLOOP_BACKUP_ENABLED`): un'installazione che non ha configurato un volume di backup non deve avere questo processo che scrive in silenzio nel file system effimero di un container.
+HotLoop esegue snapshot logici dell'historian, solo dei dati delle tabelle, e li ripristina, da 4.12.0. Attivo per impostazione predefinita, ogni giorno (`HOTLOOP_BACKUP_ENABLED`, `HOTLOOP_BACKUP_INTERVAL` 24h), nel binario e nel chart Helm. I backup vanno in `HOTLOOP_BACKUP_DIR`, che per impostazione predefinita è `backups` nella directory dati di HotLoop (`HOTLOOP_DATA_DIR`, altrimenti `/data` quando vi si può scrivere, altrimenti `~/.local/share/hotloop`): un deployment che non ha configurato un volume di backup non dovrebbe avere questo processo che scrive in silenzio nel filesystem effimero di un container.
 
 ## Che cos'è
 

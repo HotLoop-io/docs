@@ -3,6 +3,10 @@ title: "Der Cascade-Editor"
 description: "Der Editor steckt in der Cascade-Binärdatei: Ordner, Arbeitsfläche, Ausführungen Schritt für Schritt, Zugangsdaten, Projekte, Benutzer, Audit und Einstellungen."
 ---
 
+:::note[Enthält, was kommt]
+Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop Cascade 1.4.2, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
+:::
+
 Der Editor steckt in der Binärdatei, also gibt es nichts weiter zu starten, und er lädt nichts von irgendwoher nach: Öffnen Sie die Adresse, auf der der Server lauscht, und melden Sie sich an. Es ist eine Astro-App mit Svelte-Islands, beim Bauen des Images zu statischen Dateien gebaut, in denselben Farben und derselben Schrift wie jeder andere HotLoop-Bildschirm, hell oder dunkel nach Ihrem System, bis Sie wählen.
 
 ![Workflows in Ordnern](/synced/cascade/docs/screenshots/workflows.png)
@@ -25,7 +29,7 @@ Eine Ausführung wird mit dem Ergebnis jedes Schritts gezeichnet. Wiederholen Si
 
 Der Rest der Governance-Arbeit liegt unter Einstellungen: Rollen und wer sie hat, Schwärzungsrichtlinien (ein Workflow wählt in seinen Einstellungen eine aus, vom Editor aus), externe Geheimnisspeicher, Protokollweiterleitung sowie Anmeldung und SCIM. Ein Eigentümer oder Admin ändert diese; alle anderen lesen, was sie dürfen, bekommen nie eine Schaltfläche angeboten, die der Server ablehnen wird, und der Server lehnt sie trotzdem ab.
 
-Vier Bildschirme stehen neben den Workflows. Zugangsdaten werden in ihrem eigenen Projekt erstellt, geöffnet, geändert, mit anderen Projekten geteilt und gelöscht; ein geheimes Feld wird einmal eingegeben, und der Bildschirm sagt danach nur noch, dass es gesetzt ist. Projekte zeigt, wer in welchem ist und in welcher Rolle, und die Dienstkonto-Schlüssel, mit denen sich eine dauerhafte Integration anmeldet. Ihr Konto (die Adresse in der oberen Leiste) erstellt und widerruft Ihre API-Schlüssel, mit denen sich die REST-API und der MCP-Server anmelden, und ändert Ihr Passwort. Für Eigentümer und Admins hat Einstellungen die allgemeinen Einstellungen (zweiter Faktor, der Fehler-Workflow), Benutzer legt Personen an und schaltet sie ab, und das Audit-Protokoll wird dort gelesen, gefiltert und auf Manipulation geprüft. Die Anmeldung ist derselbe Editor, unter `/login`, und behält Single Sign-on, Verzeichnisanmeldung, Passkeys und Wiederherstellungscodes.
+Vier Bildschirme stehen neben den Workflows. Zugangsdaten werden in ihrem eigenen Projekt angelegt, geöffnet, geändert, mit anderen Projekten geteilt und gelöscht; ein geheimes Feld wird einmal eingegeben, und der Bildschirm sagt danach nur noch, dass es gesetzt ist. Projekte zeigt, wer in welchem Projekt ist und in welcher Rolle, und die Dienstkonto-Schlüssel, mit denen sich eine dauerhafte Integration anmeldet. Ihr Konto (die Adresse in der oberen Leiste) erstellt und widerruft Ihre API-Schlüssel, mit denen sich die REST-API und der MCP-Server anmelden, und ändert Ihr Passwort. Für Eigentümer und Administratoren enthält Einstellungen die allgemeinen Einstellungen (zweiter Faktor, der Fehler-Workflow), Benutzer legt Personen an, schaltet sie ab und lässt einen Eigentümer eine Person löschen (ihre Anmeldungen und Schlüssel verschwinden, ihre Workflows bleiben), und das Audit-Protokoll wird dort gelesen, gefiltert und auf Manipulation geprüft. Die Anmeldung ist derselbe Editor, unter `/login`, und behält Single Sign-on, Verzeichnisanmeldung, Passkeys und Wiederherstellungscodes.
 
 ![Zugangsdaten, das Geheimnis wird nie angezeigt](/synced/cascade/docs/screenshots/credentials.png)
 ![Projekte und wer in einem ist](/synced/cascade/docs/screenshots/projects.png)

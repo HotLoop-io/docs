@@ -6,7 +6,7 @@ editUrl: false
 ---
 
 HotLoop can run its own MQTT broker in-process, since 4.11.0, so a small, single-box HotLoop install has nothing extra to
-deploy. Off by default (`HOTLOOP_BROKER_ENABLED`): a deployment that already
+deploy. On by default (`HOTLOOP_BROKER_ENABLED`), in the binary and in the Helm chart. It listens on :1883; if that port is taken by another broker on the box, the embedded broker idles and says so in the log, and HotLoop starts (set `HOTLOOP_BROKER_LISTEN_ADDR` to a free address, or turn it off). A port you chose that cannot be bound is still an error: a deployment that already
 runs Mosquitto or EMQX has nothing to point this at, and starting a second
 broker beside one that already exists is not a safe default to guess into
 existence.

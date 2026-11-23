@@ -3,6 +3,10 @@ title: "HTTP API"
 description: "HotLoop जिन कॉल का HTTP पर उत्तर देता है, उनके लिए क्या चाहिए, क्या लेता है और क्या लौटाता है। वेब UI इसके अलावा कुछ और इस्तेमाल नहीं करता।"
 ---
 
+:::note[जो आने वाला है, वह भी शामिल है]
+इस पेज में कुछ ऐसी बातें भी शामिल हैं जो HotLoop core 4.24.0, यानी सबसे नए रिलीज़, से भी नई हैं। हो सकता है उनमें से कुछ आपके इंस्टॉल किए संस्करण में न हों। क्या बदला है, यह [रिलीज़ नोट्स](/hi/releases/) बताते हैं।
+:::
+
 Gateway HTTP पर जो भी कॉल लेता है, हर कॉल को क्या चाहिए, वह क्या लेती है और क्या लौटाती है। वेब UI इसके अलावा कुछ और इस्तेमाल नहीं करता: स्क्रीन के पीछे कोई निजी API नहीं है, इसलिए UI जो कुछ कर सकता है, स्क्रिप्ट वही सब उन्हीं कॉल और उन्हीं अनुमतियों से कर सकती है।
 
 यह पेज कोड के विरुद्ध जाँचा जाता है। इसलिए रूट की सूची और उन्हें कौन कॉल कर सकता है, यह किसी पुराने API का वर्णन नहीं है। नीचे के अनुरोध और प्रतिक्रिया के रूप चल रहे Gateway से लिए गए हैं; टेस्ट इन्हें नहीं जाँचते, इसलिए अगर आप कोई हैंडलर बदलें तो यहाँ उसका सेक्शन भी बदलें।
@@ -256,6 +260,9 @@ HotLoop एक ही कोडबेस से IoT, Edge, Gateway और Edge R
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ HotLoop एक ही कोडबेस से IoT, Edge, Gateway और Edge R
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ OPC UA सर्वर में साइन इन के लिए उपय�
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ HotLoop के जुड़ने के बाद से कंसोल ने
 ```
 
 `kept` वे अलार्म हैं जो सेट माँगता है और जो पहले से थे: पिछले दबाव से उसके अपने, या उसी टैग पर किसी का अपना अलार्म। इसलिए और उपकरण अपनाने के बाद दोबारा दबाना सुरक्षित है, और यह केवल नए उपकरण के लिए जोड़ता है। OT नेटवर्क और नेटवर्क से बाहर के अलार्म इसका हिस्सा नहीं हैं; वे नेटवर्क को OT चिह्नित करने और डिवाइस की निगरानी करने के साथ आते हैं। कंसोल एक बार पढ़े जाने तक `503`।
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Protect कैमरे की मौजूदा तस्वीर, एक JPEG (`Content-Type: image/jpeg`, `Cache-Control: no-store`), जो मांगे जाने पर कंसोल से लाई जाती है; यह एकमात्र UniFi रूट है जो अपना अनुरोध खुद करता है। `{id}` प्रोटोकॉल `unifi-protect` वाला डिवाइस है और `{camera}` कैमरे के लिए कंसोल की आईडी (उसके टैग `cam.<id>.online` का `<id>`)। जब डिवाइस जुड़ा हुआ Protect डिवाइस न हो तो `404`, और जब कैमरा ऑफ़लाइन हो या कंसोल कुंजी को ठुकराए तो कंसोल के कारण के साथ `502`। देखें [प्रोटोकॉल और ड्राइवर](/hi/iot/protocols/#unifi-protect)।
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+ONVIF कैमरा प्रोफ़ाइल की मौजूदा तस्वीर, एक JPEG (`Content-Type` वैसा ही जैसा कैमरे ने भेजा, `Cache-Control: no-store`), जो मांगे जाने पर कैमरे से, कैमरे के अपने लॉगिन से लाई जाती है। `{id}` प्रोटोकॉल `onvif` वाला डिवाइस है और `{profile}` मीडिया प्रोफ़ाइल के लिए कैमरे का टोकन (उसके टैग `profile.<token>.snapshot_uri` का `<token>`)। जब डिवाइस जुड़ा हुआ ONVIF डिवाइस न हो तो `404`, और जब कैमरा तस्वीर न दे तो कैमरे के कारण के साथ `502`। देखें ONVIF.md।
+
+### `POST /api/onvif/discover`
+
+नेटवर्क में ONVIF कैमरे खोजता है (WS-Discovery, हर इंटरफ़ेस से मल्टीकास्ट जांच) और हर जवाब देने वाले कैमरे के साथ `{"cameras":[...]}` लौटाता है: उसका `endpoint`, `xaddrs`, उसे जोड़ने के लिए `address`, और उसके scopes से मिले `name`, `hardware`, `location` और `profiles`। `?wait=` बताता है कि कितने सेकंड सुनना है, 1 से 15, डिफ़ॉल्ट 3। यह कुछ नहीं जोड़ता; कोई व्यक्ति कैमरे को प्रोटोकॉल `onvif` वाले डिवाइस के रूप में जोड़ता है।
 
 ## MQTT डिस्कवरी
 
@@ -2134,6 +2156,24 @@ HTML `sandbox` Content-Security-Policy के साथ परोसी जा�
 पहुँच से बाहर साइट की गिनतियों का कोई अर्थ नहीं और उन्हें कुल से बाहर रखा जाता है: जिस साइट तक नहीं पहुँचा जा सकता उसे शून्य अलार्म गिनना इस स्क्रीन का सबसे ख़तरनाक काम होता। कोई साइट कॉन्फ़िगर न हो तो: `{"configured":false,"sites":[]}`।
 
 ## सेटिंग
+
+### `GET /api/destinations`
+
+अलार्म और एज रीडिंग कहां जाते हैं, हर प्रकार की एक प्रविष्टि: `webhook`, `smtp`, `ntfy`, `gotify`, `discord_webhook`, `discord_bot` और `edge_publish`। हर एक में उसके `fields` (कुंजी, लेबल, प्रकार, सीक्रेट या अनिवार्य है या नहीं), `enabled`, एक `state` (`active`: भेज रहा है; `needs`: चालू है और अपने गंतव्य का इंतज़ार कर रहा है, `missing` बताता है कि किसका; `off`; `needs-restart`: सहेजा गया, और एज पब्लिशर इसे HotLoop के रीस्टार्ट पर लागू करता है), सादे `values`, और `set` हैं, जो बताता है कि किन सीक्रेट फ़ील्ड में मान है। सीक्रेट का मान कभी लौटाया नहीं जाता। `source` तब `saved` है जब एडमिन ने इसे सेटिंग में सहेजा और तब `environment` जब चार्ट या एनवायरनमेंट ने दिया। हर प्रकार डिफ़ॉल्ट रूप से चालू है और तब तक निष्क्रिय रहता है जब तक उसके पास भेजने की जगह न हो; कोई भी शुरुआत से मना नहीं करता।
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+OPC UA सर्वर क्या कर रहा है और कोई क्लाइंट कैसे लॉगिन करता है। `state` है `active`, `idle` (HotLoop प्रमाणीकरण बंद है, इसलिए लॉगिन करने के लिए कोई उपयोगकर्ता नहीं; `reason` यही बताता है), `off` या `unavailable` (इस उत्पाद में सर्वर नहीं है)। जब यह चालू हो, `endpoint` वह URL है जिससे क्लाइंट जुड़ता है, और प्रमाणीकरण चालू हो तो `username` और `password` वह लॉगिन हैं जो HotLoop ने OPC UA क्लाइंट के लिए बनाया (`opcua-reader`, जो टैग और मान पढ़ सकता है और कुछ नहीं, जनरेट किए पासवर्ड के साथ)। इसके लिए `users.manage` चाहिए, क्योंकि पासवर्ड इसमें है। सर्वर डिफ़ॉल्ट रूप से चालू है; इसका पासवर्ड किसी भी उपयोगकर्ता की तरह बदला जा सकता है, और अगली शुरुआत यहां दिखाए गए पासवर्ड को फिर चला देती है।
+
+### `PUT /api/destinations/{kind}`
+
+एक गंतव्य सहेजता है और सूची के साथ जवाब देता है जैसी `GET` देता है। बॉडी `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}` है, हर हिस्सा वैकल्पिक। खाली छोड़ा गया सीक्रेट जो रखा है उसे बनाए रखता है, और `clear` एक को हटाता है। कुछ भी सहेजने से पहले नतीजे को वैसे ही जांचा जाता है जैसे शुरुआत में एनवायरनमेंट को, इसलिए गलत गंतव्य एक `400` होता है जो बताता है कि क्या गलत है (मान कभी नहीं) और कुछ नहीं बदलता। अलार्म चैनल तुरंत लागू होते हैं; एज पब्लिशर का गंतव्य HotLoop के रीस्टार्ट पर लागू होता है। जब HotLoop के पास सीक्रेट कुंजी हो तो सीक्रेट डेटाबेस में सील करके रखे जाते हैं। इसके लिए `settings.write` चाहिए।
 
 ### `GET /api/settings`
 

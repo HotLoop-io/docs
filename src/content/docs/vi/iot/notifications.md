@@ -3,7 +3,7 @@ title: "Thông báo báo động"
 description: "ntfy, Gotify, Discord, webhook và email. Nhấn Xác nhận trên điện thoại là báo động được xác nhận, có chữ ký và chỉ dùng một lần."
 ---
 
-Thông báo báo động, từ bản 4.10.0, gọi điện thoại khi có báo động phát sinh lúc 03:00. Khi một báo động **phát sinh**, HotLoop gửi thông báo qua mọi kênh đã cấu hình và đang bật mà báo động đạt ngưỡng ưu tiên của kênh đó. Mặc định tắt (`HOTLOOP_NOTIFY_ENABLED`): một hệ thống không có ai để gọi thì không có gì để cấu hình ở đây.
+Thông báo báo động, từ 4.10.0, gọi điện thoại khi một báo động được kích hoạt lúc 03:00. Khi một báo động được **kích hoạt**, HotLoop gửi thông báo qua mọi kênh đã cấu hình và đã bật mà ngưỡng ưu tiên của nó báo động đạt tới. Bật trong Helm chart từ 4.23.6 (`HOTLOOP_NOTIFY_ENABLED`), không gửi gì cho đến khi một kênh được bật cùng đích của nó: một lần triển khai không có ai để báo thì không có gì để cấu hình ở đây.
 
 ## Vì sao chỉ "phát sinh"
 
@@ -24,6 +24,17 @@ Có sáu kênh, và đó là toàn bộ danh sách (xem "Thông báo" trong [l�
 
 - **Webhook**: một yêu cầu POST với nội dung JSON riêng của HotLoop (`alarmId`, `name`, `priority`, `priorityLabel`, `message`, `deviceId`, `tagName`, `raisedAt`, `event`, có giá trị `raised`, hoặc `escalated` khi leo thang) tới một URL đã cấu hình. Nó chạy với bất cứ thứ gì nhận JSON mà bạn gửi: script của riêng bạn đứng sau một bộ lắng nghe HTTP nhỏ, Node-RED, n8n, hoặc một trigger "nhận mọi webhook" trong công cụ quy trình. (Nếu trỏ tới một chủ đề ntfy thì vẫn báo được, nhưng JSON thô thành nội dung văn bản; hãy dùng kênh ntfy ở trên thay thế.) Một bản tóm tắt (xem "Giới hạn tốc độ và bản tóm tắt") có `event` là `summary` và một danh sách `alarms` nêu tên từng báo động trong đó. Nó không chạy với các dịch vụ muốn nội dung theo định dạng riêng của họ. Discord trả lời 400 vì không có `content` hoặc `embeds`. Slack, Teams và Google Chat muốn một trường văn bản riêng. Pushover muốn các trường `token`, `user` và `message`, còn Events API của PagerDuty muốn `routing_key`, `event_action` và `payload`. Trỏ webhook vào một trong số đó thì mọi thông báo đều thất bại. Discord có các kênh riêng tạo đúng nội dung Discord mong đợi; hãy dùng các kênh đó.
 - **Email qua SMTP**: gửi qua bất kỳ máy chủ chuyển tiếp nào người vận hành đã có (máy chủ thư của doanh nghiệp, điểm cuối SMTP của nhà cung cấp email giao dịch, máy chủ chuyển tiếp tự lưu trữ). Không cần khóa API, không cần thư viện của nhà cung cấp: chỉ `net/smtp` và một thư văn bản thuần dựng tay. Nhiều điện thoại đã tự hiển thị email như thông báo đẩy, và nhiều công cụ nhắn gọi chấp nhận địa chỉ cầu nối email sang SMS làm "cách liên lạc", nên riêng kênh này đã phủ một phần đáng kể nhu cầu "gọi điện thoại" mà không cần phụ thuộc trả phí nào.
+
+## Báo động đi đâu: Cài đặt
+
+Mọi kênh đều mặc định bật và nghỉ cho đến khi có nơi để gửi. Một kênh đã bật mà chưa có đích không bao giờ ngăn HotLoop khởi động, nó chờ và cho biết điều đó. Quản trị viên đặt đích cho từng kênh trong Cài đặt, "Nơi báo động và số đọc được gửi tới": URL webhook, relay email và người nhận, máy chủ và chủ đề ntfy, máy chủ và token Gotify, URL webhook Discord, token và kênh của bot Discord, cùng broker và nhóm Sparkplug của edge publisher. Mỗi kênh cho thấy nó đang làm gì (đang gửi, đang chờ đích, đã tắt) và còn thiếu gì.
+
+- Các kênh báo động áp dụng ngay khoảnh khắc cài đặt được lưu: bộ điều phối được dựng lại tại chỗ, những gì các kênh cũ đang giữ lại được gửi đi trước, và kết nối của bot Discord được đóng trước khi mở kết nối mới. **Gửi thử** (`POST /api/notify/test`) khi đó tới được kênh vừa lưu.
+- Edge publisher sở hữu một tệp hàng đợi và một nút Sparkplug, nên đích của nó được đọc khi HotLoop khởi động. Màn hình ghi "Saved, applies when HotLoop restarts".
+- Những gì lưu ở đó được ưu tiên hơn chart hoặc biến môi trường, vốn chỉ khởi tạo nó. Một giá trị để trống giữ nguyên giá trị đã lưu; Xóa sẽ gỡ nó. Một bí mật (URL webhook, chủ đề ntfy, token, mật khẩu) không bao giờ được hiện lại, chỉ cho biết nó đã được đặt hay chưa, và được niêm phong trong cơ sở dữ liệu khi HotLoop có khóa bí mật.
+- Một đích được kiểm tra giống như cách môi trường được kiểm tra khi khởi động, trước khi lưu bất cứ thứ gì, và một đích sai bị từ chối kèm điều gì sai (không bao giờ nêu giá trị).
+- Một công tắc cho mỗi kênh tắt hẳn kênh đó: tắt nghĩa là không kênh, không gửi.
+- `GET /api/destinations` và `PUT /api/destinations/{kind}` là các route; PUT cần `settings.write`. Xem [HTTP API](/vi/iot/api/).
 
 ## URL webhook không bao giờ được in ra
 

@@ -3,7 +3,7 @@ title: "Planlagte rapporter"
 description: "Historian-tall etter tidsplan som CSV eller HTML, lagret og sendt på e-post: bare gode målinger teller, og hver rad sier hvor mange som ble forkastet."
 ---
 
-Planlagte rapporter kjører siden 4.14.0 operatørdefinerte rapporter etter tidsplan: de spør historianen, lager resultatet som CSV og HTML, lagrer det på et volum og sender det eventuelt på e-post. Det er motstykket til Ignitions Reporting-modul for den delen av modulen et anlegg bruker oftest, en tabell med tall levert i tide. Av som standard (`HOTLOOP_REPORTS_ENABLED`).
+Planlagte rapporter, siden 4.14.0, kjører rapporter definert av operatøren etter en plan: de spør historikeren, rendrer resultatet som CSV og HTML, lagrer det på et volum og sender det eventuelt på e-post. Det er motstykket til Ignitions Reporting-modul for den delen av modulen et anlegg oftest bruker, en tabell med tall levert i tide. På som standard (`HOTLOOP_REPORTS_ENABLED`), i binærfilen og i Helm-chartet. Rapportene ligger under `HOTLOOP_REPORTS_DIR`, som som standard er `reports` i HotLoops datakatalog: `HOTLOOP_DATA_DIR` hvis satt, `/data` når den finnes og kan skrives til (et containervolum), og ellers `~/.local/share/hotloop` (eller `$XDG_DATA_HOME/hotloop`), så en bar binærfil trenger ingenting montert.
 
 ## Hva det er, og hva det ikke er
 

@@ -3,6 +3,10 @@ title: "L'éditeur de Cascade"
 description: "L'éditeur est intégré au binaire de Cascade : dossiers, canevas avec exécution jusqu'ici, exécutions pas à pas, identifiants, projets, utilisateurs, audit."
 ---
 
+:::note[Couvre ce qui arrive]
+Cette page couvre aussi quelques éléments plus récents que HotLoop Cascade 1.4.2, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
+:::
+
 L'éditeur est intégré au binaire : il n'y a rien d'autre à exécuter et il ne récupère rien nulle part. Ouvrez l'adresse sur laquelle le serveur écoute et connectez-vous. C'est une application Astro avec des îlots Svelte, compilée en fichiers statiques à la construction de l'image, avec les mêmes couleurs et la même typographie que tous les autres écrans HotLoop, en clair ou en sombre selon votre système tant que vous n'avez pas choisi.
 
 ![Flux de travail, rangés en dossiers](/synced/cascade/docs/screenshots/workflows.png)
@@ -25,7 +29,7 @@ Une exécution est dessinée avec le résultat de chaque étape. Relancez-la dep
 
 Le reste du travail de gouvernance se trouve dans Paramètres : les rôles et qui les détient, les politiques de masquage (un flux de travail en choisit une dans ses paramètres, depuis l'éditeur), les fournisseurs de secrets externes, l'envoi des journaux, ainsi que la connexion et SCIM. Un propriétaire ou un administrateur modifie ces éléments ; tous les autres lisent ce qu'ils ont le droit de lire, ne se voient jamais proposer un bouton que le serveur refusera, et le serveur le refuse quand même.
 
-Quatre écrans se trouvent à côté des flux de travail. Les identifiants se créent, s'ouvrent, se modifient, se partagent avec d'autres projets et se suppriment dans leur propre projet ; un champ secret se saisit une seule fois et l'écran dit seulement qu'il est défini. Projets indique qui est dans chacun et avec quel rôle, ainsi que les clés de compte de service avec lesquelles une intégration permanente se connecte. Votre compte (l'adresse dans la barre du haut) crée et révoque vos clés d'API, avec lesquelles l'API REST et le serveur MCP se connectent, et change votre mot de passe. Pour les propriétaires et les administrateurs, Paramètres propose les réglages généraux (second facteur, flux de travail d'erreur), Utilisateurs crée des personnes et les désactive, et le journal d'audit s'y lit, s'y filtre et s'y contrôle contre toute altération. La connexion est le même éditeur, à `/login`, et garde l'authentification unique, la connexion par annuaire, les passkeys et les codes de récupération.
+Quatre écrans accompagnent les workflows. Les identifiants se créent, s'ouvrent, se modifient, se partagent avec d'autres projets et se suppriment dans leur propre projet ; un champ secret se saisit une seule fois et l'écran dit seulement qu'il est défini. Projets indique qui est dans chacun et avec quel rôle, ainsi que les clés de compte de service avec lesquelles se connecte une intégration permanente. Votre compte (l'adresse dans la barre du haut) crée et révoque vos clés d'API, avec lesquelles se connectent l'API REST et le serveur MCP, et change votre mot de passe. Pour les propriétaires et les administrateurs, Paramètres contient les réglages généraux (second facteur, le workflow d'erreur), Utilisateurs crée des personnes, les désactive et laisse un propriétaire en supprimer une (ses connexions et ses clés disparaissent, ses workflows restent), et le journal d'audit s'y lit, s'y filtre et s'y vérifie contre toute falsification. La connexion est le même éditeur, sur `/login`, et conserve l'authentification unique, la connexion par annuaire, les passkeys et les codes de récupération.
 
 ![Identifiants, le secret n'étant jamais affiché](/synced/cascade/docs/screenshots/credentials.png)
 ![Projets, et qui en fait partie](/synced/cascade/docs/screenshots/projects.png)

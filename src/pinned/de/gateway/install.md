@@ -69,7 +69,7 @@ Tragen Sie das in eine Values-Datei ein und installieren Sie mit `-f`. Verlassen
 | `edgePublish.queueMaxBytes` | `67108864` | Das Limit der Ausfallwarteschlange, wenn Sie per Sparkplug nach oben veröffentlichen, 64 MiB. Darüber werden die ältesten Messwerte verworfen und gezählt. `0` ist unbegrenzt, und ein langer Ausfall füllt dann das Volume. |
 | `database.postgresql.enabled` | `true` | Auf `false` setzen und `database.external` ausfüllen, um Ihr eigenes PostgreSQL zu verwenden. Mit der TimescaleDB-Erweiterung gibt es eine Hypertable, ohne sie native Partitionierung. |
 | `opcuaClient.persistence.enabled` | `false` | Schalten Sie es ein, bevor Sie ein gesichertes OPC-UA-Gerät hinzufügen. Ohne es haben die Zertifikate des Clients keinen Ort, einen Neustart zu überleben, und das Gerät verweigert die Verbindung, statt Sie nach jedem Redeploy das Vertrauen auf beiden Seiten neu bestätigen zu lassen. |
-| `ingress` | aus | Nur, wenn es von außerhalb des Clusters über einen Namen erreichbar sein soll. |
+| `ingress` | an, beliebiger Host | Der Ingress antwortet auf jeden Host, den Ihre Ingress-Klasse bedient. Setzen Sie `ingress.hosts[0].host`, um ihn auf einen Namen festzulegen, oder `ingress.enabled: false`, um keinen zu haben. |
 
 Schreibzugriffe sind ab Werk aus, und das ist der Sinn. Selbst mit `safety.allowWrites` an ist ein Tag schreibgeschützt, bis Sie ihn einzeln scharf schalten, und jeder Wert wird gegen den Bereich des Tags geprüft, abgelehnt und nie begrenzt. [Das Schreib-Gate](/de/gateway/write-gate/) hat jede Prüfung, der Reihe nach.
 

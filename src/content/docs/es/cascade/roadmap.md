@@ -3,6 +3,10 @@ title: "Hoja de ruta de Cascade"
 description: "Lo que Cascade ya tiene construido, lo que trajo cada versión y lo que todavía no está construido ni programado."
 ---
 
+:::note[Incluye lo que viene]
+Esta página también recoge algunas cosas más nuevas que HotLoop Cascade 1.4.2, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
+:::
+
 En ninguna parte del código existe una comprobación de licencia. Cada fase termina cuando su lista «real» se ha hecho contra sistemas reales, no cuando el código compila.
 
 ## 0.1.0, el MVP
@@ -24,6 +28,14 @@ A qué se atiene hoy un flujo de trabajo guardado: el archivo indica qué versi�
 ## 1.3.0, el editor en 14 idiomas
 
 Construido. Inglés, español, francés, italiano, alemán, noruego bokmål, búlgaro, griego, coreano, japonés, vietnamita, hindi, chino simplificado y árabe. Un selector de idioma en la barra superior y en la página de inicio de sesión; se traducen todas las pantallas, los títulos y la ayuda de los pasos, y los rechazos del servidor; las fechas, los números y las duraciones siguen al idioma; el árabe se escribe de derecha a izquierda, con el lienzo y el código de izquierda a derecha. Cada idioma se prueba en todas las pantallas, en ancho de escritorio y de teléfono, en un navegador real, y la compilación rechaza un idioma al que le falte una línea. Las palabras salen del glosario compartido de HotLoop.
+
+## 1.5.0, eliminar a una persona
+
+Construido. Un propietario de la instancia puede eliminar a una persona desde Usuarios, la API REST (`DELETE /api/v1/users/{user}`) o el servidor MCP (`delete_user`). Su cuenta, sesiones, passkeys, identidades de inicio de sesión y claves de API desaparecen, y el registro de auditoría guarda quién lo hizo y qué se fue. Sus workflows, credenciales y ejecuciones se quedan: el proyecto personal pasa a ser un proyecto compartido con su nombre y "(removed)", para que un propietario o administrador traslade el trabajo o lo entregue a otra persona. Nadie puede eliminar su propia cuenta, y no se puede eliminar al último propietario. Desactivar a alguien sigue existiendo para cuando quiere conservar la cuenta.
+
+## 1.4.2, la página de inicio de sesión
+
+Construido. La página de inicio de sesión es una tarjeta centrada sobre una página tranquila, con la marca y el nombre del producto encima, el botón principal en naranja HotLoop y las otras formas de entrar (una passkey, el inicio de sesión único) como botones sencillos a su lado, en claro y oscuro y en un teléfono. El botón de inicio de sesión único lleva el icono de su proveedor cuando el proveedor es Vord. Cada campo, id y ruta de inicio de sesión es el que era.
 
 ## 1.4.1, la página de ajustes
 

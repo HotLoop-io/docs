@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge er ute, først utgitt i 4.18.10]
-Imaget er `ghcr.io/hotloop-io/hotloop-edge:4.23.2`, bygget for amd64, arm64 og arm/v7, omtrent 37 MB på amd64 og 34 MB på arm, og chartet er `hotloop-edge` fra `https://hotloop.io/hotloop`. Begge lastes ned uten innlogging. Quadlet-enhetene ligger i `edge/`-mappen i [Podman Quadlet](/nb/install/quadlet/). [Installer det](/nb/edge/install/). Før 4.18.10 kunne Gateway kjøre ute ved maskinen og publisere Sparkplug oppover, og det har den kunnet siden 4.5.0, men da trengte du hele Gateway.
+Imaget er `ghcr.io/hotloop-io/hotloop-edge:4.24.0`, bygget for amd64, arm64 og arm/v7, omtrent 37 MB på amd64 og 34 MB på arm, og chartet er `hotloop-edge` fra `https://hotloop.io/hotloop`. Begge lastes ned uten innlogging. Quadlet-enhetene ligger i `edge/`-mappen i [Podman Quadlet](/nb/install/quadlet/). [Installer det](/nb/edge/install/). Før 4.18.10 kunne Gateway kjøre ute ved maskinen og publisere Sparkplug oppover, og det har den kunnet siden 4.5.0, men da trengte du hele Gateway.
 :::
 
 Edge er en boks som skrus fast ved siden av en linje. Den leser maskinen, kjører reglene på maskinen, fortsetter å virke når WAN går ned og forteller resten av anlegget hva den så. Den bruker samme skriveport som alt annet.
@@ -18,7 +18,7 @@ Den har alt [IoT](/nb/iot/overview/) har, og to ting til.
 ## Hva Edge legger til
 
 - **[Edge-publisering og lagring og videresending](/nb/edge/edge-publish/).** Den publiserer alt den leser oppover som en Sparkplug B-edgenode. Når linken dør, bufrer den til disk og spiller av i rekkefølge når linken kommer tilbake, slik at historianen oppstrøms får avbruddet etterfylt og ikke et hull, så lenge avbruddet får plass i køen. Køen er 64 MiB som standard, omtrent 248 000 målinger: omtrent 41 minutter ved 100 målinger i sekundet, omtrent to minutter ved 2 000. Utover det går de eldste målingene først, hver eneste talt, og `edgePublish.queueMaxBytes` øker grensen. Målinger går til minnet mens brokeren bekrefter dem og til disk bare når den slutter, og en test kutter linken under last, dreper prosessen midt i avbruddet og teller hver måling. Et hardt stopp med linken oppe kan fortsatt koste omtrent én poll med målinger, og siden sier det, med tallene.
-- **[OPC UA-serveren](/nb/edge/opc-ua-server/).** Skrivebeskyttet og sikret. SCADA-systemet du allerede har ser hver tag uten ny driver, og Ignition 8.3.9 har lest den fra ende til ende. Den er av til du slår den på.
+- **[OPC UA-serveren](/nb/edge/opc-ua-server/).** Skrivebeskyttet og sikret. SCADA-systemet du allerede eier ser hver tag uten ny driver, og Ignition 8.3.9 har lest den fra ende til annen. Den er på fra første oppstart, på port 4840.
 
 De lokale skjermbildene og logikken fortsetter å gå med linken nede, og en test starter den ekte binærfilen mot en link som sluker alt, for å bevise det. En boks som starter på nytt under et WAN-avbrudd kommer opp med skjermbildene og alarmene sine, mens den før 4.18.10 gikk i krasjløkke uten skjermbilder og alarmer til WAN kom tilbake. Dashbord er skjermbildene, og de står i [IoT](/nb/iot/dashboards/). En HMI-skriving som navngir en person, en PIN eller et adgangskort på et delt panel er ikke bygget ennå. Den står på [veikartet](/nb/roadmap/).
 

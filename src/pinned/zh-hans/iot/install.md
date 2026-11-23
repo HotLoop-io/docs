@@ -67,7 +67,7 @@ kubectl -n hotloop port-forward svc/hotloop 8080:8080
 | `database.postgresql.persistence.size` | `10Gi` | 你的历史存放在这里。按变量数量和上面的保留期来确定大小。 |
 | `secretKey.existingSecret` | 空 | 由你自己管理、保存设备密码密钥的 Secret。如果用无法生成稳定密钥的 `helm template` 渲染图表，就设置它。 |
 | `opcuaClient.persistence.enabled` | `false` | 添加受保护的 OPC UA 设备之前先启用，这样客户端证书在重启后仍然保留。 |
-| `ingress` | 关闭 | 只有当你想让它能从集群外按名称访问时才用。 |
+| `ingress` | 开启，任意主机 | Ingress 会响应您的 ingress 类所服务的任何主机。设置 `ingress.hosts[0].host` 可将其固定为一个名称，设置 `ingress.enabled: false` 则不使用。 |
 
 ## Podman Quadlet
 

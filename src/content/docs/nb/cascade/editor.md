@@ -3,6 +3,10 @@ title: "Cascade-editoren"
 description: "Editoren er bygget inn i Cascade-binærfilen: mapper, lerret med kjør hit, kjøringer tegnet trinn for trinn, legitimasjon, prosjekter, brukere og revisjon."
 ---
 
+:::note[Tar med det som kommer]
+Denne siden tar også med noen ting som er nyere enn HotLoop Cascade 1.4.2, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
+:::
+
 Editoren er bakt inn i binærfilen, så det er ingenting annet å kjøre og ingenting den henter fra noe sted: åpne adressen serveren lytter på og logg inn. Det er en Astro-app med Svelte-øyer, bygget til statiske filer når imaget bygges, i de samme fargene og den samme skriften som alle andre HotLoop-skjermer, lys eller mørk etter systemet ditt til du velger.
 
 ![Arbeidsflyter, i mapper](/synced/cascade/docs/screenshots/workflows.png)
@@ -25,7 +29,7 @@ En kjøring tegnes med hvordan hvert trinn gikk. Prøv den på nytt fra trinnet 
 
 Resten av styringsarbeidet ligger under Innstillinger: roller og hvem som har dem, sladdingspolicyer (en arbeidsflyt velger en i innstillingene sine, fra editoren), eksterne leverandører av hemmeligheter, loggstrømming, og pålogging og SCIM. En eier eller admin endrer disse; alle andre leser det de har lov til, blir aldri tilbudt en knapp serveren vil avvise, og serveren avviser den likevel.
 
-Fire skjermer ligger ved siden av arbeidsflytene. Legitimasjon lages, åpnes, endres, deles med andre prosjekter og slettes i sitt eget prosjekt; et hemmelig felt legges inn én gang, og skjermen sier bare at det er satt. Prosjekter viser hvem som er med i hvert og i hvilken rolle, og tjenestekontonøklene en fast integrasjon logger inn med. Kontoen din (adressen i toppfeltet) lager og tilbakekaller API-nøklene dine, som er det REST-API-et og MCP-serveren logger inn med, og endrer passordet ditt. For eiere og admins har Innstillinger de generelle innstillingene (andre faktor, feilarbeidsflyten), Brukere oppretter folk og slår dem av, og revisjonsloggen leses, filtreres og sjekkes for manipulering der. Innloggingen er den samme editoren, på `/login`, og beholder enkel pålogging (SSO), katalogpålogging, passkeys og gjenopprettingskoder.
+Fire skjermer står ved siden av arbeidsflytene. Legitimasjon opprettes, åpnes, endres, deles med andre prosjekter og slettes i sitt eget prosjekt; et hemmelig felt legges inn én gang, og skjermen sier bare at det er satt. Prosjekter viser hvem som er med i hvert og i hvilken rolle, og tjenestekontonøklene en varig integrasjon logger på med. Kontoen din (adressen i toppfeltet) lager og tilbakekaller API-nøklene dine, som REST-API-et og MCP-serveren logger på med, og endrer passordet ditt. For eiere og administratorer har Innstillinger de generelle innstillingene (andre faktor, feilarbeidsflyten), Brukere oppretter personer, slår dem av og lar en eier slette en (innloggingene og nøklene deres forsvinner, arbeidsflytene deres blir), og revisjonsloggen leses, filtreres og kontrolleres mot manipulering der. Innloggingen er den samme editoren, på `/login`, og beholder enkel pålogging, katalogpålogging, passkeys og gjenopprettingskoder.
 
 ![Legitimasjon, der hemmeligheten aldri vises](/synced/cascade/docs/screenshots/credentials.png)
 ![Prosjekter, og hvem som er med i ett](/synced/cascade/docs/screenshots/projects.png)

@@ -19,7 +19,7 @@ HotLoop Flow محرك تدفقات مرئي للمصنع، مكتوب بلغة G
 
 وهو يشغّل تدفقاتك الحالية دون تغيير أيضًا. وهذا [أدناه](/ar/flow/migrating-from-node-red/)، لأنه ميزة وليس الغاية.
 
-الإصدار الحالي هو `2.16.6`. الصورة هي `ghcr.io/hotloop-io/hotloop-flow:2.16.6` لمعمارية amd64 (وتصل arm64 في إصدار التصحيح التالي)، ومستودع Helm هو `https://hotloop.io/hotloop-flow/`، ويغطي [نشر Flow](/ar/flow/deploying/) Kubernetes وPodman وQuadlet. فيه 117 نوعًا من العقد للرسائل و39 لمخططات FlowLab. الاستخدام المنزلي والمخبري مجاني، وكذلك استخدام المدارس والمؤسسات غير الربحية والجهات الحكومية، والاستخدام عبر EmberNet، وهي منصة شريكة، بما في ذلك الاستخدام التجاري، بلا قيود، بموجب HotLoop Source License Agreement.
+الإصدار الحالي هو `2.16.8`. الصورة هي `ghcr.io/hotloop-io/hotloop-flow:2.16.8` لمعمارية amd64 (وتأتي arm64 في 2.16.9)، ومستودع Helm هو `https://hotloop.io/hotloop-flow/`، ويتناول [نشر Flow](/ar/flow/deploying/) كلًّا من Kubernetes وPodman وQuadlet. فيه 117 نوعًا من العقد للرسائل و39 لمخططات FlowLab. الاستخدام المنزلي وفي المختبرات مجاني، وكذلك استخدام المدارس والمؤسسات غير الربحية والجهات الحكومية، والاستخدام عبر EmberNet، وهي منصة شريكة، بما فيه الاستخدام التجاري، غير مقيّد، بموجب HotLoop Source License Agreement.
 
 ## الأرقام
 

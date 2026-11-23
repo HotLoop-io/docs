@@ -17,7 +17,7 @@ Lo que eso significa en una mala noche:
 
 También ejecuta sus flujos existentes sin cambios. Eso está [más abajo](/es/flow/migrating-from-node-red/), porque es una función, no el objetivo.
 
-La versión actual es `{{flow}}`. La imagen es `ghcr.io/hotloop-io/hotloop-flow:{{flow}}` para amd64 (arm64 llega en la siguiente versión de parche), el repositorio de Helm es `https://hotloop.io/hotloop-flow/`, y [Desplegar Flow](/es/flow/deploying/) cubre Kubernetes, Podman y Quadlet. Tiene 117 tipos de nodo para mensajes y 39 para diagramas de FlowLab. El uso doméstico y de laboratorio es gratuito, igual que el de escuelas, organizaciones sin ánimo de lucro y administraciones públicas, y el uso a través de EmberNet, una plataforma asociada, empresarial incluido, no tiene restricciones, bajo el HotLoop Source License Agreement.
+La versión actual es `2.16.8`. La imagen es `ghcr.io/hotloop-io/hotloop-flow:2.16.8` para amd64 (arm64 llega en 2.16.9), el repositorio de Helm es `https://hotloop.io/hotloop-flow/`, y [Desplegar Flow](/es/flow/deploying/) explica Kubernetes, Podman y Quadlet. Tiene 117 tipos de nodo para mensajes y 39 para diagramas de FlowLab. El uso doméstico y de laboratorio es gratuito, igual que el de escuelas, organizaciones sin ánimo de lucro y gobiernos, y el uso a través de EmberNet, una plataforma asociada, incluido el uso empresarial, es ilimitado, bajo el HotLoop Source License Agreement.
 
 ## Las cifras
 

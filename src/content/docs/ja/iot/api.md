@@ -3,6 +3,10 @@ title: "HTTP API リファレンス"
 description: "HotLoop が HTTP で応答するすべての呼び出しと、必要なもの、受け取るもの、返すものをまとめています。Web UI はこれ以外を使いません。"
 ---
 
+:::note[これから来る内容も含みます]
+このページには、最新リリースであるHotLoop core 4.24.0より新しい内容も一部含まれています。お使いのバージョンには入っていない部分があるかもしれません。何が変わったかは[リリースノート](/ja/releases/)をご覧ください。
+:::
+
 Gateway が HTTP で応答するすべての呼び出しについて、必要なもの、受け取るもの、返すものをまとめています。Web UI はこれ以外を使いません。画面の裏に非公開の API はないので、UI でできることは、同じ呼び出しと同じ権限でスクリプトからもできます。
 
 このページはコードと照合して検査されます。そのため、ルートの一覧と呼び出せる人は、かつての API の説明ではありません。以下のリクエストとレスポンスの形は、稼働中の Gateway から取得したものです。テストはこれを検査しないので、ハンドラーを変更したら、このページの該当セクションも変更してください。
@@ -256,6 +260,9 @@ HotLoop は 1 つのコードベースから IoT、Edge、Gateway、Edge Relay �
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ HotLoop は 1 つのコードベースから IoT、Edge、Gateway、Edge Relay �
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ OPC UA サーバーへのサインイン用にユーザーに紐づけられた�
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ HotLoop が接続してからコンソールが報告した最新のイベント
 ```
 
 `kept` は、このセットが求めるアラームのうち、すでにあったものです。以前に押したときの自分のもの、または同じタグに対する誰かのアラームです。そのため、機器を追加で採用したあとに再び押しても安全で、新しい機器の分だけが追加されます。OT ネットワークのアラームとネットワーク離脱のアラームは含まれません。これらは、ネットワークを OT として印付け、デバイスを監視するときに付いてきます。コンソールを一度読み取るまでは `503` です。
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Protectカメラの現在の画像で、JPEGです（`Content-Type: image/jpeg`、`Cache-Control: no-store`）。要求されたときにコンソールから取得します。自分でリクエストを出す唯一のUniFiルートです。`{id}`はプロトコルが`unifi-protect`のデバイス、`{camera}`はコンソールがカメラに付けたIDです（`cam.<id>.online`タグの`<id>`）。デバイスが接続済みのProtectデバイスでなければ`404`、カメラがオフラインかコンソールがキーを拒否した場合は、コンソールの理由とともに`502`を返します。[プロトコルとドライバー](/ja/iot/protocols/#unifi-protect)を参照してください。
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+ONVIFカメラのプロファイルの現在の画像で、JPEGです（`Content-Type`はカメラが送ったまま、`Cache-Control: no-store`）。要求されたときに、カメラ自身のログインを使ってカメラから取得します。`{id}`はプロトコルが`onvif`のデバイス、`{profile}`はカメラがメディアプロファイルに付けたトークンです（`profile.<token>.snapshot_uri`タグの`<token>`）。デバイスが接続済みのONVIFデバイスでなければ`404`、カメラが画像を返さない場合は、カメラの理由とともに`502`を返します。ONVIF.mdを参照してください。
+
+### `POST /api/onvif/discover`
+
+ネットワークにONVIFカメラがないか探索し（WS-Discovery、すべてのインターフェースからのマルチキャスト探索）、応答したカメラごとに、`endpoint`、`xaddrs`、追加に使う`address`、そのscopesが示す`name`、`hardware`、`location`、`profiles`を含めて`{"cameras":[...]}`で応答します。`?wait=`は待ち受ける秒数で、1から15、デフォルトは3です。何も追加しません。人がプロトコル`onvif`のデバイスとしてカメラを追加します。
 
 ## MQTT ディスカバリー
 
@@ -2134,6 +2156,24 @@ Gateway が連携しているすべてのサイトに、MCP でプラントの�
 到達できないサイトの件数は意味がなく、集計から除かれます。到達できないサイトをアラーム 0 件と数えることは、この画面ができる最も危険なことになるからです。サイトが設定されていなければ `{"configured":false,"sites":[]}`。
 
 ## 設定
+
+### `GET /api/destinations`
+
+アラームとエッジの測定値の送り先で、種類ごとに1項目あります：`webhook`、`smtp`、`ntfy`、`gotify`、`discord_webhook`、`discord_bot`、`edge_publish`。各項目には、`fields`（キー、ラベル、型、シークレットか必須か）、`enabled`、`state`（`active`：送信中、`needs`：オンで送り先を待っており`missing`が待っているものを示す、`off`、`needs-restart`：保存済みで、エッジパブリッシャーはHotLoopの再起動時に反映）、プレーンな`values`、どのシークレットフィールドに値があるかを示す`set`があります。シークレットの値は返されません。`source`は、管理者が設定で保存した場合は`saved`、チャートや環境変数で指定された場合は`environment`です。すべての種類はデフォルトでオンで、送り先ができるまで待機します。起動を拒否するものはありません。
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+OPC UAサーバーが何をしているか、クライアントがどうログインするかを返します。`state`は`active`、`idle`（HotLoopの認証がオフでログインするユーザーがいない。`reason`がそう伝えます）、`off`、`unavailable`（この製品にはサーバーがない）のいずれかです。オンのとき、`endpoint`はクライアントが接続するURLで、認証がオンなら、`username`と`password`はHotLoopがOPC UAクライアント用に作ったログインです（`opcua-reader`。タグと値を読むことしかできず、パスワードは自動生成）。パスワードが含まれるため、`users.manage`が必要です。サーバーはデフォルトでオンです。パスワードは他のユーザーと同じように変更でき、次の起動でここに表示されるものが再び使えるようになります。
+
+### `PUT /api/destinations/{kind}`
+
+送り先を1つ保存し、`GET`が返す形のリストで応答します。ボディは`{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`で、各部分は任意です。空のままのシークレットは保存済みの値を保持し、`clear`は1つを削除します。保存の前に、起動時に環境変数を検証するのと同じ方法で結果を検証するため、誤った送り先は何が悪いかを伝える（値は決して伝えない）`400`になり、何も変更されません。アラームチャネルはすぐに反映され、エッジパブリッシャーの送り先はHotLoopの再起動時に反映されます。HotLoopにシークレットキーがあれば、シークレットはデータベース内で封印されます。`settings.write`が必要です。
 
 ### `GET /api/settings`
 

@@ -3,7 +3,7 @@ title: "Broker MQTT tích hợp sẵn"
 description: "Một broker chạy trong cùng tiến trình, để một thiết bị nhỏ có thể là toàn bộ bản cài đặt, với các listener, tài khoản và các cài đặt bật nó lên."
 ---
 
-HotLoop có thể chạy broker MQTT riêng trong cùng tiến trình, từ 4.11.0, nên một bản cài HotLoop nhỏ trên một thiết bị không phải triển khai thêm gì. Mặc định tắt (`HOTLOOP_BROKER_ENABLED`): một hệ thống đã chạy Mosquitto hoặc EMQX không có gì để trỏ nó tới, và khởi động broker thứ hai bên cạnh một broker đã có không phải giá trị mặc định an toàn để tự áp đặt.
+HotLoop có thể chạy broker MQTT của riêng nó ngay trong tiến trình, từ 4.11.0, nên một bản cài HotLoop nhỏ trên một máy không có gì thêm để triển khai. Mặc định bật (`HOTLOOP_BROKER_ENABLED`), trong tệp nhị phân và trong Helm chart. Nó lắng nghe ở :1883; nếu cổng đó đang bị một broker khác trên máy dùng, broker nhúng sẽ nghỉ và ghi điều đó vào log, và HotLoop vẫn khởi động (hãy đặt `HOTLOOP_BROKER_LISTEN_ADDR` thành một địa chỉ còn trống, hoặc tắt nó). Một cổng bạn đã chọn mà không bind được vẫn là lỗi: một lần triển khai đang chạy Mosquitto hoặc EMQX không có gì để trỏ cái này tới, và khởi động broker thứ hai cạnh một broker đã có không phải là mặc định an toàn để đoán mò.
 
 ## Vì sao nó có mặt
 

@@ -3,7 +3,7 @@ title: "内置 MQTT broker"
 description: "与主程序在同一进程中的 broker，一台小设备就能是完整安装，包括监听器、账户和启用它的设置。"
 ---
 
-HotLoop 从 4.11.0 起可以在进程内运行自己的 MQTT broker，所以单台设备上的小型 HotLoop 安装不需要再部署任何额外的东西。默认关闭（`HOTLOOP_BROKER_ENABLED`）：已经运行 Mosquitto 或 EMQX 的部署没有地方可以指向它，而在已有的 broker 旁边再启动第二个 broker，并不是可以随意假定的安全默认值。
+HotLoop 自 4.11.0 起可以在进程内运行自己的 MQTT broker，所以单机的小型 HotLoop 安装无需再部署任何额外的东西。默认开启（`HOTLOOP_BROKER_ENABLED`），二进制和 Helm chart 都是如此。它监听 :1883；如果该端口被机器上的另一个 broker 占用，内嵌 broker 会保持空闲并在日志中说明，HotLoop 照常启动（把 `HOTLOOP_BROKER_LISTEN_ADDR` 设为空闲地址，或将其关闭）。您自己选择的端口如果无法绑定，仍然是错误：已经运行 Mosquitto 或 EMQX 的部署没有可以把它指向的地方，而在已有 broker 旁再启动第二个 broker 并不是可以靠猜来定的安全默认值。
 
 ## 为什么有它
 

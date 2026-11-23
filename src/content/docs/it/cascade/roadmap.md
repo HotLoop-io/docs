@@ -3,6 +3,10 @@ title: "Roadmap di Cascade"
 description: "Che cosa Cascade ha già costruito, che cosa ha portato ogni versione e che cosa non è ancora costruito né pianificato."
 ---
 
+:::note[Comprende ciò che sta arrivando]
+Questa pagina comprende anche alcune cose più recenti di HotLoop Cascade 1.4.2, l'ultima versione rilasciata. Una parte potrebbe non essere in ciò che hai installato. Le [note di rilascio](/it/releases/) dicono cosa è cambiato.
+:::
+
 In nessun punto del codice esiste un controllo di licenza. Ogni fase finisce quando il suo elenco «reale» è stato eseguito su sistemi reali, non quando il codice compila.
 
 ## 0.1.0, l'MVP
@@ -24,6 +28,14 @@ A che cosa si attiene oggi un flusso di lavoro salvato: il file dice di quale ve
 ## 1.3.0, l'editor in 14 lingue
 
 Costruito. Inglese, spagnolo, francese, italiano, tedesco, norvegese bokmål, bulgaro, greco, coreano, giapponese, vietnamita, hindi, cinese semplificato e arabo. Un selettore di lingua nella barra in alto e nella pagina di accesso; ogni schermata, i titoli e la guida dei passaggi e i rifiuti del server sono tradotti; date, numeri e durate seguono la lingua; l'arabo si scrive da destra a sinistra, con la tela e il codice da sinistra a destra. Ogni lingua è provata su ogni schermata a larghezza desktop e telefono in un browser vero, e la compilazione rifiuta una lingua a cui manca una riga. Le parole vengono dal glossario HotLoop condiviso.
+
+## 1.5.0, eliminare una persona
+
+Realizzato. Un proprietario dell'istanza può eliminare una persona da Utenti, dall'API REST (`DELETE /api/v1/users/{user}`) o dal server MCP (`delete_user`). Il suo account, le sessioni, le passkey, le identità di accesso e le chiavi API spariscono, e il registro di controllo conserva chi l'ha fatto e cosa è andato via. I suoi workflow, le credenziali e le esecuzioni restano: il progetto personale diventa un progetto condiviso con il suo nome e "(removed)", perché un proprietario o un amministratore sposti il lavoro o lo passi a qualcun altro. Nessuno può eliminare il proprio account, e l'ultimo proprietario non può essere eliminato. Disattivare qualcuno esiste ancora per quando vuoi tenere l'account.
+
+## 1.4.2, la pagina di accesso
+
+Realizzato. La pagina di accesso è una scheda centrata su una pagina quieta, con il marchio e il nome del prodotto sopra, il pulsante principale nell'arancione HotLoop, e gli altri modi di entrare (una passkey, l'accesso unico) come semplici pulsanti accanto, in chiaro e in scuro e su un telefono. Il pulsante dell'accesso unico porta l'icona del suo provider quando il provider è Vord. Ogni campo, id e percorso di accesso è quello che era.
 
 ## 1.4.1, la pagina Impostazioni
 

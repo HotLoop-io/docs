@@ -75,7 +75,10 @@ install's own bookkeeping (`version`, `updatedBy`, `createdAt`, `updatedAt`).
 size (`w` of 12 columns, `h` in rows) and its `config`, exactly as
 [Dashboards](/iot/dashboards/#the-cards) describes each type. The layout is
 that: a flow of cards, never pixel coordinates. A symbols card places its
-symbols by pixel on its own page, inside its config.
+symbols by pixel on its own page, inside its config, and its pipes (what joins
+which connection point of which symbol, in what medium, and the tag it flows
+with) are in the config beside them. A route is never in the file: the page works
+it out again wherever the screen opens, so a P&ID comes back drawn as it went.
 
 **Assets are inside.** A floor plan on a map card and the background of a
 symbols card are base64 PNG data URLs in the card's `config`, so one file is the

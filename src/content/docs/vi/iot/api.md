@@ -3,6 +3,10 @@ title: "API HTTP"
 description: "Mọi lệnh gọi mà HotLoop trả lời qua HTTP, nó cần gì, nhận gì và trả về gì. Giao diện web không dùng thứ gì khác."
 ---
 
+:::note[Có cả những gì sắp tới]
+Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
+:::
+
 Mọi lệnh gọi mà Gateway trả lời qua HTTP, mỗi lệnh cần gì, nhận gì và trả về gì. Giao diện web không dùng thứ gì khác: không có API riêng nào phía sau các màn hình, nên bất cứ việc gì giao diện làm được, một script cũng làm được bằng đúng những lệnh gọi và đúng những quyền đó.
 
 Trang này được kiểm tra đối chiếu với mã nguồn. Vì vậy danh sách các route và người được gọi chúng không phải là mô tả một API như nó từng là. Hình dạng của các yêu cầu và phản hồi bên dưới được lấy từ một Gateway đang chạy; các bài kiểm thử không kiểm tra chúng, nên nếu bạn đổi một handler, hãy đổi cả mục của nó ở đây.
@@ -256,6 +260,9 @@ Cột sản phẩm cho biết HotLoop nhỏ nhất có route đó: `all` là IoT
 | `GET` | `/api/unifi/{id}/wifi` | `devices.read` | all |
 | `GET` | `/api/unifi/{id}/events` | `devices.read` | all |
 | `POST` | `/api/unifi/{id}/starter-alarms` | `alarms.write` | all |
+| `GET` | `/api/unifi-protect/{id}/cameras/{camera}/snapshot` | `devices.read` | all |
+| `GET` | `/api/onvif/{id}/profiles/{profile}/snapshot` | `devices.read` | all |
+| `POST` | `/api/onvif/discover` | `devices.write` | all |
 | `GET` | `/api/discovery` | `devices.read` | all |
 | `GET` | `/api/discovery/{source}/{key}` | `devices.read` | all |
 | `POST` | `/api/discovery/{source}/{key}/accept` | `devices.write` | all |
@@ -400,6 +407,9 @@ Cột sản phẩm cho biết HotLoop nhỏ nhất có route đó: `all` là IoT
 | `GET` | `/api/sites` | `sites.read` | gateway |
 | `GET` | `/api/settings` | `settings.read` | all |
 | `PUT` | `/api/settings` | `settings.write` | all |
+| `GET` | `/api/destinations` | `settings.read` | all |
+| `GET` | `/api/opcua/server` | `users.manage` | all |
+| `PUT` | `/api/destinations/{kind}` | `settings.write` | all |
 | `GET` | `/api/historian/targets` | `settings.read` | all |
 | `POST` | `/api/historian/targets` | `settings.write` | all |
 | `PUT` | `/api/historian/targets/{id}` | `settings.write` | all |
@@ -599,7 +609,7 @@ Thanh tiêu đề: bộ đếm runtime, tóm tắt báo động, tên nhà máy 
     "protocols": ["codesys","ethernet-ip","http","modbus","mqtt","mtconnect","opcua","s7comm","snmp","unifi"]
   },
   "siteId": "docs",
-  "version": "4.23.2"
+  "version": "4.24.0"
 }
 ```
 
@@ -811,6 +821,18 @@ Tạo các báo động thường dùng cho site từ những gì bảng điều
 ```
 
 `kept` là các báo động mà bộ này yêu cầu và đã có sẵn: của chính nó từ lần nhấn trước, hoặc báo động của ai đó trên cùng tag. Vì vậy nhấn lại sau khi tiếp nhận thêm thiết bị là an toàn, và nó chỉ thêm cho thiết bị mới. Các báo động mạng OT và ngoài mạng không thuộc bộ này; chúng đi kèm việc đánh dấu một mạng là OT và theo dõi một thiết bị. `503` cho đến khi bảng điều khiển được đọc một lần.
+
+### `GET /api/unifi-protect/{id}/cameras/{camera}/snapshot`
+
+Ảnh hiện tại của một camera Protect, một JPEG (`Content-Type: image/jpeg`, `Cache-Control: no-store`), lấy từ console khi được yêu cầu; đây là route UniFi duy nhất tự gửi một yêu cầu. `{id}` là một thiết bị có giao thức `unifi-protect` và `{camera}` là id mà console đặt cho camera (phần `<id>` trong tag `cam.<id>.online` của nó). `404` khi thiết bị không phải là thiết bị Protect đang kết nối, và `502` kèm lý do của console khi camera ngoại tuyến hoặc console từ chối khóa. Xem [Giao thức và driver](/vi/iot/protocols/#unifi-protect).
+
+### `GET /api/onvif/{id}/profiles/{profile}/snapshot`
+
+Ảnh hiện tại của một hồ sơ camera ONVIF, một JPEG (`Content-Type` đúng như camera đã gửi, `Cache-Control: no-store`), lấy từ camera khi được yêu cầu, bằng tài khoản đăng nhập của chính camera. `{id}` là một thiết bị có giao thức `onvif` và `{profile}` là token mà camera đặt cho hồ sơ media (phần `<token>` trong tag `profile.<token>.snapshot_uri` của nó). `404` khi thiết bị không phải là thiết bị ONVIF đang kết nối, và `502` kèm lý do của camera khi nó không cung cấp ảnh. Xem ONVIF.md.
+
+### `POST /api/onvif/discover`
+
+Dò mạng tìm camera ONVIF (WS-Discovery, một lần dò multicast từ mọi giao diện) và trả lời `{"cameras":[...]}` với từng camera đã đáp lại: `endpoint`, `xaddrs`, `address` để thêm nó vào, cùng `name`, `hardware`, `location` và `profiles` mà các scope của nó cho biết. `?wait=` là số giây để lắng nghe, từ 1 đến 15, mặc định 3. Nó không thêm gì; một người thêm camera thành thiết bị có giao thức `onvif`.
 
 ## Khám phá MQTT
 
@@ -2134,6 +2156,24 @@ Mọi địa điểm mà Gateway liên kết, được hỏi trạng thái nhà 
 Số đếm của một địa điểm không liên lạc được không có nghĩa gì và được để ngoài tổng: đếm một địa điểm không liên lạc được là không có báo động sẽ là điều nguy hiểm nhất mà màn hình này có thể làm. Khi chưa cấu hình địa điểm nào: `{"configured":false,"sites":[]}`.
 
 ## Cài đặt
+
+### `GET /api/destinations`
+
+Nơi báo động và số đọc edge được gửi tới, mỗi loại một mục: `webhook`, `smtp`, `ntfy`, `gotify`, `discord_webhook`, `discord_bot` và `edge_publish`. Mỗi mục có `fields` của nó (khóa, nhãn, kiểu, có phải bí mật hay bắt buộc không), `enabled`, một `state` (`active`: đang gửi; `needs`: đã bật và chờ đích của nó, với `missing` nêu tên thứ nó chờ; `off`; `needs-restart`: đã lưu, và edge publisher áp dụng khi HotLoop khởi động lại), các `values` thông thường, và `set`, cho biết trường bí mật nào có giá trị. Giá trị của một bí mật không bao giờ được trả về. `source` là `saved` khi quản trị viên đã lưu nó trong Cài đặt và `environment` khi chart hoặc biến môi trường cung cấp. Mọi loại đều mặc định bật và nghỉ cho đến khi có nơi để gửi; không loại nào từ chối khởi động.
+
+```json
+{"destinations":[{"id":"webhook","name":"Webhook","enabled":true,"state":"needs",
+  "missing":["url"],"values":{"min_priority":"high"},"set":{"url":false},
+  "fields":[{"key":"url","label":"URL","type":"password","secret":true,"required":true}]}]}
+```
+
+### `GET /api/opcua/server`
+
+Máy chủ OPC UA đang làm gì và một client đăng nhập thế nào. `state` là `active`, `idle` (xác thực của HotLoop đang tắt nên không có người dùng để đăng nhập; `reason` nói như vậy), `off` hoặc `unavailable` (sản phẩm này không có máy chủ). Khi nó bật, `endpoint` là URL mà client kết nối tới, và khi bật xác thực, `username` và `password` là tài khoản mà HotLoop đã tạo cho các client OPC UA (`opcua-reader`, chỉ đọc được tag và giá trị, với mật khẩu sinh tự động). Cần `users.manage`, vì mật khẩu nằm trong đó. Máy chủ mặc định bật; mật khẩu của nó có thể đổi như của bất kỳ người dùng nào, và lần khởi động tiếp theo làm cho mật khẩu hiển thị ở đây hoạt động lại.
+
+### `PUT /api/destinations/{kind}`
+
+Lưu một đích và trả lời bằng danh sách như `GET` đưa ra. Phần thân là `{"enabled": true, "values": {"url": "https://..."}, "clear": ["token"]}`, mỗi phần đều tùy chọn. Một bí mật để trống giữ nguyên giá trị đã lưu, và `clear` xóa một cái. Kết quả được kiểm tra giống như cách môi trường được kiểm tra khi khởi động, trước khi lưu bất cứ thứ gì, nên một đích sai là một `400` nói rõ điều gì sai (không bao giờ nêu giá trị) và không thay đổi gì. Các kênh báo động áp dụng ngay; đích của edge publisher áp dụng khi HotLoop khởi động lại. Các bí mật được niêm phong trong cơ sở dữ liệu khi HotLoop có khóa bí mật. Cần `settings.write`.
 
 ### `GET /api/settings`
 

@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.23.2
+reviewed: hotloop=4.24.0
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: twelve native protocol drivers, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:
@@ -71,6 +71,9 @@ Running it at a plant? [Using HotLoop in a business](/business/) covers licensin
 
 Each release has its own notes, and the notes are where the detail lives, so it is in one place and not two.
 
+- [4.24.0](/releases/hotloop-4-24-0/): screens are P&IDs, with tanks, pumps and valves joined by pipes that route themselves in right angles, carry a medium and re-route when a symbol moves, a CODESYS PLC's own alarms show in the alarm list and an acknowledge goes back to the PLC, a script run always ends, and a box's data volume always reads. This build is amd64 only, and the next version is the one small bump that builds the arm images.
+- [4.23.6](/releases/hotloop-4-23-6/): UniFi Protect, Access and PDU outlets, a Shelly device, OPC UA PubSub security and metadata, a silent Modbus device that reads bad on every point, and the finished features on from the first start, with the alarm channels and the edge publisher waiting for a destination under Settings. It carries 4.23.4's and 4.23.5's changes too, because neither was published. This build is amd64 only, and the next version is the one small bump that builds the arm images.
+- [4.23.3](/releases/hotloop-4-23-3/): any symbol on any screen can be shown and painted by a rule on a tag, and a WebVisu screen keeps its hiding and its alarm colors when it comes over. This build is amd64 only.
 - [4.23.2](/releases/hotloop-4-23-2/): a CODESYS visualization imports as a screen, the box reports its own health to the EmberNet dashboard behind a login that can read and nothing else, and an energy meter can carry a demand charge. This build is amd64 only, and the next version is the one small bump that builds the arm images.
 - [4.23.1](/releases/hotloop-4-23-1/): weather stations and energy meters, the web UI in thirteen more languages, dashboards that export to a file and import into another install, and the first commands to a UniFi console. 4.23.0 was tagged and never published, so this release carries what its notes list. This build is amd64 only.
 - [4.22.1](/releases/hotloop-4-22-1/): the multi-arch build of 4.22.0, with no change to the product.
