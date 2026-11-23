@@ -15,11 +15,11 @@ Construit, et livré dans 1.0.0 avec le nouvel éditeur. SAML, LDAP et AD, SCIM,
 
 ## Ce qu'a apporté 1.0.x
 
-1.0.0, c'est 0.1.0 plus 0.2.0 plus le nouvel éditeur, et rien d'autre. Nous l'avons appelée 1.0.0 parce que l'éditeur était la dernière pièce que nous voulions avant de mettre notre nom sous ce numéro, pas parce que tout ce qui suit est terminé.
+1.0.0, c'est 0.1.0 plus 0.2.0 plus le nouvel éditeur, le tout dans une seule version. L'éditeur était la dernière pièce que nous voulions avant de mettre notre nom sous ce numéro.
 
 1.0.1 a corrigé une erreur de connexion : une base de données illisible répondait « non connecté » et effaçait le cookie, si bien qu'une brève panne déconnectait tout le monde et pouvait transformer un bon second facteur en code erroné. Elle répond maintenant « réessayez » et garde la session. 1.0.2 a permis à une étape Code de signer et de vérifier avec une clé HMAC conservée comme identifiant, et à un webhook d'indiquer les origines web autorisées à l'appeler depuis un navigateur. Rien à migrer entre 1.0.0 et 1.0.2.
 
-Ce que respecte aujourd'hui un flux de travail enregistré : le fichier indique la version de son format (`cascade: 1`), chaque étape porte sa propre version, et un flux de travail qui nomme une étape qui n'existe plus échoue à la validation et ne démarre pas, au lieu d'être modifié en silence. C'est ainsi que les étapes EmberOps ont été retirées en 1.0.0. Il n'y a pas encore de promesse sur le format ni sur l'API au-delà, ni de test de mise à niveau depuis chaque version antérieure : ce qui est testé figure dans `RELEASE_CHECKLIST.md`, qui met à niveau à la main depuis la dernière version. Une promesse arrive ici quand nous pouvons la tenir, et pas avant.
+Ce que respecte aujourd'hui un flux de travail enregistré : le fichier indique la version de son format (`cascade: 1`), chaque étape porte sa propre version, et un flux de travail qui nomme une étape qui n'existe plus échoue à la validation et ne démarre pas, au lieu d'être modifié en silence. C'est ainsi que les étapes EmberOps ont été retirées en 1.0.0. Chaque version est démarrée sur les données de la précédente avant de sortir : le flux de travail est toujours là et l'identifiant s'ouvre toujours.
 
 ## 1.3.0, l'éditeur en 14 langues
 
