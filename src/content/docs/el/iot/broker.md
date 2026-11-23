@@ -62,7 +62,7 @@ description: "Ένας broker στην ίδια διεργασία, ώστε έ�
 
 ## Ρύθμιση
 
-| Μεταβλητή | Προεπιλογή | <span class="sr-only">Details</span> |
+| Μεταβλητή | Προεπιλογή | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | Η λειτουργία είναι απενεργοποιημένη μέχρι να οριστεί αυτό |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | Ο μη κρυπτογραφημένος listener TCP |

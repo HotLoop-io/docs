@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## Ρύθμιση
 
-| Μεταβλητή | Προεπιλογή | <span class="sr-only">Details</span> |
+| Μεταβλητή | Προεπιλογή | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | n/a | Υποχρεωτικό. Διαδρομή προς το αρχείο συσκευών που περιγράφεται παραπάνω |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | unset | Πού φυλάσσεται ένα αρχείο συσκευών που στάλθηκε· κερδίζει το παραπάνω όσο υπάρχει. Πρέπει να είναι εγγράψιμο και μόνιμο· το chart και η μονάδα Quadlet χρησιμοποιούν το `/data/pushed-devices.json`. Δείτε [Πού βρίσκεται ένα αρχείο που στάλθηκε](#πού-βρίσκεται-ένα-αρχείο-που-στάλθηκε-και-ποιο-αρχείο-κερδίζει) |

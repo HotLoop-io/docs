@@ -17,7 +17,7 @@ På et OT-nettverk du leser, skanner du ikke. En portskanning har veltet mer enn
 
 Å spørre er **sondering**, og det slås på per nettverk, av installasjonen, aldri med en knapp:
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | lytt etter mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | lytt etter SSDP |

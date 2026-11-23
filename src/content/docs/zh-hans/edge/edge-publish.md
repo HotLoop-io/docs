@@ -67,7 +67,7 @@ export HOTLOOP_EDGE_PUBLISH_QUEUE_PATH=/data/forward.db
 
 以上全部是用一台真实的 HotLoop Edge 测得的，它每 250 ms 轮询 20 台 HTTP 设备，每台 25 个变量（每秒 2000 条读数），并发布到真实的 Mosquitto。每台设备对每次轮询都回答一个比上一次大 1 的计数器，所以主机侧的判定器能确切知道哪条读数丢了、哪条回来了两次、哪条乱了序。上行链路是通过把代理从网络上拔掉来切断的：Edge 的套接字变得沉默，没有 reset，没有挂断。为了在没有任何东西在途时终止，工厂在 SIGKILL 之前暂停几秒（“quiesced”）；其他终止则落在轮询恰好所处的任何位置（“instant”）。运行时间为 2026-10-12，界限为 64 MiB。“Before”是 `15419f1`，也就是这项工作之前的构建。“Write-ahead”是 `165411f`，它先把每条读数写入磁盘，后来被我们撤掉了。“Now”是链路正常时用内存、中断期间用磁盘：
 
-| <span class="sr-only">Details</span> | 之前 | 先写后发 | 现在 |
+| <span class="sr-only">详情</span> | 之前 | 先写后发 | 现在 |
 |---|---|---|---|
 | 稳态，上行链路正常，2,000 readings/s | 2,018 readings/s，写磁盘 0 bytes/s，占一个 CPU 的 9% | 2,031 readings/s，写磁盘 5.4 MB/s（每天 450 GB），占一个 CPU 的 14% | 10 分钟：2,002 readings/s，写入磁盘 0 bytes（每天 0 bytes），写入的内嵌队列存储页 0 页，队列文件前后均为 32,768 bytes，占一个 CPU 的 9% |
 | 回放一次 5 分钟的中断，同时读数仍以 2,000 readings/s 到达 | 829,745 条读数用 4 m 11 s，每秒 3,308 条 | 每秒 194,247 到 308,582 条 | 244,335 条读数用 824 ms，每秒 296,523 条 |
@@ -93,7 +93,7 @@ HotLoop 已经在真实设备和真实服务器上运行过，并于 2026-11-17 
 
 ## 配置
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_PUBLISH_ENABLED` | `false` | 在设置它之前，该功能是关闭的 |
 | `HOTLOOP_EDGE_PUBLISH_BROKER` | 无 | 仅主机名、`host:port`，或完整的 URL |

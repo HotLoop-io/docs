@@ -297,7 +297,7 @@ Ignition Gateway में (पोर्ट 8088 पर वेब UI):
 
 ## कॉन्फ़िगरेशन
 
-| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">Details</span> |
+| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | बाइनरी और चार्ट में चालू; `false` सर्वर बंद करता है |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP पोर्ट, हर इंटरफ़ेस पर |

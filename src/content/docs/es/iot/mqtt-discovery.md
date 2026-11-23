@@ -286,7 +286,7 @@ Con las conexiones anónimas permitidas en el broker integrado, cualquiera de la
 
 El descubrimiento se ejecuta en el broker integrado (véase [el broker MQTT integrado](/es/iot/broker/)), activado por defecto siempre que lo esté el broker. El cliente propio de HotLoop inicia sesión con un acceso creado en cada arranque y guardado solo en memoria: no hay nada que configurar y nada en una copia de seguridad que pueda filtrarse. Publica una sola cosa propia, el nacimiento (`<prefix>/status` = `online`), que hace que los publicadores que lo escuchan se anuncien de nuevo.
 
-| Variable | Por defecto | <span class="sr-only">Details</span> |
+| Variable | Por defecto | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | Escuchar anuncios en el broker integrado |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | El prefijo de topic bajo el que llegan |

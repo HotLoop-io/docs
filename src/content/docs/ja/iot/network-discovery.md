@@ -17,7 +17,7 @@ HotLoop は工場ネットワークを待ち受け、そこに何があるかを
 
 問い合わせは**プローブ**であり、ボタンではなくデプロイによってネットワークごとにオンにします。
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | mDNS を待ち受ける |
 | `HOTLOOP_NETDISC_SSDP` | `true` | SSDP を待ち受ける |

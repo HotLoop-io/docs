@@ -71,7 +71,7 @@ URL केवल सर्वर है। टॉपिक अपनी अल�
 
 जो आता है:
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">विवरण</span> | <span class="sr-only">विवरण</span> |
 |---|---|
 | शीर्षक | अलार्म का नाम |
 | मुख्य भाग | अलार्म का संदेश, उसकी प्राथमिकता, वह कहां से आया (`device/tag`) और कब शुरू हुआ |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### जो आता है
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">विवरण</span> | <span class="sr-only">विवरण</span> |
 |---|---|
 | पाठ | `[Critical] Boiler Trip`, जो फ़ोन की पुश सूचना दिखाती है। गंभीर अलार्म पर, उसके आगे कॉन्फ़िगर की गई भूमिका का पिंग |
 | एम्बेड का शीर्षक | वही, जो `HOTLOOP_PUBLIC_URL` सेट होने पर HotLoop की अलार्म सूची से जुड़ता है |
@@ -305,7 +305,7 @@ N मिनट में किसी ने अलार्म स्वीक�
 
 ### नीति
 
-| फ़ील्ड | <span class="sr-only">Details</span> |
+| फ़ील्ड | <span class="sr-only">विवरण</span> |
 |---|---|
 | `enabled` | आप इसे चालू करें तब तक बंद। बंद नीति कुछ एस्केलेट नहीं करती |
 | `minPriority` | सबसे कम गंभीर अलार्म जो एस्केलेट होता है: `critical`, `high`, `medium` या `low`। डिफ़ॉल्ट `high`। एक घंटे से पड़ा मध्यम अलार्म वर्क ऑर्डर है, रात 03:00 बजे का फ़ोन कॉल नहीं |
@@ -412,7 +412,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## कॉन्फ़िगरेशन
 
-| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">Details</span> |
+| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | जब तक यह सेट नहीं होता, सुविधा बंद है |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ Helm चार्ट में ये `notify.ntfy`, `notify.gotify`, `notify.di
 
 ## API
 
-| रूट | अनुमति | <span class="sr-only">Details</span> |
+| रूट | अनुमति | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | हर कॉन्फ़िगर किए चैनल से अभी एक कृत्रिम परीक्षण सूचना भेजता है |
 | `POST /api/notify/ack/{token}` | कोई नहीं; टोकन ही प्राधिकरण है | उस अलार्म घटना को स्वीकार करता है जिसके लिए टोकन जारी हुआ था। "स्वीकृति लिंक" देखिए |

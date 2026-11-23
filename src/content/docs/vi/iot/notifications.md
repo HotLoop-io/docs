@@ -71,7 +71,7 @@ URL chỉ là máy chủ. Chủ đề nằm trong một cài đặt riêng, khô
 
 Nội dung nhận được:
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">Chi tiết</span> | <span class="sr-only">Chi tiết</span> |
 |---|---|
 | Tiêu đề | Tên của báo động |
 | Nội dung | Thông điệp của báo động, mức ưu tiên, nơi phát sinh (`device/tag`) và thời điểm phát sinh |
@@ -116,7 +116,7 @@ Có hai cách. Webhook là máy nhắn tin: dán một URL, nhận báo động 
 
 ### Nội dung nhận được
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">Chi tiết</span> | <span class="sr-only">Chi tiết</span> |
 |---|---|
 | Văn bản | `[Critical] Boiler Trip`, đó là nội dung thông báo đẩy trên điện thoại hiển thị. Với báo động nghiêm trọng, phía trước có thêm lời nhắc vai trò đã cấu hình |
 | Tiêu đề embed | Giống như trên, liên kết tới danh sách báo động của HotLoop khi đã đặt `HOTLOOP_PUBLIC_URL` |
@@ -305,7 +305,7 @@ Bạn thiết lập nó trong **Settings, Alarm escalation**, hoặc qua API (`G
 
 ### Chính sách
 
-| Trường | <span class="sr-only">Details</span> |
+| Trường | <span class="sr-only">Chi tiết</span> |
 |---|---|
 | `enabled` | Tắt cho đến khi bạn bật. Một chính sách đang tắt không leo thang gì |
 | `minPriority` | Báo động nhẹ nhất vẫn leo thang: `critical`, `high`, `medium` hoặc `low`. Mặc định `high`. Một báo động Trung bình nằm đó cả giờ là một lệnh công việc, không phải cuộc gọi lúc 03:00 |
@@ -412,7 +412,7 @@ Mỗi kênh có `MinPriority` riêng, mức ưu tiên báo động nhẹ nhất 
 
 ## Cấu hình
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | Tính năng tắt cho đến khi đặt biến này |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ Trong Helm chart, chúng nằm dưới `notify.ntfy`, `notify.gotify`, `notify.d
 
 ## API
 
-| Tuyến | Quyền | <span class="sr-only">Details</span> |
+| Tuyến | Quyền | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | Gửi một thông báo thử giả lập qua mọi kênh đã cấu hình ngay lập tức |
 | `POST /api/notify/ack/{token}` | không; token là sự cho phép | Xác nhận lần phát sinh của báo động mà token được cấp cho. Xem "Liên kết xác nhận" |

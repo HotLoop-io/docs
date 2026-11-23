@@ -17,7 +17,7 @@ HotLoop 监听工厂网络，告诉您上面有什么：院子里的 ESPHome 节
 
 提问就是**探测**，它按网络启用，由部署来启用，绝不通过按钮：
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | 监听 mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | 监听 SSDP |

@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## الإعدادات
 
-| المتغير | الافتراضي | <span class="sr-only">Details</span> |
+| المتغير | الافتراضي | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | الميزة متوقفة، بما فيها مسارات API، حتى يُضبط هذا |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | مكان كتابة النسخ الاحتياطية؛ المقصود أن يكون PVC (`backup.persistence` في المخطط chart) |

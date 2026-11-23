@@ -297,7 +297,7 @@ OPC UA 既认证用户，也认证应用。服务器在 `<PKI_DIR>/trusted/` 中
 
 ## 配置
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | 二进制文件和 chart 中均开启；设为 `false` 即关闭服务器 |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP 端口，在所有接口上 |

@@ -9,7 +9,7 @@ Dites à HotLoop où se trouve l'usine et il sait où est le soleil. Lever, couc
 
 Deux variables, en degrés décimaux, le nord et l'est étant positifs :
 
-| Variable | Exemple | <span class="sr-only">Details</span> |
+| Variable | Exemple | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | nord positif |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | est positif, donc toute l'Amérique est négative |
@@ -20,7 +20,7 @@ Sans elles, il n'y a pas d'entités du soleil, et une règle avec un déclencheu
 
 ## Les entités
 
-| Entité | État | <span class="sr-only">Details</span> |
+| Entité | État | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | `on` du lever au coucher | attributs `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, dans le fuseau horaire du site |
 | `sensor.sun_elevation` | degrés au-dessus de l'horizon, négatif en dessous | degrés entiers |

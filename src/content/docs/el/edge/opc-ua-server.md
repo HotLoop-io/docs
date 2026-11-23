@@ -297,7 +297,7 @@ description: "Δημοσιεύστε τις ρυθμισμένες συσκευ�
 
 ## Ρύθμιση
 
-| Μεταβλητή | Προεπιλογή | <span class="sr-only">Details</span> |
+| Μεταβλητή | Προεπιλογή | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Ενεργός στο εκτελέσιμο και στο chart· το `false` σβήνει τον server |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Θύρα TCP, σε όλες τις διεπαφές |

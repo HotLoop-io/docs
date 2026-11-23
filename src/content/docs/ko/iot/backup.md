@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## 구성
 
-| 변수 | 기본값 | <span class="sr-only">Details</span> |
+| 변수 | 기본값 | <span class="sr-only">상세</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | 이 값을 설정하기 전까지는 API 경로를 포함해 기능이 꺼져 있습니다 |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | 백업이 기록되는 위치이며 PVC(차트의 `backup.persistence`)여야 합니다 |

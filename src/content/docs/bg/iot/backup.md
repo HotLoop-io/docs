@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## Конфигурация
 
-| Променлива | По подразбиране | <span class="sr-only">Details</span> |
+| Променлива | По подразбиране | <span class="sr-only">Подробности</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | Функцията е изключена, включително маршрутите на API, докато това не се зададе |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Къде се записват копията; предвидено да е PVC (`backup.persistence` в chart-а) |

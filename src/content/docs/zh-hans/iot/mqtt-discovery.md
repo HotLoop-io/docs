@@ -286,7 +286,7 @@ JSON 模式灯的状态消息会被合并，因为该模式只发送变化的部
 
 发现运行在内置代理上（见[内置 MQTT 代理](/zh-hans/iot/broker/)），只要代理开着，它就默认开启。HotLoop 自己的客户端用每次启动时创建、只保存在内存中的登录来登录：没有需要配置的东西，备份里也没有可泄露的东西。它只发布自己的一件东西，即 birth（`<prefix>/status` = `online`），它会让监听它的发布方重新声明。
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | 在内置代理上监听声明 |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | 它们到达时所用的主题前缀 |

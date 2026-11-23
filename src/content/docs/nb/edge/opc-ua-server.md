@@ -297,7 +297,7 @@ Hver rad er en fersk økt med den policyen og modusen, som leser live-verdier. D
 
 ## Konfigurasjon
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | På i binærfilen og chartet; `false` slår serveren av |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP-port, på alle grensesnitt |

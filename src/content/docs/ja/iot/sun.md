@@ -9,7 +9,7 @@ HotLoop に工場の場所を伝えれば、太陽の位置が分かります。
 
 変数は 2 つで、10 進の度、北と東が正です。
 
-| 変数 | 例 | <span class="sr-only">Details</span> |
+| 変数 | 例 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | 北が正 |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | 東が正なので、アメリカ大陸はすべて負 |
@@ -20,7 +20,7 @@ HotLoop に工場の場所を伝えれば、太陽の位置が分かります。
 
 ## エンティティ
 
-| エンティティ | 状態 | <span class="sr-only">Details</span> |
+| エンティティ | 状態 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | 日の出から日没まで `on` | 属性 `next_dawn`、`next_sunrise`、`next_noon`、`next_sunset`、`next_dusk`、現場のタイムゾーン |
 | `sensor.sun_elevation` | 地平線より上の度数、下は負 | 整数の度 |

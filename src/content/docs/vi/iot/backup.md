@@ -152,7 +152,7 @@ Những gì được kiểm tra khi nạp vào là những gì được kiểm t
 
 ## Cấu hình
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | Tính năng tắt, kể cả các route API, cho đến khi đặt biến này |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Nơi ghi các bản sao lưu; dự kiến là một PVC (`backup.persistence` trong chart) |

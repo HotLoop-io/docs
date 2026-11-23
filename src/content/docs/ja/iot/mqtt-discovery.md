@@ -286,7 +286,7 @@ JSON スキーマのライトの状態メッセージは、スキーマが変化
 
 ディスカバリーは内蔵ブローカーで動作し([内蔵 MQTT ブローカー](/ja/iot/broker/)を参照)、ブローカーが有効であれば既定で有効です。HotLoop 自身のクライアントは、起動のたびに作成されメモリにのみ保持されるログインで接続するため、設定するものも、バックアップに漏れるものもありません。自身で公開するのは birth(`<prefix>/status` = `online`)の 1 つだけで、これを待ち受けるパブリッシャーに再通知させます。
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | 内蔵ブローカーで通知を受信する |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | 通知が届くトピックのプレフィックス |

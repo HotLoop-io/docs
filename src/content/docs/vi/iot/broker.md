@@ -62,7 +62,7 @@ Gói này không tạo chứng chỉ riêng, tự ký hay loại nào khác, vì
 
 ## Cấu hình
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | Tính năng tắt cho đến khi đặt biến này |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | Listener TCP không mã hóa |

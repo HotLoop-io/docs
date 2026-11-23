@@ -11,7 +11,7 @@ Mọi số đo mà historian tích hợp lưu giữ đều đi tới mọi đíc
 
 Các cơ sở dữ liệu HotLoop ghi vào:
 
-| Loại | Phiên bản đã chạy thử | <span class="sr-only">Details</span> |
+| Loại | Phiên bản đã chạy thử | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | PostgreSQL và TimescaleDB | PostgreSQL 16 với TimescaleDB 2.30 | [bên dưới](#postgresql-và-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [bên dưới](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop tạo bảng nếu chưa có. Nếu bảng đã có nhưng không phải
 
 Cùng sáu cột như lịch sử riêng của HotLoop, nên truy vấn viết cho bên này đọc được bên kia:
 
-| Cột | <span class="sr-only">Details</span> |
+| Cột | <span class="sr-only">Chi tiết</span> |
 |---|---|
 | `ts` | Thời điểm đo, UTC, chính xác đến micro giây |
 | `device_id` | Thiết bị |

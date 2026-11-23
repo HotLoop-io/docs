@@ -17,7 +17,7 @@ HotLoop प्लांट नेटवर्क को सुनता है �
 
 पूछना **प्रोबिंग** है, और यह हर नेटवर्क के लिए चालू होती है, डिप्लॉयमेंट द्वारा, बटन से कभी नहीं:
 
-| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">Details</span> |
+| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | mDNS सुनें |
 | `HOTLOOP_NETDISC_SSDP` | `true` | SSDP सुनें |

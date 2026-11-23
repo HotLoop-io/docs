@@ -27,7 +27,7 @@ POST /api/entities
 
 Solo `temperature` è obbligatorio. Una stazione senza pluviometro non ha `rain_rate` e non mostra la riga della pioggia. Ogni ruolo accetta un tag numerico e nessuno viene scritto: una stazione si legge, non si comanda mai, quindi nessun tag va armato e l'entità non accetta servizi.
 
-| Ruolo | <span class="sr-only">Details</span> | Attributo che genera |
+| Ruolo | <span class="sr-only">Dettagli</span> | Attributo che genera |
 |---|---|---|
 | `temperature` | obbligatorio, lo stato | `unit_of_measurement` |
 | `humidity` | umidità relativa, in percentuale | `humidity` |

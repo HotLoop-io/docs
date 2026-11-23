@@ -71,7 +71,7 @@ URL 只是服务器。主题放在它自己的设置里，绝不放进 URL：这
 
 收到的内容：
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">详情</span> | <span class="sr-only">详情</span> |
 |---|---|
 | 标题 | 报警的名称 |
 | 正文 | 报警的消息、它的优先级、来源（`device/tag`）以及触发时间 |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### 收到的内容
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">详情</span> | <span class="sr-only">详情</span> |
 |---|---|
 | 文本 | `[Critical] Boiler Trip`，即手机推送通知显示的内容。严重报警时，前面会加上对所配置角色的提及 |
 | 嵌入标题 | 同上，设置了 `HOTLOOP_PUBLIC_URL` 时链接到 HotLoop 的报警列表 |
@@ -305,7 +305,7 @@ ntfy 通知上的确认按钮，是向 `HOTLOOP_PUBLIC_URL` 上的 `POST /api/no
 
 ### 策略
 
-| 字段 | <span class="sr-only">Details</span> |
+| 字段 | <span class="sr-only">详情</span> |
 |---|---|
 | `enabled` | 在您打开之前为关闭。关闭的策略不会升级任何内容 |
 | `minPriority` | 会升级的最轻的报警：`critical`、`high`、`medium` 或 `low`。默认 `high`。一个挂了一小时的中级报警是工单，不是 03:00 的电话 |
@@ -412,7 +412,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## 配置
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | 在设置它之前，该功能处于关闭状态 |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## API
 
-| 路由 | 权限 | <span class="sr-only">Details</span> |
+| 路由 | 权限 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | 立即通过每个已配置的渠道发送一条合成的测试通知 |
 | `POST /api/notify/ack/{token}` | 无；令牌即授权 | 确认该令牌所签发的那次报警触发。参见“确认链接” |

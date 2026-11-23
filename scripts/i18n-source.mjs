@@ -376,6 +376,65 @@ export function report(overlay = new Map(), out = console.log) {
   return !stale.length && !all.length;
 }
 
+// ---- release versions in translations ---------------------------------------------------
+// A translation holds the version its English said the day it was made. The hash treats the latest release as a token, so a
+// new release does not mark the page stale, and that is also why nothing moved the number: a translated page kept saying 4.24.0
+// after 4.24.1 shipped. bump() closes that. For every translated page whose recorded versions are behind the sync's, and whose
+// only difference from the English is the version, it rewrites the old version in each segment where the English says the
+// latest one, in the translation's own line, and records the page again. A segment the English really changed is left for
+// the retranslation, and a version in a segment where the English names an older release is history and is not touched.
+export function bump({ dry = false, v = view() } = {}) {
+  const now = versionMap(v);
+  const done = [];
+  for (const [id, langs] of translatedPages(v)) {
+    const ep = englishPath(v, id);
+    const rec = ep ? readRecord(v, id) : null;
+    if (!rec) continue;
+    const etext = v.read(ep);
+    const eseg = segs(parse(etext));
+    for (const lang of FOLDERS.filter((l) => langs.has(l))) {
+      const r = rec.langs?.[lang], rv = rec.versions?.[lang];
+      if (!r || !rv) continue;
+      const moved = Object.keys(now).filter((k) => rv[k] && now[k] && rv[k] !== now[k]);
+      if (!moved.length) continue;
+      const tp = translationPath(v, lang, id);
+      const ttext = v.read(tp);
+      const tsegs = segs(parse(ttext));
+      if (tsegs.length !== r.length) continue;
+      const d = diff(r, currentHashes(etext, v, r, rv));
+      if (d.changed.length || d.removed.length) continue;
+      const starts = segLines(ttext);
+      const lines = ttext.split('\n');
+      let touched = 0;
+      d.carry.forEach((k, j) => {
+        if (k < 0) return;
+        let seg = tsegs[k];
+        const before = seg;
+        for (const name of moved) {
+          if (!normalizeVersions(eseg[j], { [name]: now[name] }).includes(`{{${name}`)) continue;
+          const o = /^(\d+)\.(\d+)\.(\d+)$/.exec(rv[name]), n = /^(\d+)\.(\d+)\.(\d+)$/.exec(now[name]);
+          if (!o || !n) continue;
+          const swap = (a, b) => { seg = seg.replace(new RegExp(`(?<![\\w.-])${esc(a)}(?![\\w]|\\.\\d|-\\d)`, 'g'), b); };
+          swap(rv[name], now[name]);
+          seg = seg.replace(new RegExp(`(?<![\\w.-])${esc(`${o[1]}.${o[2]}`)}\\.x\\b`, 'g'), `${n[1]}.${n[2]}.x`);
+          swap(`${o[1]}.${o[2]}`, `${n[1]}.${n[2]}`);
+        }
+        if (seg === before) return;
+        const first = starts[k] - 1, count = before.split('\n').length;
+        seg.split('\n').forEach((ln, i) => { lines[first + i] = ln; });
+        touched++;
+      });
+      if (!touched) continue;
+      done.push({ id, lang, touched });
+      if (!dry) {
+        writeFileSync(join(ROOT, tp), lines.join('\n'));
+        record(id, lang);
+      }
+    }
+  }
+  return done;
+}
+
 // ---- command line -----------------------------------------------------------------------
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const [cmd = 'check', ...rest] = process.argv.slice(2);
@@ -394,6 +453,11 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const [id, ...langs] = rest;
     if (!id) { console.error('usage: i18n-source.mjs record <page> [lang ...]'); process.exit(2); }
     for (const l of langs.length ? langs : FOLDERS) console.log(`recorded ${id} ${l}: ${record(id, l)} segments`);
+  } else if (cmd === 'bump') {
+    const done = bump({ dry: rest.includes('--dry') });
+    for (const d of done) console.log(`${rest.includes('--dry') ? 'would bump' : 'bumped'} ${d.id} ${d.lang}: ${d.touched} line(s)`);
+    console.log(`i18n-source: ${done.length} translation(s) ${rest.includes('--dry') ? 'hold' : 'held'} an older release version`);
+    process.exit(rest.includes('--dry') && done.length ? 1 : 0);
   } else if (cmd === 'migrate') {
     // One time: records made before versions were normalized hold the hash of the English as written. Where a segment
     // is still exactly what was recorded, store its normalized hash and the versions, so the next release does not flag it.

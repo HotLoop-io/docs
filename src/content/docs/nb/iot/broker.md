@@ -62,7 +62,7 @@ Denne pakken genererer ikke et eget sertifikat, selvsignert eller på annen måt
 
 ## Konfigurasjon
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | Funksjonen er av til dette settes |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | Den ukrypterte TCP-lytteren |

@@ -7,7 +7,7 @@ En integrasjon er måten du peker HotLoop mot en type enhet du kjenner adressen 
 
 Det finnes tre måter en enhet kommer inn i HotLoop på, og de er laget for å fungere side om side:
 
-| <span class="sr-only">Details</span> | Hvem som starter den | Hva den trenger |
+| <span class="sr-only">Detaljer</span> | Hvem som starter den | Hva den trenger |
 |---|---|---|
 | [MQTT-oppdagelse](/nb/iot/mqtt-discovery/) | Enheten, ved å melde seg på en broker | En publisher som snakker ett av formatene |
 | [Nettverksoppdagelse](/nb/iot/network-discovery/) | Nettverket, ved å bli lyttet til | Ingenting fra enheten; den forteller deg hva den hørte og hvordan HotLoop kunne snakke med den |

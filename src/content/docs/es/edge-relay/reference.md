@@ -207,7 +207,7 @@ Deliberadamente sin autenticación delante de ninguno: un edge relay no tiene ba
 
 ## Configuración
 
-| Variable | Por defecto | <span class="sr-only">Details</span> |
+| Variable | Por defecto | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | n/a | Obligatorio. Ruta al archivo de dispositivos descrito arriba |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | unset | Dónde se guarda un archivo de dispositivos enviado; gana al de arriba mientras exista. Debe ser escribible y persistente; el chart y la unidad Quadlet usan `/data/pushed-devices.json`. Vea [Dónde vive un archivo enviado](#dónde-vive-un-archivo-enviado-y-qué-archivo-gana) |

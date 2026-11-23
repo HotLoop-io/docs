@@ -297,7 +297,7 @@ Mỗi hàng là một phiên mới với chính sách và chế độ đó, đ�
 
 ## Cấu hình
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Bật trong tệp thực thi và chart; `false` tắt máy chủ |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Cổng TCP, trên mọi giao diện |

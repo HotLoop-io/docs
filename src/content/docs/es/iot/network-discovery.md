@@ -17,7 +17,7 @@ En una red OT que usted lee, no se escanea. Un barrido de puertos ha tumbado má
 
 Preguntar es **sondear**, y se activa por red, por el despliegue, nunca con un botón:
 
-| Variable | Por defecto | <span class="sr-only">Details</span> |
+| Variable | Por defecto | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | escuchar mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | escuchar SSDP |

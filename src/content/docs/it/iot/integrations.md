@@ -7,7 +7,7 @@ Un'integrazione è il modo di puntare HotLoop su un tipo di dispositivo di cui c
 
 Un dispositivo può entrare in HotLoop in tre modi, pensati per convivere:
 
-| <span class="sr-only">Details</span> | Chi la avvia | Cosa serve |
+| <span class="sr-only">Dettagli</span> | Chi la avvia | Cosa serve |
 |---|---|---|
 | [Rilevamento MQTT](/it/iot/mqtt-discovery/) | Il dispositivo, annunciandosi su un broker | Un publisher che parli uno dei formati |
 | [Rilevamento di rete](/it/iot/network-discovery/) | La rete, perché viene ascoltata | Nulla dal dispositivo; vi dice cosa ha sentito e come HotLoop potrebbe parlargli |

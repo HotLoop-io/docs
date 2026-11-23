@@ -7,7 +7,7 @@ description: "アドレスがわかるデバイスに HotLoop を向け、実際
 
 デバイスが HotLoop に入る方法は 3 つあり、互いに並行して使うことを想定しています。
 
-| <span class="sr-only">Details</span> | 開始する側 | 必要なもの |
+| <span class="sr-only">詳細</span> | 開始する側 | 必要なもの |
 |---|---|---|
 | [MQTT ディスカバリー](/ja/iot/mqtt-discovery/) | デバイスが、ブローカーに自分自身を通知する | いずれかの形式で発行するパブリッシャー |
 | [ネットワークディスカバリー](/ja/iot/network-discovery/) | ネットワークが、傍受される | デバイス側では不要。聞き取った内容と、HotLoop がどう通信できるかを知らせます |

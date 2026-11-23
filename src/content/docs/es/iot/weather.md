@@ -27,7 +27,7 @@ POST /api/entities
 
 Solo `temperature` es obligatoria. Una estación sin pluviómetro no tiene `rain_rate` y no muestra fila de lluvia. Cada función admite un tag numérico y ninguna se escribe: una estación se lee, nunca se manda, así que no hace falta armar ningún tag y la entidad no admite servicios.
 
-| Función | <span class="sr-only">Details</span> | Atributo que genera |
+| Función | <span class="sr-only">Detalles</span> | Atributo que genera |
 |---|---|---|
 | `temperature` | obligatoria, el estado | `unit_of_measurement` |
 | `humidity` | humedad relativa, en porcentaje | `humidity` |

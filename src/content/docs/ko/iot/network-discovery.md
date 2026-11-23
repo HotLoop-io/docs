@@ -17,7 +17,7 @@ HotLoop는 공장 네트워크를 수신하여 그 안에 무엇이 있는지 �
 
 묻는 것은 **프로빙**이며, 버튼이 아니라 배포가 네트워크별로 켭니다.
 
-| 변수 | 기본값 | <span class="sr-only">Details</span> |
+| 변수 | 기본값 | <span class="sr-only">상세</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | mDNS 수신 |
 | `HOTLOOP_NETDISC_SSDP` | `true` | SSDP 수신 |

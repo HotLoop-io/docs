@@ -152,7 +152,7 @@ Ce qui est vérifié à l'entrée est ce qui est vérifié pour toute restaurati
 
 ## Configuration
 
-| Variable | Valeur par défaut | <span class="sr-only">Details</span> |
+| Variable | Valeur par défaut | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | La fonction est désactivée, routes de l'API comprises, tant que ceci n'est pas défini |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Où les sauvegardes sont écrites ; prévu pour être un PVC (`backup.persistence` dans le chart) |

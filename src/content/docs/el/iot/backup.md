@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## Ρύθμιση
 
-| Μεταβλητή | Προεπιλογή | <span class="sr-only">Details</span> |
+| Μεταβλητή | Προεπιλογή | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | Η λειτουργία είναι απενεργοποιημένη, μαζί με τις διαδρομές του API, μέχρι να οριστεί αυτό |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Πού γράφονται τα αντίγραφα· προορίζεται να είναι PVC (`backup.persistence` στο chart) |

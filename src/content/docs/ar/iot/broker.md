@@ -62,7 +62,7 @@ Zigbee2MQTT هو الحالة الخاصة: جسر واحد يعلن عن كل �
 
 ## الإعداد
 
-| المتغير | الافتراضي | <span class="sr-only">Details</span> |
+| المتغير | الافتراضي | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | الميزة متوقفة حتى يُضبط هذا |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | مستمع TCP غير المشفّر |

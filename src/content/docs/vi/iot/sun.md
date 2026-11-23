@@ -9,7 +9,7 @@ Cho HotLoop biết nhà máy ở đâu và nó biết mặt trời ở đâu. M�
 
 Hai biến, tính bằng độ thập phân, bắc và đông là số dương:
 
-| Biến | Ví dụ | <span class="sr-only">Details</span> |
+| Biến | Ví dụ | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | bắc là dương |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | đông là dương, nên toàn bộ châu Mỹ là số âm |
@@ -20,7 +20,7 @@ Nếu bỏ trống, sẽ không có thực thể mặt trời, và một quy t�
 
 ## Các thực thể
 
-| Thực thể | Trạng thái | <span class="sr-only">Details</span> |
+| Thực thể | Trạng thái | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | `on` từ lúc mặt trời mọc đến lúc lặn | thuộc tính `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, theo múi giờ của địa điểm |
 | `sensor.sun_elevation` | số độ trên đường chân trời, âm khi ở dưới | độ nguyên |

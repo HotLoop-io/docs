@@ -27,7 +27,7 @@ POST /api/entities
 
 只有 `temperature` 是必需的。没有雨量计的气象站没有 `rain_rate`，也不显示降雨行。每个角色接受一个数值变量，且都不会被写入：气象站只被读取，从不被命令，所以不需要启用任何变量，实体也不接受任何服务。
 
-| 角色 | <span class="sr-only">Details</span> | 生成的属性 |
+| 角色 | <span class="sr-only">详情</span> | 生成的属性 |
 |---|---|---|
 | `temperature` | 必需，即状态 | `unit_of_measurement` |
 | `humidity` | 相对湿度，百分比 | `humidity` |

@@ -67,7 +67,7 @@ La consegna è **almeno una volta**. Un blocco che il broker ha preso ma non ha 
 
 Tutto questo è misurato con un vero HotLoop Edge che interroga 20 dispositivi HTTP con 25 tag ciascuno ogni 250 ms (2000 letture al secondo), pubblicando su un vero Mosquitto. Ogni dispositivo risponde a ogni interrogazione con un contatore maggiore di uno rispetto al precedente, così un giudice lato host sa esattamente quale lettura è mancata, quale è tornata due volte e quale è uscita fuori ordine. Il collegamento verso l'alto viene tagliato staccando il broker dalla rete: il socket dell'Edge diventa silenzioso, senza reset né chiusura. Per terminare con nulla in volo l'impianto si ferma per qualche secondo prima del SIGKILL ("quiesced"); le altre terminazioni cadono dove capita l'interrogazione ("instant"). Le esecuzioni del 2026-10-12, con un limite di 64 MiB. "Before" è `15419f1`, la build prima di questo lavoro. "Write-ahead" è `165411f`, che scriveva prima ogni lettura su disco e che abbiamo ritirato. "Now" è memoria finché il collegamento è attivo e disco durante un'interruzione:
 
-| <span class="sr-only">Details</span> | Prima | Scrittura anticipata | Ora |
+| <span class="sr-only">Dettagli</span> | Prima | Scrittura anticipata | Ora |
 |---|---|---|---|
 | Regime stabile, collegamento verso l'alto attivo, 2.000 readings/s | 2.018 readings/s, 0 bytes/s su disco, 9% di una CPU | 2.031 readings/s, 5,4 MB/s su disco (450 GB al giorno), 14% di una CPU | 10 minuti: 2.002 readings/s, 0 bytes scritti su disco (0 bytes al giorno), 0 pagine scritte dell'archivio di coda incorporato, file di coda di 32.768 bytes prima e dopo, 9% di una CPU |
 | Riproduzione di un'interruzione di 5 minuti, con letture che continuano ad arrivare a 2.000 readings/s | 829.745 letture in 4 m 11 s, 3.308 al secondo | da 194.247 a 308.582 al secondo | 244.335 letture in 824 ms, 296.523 al secondo |
@@ -93,7 +93,7 @@ HotLoop è stato eseguito su apparecchiature reali e server reali, e su hardware
 
 ## Configurazione
 
-| Variabile | Predefinito | <span class="sr-only">Details</span> |
+| Variabile | Predefinito | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_PUBLISH_ENABLED` | `false` | La funzione è disattivata finché non viene impostata |
 | `HOTLOOP_EDGE_PUBLISH_BROKER` | n/d | Solo host, `host:port`, o un URL completo |

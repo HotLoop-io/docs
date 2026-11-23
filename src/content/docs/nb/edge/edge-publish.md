@@ -67,7 +67,7 @@ Leveringen er **minst én gang**. En bit megleren tok imot men aldri bekreftet s
 
 Alt dette er målt med en ekte HotLoop Edge som spør 20 HTTP-enheter med 25 tagger hver hvert 250 ms (2000 avlesninger i sekundet), og publiserer til en ekte Mosquitto. Hver enhet svarer på hver spørring med en teller som er én høyere enn forrige, så en dommer på vertssiden vet nøyaktig hvilken avlesning som manglet, hvilken som kom tilbake to ganger og hvilken som kom i feil rekkefølge. Opplenken kuttes ved å trekke megleren av nettverket: Edges socket blir stille, uten reset, uten påhengt. For å drepe med ingenting underveis pauser anlegget noen sekunder før SIGKILL ("quiesced"); de andre drapene lander der spørringen tilfeldigvis er ("instant"). Kjøringene 2026-10-12, med en grense på 64 MiB. "Before" er `15419f1`, bygget før dette arbeidet. "Write-ahead" er `165411f`, som skrev hver avlesning til disk først og som vi tok ut igjen. "Now" er minne mens forbindelsen er oppe og disk under et avbrudd:
 
-| <span class="sr-only">Details</span> | Før | Skriv først | Nå |
+| <span class="sr-only">Detaljer</span> | Før | Skriv først | Nå |
 |---|---|---|---|
 | Jevn drift, opplenke oppe, 2 000 readings/s | 2 018 readings/s, 0 bytes/s til disk, 9 % av en CPU | 2 031 readings/s, 5,4 MB/s til disk (450 GB om dagen), 14 % av en CPU | 10 minutter: 2 002 readings/s, 0 bytes skrevet til disk (0 bytes om dagen), 0 sider skrevet i det innebygde kølageret, køfil på 32 768 bytes før og etter, 9 % av en CPU |
 | Avspilling av et 5 minutters avbrudd, mens avlesninger fortsatt kommer inn med 2 000 readings/s | 829 745 avlesninger på 4 m 11 s, 3 308 i sekundet | 194 247 til 308 582 i sekundet | 244 335 avlesninger på 824 ms, 296 523 i sekundet |
@@ -93,7 +93,7 @@ HotLoop er kjørt mot ekte utstyr og ekte servere, og på ekte maskinvare 2026-1
 
 ## Konfigurasjon
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_PUBLISH_ENABLED` | `false` | Funksjonen er av til dette settes |
 | `HOTLOOP_EDGE_PUBLISH_BROKER` | ikke aktuelt | Bare vert, `host:port`, eller en full URL |

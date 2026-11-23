@@ -62,7 +62,7 @@ SMTP チャネルが 1 つの接続内で行う STARTTLS のアップグレー�
 
 ## 設定
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | これを設定するまで機能はオフです |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | 平文の TCP リスナー |

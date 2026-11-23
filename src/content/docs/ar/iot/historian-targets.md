@@ -11,7 +11,7 @@ description: "اكتب كل قراءة يحتفظ بها HotLoop أيضًا في
 
 قواعد البيانات التي يكتب فيها HotLoop:
 
-| النوع | الإصدارات التي جُرّب عليها | <span class="sr-only">Details</span> |
+| النوع | الإصدارات التي جُرّب عليها | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | PostgreSQL وTimescaleDB | PostgreSQL 16 مع TimescaleDB 2.30 | [أدناه](#postgresql-وtimescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [أدناه](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ description: "اكتب كل قراءة يحتفظ بها HotLoop أيضًا في
 
 الأعمدة الستة نفسها الموجودة في سجل HotLoop التاريخي، فيقرأ استعلام كُتب لأحدهما الآخر:
 
-| العمود | <span class="sr-only">Details</span> |
+| العمود | <span class="sr-only">التفاصيل</span> |
 |---|---|
 | `ts` | وقت أخذ القراءة، بالتوقيت العالمي UTC، حتى الميكروثانية |
 | `device_id` | الجهاز |

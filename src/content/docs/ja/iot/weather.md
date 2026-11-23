@@ -27,7 +27,7 @@ POST /api/entities
 
 必須なのは `temperature` だけです。雨量計のないステーションには `rain_rate` がなく、雨の行も表示されません。どの役割も数値タグを 1 つ受け取り、書き込まれるものはありません。ステーションは読み取るだけで、コマンドは送らないので、有効にするタグはなく、エンティティはサービスを受け付けません。
 
-| 役割 | <span class="sr-only">Details</span> | 作られる属性 |
+| 役割 | <span class="sr-only">詳細</span> | 作られる属性 |
 |---|---|---|
 | `temperature` | 必須、状態 | `unit_of_measurement` |
 | `humidity` | 相対湿度、パーセント | `humidity` |

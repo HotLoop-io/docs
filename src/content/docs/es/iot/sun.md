@@ -9,7 +9,7 @@ Dígale a HotLoop dónde está la planta y sabrá dónde está el sol. Amanecer,
 
 Dos variables, en grados decimales, con el norte y el este positivos:
 
-| Variable | Ejemplo | <span class="sr-only">Details</span> |
+| Variable | Ejemplo | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | norte positivo |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | este positivo, así que todo el continente americano es negativo |
@@ -20,7 +20,7 @@ Si las omite, no hay entidades del sol, y una regla con disparador solar no qued
 
 ## Las entidades
 
-| Entidad | Estado | <span class="sr-only">Details</span> |
+| Entidad | Estado | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | `on` desde el amanecer hasta el atardecer | atributos `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, en la zona horaria del sitio |
 | `sensor.sun_elevation` | grados sobre el horizonte, negativo por debajo | grados enteros |

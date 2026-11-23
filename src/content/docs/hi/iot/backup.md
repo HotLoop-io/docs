@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## कॉन्फ़िगरेशन
 
-| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">Details</span> |
+| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | जब तक यह सेट नहीं होता, फ़ीचर बंद है, API रूट सहित |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | बैकअप कहाँ लिखे जाते हैं; PVC होना चाहिए (चार्ट में `backup.persistence`) |

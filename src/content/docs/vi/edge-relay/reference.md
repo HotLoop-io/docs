@@ -207,7 +207,7 @@ Cố ý không có xác thực phía trước cả hai: một Edge Relay không 
 
 ## Cấu hình
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | không có | Bắt buộc. Đường dẫn tới tệp thiết bị ở trên |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | chưa đặt | Nơi giữ tệp thiết bị được đẩy, và nó thắng tệp ở trên khi còn tồn tại. Phải ghi được và bền vững; biểu đồ và đơn vị Quadlet dùng `/data/pushed-devices.json`. Xem [Tệp được đẩy nằm ở đâu](#tệp-được-đẩy-nằm-ở-đâu-và-tệp-nào-thắng) |

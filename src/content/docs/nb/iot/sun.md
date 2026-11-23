@@ -9,7 +9,7 @@ Si fra til HotLoop hvor anlegget ligger, så vet det hvor solen er. Soloppgang, 
 
 To variabler, desimalgrader, nord og øst positive:
 
-| Variabel | Eksempel | <span class="sr-only">Details</span> |
+| Variabel | Eksempel | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | nord positiv |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | øst positiv, så hele Amerika er negativ |
@@ -20,7 +20,7 @@ Utelater du dem, finnes det ingen sol-entiteter, og en regel med solutløser bli
 
 ## Entitetene
 
-| Entitet | Tilstand | <span class="sr-only">Details</span> |
+| Entitet | Tilstand | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | `on` fra soloppgang til solnedgang | attributter `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, i anleggets tidssone |
 | `sensor.sun_elevation` | grader over horisonten, negativ under | hele grader |

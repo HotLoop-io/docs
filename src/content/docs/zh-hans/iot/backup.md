@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## 配置
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | 在设置它之前，该功能（包括 API 路由）处于关闭状态 |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | 备份写入的位置；设计上应为 PVC（chart 中的 `backup.persistence`） |

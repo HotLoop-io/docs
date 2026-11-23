@@ -11,7 +11,7 @@ description: "Γράψτε κάθε μέτρηση που κρατά το HotLoo
 
 Βάσεις δεδομένων στις οποίες γράφει το HotLoop:
 
-| Είδος | Εκδόσεις που δοκιμάστηκαν | <span class="sr-only">Details</span> |
+| Είδος | Εκδόσεις που δοκιμάστηκαν | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | PostgreSQL και TimescaleDB | PostgreSQL 16 με TimescaleDB 2.30 | [παρακάτω](#postgresql-και-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [παρακάτω](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ description: "Γράψτε κάθε μέτρηση που κρατά το HotLoo
 
 Οι ίδιες έξι στήλες που έχει το δικό του ιστορικό του HotLoop, ώστε ένα ερώτημα γραμμένο για το ένα να διαβάζει το άλλο:
 
-| Στήλη | <span class="sr-only">Details</span> |
+| Στήλη | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|
 | `ts` | Πότε λήφθηκε η μέτρηση, UTC, με ακρίβεια μικροδευτερολέπτου |
 | `device_id` | Η συσκευή |

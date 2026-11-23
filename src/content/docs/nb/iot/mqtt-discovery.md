@@ -286,7 +286,7 @@ Med anonyme tilkoblinger tillatt på den innebygde megleren kan hvem som helst p
 
 Oppdagelsen kjører på den innebygde megleren (se [den innebygde MQTT-megleren](/nb/iot/broker/)), på som standard så snart megleren er på. HotLoops egen klient logger inn med en pålogging laget ved hver oppstart og bare holdt i minnet: det er ingenting å konfigurere og ingenting i en sikkerhetskopi som kan lekke. Den publiserer én ting av eget, fødselen (`<prefix>/status` = `online`), som får publishere som lytter etter den til å kunngjøre seg på nytt.
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | Lytt etter kunngjøringer på den innebygde megleren |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | Topic-prefikset de kommer under |

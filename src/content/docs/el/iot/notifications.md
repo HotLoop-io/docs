@@ -71,7 +71,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 Τι φτάνει:
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">Λεπτομέρειες</span> | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|
 | Τίτλος | Το όνομα του συναγερμού |
 | Κείμενο | Το μήνυμα του συναγερμού, η προτεραιότητά του, από πού προέρχεται (`device/tag`) και πότε ενεργοποιήθηκε |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### Τι φτάνει
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">Λεπτομέρειες</span> | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|
 | Κείμενο | `[Critical] Boiler Trip`, αυτό που δείχνει η ειδοποίηση push του κινητού. Σε κρίσιμο συναγερμό, μπροστά του μπαίνει επισήμανση του ρυθμισμένου ρόλου |
 | Τίτλος embed | Ο ίδιος, με σύνδεσμο προς τη λίστα συναγερμών του HotLoop όταν έχει οριστεί το `HOTLOOP_PUBLIC_URL` |
@@ -305,7 +305,7 @@ WARN NOBODY can acknowledge alarms from Discord, because HOTLOOP_NOTIFY_DISCORD_
 
 ### Η πολιτική
 
-| Πεδίο | <span class="sr-only">Details</span> |
+| Πεδίο | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|
 | `enabled` | Ανενεργή μέχρι να την ενεργοποιήσετε. Μια ανενεργή πολιτική δεν κλιμακώνει τίποτα |
 | `minPriority` | Ο λιγότερο σοβαρός συναγερμός που κλιμακώνεται: `critical`, `high`, `medium` ή `low`. Προεπιλογή `high`. Ένας συναγερμός μέτριας προτεραιότητας που στέκεται μία ώρα είναι εντολή εργασίας, όχι τηλεφώνημα στις 03:00 |
@@ -412,7 +412,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## Ρύθμιση
 
-| Μεταβλητή | Προεπιλογή | <span class="sr-only">Details</span> |
+| Μεταβλητή | Προεπιλογή | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | Η λειτουργία είναι απενεργοποιημένη μέχρι να οριστεί αυτό |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## API
 
-| Διαδρομή | Δικαίωμα | <span class="sr-only">Details</span> |
+| Διαδρομή | Δικαίωμα | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | Στέλνει συνθετική δοκιμαστική ειδοποίηση μέσω κάθε ρυθμισμένου καναλιού αμέσως |
 | `POST /api/notify/ack/{token}` | κανένα· το token είναι η εξουσιοδότηση | Αναγνωρίζει το περιστατικό συναγερμού για το οποίο εκδόθηκε το token. Δείτε «Σύνδεσμοι αναγνώρισης» |

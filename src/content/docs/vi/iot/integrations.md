@@ -7,7 +7,7 @@ Tích hợp là cách để trỏ HotLoop tới một loại thiết bị mà b�
 
 Có ba cách để một thiết bị vào HotLoop, và chúng được thiết kế để dùng song song:
 
-| <span class="sr-only">Details</span> | Ai bắt đầu | Cần gì |
+| <span class="sr-only">Chi tiết</span> | Ai bắt đầu | Cần gì |
 |---|---|---|
 | [Phát hiện qua MQTT](/vi/iot/mqtt-discovery/) | Thiết bị, bằng cách tự thông báo trên một broker | Một publisher nói một trong các định dạng |
 | [Phát hiện mạng](/vi/iot/network-discovery/) | Mạng, bằng cách được lắng nghe | Không cần gì từ thiết bị; nó cho bạn biết đã nghe thấy gì và HotLoop có thể giao tiếp với thiết bị như thế nào |
