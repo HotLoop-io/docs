@@ -38,7 +38,7 @@ Dưới mặt trời nửa đêm hay trong đêm địa cực, lần mặt trờ
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` hoặc `dusk`, dời đi theo `offsetSec` (âm là trước, tối đa sáu giờ mỗi chiều). Xem [Tự động hóa](/vi/iot/automations/#sun-triggers). `binary_sensor.sun_up` cũng dùng được với trigger `state` thông thường, và với `states['binary_sensor.sun_up'] == 'off'` trong một điều kiện, cho trường hợp «chỉ sau khi trời tối».
+`dawn`, `sunrise`, `noon`, `sunset` hoặc `dusk`, dời đi theo `offsetSec` (âm là trước, tối đa sáu giờ mỗi chiều). Xem [Tự động hóa](/vi/iot/automations/#trình-kích-hoạt-theo-mặt-trời). `binary_sensor.sun_up` cũng dùng được với trigger `state` thông thường, và với `states['binary_sensor.sun_up'] == 'off'` trong một điều kiện, cho trường hợp «chỉ sau khi trời tối».
 
 ## Ý nghĩa của các con số
 

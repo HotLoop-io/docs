@@ -52,7 +52,7 @@ La base. Cada automatización, ayudante, script y pantalla de HotLoop habla de e
 - [x] Un único árbol de equipos ISA-95 (empresa, sitio, área, línea, celda, unidad, equipo), más etiquetas. Los campos de sitio, área y línea que ya llevamos siguen funcionando
 - [x] Unidades y clases de dispositivo
 - [x] Entidades en MCP, en las automatizaciones y en el flujo en vivo, y las pantallas Entidades y Planta
-- [x] Una duración `for:` en los disparadores de estado de entidad ("la bomba lleva 5 minutos apagada"). Se publicó en la fase 2 como `forSec` en un disparador `state`; una espera en curso no sobrevive a un reinicio ([Automatizaciones](/es/iot/automations/#holding-a-state-forsec))
+- [x] Una duración `for:` en los disparadores de estado de entidad ("la bomba lleva 5 minutos apagada"). Se publicó en la fase 2 como `forSec` en un disparador `state`; una espera en curso no sobrevive a un reinicio ([Automatizaciones](/es/iot/automations/#mantener-un-estado-forsec))
 
 ### Fase 2: ayudantes, scripts, escenas, registro
 

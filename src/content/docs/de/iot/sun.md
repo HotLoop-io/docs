@@ -38,7 +38,7 @@ Unter der Mitternachtssonne oder in der Polarnacht kann der nächste Sonnenunter
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` oder `dusk`, verschoben um `offsetSec` (negativ heißt davor, höchstens sechs Stunden in jede Richtung). Siehe [Automatisierungen](/de/iot/automations/#sun-triggers). `binary_sensor.sun_up` funktioniert auch mit einem gewöhnlichen `state`-Auslöser und mit `states['binary_sensor.sun_up'] == 'off'` in einer Bedingung, für »erst nach Einbruch der Dunkelheit«.
+`dawn`, `sunrise`, `noon`, `sunset` oder `dusk`, verschoben um `offsetSec` (negativ heißt davor, höchstens sechs Stunden in jede Richtung). Siehe [Automatisierungen](/de/iot/automations/#sonnenauslöser). `binary_sensor.sun_up` funktioniert auch mit einem gewöhnlichen `state`-Auslöser und mit `states['binary_sensor.sun_up'] == 'off'` in einer Bedingung, für »erst nach Einbruch der Dunkelheit«.
 
 ## Was die Zahlen bedeuten
 

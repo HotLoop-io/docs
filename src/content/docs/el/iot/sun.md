@@ -38,7 +38,7 @@ description: "Ανατολή, δύση, αυγή, λυκόφως και θέση
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` ή `dusk`, μετατοπισμένα κατά `offsetSec` (αρνητικό σημαίνει πριν, το πολύ έξι ώρες προς κάθε κατεύθυνση). Δείτε τους [Αυτοματισμούς](/el/iot/automations/#sun-triggers). Το `binary_sensor.sun_up` λειτουργεί και με ένα συνηθισμένο έναυσμα `state`, και με `states['binary_sensor.sun_up'] == 'off'` σε μια συνθήκη, για «μόνο μετά το σκοτάδι».
+`dawn`, `sunrise`, `noon`, `sunset` ή `dusk`, μετατοπισμένα κατά `offsetSec` (αρνητικό σημαίνει πριν, το πολύ έξι ώρες προς κάθε κατεύθυνση). Δείτε τους [Αυτοματισμούς](/el/iot/automations/#ηλιακοί-σκανδαλιστές). Το `binary_sensor.sun_up` λειτουργεί και με ένα συνηθισμένο έναυσμα `state`, και με `states['binary_sensor.sun_up'] == 'off'` σε μια συνθήκη, για «μόνο μετά το σκοτάδι».
 
 ## Τι σημαίνουν οι αριθμοί
 

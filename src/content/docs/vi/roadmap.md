@@ -52,7 +52,7 @@ Nền móng. Mọi tự động hóa, trợ thủ, script và màn hình trong H
 - [x] Một cây thiết bị ISA-95 (doanh nghiệp, địa điểm, khu vực, dây chuyền, ô, đơn vị, thiết bị), cộng nhãn. Các trường địa điểm / khu vực / dây chuyền đã có vẫn chạy bình thường
 - [x] Đơn vị và lớp thiết bị
 - [x] Thực thể trong MCP, tự động hóa và luồng trực tiếp, cùng các màn hình Thực thể và Nhà máy
-- [x] Khoảng thời gian `for:` trên bộ kích hoạt trạng thái thực thể ("bơm đã tắt 5 phút"). Phát hành ở giai đoạn 2 dưới dạng `forSec` trên bộ kích hoạt `state`; một lần chờ đang diễn ra không sống sót qua khởi động lại ([Tự động hóa](/vi/iot/automations/#holding-a-state-forsec))
+- [x] Khoảng thời gian `for:` trên bộ kích hoạt trạng thái thực thể ("bơm đã tắt 5 phút"). Phát hành ở giai đoạn 2 dưới dạng `forSec` trên bộ kích hoạt `state`; một lần chờ đang diễn ra không sống sót qua khởi động lại ([Tự động hóa](/vi/iot/automations/#giữ-một-trạng-thái-forsec))
 
 ### Giai đoạn 2: trợ thủ, script, cảnh, nhật ký
 

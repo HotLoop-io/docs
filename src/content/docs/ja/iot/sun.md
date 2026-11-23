@@ -38,7 +38,7 @@ HotLoop に工場の場所を伝えれば、太陽の位置が分かります。
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`、`sunrise`、`noon`、`sunset`、`dusk` のいずれかを `offsetSec` だけずらします(負は前、どちら向きも最大 6 時間)。[オートメーション](/ja/iot/automations/#sun-triggers)を参照してください。`binary_sensor.sun_up` は通常の `state` トリガーでも使え、条件に `states['binary_sensor.sun_up'] == 'off'` と書けば「日が暮れてからだけ」にできます。
+`dawn`、`sunrise`、`noon`、`sunset`、`dusk` のいずれかを `offsetSec` だけずらします(負は前、どちら向きも最大 6 時間)。[オートメーション](/ja/iot/automations/#太陽トリガー)を参照してください。`binary_sensor.sun_up` は通常の `state` トリガーでも使え、条件に `states['binary_sensor.sun_up'] == 'off'` と書けば「日が暮れてからだけ」にできます。
 
 ## 数値の意味
 

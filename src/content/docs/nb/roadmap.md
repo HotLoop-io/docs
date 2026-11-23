@@ -52,7 +52,7 @@ Fundamentet. Hver automasjon, hjelper, skript og skjerm i HotLoop snakker om ent
 - [x] Ett ISA-95-utstyrstre (foretak, lokasjon, område, linje, celle, enhet, utstyr), pluss etiketter. Feltene lokasjon / område / linje vi allerede har fortsetter å virke
 - [x] Enheter og enhetsklasser
 - [x] Entiteter i MCP, i automasjonene og i direktestrømmen, og skjermene Entiteter og Anlegg
-- [x] Et `for:`-varighetsvilkår på tilstandsutløsere for entiteter («pumpen har vært av i 5 minutter»). Levert i fase 2 som `forSec` på en `state`-utløser; en pågående venting overlever ikke en omstart ([Automasjoner](/nb/iot/automations/#holding-a-state-forsec))
+- [x] Et `for:`-varighetsvilkår på tilstandsutløsere for entiteter («pumpen har vært av i 5 minutter»). Levert i fase 2 som `forSec` på en `state`-utløser; en pågående venting overlever ikke en omstart ([Automasjoner](/nb/iot/automations/#å-holde-en-tilstand-forsec))
 
 ### Fase 2: hjelpere, skript, scener, logg
 

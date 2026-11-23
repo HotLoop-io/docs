@@ -52,7 +52,7 @@ Le fondement. Chaque automatisation, assistant, script et écran de HotLoop parl
 - [x] Un seul arbre d'équipements ISA-95 (entreprise, site, zone, ligne, cellule, unité, équipement), plus des étiquettes. Les champs site / zone / ligne que nous portons déjà continuent de fonctionner
 - [x] Unités et classes d'appareil
 - [x] Les entités dans MCP, les automatisations et le flux en direct, et les écrans Entités et Usine
-- [x] Une durée `for:` sur les déclencheurs d'état d'entité (« la pompe est arrêtée depuis 5 minutes »). Livrée en phase 2 sous la forme `forSec` sur un déclencheur `state` ; une attente en cours ne survit pas à un redémarrage ([Automatisations](/fr/iot/automations/#holding-a-state-forsec))
+- [x] Une durée `for:` sur les déclencheurs d'état d'entité (« la pompe est arrêtée depuis 5 minutes »). Livrée en phase 2 sous la forme `forSec` sur un déclencheur `state` ; une attente en cours ne survit pas à un redémarrage ([Automatisations](/fr/iot/automations/#tenir-un-état--forsec))
 
 ### Phase 2 : assistants, scripts, scènes, journal
 

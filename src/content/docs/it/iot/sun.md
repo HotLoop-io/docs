@@ -38,7 +38,7 @@ Sotto il sole di mezzanotte o nella notte polare, il prossimo tramonto o la pros
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` o `dusk`, spostati di `offsetSec` (negativo è prima, al massimo sei ore per parte). Vedi [Automazioni](/it/iot/automations/#sun-triggers). `binary_sensor.sun_up` funziona anche con un normale trigger `state`, e con `states['binary_sensor.sun_up'] == 'off'` in una condizione, per «solo dopo il buio».
+`dawn`, `sunrise`, `noon`, `sunset` o `dusk`, spostati di `offsetSec` (negativo è prima, al massimo sei ore per parte). Vedi [Automazioni](/it/iot/automations/#trigger-solari). `binary_sensor.sun_up` funziona anche con un normale trigger `state`, e con `states['binary_sensor.sun_up'] == 'off'` in una condizione, per «solo dopo il buio».
 
 ## Cosa significano i numeri
 

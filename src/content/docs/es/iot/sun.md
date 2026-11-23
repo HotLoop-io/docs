@@ -38,7 +38,7 @@ Bajo el sol de medianoche o en la noche polar, el próximo atardecer o amanecer 
 {"type": "sun", "event": "sunset", "offsetSec": -1800}
 ```
 
-`dawn`, `sunrise`, `noon`, `sunset` o `dusk`, desplazados por `offsetSec` (negativo es antes, como máximo seis horas hacia cada lado). Vea [Automatizaciones](/es/iot/automations/#sun-triggers). `binary_sensor.sun_up` funciona también con un disparador `state` normal, y con `states['binary_sensor.sun_up'] == 'off'` en una condición, para «solo después de oscurecer».
+`dawn`, `sunrise`, `noon`, `sunset` o `dusk`, desplazados por `offsetSec` (negativo es antes, como máximo seis horas hacia cada lado). Vea [Automatizaciones](/es/iot/automations/#disparadores-solares). `binary_sensor.sun_up` funciona también con un disparador `state` normal, y con `states['binary_sensor.sun_up'] == 'off'` en una condición, para «solo después de oscurecer».
 
 ## Qué significan los números
 
