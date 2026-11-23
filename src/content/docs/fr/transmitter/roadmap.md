@@ -5,6 +5,10 @@ description: "Ce que HotLoop Transmitter a déjà construit, ce qui vient ensuit
 
 Ce qu'il y a aujourd'hui dans la boîte, ce qui vient ensuite et ce qui n'est volontairement pas prévu. Une ligne passe dans « Livré » seulement quand elle a tourné sur le vrai runtime 4.22.0.0 et qu'un récepteur l'a lue.
 
+## Livré en 1.2.0
+
+* HotLoop Alarms, une bibliothèque qui lit les alarmes actives, en attente et acquittées du gestionnaire d'alarmes de CODESYS dans des variables simples et exécute l'acquittement que HotLoop écrit en retour. Elle a tourné sur le vrai runtime 4.22.0.0 et la liste d'alarmes de HotLoop l'a lue.
+
 ## Livré en 1.1.0
 
 * Horodatages des DataSetMessage et NetworkMessage pris sur l'horloge temps réel de l'automate, activés par défaut ; `bTimestamp` les désactive.

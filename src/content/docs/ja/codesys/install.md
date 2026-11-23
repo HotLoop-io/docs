@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYSは、CODESYSランタイムと同じノードにHotLoop Edgeとプロビジョナーをインストールするチャート`hotloop-codesys`です。チャートは`https://hotloop.io/hotloop-codesys/`で公開され、最新は0.3.8で、プロビジョナーのイメージはログインなしで取得できます。EmberNetではApp Storeのアプリです。EmberNetがない場合は、k3s上のHelmです。
+HotLoop for CODESYSは、CODESYSランタイムと同じノードにHotLoop Edgeとプロビジョナーをインストールするチャート`hotloop-codesys`です。チャートは`https://hotloop.io/hotloop-codesys/`で公開され、最新は0.3.10で、プロビジョナーのイメージはログインなしで取得できます。EmberNetではApp Storeのアプリです。EmberNetがない場合は、k3s上のHelmです。
 
 ## ノードに最初に必要なもの
 
 - **同じノード上で、ポート4840でOPC UAサーバーを公開するCODESYSランタイム。** プロビジョナーはノード自身のアドレスをKubernetesから取得し、`<node address>:4840`を読みます。ランタイム自身のチャートが、そのポートをホストに公開します。
 - **PLCプログラムのSymbol Configuration。** *Support OPC UA features*をオンにして見たい変数を列挙するか、宣言でそれらに`{attribute 'symbol' := 'read'}`を付けます。Symbol ConfigurationのないPLCは、セットアップに対して追加するよう促すメッセージで応答します。PLCプロジェクトで変更するのはこれだけです。
-- **HotLoop 4.22.0**。チャートがこれを包んでいます。CODESYSコネクターはHotLoop 4.19.4で加わりました。チャートは`~4.22.0`系列の`hotloop-edge`チャートに依存します。
+- **HotLoop 4.24.0**。チャートがこれを包んでいます。CODESYSコネクターはHotLoop 4.19.4で加わりました。チャートは`~4.24.0`系列の`hotloop-edge`チャートに依存します。
 - **プロファイル。** キーが1つのSecretが1つです。[プロファイルのページ](/ja/codesys/profile/)に形式があります。
 
 ## EmberCORE App Storeから
@@ -26,7 +26,7 @@ HotLoop for CODESYSは、CODESYSランタイムと同じノードにHotLoop Edge
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace>
 ```
 
 Secretの名前を`<release>-profile`にするか、チャートが探す名前を`profile.existingSecret`(Secret)と`profile.key`(キー、既定は`profile.json`)で変更します。インストールをランタイムのノードに固定するには、`nodeSelector`を設定します。プロファイルなしでHotLoopだけを入れて手動でセットアップする場合は、`--set provisioner.enabled=false`でインストールします。
@@ -36,7 +36,7 @@ Secretの名前を`<release>-profile`にするか、チャートが探す名前�
 `network.hostNetwork=true`で自身のチャートからインストールしたランタイムは、WebVisuのためにホストのポート8080を占有するので、HotLoopのページはそこで8080をリッスンできません。チャートはHotLoopのページをPod内で8090でリッスンさせ、Serviceは8080のままにするので、App Storeのタイルとプロビジョナーはこれまでどおり到達できます。両方でホストネットワークをオンにしてインストールします。
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

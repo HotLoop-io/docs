@@ -9,7 +9,7 @@ editUrl: false
 
 ## What changed
 
-0.3.5 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-16, and it is the chart to install.
+0.3.5 is in the index at `https://hotloop.io/hotloop-codesys/`, published on 2026-11-23, and it is the chart to install.
 
 - **It wraps HotLoop 4.20.2,** which carries the EtherNet/IP batch fix and a `version` command that prints with no configuration. The provisioner stays on 0.3.1.
 - **Everything in [0.3.2](/releases/codesys-0-3-2/) to [0.3.4](/releases/codesys-0-3-4/) is still here,** nothing writes to the PLC, and every earlier chart stays in the index.

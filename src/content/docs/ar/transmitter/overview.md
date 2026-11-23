@@ -15,7 +15,7 @@ description: "مكتبة CODESYS مكتوبة بلغة Structured Text فوق Sy
 
 ## طريقة الاستخدام
 
-1. ثبّت `HotLoopTransmitter-1.1.0.library` في مستودع مكتبات CODESYS (Tools, Library Repository, Install)، أو ثبّت `HotLoopTransmitter-1.1.0.package` بواسطة CODESYS Installer، ثم أضفها إلى Library Manager في المشروع. تجد التنزيلات والتفاصيل في [صفحة التثبيت](/ar/transmitter/install/).
+1. ثبّت `HotLoopTransmitter-1.2.0.library` في مستودع مكتبات CODESYS (Tools, Library Repository, Install)، أو ثبّت `HotLoopTransmitter-1.2.0.package` بواسطة CODESYS Installer، ثم أضفها إلى Library Manager في المشروع. تجد التنزيلات والتفاصيل في [صفحة التثبيت](/ar/transmitter/install/).
 2. عرّف ناشرًا (publisher)، وأضف المتغيرات التي تريد نشرها مرة واحدة عند البدء، ثم استدعِه في كل دورة:
 
 ```iecst

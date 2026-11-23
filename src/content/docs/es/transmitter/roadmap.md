@@ -5,6 +5,10 @@ description: "Lo que HotLoop Transmitter ya tiene construido, lo que viene despu
 
 Qué hay hoy en la caja, qué viene después y qué deliberadamente no está previsto. Una línea pasa a "Publicado" solo cuando se ha ejecutado en el runtime real 4.22.0.0 y un receptor la ha leído.
 
+## Publicado en 1.2.0
+
+* HotLoop Alarms, una biblioteca que lee las alarmas activas, en espera y reconocidas del propio gestor de alarmas de CODESYS en variables simples y ejecuta el acuse que HotLoop escribe de vuelta. Se ejecutó en el runtime real 4.22.0.0 y la lista de alarmas de HotLoop la leyó.
+
 ## Publicado en 1.1.0
 
 * Marcas de tiempo de DataSetMessage y NetworkMessage tomadas del reloj de tiempo real del PLC, activadas por defecto; `bTimestamp` las desactiva.

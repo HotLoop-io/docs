@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop for CODESYS एक Helm चार्ट है, `hotloop-codesys`, जो CODESYS रनटाइम वाले उसी नोड पर HotLoop Edge और एक प्रोविज़नर इंस्टॉल करता है। चार्ट `https://hotloop.io/hotloop-codesys/` पर प्रकाशित है, 0.3.8 सबसे नई के रूप में, और प्रोविज़नर इमेज बिना लॉगिन के खींची जाती है। EmberNet पर यह App Store ऐप है। EmberNet के बिना यह k3s पर Helm है।
+HotLoop for CODESYS एक Helm चार्ट है, `hotloop-codesys`, जो CODESYS रनटाइम वाले उसी नोड पर HotLoop Edge और एक प्रोविज़नर इंस्टॉल करता है। चार्ट `https://hotloop.io/hotloop-codesys/` पर प्रकाशित है, 0.3.10 सबसे नई के रूप में, और प्रोविज़नर इमेज बिना लॉगिन के खींची जाती है। EmberNet पर यह App Store ऐप है। EmberNet के बिना यह k3s पर Helm है।
 
 ## नोड को पहले क्या चाहिए
 
 - **उसी नोड पर एक CODESYS रनटाइम जो अपना OPC UA सर्वर पोर्ट 4840 पर प्रकाशित करता है।** प्रोविज़नर नोड का अपना पता Kubernetes से लेता है और `<node address>:4840` पढ़ता है। रनटाइम का अपना चार्ट वह पोर्ट होस्ट पर प्रकाशित करता है।
 - **PLC प्रोग्राम में एक Symbol Configuration** जिसमें *Support OPC UA features* चालू हो, उन वेरिएबल को सूचीबद्ध करते हुए जिन्हें आप देखना चाहते हैं, या घोषणा में उन पर `{attribute 'symbol' := 'read'}`। जिस PLC में Symbol Configuration नहीं है वह सेटअप का जवाब एक संदेश से देता है जो कहता है कि एक जोड़ें। PLC प्रोजेक्ट में बस यही एक बदलाव है।
-- **HotLoop 4.22.0**, जिसे चार्ट लपेटता है। CODESYS कनेक्टर HotLoop 4.19.4 के साथ आया। चार्ट `~4.22.0` लाइन पर `hotloop-edge` चार्ट पर निर्भर है।
+- **HotLoop 4.24.0**, जिसे चार्ट लपेटता है। CODESYS कनेक्टर HotLoop 4.19.4 के साथ आया। चार्ट `~4.24.0` लाइन पर `hotloop-edge` चार्ट पर निर्भर है।
 - **एक प्रोफ़ाइल।** एक कुंजी वाला एक Secret। [प्रोफ़ाइल पेज](/hi/codesys/profile/) में उसका रूप है।
 
 ## EmberCORE App Store से
@@ -26,7 +26,7 @@ HotLoop for CODESYS एक Helm चार्ट है, `hotloop-codesys`, ज�
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
 helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace>
 ```
 
 Secret का नाम `<release>-profile` रखें, या चार्ट जो ढूंढता है उसे `profile.existingSecret` (Secret) और `profile.key` (कुंजी, डिफ़ॉल्ट `profile.json`) से बदलें। इंस्टॉल को रनटाइम के नोड पर पिन करने के लिए `nodeSelector` सेट करें। केवल HotLoop के लिए, बिना प्रोफ़ाइल के, हाथ से सेट अप करने के लिए, `--set provisioner.enabled=false` के साथ इंस्टॉल करें।
@@ -36,7 +36,7 @@ Secret का नाम `<release>-profile` रखें, या चार्ट
 अपने चार्ट से `network.hostNetwork=true` के साथ इंस्टॉल किया रनटाइम WebVisu के लिए होस्ट पोर्ट 8080 रखता है, इसलिए HotLoop का पेज वहां 8080 पर भी नहीं सुन सकता। चार्ट HotLoop के पेज को pod के भीतर 8090 पर सुनवाता है और Service को 8080 पर रखता है, ताकि App Store टाइल और प्रोविज़नर उस तक पहले की तरह पहुंचें। दोनों के लिए होस्ट नेटवर्क चालू करके इंस्टॉल करें:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.10 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

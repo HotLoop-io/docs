@@ -15,7 +15,7 @@ HotLoop の新しいツールは、確かな理由がない限りすべて Go �
 
 ## 使い方
 
-1. `HotLoopTransmitter-1.1.0.library` を CODESYS のライブラリリポジトリにインストールするか (Tools, Library Repository, Install)、CODESYS Installer で `HotLoopTransmitter-1.1.0.package` をインストールし、プロジェクトの Library Manager に追加します。ダウンロードと詳細は[インストールのページ](/ja/transmitter/install/)にあります。
+1. `HotLoopTransmitter-1.2.0.library` を CODESYS のライブラリリポジトリにインストールするか (Tools, Library Repository, Install)、CODESYS Installer で `HotLoopTransmitter-1.2.0.package` をインストールし、プロジェクトの Library Manager に追加します。ダウンロードと詳細は[インストールのページ](/ja/transmitter/install/)にあります。
 2. パブリッシャーを宣言し、発行したい変数を起動時に一度だけ追加して、毎サイクル呼び出します。
 
 ```iecst

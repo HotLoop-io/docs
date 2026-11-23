@@ -15,7 +15,7 @@ description: "Μια βιβλιοθήκη CODESYS σε Structured Text πάνω 
 
 ## Πώς χρησιμοποιείται
 
-1. Εγκαταστήστε το `HotLoopTransmitter-1.1.0.library` στο αποθετήριο βιβλιοθηκών του CODESYS (Tools, Library Repository, Install), ή εγκαταστήστε το `HotLoopTransmitter-1.1.0.package` με το CODESYS Installer, και προσθέστε το στο Library Manager του έργου. Η [σελίδα εγκατάστασης](/el/transmitter/install/) έχει τις λήψεις και τις λεπτομέρειες.
+1. Εγκαταστήστε το `HotLoopTransmitter-1.2.0.library` στο αποθετήριο βιβλιοθηκών του CODESYS (Tools, Library Repository, Install), ή εγκαταστήστε το `HotLoopTransmitter-1.2.0.package` με το CODESYS Installer, και προσθέστε το στο Library Manager του έργου. Η [σελίδα εγκατάστασης](/el/transmitter/install/) έχει τις λήψεις και τις λεπτομέρειες.
 2. Δηλώστε έναν publisher, προσθέστε τις μεταβλητές που θέλετε να δημοσιεύσετε μία φορά στην εκκίνηση, και καλέστε τον σε κάθε κύκλο:
 
 ```iecst

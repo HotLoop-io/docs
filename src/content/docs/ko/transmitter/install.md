@@ -7,19 +7,23 @@ CODESYS 개발 시스템 3.5 SP22 이상과, 대상에 SysSocket 및 SysTimeRtc 
 
 ## CODESYS Installer로 설치
 
-1.1.0부터 릴리스에는 `HotLoopTransmitter-1.1.0.package`도 있습니다. 주소는 https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.package 입니다. CODESYS Installer(IDE에서 Tools, CODESYS Installer)로 설치하거나, 창 없이 명령줄 `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`로 설치합니다. Installer가 해당 프로필의 라이브러리 저장소에 HotLoop 회사 아래로 라이브러리를 넣으면 아래 3단계로 넘어가면 됩니다. 패키지는 `.library` 파일과 같은 라이브러리를 Installer가 읽는 ZIP에 담은 것이므로, 두 방법의 결과는 같습니다.
+1.1.0부터 릴리스에는 `HotLoopTransmitter-1.2.0.package`도 있습니다. 주소는 https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.package 입니다. CODESYS Installer(IDE에서 Tools, CODESYS Installer)로 설치하거나, 창 없이 명령줄 `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`로 설치합니다. Installer가 해당 프로필의 라이브러리 저장소에 HotLoop 회사 아래로 라이브러리를 넣으면 아래 3단계로 넘어가면 됩니다. 패키지는 `.library` 파일과 같은 라이브러리를 Installer가 읽는 ZIP에 담은 것이므로, 두 방법의 결과는 같습니다.
 
 ## 라이브러리 파일로 설치
 
-1. https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library 에서 `HotLoopTransmitter-1.1.0.library`를 내려받고, 같은 폴더의 `SHA256SUMS`로 확인합니다(`sha256sum -c SHA256SUMS`).
+1. https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library 에서 `HotLoopTransmitter-1.2.0.library`를 내려받고, 같은 폴더의 `SHA256SUMS`로 확인합니다(`sha256sum -c SHA256SUMS`).
 2. CODESYS IDE에서 Tools, Library Repository, Install을 열어 파일을 고릅니다. 이제 저장소에 HotLoop 회사 아래로 들어갑니다.
 3. 프로젝트에서 애플리케이션의 Library Manager를 열고 Add Library에서 HotLoop Transmitter를 고릅니다. SysSocket, SysTimeRtc와 그 인터페이스 라이브러리는 종속성으로 함께 들어오므로 따로 할 일이 없습니다.
 4. `HLTX.FB_HLTX_Publisher`를 선언하고 필드를 추가한 뒤 사이클마다 호출합니다(예제는 README에 있습니다).
 5. 컨트롤러에 다운로드합니다. 대상은 컨트롤러의 네트워크에서 닿을 수 있어야 하며, 멀티캐스트라면 네트워크의 스위치가 해당 그룹을 전달해야 합니다.
 
-`.compiled-library` 파일은 소스가 빠진 같은 라이브러리입니다. Library Manager에 Structured Text가 보이지 않기를 원하면 이쪽을 설치하세요. 같은 폴더에 `HotLoopTransmitter-1.1.0.compiled-library`로 있습니다.
+`.compiled-library` 파일은 소스가 빠진 같은 라이브러리입니다. Library Manager에 Structured Text가 보이지 않기를 원하면 이쪽을 설치하세요. 같은 폴더에 `HotLoopTransmitter-1.2.0.compiled-library`로 있습니다.
 
 무엇이 도착하는지 확인하려면 대상 포트의 어떤 UDP 리스너든 쓸 수 있습니다. 포트에서 수신하거나 멀티캐스트 그룹에 가입해 각 데이터그램을 헥사 값과 함께 JSON 한 줄로 출력하는 작은 Go 프로그램이면 충분합니다.
+
+## HotLoop Alarms
+
+1.2.0부터 릴리스에는 같은 폴더에 PLC 자체 알람을 위한 라이브러리인 `HotLoopAlarms-1.0.0.0.library`와 `HotLoopAlarms-1.0.0.0.compiled-library`도 들어 있습니다. 둘 중 하나를 Transmitter 라이브러리와 같은 방식으로 설치하고 애플리케이션의 Library Manager에 추가하세요. 프로젝트에는 Alarm Configuration이 필요하며, HotLoop 4.23.6 이상이 이 블록을 읽습니다.
 
 ## 블록이 오류를 보고할 때
 

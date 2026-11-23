@@ -5,6 +5,10 @@ description: "Was HotLoop Transmitter schon kann, was als Nächstes kommt und wa
 
 Was heute im Paket steckt, was als Nächstes kommt und was bewusst nicht geplant ist. Eine Zeile rückt erst unter „Ausgeliefert“, wenn sie auf der echten Runtime 4.22.0.0 gelaufen ist und ein Empfänger sie gelesen hat.
 
+## Ausgeliefert in 1.2.0
+
+* HotLoop Alarms, eine Bibliothek, die die aktiven, wartenden und quittierten Alarme des CODESYS-Alarmmanagers in einfache Variablen liest und die Quittierung ausführt, die HotLoop zurückschreibt. Sie lief auf der echten Runtime 4.22.0.0, und die Alarmliste von HotLoop hat sie gelesen.
+
 ## Ausgeliefert in 1.1.0
 
 * Zeitstempel in DataSetMessage und NetworkMessage aus der Echtzeituhr der SPS, standardmäßig an; `bTimestamp` schaltet sie ab.

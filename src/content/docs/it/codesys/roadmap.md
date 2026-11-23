@@ -24,7 +24,7 @@ Questo è l'elenco di ciò che è fatto e di ciò che resta, nell'ordine in cui 
 - [x] L'immagine del provisioner pubblica, quindi scaricabile senza login, 0.3.3.
 - [x] Un'immagine multi-architettura del provisioner, amd64 e arm64, da 0.3.3 e dal chart 0.3.8.
 - [x] Due listener OPC UA PubSub su una stessa porta UDP, con HotLoop 4.22.0 e il chart 0.3.7.
-- [x] [Note di rilascio](/it/releases/codesys-0-3-8/) per ogni chart, da 0.3.0 a 0.3.8.
+- [x] [Note di rilascio](/it/releases/codesys-0-3-10/) per ogni chart, da 0.3.0 a 0.3.10.
 
 ## Provato su hardware senza sistema operativo
 

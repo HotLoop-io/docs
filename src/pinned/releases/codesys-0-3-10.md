@@ -1,0 +1,23 @@
+---
+title: "HotLoop for CODESYS 0.3.10 release notes"
+description: "Chart 0.3.10 of HotLoop for CODESYS: it wraps HotLoop 4.24.0 and runs provisioner 0.4.1, so a profile can bring several screens."
+sidebar:
+  label: "0.3.10"
+---
+
+## What changed
+
+0.3.10 is in the index at `{{codesysChartRepo}}`, published on 2026-11-23. It is the one to install, and it carries everything 0.3.9 added.
+
+- **It wraps HotLoop 4.24.0,** which shows a CODESYS PLC's own alarms in the alarm list and draws screens as P&IDs.
+- **It runs provisioner 0.4.1.** A profile takes a list of screens beside the one, so a project with several WebVisu pages comes back whole.
+- **The example profile connects at once.** Its tags use the OPC UA PubSub field index, so the device it makes does not retry its connection.
+- **The chart leaves the Gotify and Discord alarm channels out until they have a credential,** so the pod starts on a plain install. Set a channel's `enabled` to true with its token or URL to use it.
+
+What it means for you: install this one. An upgrade from 0.3.8 keeps the device and its tags.
+
+## What was checked
+
+Installed from the index on a real cluster with a profile of one OPC UA PubSub listener and two screens: the provisioner made the device, its two tags and both screens with no hand step, the device read connected, and the HotLoop log had no warnings or errors. Deleting both pods brought them back by themselves with the device still configured, an upgrade from [0.3.8](/releases/codesys-0-3-8/) kept the device and its tags, and an install with no profile gave HotLoop alone.
+
+The 4.24.0 image is built for amd64, so on an arm64 node pin HotLoop to an amd64 one.

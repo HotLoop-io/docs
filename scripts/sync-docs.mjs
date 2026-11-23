@@ -517,6 +517,7 @@ ${rows('cascade')}
 
 ## HotLoop for CODESYS
 
+- [HotLoop for CODESYS 0.3.10 release notes](/releases/codesys-0-3-10/)
 - [HotLoop for CODESYS 0.3.8 release notes](/releases/codesys-0-3-8/)
 - [HotLoop for CODESYS 0.3.7 release notes](/releases/codesys-0-3-7/)
 - [HotLoop for CODESYS 0.3.6 release notes](/releases/codesys-0-3-6/)
@@ -529,6 +530,7 @@ ${rows('cascade')}
 
 ## HotLoop Transmitter
 
+- [HotLoop Transmitter 1.2.0 release notes](/releases/transmitter-1-2-0/)
 - [HotLoop Transmitter 1.1.0 release notes](/releases/transmitter-1-1-0/)
 - [HotLoop Transmitter 1.0.0 release notes](/releases/transmitter-1-0-0/)
 `);

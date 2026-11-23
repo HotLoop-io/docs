@@ -5,6 +5,10 @@ description: "Hva HotLoop Transmitter allerede har bygget, hva som kommer neste 
 
 Hva som er i pakken i dag, hva som kommer neste og hva som bevisst ikke er planlagt. En linje flyttes til «Levert» først når den har kjørt på den ekte 4.22.0.0-kjøretiden og en mottaker har lest den.
 
+## Levert i 1.2.0
+
+* HotLoop Alarms, et bibliotek som leser de aktive, ventende og kvitterte alarmene i CODESYS sin alarmbehandler inn i enkle variabler og utfører kvitteringen HotLoop skriver tilbake. Det kjørte på den ekte 4.22.0.0-runtimen, og alarmlisten i HotLoop leste det.
+
 ## Levert i 1.1.0
 
 * Tidsstempler i DataSetMessage og NetworkMessage fra PLS-ens sanntidsklokke, på som standard; `bTimestamp` slår dem av.

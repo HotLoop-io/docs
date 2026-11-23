@@ -26,7 +26,7 @@ sidebar:
 | [HotLoop Flow](/ar/flow/overview/) | {{flow}} | نعم | نعم | [تثبيت Flow](/ar/flow/install/) |
 | [HotLoop Cascade](/ar/cascade/overview/) | {{cascade}} | نعم، دون تسجيل دخول | نعم، دون تسجيل دخول, انظر [Cascade مع Podman Quadlet](/ar/cascade/quadlet/) | [تشغيل Cascade](/ar/cascade/running/) |
 | [HotLoop for CODESYS](/ar/codesys/overview/) | {{codesys}} | نعم، أو متجر تطبيقات EmberCORE | لا | [تثبيت HotLoop for CODESYS](/ar/codesys/install/) |
-| [HotLoop Transmitter](/ar/transmitter/overview/) | 1.1.0 | لا، فهو مكتبة CODESYS | لا، فهو مكتبة CODESYS | [تثبيت Transmitter](/ar/transmitter/install/) |
+| [HotLoop Transmitter](/ar/transmitter/overview/) | 1.2.0 | لا، فهو مكتبة CODESYS | لا، فهو مكتبة CODESYS | [تثبيت Transmitter](/ar/transmitter/install/) |
 
 تخرج HotLoop IoT وEdge وGateway وEdge Relay من وسم واحد، معًا، لذا تتشارك رقم إصدار واحدًا. أما Flow وCascade وHotLoop for CODESYS وTransmitter فلكل منها رقمه. وحدات Quadlet الخاصة بـ IoT وEdge وGateway تحتاج إلى Podman 5.0 أو أحدث، وقد شُغّلت وحدة المُمرِّر على Podman 4.9.3. يأتي Raspberry Pi OS Bookworm بالإصدار 4.3 الذي لا يدعم Quadlet إطلاقًا، لذا يحتاج Pi إلى Trixie أو أحدث.
 

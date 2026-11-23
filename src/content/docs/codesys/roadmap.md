@@ -20,12 +20,12 @@ This is the list of what is done and what is left, in the order it gets done. It
 
 ## Shipped
 
-- [x] HotLoop 4.22.0, the release the chart wraps.
-- [x] The chart published at `https://hotloop.io/hotloop-codesys/`, 0.3.8 the newest.
+- [x] HotLoop 4.24.0, the release the chart wraps.
+- [x] The chart published at `https://hotloop.io/hotloop-codesys/`, 0.3.10 the newest.
 - [x] The provisioner image public, so it pulls with no login, 0.3.3.
 - [x] A multi-arch provisioner image, amd64 and arm64, from 0.3.3 and chart 0.3.8.
 - [x] Two OPC UA PubSub listeners on one UDP port, with HotLoop 4.22.0 and chart 0.3.7.
-- [x] [Release notes](/releases/codesys-0-3-8/) for every chart, 0.3.0 to 0.3.8.
+- [x] [Release notes](/releases/codesys-0-3-10/) for every chart, 0.3.0 to 0.3.10.
 
 ## Proven on bare metal
 

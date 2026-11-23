@@ -24,7 +24,7 @@ Esta es la lista de lo que está hecho y lo que falta, en el orden en que se hac
 - [x] La imagen del provisioner pública, para que se descargue sin iniciar sesión, 0.3.3.
 - [x] Una imagen multiarquitectura del provisioner, amd64 y arm64, desde 0.3.3 y el chart 0.3.8.
 - [x] Dos listeners OPC UA PubSub en un mismo puerto UDP, con HotLoop 4.22.0 y el chart 0.3.7.
-- [x] [Notas de la versión](/es/releases/codesys-0-3-8/) de cada chart, de 0.3.0 a 0.3.8.
+- [x] [Notas de la versión](/es/releases/codesys-0-3-10/) de cada chart, de 0.3.0 a 0.3.10.
 
 ## Probado en hardware sin sistema operativo
 

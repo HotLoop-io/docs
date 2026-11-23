@@ -24,7 +24,7 @@ Voici la liste de ce qui est fait et de ce qui reste, dans l'ordre où cela se f
 - [x] L'image du provisioner publique, donc récupérable sans connexion, 0.3.3.
 - [x] Une image multi-architecture du provisioner, amd64 et arm64, depuis 0.3.3 et le chart 0.3.8.
 - [x] Deux listeners OPC UA PubSub sur un même port UDP, avec HotLoop 4.22.0 et le chart 0.3.7.
-- [x] [Notes de version](/fr/releases/codesys-0-3-8/) pour chaque chart, de 0.3.0 à 0.3.8.
+- [x] [Notes de version](/fr/releases/codesys-0-3-10/) pour chaque chart, de 0.3.0 à 0.3.10.
 
 ## Éprouvé sur machine physique
 

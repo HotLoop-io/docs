@@ -5,6 +5,10 @@ description: "HotLoop Transmitter 已经做成的功能、接下来要做的，�
 
 如今包里有什么，接下来是什么，以及刻意不计划什么。一条内容只有在真实的 4.22.0.0 运行时上运行过、并有接收端读取过之后，才会移到“已发布”。
 
+## 1.2.0 中已发布
+
+* HotLoop Alarms，一个把 CODESYS 报警管理器中处于激活、等待和已确认状态的报警读入普通变量，并执行 HotLoop 写回的确认的库。它在真实的 4.22.0.0 运行时上运行过，HotLoop 的报警列表读到了它。
+
 ## 1.1.0 中已发布
 
 * DataSetMessage 和 NetworkMessage 的时间戳取自 PLC 的实时时钟，默认开启，`bTimestamp` 可关闭。

@@ -17,8 +17,8 @@ HotLoop 是面向工厂现场的八款产品：四款随站点一起成长（IoT
 | **HotLoop Edge Relay** | HotLoop core | <a href="/zh-hans/edge-relay/overview/">文档</a> | <a href="/zh-hans/edge-relay/install/">安装</a> | <a href="/zh-hans/releases/#hotloop-core">说明</a> | <a href="/zh-hans/roadmap/">路线图</a> |
 | **HotLoop Flow** | Flow | <a href="/zh-hans/flow/overview/">文档</a> | <a href="/zh-hans/flow/install/">安装</a> | <a href="/zh-hans/releases/#hotloop-flow">说明</a> | <a href="/zh-hans/flow/roadmap/">路线图</a> |
 | **HotLoop Cascade** | Cascade | <a href="/zh-hans/cascade/overview/">文档</a> | <a href="/zh-hans/cascade/running/">安装</a> | <a href="/zh-hans/releases/#hotloop-cascade">说明</a> | <a href="/zh-hans/cascade/roadmap/">路线图</a> |
-| **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/zh-hans/codesys/overview/">文档</a> | <a href="/zh-hans/codesys/install/">安装</a> | <a href="/zh-hans/releases/codesys-0-3-8/">说明</a> | <a href="/zh-hans/codesys/roadmap/">路线图</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/zh-hans/transmitter/overview/">文档</a> | <a href="/zh-hans/transmitter/install/">安装</a> | <a href="/zh-hans/releases/transmitter-1-1-0/">说明</a> | <a href="/zh-hans/transmitter/roadmap/">路线图</a> |
+| **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/zh-hans/codesys/overview/">文档</a> | <a href="/zh-hans/codesys/install/">安装</a> | <a href="/zh-hans/releases/codesys-0-3-10/">说明</a> | <a href="/zh-hans/codesys/roadmap/">路线图</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/zh-hans/transmitter/overview/">文档</a> | <a href="/zh-hans/transmitter/install/">安装</a> | <a href="/zh-hans/releases/transmitter-1-2-0/">说明</a> | <a href="/zh-hans/transmitter/roadmap/">路线图</a> |
 
 下表对比核心的四款产品。
 

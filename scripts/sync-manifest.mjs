@@ -31,12 +31,12 @@ export const PRODUCTS = [
 ];
 
 // HotLoop for CODESYS, its own release line (HotLoop-io/hotloop-codesys). The chart is published at
-// `chartRepo` (0.3.8 is the newest, 2026-11-19) and wraps HotLoop `needsCore`. The pages that name the
+// `chartRepo` (0.3.10 is the newest, 2026-11-23) and wraps HotLoop `needsCore`. The pages that name the
 // version and the chart read these through {{codesys}}, {{codesysNeeds}} and {{codesysChartRepo}}, so the
 // next chart is one edit here and a release note in src/pinned/releases.
 export const CODESYS = {
-  version: '0.3.8',
-  needsCore: '4.22.0',
+  version: '0.3.10',
+  needsCore: '4.24.0',
   chartRepo: 'https://hotloop.io/hotloop-codesys/',
 };
 
@@ -249,7 +249,7 @@ Object.assign(SLUG_RULES, {
          ['Flow', 'Flow', 'flow/overview', 'flow/install', 'releases/#hotloop-flow', 'flow/roadmap'],
          ['Cascade', 'Cascade', 'cascade/overview', 'cascade/running', 'releases/#hotloop-cascade', 'cascade/roadmap'],
          ['for CODESYS', 'HotLoop for CODESYS', 'codesys/overview', 'codesys/install', `releases/codesys-${CODESYS.version.replace(/\./g, '-')}`, 'codesys/roadmap'],
-         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-1-0', 'transmitter/roadmap']]
+         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-2-0', 'transmitter/roadmap']]
         .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}${r.includes('#') ? '' : '/'}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
       + '\n\nThe table that follows compares the four core products.'],
   ],

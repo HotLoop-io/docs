@@ -24,7 +24,7 @@ Dette er listen over hva som er gjort og hva som gjenstår, i den rekkefølgen d
 - [x] Provisioner-imaget offentlig, så det kan hentes uten innlogging, 0.3.3.
 - [x] Et multiarkitektur-provisioner-image, amd64 og arm64, fra 0.3.3 og chart 0.3.8.
 - [x] To OPC UA PubSub-lyttere på én UDP-port, med HotLoop 4.22.0 og chart 0.3.7.
-- [x] [Utgivelsesnotater](/nb/releases/codesys-0-3-8/) for hvert chart, 0.3.0 til 0.3.8.
+- [x] [Utgivelsesnotater](/nb/releases/codesys-0-3-10/) for hvert chart, 0.3.0 til 0.3.10.
 
 ## Bevist på bare metal
 

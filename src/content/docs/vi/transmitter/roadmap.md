@@ -5,6 +5,10 @@ description: "Những gì HotLoop Transmitter đã xây dựng, những gì sắ
 
 Hiện có gì trong hộp, tiếp theo là gì và cố ý không có kế hoạch cho điều gì. Một dòng chỉ chuyển sang "Đã phát hành" khi nó đã chạy trên runtime 4.22.0.0 thật và một bộ nhận đã đọc được.
 
+## Phát hành trong 1.2.0
+
+* HotLoop Alarms, một thư viện đọc các cảnh báo đang hoạt động, đang chờ và đã xác nhận của trình quản lý cảnh báo CODESYS vào các biến đơn giản và thực hiện xác nhận mà HotLoop ghi ngược lại. Nó đã chạy trên runtime thật 4.22.0.0 và danh sách cảnh báo của HotLoop đã đọc nó.
+
 ## Phát hành trong 1.1.0
 
 * Dấu thời gian của DataSetMessage và NetworkMessage lấy từ đồng hồ thời gian thực của PLC, bật theo mặc định; `bTimestamp` tắt chúng.

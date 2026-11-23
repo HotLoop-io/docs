@@ -24,7 +24,7 @@ editUrl: false
 - [x] صورة الـ provisioner عامة، فتُسحب دون تسجيل دخول، 0.3.3.
 - [x] صورة provisioner متعددة المعماريات، amd64 وarm64، من 0.3.3 والـ chart 0.3.8.
 - [x] مستمعان OPC UA PubSub على منفذ UDP واحد، مع HotLoop 4.22.0 والـ chart 0.3.7.
-- [x] [ملاحظات الإصدار](/ar/releases/codesys-0-3-8/) لكل chart، من 0.3.0 إلى 0.3.8.
+- [x] [ملاحظات الإصدار](/ar/releases/codesys-0-3-10/) لكل chart، من 0.3.0 إلى 0.3.10.
 
 ## أُثبت على عتاد مباشر
 

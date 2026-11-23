@@ -24,7 +24,7 @@ editUrl: false
 - [x] 公开的 provisioner 镜像，无需登录即可拉取，0.3.3。
 - [x] 从 0.3.3 和 chart 0.3.8 起提供多架构 provisioner 镜像，amd64 和 arm64。
 - [x] 一个 UDP 端口上的两个 OPC UA PubSub 监听器，随 HotLoop 4.22.0 和 chart 0.3.7。
-- [x] 每个 chart 的[发布说明](/zh-hans/releases/codesys-0-3-8/)，从 0.3.0 到 0.3.8。
+- [x] 每个 chart 的[发布说明](/zh-hans/releases/codesys-0-3-10/)，从 0.3.0 到 0.3.10。
 
 ## 已在裸机上验证
 
