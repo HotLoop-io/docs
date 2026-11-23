@@ -3,10 +3,6 @@ title: "MCP-serveren"
 description: "Cascade har en MCP-server som leser og skriver: 83 verktøy, hvert en API-rute med sin egen behandler, sin tillatelse, en begrunnelse og en revisjonsrad."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop Cascade 1.4.2, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Cascade har en MCP-server, og den leser og skriver. Den leveres på, på `/mcp` på samme adresse som API-et og editoren, og en agent som kobler til den, kan gjøre det personen bak nøkkelen kan gjøre, og ingenting utover det. Det finnes ingen skrivebeskyttet modus å komme seg rundt, for en server en agent kan se på men ikke røre, er en statusside, og den har du allerede.
 
 84 verktøy, og hvert av dem er en rute i REST-API-et. Et kall går ikke ved siden av ruten, det går gjennom den: rutens egen behandler sjekker tillatelsen, validerer innholdet, gjør endringen og skriver revisjonsraden. Ingenting ble kopiert inn i MCP-serveren som kan drive av gårde, og ingenting ble utelatt fra den for å hoppe over noe.

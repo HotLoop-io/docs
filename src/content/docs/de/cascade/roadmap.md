@@ -3,10 +3,6 @@ title: "Roadmap von Cascade"
 description: "Was Cascade schon gebaut hat, was jedes Release gebracht hat und was weder gebaut noch geplant ist."
 ---
 
-:::note[Enthält, was kommt]
-Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop Cascade 1.4.2, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
-:::
-
 Nirgendwo im Code gibt es eine Lizenzprüfung. Jede Phase endet, wenn ihre „echte“ Liste gegen echte Systeme abgearbeitet ist, nicht wenn der Code kompiliert.
 
 ## 0.1.0, das MVP

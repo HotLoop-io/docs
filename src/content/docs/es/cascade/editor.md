@@ -3,10 +3,6 @@ title: "El editor de Cascade"
 description: "El editor viene en el binario de Cascade: carpetas, un lienzo con ejecutar hasta aquí, ejecuciones paso a paso, credenciales, proyectos, usuarios y auditoría."
 ---
 
-:::note[Incluye lo que viene]
-Esta página también recoge algunas cosas más nuevas que HotLoop Cascade 1.4.2, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
-:::
-
 El editor está integrado en el binario, así que no hay nada más que ejecutar y no descarga nada de ningún sitio: abra la dirección en la que escucha el servidor e inicie sesión. Es una aplicación Astro con islas de Svelte, compilada a archivos estáticos al construir la imagen, con los mismos colores y tipografía que cualquier otra pantalla de HotLoop, en claro u oscuro según su sistema hasta que elija.
 
 ![Flujos de trabajo, en carpetas](/synced/cascade/docs/screenshots/workflows.png)

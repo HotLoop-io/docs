@@ -3,10 +3,6 @@ title: "Trình soạn thảo của Cascade"
 description: "Trình soạn thảo nằm trong tệp nhị phân Cascade: thư mục, canvas có Chạy tới đây, các lần chạy vẽ từng bước, thông tin đăng nhập, dự án, người dùng, kiểm toán."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop Cascade 1.4.2, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Trình soạn thảo được tích hợp sẵn trong tệp nhị phân, nên không có gì khác phải chạy và nó không tải gì từ bất cứ đâu: mở địa chỉ mà máy chủ đang lắng nghe rồi đăng nhập. Đó là một ứng dụng Astro với các island Svelte, được dựng thành tệp tĩnh khi xây dựng image, cùng màu sắc và phông chữ với mọi màn hình HotLoop khác, sáng hoặc tối theo hệ thống của bạn cho đến khi bạn chọn.
 
 ![Các quy trình, trong thư mục](/synced/cascade/docs/screenshots/workflows.png)

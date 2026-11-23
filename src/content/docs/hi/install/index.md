@@ -26,7 +26,7 @@ HotLoop उत्पाद को असल में चलाने के द
 | [HotLoop Gateway](/hi/gateway/overview/) | 4.24.0 | हां | हां | [Gateway इंस्टॉल करें](/hi/gateway/install/) |
 | [HotLoop Edge Relay](/hi/edge-relay/overview/) | 4.24.0 | हां | हां | [Edge Relay इंस्टॉल करें](/hi/edge-relay/install/) |
 | [HotLoop Flow](/hi/flow/overview/) | 2.16.8 | हां | हां | [Flow इंस्टॉल करें](/hi/flow/install/) |
-| [HotLoop Cascade](/hi/cascade/overview/) | 1.4.2 | हां, लॉगिन की ज़रूरत नहीं | हां, लॉगिन की ज़रूरत नहीं, देखें [Podman Quadlet के साथ Cascade](/hi/cascade/quadlet/) | [Cascade चलाना](/hi/cascade/running/) |
+| [HotLoop Cascade](/hi/cascade/overview/) | 1.5.1 | हां, लॉगिन की ज़रूरत नहीं | हां, लॉगिन की ज़रूरत नहीं, देखें [Podman Quadlet के साथ Cascade](/hi/cascade/quadlet/) | [Cascade चलाना](/hi/cascade/running/) |
 | [HotLoop for CODESYS](/hi/codesys/overview/) | 0.3.8 | हां, या EmberCORE App Store | नहीं | [HotLoop for CODESYS इंस्टॉल करें](/hi/codesys/install/) |
 | [HotLoop Transmitter](/hi/transmitter/overview/) | 1.1.0 | नहीं, यह एक CODESYS लाइब्रेरी है | नहीं, यह एक CODESYS लाइब्रेरी है | [Transmitter इंस्टॉल करें](/hi/transmitter/install/) |
 

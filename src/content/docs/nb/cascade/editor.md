@@ -3,10 +3,6 @@ title: "Cascade-editoren"
 description: "Editoren er bygget inn i Cascade-binærfilen: mapper, lerret med kjør hit, kjøringer tegnet trinn for trinn, legitimasjon, prosjekter, brukere og revisjon."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop Cascade 1.4.2, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Editoren er bakt inn i binærfilen, så det er ingenting annet å kjøre og ingenting den henter fra noe sted: åpne adressen serveren lytter på og logg inn. Det er en Astro-app med Svelte-øyer, bygget til statiske filer når imaget bygges, i de samme fargene og den samme skriften som alle andre HotLoop-skjermer, lys eller mørk etter systemet ditt til du velger.
 
 ![Arbeidsflyter, i mapper](/synced/cascade/docs/screenshots/workflows.png)

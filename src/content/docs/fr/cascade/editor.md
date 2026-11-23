@@ -3,10 +3,6 @@ title: "L'éditeur de Cascade"
 description: "L'éditeur est intégré au binaire de Cascade : dossiers, canevas avec exécution jusqu'ici, exécutions pas à pas, identifiants, projets, utilisateurs, audit."
 ---
 
-:::note[Couvre ce qui arrive]
-Cette page couvre aussi quelques éléments plus récents que HotLoop Cascade 1.4.2, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
-:::
-
 L'éditeur est intégré au binaire : il n'y a rien d'autre à exécuter et il ne récupère rien nulle part. Ouvrez l'adresse sur laquelle le serveur écoute et connectez-vous. C'est une application Astro avec des îlots Svelte, compilée en fichiers statiques à la construction de l'image, avec les mêmes couleurs et la même typographie que tous les autres écrans HotLoop, en clair ou en sombre selon votre système tant que vous n'avez pas choisi.
 
 ![Flux de travail, rangés en dossiers](/synced/cascade/docs/screenshots/workflows.png)

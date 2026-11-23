@@ -26,7 +26,7 @@ editUrl: false
 | [HotLoop Gateway](/ar/gateway/overview/) | 4.24.0 | نعم | نعم | [تثبيت Gateway](/ar/gateway/install/) |
 | [HotLoop Edge Relay](/ar/edge-relay/overview/) | 4.24.0 | نعم | نعم | [تثبيت Edge Relay](/ar/edge-relay/install/) |
 | [HotLoop Flow](/ar/flow/overview/) | 2.16.8 | نعم | نعم | [تثبيت Flow](/ar/flow/install/) |
-| [HotLoop Cascade](/ar/cascade/overview/) | 1.4.2 | نعم، دون تسجيل دخول | نعم، دون تسجيل دخول, انظر [Cascade مع Podman Quadlet](/ar/cascade/quadlet/) | [تشغيل Cascade](/ar/cascade/running/) |
+| [HotLoop Cascade](/ar/cascade/overview/) | 1.5.1 | نعم، دون تسجيل دخول | نعم، دون تسجيل دخول, انظر [Cascade مع Podman Quadlet](/ar/cascade/quadlet/) | [تشغيل Cascade](/ar/cascade/running/) |
 | [HotLoop for CODESYS](/ar/codesys/overview/) | 0.3.8 | نعم، أو متجر تطبيقات EmberCORE | لا | [تثبيت HotLoop for CODESYS](/ar/codesys/install/) |
 | [HotLoop Transmitter](/ar/transmitter/overview/) | 1.1.0 | لا، فهو مكتبة CODESYS | لا، فهو مكتبة CODESYS | [تثبيت Transmitter](/ar/transmitter/install/) |
 

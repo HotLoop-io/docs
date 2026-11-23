@@ -5,16 +5,12 @@ description: "Cascade को Podman Quadlet या k3s पर Helm से चल
 editUrl: false
 ---
 
-:::note[जो आने वाला है, वह भी शामिल है]
-इस पेज में कुछ ऐसी बातें भी शामिल हैं जो HotLoop Cascade 1.4.2, यानी सबसे नए रिलीज़, से भी नई हैं। हो सकता है उनमें से कुछ आपके इंस्टॉल किए संस्करण में न हों। क्या बदला है, यह [रिलीज़ नोट्स](/hi/releases/) बताते हैं।
-:::
-
 Podman होस्ट पर `deploy/quadlet` में systemd यूनिट होती हैं। एक फ़ाइल और एक वॉल्यूम SQLite पर Cascade है; `deploy/quadlet/postgres` सर्वर, एक वर्कर और PostgreSQL है, जो अपने अलग नेटवर्क पर होते हैं। दोनों बूट पर शुरू होते हैं, विफल होने पर फिर शुरू होते हैं और रीड-ओनली, नॉनरूट तथा हर capability हटाकर चलते हैं। इसका README पूरी प्रक्रिया समझाता है।
 
 किसी संस्करण को हाथ से खींचने के लिए:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.1
 ```
 
 यूनिट `:stable` का अनुसरण करती हैं और Podman का ऑटो-अपडेट टाइमर उन्हें आगे बढ़ाता है।
@@ -22,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
 k3s पर `charts/hotloop-cascade` Helm चार्ट है:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.0
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.1
 ```
 
 चार्ट पर वे लेबल लगे होते हैं जिन्हें EmberNet डैशबोर्ड पढ़ता है, Service पर और एडिटर परोसने वाले पॉड पर, इसलिए App Store से डिप्लॉय किया गया Cascade Running Apps में LAUNCH बटन के साथ दिखता है। `gui.appName`, `gui.port` और `gui.displayName` बदलने से जो दिखता है वह बदल जाता है।

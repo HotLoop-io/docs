@@ -5,10 +5,6 @@ description: "What Cascade has built, what each release shipped, and what is not
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Cascade 1.4.2, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 No license check exists anywhere in the code. Each phase ends when
 its "real" list has been done against real systems, not when the code compiles.
 

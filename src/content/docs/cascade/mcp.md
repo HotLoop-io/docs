@@ -5,10 +5,6 @@ description: "Cascade has an MCP server that reads and writes: 83 tools, each an
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop Cascade 1.4.2, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 Cascade has an MCP server, and it reads and writes. It ships on, at `/mcp` on the
 same address as the API and the editor, and an agent that connects to it can do
 what the person behind its key can do and nothing past that. There is no read

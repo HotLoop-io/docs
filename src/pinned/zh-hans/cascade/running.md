@@ -3,16 +3,12 @@ title: "运行 Cascade"
 description: "用 Podman Quadlet 或 k3s 上的 Helm 运行 Cascade，可基于 SQLite 或 Postgres，并配有单元和 Chart 探针所用的健康检查。"
 ---
 
-:::note[也涵盖即将推出的内容]
-本页也涵盖了一些比最新版本 HotLoop Cascade 1.4.2 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
-:::
-
 在 Podman 主机上，`deploy/quadlet` 提供 systemd 单元。一个文件加一个卷就是基于 SQLite 的 Cascade；`deploy/quadlet/postgres` 则是服务器、一个 worker 和 PostgreSQL，运行在各自独立的网络上。两者都随开机启动，失败后自动重启，并以只读、非 root、去掉全部 capability 的方式运行。其 README 有详细步骤。
 
 手动拉取某个版本：
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.1
 ```
 
 这些单元跟随 `:stable`，由 Podman 的自动更新定时器更新。
@@ -20,7 +16,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
 在 k3s 上，`charts/hotloop-cascade` 就是 Helm Chart：
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.0
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.1
 ```
 
 Chart 在 Service 和提供编辑器的 pod 上带有 EmberNet 仪表板读取的标签，因此从 App Store 部署的 Cascade 会显示在 Running Apps 下，并带有 LAUNCH 按钮。`gui.appName`、`gui.port` 和 `gui.displayName` 可以改变显示的内容。

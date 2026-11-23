@@ -3,10 +3,6 @@ title: "Der Cascade-Editor"
 description: "Der Editor steckt in der Cascade-Binärdatei: Ordner, Arbeitsfläche, Ausführungen Schritt für Schritt, Zugangsdaten, Projekte, Benutzer, Audit und Einstellungen."
 ---
 
-:::note[Enthält, was kommt]
-Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop Cascade 1.4.2, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
-:::
-
 Der Editor steckt in der Binärdatei, also gibt es nichts weiter zu starten, und er lädt nichts von irgendwoher nach: Öffnen Sie die Adresse, auf der der Server lauscht, und melden Sie sich an. Es ist eine Astro-App mit Svelte-Islands, beim Bauen des Images zu statischen Dateien gebaut, in denselben Farben und derselben Schrift wie jeder andere HotLoop-Bildschirm, hell oder dunkel nach Ihrem System, bis Sie wählen.
 
 ![Workflows in Ordnern](/synced/cascade/docs/screenshots/workflows.png)

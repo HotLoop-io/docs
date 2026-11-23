@@ -5,14 +5,7 @@ description: "What shipped in HotLoop Cascade 1.5.0, what changed on upgrade, an
 editUrl: false
 sidebar:
   label: "1.5.0"
-  badge:
-    text: Next release
-    variant: caution
 ---
-
-:::caution[Coming in the next release]
-These notes are for a release that is not out yet. HotLoop Cascade 1.4.2 is the latest one you can install.
-:::
 
 ## What this is
 

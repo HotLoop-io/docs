@@ -3,10 +3,6 @@ title: "Veikart for Cascade"
 description: "Hva Cascade har bygget, hva hver utgivelse leverte, og hva som verken er bygget eller planlagt."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop Cascade 1.4.2, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Ingen steder i koden finnes en lisenssjekk. Hver fase er ferdig når den «ekte» listen er gjennomført mot ekte systemer, ikke når koden kompilerer.
 
 ## 0.1.0, MVP-en

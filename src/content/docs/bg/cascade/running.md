@@ -5,16 +5,12 @@ description: "Стартирайте Cascade с Podman Quadlet или с Helm н
 editUrl: false
 ---
 
-:::note[Обхваща и това, което предстои]
-Тази страница обхваща и няколко неща, по-нови от HotLoop Cascade 1.4.2, последното издание. Част от тях може да не са в това, което сте инсталирали. [Бележките към изданията](/bg/releases/) казват какво е променено.
-:::
-
 На хост с Podman `deploy/quadlet` съдържа systemd единици. Един файл и един том са Cascade върху SQLite; `deploy/quadlet/postgres` е сървърът, един worker и PostgreSQL в собствена мрежа. И двата стартират при зареждане, рестартират се при грешка и работят само за четене, без root и без нито една capability. Неговият README описва стъпките.
 
 За да изтеглите версия ръчно:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.1
 ```
 
 Единиците следват `:stable`, а таймерът за автоматично обновяване на Podman ги обновява.
@@ -22,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.5.0
 На k3s `charts/hotloop-cascade` е Helm чартът:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.0
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.5.1
 ```
 
 Чартът носи етикетите, които таблото на EmberNet чете, върху Service и върху подовете, които обслужват редактора, така че Cascade, внедрен от App Store, се показва в Running Apps с бутон LAUNCH. `gui.appName`, `gui.port` и `gui.displayName` променят какво се показва.
