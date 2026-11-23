@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-`POST /api/services/...`やMCPの`call_service`ツールと同じように、エンティティをそのサービスで操作します。各ドメインが受け付けるものは[エンティティ](/ja/iot/entities/#services)を参照してください。
+`POST /api/services/...`やMCPの`call_service`ツールと同じように、エンティティをそのサービスで操作します。各ドメインが受け付けるものは[エンティティ](/ja/iot/entities/#サービス)を参照してください。
 
 ```json
 {

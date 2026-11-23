@@ -187,7 +187,7 @@ Oder berechnet:
 
 ### call_service
 
-Steuert eine Entität über ihren Dienst, so wie es `POST /api/services/...` und das MCP-Werkzeug `call_service` tun. Siehe [Entitäten](/de/iot/entities/#services), was jede Domäne annimmt.
+Steuert eine Entität über ihren Dienst, so wie es `POST /api/services/...` und das MCP-Werkzeug `call_service` tun. Siehe [Entitäten](/de/iot/entities/#dienste), was jede Domäne annimmt.
 
 ```json
 {

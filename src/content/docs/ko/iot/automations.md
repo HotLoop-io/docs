@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-`POST /api/services/...`와 MCP `call_service` 도구처럼 엔티티를 그 서비스로 제어합니다. 각 도메인이 받는 것은 [엔티티](/ko/iot/entities/#services)를 참고하세요.
+`POST /api/services/...`와 MCP `call_service` 도구처럼 엔티티를 그 서비스로 제어합니다. 각 도메인이 받는 것은 [엔티티](/ko/iot/entities/#서비스)를 참고하세요.
 
 ```json
 {

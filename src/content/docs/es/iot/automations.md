@@ -187,7 +187,7 @@ O calculado:
 
 ### call_service
 
-Manda sobre una entidad mediante su servicio, igual que `POST /api/services/...` y la herramienta `call_service` de MCP. Consulta [Entidades](/es/iot/entities/#services) para ver qué admite cada dominio.
+Manda sobre una entidad mediante su servicio, igual que `POST /api/services/...` y la herramienta `call_service` de MCP. Consulta [Entidades](/es/iot/entities/#servicios) para ver qué admite cada dominio.
 
 ```json
 {

@@ -9,7 +9,7 @@ Sin servicio meteorológico, sin clave de API, sin internet. Un sitio cuyo enlac
 
 ## Cómo crearla
 
-Una entidad meteorológica se crea como se crea un motor (vea [Entidades](/es/iot/entities/#composite-equipment)): un administrador nombra los tags. En la pantalla Entidades, Nuevo equipo, Meteorología. O por la API:
+Una entidad meteorológica se crea como se crea un motor (vea [Entidades](/es/iot/entities/#equipos-compuestos)): un administrador nombra los tags. En la pantalla Entidades, Nuevo equipo, Meteorología. O por la API:
 
 ```json
 POST /api/entities

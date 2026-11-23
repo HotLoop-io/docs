@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-किसी एंटिटी को उसकी सेवा से नियंत्रित करता है, जैसे `POST /api/services/...` और MCP का `call_service` टूल करते हैं। हर डोमेन क्या लेता है, इसके लिए [एंटिटी](/hi/iot/entities/#services) देखें।
+किसी एंटिटी को उसकी सेवा से नियंत्रित करता है, जैसे `POST /api/services/...` और MCP का `call_service` टूल करते हैं। हर डोमेन क्या लेता है, इसके लिए [एंटिटी](/hi/iot/entities/#सर्विस) देखें।
 
 ```json
 {

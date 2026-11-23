@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-يتحكم في كيان عبر خدمته، كما يفعل `POST /api/services/...` وأداة MCP المسماة `call_service`. انظر [الكيانات](/ar/iot/entities/#services) لمعرفة ما يقبله كل نطاق.
+يتحكم في كيان عبر خدمته، كما يفعل `POST /api/services/...` وأداة MCP المسماة `call_service`. انظر [الكيانات](/ar/iot/entities/#الخدمات) لمعرفة ما يقبله كل نطاق.
 
 ```json
 {

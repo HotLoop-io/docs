@@ -1076,7 +1076,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}` 또는 `404`. 이력은 남습니다. 태그의 엔티티는 고아가 됩니다([엔티티](/ko/iot/entities/#deleted-tags-orphans-and-re-adoption) 참고).
+`{"deleted":"tank-farm/level"}` 또는 `404`. 이력은 남습니다. 태그의 엔티티는 고아가 됩니다([엔티티](/ko/iot/entities/#삭제된-태그-고아-엔티티-재연결) 참고).
 
 ## 값, 보드, 쓰기
 
@@ -1260,7 +1260,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-`entity_id`(없으면 이름에서 생성), `device_class`, `unit_of_measurement`, `icon`, `entity_category`, `options`도 쓸 수 있습니다. 도메인마다 받는 역할과 옵션은 [엔티티](/ko/iot/entities/#composite-equipment)에 있습니다. `201` `{"entity": {...}, "warnings": [...]}`을 응답합니다. 여기서 만들지 않는 도메인(`sensor`는 태그에서, `alarm`은 정의에서 생김), 빠진 역할이나 그 역할을 채울 수 없는 태그는 `400`, 이미 쓰는 entity_id는 `409`입니다.
+`entity_id`(없으면 이름에서 생성), `device_class`, `unit_of_measurement`, `icon`, `entity_category`, `options`도 쓸 수 있습니다. 도메인마다 받는 역할과 옵션은 [엔티티](/ko/iot/entities/#복합-설비)에 있습니다. `201` `{"entity": {...}, "warnings": [...]}`을 응답합니다. 여기서 만들지 않는 도메인(`sensor`는 태그에서, `alarm`은 정의에서 생김), 빠진 역할이나 그 역할을 채울 수 없는 태그는 `400`, 이미 쓰는 entity_id는 `409`입니다.
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id`는 필수이며 목록이 아니라 엔티티 하나입니다. `reason`은 선택이고, 나머지는 모두 서비스의 데이터입니다(`value`, `option`, `position`, `mode`, `minutes`, `note`). 숫자는 입력한 타입을 유지합니다. 경로의 도메인은 엔티티의 도메인이어야 합니다. 모든 서비스와 그 데이터는 [엔티티](/ko/iot/entities/#what-each-domain-takes)에 있습니다.
+`entity_id`는 필수이며 목록이 아니라 엔티티 하나입니다. `reason`은 선택이고, 나머지는 모두 서비스의 데이터입니다(`value`, `option`, `position`, `mode`, `minutes`, `note`). 숫자는 입력한 타입을 유지합니다. 경로의 도메인은 엔티티의 도메인이어야 합니다. 모든 서비스와 그 데이터는 [엔티티](/ko/iot/entities/#도메인별로-받는-것)에 있습니다.
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-실제 호출이 어떤 검사보다 먼저 돌려보낼 요청(없는 엔티티, 알 수 없는 서비스, 서비스가 받지 않는 데이터, 알려진 상태가 없는 토글)은 실제 호출의 상태와 오류로 응답하며, 권한이 없을 때도 같습니다. `dry_run`은 `true` 또는 `false`만 가능하며 `yes`는 추측하지 않고 400입니다. 잘못 추측하면 질문이 명령이 되기 때문입니다. [엔티티](/ko/iot/entities/#asking-first-the-dry-run)를 참고하십시오.
+실제 호출이 어떤 검사보다 먼저 돌려보낼 요청(없는 엔티티, 알 수 없는 서비스, 서비스가 받지 않는 데이터, 알려진 상태가 없는 토글)은 실제 호출의 상태와 오류로 응답하며, 권한이 없을 때도 같습니다. `dry_run`은 `true` 또는 `false`만 가능하며 `yes`는 추측하지 않고 400입니다. 잘못 추측하면 질문이 명령이 되기 때문입니다. [엔티티](/ko/iot/entities/#먼저-묻기-드라이런)를 참고하십시오.
 
 **권한을 핸들러에서 검사하는 이유.** 이 호출에는 태그를 직접 쓰는 것과 같은 `values.write`가 필요합니다. 그것이 이 호출의 전부이기 때문입니다. `alarm` 엔티티의 서비스는 대신 알람 화면과 같은 `alarms.ack`가 필요하고, 헬퍼의 서비스는 operator가 가진 `helpers.write`, 스크립트의 서비스는 `POST /api/scripts/{id}/run`과 같은 `scripts.run`, 씬의 서비스는 `POST /api/recipes/{id}/apply`와 같은 `recipes.apply`와 레시피가 지정한 경우 그 레시피 자체의 권한이 필요합니다. 검사를 핸들러 앞이 아니라 안에서 하는 이유는, 권한이 없어 거부될 때도 그 거부가 쓰기 게이트로 가서 요청한 값과 함께 다른 모든 거부처럼 **엔티티를 기준으로 감사**되게 하기 위해서입니다. 권한 없는 사용자는 403과 `GET /api/writes?entity=...`의 한 줄을 받으며, 403만 받고 아무 기록이 없는 일은 없습니다. 헬퍼는 태그를 쓰지 않으므로 이번 경우를 포함한 헬퍼의 거부는 대신 헬퍼에 대한 시스템 로그(`GET /api/events`)의 경고이며, 스크립트도 마찬가지입니다. 씬의 거부는 레시피 이력에 사용자와 함께 남는 거부된 적용입니다.
 

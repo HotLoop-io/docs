@@ -1076,7 +1076,7 @@ HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブロ
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`、または `404`。履歴は残ります。タグのエンティティは孤立します([エンティティ](/ja/iot/entities/#deleted-tags-orphans-and-re-adoption)を参照)。
+`{"deleted":"tank-farm/level"}`、または `404`。履歴は残ります。タグのエンティティは孤立します([エンティティ](/ja/iot/entities/#削除されたタグ孤立エンティティ再引き継ぎ)を参照)。
 
 ## 値、ボード、書き込み
 
@@ -1260,7 +1260,7 @@ HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブロ
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-`entity_id`(なければ名前から生成)、`device_class`、`unit_of_measurement`、`icon`、`entity_category`、`options` も指定できます。各ドメインが受け付けるロールとオプションは[エンティティ](/ja/iot/entities/#composite-equipment)にあります。`201` `{"entity": {...}, "warnings": [...]}` を返します。ここで作らないドメイン(`sensor` はタグから、`alarm` はその定義から作られます)、足りないロール、またはそれを満たせないタグは `400`、使用済みの entity_id は `409` です。
+`entity_id`(なければ名前から生成)、`device_class`、`unit_of_measurement`、`icon`、`entity_category`、`options` も指定できます。各ドメインが受け付けるロールとオプションは[エンティティ](/ja/iot/entities/#複合設備)にあります。`201` `{"entity": {...}, "warnings": [...]}` を返します。ここで作らないドメイン(`sensor` はタグから、`alarm` はその定義から作られます)、足りないロール、またはそれを満たせないタグは `400`、使用済みの entity_id は `409` です。
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブロ
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` は必須で、リストではなくエンティティ 1 つです。`reason` は任意で、ほかはすべてサービスのデータです(`value`、`option`、`position`、`mode`、`minutes`、`note`)。数値は入力した型を保ちます。パスのドメインはエンティティのドメインでなければなりません。すべてのサービスとそのデータは[エンティティ](/ja/iot/entities/#what-each-domain-takes)にあります。
+`entity_id` は必須で、リストではなくエンティティ 1 つです。`reason` は任意で、ほかはすべてサービスのデータです(`value`、`option`、`position`、`mode`、`minutes`、`note`)。数値は入力した型を保ちます。パスのドメインはエンティティのドメインでなければなりません。すべてのサービスとそのデータは[エンティティ](/ja/iot/entities/#ドメインごとに受け付けるもの)にあります。
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ HotLoop 自身のもの以外で、ディスカバリーが待ち受けるブロ
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-本物の呼び出しなら何らかのチェックの前に突き返すリクエスト(存在しないエンティティ、未知のサービス、サービスが受け付けないデータ、既知のステートがないトグル)は、本物の呼び出しのステータスとエラーで応答します。権限がない場合も同じです。`dry_run` は `true` か `false` だけで、`yes` は推測せずに 400 です。推測を誤ると質問がコマンドになってしまうからです。[エンティティ](/ja/iot/entities/#asking-first-the-dry-run)を参照してください。
+本物の呼び出しなら何らかのチェックの前に突き返すリクエスト(存在しないエンティティ、未知のサービス、サービスが受け付けないデータ、既知のステートがないトグル)は、本物の呼び出しのステータスとエラーで応答します。権限がない場合も同じです。`dry_run` は `true` か `false` だけで、`yes` は推測せずに 400 です。推測を誤ると質問がコマンドになってしまうからです。[エンティティ](/ja/iot/entities/#先に尋ねる-ドライラン)を参照してください。
 
 **権限をハンドラーで確認する理由。** タグへの直接書き込みと同じ `values.write` が必要です。それがこの呼び出しのすべてだからです。`alarm` エンティティのサービスは代わりにアラーム画面と同じ `alarms.ack`、ヘルパーのサービスはオペレーターが持つ `helpers.write`、スクリプトのサービスは `POST /api/scripts/{id}/run` と同じ `scripts.run`、シーンのサービスは `POST /api/recipes/{id}/apply` と同じ `recipes.apply` と、レシピが指定する場合はそのレシピ自身の権限が必要です。確認をハンドラーの前ではなく中で行うのは、権限不足による拒否も書き込みゲートに送られ、要求された値とともに、ほかの拒否と同様に**エンティティに対して監査**されるようにするためです。権限のないユーザーは 403 と `GET /api/writes?entity=...` の 1 行を受け取り、403 だけで何も残らないことはありません。ヘルパーはタグに書き込まないので、今回を含むヘルパーの拒否は、代わりにそのヘルパーに対するシステムログ(`GET /api/events`)の警告になり、スクリプトも同様です。シーンの拒否は、レシピの履歴にユーザー付きで残る拒否されたアプリケーションです。
 

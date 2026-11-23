@@ -187,7 +187,7 @@ Eller beregnet:
 
 ### call_service
 
-Styrer en entitet via tjenesten dens, slik `POST /api/services/...` og MCP-verktøyet `call_service` gjør. Se [Entiteter](/nb/iot/entities/#services) for hva hvert domene tar imot.
+Styrer en entitet via tjenesten dens, slik `POST /api/services/...` og MCP-verktøyet `call_service` gjør. Se [Entiteter](/nb/iot/entities/#tjenester) for hva hvert domene tar imot.
 
 ```json
 {

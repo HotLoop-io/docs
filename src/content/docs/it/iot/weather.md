@@ -9,7 +9,7 @@ Nessun servizio meteo, nessuna chiave API, nessuna internet. Un sito il cui upli
 
 ## Come crearla
 
-Un'entità meteo si crea come si crea un motore (vedi [Entità](/it/iot/entities/#composite-equipment)): un amministratore indica i tag. Nella schermata Entità, Nuova apparecchiatura, Meteo. Oppure tramite l'API:
+Un'entità meteo si crea come si crea un motore (vedi [Entità](/it/iot/entities/#apparecchiature-composite)): un amministratore indica i tag. Nella schermata Entità, Nuova apparecchiatura, Meteo. Oppure tramite l'API:
 
 ```json
 POST /api/entities

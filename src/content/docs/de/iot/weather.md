@@ -9,7 +9,7 @@ Kein Wetterdienst, kein API-Schlüssel, kein Internet. Ein Standort, dessen Upli
 
 ## Anlegen
 
-Eine Wetter-Entität wird so angelegt wie ein Motor (siehe [Entitäten](/de/iot/entities/#composite-equipment)): Ein Administrator benennt die Tags. Auf dem Bildschirm Entitäten, Neue Anlage, Wetter. Oder über die API:
+Eine Wetter-Entität wird so angelegt wie ein Motor (siehe [Entitäten](/de/iot/entities/#zusammengesetzte-anlagen)): Ein Administrator benennt die Tags. Auf dem Bildschirm Entitäten, Neue Anlage, Wetter. Oder über die API:
 
 ```json
 POST /api/entities

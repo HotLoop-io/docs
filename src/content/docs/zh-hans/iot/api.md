@@ -1076,7 +1076,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`，或 `404`。历史数据保留。变量的实体变成孤儿（参见[实体](/zh-hans/iot/entities/#deleted-tags-orphans-and-re-adoption)）。
+`{"deleted":"tank-farm/level"}`，或 `404`。历史数据保留。变量的实体变成孤儿（参见[实体](/zh-hans/iot/entities/#被删除的变量孤儿实体与重新接管)）。
 
 ## 值、看板和写入
 
@@ -1260,7 +1260,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-还可以有 `entity_id`（否则根据名称生成）、`device_class`、`unit_of_measurement`、`icon`、`entity_category` 和 `options`。每个域接受哪些角色和选项见[实体](/zh-hans/iot/entities/#composite-equipment)。返回 `201` `{"entity": {...}, "warnings": [...]}`。不在这里创建的域（`sensor` 来自它的变量，`alarm` 来自它的定义）、缺少的角色或无法填充它的变量返回 `400`，entity_id 已被占用返回 `409`。
+还可以有 `entity_id`（否则根据名称生成）、`device_class`、`unit_of_measurement`、`icon`、`entity_category` 和 `options`。每个域接受哪些角色和选项见[实体](/zh-hans/iot/entities/#复合设备)。返回 `201` `{"entity": {...}, "warnings": [...]}`。不在这里创建的域（`sensor` 来自它的变量，`alarm` 来自它的定义）、缺少的角色或无法填充它的变量返回 `400`，entity_id 已被占用返回 `409`。
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` 必填，且是一个实体，而不是列表；`reason` 可选；其他一切都是服务的数据（`value`、`option`、`position`、`mode`、`minutes`、`note`）。数字保持输入时的类型。路径中的域必须是该实体的域。每个服务及其数据见[实体](/zh-hans/iot/entities/#what-each-domain-takes)。
+`entity_id` 必填，且是一个实体，而不是列表；`reason` 可选；其他一切都是服务的数据（`value`、`option`、`position`、`mode`、`minutes`、`note`）。数字保持输入时的类型。路径中的域必须是该实体的域。每个服务及其数据见[实体](/zh-hans/iot/entities/#每个域接受什么)。
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-真实调用会在任何检查之前就拒绝的请求（没有这个实体、服务未知、服务不接受的数据、没有已知状态的切换），会以真实调用的状态和错误作答；缺少权限时同样如此。`dry_run` 只能是 `true` 或 `false`，别无其他：`yes` 是 400，而不是猜测，因为猜错会把一个问题变成一条命令。参见[实体](/zh-hans/iot/entities/#asking-first-the-dry-run)。
+真实调用会在任何检查之前就拒绝的请求（没有这个实体、服务未知、服务不接受的数据、没有已知状态的切换），会以真实调用的状态和错误作答；缺少权限时同样如此。`dry_run` 只能是 `true` 或 `false`，别无其他：`yes` 是 400，而不是猜测，因为猜错会把一个问题变成一条命令。参见[实体](/zh-hans/iot/entities/#先问一下试运行)。
 
 **为什么权限在处理程序中检查。** 它需要 `values.write`，与直接写入变量相同，因为它本来就只是这样；`alarm` 实体的服务改为需要 `alarms.ack`，与报警界面相同，辅助量的服务需要 operator 拥有的 `helpers.write`，脚本的服务需要 `scripts.run`，与 `POST /api/scripts/{id}/run` 相同，场景的服务需要 `recipes.apply`，以及配方指定时配方自己的权限，与 `POST /api/recipes/{id}/apply` 相同。检查放在处理程序内部而不是前面，是为了让因缺少权限而被拒绝的请求也被送到写入门，并像其他所有拒绝一样，连同被请求的值一起**按实体被审计**。没有权限的用户会得到 403 和 `GET /api/writes?entity=...` 中的一行，而不是只有 403 而什么也没有。辅助量不写入任何变量，所以辅助量的拒绝（包括这一次）改为针对该辅助量记入系统日志（`GET /api/events`）的一条警告，脚本也一样。场景的拒绝是配方历史中带有用户的一次被拒绝的应用。
 
