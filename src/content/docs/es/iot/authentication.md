@@ -208,7 +208,7 @@ De solo escritura se trata en la API. El gateway necesita los valores reales par
 
 - **La base de datos.** Las credenciales de dispositivo están en las columnas `config` y `address`. Con `HOTLOOP_SECRET_KEY_FILE` definido, las que tienen clave en `config` (cada `password`, los valores de cabeceras) se cifran con una clave guardada fuera de la base de datos, y también una dirección o una opción con una credencial escrita en su texto (`mqtt://user:pass@host`, `?token=`), selladas enteras. Véase [Copias de seguridad y restauración](/es/iot/backup/#credenciales-de-dispositivos-y-la-clave-secreta).
 - **Copias de seguridad.** `devices.copy` en una copia las contiene, cifradas o no exactamente como la base de datos. Véase [Copias de seguridad y restauración](/es/iot/backup/#proteja-los-archivos-de-copia).
-- **Archivos de dispositivos del Edge Relay.** El relay lee un archivo JSON que lleva las credenciales de sus dispositivos. Véase [Referencia de Edge Relay](/es/edge-relay/reference/#credentials-in-the-device-file-4150).
+- **Archivos de dispositivos del Edge Relay.** El relay lee un archivo JSON que lleva las credenciales de sus dispositivos. Véase [Referencia de Edge Relay](/es/edge-relay/reference/#credenciales-en-el-archivo-de-dispositivos-4150).
 - **Envío de configuración de la flota.** Un archivo de dispositivos enviado a un relay se publica en un topic MQTT, retenido, tal como es. Véase [Gestión de flotas](/es/gateway/fleet/).
 
 Proteja en consecuencia la base de datos, el volumen de copias, el archivo de dispositivos del relay y el broker. Ocultar datos en la API no cambia ninguno de ellos.

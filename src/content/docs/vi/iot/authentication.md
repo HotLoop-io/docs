@@ -208,7 +208,7 @@ Chỉ ghi là về API. Cổng cần giá trị thật để kết nối, và nh
 
 - **Cơ sở dữ liệu.** Thông tin xác thực thiết bị nằm trong các cột `config` và `address`. Khi đặt `HOTLOOP_SECRET_KEY_FILE`, các giá trị có khóa trong `config` (mọi `password`, giá trị header) được mã hóa bằng một khóa giữ ngoài cơ sở dữ liệu, và một địa chỉ hay một tùy chọn có thông tin xác thực viết trong văn bản của nó (`mqtt://user:pass@host`, `?token=`) cũng vậy, được niêm phong toàn bộ. Xem [Sao lưu và khôi phục](/vi/iot/backup/#thông-tin-xác-thực-thiết-bị-và-khóa-bí-mật).
 - **Bản sao lưu.** `devices.copy` trong một bản sao lưu giữ chúng, được mã hóa hoặc không đúng như cơ sở dữ liệu. Xem [Sao lưu và khôi phục](/vi/iot/backup/#bảo-vệ-các-tệp-sao-lưu).
-- **Tệp thiết bị của Edge Relay.** Relay đọc một tệp JSON mang thông tin xác thực của các thiết bị của nó. Xem [Tham chiếu Edge Relay](/vi/edge-relay/reference/#credentials-in-the-device-file-4150).
+- **Tệp thiết bị của Edge Relay.** Relay đọc một tệp JSON mang thông tin xác thực của các thiết bị của nó. Xem [Tham chiếu Edge Relay](/vi/edge-relay/reference/#thông-tin-xác-thực-trong-tệp-thiết-bị-4150).
 - **Đẩy cấu hình đội thiết bị.** Một tệp thiết bị được đẩy tới relay được xuất bản lên một chủ đề MQTT, ở dạng lưu giữ, nguyên như vậy. Xem [Quản lý đội thiết bị](/vi/gateway/fleet/).
 
 Hãy bảo vệ cơ sở dữ liệu, ổ sao lưu, tệp thiết bị của relay và broker cho tương xứng. Việc che giấu ở API không thay đổi điều nào trong số đó.

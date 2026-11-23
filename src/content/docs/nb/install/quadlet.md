@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-Hvis et nytt image ikke består helsesjekken sin, setter Podman det gamle tilbake. Gateways flåteliste viser hvert relés versjon og image-digest og logger hver endring. For å holde tilbake oppdateringer til en administrator godkjenner dem på Gateway, installerer du `edge-relay-hold.conf` slik kommentaren øverst i den filen sier, og slår av tidtakeren. Alt dette gjør, og hva det ikke kan, står i [referansen for Edge Relay](/nb/edge-relay/reference/#updating-a-relay).
+Hvis et nytt image ikke består helsesjekken sin, setter Podman det gamle tilbake. Gateways flåteliste viser hvert relés versjon og image-digest og logger hver endring. For å holde tilbake oppdateringer til en administrator godkjenner dem på Gateway, installerer du `edge-relay-hold.conf` slik kommentaren øverst i den filen sier, og slår av tidtakeren. Alt dette gjør, og hva det ikke kan, står i [referansen for Edge Relay](/nb/edge-relay/reference/#oppdatere-en-relay).
 
 For å ta i bruk en endring i den lokale filen: rediger den, og kjør deretter `sudo systemctl restart edge-relay.service`. Reléet leser den filen ved oppstart og overvåker den ikke.
 

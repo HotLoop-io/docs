@@ -30,15 +30,15 @@ description: "通过 Sparkplug 的出生与死亡消息跟踪每个 Edge Relay�
 
 中继在收到时会再次校验：本应用不能假定只有 Gateway 会发布到该主题，只能保证自己不发布有问题的内容。
 
-**设备文件可能带有凭据，推送会把它发布出去。** 设备的 `config` 块包含其驱动登录所用的信息，例如 OPC UA 的 `username` 和 `password`（4.15.0），文件会原样以保留消息发布。任何能订阅 `hotloop/edge-relay-config/#` 的人都能读取，所以在推送带凭据的文件之前，代理需要对该主题启用 TLS 和 ACL。自 4.15.1 起，Gateway 的 API 对所有角色隐藏设备凭据，但推送的文件不在 API 之后，也不受此影响。参见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#credentials-in-the-device-file-4150)和[认证与用户](/zh-hans/iot/authentication/#凭据仍是明文的地方)。
+**设备文件可能带有凭据，推送会把它发布出去。** 设备的 `config` 块包含其驱动登录所用的信息，例如 OPC UA 的 `username` 和 `password`（4.15.0），文件会原样以保留消息发布。任何能订阅 `hotloop/edge-relay-config/#` 的人都能读取，所以在推送带凭据的文件之前，代理需要对该主题启用 TLS 和 ACL。自 4.15.1 起，Gateway 的 API 对所有角色隐藏设备凭据，但推送的文件不在 API 之后，也不受此影响。参见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#设备文件中的凭据-4150)和[认证与用户](/zh-hans/iot/authentication/#凭据仍是明文的地方)。
 
 **推送即时生效，而且绝不重启任何东西。** 到 4.17 为止，推送只是把文件备好，要让它生效还得再做一次操作，即 `POST /api/fleet/{id}/restart`，为了改一个变量，它会断开中继与代理的会话以及它持有的每个设备会话。现在：
 
-- **正在运行的中继**会校验文件、保存并就地应用：新设备连接，被移除的设备断开，被改动的设备重连，没有变化的设备保持会话。Sparkplug 会话和转发队列全程保持。节点用新的指标集执行 rebirth，并先把去掉的指标置空，这样主机就不会继续显示已移除设备的最后一个良好值。[Edge Relay 参考](/zh-hans/edge-relay/reference/#what-a-live-apply-keeps-and-what-it-changes)准确说明了线路上发出什么以及原因。
+- **正在运行的中继**会校验文件、保存并就地应用：新设备连接，被移除的设备断开，被改动的设备重连，没有变化的设备保持会话。Sparkplug 会话和转发队列全程保持。节点用新的指标集执行 rebirth，并先把去掉的指标置空，这样主机就不会继续显示已移除设备的最后一个良好值。[Edge Relay 参考](/zh-hans/edge-relay/reference/#实时应用保留什么改变什么)准确说明了线路上发出什么以及原因。
 - **中继拒绝的文件**（无法解析、无法校验、无法保存）不会改变中继上的任何东西，中继的 `/status` 会在 `config.rejected` 下说明。`GET /api/fleet` 会为每个带 `statusUrl` 的成员显示这一点，并列出它正在运行的文件的摘要，所以“我推送了”和“它在运行”是两件可以核对的事，而不是一件想当然的事。Gateway 在发布之前也会校验，所以实际上这是较新或较旧版本的中继对规则看法不一致，或者是 Gateway 之外的东西在向该主题发布。
 - **离线的中继**在连接的那一刻就会收到保留的推送。启动时它会先等几秒钟，再加载本地文件，所以它直接以推送的列表启动，而不是先用旧列表再切换。
 
-推送的文件落在中继的数据卷上，而不是覆盖它本地的设备文件，并且在推送被清除之前优先于本地文件。中继的 [Edge Relay 参考](/zh-hans/edge-relay/reference/#where-a-pushed-file-lives-and-which-file-wins)说明了优先级规则，以及促成这些规则的 4.16.0 缺陷。
+推送的文件落在中继的数据卷上，而不是覆盖它本地的设备文件，并且在推送被清除之前优先于本地文件。中继的 [Edge Relay 参考](/zh-hans/edge-relay/reference/#推送的文件放在哪里以及哪个文件优先)说明了优先级规则，以及促成这些规则的 4.16.0 缺陷。
 
 **撤回推送**用 `DELETE /api/fleet/{id}/config`（`fleet.config`，与推送相同）。它向成员的配置主题发布一条空的保留消息，这是 MQTT 删除保留值的方式，此后的任何启动都不会应用该推送。此刻已连接的中继会丢弃推送的文件，并像应用推送一样即时回到本地文件，除非本地文件无法加载，那时它会保留推送的文件并说明。离线的中继永远收不到清除（空消息不会被保留），所以等中继恢复后请再发送一次。
 
@@ -48,7 +48,7 @@ description: "通过 Sparkplug 的出生与死亡消息跟踪每个 Edge Relay�
 
 当成员的构建发生变化时，Gateway 会把它作为该成员的 `config` 事件写入系统日志，详情中带有旧版本、新版本和摘要（`{"kind":"fleet.release",...}`）。它听到的第一个构建也会被记录，作为衡量下一个构建的基线。这在 Gateway 重启后依然保留，因为最后一条记录是从日志读回来的：重启绝不会凭空造出一次更新。这是中继接受的每一次更新的审计轨迹，无论通过什么途径（Podman 的定时器、一次批准、`helm upgrade`、现场的某个人），因为 Gateway 不会引发更新，只能报告它。移动的标签是 `:stable` 更新的方式，所以同一版本下摘要变化也会被记录，记为“同一版本的另一个镜像”。
 
-`POST /api/fleet/{id}/update`（`fleet.update`，仅限管理员）批准中继正在扣留的更新。它只对设置为扣留更新的中继有作用；其他中继会记录为已忽略。请求中不指定镜像。针对每种安装类型，它做什么和不做什么，见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#updating-a-relay)。
+`POST /api/fleet/{id}/update`（`fleet.update`，仅限管理员）批准中继正在扣留的更新。它只对设置为扣留更新的中继有作用；其他中继会记录为已忽略。请求中不指定镜像。针对每种安装类型，它做什么和不做什么，见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#更新-relay)。
 
 ## 命令授权
 

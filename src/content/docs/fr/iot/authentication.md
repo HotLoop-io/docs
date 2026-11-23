@@ -208,7 +208,7 @@ L'écriture seule concerne l'API. La passerelle a besoin des vraies valeurs pour
 
 - **La base de données.** Les identifiants d'appareil sont dans les colonnes `config` et `address`. Avec `HOTLOOP_SECRET_KEY_FILE` défini, ceux à clé dans `config` (chaque `password`, les valeurs d'en-têtes) sont chiffrés avec une clé conservée hors de la base, ainsi qu'une adresse ou une option dont le texte contient un identifiant (`mqtt://user:pass@host`, `?token=`), scellées entières. Voir [Sauvegardes et restauration](/fr/iot/backup/#identifiants-dappareils-et-clé-secrète).
 - **Les sauvegardes.** `devices.copy` dans une sauvegarde les contient, chiffrés ou non exactement comme la base de données. Voir [Sauvegardes et restauration](/fr/iot/backup/#protégez-les-fichiers-de-sauvegarde).
-- **Les fichiers d'appareils de l'Edge Relay.** Le relais lit un fichier JSON qui porte les identifiants de ses appareils. Voir [Référence d'Edge Relay](/fr/edge-relay/reference/#credentials-in-the-device-file-4150).
+- **Les fichiers d'appareils de l'Edge Relay.** Le relais lit un fichier JSON qui porte les identifiants de ses appareils. Voir [Référence d'Edge Relay](/fr/edge-relay/reference/#identifiants-dans-le-fichier-dappareils-4150).
 - **Le push de configuration de la flotte.** Un fichier d'appareils poussé vers un relais est publié tel quel sur un topic MQTT, retenu. Voir [Gestion de flotte](/fr/gateway/fleet/).
 
 Protégez en conséquence la base de données, le volume de sauvegarde, le fichier d'appareils du relais et le broker. Masquer l'API ne change rien à tout cela.

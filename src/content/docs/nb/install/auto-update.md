@@ -56,7 +56,7 @@ Standard er ingen tilbakeholding: oppdateringer skjer når timeren utløses. Et 
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay er annerledes på ett punkt: en Gateway kan godkjenne oppdateringen sin fra flåteskjermen, fordi et relé allerede lytter etter kommandoer fra Gatewayen det videresender til. IoT, Edge og Gateway har ingen slik kanal å nås gjennom, og å bygge en ville satt en «start denne maskinen på nytt»-knapp på et webgrensesnitt for en funksjon som `sudo podman auto-update` allerede er. Se [Edge Relay-referansen](/nb/edge-relay/reference/#updating-a-relay) for reléets tilbakeholding, og `edge-relay-hold.conf`.
+Edge Relay er annerledes på ett punkt: en Gateway kan godkjenne oppdateringen sin fra flåteskjermen, fordi et relé allerede lytter etter kommandoer fra Gatewayen det videresender til. IoT, Edge og Gateway har ingen slik kanal å nås gjennom, og å bygge en ville satt en «start denne maskinen på nytt»-knapp på et webgrensesnitt for en funksjon som `sudo podman auto-update` allerede er. Se [Edge Relay-referansen](/nb/edge-relay/reference/#oppdatere-en-relay) for reléets tilbakeholding, og `edge-relay-hold.conf`.
 
 ## Hva Gatewayen ser
 

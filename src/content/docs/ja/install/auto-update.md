@@ -56,7 +56,7 @@ sudo systemctl enable --now podman-auto-update.timer
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay は1点だけ異なります。リレーは転送先の Gateway からのコマンドをすでに待ち受けているため、Gateway はフリート画面からリレーの更新を承認できます。IoT、Edge、Gateway にはそのようなチャネルがなく、作ると、`sudo podman auto-update` がすでに果たしている機能のために、Web UI に「この機器を再起動」ボタンを置くことになります。リレーの保留については [Edge Relay リファレンス](/ja/edge-relay/reference/#updating-a-relay)と `edge-relay-hold.conf` を参照してください。
+Edge Relay は1点だけ異なります。リレーは転送先の Gateway からのコマンドをすでに待ち受けているため、Gateway はフリート画面からリレーの更新を承認できます。IoT、Edge、Gateway にはそのようなチャネルがなく、作ると、`sudo podman auto-update` がすでに果たしている機能のために、Web UI に「この機器を再起動」ボタンを置くことになります。リレーの保留については [Edge Relay リファレンス](/ja/edge-relay/reference/#relay-の更新)と `edge-relay-hold.conf` を参照してください。
 
 ## Gateway から見えるもの
 

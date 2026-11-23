@@ -56,7 +56,7 @@ Per impostazione predefinita non c'è sospensione: gli aggiornamenti avvengono q
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-L'Edge Relay è diverso per un aspetto: un Gateway può approvare il proprio aggiornamento dalla schermata della flotta, perché un relay è già in ascolto dei comandi del Gateway a cui inoltra. IoT, Edge e Gateway non hanno un canale simile per raggiungerli, e costruirne uno metterebbe un pulsante "riavvia questa macchina" su un'interfaccia web per una funzione che `sudo podman auto-update` già è. Vedi il [riferimento dell'Edge Relay](/it/edge-relay/reference/#updating-a-relay) per la sospensione del relay, e `edge-relay-hold.conf`.
+L'Edge Relay è diverso per un aspetto: un Gateway può approvare il proprio aggiornamento dalla schermata della flotta, perché un relay è già in ascolto dei comandi del Gateway a cui inoltra. IoT, Edge e Gateway non hanno un canale simile per raggiungerli, e costruirne uno metterebbe un pulsante "riavvia questa macchina" su un'interfaccia web per una funzione che `sudo podman auto-update` già è. Vedi il [riferimento dell'Edge Relay](/it/edge-relay/reference/#aggiornare-un-relay) per la sospensione del relay, e `edge-relay-hold.conf`.
 
 ## Cosa vede il Gateway
 

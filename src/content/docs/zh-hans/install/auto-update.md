@@ -56,7 +56,7 @@ sudo systemctl enable --now podman-auto-update.timer
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay 有一点不同：Gateway 可以在车队界面批准它的更新，因为中继本来就在监听它所转发到的 Gateway 的命令。IoT、Edge 和 Gateway 没有这样的通道可以触达，而为此建一个，就是在网页界面上放一个“重启此设备”按钮，去实现 `sudo podman auto-update` 已经提供的功能。中继的暂缓请参阅 [Edge Relay 参考](/zh-hans/edge-relay/reference/#updating-a-relay)和 `edge-relay-hold.conf`。
+Edge Relay 有一点不同：Gateway 可以在车队界面批准它的更新，因为中继本来就在监听它所转发到的 Gateway 的命令。IoT、Edge 和 Gateway 没有这样的通道可以触达，而为此建一个，就是在网页界面上放一个“重启此设备”按钮，去实现 `sudo podman auto-update` 已经提供的功能。中继的暂缓请参阅 [Edge Relay 参考](/zh-hans/edge-relay/reference/#更新-relay)和 `edge-relay-hold.conf`。
 
 ## Gateway 看到什么
 

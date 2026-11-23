@@ -56,7 +56,7 @@ Podman изтегля `:stable`, когато таймерът се задейс
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay се различава в едно: Gateway може да одобри обновяването си от екрана на флота, защото релето вече слуша за команди от Gateway, към който препраща. IoT, Edge и Gateway нямат такъв канал, а изграждането му би поставило бутон „рестартирай това устройство“ в уеб интерфейс заради функция, която `sudo podman auto-update` вече е. Вижте [справочника на Edge Relay](/bg/edge-relay/reference/#updating-a-relay) за задържането на релето и `edge-relay-hold.conf`.
+Edge Relay се различава в едно: Gateway може да одобри обновяването си от екрана на флота, защото релето вече слуша за команди от Gateway, към който препраща. IoT, Edge и Gateway нямат такъв канал, а изграждането му би поставило бутон „рестартирай това устройство“ в уеб интерфейс заради функция, която `sudo podman auto-update` вече е. Вижте [справочника на Edge Relay](/bg/edge-relay/reference/#обновяване-на-реле) за задържането на релето и `edge-relay-hold.conf`.
 
 ## Какво вижда Gateway
 

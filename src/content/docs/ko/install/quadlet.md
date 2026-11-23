@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-새 이미지가 상태 점검을 통과하지 못하면 Podman이 이전 이미지를 되돌려 놓습니다. Gateway의 장비 목록에는 각 릴레이의 버전과 이미지 다이제스트가 표시되고 모든 변경이 기록됩니다. 관리자가 Gateway에서 승인할 때까지 업데이트를 보류하려면, 그 파일 맨 위 주석의 안내대로 `edge-relay-hold.conf`를 설치하고 타이머를 끄세요. 이것이 하는 모든 일과 하지 못하는 일은 [Edge Relay 레퍼런스](/ko/edge-relay/reference/#updating-a-relay)에 있습니다.
+새 이미지가 상태 점검을 통과하지 못하면 Podman이 이전 이미지를 되돌려 놓습니다. Gateway의 장비 목록에는 각 릴레이의 버전과 이미지 다이제스트가 표시되고 모든 변경이 기록됩니다. 관리자가 Gateway에서 승인할 때까지 업데이트를 보류하려면, 그 파일 맨 위 주석의 안내대로 `edge-relay-hold.conf`를 설치하고 타이머를 끄세요. 이것이 하는 모든 일과 하지 못하는 일은 [Edge Relay 레퍼런스](/ko/edge-relay/reference/#relay-업데이트)에 있습니다.
 
 로컬 파일의 변경을 반영하려면 파일을 편집한 뒤 `sudo systemctl restart edge-relay.service`를 실행하세요. 릴레이는 부팅할 때 그 파일을 읽고 변화를 감시하지 않습니다.
 

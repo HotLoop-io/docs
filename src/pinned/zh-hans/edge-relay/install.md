@@ -225,7 +225,7 @@ sudo systemctl enable --now podman-auto-update.timer
 
 定时器触发时，Podman 拉取 `:stable`，如果摘要变了，就用新镜像重启 unit。在中继自身的健康检查通过之前，unit 不算启动，所以如果新镜像始终通不过，Podman 会换回之前的镜像并启动它。一个无法启动的版本，代价是一台机器上的几分钟，而不是一个一直宕机的中继。转发队列和推送的设备文件在数据卷上，新镜像不会碰它。Gateway 的设备群列表显示每个中继的版本和镜像摘要，并在其中一个变化时记录一行日志。
 
-Podman 运行时会更新机器上每一个带标签的容器，而不只是这一个。想让人来决定何时更新的站点有两个选项，都在 `deploy/quadlet/` 中。`edge-relay-hold.conf` 会扣住更新，直到 Gateway 上的管理员用 `POST /api/fleet/{id}/update` 批准，并且需要整台机器的定时器关闭。`update-window.conf` 只让定时器在某个时间窗内触发，比如周日 03:00。Gateway 无法告诉您有更新在等待，只能告诉您每个中继当前运行的是什么。这个扣留功能用一次真实更新验证过，先扣留 30 秒，再在批准后放行，参考页[更新中继](/zh-hans/edge-relay/reference/#updating-a-relay)写明了它能做什么和不能做什么。
+Podman 运行时会更新机器上每一个带标签的容器，而不只是这一个。想让人来决定何时更新的站点有两个选项，都在 `deploy/quadlet/` 中。`edge-relay-hold.conf` 会扣住更新，直到 Gateway 上的管理员用 `POST /api/fleet/{id}/update` 批准，并且需要整台机器的定时器关闭。`update-window.conf` 只让定时器在某个时间窗内触发，比如周日 03:00。Gateway 无法告诉您有更新在等待，只能告诉您每个中继当前运行的是什么。这个扣留功能用一次真实更新验证过，先扣留 30 秒，再在批准后放行，参考页[更新中继](/zh-hans/edge-relay/reference/#更新-relay)写明了它能做什么和不能做什么。
 
 ## 然后：通过 Gateway 来管理
 

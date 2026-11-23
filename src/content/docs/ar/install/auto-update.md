@@ -56,7 +56,7 @@ sudo systemctl enable --now podman-auto-update.timer
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-يختلف Edge Relay في أمر واحد: يستطيع Gateway الموافقة على تحديثه من شاشة الأسطول، لأن المرحّل يصغي أصلًا إلى أوامر Gateway الذي يمرّر إليه. أما IoT وEdge وGateway فلا قناة من هذا النوع للوصول إليها، وبناء واحدة يعني وضع زر "أعد تشغيل هذا الجهاز" على واجهة ويب لميزة هي بالفعل `sudo podman auto-update`. راجع [مرجع Edge Relay](/ar/edge-relay/reference/#updating-a-relay) لإيقاف المرحّل، و`edge-relay-hold.conf`.
+يختلف Edge Relay في أمر واحد: يستطيع Gateway الموافقة على تحديثه من شاشة الأسطول، لأن المرحّل يصغي أصلًا إلى أوامر Gateway الذي يمرّر إليه. أما IoT وEdge وGateway فلا قناة من هذا النوع للوصول إليها، وبناء واحدة يعني وضع زر "أعد تشغيل هذا الجهاز" على واجهة ويب لميزة هي بالفعل `sudo podman auto-update`. راجع [مرجع Edge Relay](/ar/edge-relay/reference/#تحديث-relay) لإيقاف المرحّل، و`edge-relay-hold.conf`.
 
 ## ما الذي يراه Gateway
 

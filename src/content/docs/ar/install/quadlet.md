@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-إن لم تجتز صورة جديدة فحص صحتها، يعيد Podman الصورة القديمة. تعرض قائمة الأسطول في Gateway إصدار كل مرحّل وملخّص صورته وتسجّل كل تغيير. ولحجز التحديثات حتى يوافق عليها مسؤول في Gateway، ثبّت `edge-relay-hold.conf` كما يقول التعليق في أعلى ذلك الملف، وأوقف المؤقّت. كل ما يفعله هذا، وما لا يستطيعه، في [مرجع Edge Relay](/ar/edge-relay/reference/#updating-a-relay).
+إن لم تجتز صورة جديدة فحص صحتها، يعيد Podman الصورة القديمة. تعرض قائمة الأسطول في Gateway إصدار كل مرحّل وملخّص صورته وتسجّل كل تغيير. ولحجز التحديثات حتى يوافق عليها مسؤول في Gateway، ثبّت `edge-relay-hold.conf` كما يقول التعليق في أعلى ذلك الملف، وأوقف المؤقّت. كل ما يفعله هذا، وما لا يستطيعه، في [مرجع Edge Relay](/ar/edge-relay/reference/#تحديث-relay).
 
 لتطبيق تغيير على الملف المحلي: عدّله، ثم نفّذ `sudo systemctl restart edge-relay.service`. يقرأ المرحّل ذلك الملف عند الإقلاع ولا يراقبه.
 

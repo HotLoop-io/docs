@@ -56,7 +56,7 @@ sudo systemctl enable --now podman-auto-update.timer
   sudo systemctl daemon-reload && sudo systemctl restart podman-auto-update.timer
   ```
 
-Edge Relay는 한 가지가 다릅니다. 릴레이는 이미 자신이 전달하는 대상 Gateway의 명령을 수신하고 있으므로 Gateway가 플릿 화면에서 릴레이의 업데이트를 승인할 수 있습니다. IoT, Edge, Gateway에는 그런 채널이 없고, 만들면 `sudo podman auto-update`가 이미 해 주는 기능을 위해 웹 UI에 "이 장비 재시작" 버튼을 놓게 됩니다. 릴레이의 보류는 [Edge Relay 레퍼런스](/ko/edge-relay/reference/#updating-a-relay)와 `edge-relay-hold.conf`를 보십시오.
+Edge Relay는 한 가지가 다릅니다. 릴레이는 이미 자신이 전달하는 대상 Gateway의 명령을 수신하고 있으므로 Gateway가 플릿 화면에서 릴레이의 업데이트를 승인할 수 있습니다. IoT, Edge, Gateway에는 그런 채널이 없고, 만들면 `sudo podman auto-update`가 이미 해 주는 기능을 위해 웹 UI에 "이 장비 재시작" 버튼을 놓게 됩니다. 릴레이의 보류는 [Edge Relay 레퍼런스](/ko/edge-relay/reference/#relay-업데이트)와 `edge-relay-hold.conf`를 보십시오.
 
 ## Gateway가 보는 것
 

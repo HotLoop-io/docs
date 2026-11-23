@@ -208,7 +208,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/jso
 
 - **数据库。** 设备凭据在 `config` 和 `address` 列中。设置 `HOTLOOP_SECRET_KEY_FILE` 后，`config` 中带键的内容（每个 `password`、请求头的值）会用保存在数据库之外的密钥加密，文本中写有凭据的地址或选项（`mqtt://user:pass@host`、`?token=`）也一样，整体密封。见[备份与恢复](/zh-hans/iot/backup/#设备凭据与密钥)。
 - **备份。** 备份中的 `devices.copy` 保存着它们，是否加密与数据库完全一致。见[备份与恢复](/zh-hans/iot/backup/#保护备份文件)。
-- **Edge Relay 设备文件。** 中继读取一个携带其设备凭据的 JSON 文件。见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#credentials-in-the-device-file-4150)。
+- **Edge Relay 设备文件。** 中继读取一个携带其设备凭据的 JSON 文件。见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#设备文件中的凭据-4150)。
 - **机群配置推送。** 推送给中继的设备文件会原样发布到一个 MQTT 主题，并被保留。见[机群管理](/zh-hans/gateway/fleet/)。
 
 请相应地保护数据库、备份卷、中继的设备文件和代理。在 API 上隐藏，并不会改变其中任何一项。

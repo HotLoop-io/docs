@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-新しいイメージがヘルスチェックに通らなければ、Podman は古いイメージを戻します。Gateway のフリート一覧には各リレーのバージョンとイメージダイジェストが表示され、すべての変更が記録されます。管理者が Gateway で承認するまで更新を保留するには、そのファイルの冒頭のコメントのとおりに `edge-relay-hold.conf` をインストールし、タイマーをオフにします。これができることとできないことのすべては、[Edge Relay のリファレンス](/ja/edge-relay/reference/#updating-a-relay)にあります。
+新しいイメージがヘルスチェックに通らなければ、Podman は古いイメージを戻します。Gateway のフリート一覧には各リレーのバージョンとイメージダイジェストが表示され、すべての変更が記録されます。管理者が Gateway で承認するまで更新を保留するには、そのファイルの冒頭のコメントのとおりに `edge-relay-hold.conf` をインストールし、タイマーをオフにします。これができることとできないことのすべては、[Edge Relay のリファレンス](/ja/edge-relay/reference/#relay-の更新)にあります。
 
 ローカルファイルの変更を反映するには、編集してから `sudo systemctl restart edge-relay.service` を実行します。リレーはそのファイルを起動時に読み込み、監視はしません。
 

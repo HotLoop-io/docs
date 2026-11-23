@@ -128,7 +128,7 @@ curl localhost:8081/status
 sudo systemctl enable --now podman-auto-update.timer
 ```
 
-Si una nueva imagen no supera su comprobación de estado, Podman vuelve a poner la anterior. La lista de flota del Gateway muestra la versión y el digest de imagen de cada relay y registra cada cambio. Para retener las actualizaciones hasta que un administrador las apruebe en el Gateway, instale `edge-relay-hold.conf` como indica el comentario al principio de ese archivo y apague el temporizador. Todo lo que esto hace, y lo que no puede hacer, está en [la referencia del Edge Relay](/es/edge-relay/reference/#updating-a-relay).
+Si una nueva imagen no supera su comprobación de estado, Podman vuelve a poner la anterior. La lista de flota del Gateway muestra la versión y el digest de imagen de cada relay y registra cada cambio. Para retener las actualizaciones hasta que un administrador las apruebe en el Gateway, instale `edge-relay-hold.conf` como indica el comentario al principio de ese archivo y apague el temporizador. Todo lo que esto hace, y lo que no puede hacer, está en [la referencia del Edge Relay](/es/edge-relay/reference/#actualizar-un-relay).
 
 Para aplicar un cambio al archivo local: edítelo y ejecute `sudo systemctl restart edge-relay.service`. El relay lee ese archivo al arrancar y no lo vigila.
 
