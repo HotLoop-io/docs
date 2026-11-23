@@ -309,7 +309,7 @@ Vier Einstellungen sind Anlagenidentität und kein Verhalten und dort bearbeitba
 | Zeitzone | `HOTLOOP_TIMEZONE` |
 | Vor dem Schreiben bestätigen | `HOTLOOP_CONFIRM_WRITES` |
 
-Unter den Einstellungen gibt es Karten, die Daten sind und keine Konfiguration, und sie sind aus demselben Grund bearbeitbar: **Benutzer** ([Authentifizierung und Benutzer](/de/iot/authentication/)), **Alarm-Eskalation**, die sagt, wer als Nächstes informiert wird, wenn niemand einen Alarm quittiert, und wann ([Alarmbenachrichtigungen](/de/iot/notifications/#escalation)), sowie die Historian-Ziele und MQTT-Anmeldungen. Die Kanäle, die eine Eskalation nutzen kann, bleiben die der Bereitstellung, gesetzt über `HOTLOOP_NOTIFY_*`.
+Unter den Einstellungen gibt es Karten, die Daten sind und keine Konfiguration, und sie sind aus demselben Grund bearbeitbar: **Benutzer** ([Authentifizierung und Benutzer](/de/iot/authentication/)), **Alarm-Eskalation**, die sagt, wer als Nächstes informiert wird, wenn niemand einen Alarm quittiert, und wann ([Alarmbenachrichtigungen](/de/iot/notifications/#eskalation)), sowie die Historian-Ziele und MQTT-Anmeldungen. Die Kanäle, die eine Eskalation nutzen kann, bleiben die der Bereitstellung, gesetzt über `HOTLOOP_NOTIFY_*`.
 
 Ein gespeicherter Wert hat Vorrang vor der Umgebungsvariablen, der Wert des Charts wird also zum Ausgangspunkt statt zum letzten Wort. Eine Zeitzone, die die Maschine nicht auflösen kann, wird abgelehnt, statt akzeptiert und stillschweigend ignoriert zu werden, was jeden Zeitstempel auf UTC zurückfallen ließe, ohne dass etwas sagt, warum.
 

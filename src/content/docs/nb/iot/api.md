@@ -1578,7 +1578,7 @@ Alarmens revisjonsspor, nyeste først. `?alarm=` én definisjon, `?limit=` (stan
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` er `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` eller `escalation-ended`. De to siste skrives av alarmeskaleringen (`actor` er `escalation`), og `note` sier hvem som ble varslet og hvorfor kjeden stoppet. Se [Alarmvarsler](/nb/iot/notifications/#escalation).
+`type` er `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` eller `escalation-ended`. De to siste skrives av alarmeskaleringen (`actor` er `escalation`), og `note` sier hvem som ble varslet og hvorfor kjeden stoppet. Se [Alarmvarsler](/nb/iot/notifications/#eskalering).
 
 ## Automasjoner
 
@@ -2016,7 +2016,7 @@ Erstatter hele policyen, ikke en patch, og svarer det `GET` ville svart. Den gje
 
 `minPriority` er `critical`, `high` (standard), `medium` eller `low`. Et steg forfaller `afterMinutes` (1 til 1440) etter det før, det første etter utløsningen, og nevner `contacts` fra listen, `channels` som oppsettet har, eller begge. Høyst 10 steg, 50 kontakter og 20 repetisjoner. Ukjente felt avvises.
 
-`400` med grunnen når policyen ikke kan fungere, i ord du kan handle på: et steg som ikke nevner noen, en kontakt som ikke er i listen, en kanal denne HotLoop ikke har konfigurert (svaret lister de den har), et ntfy-topic uten at ntfy er konfigurert eller en adresse uten at e-post er konfigurert, en adresse som ikke er en vanlig en, en repetisjon uten intervall. Ingenting lagres når den avvises. Lagringen står i systemloggen, uten topics. Se [Alarmvarsler](/nb/iot/notifications/#escalation).
+`400` med grunnen når policyen ikke kan fungere, i ord du kan handle på: et steg som ikke nevner noen, en kontakt som ikke er i listen, en kanal denne HotLoop ikke har konfigurert (svaret lister de den har), et ntfy-topic uten at ntfy er konfigurert eller en adresse uten at e-post er konfigurert, en adresse som ikke er en vanlig en, en repetisjon uten intervall. Ingenting lagres når den avvises. Lagringen står i systemloggen, uten topics. Se [Alarmvarsler](/nb/iot/notifications/#eskalering).
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ Det er en vanlig kvittering gjennom alarmmotoren, revidert under `notify:<channe
 | 410 | Ekte, men utløpt |
 | 503 | Kvitteringen kunne ikke lagres; lenken gis tilbake slik at et nytt trykk fortsatt kan fungere |
 
-Svaret bærer `Access-Control-Allow-Origin: *` slik at ntfy-webappen kan trykke på den fra sin egen origin; ingenting på denne ruten leser en cookie. Tokenet logges eller returneres aldri noe sted. Se [Alarmvarsler](/nb/iot/notifications/#acknowledge-links).
+Svaret bærer `Access-Control-Allow-Origin: *` slik at ntfy-webappen kan trykke på den fra sin egen origin; ingenting på denne ruten leser en cookie. Tokenet logges eller returneres aldri noe sted. Se [Alarmvarsler](/nb/iot/notifications/#kvitteringslenker).
 
 ## Sikkerhetskopier
 

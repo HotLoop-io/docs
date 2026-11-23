@@ -309,7 +309,7 @@ Cuatro ajustes son identidad de la planta y no comportamiento, y se pueden edita
 | Zona horaria | `HOTLOOP_TIMEZONE` |
 | Confirmar antes de escribir | `HOTLOOP_CONFIRM_WRITES` |
 
-Bajo los ajustes hay tarjetas que son datos y no configuración, y son editables por la misma razón: **Usuarios** ([Autenticación y usuarios](/es/iot/authentication/)), **Escalado de alarmas**, que dice a quién se avisa a continuación cuando nadie reconoce una alarma y cuándo ([Notificaciones de alarmas](/es/iot/notifications/#escalation)), y los destinos del historiador y los accesos MQTT. Los canales que puede usar un escalado siguen siendo del despliegue, fijados con `HOTLOOP_NOTIFY_*`.
+Bajo los ajustes hay tarjetas que son datos y no configuración, y son editables por la misma razón: **Usuarios** ([Autenticación y usuarios](/es/iot/authentication/)), **Escalado de alarmas**, que dice a quién se avisa a continuación cuando nadie reconoce una alarma y cuándo ([Notificaciones de alarmas](/es/iot/notifications/#escalado)), y los destinos del historiador y los accesos MQTT. Los canales que puede usar un escalado siguen siendo del despliegue, fijados con `HOTLOOP_NOTIFY_*`.
 
 Un valor guardado gana a la variable de entorno, así que el valor del chart pasa a ser el punto de partida y no la última palabra. Una zona horaria que la máquina no puede resolver se rechaza en lugar de aceptarse e ignorarse en silencio, lo que dejaría todas las marcas de tiempo recurriendo a UTC sin que nada dijera por qué.
 

@@ -309,7 +309,7 @@ Fire innstillinger er anleggsidentitet og ikke oppførsel, og kan redigeres der.
 | Tidssone | `HOTLOOP_TIMEZONE` |
 | Bekreft før skriving | `HOTLOOP_CONFIRM_WRITES` |
 
-Under innstillingene er det kort som er data og ikke konfigurasjon, og de kan redigeres av samme grunn: **Brukere** ([Autentisering og brukere](/nb/iot/authentication/)), **Alarmeskalering**, som sier hvem som varsles neste gang ingen kvitterer en alarm og når ([Alarmvarsler](/nb/iot/notifications/#escalation)), og historikermålene og MQTT-innloggingene. Kanalene en eskalering kan bruke er fortsatt distribusjonens, satt av `HOTLOOP_NOTIFY_*`.
+Under innstillingene er det kort som er data og ikke konfigurasjon, og de kan redigeres av samme grunn: **Brukere** ([Autentisering og brukere](/nb/iot/authentication/)), **Alarmeskalering**, som sier hvem som varsles neste gang ingen kvitterer en alarm og når ([Alarmvarsler](/nb/iot/notifications/#eskalering)), og historikermålene og MQTT-innloggingene. Kanalene en eskalering kan bruke er fortsatt distribusjonens, satt av `HOTLOOP_NOTIFY_*`.
 
 En lagret verdi vinner over miljøvariabelen, så chartets verdi blir utgangspunktet i stedet for siste ord. En tidssone maskinen ikke kan løse avvises i stedet for å bli akseptert og ignorert i det stille, noe som ville latt hvert tidsstempel falle tilbake på UTC uten at noe sier hvorfor.
 

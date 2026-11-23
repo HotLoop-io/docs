@@ -1578,7 +1578,7 @@ Das Audit-Protokoll der Alarme, neueste zuerst. `?alarm=` eine Definition, `?lim
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` ist `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` oder `escalation-ended`. Die letzten beiden schreibt die Alarmeskalation (`actor` ist `escalation`), und ihr `note` sagt, wer informiert wurde und warum die Kette endete. Siehe [Alarmbenachrichtigungen](/de/iot/notifications/#escalation).
+`type` ist `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` oder `escalation-ended`. Die letzten beiden schreibt die Alarmeskalation (`actor` ist `escalation`), und ihr `note` sagt, wer informiert wurde und warum die Kette endete. Siehe [Alarmbenachrichtigungen](/de/iot/notifications/#eskalation).
 
 ## Automatisierungen
 
@@ -2016,7 +2016,7 @@ Ersetzt die ganze Richtlinie, kein Patch, und antwortet mit dem, was `GET` antwo
 
 `minPriority` ist `critical`, `high` (der Standard), `medium` oder `low`. Ein Schritt ist `afterMinutes` (1 bis 1440) nach dem vorigen fällig, der erste nach dem Auslösen, und nennt `contacts` aus der Liste, `channels`, die das Deployment hat, oder beides. Höchstens 10 Schritte, 50 Kontakte und 20 Wiederholungen. Unbekannte Felder werden abgelehnt.
 
-`400` mit dem Grund, wenn die Richtlinie nicht funktionieren kann, in Worten, mit denen sich etwas anfangen lässt: ein Schritt, der niemanden nennt, ein Kontakt, der nicht in der Liste steht, ein Kanal, den dieses HotLoop nicht konfiguriert hat (die Antwort listet die auf, die es hat), ein ntfy-Topic ohne konfiguriertes ntfy oder eine Adresse ohne konfigurierte E-Mail, eine Adresse, die keine einfache ist, eine Wiederholung ohne Intervall. Bei Ablehnung wird nichts gespeichert. Das Speichern steht im Systemprotokoll, ohne die Topics. Siehe [Alarmbenachrichtigungen](/de/iot/notifications/#escalation).
+`400` mit dem Grund, wenn die Richtlinie nicht funktionieren kann, in Worten, mit denen sich etwas anfangen lässt: ein Schritt, der niemanden nennt, ein Kontakt, der nicht in der Liste steht, ein Kanal, den dieses HotLoop nicht konfiguriert hat (die Antwort listet die auf, die es hat), ein ntfy-Topic ohne konfiguriertes ntfy oder eine Adresse ohne konfigurierte E-Mail, eine Adresse, die keine einfache ist, eine Wiederholung ohne Intervall. Bei Ablehnung wird nichts gespeichert. Das Speichern steht im Systemprotokoll, ohne die Topics. Siehe [Alarmbenachrichtigungen](/de/iot/notifications/#eskalation).
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ Es ist eine gewöhnliche Quittierung über die Alarm-Engine, auditiert unter `no
 | 410 | Echt, aber abgelaufen |
 | 503 | Die Quittierung konnte nicht gespeichert werden; der Link wird zurückgegeben, damit ein zweiter Druck noch funktionieren kann |
 
-Die Antwort trägt `Access-Control-Allow-Origin: *`, damit die ntfy-Web-App ihn von ihrer eigenen Origin aus drücken kann; nichts auf dieser Route liest ein Cookie. Das Token wird nie protokolliert oder irgendwo zurückgegeben. Siehe [Alarmbenachrichtigungen](/de/iot/notifications/#acknowledge-links).
+Die Antwort trägt `Access-Control-Allow-Origin: *`, damit die ntfy-Web-App ihn von ihrer eigenen Origin aus drücken kann; nichts auf dieser Route liest ein Cookie. Das Token wird nie protokolliert oder irgendwo zurückgegeben. Siehe [Alarmbenachrichtigungen](/de/iot/notifications/#quittierlinks).
 
 ## Sicherungen
 

@@ -1578,7 +1578,7 @@ Nhật ký kiểm tra báo động, mới nhất trước. `?alarm=` một đị
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` là `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` hoặc `escalation-ended`. Hai giá trị cuối do cơ chế leo thang báo động ghi (`actor` là `escalation`), và `note` của chúng cho biết ai đã được báo và vì sao chuỗi dừng lại. Xem [Thông báo báo động](/vi/iot/notifications/#escalation).
+`type` là `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` hoặc `escalation-ended`. Hai giá trị cuối do cơ chế leo thang báo động ghi (`actor` là `escalation`), và `note` của chúng cho biết ai đã được báo và vì sao chuỗi dừng lại. Xem [Thông báo báo động](/vi/iot/notifications/#leo-thang).
 
 ## Tự động hóa
 
@@ -2016,7 +2016,7 @@ Thay toàn bộ chính sách, không phải một bản vá, và trả lời nh�
 
 `minPriority` là `critical`, `high` (mặc định), `medium` hoặc `low`. Một bước đến hạn sau bước trước `afterMinutes` (1 đến 1440), bước đầu sau lúc kích hoạt, và nêu `contacts` từ danh sách, `channels` mà bản triển khai có, hoặc cả hai. Tối đa 10 bước, 50 liên hệ và 20 lần lặp. Các trường không xác định bị từ chối.
 
-`400` kèm lý do khi chính sách không thể hoạt động, bằng lời bạn có thể làm theo: một bước không nêu ai, một liên hệ không có trong danh sách, một kênh mà HotLoop này chưa cấu hình (phản hồi liệt kê những kênh nó có), một topic ntfy khi ntfy chưa được cấu hình hoặc một địa chỉ khi email chưa được cấu hình, một địa chỉ không phải loại đơn giản, một lần lặp không có khoảng cách. Không lưu gì khi bị từ chối. Việc lưu nằm trong nhật ký hệ thống, không có các topic. Xem [Thông báo báo động](/vi/iot/notifications/#escalation).
+`400` kèm lý do khi chính sách không thể hoạt động, bằng lời bạn có thể làm theo: một bước không nêu ai, một liên hệ không có trong danh sách, một kênh mà HotLoop này chưa cấu hình (phản hồi liệt kê những kênh nó có), một topic ntfy khi ntfy chưa được cấu hình hoặc một địa chỉ khi email chưa được cấu hình, một địa chỉ không phải loại đơn giản, một lần lặp không có khoảng cách. Không lưu gì khi bị từ chối. Việc lưu nằm trong nhật ký hệ thống, không có các topic. Xem [Thông báo báo động](/vi/iot/notifications/#leo-thang).
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ Khi các liên kết xác nhận bị tắt:
 | 410 | Thật, nhưng đã hết hạn |
 | 503 | Không thể lưu lần xác nhận; liên kết được trả lại để lần nhấn thứ hai vẫn có thể hoạt động |
 
-Phản hồi mang `Access-Control-Allow-Origin: *` để ứng dụng web ntfy có thể nhấn nó từ origin của chính nó; không có gì trên route này đọc cookie. Token không bao giờ được ghi nhật ký hay trả về ở đâu cả. Xem [Thông báo báo động](/vi/iot/notifications/#acknowledge-links).
+Phản hồi mang `Access-Control-Allow-Origin: *` để ứng dụng web ntfy có thể nhấn nó từ origin của chính nó; không có gì trên route này đọc cookie. Token không bao giờ được ghi nhật ký hay trả về ở đâu cả. Xem [Thông báo báo động](/vi/iot/notifications/#liên-kết-xác-nhận).
 
 ## Sao lưu
 

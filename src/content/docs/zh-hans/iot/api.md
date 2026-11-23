@@ -1578,7 +1578,7 @@ ISA-18.2：触发、确认和恢复正常是三件不同的事，日志能分清
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` 是 `raised`、`acked`、`cleared`、`shelved`、`unshelved`、`suppressed`、`unsuppressed`、`escalated` 或 `escalation-ended`。最后两个由报警升级写入(`actor` 为 `escalation`),其 `note` 说明通知了谁,以及链条为什么停止。参见[报警通知](/zh-hans/iot/notifications/#escalation)。
+`type` 是 `raised`、`acked`、`cleared`、`shelved`、`unshelved`、`suppressed`、`unsuppressed`、`escalated` 或 `escalation-ended`。最后两个由报警升级写入(`actor` 为 `escalation`),其 `note` 说明通知了谁,以及链条为什么停止。参见[报警通知](/zh-hans/iot/notifications/#升级)。
 
 ## 自动化
 
@@ -2016,7 +2016,7 @@ ISA-18.2：触发、确认和恢复正常是三件不同的事，日志能分清
 
 `minPriority` 为 `critical`、`high`(默认)、`medium` 或 `low`。一个步骤在前一个步骤之后 `afterMinutes`(1 到 1440)到期,第一个在触发之后,并指定列表中的 `contacts`、部署所具有的 `channels`,或两者兼有。最多 10 个步骤、50 个联系人和 20 次重复。未知字段会被拒绝。
 
-策略无法工作时返回 `400` 并附原因,措辞便于据此采取行动:没有指定任何人的步骤、不在列表中的联系人、此 HotLoop 未配置的渠道(响应会列出它已有的渠道)、未配置 ntfy 却有 ntfy 主题,或未配置邮件却有地址、不是普通地址的地址、没有间隔的重复。被拒绝时不会存储任何内容。保存它会记录在系统日志中,不含主题。参见[报警通知](/zh-hans/iot/notifications/#escalation)。
+策略无法工作时返回 `400` 并附原因,措辞便于据此采取行动:没有指定任何人的步骤、不在列表中的联系人、此 HotLoop 未配置的渠道(响应会列出它已有的渠道)、未配置 ntfy 却有 ntfy 主题,或未配置邮件却有地址、不是普通地址的地址、没有间隔的重复。被拒绝时不会存储任何内容。保存它会记录在系统日志中,不含主题。参见[报警通知](/zh-hans/iot/notifications/#升级)。
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ ntfy 通知上的**确认**按钮。按下它的手机没有会话可发送,所�
 | 410 | 真实,但已过期 |
 | 503 | 无法保存确认;链接会被退还,让第二次按下仍然有效 |
 
-响应带有 `Access-Control-Allow-Origin: *`,让 ntfy 网页应用可以从它自己的来源按下它;此路由上没有任何东西会读取 Cookie。令牌永远不会被记录,也不会在任何地方返回。参见[报警通知](/zh-hans/iot/notifications/#acknowledge-links)。
+响应带有 `Access-Control-Allow-Origin: *`,让 ntfy 网页应用可以从它自己的来源按下它;此路由上没有任何东西会读取 Cookie。令牌永远不会被记录,也不会在任何地方返回。参见[报警通知](/zh-hans/iot/notifications/#确认链接)。
 
 ## 备份
 

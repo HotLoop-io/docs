@@ -2042,7 +2042,7 @@ Con i link di riconoscimento disattivati:
 | 410 | Autentico, ma scaduto |
 | 503 | Il riconoscimento non ha potuto essere salvato; il link viene restituito così che una seconda pressione possa ancora funzionare |
 
-La risposta porta `Access-Control-Allow-Origin: *` così che l'app web di ntfy possa premerlo dalla propria origine; nulla su questa route legge un cookie. Il token non viene mai registrato né restituito da nessuna parte. Vedi [Notifiche degli allarmi](/it/iot/notifications/#acknowledge-links).
+La risposta porta `Access-Control-Allow-Origin: *` così che l'app web di ntfy possa premerlo dalla propria origine; nulla su questa route legge un cookie. Il token non viene mai registrato né restituito da nessuna parte. Vedi [Notifiche degli allarmi](/it/iot/notifications/#link-di-riconoscimento).
 
 ## Backup
 
