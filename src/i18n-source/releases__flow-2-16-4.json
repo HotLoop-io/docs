@@ -1,0 +1,34 @@
+{
+  "page": "releases/flow-2-16-4",
+  "english": "src/content/docs/releases/flow-2-16-4.md",
+  "langs": {
+    "es": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "fr": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "it": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "de": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "nb": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "bg": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "el": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "ko": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "ja": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "vi": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "hi": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "zh-hans": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"],
+    "ar": ["d1d899299dc7","2b7b892ffb66","23174cd8f6fc","b6060ffba547","00afaed120cf","3e4b86b5dadf","57917a300fb1","50912afe7fc1","15acd00bd6b2","33c104de468d","807f9e13c58e","9c6ed711906e","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","78f45a921beb","3fc5d1401263"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"}
+  }
+}
