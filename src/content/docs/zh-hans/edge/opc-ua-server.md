@@ -3,6 +3,10 @@ title: "OPC UA 服务器"
 description: "把配置好的设备和变量发布为只读的 OPC UA 地址空间，让您现有的 SCADA 无需新驱动就能看到每个变量。"
 ---
 
+:::note[也涵盖即将推出的内容]
+本页也涵盖了一些比最新版本 HotLoop core 4.24.0 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
+:::
+
 HotLoop 的 OPC UA 服务器自 4.13.0 起，把 Gateway 中配置的设备和变量发布为 OPC UA 地址空间。第三方 OPC UA 客户端、SCADA 软件包、HMI、历史数据库，或 UaExpert 这类测试工具，都可以读取 Gateway 的实时变量，无需任何人为另一端编写 HotLoop 驱动。
 
 默认开启（`HOTLOOP_OPCUA_SERVER_ENABLED`），二进制文件和 Helm chart 都是如此。它在 HotLoop 认证开启的状态下启动，并有自己的登录账号 `opcua-reader`，HotLoop 用生成的密码创建该账号，设置页面会向管理员显示这个密码（`GET /api/opcua/server`）；它只能读取变量和数值，别的都不能做。HotLoop 认证关闭时没有可登录的用户，因此服务器会等待并说明原因（它不会拒绝启动）。如果设备上另一个 OPC UA 服务器已占用 4840，它会等待并说明；您自己选择的端口无法打开则是错误：在工厂网络上打开监听器，是部署方有意去做的事。默认端口 4840。

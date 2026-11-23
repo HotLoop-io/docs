@@ -5,6 +5,10 @@ description: "Publish configured devices and tags as a read-only OPC UA address 
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 HotLoop's OPC UA server, since 4.13.0, publishes the Gateway's configured
 devices and tags as an OPC UA address space, so a third-party OPC UA client, a
 SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the

@@ -3,6 +3,10 @@ title: "OPC UA-serveren"
 description: "Publiser konfigurerte enheter og tags som et skrivebeskyttet OPC UA-adresserom, så SCADA-systemet du allerede eier ser alle tags uten ny driver."
 ---
 
+:::note[Tar med det som kommer]
+Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
+:::
+
 OPC UA-serveren i HotLoop publiserer, siden 4.13.0, enhetene og taggene som er konfigurert i Gateway som et OPC UA-adresserom. En OPC UA-klient fra en tredjepart, en SCADA-pakke, en HMI, en historian eller et testverktøy som UaExpert kan dermed lese Gatewayens live tags uten at noen skriver en HotLoop-driver for den andre siden.
 
 På som standard (`HOTLOOP_OPCUA_SERVER_ENABLED`), i binærfilen og i Helm-chartet. Den starter med HotLoop-autentisering på og en egen innlogging, `opcua-reader`, som HotLoop lager med et generert passord som Innstillinger viser en administrator (`GET /api/opcua/server`); den kan lese tagger og verdier og ingenting annet. Med HotLoop-autentisering av finnes det ingen brukere å logge inn som, så serveren venter og sier fra (den nekter ikke å starte). Er 4840 allerede tatt av en annen OPC UA-server på boksen, venter den og sier fra; en port du valgte som ikke kan åpnes, er en feil: å åpne en lytter på et anleggsnettverk er noe en driftsetting gjør med vilje. Standardport 4840.

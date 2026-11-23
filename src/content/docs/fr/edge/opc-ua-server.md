@@ -3,6 +3,10 @@ title: "Le serveur OPC UA"
 description: "Publiez les appareils et tags configurés sous forme d'espace d'adressage OPC UA en lecture seule : votre SCADA voit chaque tag sans nouveau pilote."
 ---
 
+:::note[Couvre ce qui arrive]
+Cette page couvre aussi quelques éléments plus récents que HotLoop core 4.24.0, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
+:::
+
 Le serveur OPC UA de HotLoop, depuis la version 4.13.0, publie les appareils et les tags configurés dans le Gateway sous forme d'espace d'adressage OPC UA. Un client OPC UA tiers, un logiciel SCADA, un IHM, un historien ou un outil de test comme UaExpert peut ainsi lire les tags en direct du Gateway sans que personne n'écrive de pilote HotLoop pour l'autre côté.
 
 Activé par défaut (`HOTLOOP_OPCUA_SERVER_ENABLED`), dans le binaire et dans le chart Helm. Il démarre avec l'authentification HotLoop activée et un identifiant qui lui est propre, `opcua-reader`, que HotLoop crée avec un mot de passe généré que les Paramètres montrent à un administrateur (`GET /api/opcua/server`) ; il peut lire les tags et les valeurs, rien de plus. Avec l'authentification HotLoop désactivée, il n'y a aucun utilisateur avec qui se connecter, donc le serveur reste en attente et le signale (il ne refuse pas de démarrer). Si un autre serveur OPC UA de la machine occupe déjà le 4840, il reste en attente et le signale ; un port que vous avez choisi et qui ne peut pas être ouvert est une erreur : ouvrir un listener sur un réseau d'usine est une décision qu'un déploiement prend en connaissance de cause. Port par défaut 4840.
