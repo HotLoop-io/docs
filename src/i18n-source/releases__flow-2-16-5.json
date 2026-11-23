@@ -1,0 +1,34 @@
+{
+  "page": "releases/flow-2-16-5",
+  "english": "src/content/docs/releases/flow-2-16-5.md",
+  "langs": {
+    "es": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "fr": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "it": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "de": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "nb": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "bg": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "el": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "ko": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "ja": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "vi": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "hi": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "zh-hans": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"],
+    "ar": ["52f681cef89c","5f6ef17c6f94","c51896ad7a2d","2bf939069040","00afaed120cf","65382e962f95","476b157c780f","6f5636e10f72","33c104de468d","64a2845daeee","f96a4bd45fde","35f1aad25b10","8ce637b3381f","36579d7ebb2a","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","49a12673751c","fbe419ede22d"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"}
+  }
+}
