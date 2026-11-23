@@ -1,0 +1,34 @@
+{
+  "page": "releases/hotloop-4-20-1",
+  "english": "src/content/docs/releases/hotloop-4-20-1.md",
+  "langs": {
+    "es": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "fr": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "it": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "de": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "nb": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "bg": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "el": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "ko": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "ja": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "vi": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "hi": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "zh-hans": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"],
+    "ar": ["2249840c4a85","6f0563de41d7","71a8f360fd1d","19c15df508e6","5473aaec5a2f","9c4ffa08faf0"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.0","flow":"2.16.8","cascade":"1.5.1"}
+  }
+}
