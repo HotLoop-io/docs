@@ -26,7 +26,7 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "3e2344e1ed947af5d5029ba4b122866527a01ef1",
+      "ref": "origin/main",
       "sha": "3e2344e1ed947af5d5029ba4b122866527a01ef1",
       "release": {
         "tag": "v1.5.1",
