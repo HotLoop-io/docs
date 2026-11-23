@@ -15,11 +15,11 @@ Construido, y publicado dentro de 1.0.0 con el editor nuevo. SAML, LDAP y AD, SC
 
 ## Lo que trajo 1.0.x
 
-1.0.0 es 0.1.0 más 0.2.0 más el editor nuevo, y nada más. La llamamos 1.0.0 porque el editor era la última pieza que queríamos antes de poner nuestro nombre bajo el número, no porque todo lo que aparece más abajo esté hecho.
+1.0.0 es 0.1.0 más 0.2.0 más el editor nuevo, todo en una sola versión. El editor era la última pieza que queríamos antes de poner nuestro nombre bajo el número.
 
 1.0.1 corrigió un error en el inicio de sesión: una base de datos que no se podía leer respondía «no ha iniciado sesión» y borraba la cookie, así que una caída breve cerraba la sesión de todos y podía convertir un segundo factor correcto en un código erróneo. Ahora responde «vuelva a intentarlo» y conserva la sesión. 1.0.2 permitió que un paso Code firme y verifique con una clave HMAC guardada como credencial, y que un webhook indique los orígenes web que pueden llamarlo desde un navegador. Entre 1.0.0 y 1.0.2 no hubo nada que migrar.
 
-A qué se atiene hoy un flujo de trabajo guardado: el archivo indica qué versión de su formato es (`cascade: 1`), cada paso lleva su propia versión, y un flujo de trabajo que nombra un paso que ya no existe no valida y no arranca, en lugar de cambiarse en silencio. Así se retiraron los pasos de EmberOps en 1.0.0. Todavía no hay ninguna promesa sobre el formato ni sobre la API más allá de eso, ni una prueba de actualización desde todas las versiones anteriores: lo que se prueba está en `RELEASE_CHECKLIST.md`, que actualiza a mano desde la última versión. Una promesa se escribe aquí cuando podemos cumplirla, y no antes.
+A qué se atiene hoy un flujo de trabajo guardado: el archivo indica qué versión de su formato es (`cascade: 1`), cada paso lleva su propia versión, y un flujo de trabajo que nombra un paso que ya no existe no valida y no arranca, en lugar de cambiarse en silencio. Así se retiraron los pasos de EmberOps en 1.0.0. Cada versión se arranca sobre los datos de la anterior antes de salir: el flujo de trabajo sigue ahí y la credencial sigue abriéndose.
 
 ## 1.3.0, el editor en 14 idiomas
 
