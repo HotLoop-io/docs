@@ -10,7 +10,7 @@ editUrl: false
 手动拉取某个版本：
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 这些单元跟随 `:stable`，由 Podman 的自动更新定时器更新。
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 在 k3s 上，`charts/hotloop-cascade` 就是 Helm Chart：
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 Chart 在 Service 和提供编辑器的 pod 上带有 EmberNet 仪表板读取的标签，因此从 App Store 部署的 Cascade 会显示在 Running Apps 下，并带有 LAUNCH 按钮。`gui.appName`、`gui.port` 和 `gui.displayName` 可以改变显示的内容。

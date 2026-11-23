@@ -10,6 +10,13 @@ everything it reads to a central Gateway over MQTT, the opposite direction
 from the existing MQTT driver, which consumes Sparkplug as a primary host.
 This is what it means to run it.
 
+Edge publish is on by default in the Gateway and Edge and idle until it has a
+broker and a Sparkplug group, from the chart or the environment, or entered by an
+admin under Settings, "Where alarms and readings go" (see
+[Alarm notifications](/iot/notifications/#where-alarms-go-settings)). What is saved there wins, and it
+is read when HotLoop starts, because the publisher owns the queue file and the
+node. With nothing given it publishes nothing and does not stop HotLoop starting.
+
 Turning this on runs it inside the same Gateway process, still connected to
 TimescaleDB, useful when a site wants the full Gateway's UI and history
 locally as well as an uplink to a central one.

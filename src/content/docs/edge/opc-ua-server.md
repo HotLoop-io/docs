@@ -10,7 +10,7 @@ devices and tags as an OPC UA address space, so a third-party OPC UA client, a
 SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the
 Gateway's live tags without anyone writing a HotLoop driver for the other side.
 
-Off by default (`HOTLOOP_OPCUA_SERVER_ENABLED`): opening a listener on a plant
+On by default (`HOTLOOP_OPCUA_SERVER_ENABLED`), in the binary and in the Helm chart. It comes up with HotLoop authentication on and a login of its own, `opcua-reader`, which HotLoop makes with a generated password that Settings shows an admin (`GET /api/opcua/server`); it can read tags and values and nothing else. With HotLoop authentication off there are no users to log in as, so the server idles and says so (it does not refuse to start). If 4840 is taken by another OPC UA server on the box it idles and says so; a port you chose that cannot be bound is an error: opening a listener on a plant
 network is something a deployment does on purpose. Default port 4840.
 
 **It is read-only.** See [Why it is read-only](#why-it-is-read-only). It

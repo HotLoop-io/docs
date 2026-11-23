@@ -7,13 +7,13 @@ sidebar:
 editUrl: false
 ---
 
-Το HotLoop for CODESYS είναι ένα Helm chart, το `hotloop-codesys`, που εγκαθιστά το HotLoop Edge και έναν εγκαταστάτη προφίλ στον ίδιο κόμβο με ένα runtime CODESYS. Το chart δημοσιεύεται στο `{{codesysChartRepo}}`, με την {{codesys}} ως νεότερη, και το image του εγκαταστάτη τραβιέται χωρίς σύνδεση. Στο EmberNet είναι εφαρμογή του App Store. Χωρίς EmberNet είναι Helm σε k3s.
+Το HotLoop for CODESYS είναι ένα Helm chart, το `hotloop-codesys`, που εγκαθιστά το HotLoop Edge και έναν εγκαταστάτη προφίλ στον ίδιο κόμβο με ένα runtime CODESYS. Το chart δημοσιεύεται στο `https://hotloop.io/hotloop-codesys/`, με την 0.3.8 ως νεότερη, και το image του εγκαταστάτη τραβιέται χωρίς σύνδεση. Στο EmberNet είναι εφαρμογή του App Store. Χωρίς EmberNet είναι Helm σε k3s.
 
 ## Τι χρειάζεται πρώτα ο κόμβος
 
 - **Ένα runtime CODESYS στον ίδιο κόμβο που δημοσιεύει τον διακομιστή OPC UA του στη θύρα 4840.** Ο εγκαταστάτης βρίσκει τη διεύθυνση του ίδιου του κόμβου από το Kubernetes και διαβάζει το `<node address>:4840`. Το chart του ίδιου του runtime δημοσιεύει αυτή τη θύρα στον host.
 - **Ένα Symbol Configuration στο πρόγραμμα του PLC** με ενεργό το *Support OPC UA features*, που απαριθμεί τις μεταβλητές που θέλετε να βλέπετε, ή `{attribute 'symbol' := 'read'}` πάνω τους στη δήλωση. Ένα PLC χωρίς Symbol Configuration απαντά στη ρύθμιση με ένα μήνυμα που λέει να προσθέσετε ένα. Είναι η μόνη αλλαγή στο έργο του PLC.
-- **HotLoop {{codesysNeeds}}**, που το chart τυλίγει. Ο συνδέτης CODESYS ήρθε με το HotLoop 4.19.4. Το chart εξαρτάται από το chart `hotloop-edge` στη γραμμή `~{{codesysNeeds}}`.
+- **HotLoop 4.22.0**, που το chart τυλίγει. Ο συνδέτης CODESYS ήρθε με το HotLoop 4.19.4. Το chart εξαρτάται από το chart `hotloop-edge` στη γραμμή `~4.22.0`.
 - **Ένα προφίλ.** Ένα Secret με ένα κλειδί. [Η σελίδα του προφίλ](/el/codesys/profile/) έχει τη μορφή του.
 
 ## Από το App Store του EmberCORE
@@ -24,9 +24,9 @@ editUrl: false
 
 ```bash
 kubectl -n <namespace> create secret generic <release>-profile --from-file=profile.json
-helm repo add hotloop-codesys {{codesysChartRepo}}
+helm repo add hotloop-codesys https://hotloop.io/hotloop-codesys/
 helm repo update
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace>
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace>
 ```
 
 Ονομάστε το Secret `<release>-profile`, ή αλλάξτε ό,τι ψάχνει το chart με `profile.existingSecret` (το Secret) και `profile.key` (το κλειδί, `profile.json` από προεπιλογή). Για να καρφώσετε την εγκατάσταση στον κόμβο του runtime, ορίστε `nodeSelector`. Για το HotLoop μόνο του, χωρίς προφίλ, για ρύθμιση με το χέρι, εγκαταστήστε με `--set provisioner.enabled=false`.
@@ -36,7 +36,7 @@ helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n 
 Ένα runtime που εγκαταστάθηκε από το chart του με `network.hostNetwork=true` κρατά τη θύρα 8080 του host για το WebVisu, οπότε η σελίδα του HotLoop δεν μπορεί να ακούει κι αυτή στην 8080 εκεί. Το chart κάνει τη σελίδα του HotLoop να ακούει στην 8090 μέσα στο pod και κρατά το Service στην 8080, ώστε το πλακίδιο του App Store και ο εγκαταστάτης να τη φτάνουν όπως πριν. Εγκαταστήστε με ενεργό το δίκτυο του host και για τα δύο:
 
 ```bash
-helm install <release> hotloop-codesys/hotloop-codesys --version {{codesys}} -n <namespace> \
+helm install <release> hotloop-codesys/hotloop-codesys --version 0.3.8 -n <namespace> \
   --set hotloop-edge.hostNetwork=true --set hotloop-edge.service.targetPort=8090
 ```
 

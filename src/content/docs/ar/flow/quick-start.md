@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
-ولّد التجزئة بالأمر `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long'`. الصورة distroless وتعمل بلا صلاحيات root وليس فيها shell، فلا يوجد ما يُنفَّذ فيه `exec` ولا ما يتخذه من يحصل على تنفيذ الشيفرة نقطة ارتكاز.
+ولّد التجزئة بالأمر `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. الصورة distroless وتعمل بلا صلاحيات root وليس فيها shell، فلا يوجد ما يُنفَّذ فيه `exec` ولا ما يتخذه من يحصل على تنفيذ الشيفرة نقطة ارتكاز.
 
 ثم افتح <http://localhost:1880>. ضع ملف `flows.json` في مجلد البيانات وأعد التشغيل، أو ابنِ التدفق مباشرة في المحرر. المحرر هو Astro مع جزر Svelte فوق لوحة رسم من TypeScript خالصة وSVG أصلي، مبني كملفات ثابتة داخل الملف الثنائي: 190.7 kB من JS و30.1 kB من CSS مصغَّرة، و62.5 kB و6.8 kB بعد gzip، مقروءة من `web/dist/_astro` بعد `npm run build`. لا يُجلب شيء منه من أي مكان، فيعمل على جهاز بلا إنترنت.
 

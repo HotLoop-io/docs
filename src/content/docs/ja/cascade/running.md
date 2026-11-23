@@ -10,7 +10,7 @@ Podmanホストでは、`deploy/quadlet`にsystemdのユニットがあります
 バージョンを手動で取得するには次のようにします。
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 ユニットは`:stable`に従い、Podmanの自動更新タイマーがそれを更新します。
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 k3sでは、`charts/hotloop-cascade`がHelmチャートです。
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 チャートには、EmberNetダッシュボードが読み取るラベルが、Serviceとエディターを提供するPodに付いています。そのため、App Storeから展開したCascadeは、Running AppsにLAUNCHボタン付きで表示されます。`gui.appName`、`gui.port`、`gui.displayName`で表示内容を変えられます。

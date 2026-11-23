@@ -10,7 +10,7 @@ editUrl: false
 За да изтеглите версия ръчно:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 Единиците следват `:stable`, а таймерът за автоматично обновяване на Podman ги обновява.
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 На k3s `charts/hotloop-cascade` е Helm чартът:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 Чартът носи етикетите, които таблото на EmberNet чете, върху Service и върху подовете, които обслужват редактора, така че Cascade, внедрен от App Store, се показва в Running Apps с бутон LAUNCH. `gui.appName`, `gui.port` и `gui.displayName` променят какво се показва.

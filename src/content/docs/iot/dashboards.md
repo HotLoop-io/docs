@@ -114,7 +114,7 @@ should hear that and not the person pressing it.
 | `camera` | A snapshot that refreshes, or a motion JPEG stream | `url`, `stream`, `refreshSec` | 6 x 4 |
 | `map` | A floor plan with live tags placed on it | `image`, `markers` | 6 x 5 |
 | `setpoint` | A number entered for one tag, with limits, a unit and a confirm, and what the device reports back | `tag`, `label`, `min`, `max`, `step`, `unit`, `decimals`, `confirm` | 3 x 3 |
-| `symbols` | A picture of a machine: symbols placed by pixel on a background, drawn from their tags | `image`, `width`, `height`, `symbols` | 8 x 5 |
+| `symbols` | A picture of a machine or a process: symbols placed by pixel on a background, joined by pipes, drawn from their tags | `image`, `width`, `height`, `symbols`, `pipes`, `view` | 8 x 5 |
 
 Things worth knowing about the ones that aren't obvious:
 
@@ -227,6 +227,23 @@ Things worth knowing about the ones that aren't obvious:
   and `decimals`) and `label` (fixed text). `invert` reads a tag the other way up, and a lamp's `tone` (`ok`, `warn`,
   `bad` or `info`) is the color it lights in: a run lamp is green and a fault
   lamp is red, and the tag says only when it is lit.
+  Any symbol can carry two rules that read a tag. `show` makes it appear only
+  while the rule holds (`"show": {"tag": "plc/bDoorOpen", "op": "off"}`): while it
+  does not hold the symbol is not drawn, and the builder shows it faded so it can
+  still be picked. `colors` is up to four rules, each with a `tone` (`ok`, `warn`,
+  `bad` or `info`): the first one that holds paints the symbol in that tone,
+  whatever its own tag says, and when none holds it is drawn as it was. A rule is
+  `tag`, an `op` and, for the comparisons that need one, a `value`: `on` (the tag is
+  not 0, the default), `off`, `eq`, `ne`, `gt`, `ge`, `lt` and `le`. A rule whose
+  tag has no good reading holds nothing and hides nothing, so a lost connection
+  never makes a symbol vanish. A rule can instead combine rules: `{"all": [...]}`
+  holds while every one of them holds and `{"any": [...]}` while one does (a PLC's
+  AND and OR), up to three deep and eight parts, and has no tag of its own. A lost tag
+  makes an `all` not hold, and an `any` holds through the others. A lamp can also
+  carry a `lit` rule in place of its tag, for a lamp that is lit by a comparison or a
+  combination (`"lit": {"tag": "plc/Mode", "op": "eq", "value": 3}`); it then needs
+  no tag. The rules' tags are tags the screen names, so a
+  screen file lists them and moves them with the rest.
   A symbol says its state in words as well as in color (a caption and a title),
   is drawn red or warm when its tag is in an alarm or has returned from one, and
   is faded with "no reading" when the tag has no good reading. Motion stops when
@@ -236,6 +253,52 @@ Things worth knowing about the ones that aren't obvious:
   or a `button` card beside it for that. In the builder a symbol is picked up and
   moved with the pointer, or with the arrow keys (Shift moves ten pixels), or
   given its pixels by number.
+
+  **Process symbols and pipes.** A symbols card is also a P&ID. Besides the types
+  above it places `controlvalve`, `checkvalve`, `compressor`, `heatexchanger`,
+  `filter`, `vessel`, `flowmeter`, `instrument` (an ISA bubble: its `label` is the
+  letters, and it shows its tag's number), `junction`, `source` and `sink`. A
+  symbol has `rot` (`90`, `180` or `270`) to turn it a quarter at a time about its
+  center; text does not turn. Most symbols have connection points: a pump's `in`
+  and `out`, a tank's `top`, `bottom`, `left-1` to `left-3` and `right-1` to
+  `right-3`, a valve's `w` and `e`, and so on. A pipe joins two of them:
+
+  ```json
+  "pipes": [
+    { "id": "tank-out", "from": { "symbol": "tank-1", "port": "bottom" },
+      "to": { "symbol": "p1", "port": "in" }, "medium": "water", "tag": "plc/Flow" }
+  ]
+  ```
+
+  Only what is joined is stored. The page works out the route wherever it draws
+  the pipe: right angles, round every symbol on the page with clearance, as few
+  corners as it can, and a pipe that leaves a symbol leaves the way its
+  connection point faces. Move a symbol and its pipes re-route as it moves, in the
+  builder and in a saved file. A T is a `junction` symbol with three pipes on it
+  (its points `n`, `e`, `s` and `w` are all at its center), and in the builder
+  dropping a pipe on another pipe splits that pipe with a junction for you.
+  `medium` is one of `process` (the default), `water`, `wastewater`, `fuel`,
+  `oil`, `air`, `steam`, `gas`, `chemical`, `coolant`, `hydraulic`, `vacuum`,
+  `nitrogen`, `power` or `signal`. Each has its color, and signal and power also
+  have their own line pattern, so a pipe is never told apart by color alone.
+  `tag` (with `invert`) says when the medium is moving in the pipe, from `from`
+  to `to`, and `flow` says it with a rule, the same rules a symbol's `show` and
+  `colors` use. A pipe with neither is drawn full and still. `label` is up to 24
+  characters along the pipe. A pipe holds one tag or one rule, not both. A page
+  holds up to 120 symbols and 240 pipes.
+
+  **The toolbar.** Every symbols card, when it is viewed and when it is built, has
+  a toolbar at its top right: zoom in, zoom out, fit the page, the mini-map, and
+  the high performance view. Zoom is also Ctrl and the wheel (a plain wheel keeps
+  scrolling the dashboard), `+`, `-` and `0` on the page; drag the page to pan it.
+  Once zoomed in, the mini-map shows the whole page with a frame where you are, and
+  pressing or dragging on it takes you there. The high performance view is the
+  ISA-101 gray page: gray equipment and gray pipes, a darker fill for running
+  or open instead of green, the pipe's medium as a short code beside it (W for
+  water, S for steam, SIG for signal), and a color only on what is in alarm or
+  painted by a rule. `view` set to `hp` makes a page open in it; the toolbar
+  switches either way for whoever is looking, and nothing is stored by that.
+  Flow is animated only when the person has not asked their system for less motion.
 - **`markdown`** is built into DOM nodes and never into HTML, so nothing typed
   into it can become markup or a script.
 - **`gauge`, `value`, `map`, `setpoint`** show "not on this gateway any more" if their tag

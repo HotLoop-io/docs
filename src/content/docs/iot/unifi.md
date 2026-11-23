@@ -145,7 +145,7 @@ declares and doesn't add any, because it has nowhere to keep them.
 
 ## Commands
 
-Five kinds of point are commands. Each is created read-only like every other tag, and
+Six kinds of point are commands. Each is created read-only like every other tag, and
 does nothing until someone marks it writable. The account HotLoop logs in with has
 to be a local Administrator for these; as View Only the console answers HTTP 403 and
 HotLoop says so, and nothing changes.
@@ -155,8 +155,20 @@ HotLoop says so, and nothing changes.
 | `d.<mac>.locate` | `true` or `false` | Flashes the device's LED until it is turned off. Reads back what the console says. |
 | `d.<mac>.restart` | `true` | Restarts the device when it next informs. `false` does nothing. Reads 0. |
 | `p.<mac>.<nn>.power_cycle` | `true` | Turns the port's PoE off and on. `false` does nothing. Reads 0. |
+| `p.<mac>.<nn>.poe_mode` | `auto`, `off`, `pasv24` or `passthrough` | Sets the port's PoE mode. The switch's other port settings are read first and sent back with the change, so none is lost. `off` is refused on a port that carries the network, as a power cycle is. |
 | `w.<id>.enabled` | `true` or `false` | Switches a wireless network on or off. Only that one field is sent, so the passphrase and every other setting stay. `<id>` is the console's id for the network, which a rename does not change. |
 | `c.<mac>.blocked` | `true` or `false` | Blocks a watched client from the network, or lets it back in. The point exists for a client the console has seen. |
+
+It has
+no locate, no PoE mode and no port disable, its client actions are guest authorization only
+(no block), and a Wifi Broadcast update replaces the whole network. It also takes an API
+key, a second credential. So HotLoop sends all of these through the console's own
+commands, one session and one login for everything, as the web UI does.
+
+The published API has no
+port configuration to write. So there is no way HotLoop could turn a port off on 10.6 that
+has been seen to hold, and it does not send one. It needs the web UI's own request for
+"Disabled" captured from a real console.
 
 A power cycle can hurt a plant (an automation cycling a PLC every two minutes cooks
 its power supply), so two rules hold whoever asks: a port is cycled at most once in
@@ -393,6 +405,43 @@ backoff of two seconds up to a minute. It pings, and a stream that answers
 nothing for 90 seconds is dead whatever the network says, so it is closed and
 reopened. While it is down, `site.events_live` reads 0, the Overview says
 "polling only" with the reason, and polling carries on exactly as before.
+## SmartPower PDU outlets
+
+A SmartPower PDU is adopted into the Network Application like any device, and its
+`outlet_table` makes the tags of its outlets, in the same device. An outlet is
+`o.<mac>.<nn>.…`:
+
+| Tag | Write | What it is |
+|---|---|---|
+| `o.<mac>.<nn>.on` | `true` or `false` | The outlet's relay. Writing it switches the outlet: the PDU's whole `outlet_overrides` array is read first and sent back with the one change (the console's PUT replaces the array, so an outlet's name would be lost otherwise). |
+| `o.<mac>.<nn>.cycle` | `true` | Turns the outlet off, waits five seconds, and turns it on again. The outlet is always turned back on, even when the request is cancelled in the middle. At most once in 15 minutes, the same cooldown a port's power cycle has, kept the same way. Reads 0. |
+| `o.<mac>.<nn>.power_w`, `.current_a`, `.voltage_v`, `.pf` | | What the outlet measures. |
+| `d.<mac>.pdu_power_w` | | The PDU's total draw, feeding the energy work. |
+
+An outlet can be a machine, so nothing here switches one unless a person armed that
+tag, and every write goes through the gate. The outlet's own cycle (the PDU's
+auto-recovery, `cycle_enabled`) is not touched. The PDU tests run against a console that keeps state and takes the PUT, and a console learns a PDU's outlet table only from
+the device's own inform, so the tests give it that way.
+
+## UniFi Protect
+
+A separate device, protocol `unifi-protect`, because Protect has its own API and its
+own key. See [Protocols and drivers](/iot/protocols/#unifi-protect) for the tags, the events stream
+and the writes. The Integration API is the one the console documents
+(`/proxy/protect/integration/v1`, the key in the `X-API-KEY` header), and the
+key is made in the console's Integrations page; it can be revoked on its own, which
+does not touch the Network login. The certificate is pinned as for the Network
+device. Camera motion needs the events websocket: while it is down the camera's
+motion reads bad and `site.events_live` reads 0. The sensors' own state is on the REST
+record and stays good.
+
+## UniFi Access
+
+A separate device, protocol `unifi-access`, with its API token and port 12445. See
+[Protocols and drivers](/iot/protocols/#unifi-access). Unlocking is a write like any other: a
+person arms `door.<id>.unlock`, and the write gate and the audit apply, from the screen,
+an automation or MCP alike.
+
 ## What is verified
 
 The UniFi driver and screens have been run against real UniFi Network Applications and UniFi OS consoles, read-only as a View Only account, and on bare metal on 2026-11-17: the login and its one session, the device, port, PoE, WAN and client tags, the live events stream, and the screens built on them.

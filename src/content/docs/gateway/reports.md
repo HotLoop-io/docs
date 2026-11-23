@@ -9,7 +9,7 @@ Scheduled reports, since 4.14.0, run operator-defined reports on a schedule:
 it queries the historian, renders the result as CSV and HTML, stores it on a
 volume, and optionally emails it. It is the counterpart of Ignition's Reporting
 module for the part of that module a plant most often uses, a table of numbers
-delivered on time. Off by default (`HOTLOOP_REPORTS_ENABLED`).
+delivered on time. On by default (`HOTLOOP_REPORTS_ENABLED`), in the binary and in the Helm chart. Reports are kept under `HOTLOOP_REPORTS_DIR`, which defaults to `reports` in HotLoop's data directory: `HOTLOOP_DATA_DIR` if set, `/data` when it exists and can be written (a container volume), and otherwise `~/.local/share/hotloop` (or `$XDG_DATA_HOME/hotloop`), so a bare binary needs nothing mounted.
 
 ## What it is, and what it is not
 

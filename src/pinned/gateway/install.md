@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.23.2
+reviewed: hotloop=4.24.0
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:
@@ -70,7 +70,7 @@ Put these in a values file and install with `-f`. Don't lean on `--set` for anyt
 | `edgePublish.queueMaxBytes` | `67108864` | The outage queue's limit when you publish upstream over Sparkplug, 64 MiB. Past it the oldest readings are dropped and counted. `0` is unbounded, and a long enough outage then fills the volume. |
 | `database.postgresql.enabled` | `true` | Set `false` and fill in `database.external` to use your own PostgreSQL. With the TimescaleDB extension you get a hypertable, without it native partitioning. |
 | `opcuaClient.persistence.enabled` | `false` | Turn it on before you add a secured OPC UA device. Without it the client's certificates have nowhere to survive a restart, and the device refuses to connect rather than make you re-approve trust on both ends after every redeploy. |
-| `ingress` | off | Only if you want it reachable from outside the cluster by a name. |
+| `ingress` | on, any host | The Ingress answers any host your ingress class serves. Set `ingress.hosts[0].host` to pin it to one name, or `ingress.enabled: false` for none. |
 
 Writes ship off, and that's the point. Even with `safety.allowWrites` on, a tag is read-only until you arm it on its own, and every value is checked against the tag's range, refused and never clamped. [The write gate](/gateway/write-gate/) has every check, in order.
 

@@ -5,13 +5,17 @@ description: "Cascade has an MCP server that reads and writes: 83 tools, each an
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.4.2, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 Cascade has an MCP server, and it reads and writes. It ships on, at `/mcp` on the
 same address as the API and the editor, and an agent that connects to it can do
 what the person behind its key can do and nothing past that. There is no read
 only mode to find your way round, because a server an agent can look at and not
 touch is a status page, and you already have one of those.
 
-83 tools, and every one of them is a route of the REST API. A call doesn't go
+84 tools, and every one of them is a route of the REST API. A call doesn't go
 beside the route, it goes through it: the route's own handler checks the
 permission, validates the body, makes the change and writes the audit row. Nothing
 was copied into the MCP server to drift, and nothing was left out of it to skip.
@@ -196,6 +200,7 @@ gives any tool's schema, so the first call is right.
 | `list_users` | `GET /api/v1/users` | `user.manage` | read |
 | `create_user` | `POST /api/v1/users` | `user.manage` | write |
 | `change_user` | `PATCH /api/v1/users/{user}` | `user.manage` | write |
+| `delete_user` | `DELETE /api/v1/users/{user}` | `user.manage` | write, owner only |
 | `list_audit` | `GET /api/v1/audit` | `audit.read` | read |
 | `verify_audit` | `GET /api/v1/audit/verify` | `audit.read` | read |
 | `get_settings` | `GET /api/v1/settings` | `instance.settings` | read |

@@ -21,12 +21,12 @@ editUrl: false
 
 | 产品 | 最新发布 | Helm | Quadlet | 从这里开始 |
 |---|---|---|---|---|
-| [HotLoop IoT](/zh-hans/iot/overview/) | 4.23.2 | 支持 | 支持 | [安装 IoT](/zh-hans/iot/install/) |
-| [HotLoop Edge](/zh-hans/edge/overview/) | 4.23.2 | 支持 | 支持 | [安装 Edge](/zh-hans/edge/install/) |
-| [HotLoop Gateway](/zh-hans/gateway/overview/) | 4.23.2 | 支持 | 支持 | [安装 Gateway](/zh-hans/gateway/install/) |
-| [HotLoop Edge Relay](/zh-hans/edge-relay/overview/) | 4.23.2 | 支持 | 支持 | [安装 Edge Relay](/zh-hans/edge-relay/install/) |
-| [HotLoop Flow](/zh-hans/flow/overview/) | 2.16.6 | 支持 | 支持 | [安装 Flow](/zh-hans/flow/install/) |
-| [HotLoop Cascade](/zh-hans/cascade/overview/) | 1.4.1 | 支持，无需登录 | 支持，无需登录, 参见 [用 Podman Quadlet 运行 Cascade](/zh-hans/cascade/quadlet/) | [运行 Cascade](/zh-hans/cascade/running/) |
+| [HotLoop IoT](/zh-hans/iot/overview/) | 4.24.0 | 支持 | 支持 | [安装 IoT](/zh-hans/iot/install/) |
+| [HotLoop Edge](/zh-hans/edge/overview/) | 4.24.0 | 支持 | 支持 | [安装 Edge](/zh-hans/edge/install/) |
+| [HotLoop Gateway](/zh-hans/gateway/overview/) | 4.24.0 | 支持 | 支持 | [安装 Gateway](/zh-hans/gateway/install/) |
+| [HotLoop Edge Relay](/zh-hans/edge-relay/overview/) | 4.24.0 | 支持 | 支持 | [安装 Edge Relay](/zh-hans/edge-relay/install/) |
+| [HotLoop Flow](/zh-hans/flow/overview/) | 2.16.8 | 支持 | 支持 | [安装 Flow](/zh-hans/flow/install/) |
+| [HotLoop Cascade](/zh-hans/cascade/overview/) | 1.4.2 | 支持，无需登录 | 支持，无需登录, 参见 [用 Podman Quadlet 运行 Cascade](/zh-hans/cascade/quadlet/) | [运行 Cascade](/zh-hans/cascade/running/) |
 | [HotLoop for CODESYS](/zh-hans/codesys/overview/) | 0.3.8 | 支持，或通过 EmberCORE App Store | 不支持 | [安装 HotLoop for CODESYS](/zh-hans/codesys/install/) |
 | [HotLoop Transmitter](/zh-hans/transmitter/overview/) | 1.1.0 | 不支持，它是 CODESYS 库 | 不支持，它是 CODESYS 库 | [安装 Transmitter](/zh-hans/transmitter/install/) |
 

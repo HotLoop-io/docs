@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.6
+  ghcr.io/hotloop-io/hotloop-flow:2.16.8
 ```
 
-हैश `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.6 hash-password -password 'something-long'` से बनाएँ। इमेज distroless है, बिना root के चलती है और उसमें शेल नहीं है, इसलिए `exec` करने के लिए कुछ नहीं है और कोड एक्ज़ीक्यूशन पा लेने वाले के लिए आगे बढ़ने का कोई सहारा नहीं।
+हैश `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'` से बनाएँ। इमेज distroless है, बिना root के चलती है और उसमें शेल नहीं है, इसलिए `exec` करने के लिए कुछ नहीं है और कोड एक्ज़ीक्यूशन पा लेने वाले के लिए आगे बढ़ने का कोई सहारा नहीं।
 
 फिर <http://localhost:1880> खोलें। डेटा डायरेक्टरी में `flows.json` डालें और रीस्टार्ट करें, या सीधे एडिटर में फ़्लो बनाएँ। एडिटर Astro है जिसमें Svelte आइलैंड सादे TypeScript और नेटिव SVG के कैनवास पर हैं, बाइनरी के भीतर स्टैटिक फ़ाइलों के रूप में बने हुए: 190.7 kB JS और 30.1 kB CSS मिनिफ़ाइड, gzip में 62.5 kB और 6.8 kB, `npm run build` के बाद `web/dist/_astro` से पढ़े गए। इसमें से कुछ भी कहीं से फ़ेच नहीं होता, इसलिए यह बिना इंटरनेट वाली मशीन पर चलता है।
 

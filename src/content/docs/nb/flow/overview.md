@@ -19,7 +19,7 @@ Hva det betyr en dårlig natt:
 
 Den kjører også de eksisterende flytene dine uendret. Det står [lenger ned](/nb/flow/migrating-from-node-red/), fordi det er en funksjon, ikke poenget.
 
-Gjeldende versjon er `2.16.6`. Imaget er `ghcr.io/hotloop-io/hotloop-flow:2.16.6` for amd64 (arm64 kommer i neste patchversjon), Helm-repoet er `https://hotloop.io/hotloop-flow/`, og [Rull ut Flow](/nb/flow/deploying/) dekker Kubernetes, Podman og Quadlet. Den har 117 nodetyper for meldinger og 39 for FlowLab-diagrammer. Bruk hjemme og i laboratoriet er gratis, det samme er bruk i skoler, ideelle organisasjoner og offentlig sektor, og bruk gjennom EmberNet, en partnerplattform, også i næringsvirksomhet, er uten begrensninger, under HotLoop Source License Agreement.
+Gjeldende versjon er `2.16.8`. Imaget er `ghcr.io/hotloop-io/hotloop-flow:2.16.8` for amd64 (arm64 kommer i neste patchversjon), Helm-repoet er `https://hotloop.io/hotloop-flow/`, og [Rull ut Flow](/nb/flow/deploying/) dekker Kubernetes, Podman og Quadlet. Den har 117 nodetyper for meldinger og 39 for FlowLab-diagrammer. Bruk hjemme og i laboratoriet er gratis, det samme er bruk i skoler, ideelle organisasjoner og offentlig sektor, og bruk gjennom EmberNet, en partnerplattform, også i næringsvirksomhet, er uten begrensninger, under HotLoop Source License Agreement.
 
 ## Tallene
 

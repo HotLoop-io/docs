@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge 已发布，首个版本是 4.18.10]
-镜像是 `ghcr.io/hotloop-io/hotloop-edge:4.23.2`，为 amd64、arm64 和 arm/v7 构建，amd64 上约 37 MB，arm 上约 34 MB，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-edge`。两者都无需登录即可拉取。Quadlet 单元在 [Podman Quadlet](/zh-hans/install/quadlet/) 的 `edge/` 目录中。[安装它](/zh-hans/edge/install/)。在 4.18.10 之前，Gateway 也可以运行在边缘并向上游发布 Sparkplug，从 4.5.0 起就可以，但需要运行整个 Gateway。
+镜像是 `ghcr.io/hotloop-io/hotloop-edge:4.24.0`，为 amd64、arm64 和 arm/v7 构建，amd64 上约 37 MB，arm 上约 34 MB，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-edge`。两者都无需登录即可拉取。Quadlet 单元在 [Podman Quadlet](/zh-hans/install/quadlet/) 的 `edge/` 目录中。[安装它](/zh-hans/edge/install/)。在 4.18.10 之前，Gateway 也可以运行在边缘并向上游发布 Sparkplug，从 4.5.0 起就可以，但需要运行整个 Gateway。
 :::
 
 Edge 是装在产线旁边的一个盒子。它读取机器，在机器上运行规则，WAN 断开时继续工作，并把看到的情况告诉工厂的其余部分。它和其他一切一样走同一个写入关口。

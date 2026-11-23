@@ -8,7 +8,7 @@ editUrl: false
 Alarm notifications, since 4.10.0, page a phone when an alarm is raised at
 03:00. When an alarm is **raised**, HotLoop sends a notification
 through every configured, enabled channel whose priority floor the alarm
-meets. Off by default (`HOTLOOP_NOTIFY_ENABLED`): a deployment with nobody to
+meets. On in the Helm chart since 4.23.6 (`HOTLOOP_NOTIFY_ENABLED`), sending nothing until a channel is enabled with its target: a deployment with nobody to
 page has nothing to configure this against.
 
 ## Why only "raised"
@@ -77,6 +77,32 @@ to run.
   notification on their own, and many paging tools accept an email-to-SMS
   bridge address as a "contact method", so this one channel alone covers a
   meaningful slice of "pages a phone" with zero paid dependency.
+
+## Where alarms go: Settings
+
+Every channel is on by default and idle until it has somewhere to send. An enabled
+channel with no destination never stops HotLoop starting, it waits and says so.
+An admin gives each one its destination under Settings, "Where alarms and readings
+go": the webhook URL, the email relay and recipients, the ntfy server and topic,
+the Gotify server and token, the Discord webhook URL, the Discord bot's token and
+channel, and the edge publisher's broker and Sparkplug group. Each shows what it
+is doing (sending, waiting for a destination, off) and what it is missing.
+
+- The alarm channels apply the moment the setting is saved: the dispatcher is
+  rebuilt in place, what the old channels were holding back goes out first, and
+  the Discord bot's connection is closed before a new one opens. **Send a test**
+  (`POST /api/notify/test`) then reaches the channel that was just saved.
+- The edge publisher owns a queue file and a Sparkplug node, so its destination is
+  read when HotLoop starts. The screen says "Saved, applies when HotLoop restarts".
+- What is saved there wins over the chart or environment, which only seed it. A
+  value left blank keeps what is stored; Clear removes it. A secret (a webhook URL,
+  an ntfy topic, a token, a password) is never shown again, only whether it is set,
+  and is sealed in the database when HotLoop has a secret key.
+- A destination is checked the way the environment is at startup, before anything is
+  stored, and a wrong one is refused with what is wrong (never the value).
+- A switch per channel turns it off for good: off means no channel, no send.
+- `GET /api/destinations` and `PUT /api/destinations/{kind}` are the routes; the
+  PUT needs `settings.write`. See [the HTTP API](/iot/api/).
 
 ## The webhook URL is never printed
 

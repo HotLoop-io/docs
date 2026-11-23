@@ -10,7 +10,7 @@ editUrl: false
 Για να τραβήξετε μια έκδοση με το χέρι:
 
 ```sh
-podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
+podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.2
 ```
 
 Οι μονάδες ακολουθούν το `:stable` και ο χρονοδιακόπτης αυτόματης ενημέρωσης του Podman τις μετακινεί.
@@ -18,7 +18,7 @@ podman pull ghcr.io/hotloop-io/hotloop-cascade:1.4.1
 Στο k3s, το `charts/hotloop-cascade` είναι το chart του Helm:
 
 ```sh
-helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.1
+helm install cascade oci://ghcr.io/hotloop-io/charts/hotloop-cascade --version 1.4.2
 ```
 
 Το chart φέρει τις ετικέτες που διαβάζει ο πίνακας ελέγχου του EmberNet, στο Service και στα pods που εξυπηρετούν τον επεξεργαστή, ώστε ένα Cascade που έχει αναπτυχθεί από το App Store να εμφανίζεται στο Running Apps με κουμπί LAUNCH. Τα `gui.appName`, `gui.port` και `gui.displayName` αλλάζουν ό,τι εμφανίζεται.

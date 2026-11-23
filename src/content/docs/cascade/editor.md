@@ -5,6 +5,10 @@ description: "The editor is built into the Cascade binary: folders, a canvas wit
 editUrl: false
 ---
 
+:::note[Covers what is coming]
+This page also covers a few things that are newer than HotLoop Cascade 1.4.2, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
+:::
+
 The editor is baked into the binary, so there is nothing else to run and nothing it
 fetches from anywhere: open the address the server listens on and sign in. It is an
 Astro app with Svelte islands, built to static files at image build time, in the
@@ -53,7 +57,8 @@ and the service account keys a standing integration signs in with. Your account
 (the address in the top bar) makes and revokes your API keys, which are what the REST
 API and the MCP server sign in with, and changes your password. For owners and
 admins, Settings has the general settings (second factor, the error workflow),
-Users makes people and turns them off, and the audit log is read, filtered and
+Users makes people, turns them off, and lets an owner delete one (their sign-ins and
+keys go, their workflows stay), and the audit log is read, filtered and
 checked for tampering there. Sign-in is the same editor, at `/login`, and keeps
 single sign-on, directory sign-in, passkeys and recovery codes.
 

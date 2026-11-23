@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.23.2
+reviewed: hotloop=4.24.0
 title: "Install HotLoop IoT {{hotloop}}"
 description: "Install HotLoop IoT {{hotloop}} on k3s with Helm, or on a Pi or small PC as systemd services with Podman Quadlet, on PostgreSQL, or a SQLite file."
 sidebar:
@@ -68,7 +68,7 @@ Put these in a values file and install with `-f`.
 | `database.postgresql.persistence.size` | `10Gi` | Your history lives here. Size it for your tag count and the retention above. |
 | `secretKey.existingSecret` | empty | A Secret you manage holding the device password key. Set it if you render the chart with `helm template`, which can't generate a stable key. |
 | `opcuaClient.persistence.enabled` | `false` | Turn it on before you add a secured OPC UA device, so the client's certificates survive a restart. |
-| `ingress` | off | Only if you want it reachable from outside the cluster by a name. |
+| `ingress` | on, any host | The Ingress answers any host your ingress class serves. Set `ingress.hosts[0].host` to pin it to one name, or `ingress.enabled: false` for none. |
 
 ## Podman Quadlet
 
