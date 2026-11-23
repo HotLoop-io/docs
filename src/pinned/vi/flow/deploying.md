@@ -1,0 +1,246 @@
+---
+title: "Triển khai Flow"
+description: "Flow trên Kubernetes với Helm, trên một máy có Podman và Quadlet, hoặc với podman run đơn giản, cùng sao lưu và một bí mật bạn không được phép làm mất."
+---
+
+Ba cách vào, đều dùng cùng một image, `ghcr.io/hotloop-io/hotloop-flow`, được xây dựng cho amd64 và arm64:
+
+| Bạn có | Dùng |
+|---|---|
+| Một cluster Kubernetes, kể cả k3s trên Pi | [Helm](#kubernetes) |
+| Một máy Linux chạy systemd | [Podman với Quadlet](#podman-với-quadlet) |
+| Mười phút và sự tò mò | [`podman run`](#podman-run) |
+
+Không có tệp Docker Compose, và sẽ không có. Quadlet giao container cho systemd, vốn đã biết cách khởi động lại, sắp xếp chúng sau mạng và giữ nhật ký của chúng. Thêm một trình giám sát thứ hai lên trên chỉ là thêm một thứ có thể đang hỏng khi bạn cần.
+
+## Mọi bản cài đều cần gì
+
+Dù chọn cách nào, Flow không khởi động nếu thiếu ba thứ, và mỗi lần từ chối này đều có chủ đích:
+
+- **Một tài khoản quản trị.** Một tên người dùng và một **băm bcrypt** của mật khẩu, không bao giờ là chính mật khẩu. `hotloop-flow hash-password -password '...'` tạo ra một cái, và image có thể chạy nó giúp bạn. Bất cứ thứ gì không phải băm bcrypt đều là lỗi khởi động, nên mật khẩu dạng văn bản thuần không thể vô tình lọt vào tệp cấu hình.
+- **Một bí mật thông tin xác thực.** Nó mã hóa mọi mật khẩu broker và mọi đăng nhập cơ sở dữ liệu mà các luồng của bạn giữ. **Mất nó thì những thông tin xác thực đó mất theo**, và trông như một lần khởi động hoàn toàn sạch sẽ cho đến khi MQTT ngừng xác thực. Hãy tạo một lần, lưu ở nơi sống lâu hơn máy, và đừng bao giờ để thứ gì tạo lại nó.
+- **Một nơi để `/data` sống.** Các luồng, thông tin xác thực và ba thế hệ sao lưu nằm ở đó. Một container không có volume vẫn chạy tốt cho đến khi nó khởi động lại.
+
+Ngữ cảnh (luồng, toàn cục và nút) được lưu trong một tệp SQLite, `state.db`, trên cùng volume đó, và sống sót qua khởi động lại dù bạn triển khai theo cách nào. Các hàng đợi sau dây bền vững cũng vậy. Một container không có volume mất tệp cùng mọi thứ khác, nên nó chỉ giữ ngữ cảnh cho đến khi container bị thay thế. Cái gì được ghi, ghi thường xuyên đến đâu và nó tốn gì với một thẻ flash nằm trong [Trạng thái bền vững, đã đo](/vi/flow/durable-state/).
+
+---
+
+## Kubernetes
+
+```bash
+helm repo add hotloop-flow https://hotloop.io/hotloop-flow/
+helm install line3-flows hotloop-flow/hotloop-flow
+```
+
+Đó là toàn bộ việc cài đặt, trên bất kỳ cluster nào. Chart tạo mật khẩu quản trị và bí mật thông tin xác thực ở lần cài đầu tiên và lưu cả hai trong một Secret đặt theo tên release. Đọc lại mật khẩu bằng:
+
+```bash
+kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base64 -d
+```
+
+**Khi nâng cấp, nó đọc lại cả hai từ Secret đó thay vì tạo cái mới.** Đó là ranh giới giữa nâng cấp và mất mọi thông tin xác thực trên PVC. (Mật khẩu được tạo hoàn toàn không dùng được trước 2.0.2: băm mà ứng dụng kiểm tra được tạo từ một mật khẩu ngẫu nhiên khác với mật khẩu chart lưu. Đã sửa, và một release cài với lỗi này được sửa tại chỗ khi nâng cấp, mà không đổi mật khẩu hay bí mật thông tin xác thực.)
+
+Để chọn của riêng bạn:
+
+```bash
+helm install line3-flows hotloop-flow/hotloop-flow \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
+```
+
+`auth.password` nhận một mật khẩu dạng văn bản thuần và băm nó khi cài, nếu bạn thích. `auth.passwordHash` thắng khi cả hai cùng được đặt.
+
+### Một instance, một pod
+
+Nhiều instance nghĩa là nhiều **release**, không phải nhiều replica, và chart cố định `replicaCount: 1` có chủ đích. Flow giữ trạng thái luồng và các kết nối mở tới broker và PLC, nên hai pod sau một Service sẽ cùng đăng ký và cùng ghi, và historian của bạn sẽ lặng lẽ nhận mọi thứ hai lần. Cần nhiều hơn? Hãy cài release thứ hai với các luồng riêng.
+
+### Tài nguyên
+
+Preset, không phải số thô. `resources.preset` là `small` (mặc định), `medium`, `large` hoặc `custom`:
+
+| Preset | Yêu cầu | Giới hạn |
+|---|---|---|
+| `small` | 10m CPU, 64Mi | 500m CPU, 256Mi |
+| `medium` | 50m CPU, 128Mi | 1 CPU, 512Mi |
+| `large` | 200m CPU, 512Mi | 2 CPU, 2Gi |
+
+Khi nhàn rỗi, tiến trình giữ khoảng 16,6 MiB resident (phương pháp và lệnh trong [docs/bench/](/vi/flow/benchmarks/#bộ-nhớ)), nên `small` được lên lịch trên một nút biên còn dư 64Mi.
+
+Flow đọc giới hạn bộ nhớ của container khi khởi động và yêu cầu runtime Go giữ heap của nó dưới 85% giới hạn đó, nhờ vậy bộ thu gom làm việc chăm hơn khi heap gần chạm giới hạn thay vì để nó tăng gấp đôi rồi bị giết. Nhật ký nói điều đó khi khởi động (`memory limit for the collector`). Tự đặt `GOMEMLIMIT` thì giá trị đó thắng. Giới hạn phải chừa chỗ cho những gì đang sống: một tệp luồng khoảng 13.000 nút giữ chừng 800 MiB, nên hãy định cỡ một nhà máy lớn như vậy ở 3Gi trở lên với `custom`.
+
+### Chế độ mạng
+
+Đây là lý do Flow xứng đáng có chỗ trong nhà máy. Một động cơ luồng chỉ thấy những gì cluster định tuyến cho nó thì không thể kiểm kê một phân đoạn OT.
+
+| `network.mode` | Nó có gì | Số instance mỗi nút |
+|---|---|---|
+| `cluster` | ClusterIP. Bất cứ gì cluster định tuyến. Mặc định, và là đáp án đúng trừ khi bạn cần L2. | không giới hạn |
+| `host` | Các giao diện, bảng ARP và miền quảng bá của nút. | một, cổng là của nút |
+| `macvlan` | **MAC và IP riêng** của nó trên VLAN đích, ngay trên phân đoạn có các PLC. Cần Multus. | không giới hạn |
+
+`macvlan` là cái thú vị: chạy nhiều cái trên một nút **và** trên phân đoạn OT đều an toàn, không xung đột cổng vì mỗi instance có địa chỉ riêng. Đặt `network.macvlan.master` là giao diện của nút trên VLAN đó và điền `network.macvlan.ipam`.
+
+### Pod được phép làm gì
+
+Distroless nonroot với uid 65532, hệ thống tệp gốc chỉ đọc, không leo thang đặc quyền, seccomp `RuntimeDefault`, mọi capability bị bỏ. Kể cả khám phá: `scan` chỉ tạo kết nối TCP, không cần capability nào, và hoàn tất bắt tay thay vì để lại các kết nối nửa mở trên một PLC.
+
+Một giá trị thêm một capability, và chỉ khi bạn đặt nó: `bindToInterface.netRaw`. Một nút có thể gắn các kết nối của nó vào một giao diện mạng (`SO_BINDTODEVICE`), cho một máy mà cổng của nó mang một VLAN cho mỗi thiết bị với cùng một mạng con trên tất cả. Trên Linux 5.7 trở lên việc đó không cần capability nào và giá trị giữ là `false`. Trên kernel cũ hơn nó cần `CAP_NET_RAW`: đặt thành `true` và pod thêm đúng capability đó, mọi capability khác vẫn bị bỏ. Pod cũng phải thấy các giao diện của máy chủ, tức `network.mode: host`. Cách một tab chọn giao diện của nó nằm trong node-red-types.md.
+
+### Nhà máy có một VLAN cho mỗi máy
+
+Một máy, một cổng, một VLAN cho mỗi máy sấy, mọi VLAN cùng `192.168.1.0/24` với cùng địa chỉ thiết bị. Chạy một Flow với `network.mode: host`, cho tab của mỗi máy sấy biến môi trường `FLOW_NETWORK_INTERFACE` (`enp2s0.14`, `enp2s0.15` và v.v.), và mọi máy khách trên tab đó chỉ tới được VLAN của riêng nó. Với Podman và Quadlet, `Network=host`, và `AddCapability=NET_RAW` chỉ trên kernel cũ hơn 5.7. Chi tiết, thứ tự một nút chọn giao diện và những gì đã được chứng minh nằm trong node-red-types.md.
+
+### Đăng nhập từ bảng điều khiển EmberCORE
+
+Khi bảng điều khiển triển khai Flow từ App Store, nó đưa cho chart khóa công khai của mình (`embernetSignin.publicKey`), và từ đó bảng điều khiển là lối vào. Nó đặt một token do nó ký vào `X-Embernet-Assertion` trên mọi yêu cầu nó chuyển tiếp, kể cả websocket của trình soạn thảo, và Flow kiểm tra nó bằng khóa đó: chữ ký (ES256), bên phát hành (`embernet-dashboard`), rằng nó được tạo cho ứng dụng này trong tenant này (audience là `<tenant>/<release>`, nên token cho ứng dụng khác không mở được gì ở đây) và hạn dùng của nó (khoảng một phút, nên không có gì để thu hồi và một vai trò đổi trong bảng điều khiển có hiệu lực ở yêu cầu kế tiếp).
+
+Quyền đến từ bản đồ vai trò của tenant trong bảng điều khiển: `*` là toàn quyền, `read` là chỉ đọc (các luồng, bảng nút, cài đặt và trạng thái, và không có gì thay đổi chúng, không có nhật ký triển khai và không có inject). Một vai trò không phải hai loại đó, hoặc không có, thì không có quyền truy cập. Người đăng nhập theo cách này hiện trong nhật ký triển khai và dấu vết kiểm toán là `dashboard:<email>`.
+
+Tắt trừ khi khóa được đặt. Không có khóa, Flow bỏ qua tiêu đề và cư xử như mọi khi. Có khóa, một token xấu bị từ chối thẳng và không gì khác trong yêu cầu cứu được nó. Đăng nhập quản trị và bearer token vẫn hoạt động bên cạnh, đó là lối thoát khẩn cấp cho nhân viên và tự động hóa, và trình soạn thảo hiện "Open this from the EmberCORE dashboard" thay cho biểu mẫu đăng nhập của riêng nó (`embernetSignin.hideLoginForm`).
+
+Trên một pod bạn tự chạy, gắn PEM và đặt `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE` và `HOTLOOP_FLOW_ASSERTION_AUDIENCE`; Flow từ chối khởi động với khóa nó không đọc được hoặc không có audience.
+
+### Những giá trị bạn sẽ thật sự chạm tới
+
+| Giá trị | Mặc định | Dùng để làm gì |
+|---|---|---|
+| `image.tag` | phiên bản ứng dụng của chart | Hãy cố định nó. Tag tường minh là cơ chế cập nhật. |
+| `persistence.size`, `persistence.storageClass` | `2Gi`, mặc định của cluster | Nơi `/data` sống. |
+| `store.context.persist`, `store.context.flushInterval` | bật, `30s` | Ngữ cảnh qua các lần khởi động lại, và một giá trị đã đổi chờ bao lâu trước khi được ghi. Một kill -9 mất chừng đó. |
+| `store.durable.maxBytes`, `store.durable.ackFlush` | 256 MiB, `100ms` | Hạn mức đĩa cho các dây bền vững, và thời gian một thông điệp đã giao chờ để được đánh dấu là xong. |
+| `store.synchronous` | `normal` | `full` fsync mọi commit. Chắc hơn trước mất điện, nặng hơn với thẻ. |
+| `trace.enabled`, `trace.perSecond` | bật, `1000` | Truy vết thông điệp, thứ đứng sau việc nhấp vào một thông điệp gỡ lỗi để xem nó đi đâu. `perSecond` giới hạn số truy vết mới mỗi giây để một dây chuyền nhanh không phải trả giá; `0` truy vết mọi thông điệp. |
+| `trace.traces`, `trace.maxHops`, `trace.maxMessageBytes`, `trace.maxBytes` | `256`, `512`, `16384`, `16777216` | Giữ bao nhiêu truy vết trong bộ nhớ, và không bao giờ nhiều hơn. Khởi động lại bắt đầu lại danh sách. |
+| `trace.otlp.endpoint` | trống | Địa chỉ OTLP/HTTP của một bộ thu OpenTelemetry, như `http://collector:4318`. Trống nghĩa là không xuất. `trace.otlp.serviceName` và `trace.otlp.interval` đi kèm. |
+| `trace.otlp.headersSecret.name`, `.key` | trống, `headers` | Một Secret chứa các tiêu đề của bộ thu dưới dạng cặp `Name=value` ngăn cách bằng dấu phẩy, cho khóa API của một bộ thu được lưu trữ. Nó tới pod dưới dạng biến môi trường và không bao giờ chạm tới ConfigMap. |
+| `history.retain` | `100` | Giữ bao nhiêu bản ghi triển khai dưới `/data/deployments`. `0` giữ tất cả, đó là một quyết định về đĩa, vì mỗi bản ghi là một bản sao của tệp luồng. |
+| `history.git.url` | trống | Phản chiếu mỗi lần triển khai vào một kho git dưới dạng commit của người đã triển khai. Trống là tắt. `history.git.branch`, `.path`, `.emailDomain` và `.username` đi kèm, và để trống thì dùng mặc định của chính tệp nhị phân. |
+| `history.git.passwordSecret.name`, `.key` | trống, `password` | Một Secret chứa token truy cập cho kho đó. Nó tới pod dưới dạng `HOTLOOP_FLOW_GIT_PASSWORD` và không bao giờ chạm tới ConfigMap. |
+| `stations.dashboardUrl`, `stations.tenant`, `stations.dashboardTokenSecret.name`, `.key`, `stations.deployTokenSecret.name`, `.key` | trống, trống, trống, `token`, trống, `token` | Đẩy một tệp luồng tới mọi bản cài Flow mà tenant chạy trong EmberNet, có kiểm tra sau mỗi bản ([Đẩy tới các trạm của một tenant](/vi/flow/stations/)). Cả bốn giá trị, bảng điều khiển, tenant và hai tên Secret, được đặt hoặc không giá trị nào; một lần render với một số trong đó bị từ chối. Mỗi Secret chứa một token và được gắn như tệp, không bao giờ đặt vào ConfigMap. Token triển khai là cái các trạm chấp nhận và cần `flows.read`, `flows.write` và `status.read`. |
+| `failover.urlSecret.name`, `.key`, `failover.name`, `failover.ttl`, `failover.renewEvery`, `failover.writeMargin` | trống, `url`, `flow`, `15s`, một phần ba ttl, `5s` | Một cặp failover: hai bản cài chia sẻ một lease trong PostgreSQL, một bản ghi vào thiết bị và bản kia giữ các lần ghi của mình cho đến khi tiếp quản ([Dự phòng nóng với lease](/vi/flow/failover/)). Tắt cho đến khi Secret được nêu tên. Khóa của Secret chứa URL PostgreSQL và được gắn như tệp, không bao giờ đặt vào ConfigMap. |
+| `audit.maxBytes`, `audit.keep` | 16 MiB, `4` | Khi nào `/data/audit.log` xoay vòng, và bao nhiêu tệp đã xoay vòng ở lại bên cạnh. |
+| `tests.gate`, `tests.timeout` | tắt, `2m` | `true` từ chối một lần triển khai mà các luồng không qua `/data/flows.test.yaml`. Tắt theo mặc định, vì một cổng không ai yêu cầu làm hỏng một lần triển khai lúc 3 giờ sáng vì lý do mà không ai trong ca từng nghe. |
+| `discovery.enabled`, `discovery.allowedCIDRs` | tắt, trống | Các nút scan. Bật với danh sách trống thì từ chối khởi động. |
+| `exec.enabled`, `exec.allowedCommands` | tắt, trống | Nút exec. Cùng quy tắc. |
+| `files.allowedPaths` | trống | Các cây thư mục bổ sung mà nút tệp có thể tới ngoài `/data`. |
+| `secrets.mounts` | trống | Các Secret để gắn chỉ đọc, mỗi cái `{secretName, mountPath}`, cho các tệp của tls-config và `ew_credentialFiles`. Mỗi đường dẫn vào phạm vi bí mật và không bao giờ vào phạm vi của nút tệp. |
+| `plugins.enabled` | tắt | [Plugin](/vi/flow/plugins/). Tắt thì không render gì. Bật mà `plugins.trustedKeys` trống thì mọi plugin đều bị từ chối. |
+| `plugins.trustedKeys`, `plugins.grants` | trống | Các khóa nhà phát hành được tin, và mỗi plugin được dùng gì theo tên (`clock`, `random`, `context.flow`, `context.global`). Một luồng dùng plugin đòi hỏi nhiều hơn sẽ làm việc triển khai thất bại. |
+| `plugins.maxMemoryMiB`, `plugins.maxTimeout` | `64`, `5s` | Bộ nhớ nhiều nhất và thời gian lâu nhất có thể cấp cho một nút plugin. |
+| `plugins.volume`, `plugins.mountPath`, `plugins.dir` | trống, `/etc/hotloop-flow/plugins`, trống | Cách các tệp plugin đến nơi. Không volume: sao chép chúng vào `plugins/` trên volume dữ liệu. Volume là bất kỳ nguồn volume Kubernetes nào (một claim có sẵn, một ConfigMap, một Secret), gắn chỉ đọc tại `mountPath`, và `dir` đi theo nó. |
+| `metrics.serviceMonitor.enabled` | tắt | Thu thập bằng Prometheus Operator. |
+| `ingress.enabled` | tắt | Nếu bạn muốn truy cập được từ ngoài cluster. |
+
+Một lần render mặc định cũng phải bằng các mặc định của chính tệp nhị phân, để một cài đặt trong `values.yaml` luôn làm đúng điều nó nói trong tiến trình.
+
+Service lắng nghe trên 8080 và chuyển tiếp tới 1880 của tệp nhị phân. Mọi thứ còn lại được ghi tài liệu cạnh giá trị trong `charts/hotloop-flow/values.yaml`.
+
+---
+
+## Podman với Quadlet
+
+Cho một máy đơn lẻ không chạy Kubernetes: một PC công nghiệp, một gateway, một VM cạnh historian. Quadlet biến một tệp unit ngắn thành dịch vụ systemd chạy container, nên Flow khởi động lúc boot, khởi động lại khi chết và ghi vào journal như mọi thứ khác trên máy.
+
+Bạn cần một Podman có kèm Quadlet (`/usr/libexec/podman/quadlet` tồn tại). Các bước dưới đây đã được chạy đúng như viết, bằng root, trên Podman 4.9.3 với image 2.0.5: nó khởi động, nhận một đăng nhập, nhận một lần triển khai và quay lại sau `systemctl restart` với các luồng và thông tin xác thực đã mã hóa còn nguyên.
+
+**1. Giữ hai bí mật ngoài tệp unit.** Bí mật Podman nằm bên ngoài nó, nên unit có thể được sao chép, commit và xem xét mà không mang theo thứ gì quan trọng.
+
+```bash
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} \
+  hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
+printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
+```
+
+`printf '%s' "$(...)"` bỏ ký tự xuống dòng ở cuối. Không có nó, ký tự xuống dòng trở thành một phần của bí mật, và một băm có ký tự xuống dòng ở cuối không khớp với gì cả.
+
+**2. Unit.** `/etc/containers/systemd/hotloop-flow.container`:
+
+```ini
+[Unit]
+Description=HotLoop Flow
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=hotloop-flow
+Image=ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+PublishPort=1880:1880
+Volume=hotloop-flow-data:/data
+Environment=HOTLOOP_FLOW_ADMIN_USER=admin
+Environment=HOTLOOP_FLOW_LOG_FORMAT=json
+Secret=hotloop-flow-admin-hash,type=env,target=HOTLOOP_FLOW_ADMIN_PASSWORD_HASH
+Secret=hotloop-flow-credential-secret,type=env,target=HOTLOOP_FLOW_CREDENTIAL_SECRET
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+
+[Service]
+Restart=always
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**3. Khởi động nó.**
+
+```bash
+systemctl daemon-reload
+systemctl start hotloop-flow.service
+journalctl -u hotloop-flow -f
+```
+
+Quadlet tạo dịch vụ khi `daemon-reload`, và phần `[Install]` là thứ khởi động nó lúc boot. Không có bước `systemctl enable`: tài liệu của chính Podman nói một unit được tạo không thể enable, và bộ tạo tự áp dụng `[Install]`.
+
+Rootless hoạt động theo cùng cách với tệp trong `~/.config/containers/systemd/`, `systemctl --user` thay cho `systemctl` và `WantedBy=default.target`. Hãy chạy thêm `loginctl enable-linger <user>`, nếu không systemd dừng các dịch vụ của người dùng đó khi họ đăng xuất, và Flow dừng theo. Đó là hành vi được ghi tài liệu của [Podman](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) và systemd. Unit rootful ở trên là cái chúng tôi đã chạy.
+
+**Đẩy tới các trạm khác của tenant** từ unit này là bốn cài đặt và hai bí mật Podman được gắn như tệp (xem [Đẩy tới các trạm của một tenant](/vi/flow/stations/)). Tạo các bí mật bằng `podman secret create`, rồi thêm vào `[Container]`:
+
+```ini
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_URL=https://dashboard.example
+Environment=HOTLOOP_FLOW_STATIONS_TENANT=acme
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_TOKEN_FILE=/run/secrets/stations-dashboard-token
+Environment=HOTLOOP_FLOW_STATIONS_DEPLOY_TOKEN_FILE=/run/secrets/stations-deploy-token
+Secret=hotloop-flow-dashboard-token,type=mount,target=stations-dashboard-token
+Secret=hotloop-flow-station-token,type=mount,target=stations-deploy-token
+```
+
+Cả bốn cài đặt hoặc không cái nào: Flow từ chối khởi động với một số trong đó. Token triển khai được tạo bằng `hotloop-flow token` và đưa cho mỗi trạm dưới dạng token API với `flows.read`, `flows.write` và `status.read`.
+
+**Một cặp failover** là hai unit như thế này, mỗi cái có volume riêng, và cùng ba dòng trong mỗi phần `[Container]` (xem [Dự phòng nóng với lease](/vi/flow/failover/)); tên máy chủ của unit thứ hai là của riêng nó, nên hai bên không bao giờ dùng chung tên bên giữ:
+
+```ini
+Environment=HOTLOOP_FLOW_FAILOVER_URL_FILE=/run/secrets/flow-lease-url
+Environment=HOTLOOP_FLOW_FAILOVER_NAME=line3
+Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
+```
+
+**Nâng cấp** là đổi tag trong `Image=`, rồi `daemon-reload` và `restart`. Các luồng, thông tin xác thực và bí mật ở nguyên chỗ cũ. Hãy cố định tag. `:latest` trong nhà máy nghĩa là bạn biết cái gì đã đổi khi nó hỏng.
+
+**Bật các thứ** là thêm các dòng `Environment=`: `HOTLOOP_FLOW_EXEC_ENABLED` và `HOTLOOP_FLOW_EXEC_ALLOWED_COMMANDS`, `HOTLOOP_FLOW_DISCOVERY_ENABLED` và `HOTLOOP_FLOW_DISCOVERY_CIDRS`, và phần còn lại của bảng trong [README](/vi/flow/configuration/#biến-môi-trường-ghi-đè). Với các cài đặt chỉ có trong tệp (TTL phiên, số thế hệ sao lưu, thời gian chờ), gắn một tệp YAML và trỏ `HOTLOOP_FLOW_CONFIG` tới nó.
+
+Để khám phá trên một phân đoạn OT, `Network=host` đưa cho container các giao diện của chính máy. Cùng sự đánh đổi như chế độ `host` trên Kubernetes: một instance mỗi cổng.
+
+---
+
+## `podman run`
+
+Để thử, không phải để chạy một dây chuyền trên đó:
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+Rồi mở <http://localhost:1880>. Bí mật thông tin xác thực đó mới mỗi lần bạn chạy lệnh, nên thông tin xác thực lưu trong một lần chạy không đọc được trong lần sau. Ổn để xem qua. Đó chính là lý do bản cài Quadlet giữ nó trong một bí mật Podman.
+
+Image là distroless nonroot không có shell, nên không có gì để `exec` vào, và không có gì cho ai có được quyền thực thi mã dùng để di chuyển tiếp.
+
+---
+
+## Sao lưu
+
+Mọi thứ đáng giữ đều nằm trong `/data`: `flows.json`, `credentials.json`, `flows.json.bak.1` đến `.bak.3`, nhật ký triển khai trong `deployments/` (một tệp cho mỗi lần triển khai), dấu vết kiểm toán trong `audit.log`, các đăng ký hai yếu tố trong `mfa.json` và các phiên đăng nhập trong `sessions.json`. Các bản ghi của nhật ký và các đăng ký được mã hóa dưới cùng bí mật với thông tin xác thực, còn các phiên là băm. `git-mirror/` chỉ là một bản sao, được xây lại từ kho nếu bị mất. Hãy sao lưu thư mục và bí mật thông tin xác thực **riêng biệt**. Tệp thông tin xác thực vô dụng nếu thiếu bí mật, đó chính là mục đích, và một bản sao lưu giữ cả hai ở một nơi là bản sao lưu trao cả hai cho kẻ đánh cắp nó.

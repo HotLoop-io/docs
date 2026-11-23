@@ -1,0 +1,246 @@
+---
+title: "部署 Flow"
+description: "用 Helm 在 Kubernetes 上部署 Flow，在装有 Podman 和 Quadlet 的机器上部署，或直接 podman run，另附备份和您绝不能丢失的那一个密钥。"
+---
+
+三种入口，都用同一个镜像 `ghcr.io/hotloop-io/hotloop-flow`，为 amd64 和 arm64 构建：
+
+| 您拥有 | 使用 |
+|---|---|
+| 一个 Kubernetes 集群，包括 Pi 上的 k3s | [Helm](#kubernetes) |
+| 一台运行 systemd 的 Linux 机器 | [带 Quadlet 的 Podman](#带-quadlet-的-podman) |
+| 十分钟和好奇心 | [`podman run`](#podman-run) |
+
+没有 Docker Compose 文件，也不会有。Quadlet 把容器交给 systemd，而 systemd 早就知道如何重启服务、在网络之后排序并保存它们的日志。在此之上再加一个监督程序，只是多出一个在您需要时可能宕掉的东西。
+
+## 每个安装都需要什么
+
+无论您选哪种方式，没有三样东西 Flow 都不会启动，每一次拒绝都是有意为之：
+
+- **一个管理员账户。** 一个用户名和其密码的 **bcrypt 哈希**，绝不是密码本身。`hotloop-flow hash-password -password '...'` 可以生成，镜像也可以替您运行。任何不是 bcrypt 哈希的内容都是启动错误，所以明文密码不可能意外进入配置文件。
+- **一个凭据密钥。** 它加密您的流程所保存的每个代理密码和数据库登录。**丢了它，这些凭据就没了**，而且看起来是一次完全干净的启动，直到 MQTT 不再认证。只生成一次，存放在比机器更长命的地方，绝不要让任何东西重新生成它。
+- **`/data` 的存放位置。** 流程、凭据和三代备份都放在那里。没有卷的容器在重启之前一切正常。
+
+上下文（流程、全局和节点）保存在同一个卷上的 SQLite 文件 `state.db` 中，无论您怎么部署，都能在重启后保留。持久连线背后的队列也一样。没有卷的容器会连同其他所有内容一起丢失该文件，所以它只在容器被替换之前保留上下文。写入什么、多久写一次、对闪存卡意味着什么，见[持久状态实测](/zh-hans/flow/durable-state/)。
+
+---
+
+## Kubernetes
+
+```bash
+helm repo add hotloop-flow https://hotloop.io/hotloop-flow/
+helm install line3-flows hotloop-flow/hotloop-flow
+```
+
+这就是在任何集群上的完整安装。chart 在首次安装时生成管理员密码和凭据密钥，并把两者存放在以发布名命名的 Secret 中。用以下命令读回密码：
+
+```bash
+kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base64 -d
+```
+
+**升级时，它会从该 Secret 读回两者，而不是生成新的。** 这就是升级与丢失 PVC 上所有凭据之间的界线。（生成的密码在 2.0.2 之前完全不能用：应用检查的哈希来自一个随机密码，而不是 chart 所存的那个。已修复，用有此缺陷的版本安装的发布，升级后会就地修复，不会更改密码或凭据密钥。）
+
+如果想改为自己选择：
+
+```bash
+helm install line3-flows hotloop-flow/hotloop-flow \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
+```
+
+`auth.password` 接受明文密码并在安装时对其做哈希，如果您更愿意这样。两者都设置时 `auth.passwordHash` 优先。
+
+### 一个实例，一个 pod
+
+多实例意味着多个**发布**，而不是多个副本，chart 有意固定 `replicaCount: 1`。Flow 保存流程状态以及与代理和 PLC 的打开连接，所以一个 Service 背后的两个 pod 会同时订阅、同时写入，您的历史库会悄悄收到所有内容两遍。需要更多？请安装带有自己流程的第二个发布。
+
+### 资源
+
+预设，而不是原始数字。`resources.preset` 为 `small`（默认）、`medium`、`large` 或 `custom`：
+
+| 预设 | 请求 | 限制 |
+|---|---|---|
+| `small` | 10m CPU, 64Mi | 500m CPU, 256Mi |
+| `medium` | 50m CPU, 128Mi | 1 CPU, 512Mi |
+| `large` | 200m CPU, 512Mi | 2 CPU, 2Gi |
+
+空闲时，该进程驻留约 16.6 MiB（方法和命令见 [docs/bench/](/zh-hans/flow/benchmarks/#内存)），所以 `small` 可以调度到只剩 64Mi 的边缘节点上。
+
+Flow 在启动时读取容器的内存限制，并要求 Go 运行时把堆保持在其 85% 以下，这样随着堆接近限制，收集器会更加努力工作，而不是任由堆翻倍后被杀掉。日志会在启动时说明这一点（`memory limit for the collector`）。自己设置 `GOMEMLIMIT` 则以它为准。限制必须为存活的数据留出空间：约 13,000 个节点的流程文件约占 800 MiB，所以这么大的工厂请用 `custom` 配置为 3Gi 或更多。
+
+### 网络模式
+
+这就是 Flow 在工厂车间能占一席之地的原因。一个只能看到集群路由给它的东西的流程引擎，无法盘点 OT 网段。
+
+| `network.mode` | 它能得到什么 | 每节点实例数 |
+|---|---|---|
+| `cluster` | ClusterIP。集群路由的任何东西。默认值，除非需要 L2，否则就是正确答案。 | 不限 |
+| `host` | 节点的接口、ARP 表和广播域。 | 一个，端口属于节点 |
+| `macvlan` | 它在目标 VLAN 上**自己的 MAC 和 IP**，直接位于有 PLC 的网段上。需要 Multus。 | 不限 |
+
+`macvlan` 是有意思的那个：在一个节点上**并且**在 OT 网段上运行多个都是安全的，没有端口冲突，因为每个实例都有自己的地址。把 `network.macvlan.master` 设为节点在该 VLAN 上的接口，并填写 `network.macvlan.ipam`。
+
+### pod 被允许做什么
+
+以 uid 65532 运行的 distroless nonroot，只读根文件系统，无权限提升，`RuntimeDefault` seccomp，所有 capability 都被移除。发现节点也包括在内：`scan` 只建立 TCP 连接，这不需要任何 capability，并且会完成握手，而不是在 PLC 上留下半开连接。
+
+有一个值会添加一个 capability，而且只在您设置它时才会：`bindToInterface.netRaw`。节点可以把它的连接绑定到一个网络接口（`SO_BINDTODEVICE`），适用于这样的机器：其端口为每台设备承载一个 VLAN，所有 VLAN 使用相同的子网。在 Linux 5.7 及更高版本上不需要 capability，该值保持 `false`。在更旧的内核上需要 `CAP_NET_RAW`：把它设为 `true`，pod 就会只添加那一个 capability，其他所有 capability 仍被移除。pod 还必须能看到主机的接口，也就是 `network.mode: host`。标签页如何选择接口，见 node-red-types.md。
+
+### 每台机器一个 VLAN 的工厂
+
+一台机器，一个端口，每台烘干机一个 VLAN，每个 VLAN 都是相同的 `192.168.1.0/24`，设备地址也相同。用 `network.mode: host` 运行一个 Flow，给每台烘干机的标签页设置环境变量 `FLOW_NETWORK_INTERFACE`（`enp2s0.14`、`enp2s0.15` 等等），该标签页上的每个客户端就只会连到自己的 VLAN。使用 Podman 和 Quadlet 时，用 `Network=host`，并且只在比 5.7 更旧的内核上使用 `AddCapability=NET_RAW`。细节、节点选择接口的顺序，以及已经证实的内容，见 node-red-types.md。
+
+### 从 EmberCORE 仪表板登录
+
+当仪表板从 App Store 部署 Flow 时，它会把自己的公钥（`embernetSignin.publicKey`）交给 chart，此后仪表板就是入口。它在转发的每个请求上，包括编辑器的 websocket，都把它签发的令牌放在 `X-Embernet-Assertion` 中，Flow 用该密钥检查：签名（ES256）、签发者（`embernet-dashboard`）、它是为该租户中的这个应用签发的（audience 是 `<tenant>/<release>`，所以为其他应用签发的令牌在这里什么也打不开），以及它的有效期（约一分钟，所以没有什么需要撤销的，仪表板中更改的角色在下一个请求就生效）。
+
+权限来自仪表板中租户的角色映射：`*` 是完全访问，`read` 是只读（流程、面板、设置和状态，没有任何会改变它们的东西，没有部署日志，也没有 inject）。既不是这两者，或没有角色，则无法访问。以这种方式登录的人在部署日志和审计记录中显示为 `dashboard:<email>`。
+
+除非设置了密钥，否则关闭。没有密钥时，Flow 忽略该请求头，行为与以往相同。有密钥时，错误的令牌会被直接拒绝，请求中的其他任何内容都救不了它。管理员登录和承载令牌在它旁边继续可用，这是为员工和自动化准备的应急通道，编辑器会显示“Open this from the EmberCORE dashboard”，而不是它自己的登录表单（`embernetSignin.hideLoginForm`）。
+
+在您自己运行的 pod 上，挂载 PEM 并设置 `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE` 和 `HOTLOOP_FLOW_ASSERTION_AUDIENCE`；如果密钥无法读取或没有 audience，Flow 拒绝启动。
+
+### 您真正会改动的值
+
+| 值 | 默认值 | 用途 |
+|---|---|---|
+| `image.tag` | chart 的应用版本 | 请固定它。显式的标签就是更新机制。 |
+| `persistence.size`, `persistence.storageClass` | `2Gi`，集群默认值 | `/data` 所在的位置。 |
+| `store.context.persist`, `store.context.flushInterval` | 开启，`30s` | 跨重启的上下文，以及被更改的值在写入前等待多久。kill -9 会丢失这么多。 |
+| `store.durable.maxBytes`, `store.durable.ackFlush` | 256 MiB，`100ms` | 持久连线的磁盘配额，以及已送达的消息等待被标记为完成的时间。 |
+| `store.synchronous` | `normal` | `full` 对每次提交都做 fsync。更能抵御断电，对卡更吃力。 |
+| `trace.enabled`, `trace.perSecond` | 开启，`1000` | 消息跟踪，也就是点击调试消息来查看它去向何处的背后支撑。`perSecond` 限制每秒新增的跟踪数，让高速产线不必为此付出代价；`0` 会跟踪每条消息。 |
+| `trace.traces`, `trace.maxHops`, `trace.maxMessageBytes`, `trace.maxBytes` | `256`, `512`, `16384`, `16777216` | 在内存中保留多少跟踪，绝不超过。重启会让列表重新开始。 |
+| `trace.otlp.endpoint` | 空 | OpenTelemetry 收集器的 OTLP/HTTP 地址，例如 `http://collector:4318`。为空表示不导出。`trace.otlp.serviceName` 和 `trace.otlp.interval` 与它配套。 |
+| `trace.otlp.headersSecret.name`, `.key` | 空，`headers` | 一个 Secret，以逗号分隔的 `Name=value` 对保存收集器的请求头，用于托管收集器的 API 密钥。它以环境变量的形式到达 pod，绝不会接触 ConfigMap。 |
+| `history.retain` | `100` | 在 `/data/deployments` 下保留多少条部署记录。`0` 表示全部保留，这是关于磁盘的决定，因为每条记录都是流程文件的副本。 |
+| `history.git.url` | 空 | 把每次部署以部署者的提交形式镜像到一个 git 仓库。为空表示关闭。`history.git.branch`、`.path`、`.emailDomain` 和 `.username` 与它配套，留空时使用二进制文件自己的默认值。 |
+| `history.git.passwordSecret.name`, `.key` | 空，`password` | 一个 Secret，保存该仓库的访问令牌。它以 `HOTLOOP_FLOW_GIT_PASSWORD` 的形式到达 pod，绝不会接触 ConfigMap。 |
+| `stations.dashboardUrl`, `stations.tenant`, `stations.dashboardTokenSecret.name`, `.key`, `stations.deployTokenSecret.name`, `.key` | 空，空，空，`token`，空，`token` | 把一个流程文件推送到租户在 EmberNet 中运行的每个 Flow 安装，并在每一个之后做检查（[推送到租户的工作站](/zh-hans/flow/stations/)）。仪表板、租户和两个 Secret 名称这四个值要么全部设置，要么都不设置；只设置其中一部分的渲染会被拒绝。每个 Secret 保存一个令牌并作为文件挂载，绝不放进 ConfigMap。部署令牌是工作站接受的那个，需要 `flows.read`、`flows.write` 和 `status.read`。 |
+| `failover.urlSecret.name`, `.key`, `failover.name`, `failover.ttl`, `failover.renewEvery`, `failover.writeMargin` | 空，`url`，`flow`，`15s`，ttl 的三分之一，`5s` | 一个故障转移对：两个安装共享 PostgreSQL 中的一份租约，一个写入设备，另一个在接管之前扣留它的写入（[基于租约的热备](/zh-hans/flow/failover/)）。在指定 Secret 名称之前关闭。该 Secret 的键中保存 PostgreSQL URL，并作为文件挂载，绝不放进 ConfigMap。 |
+| `audit.maxBytes`, `audit.keep` | 16 MiB，`4` | `/data/audit.log` 何时轮转，以及在它旁边保留多少个已轮转的文件。 |
+| `tests.gate`, `tests.timeout` | 关闭，`2m` | `true` 会拒绝流程未通过 `/data/flows.test.yaml` 的部署。默认关闭，因为没人要求的门禁会在凌晨 3 点以一个值班人员从没听说过的理由让部署失败。 |
+| `discovery.enabled`, `discovery.allowedCIDRs` | 关闭，空 | scan 节点。在列表为空的情况下启用，会拒绝启动。 |
+| `exec.enabled`, `exec.allowedCommands` | 关闭，空 | exec 节点。规则相同。 |
+| `files.allowedPaths` | 空 | 文件节点在 `/data` 之外可以访问的额外目录树。 |
+| `secrets.mounts` | 空 | 以只读方式挂载的 Secret，每个为 `{secretName, mountPath}`，用于 tls-config 的文件和 `ew_credentialFiles`。每个路径加入密钥范围，绝不加入文件节点的范围。 |
+| `plugins.enabled` | 关闭 | [插件](/zh-hans/flow/plugins/)。关闭时不渲染任何内容。开启且 `plugins.trustedKeys` 为空时，每个插件都会被拒绝。 |
+| `plugins.trustedKeys`, `plugins.grants` | 空 | 要信任的发布者密钥，以及每个插件可以按名称使用的内容（`clock`、`random`、`context.flow`、`context.global`）。使用了要求更多权限的插件的流程会使部署失败。 |
+| `plugins.maxMemoryMiB`, `plugins.maxTimeout` | `64`, `5s` | 可以给予任何一个插件节点的最大内存和最长时间。 |
+| `plugins.volume`, `plugins.mountPath`, `plugins.dir` | 空，`/etc/hotloop-flow/plugins`，空 | 插件文件如何到达。没有卷：把它们复制到数据卷上的 `plugins/` 中。卷可以是任何 Kubernetes 卷来源（现有的 claim、ConfigMap、Secret），以只读方式挂载在 `mountPath`，`dir` 跟随其后。 |
+| `metrics.serviceMonitor.enabled` | 关闭 | Prometheus Operator 抓取。 |
+| `ingress.enabled` | 关闭 | 如果您希望从集群外部可以访问它。 |
+
+默认渲染也必须等于二进制文件自己的默认值，这样 `values.yaml` 中的设置在进程中总是做它所说的事。
+
+Service 监听 8080 并转发到二进制文件的 1880。其他一切都记录在 `charts/hotloop-flow/values.yaml` 中该值的旁边。
+
+---
+
+## 带 Quadlet 的 Podman
+
+适用于不运行 Kubernetes 的单台机器：工业 PC、网关、历史库旁边的虚拟机。Quadlet 把一个简短的单元文件变成运行容器的 systemd 服务，所以 Flow 在开机时启动，崩溃时重启，并像机器上的其他一切一样写入日志。
+
+您需要一个自带 Quadlet 的 Podman（存在 `/usr/libexec/podman/quadlet`）。以下步骤完全按所写内容执行过，以 root 身份，在 Podman 4.9.3 上使用 2.0.5 镜像：它启动了，接受了登录，接受了部署，并在 `systemctl restart` 之后带着完好的流程和加密凭据恢复。
+
+**1. 让两个密钥留在单元文件之外。** Podman 密钥存放在它之外，所以单元文件可以到处复制、提交和审阅，而不携带任何重要的东西。
+
+```bash
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} \
+  hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
+printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
+```
+
+`printf '%s' "$(...)"` 会去掉末尾的换行符。没有它，换行符会成为密钥的一部分，而末尾带换行符的哈希什么都匹配不上。
+
+**2. 单元文件。** `/etc/containers/systemd/hotloop-flow.container`：
+
+```ini
+[Unit]
+Description=HotLoop Flow
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+ContainerName=hotloop-flow
+Image=ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+PublishPort=1880:1880
+Volume=hotloop-flow-data:/data
+Environment=HOTLOOP_FLOW_ADMIN_USER=admin
+Environment=HOTLOOP_FLOW_LOG_FORMAT=json
+Secret=hotloop-flow-admin-hash,type=env,target=HOTLOOP_FLOW_ADMIN_PASSWORD_HASH
+Secret=hotloop-flow-credential-secret,type=env,target=HOTLOOP_FLOW_CREDENTIAL_SECRET
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+
+[Service]
+Restart=always
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**3. 启动它。**
+
+```bash
+systemctl daemon-reload
+systemctl start hotloop-flow.service
+journalctl -u hotloop-flow -f
+```
+
+Quadlet 在 `daemon-reload` 时生成服务，而 `[Install]` 部分就是开机时启动它的东西。没有 `systemctl enable` 这一步：Podman 自己的文档说生成的单元无法被 enable，生成器自己会应用 `[Install]`。
+
+无 root 模式的工作方式相同，文件放在 `~/.config/containers/systemd/` 中，用 `systemctl --user` 代替 `systemctl`，并使用 `WantedBy=default.target`。还要运行 `loginctl enable-linger <user>`，否则该用户注销时 systemd 会停止该用户的服务，Flow 也随之停止。这是 [Podman](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) 和 systemd 文档记载的行为。上面的 root 单元就是我们运行过的那个。
+
+从这个单元**推送到租户的其他工作站**需要四项设置和两个作为文件挂载的 Podman 密钥（见[推送到租户的工作站](/zh-hans/flow/stations/)）。用 `podman secret create` 创建密钥，然后添加到 `[Container]`：
+
+```ini
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_URL=https://dashboard.example
+Environment=HOTLOOP_FLOW_STATIONS_TENANT=acme
+Environment=HOTLOOP_FLOW_STATIONS_DASHBOARD_TOKEN_FILE=/run/secrets/stations-dashboard-token
+Environment=HOTLOOP_FLOW_STATIONS_DEPLOY_TOKEN_FILE=/run/secrets/stations-deploy-token
+Secret=hotloop-flow-dashboard-token,type=mount,target=stations-dashboard-token
+Secret=hotloop-flow-station-token,type=mount,target=stations-deploy-token
+```
+
+四项设置要么全有，要么都没有：只设置其中一部分时，Flow 拒绝启动。部署令牌用 `hotloop-flow token` 生成，并作为具有 `flows.read`、`flows.write` 和 `status.read` 的 API 令牌交给每个工作站。
+
+**故障转移对**是两个这样的单元，各有自己的卷，每个 `[Container]` 部分里是同样的三行（见[基于租约的热备](/zh-hans/flow/failover/)）；第二个单元的主机名是它自己的，所以两者永远不会共用持有者名称：
+
+```ini
+Environment=HOTLOOP_FLOW_FAILOVER_URL_FILE=/run/secrets/flow-lease-url
+Environment=HOTLOOP_FLOW_FAILOVER_NAME=line3
+Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
+```
+
+**升级**就是更改 `Image=` 中的标签，然后 `daemon-reload` 和 `restart`。流程、凭据和密钥留在原处。请固定标签。在工厂车间使用 `:latest` 意味着您要等它坏掉才知道改了什么。
+
+**开启功能**就是更多的 `Environment=` 行：`HOTLOOP_FLOW_EXEC_ENABLED` 和 `HOTLOOP_FLOW_EXEC_ALLOWED_COMMANDS`、`HOTLOOP_FLOW_DISCOVERY_ENABLED` 和 `HOTLOOP_FLOW_DISCOVERY_CIDRS`，以及 [README](/zh-hans/flow/configuration/#环境变量覆盖) 中表格的其余部分。对于只能在文件中设置的项（会话 TTL、备份代数、超时），挂载一个 YAML 文件，并让 `HOTLOOP_FLOW_CONFIG` 指向它。
+
+要在 OT 网段上做发现，`Network=host` 会把机器自己的接口交给容器。与 Kubernetes 上的 `host` 模式是同样的取舍：每个端口一个实例。
+
+---
+
+## `podman run`
+
+用来试用，不是用来运行产线的：
+
+```bash
+podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
+  -e HOTLOOP_FLOW_ADMIN_USER=admin \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:{{flow}} hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
+  ghcr.io/hotloop-io/hotloop-flow:{{flow}}
+```
+
+然后打开 <http://localhost:1880>。每次运行该命令时，凭据密钥都是新的，所以一次运行中保存的凭据在下一次运行中无法读取。用来看一看没问题。这正是 Quadlet 安装把它存放在 Podman 密钥中的原因。
+
+该镜像是没有 shell 的 distroless nonroot，所以没有任何东西可以 `exec` 进去，获得代码执行权限的人也没有任何可借以横向移动的东西。
+
+---
+
+## 备份
+
+所有值得保留的东西都在 `/data` 中：`flows.json`、`credentials.json`、`flows.json.bak.1` 到 `.bak.3`、`deployments/` 中的部署日志（每次部署一个文件）、`audit.log` 中的审计记录、`mfa.json` 中的双因素登记信息，以及 `sessions.json` 中的登录会话。日志的记录和登记信息是用与凭据相同的密钥加密的，会话则是哈希。`git-mirror/` 只是一个克隆，丢失后会从仓库重建。请**分别**备份该目录和凭据密钥。凭据文件没有密钥就毫无用处，这正是目的所在，而把两者放在一处的备份，就是把两者都交给偷走它的人的备份。
