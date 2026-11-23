@@ -5,7 +5,7 @@ description: "Publiser alt en enhet leser til en sentral Gateway som en Sparkplu
 
 Edge Publish gjør HotLoop til en Sparkplug B-**kantnode** fra 4.5.0, som publiserer alt den leser til en sentral Gateway over MQTT, i motsatt retning av den eksisterende MQTT-driveren, som bruker Sparkplug som primærvert. Dette er hva det betyr å kjøre den.
 
-Edge-publisering er på som standard i Gateway og Edge og hviler til den har en broker og en Sparkplug-gruppe, fra chartet eller miljøet, eller lagt inn av en administrator under Innstillinger, "Hvor alarmer og målinger går" (se [Alarmvarsler](/nb/iot/notifications/#where-alarms-go-settings)). Det som er lagret der gjelder, og det leses når HotLoop starter, fordi publisereren eier køfilen og noden. Uten noe oppgitt publiserer den ingenting og hindrer ikke HotLoop i å starte.
+Edge-publisering er på som standard i Gateway og Edge og hviler til den har en broker og en Sparkplug-gruppe, fra chartet eller miljøet, eller lagt inn av en administrator under Innstillinger, "Hvor alarmer og målinger går" (se [Alarmvarsler](/nb/iot/notifications/#hvor-alarmer-går-innstillinger)). Det som er lagret der gjelder, og det leses når HotLoop starter, fordi publisereren eier køfilen og noden. Uten noe oppgitt publiserer den ingenting og hindrer ikke HotLoop i å starte.
 
 Slått på kjører den i samme Gateway-prosess, fortsatt koblet til TimescaleDB, noe som er nyttig når et anlegg vil ha hele Gateways grensesnitt og historikk lokalt og i tillegg en opplenke til en sentral. Flåtestyring for mange Edge Relay kom i 4.7.0 (sporing, fra deres births og deaths) og 4.8.0 (konfigurasjonspush); se siden om flåtestyring.
 

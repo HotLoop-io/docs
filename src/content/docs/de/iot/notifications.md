@@ -3,7 +3,7 @@ title: "Alarmbenachrichtigungen"
 description: "ntfy, Gotify, Discord, Webhooks und E-Mail. Tippen Sie auf dem Handy auf Quittieren, und der Alarm ist quittiert, signiert und nur einmal gültig."
 ---
 
-Alarmbenachrichtigungen rufen seit Version 4.10.0 ein Handy an, wenn um 03:00 ein Alarm kommt. Wenn ein Alarm **kommt**, sendet HotLoop eine Benachrichtigung über jeden konfigurierten und aktivierten Kanal, dessen Prioritätsgrenze der Alarm erreicht. Standardmäßig ausgeschaltet (`HOTLOOP_NOTIFY_ENABLED`): Eine Installation ohne jemanden, der gerufen werden soll, hat hier nichts zu konfigurieren.
+Alarmbenachrichtigungen, seit 4.10.0, wecken ein Telefon, wenn um 03:00 Uhr ein Alarm ausgelöst wird. Wenn ein Alarm **ausgelöst** wird, sendet HotLoop eine Benachrichtigung über jeden konfigurierten, aktivierten Kanal, dessen Prioritätsschwelle der Alarm erreicht. Seit 4.23.6 im Helm-Chart an (`HOTLOOP_NOTIFY_ENABLED`), senden sie nichts, bis ein Kanal mit seinem Ziel aktiviert wird: Eine Bereitstellung ohne jemanden, den man alarmieren kann, hat hier nichts zu konfigurieren.
 
 ## Warum nur "kommt"
 
@@ -24,6 +24,17 @@ Es sind sechs, und das ist die Liste (siehe "Benachrichtigungen" in der [HotLoop
 
 - **Webhook**: ein POST mit HotLoops eigenem JSON-Body (`alarmId`, `name`, `priority`, `priorityLabel`, `message`, `deviceId`, `tagName`, `raisedAt`, `event`, das `raised` ist, oder `escalated` bei einer Eskalation) an eine konfigurierte URL. Er funktioniert mit allem, was beliebiges JSON annimmt: Ihr eigenes Skript hinter einem kleinen HTTP-Listener, Node-RED, n8n oder ein "beliebiger Webhook"-Trigger in einem Workflow-Werkzeug. (Auf ein ntfy-Topic gerichtet, ruft er, mit dem rohen JSON als Text; nehmen Sie dafür besser den ntfy-Kanal oben.) Eine Zusammenfassung (siehe "Ratenbegrenzung und Zusammenfassungen") hat `event` mit dem Wert `summary` und eine Liste `alarms`, die jeden enthaltenen Alarm nennt. Er funktioniert nicht mit Diensten, die den Body in ihrem eigenen Format wollen. Discord antwortet 400, weil weder `content` noch `embeds` da sind. Slack, Teams und Google Chat wollen ihr eigenes Textfeld. Pushover will seine Felder `token`, `user` und `message`, und die Events-API von PagerDuty will einen `routing_key`, eine `event_action` und ein `payload`. Richten Sie den Webhook auf einen davon, und jeder Ruf schlägt fehl. Discord hat eigene Kanäle, die den Body bauen, den Discord erwartet; nehmen Sie diese.
 - **E-Mail über SMTP**: gesendet über das Relay, das der Betreiber schon hat (ein Firmen-Mailserver, der SMTP-Endpunkt eines Anbieters für Transaktionsmails, ein selbst gehostetes Relay). Kein API-Schlüssel, keine Hersteller-Bibliothek: `net/smtp` und eine von Hand gebaute Nur-Text-Nachricht. Viele Handys zeigen E-Mail schon von sich aus als Push-Nachricht an, und viele Alarmierungswerkzeuge akzeptieren eine E-Mail-zu-SMS-Brückenadresse als "Kontaktmethode". Allein dieser Kanal deckt also einen großen Teil von "ein Handy rufen" ab, ganz ohne kostenpflichtige Abhängigkeit.
+
+## Wohin Alarme gehen: Einstellungen
+
+Jeder Kanal ist standardmäßig an und untätig, bis er ein Ziel zum Senden hat. Ein aktivierter Kanal ohne Ziel hindert HotLoop nie am Start, er wartet und sagt das. Ein Administrator gibt jedem sein Ziel unter Einstellungen, "Wohin Alarme und Messwerte gehen": die Webhook-URL, das E-Mail-Relay und die Empfänger, den ntfy-Server und das Topic, den Gotify-Server und das Token, die Discord-Webhook-URL, das Token und den Kanal des Discord-Bots sowie den Broker und die Sparkplug-Gruppe des Edge-Publishers. Jeder zeigt, was er tut (sendet, wartet auf ein Ziel, aus) und was ihm fehlt.
+
+- Die Alarmkanäle gelten in dem Moment, in dem die Einstellung gespeichert wird: Der Dispatcher wird an Ort und Stelle neu aufgebaut, was die alten Kanäle zurückhielten, geht zuerst hinaus, und die Verbindung des Discord-Bots wird geschlossen, bevor eine neue geöffnet wird. **Test senden** (`POST /api/notify/test`) erreicht dann den eben gespeicherten Kanal.
+- Der Edge-Publisher besitzt eine Warteschlangendatei und einen Sparkplug-Knoten, also wird sein Ziel beim Start von HotLoop gelesen. Der Bildschirm sagt "Saved, applies when HotLoop restarts".
+- Was dort gespeichert ist, gilt vor dem Chart oder der Umgebung, die es nur vorbelegen. Ein leer gelassener Wert behält das Gespeicherte; Löschen entfernt es. Ein Geheimnis (eine Webhook-URL, ein ntfy-Topic, ein Token, ein Passwort) wird nie wieder angezeigt, nur ob es gesetzt ist, und wird in der Datenbank versiegelt, wenn HotLoop einen geheimen Schlüssel hat.
+- Ein Ziel wird so geprüft wie die Umgebung beim Start, bevor etwas gespeichert wird, und ein falsches wird abgelehnt mit der Angabe, was falsch ist (nie der Wert).
+- Ein Schalter pro Kanal schaltet ihn endgültig ab: aus heißt kein Kanal, kein Senden.
+- `GET /api/destinations` und `PUT /api/destinations/{kind}` sind die Routen; das PUT braucht `settings.write`. Siehe [die HTTP-API](/de/iot/api/).
 
 ## Die Webhook-URL wird nie ausgegeben
 

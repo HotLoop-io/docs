@@ -5,7 +5,7 @@ description: "把一台设备读到的一切，以 Sparkplug B 边缘节点的�
 
 Edge Publish 自 4.5.0 起，把 HotLoop 变成一个 Sparkplug B **边缘节点**，通过 MQTT 把它读到的一切发布到中央 Gateway，方向与现有的 MQTT 驱动相反，后者是作为主机来消费 Sparkplug。运行它就是这个意思。
 
-边缘发布在 Gateway 和 Edge 中默认开启，在有了 broker 和 Sparkplug 组之前保持空闲，这些可以来自 chart 或环境变量，也可以由管理员在设置的“报警和读数发往何处”中填写（见[报警通知](/zh-hans/iot/notifications/#where-alarms-go-settings)）。那里保存的内容优先，并在 HotLoop 启动时读取，因为发布器拥有队列文件和节点。如果没有给出任何内容，它不发布任何东西，也不会阻止 HotLoop 启动。
+边缘发布在 Gateway 和 Edge 中默认开启，在有了 broker 和 Sparkplug 组之前保持空闲，这些可以来自 chart 或环境变量，也可以由管理员在设置的“报警和读数发往何处”中填写（见[报警通知](/zh-hans/iot/notifications/#报警发往何处设置)）。那里保存的内容优先，并在 HotLoop 启动时读取，因为发布器拥有队列文件和节点。如果没有给出任何内容，它不发布任何东西，也不会阻止 HotLoop 启动。
 
 打开它之后，它运行在同一个 Gateway 进程内，仍然连接着 TimescaleDB，适用于现场既想在本地使用完整 Gateway 的界面和历史数据，又想向中央 Gateway 上行的情况。针对多个 Edge Relay 的设备群管理，在 4.7.0（根据它们的 Birth 和 Death 进行跟踪）和 4.8.0（配置推送）中加入；见设备群管理页面。
 

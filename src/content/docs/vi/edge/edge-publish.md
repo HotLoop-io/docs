@@ -5,7 +5,7 @@ description: "Xuất bản mọi thứ một máy đọc được lên Gateway t
 
 Edge Publish, từ 4.5.0, biến HotLoop thành một **nút biên** Sparkplug B, xuất bản mọi thứ nó đọc được lên một Gateway trung tâm qua MQTT, theo chiều ngược lại với trình điều khiển MQTT hiện có, vốn tiếp nhận Sparkplug với vai trò máy chủ chính. Đây là ý nghĩa của việc chạy nó.
 
-Edge publish mặc định bật trong Gateway và Edge và nghỉ cho đến khi có broker và một nhóm Sparkplug, từ chart hoặc biến môi trường, hoặc do quản trị viên nhập trong Cài đặt, "Nơi báo động và số đọc được gửi tới" (xem [Thông báo báo động](/vi/iot/notifications/#where-alarms-go-settings)). Những gì lưu ở đó được ưu tiên, và được đọc khi HotLoop khởi động, vì publisher sở hữu tệp hàng đợi và nút. Nếu chưa có gì được đặt, nó không phát hành gì và không ngăn HotLoop khởi động.
+Edge publish mặc định bật trong Gateway và Edge và nghỉ cho đến khi có broker và một nhóm Sparkplug, từ chart hoặc biến môi trường, hoặc do quản trị viên nhập trong Cài đặt, "Nơi báo động và số đọc được gửi tới" (xem [Thông báo báo động](/vi/iot/notifications/#báo-động-đi-đâu-cài-đặt)). Những gì lưu ở đó được ưu tiên, và được đọc khi HotLoop khởi động, vì publisher sở hữu tệp hàng đợi và nút. Nếu chưa có gì được đặt, nó không phát hành gì và không ngăn HotLoop khởi động.
 
 Khi bật tính năng này, nó chạy ngay trong cùng tiến trình Gateway, vẫn kết nối với TimescaleDB, hữu ích khi một địa điểm muốn có cả giao diện và lịch sử của Gateway đầy đủ ngay tại chỗ lẫn đường lên một Gateway trung tâm. Việc quản lý đội thiết bị cho nhiều Edge Relay có từ 4.7.0 (theo dõi, dựa trên Birth và Death của chúng) và 4.8.0 (đẩy cấu hình); xem trang quản lý đội thiết bị.
 
