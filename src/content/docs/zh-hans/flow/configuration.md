@@ -130,7 +130,7 @@ trace:                      # where every message went, kept in memory, bounded
 | `HOTLOOP_FLOW_DATA_DIR`, `HOTLOOP_FLOW_FLOW_FILE` | 状态存放的位置。 |
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | 凭据加密密钥。 |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | 一个拥有全部权限的管理员账户，使首次运行的容器无需挂载文件即可使用。两者必须同时设置。 |
-| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | 一个名为 `deploy` 的部署令牌，供 CI 使用：只有 `flows.read` 和 `flows.write`，没有别的。用的是哈希，绝不是令牌本身。同时要推送到工作站的令牌（[推送到租户的工作站](/zh-hans/flow/stations/)）还需要 `status.read`，所以请在配置文件中创建。 |
+| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | 一个名为 `deploy` 的部署令牌，供 CI/CD 使用：只有 `flows.read` 和 `flows.write`，没有别的。用的是哈希，绝不是令牌本身。同时要推送到工作站的令牌（[推送到租户的工作站](/zh-hans/flow/stations/)）还需要 `status.read`，所以请在配置文件中创建。 |
 | `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | 从 EmberCORE 仪表板登录。密钥是仪表板的 ES256 公钥（一个 PEM 文件），audience 是 `<tenant>/<release>`。没有密钥文件则为关闭，默认也是关闭。 |
 | `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | 签发者（`embernet-dashboard`）、请求头（`X-Embernet-Assertion`），以及编辑器是否省略自己的登录表单（`true`）。 |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | git 镜像。密码（访问令牌）只能通过环境变量设置。 |

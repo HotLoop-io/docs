@@ -130,7 +130,7 @@ trace:                      # where every message went, kept in memory, bounded
 | `HOTLOOP_FLOW_DATA_DIR`, `HOTLOOP_FLOW_FLOW_FILE` | 상태를 저장하는 위치. |
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | 자격 증명 암호화 시크릿. |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | 모든 권한을 가진 관리자 계정 하나로, 파일을 마운트하지 않아도 첫 실행 컨테이너를 쓸 수 있게 해 줍니다. 둘 다 설정해야 합니다. |
-| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | CI용으로 `deploy`라는 이름의 배포 토큰: `flows.read`와 `flows.write`만 있고 다른 것은 없습니다. 토큰이 아니라 해시를 씁니다. 스테이션으로도 푸시하는 토큰([테넌트의 스테이션으로 푸시하기](/ko/flow/stations/))에는 `status.read`도 필요하므로 설정 파일에서 만드십시오. |
+| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | CI/CD용으로 `deploy`라는 이름의 배포 토큰: `flows.read`와 `flows.write`만 있고 다른 것은 없습니다. 토큰이 아니라 해시를 씁니다. 스테이션으로도 푸시하는 토큰([테넌트의 스테이션으로 푸시하기](/ko/flow/stations/))에는 `status.read`도 필요하므로 설정 파일에서 만드십시오. |
 | `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | EmberCORE 대시보드에서의 로그인. 키는 대시보드의 공개 ES256 키(PEM 파일)이고 audience는 `<tenant>/<release>`입니다. 키 파일이 없으면 꺼지며, 기본값은 꺼짐입니다. |
 | `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | 발급자(`embernet-dashboard`), 헤더(`X-Embernet-Assertion`), 그리고 에디터가 자체 로그인 양식을 생략할지 여부(`true`). |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | git 미러. 비밀번호(액세스 토큰)는 환경 변수로만 설정합니다. |

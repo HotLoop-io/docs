@@ -130,7 +130,7 @@ trace:                      # where every message went, kept in memory, bounded
 | `HOTLOOP_FLOW_DATA_DIR`, `HOTLOOP_FLOW_FLOW_FILE` | स्टेट कहाँ रहता है। |
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | क्रेडेंशियल एन्क्रिप्शन का सीक्रेट। |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | पूरी अनुमतियों वाला एक अकेला एडमिन खाता, जिससे पहली बार चलने वाला कंटेनर बिना फ़ाइल माउंट किए इस्तेमाल हो जाता है। दोनों सेट होने चाहिए। |
-| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | CI के लिए `deploy` नाम का डिप्लॉय टोकन: `flows.read` और `flows.write`, और कुछ नहीं। हैश, कभी टोकन नहीं। जो टोकन स्टेशनों पर भी पुश करता है ([किसी टेनेंट के स्टेशनों पर पुश करना](/hi/flow/stations/)) उसे `status.read` भी चाहिए, इसलिए उसे कॉन्फ़िग फ़ाइल में बनाएँ। |
+| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | CI/CD के लिए `deploy` नाम का डिप्लॉय टोकन: `flows.read` और `flows.write`, और कुछ नहीं। हैश, कभी टोकन नहीं। जो टोकन स्टेशनों पर भी पुश करता है ([किसी टेनेंट के स्टेशनों पर पुश करना](/hi/flow/stations/)) उसे `status.read` भी चाहिए, इसलिए उसे कॉन्फ़िग फ़ाइल में बनाएँ। |
 | `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | EmberCORE डैशबोर्ड से साइन-इन। कुंजी डैशबोर्ड की सार्वजनिक ES256 कुंजी (एक PEM फ़ाइल) है, ऑडियंस `<tenant>/<release>` है। कुंजी फ़ाइल न हो तो यह बंद रहता है, और डिफ़ॉल्ट बंद है। |
 | `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | जारीकर्ता (`embernet-dashboard`), हेडर (`X-Embernet-Assertion`), और क्या एडिटर अपना साइन-इन फ़ॉर्म छोड़ देता है (`true`)। |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | git मिरर। पासवर्ड (एक एक्सेस टोकन) केवल एनवायरनमेंट से सेट होता है। |

@@ -1,5 +1,5 @@
 ---
-title: "Configuration"
+title: "Configuration de Flow"
 description: "Chaque réglage que lit Flow, sa valeur par défaut, sa variable d'environnement et ce que fait une mauvaise valeur au démarrage."
 ---
 
@@ -130,7 +130,7 @@ L'environnement l'emporte sur le fichier, ce qui est le seul partage viable sur 
 | `HOTLOOP_FLOW_DATA_DIR`, `HOTLOOP_FLOW_FLOW_FILE` | L'emplacement de l'état. |
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | Le secret de chiffrement des identifiants. |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | Un seul compte administrateur avec tous les droits, ce qui rend utilisable un conteneur au premier démarrage sans monter de fichier. Les deux doivent être définis. |
-| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | Un jeton de déploiement nommé `deploy`, pour la CI : `flows.read` et `flows.write`, rien d'autre. Le hash, jamais le jeton. Un jeton qui pousse aussi vers les stations ([Envoi vers les stations d'un tenant](/fr/flow/stations/)) a besoin aussi de `status.read`, créez-le donc dans le fichier de configuration. |
+| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | Un jeton de déploiement nommé `deploy`, pour la CI/CD : `flows.read` et `flows.write`, rien d'autre. Le hash, jamais le jeton. Un jeton qui pousse aussi vers les stations ([Envoi vers les stations d'un tenant](/fr/flow/stations/)) a besoin aussi de `status.read`, créez-le donc dans le fichier de configuration. |
 | `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | Connexion depuis le tableau de bord EmberCORE. La clé est la clé publique ES256 du tableau de bord (un fichier PEM), l'audience est `<tenant>/<release>`. Sans fichier de clé, elle est désactivée, et la valeur par défaut est désactivée. |
 | `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | L'émetteur (`embernet-dashboard`), l'en-tête (`X-Embernet-Assertion`) et si l'éditeur omet son propre formulaire de connexion (`true`). |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | Le miroir git. Le mot de passe (un jeton d'accès) ne passe que par l'environnement. |

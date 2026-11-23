@@ -130,7 +130,7 @@ Môi trường được ưu tiên hơn tệp, đây là cách chia duy nhất d�
 | `HOTLOOP_FLOW_DATA_DIR`, `HOTLOOP_FLOW_FLOW_FILE` | Nơi lưu trạng thái. |
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | Bí mật mã hóa thông tin xác thực. |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | Một tài khoản quản trị duy nhất với đầy đủ quyền, giúp một container chạy lần đầu dùng được mà không cần gắn tệp. Cả hai đều phải được đặt. |
-| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | Một token triển khai tên `deploy`, cho CI: `flows.read` và `flows.write`, không gì khác. Là mã băm, không bao giờ là token. Một token cũng đẩy tới các trạm ([Đẩy tới các trạm của một tenant](/vi/flow/stations/)) cần thêm `status.read`, nên hãy tạo nó trong tệp cấu hình. |
+| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | Một token triển khai tên `deploy`, cho CI/CD: `flows.read` và `flows.write`, không gì khác. Là mã băm, không bao giờ là token. Một token cũng đẩy tới các trạm ([Đẩy tới các trạm của một tenant](/vi/flow/stations/)) cần thêm `status.read`, nên hãy tạo nó trong tệp cấu hình. |
 | `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | Đăng nhập từ bảng điều khiển EmberCORE. Khóa là khóa công khai ES256 của bảng điều khiển (một tệp PEM), audience là `<tenant>/<release>`. Không có tệp khóa thì tắt, và mặc định là tắt. |
 | `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | Bên phát hành (`embernet-dashboard`), tiêu đề (`X-Embernet-Assertion`) và việc trình soạn thảo có bỏ biểu mẫu đăng nhập riêng của nó hay không (`true`). |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | Bản sao git. Mật khẩu (một token truy cập) chỉ đặt qua biến môi trường. |

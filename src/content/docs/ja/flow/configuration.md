@@ -130,7 +130,7 @@ trace:                      # where every message went, kept in memory, bounded
 | `HOTLOOP_FLOW_DATA_DIR`, `HOTLOOP_FLOW_FLOW_FILE` | 状態の保存場所。 |
 | `HOTLOOP_FLOW_CREDENTIAL_SECRET` | 資格情報の暗号化シークレット。 |
 | `HOTLOOP_FLOW_ADMIN_USER`, `HOTLOOP_FLOW_ADMIN_PASSWORD_HASH` | すべての権限を持つ管理者アカウント 1 つで、ファイルをマウントしなくても初回起動のコンテナを使えるようにします。両方を設定する必要があります。 |
-| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | CI 用の `deploy` という名前のデプロイトークン。`flows.read` と `flows.write` だけで、ほかには何もありません。使うのはハッシュで、トークンではありません。ステーションにもプッシュするトークン([テナントのステーションへのプッシュ](/ja/flow/stations/))には `status.read` も必要なので、設定ファイルで作成してください。 |
+| `HOTLOOP_FLOW_DEPLOY_TOKEN_HASH` | CI/CD 用の `deploy` という名前のデプロイトークン。`flows.read` と `flows.write` だけで、ほかには何もありません。使うのはハッシュで、トークンではありません。ステーションにもプッシュするトークン([テナントのステーションへのプッシュ](/ja/flow/stations/))には `status.read` も必要なので、設定ファイルで作成してください。 |
 | `HOTLOOP_FLOW_ASSERTION_PUBLIC_KEY_FILE`, `HOTLOOP_FLOW_ASSERTION_AUDIENCE` | EmberCORE ダッシュボードからのサインイン。キーはダッシュボードの公開 ES256 キー(PEM ファイル)で、audience は `<tenant>/<release>` です。キーファイルがなければオフで、既定もオフです。 |
 | `HOTLOOP_FLOW_ASSERTION_ISSUER`, `HOTLOOP_FLOW_ASSERTION_HEADER`, `HOTLOOP_FLOW_ASSERTION_HIDE_LOGIN` | 発行者(`embernet-dashboard`)、ヘッダー(`X-Embernet-Assertion`)、およびエディターが独自のサインインフォームを省くかどうか(`true`)。 |
 | `HOTLOOP_FLOW_GIT_URL`, `HOTLOOP_FLOW_GIT_USERNAME`, `HOTLOOP_FLOW_GIT_PASSWORD` | git ミラー。パスワード(アクセストークン)は環境変数でのみ設定します。 |
