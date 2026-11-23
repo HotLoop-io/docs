@@ -1066,7 +1066,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 | `writable` | bool | **从所有途径（界面、自动化、实体、MCP）启用该变量的写入。** 省略时为 `false` |
 | `hasRange`, `minValue`, `maxValue` | bool, number, number | 设置了 `hasRange` 时，超出范围的写入会被拒绝（绝不截断） |
 | `scale`, `offset` | number | 工程值 = 原始值 x 比例 + 偏移。比例为 0 时按 1 处理 |
-| `noData` | list | 表示“没有测量值”的原始值，每项是 `{"raw", "reason"}`。`raw` 是字符串（`"0x8005"`、`"-32763"`）或裸数字，并以字符串形式返回。原始值在该列表中的读数，质量为坏并带该 `reason`，在 `scale` 和 `offset` 之前检查。最多 32 个代码。不是整数、被列出两次或不可能是该点类型的代码返回 `400`。每种类型该怎么写以及 Yokogawa DX 的示例，参见[协议与驱动](/zh-hans/iot/protocols/#no-data-values) |
+| `noData` | list | 表示“没有测量值”的原始值，每项是 `{"raw", "reason"}`。`raw` 是字符串（`"0x8005"`、`"-32763"`）或裸数字，并以字符串形式返回。原始值在该列表中的读数，质量为坏并带该 `reason`，在 `scale` 和 `offset` 之前检查。最多 32 个代码。不是整数、被列出两次或不可能是该点类型的代码返回 `400`。每种类型该怎么写以及 Yokogawa DX 的示例，参见[协议与驱动](/zh-hans/iot/protocols/#无数据值) |
 | `deadband`, `deadbandPercent` | number | 小于该值的变化不会写入历史数据 |
 | `deviceClass` | string | 变量的实体起始所用的类别（`power`、`connectivity`、`temperature` 等），在对其领域有意义时使用。创建变量时采用，替换时忽略：此后类别归实体所有，请在那里修改 |
 

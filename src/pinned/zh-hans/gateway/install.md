@@ -30,7 +30,7 @@ helm install hotloop hotloop/hotloop --version {{hotloop}} \
 
 **只是渲染图表而不是安装它？请自带密钥。** 密钥由一个 `lookup` 生成，只有真正的 `helm install` 或 `helm upgrade` 才能执行它。任何运行 `helm template` 再应用结果的做法，每次渲染都会得到新密钥，下一次同步就会把所有封存的密码锁在门外。用 `hotloop gen-secret-key` 生成一个密钥，放进你自己管理的 Secret 的 `secret.key` 项，再在 `secretKey.existingSecret` 中写上这个 Secret 的名称。Helm、Fleet 和 EmberNet App Store 都是真正安装，不需要这样做。
 
-写在 URL（`mqtt://user:pass@host`）或自由文本里的凭据仍是明文。请把它放进 `password`。哪些内容会被加密，完整列表见[设备凭据](/zh-hans/iot/protocols/#device-credentials)。
+写在 URL（`mqtt://user:pass@host`）或自由文本里的凭据仍是明文。请把它放进 `password`。哪些内容会被加密，完整列表见[设备凭据](/zh-hans/iot/protocols/#设备凭据)。
 
 ## 登录
 

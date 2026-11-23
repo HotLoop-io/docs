@@ -47,7 +47,7 @@ Tout ce qui suit une interrogation, le pilote, le bus de tags, l'éditeur Sparkp
 }
 ```
 
-Un tag accepte tout ce qu'acceptent ceux du Gateway, `noData` compris : une liste de valeurs brutes qui signifient « pas de mesure » (le 0x8005 d'un enregistreur), chacune avec sa raison, pour qu'une voie morte s'affiche en erreur sur le relay et dans le flux Sparkplug au lieu d'un nombre. Voir [Valeurs sans donnée](/fr/iot/protocols/#no-data-values).
+Un tag accepte tout ce qu'acceptent ceux du Gateway, `noData` compris : une liste de valeurs brutes qui signifient « pas de mesure » (le 0x8005 d'un enregistreur), chacune avec sa raison, pour qu'une voie morte s'affiche en erreur sur le relay et dans le flux Sparkplug au lieu d'un nombre. Voir [Valeurs sans donnée](/fr/iot/protocols/#valeurs-sans-données).
 
 Les sept pilotes de protocole du Gateway sont compilés : OPC UA, Modbus, MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect et HTTP. Rien dans le format du fichier d'appareils n'est propre à l'edge relay.
 
@@ -90,7 +90,7 @@ Un relay ne garde rien de ce qu'il a entendu. Les configurations `homeassistant/
 
 ### Identifiants dans le fichier d'appareils (4.15.0)
 
-Le pilote OPC UA du relay est celui du Gateway, donc un appareil peut porter un `username` et un `password` OPC UA (et les options de sécurité de [Protocoles et pilotes](/fr/iot/protocols/#opc-ua-security-and-credentials)) dans son bloc `config`, et un appareil de tout autre protocole aussi (mots de passe MQTT et HTTP, en-têtes HTTP, identifiants dans une adresse). Ils sont en clair dans le fichier d'appareils, et le relay n'a pas d'API derrière laquelle les cacher (la rédaction d'API ajoutée au Gateway en 4.15.1 ne s'y applique pas ; voir [Authentification et utilisateurs](/fr/iot/authentication/#où-les-identifiants-restent-en-clair)), donc l'emplacement du fichier compte :
+Le pilote OPC UA du relay est celui du Gateway, donc un appareil peut porter un `username` et un `password` OPC UA (et les options de sécurité de [Protocoles et pilotes](/fr/iot/protocols/#opc-ua-sécurité-et-identifiants)) dans son bloc `config`, et un appareil de tout autre protocole aussi (mots de passe MQTT et HTTP, en-têtes HTTP, identifiants dans une adresse). Ils sont en clair dans le fichier d'appareils, et le relay n'a pas d'API derrière laquelle les cacher (la rédaction d'API ajoutée au Gateway en 4.15.1 ne s'y applique pas ; voir [Authentification et utilisateurs](/fr/iot/authentication/#où-les-identifiants-restent-en-clair)), donc l'emplacement du fichier compte :
 
 - **Dans le chart Helm, utilisez `devicesSecret`.** Les appareils définis dans les valeurs `devices` et `tags` du chart sont rendus dans un ConfigMap, que peut lire quiconque a le droit de lire les ConfigMaps du namespace, et ils restent dans l'enregistrement de la release Helm. Pour des appareils avec identifiants, mettez le fichier d'appareils entier dans un Secret sous la clé `devices.json` et nommez-le dans `devicesSecret` ; le Secret est monté à la place du ConfigMap, qui n'est alors pas créé.
 - **Un fichier d'appareils poussé les porte aussi.** Un fichier poussé avec `POST /api/fleet/{id}/config` est publié, retenu, sur un topic MQTT, donc le broker doit porter TLS et restreindre qui peut lire `hotloop/edge-relay-config/#`, sinon quiconque peut s'y abonner lit tous les identifiants qu'il contient. Le relay écrit un fichier poussé avec le mode `0600` sur son volume de données (`/data/pushed-devices.json` dans le chart et l'unité Quadlet), donc il est aussi sur le PVC, pas dans un Secret.

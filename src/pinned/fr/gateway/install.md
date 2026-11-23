@@ -30,7 +30,7 @@ Sauvegardez donc le Secret comme vous sauvegardez les autres secrets du cluster,
 
 **Vous rendez le chart au lieu de l'installer ? Apportez votre propre clé.** La clé est générée par un `lookup` que seuls un vrai `helm install` ou `helm upgrade` peuvent faire. Tout ce qui exécute `helm template` et applique le résultat obtient une nouvelle clé à chaque rendu, et la synchronisation suivante verrouille tous les mots de passe scellés. Créez une clé avec `hotloop gen-secret-key`, mettez-la dans un Secret que vous gérez sous la clé `secret.key`, et nommez ce Secret dans `secretKey.existingSecret`. Helm, Fleet et l'App Store EmberNet installent tous pour de vrai et n'ont pas besoin de cela.
 
-Un identifiant écrit dans une URL (`mqtt://user:pass@host`) ou dans un texte libre reste en clair. Mettez-le dans `password`. [Identifiants des appareils](/fr/iot/protocols/#device-credentials) donne la liste complète de ce qui est chiffré.
+Un identifiant écrit dans une URL (`mqtt://user:pass@host`) ou dans un texte libre reste en clair. Mettez-le dans `password`. [Identifiants des appareils](/fr/iot/protocols/#identifiants-dappareil) donne la liste complète de ce qui est chiffré.
 
 ## Se connecter
 

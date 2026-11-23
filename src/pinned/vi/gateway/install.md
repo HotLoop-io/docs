@@ -30,7 +30,7 @@ Vì vậy hãy sao lưu Secret như bạn sao lưu các bí mật khác của c�
 
 **Chỉ render chart chứ không cài? Hãy mang theo khóa của riêng bạn.** Khóa được tạo bởi một `lookup` mà chỉ `helm install` hoặc `helm upgrade` thật mới làm được. Mọi thứ chạy `helm template` rồi áp dụng kết quả sẽ có khóa mới ở mỗi lần render, và lần đồng bộ kế tiếp khóa chặn mọi mật khẩu đã niêm phong. Hãy tạo khóa bằng `hotloop gen-secret-key`, đặt vào một Secret do bạn quản lý dưới khóa `secret.key`, và nêu Secret đó trong `secretKey.existingSecret`. Helm, Fleet và App Store của EmberNet đều cài thật và không cần việc này.
 
-Thông tin đăng nhập viết trong một URL (`mqtt://user:pass@host`) hoặc trong văn bản tự do vẫn ở dạng rõ. Hãy đặt nó vào `password`. [Thông tin đăng nhập của thiết bị](/vi/iot/protocols/#device-credentials) có danh sách đầy đủ những gì được mã hóa.
+Thông tin đăng nhập viết trong một URL (`mqtt://user:pass@host`) hoặc trong văn bản tự do vẫn ở dạng rõ. Hãy đặt nó vào `password`. [Thông tin đăng nhập của thiết bị](/vi/iot/protocols/#thông-tin-xác-thực-của-thiết-bị) có danh sách đầy đủ những gì được mã hóa.
 
 ## Đăng nhập
 

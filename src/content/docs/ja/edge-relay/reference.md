@@ -47,7 +47,7 @@ Edge Relay は 4.6.0 から独立して動く 2 つ目のバイナリです。�
 }
 ```
 
-タグは Gateway のタグができることをすべてサポートし、`noData` も含みます。これは「測定値なし」を意味する生の値のリスト(レコーダーの 0x8005 など)で、それぞれに理由が付いているため、死んだチャネルが数値としてではなく、Relay と Sparkplug ストリームで不良として読めます。[データなしの値](/ja/iot/protocols/#no-data-values)を参照してください。
+タグは Gateway のタグができることをすべてサポートし、`noData` も含みます。これは「測定値なし」を意味する生の値のリスト(レコーダーの 0x8005 など)で、それぞれに理由が付いているため、死んだチャネルが数値としてではなく、Relay と Sparkplug ストリームで不良として読めます。[データなしの値](/ja/iot/protocols/#データなしの値)を参照してください。
 
 Gateway の 7 つのプロトコルドライバーはすべて組み込まれています。OPC UA、Modbus、MQTT/Sparkplug B、EtherNet/IP、S7comm、MTConnect、HTTP です。デバイスファイルの形式に Edge Relay 専用の部分はありません。
 
@@ -90,7 +90,7 @@ Relay は聞こえたことを何も保存しません。`homeassistant/` と Ta
 
 ### デバイスファイルの認証情報 (4.15.0)
 
-Relay の OPC UA ドライバーは Gateway のものなので、デバイスは `config` ブロックに OPC UA の `username` と `password`([プロトコルとドライバー](/ja/iot/protocols/#opc-ua-security-and-credentials)のセキュリティオプション)を持てます。ほかのプロトコルのデバイスも同様です(MQTT と HTTP のパスワード、HTTP ヘッダー、アドレス内の認証情報)。これらはデバイスファイルに平文で入っていて、Relay にはそれを隠す API がないため(4.15.1 で Gateway に加わった API の伏せ字処理は Relay には適用されません。[認証とユーザー](/ja/iot/authentication/#資格情報がまだ平文の場所)を参照)、ファイルの置き場所が重要です。
+Relay の OPC UA ドライバーは Gateway のものなので、デバイスは `config` ブロックに OPC UA の `username` と `password`([プロトコルとドライバー](/ja/iot/protocols/#opc-ua-セキュリティと認証情報)のセキュリティオプション)を持てます。ほかのプロトコルのデバイスも同様です(MQTT と HTTP のパスワード、HTTP ヘッダー、アドレス内の認証情報)。これらはデバイスファイルに平文で入っていて、Relay にはそれを隠す API がないため(4.15.1 で Gateway に加わった API の伏せ字処理は Relay には適用されません。[認証とユーザー](/ja/iot/authentication/#資格情報がまだ平文の場所)を参照)、ファイルの置き場所が重要です。
 
 - **Helm チャートでは `devicesSecret` を使います。** チャートの `devices` と `tags` の値で設定したデバイスは ConfigMap として生成され、名前空間の ConfigMap を読める人なら誰でも読めるうえ、Helm リリース記録にも残ります。認証情報を持つデバイスでは、デバイスファイル全体を `devices.json` というキーで Secret に入れ、`devicesSecret` にその名前を指定します。Secret が ConfigMap の代わりにマウントされ、ConfigMap は作られません。
 - **プッシュされたデバイスファイルにも含まれます。** `POST /api/fleet/{id}/config` でプッシュしたファイルは MQTT トピックに retained で発行されるので、ブローカーは TLS を使い、`hotloop/edge-relay-config/#` を読める人を制限する必要があります。そうしないと、購読できる人なら誰でもそこにあるすべての認証情報を読めます。Relay はプッシュされたファイルをデータボリューム上にモード `0600` で書き込みます(チャートでも Quadlet ユニットでも `/data/pushed-devices.json`)。そのため Secret ではなく PVC にも残ります。

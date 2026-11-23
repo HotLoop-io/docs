@@ -126,7 +126,7 @@ opcuaClient:
     size: 64Mi
 ```
 
-En enhet som kobler til en sikret OPC UA-server, eller som logger inn med et brukernavn og passord serveren krever kryptert, har et sertifikat og et tillitslager med godkjente serversertifikater (`HOTLOOP_OPCUA_CLIENT_PKI_DIR`, `/data/opcua-client-pki`). Slå dette på før du legger til en slik enhet: rotfilsystemet er skrivebeskyttet, så uten volumet melder enheten en feil som sier det i stedet for å koble til med sertifikater som ville gått tapt ved neste omstart. Det er av som standard fordi det legger en PersistentVolumeClaim til en eksisterende installasjon, som blir stående i Pending på en klynge uten standard StorageClass. Anonyme enheter på en usikret kanal bruker det ikke. Å godkjenne en servers sertifikat, og alt annet om disse enhetene, står i [Protokoller og drivere](/nb/iot/protocols/#opc-ua-security-and-credentials).
+En enhet som kobler til en sikret OPC UA-server, eller som logger inn med et brukernavn og passord serveren krever kryptert, har et sertifikat og et tillitslager med godkjente serversertifikater (`HOTLOOP_OPCUA_CLIENT_PKI_DIR`, `/data/opcua-client-pki`). Slå dette på før du legger til en slik enhet: rotfilsystemet er skrivebeskyttet, så uten volumet melder enheten en feil som sier det i stedet for å koble til med sertifikater som ville gått tapt ved neste omstart. Det er av som standard fordi det legger en PersistentVolumeClaim til en eksisterende installasjon, som blir stående i Pending på en klynge uten standard StorageClass. Anonyme enheter på en usikret kanal bruker det ikke. Å godkjenne en servers sertifikat, og alt annet om disse enhetene, står i [Protokoller og drivere](/nb/iot/protocols/#opc-ua-sikkerhet-og-legitimasjon).
 
 ### Nettverk
 

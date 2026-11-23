@@ -47,7 +47,7 @@ Tutto ciò che segue un'interrogazione, il driver, il bus dei tag, il publisher 
 }
 ```
 
-Un tag accetta tutto ciò che accettano quelli del Gateway, `noData` incluso: un elenco di valori grezzi che significano "nessuna misura" (lo 0x8005 di un registratore), ciascuno con il suo motivo, così un canale morto risulta errato sul relay e nel flusso Sparkplug invece di apparire come un numero. Vedi [Valori senza dati](/it/iot/protocols/#no-data-values).
+Un tag accetta tutto ciò che accettano quelli del Gateway, `noData` incluso: un elenco di valori grezzi che significano "nessuna misura" (lo 0x8005 di un registratore), ciascuno con il suo motivo, così un canale morto risulta errato sul relay e nel flusso Sparkplug invece di apparire come un numero. Vedi [Valori senza dati](/it/iot/protocols/#valori-senza-dati).
 
 Tutti e sette i driver di protocollo del Gateway sono compilati: OPC UA, Modbus, MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect e HTTP. Nulla nel formato del file dei dispositivi è specifico dell'edge relay.
 
@@ -90,7 +90,7 @@ Un relay non conserva nulla di ciò che ha sentito. Le configurazioni `homeassis
 
 ### Credenziali nel file dei dispositivi (4.15.0)
 
-Il driver OPC UA del relay è quello del Gateway, quindi un dispositivo può portare uno `username` e una `password` OPC UA (e le opzioni di sicurezza di [Protocolli e driver](/it/iot/protocols/#opc-ua-security-and-credentials)) nel suo blocco `config`, e lo stesso vale per un dispositivo di qualsiasi altro protocollo (password MQTT e HTTP, header HTTP, credenziali in un indirizzo). Sono in chiaro nel file dei dispositivi, e il relay non ha un'API dietro cui nasconderle (la redazione dell'API aggiunta al Gateway nella 4.15.1 qui non si applica; vedi [Autenticazione e utenti](/it/iot/authentication/#dove-le-credenziali-restano-in-chiaro)), quindi conta dove sta il file:
+Il driver OPC UA del relay è quello del Gateway, quindi un dispositivo può portare uno `username` e una `password` OPC UA (e le opzioni di sicurezza di [Protocolli e driver](/it/iot/protocols/#opc-ua-sicurezza-e-credenziali)) nel suo blocco `config`, e lo stesso vale per un dispositivo di qualsiasi altro protocollo (password MQTT e HTTP, header HTTP, credenziali in un indirizzo). Sono in chiaro nel file dei dispositivi, e il relay non ha un'API dietro cui nasconderle (la redazione dell'API aggiunta al Gateway nella 4.15.1 qui non si applica; vedi [Autenticazione e utenti](/it/iot/authentication/#dove-le-credenziali-restano-in-chiaro)), quindi conta dove sta il file:
 
 - **Nel chart Helm, usi `devicesSecret`.** I dispositivi impostati nei valori `devices` e `tags` del chart vengono resi in un ConfigMap, che può leggere chiunque possa leggere i ConfigMap nel namespace, e restano nel registro della release Helm. Per dispositivi con credenziali, metta l'intero file dei dispositivi in un Secret con la chiave `devices.json` e lo nomini in `devicesSecret`; il Secret viene montato al posto del ConfigMap, che allora non viene creato.
 - **Anche un file dei dispositivi inviato le contiene.** Un file inviato con `POST /api/fleet/{id}/config` viene pubblicato, retained, su un topic MQTT, quindi il broker deve usare TLS e limitare chi può leggere `hotloop/edge-relay-config/#`, altrimenti chiunque possa sottoscriverlo legge ogni credenziale al suo interno. Il relay scrive un file inviato con modo `0600` sul suo volume dati (`/data/pushed-devices.json` nel chart e nell'unità Quadlet), quindi si trova anche sul PVC, non in un Secret.

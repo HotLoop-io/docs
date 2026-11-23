@@ -30,7 +30,7 @@ Así que haga copia del Secret como hace con el resto de los secretos del clúst
 
 **¿Renderiza el chart en lugar de instalarlo? Traiga su propia clave.** La clave la genera un `lookup` que solo un `helm install` o `helm upgrade` reales pueden hacer. Todo lo que ejecuta `helm template` y aplica el resultado obtiene una clave nueva en cada renderizado, y la siguiente sincronización deja fuera todas las contraseñas selladas. Cree una clave con `hotloop gen-secret-key`, póngala en un Secret que usted gestione bajo la clave `secret.key`, y nombre ese Secret en `secretKey.existingSecret`. Helm, Fleet y la App Store de EmberNet instalan de verdad y no necesitan esto.
 
-Una credencial escrita en una URL (`mqtt://user:pass@host`) o en texto libre queda en claro. Póngala en `password`. [Credenciales de dispositivo](/es/iot/protocols/#device-credentials) tiene la lista completa de lo que se cifra.
+Una credencial escrita en una URL (`mqtt://user:pass@host`) o en texto libre queda en claro. Póngala en `password`. [Credenciales de dispositivo](/es/iot/protocols/#credenciales-de-dispositivo) tiene la lista completa de lo que se cifra.
 
 ## Iniciar sesión
 

@@ -30,7 +30,7 @@ Ta derfor sikkerhetskopi av Secret på samme måte som du tar kopi av klyngens a
 
 **Rendrer du chartet i stedet for å installere det? Ta med din egen nøkkel.** Nøkkelen lages av et `lookup` som bare en ekte `helm install` eller `helm upgrade` kan gjøre. Alt som kjører `helm template` og anvender resultatet får en ny nøkkel ved hver rendering, og neste synkronisering låser ute alle forseglede passord. Lag en nøkkel med `hotloop gen-secret-key`, legg den i en Secret du styrer selv under nøkkelen `secret.key`, og navngi den Secret i `secretKey.existingSecret`. Helm, Fleet og EmberNet App Store installerer alle på ekte og trenger ikke dette.
 
-En påloggingsopplysning skrevet inn i en URL (`mqtt://user:pass@host`) eller i fritekst forblir i klartekst. Legg den i `password`. [Enhetslegitimasjon](/nb/iot/protocols/#device-credentials) har hele listen over hva som krypteres.
+En påloggingsopplysning skrevet inn i en URL (`mqtt://user:pass@host`) eller i fritekst forblir i klartekst. Legg den i `password`. [Enhetslegitimasjon](/nb/iot/protocols/#enhetslegitimasjon) har hele listen over hva som krypteres.
 
 ## Logg inn
 

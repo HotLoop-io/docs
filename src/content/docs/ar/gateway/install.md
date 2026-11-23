@@ -32,7 +32,7 @@ helm install hotloop hotloop/hotloop --version 4.23.2 \
 
 **هل تعرض المخطط بدل أن تثبّته؟ أحضر مفتاحك الخاص.** يُولَّد المفتاح بواسطة `lookup` لا يستطيع تنفيذه إلا `helm install` أو `helm upgrade` حقيقي. كل ما يشغّل `helm template` ويطبّق الناتج يحصل على مفتاح جديد في كل عرض، وتقفل المزامنة التالية كل كلمة مرور مختومة. أنشئ مفتاحًا بالأمر `hotloop gen-secret-key`، وضعه في Secret تديره أنت تحت المفتاح `secret.key`، وسمِّ ذلك Secret في `secretKey.existingSecret`. Helm وFleet وApp Store في EmberNet كلها تثبّت فعليًا ولا تحتاج إلى هذا.
 
-بيانات الاعتماد المكتوبة داخل عنوان URL (`mqtt://user:pass@host`) أو في نص حر تبقى واضحة. ضعها في `password`. [بيانات اعتماد الأجهزة](/ar/iot/protocols/#device-credentials) فيها القائمة الكاملة لما يُشفَّر.
+بيانات الاعتماد المكتوبة داخل عنوان URL (`mqtt://user:pass@host`) أو في نص حر تبقى واضحة. ضعها في `password`. [بيانات اعتماد الأجهزة](/ar/iot/protocols/#بيانات-اعتماد-الجهاز) فيها القائمة الكاملة لما يُشفَّر.
 
 ## تسجيل الدخول
 

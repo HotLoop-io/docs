@@ -47,7 +47,7 @@ Mọi thứ sau bước thăm dò, gồm trình điều khiển, bus tag, bộ x
 }
 ```
 
-Tag nhận mọi thứ mà tag của Gateway có, kể cả `noData`: danh sách các giá trị thô có nghĩa là "không có phép đo" (0x8005 của một bộ ghi), mỗi giá trị kèm một lý do, để một kênh chết hiện là lỗi trên Relay và trong luồng Sparkplug thay vì là một con số. Xem [Giá trị không có dữ liệu](/vi/iot/protocols/#no-data-values).
+Tag nhận mọi thứ mà tag của Gateway có, kể cả `noData`: danh sách các giá trị thô có nghĩa là "không có phép đo" (0x8005 của một bộ ghi), mỗi giá trị kèm một lý do, để một kênh chết hiện là lỗi trên Relay và trong luồng Sparkplug thay vì là một con số. Xem [Giá trị không có dữ liệu](/vi/iot/protocols/#giá-trị-không-có-dữ-liệu).
 
 Cả bảy trình điều khiển giao thức của Gateway đều được biên dịch sẵn: OPC UA, Modbus, MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect và HTTP. Định dạng tệp thiết bị không có phần nào dành riêng cho Edge Relay.
 
@@ -90,7 +90,7 @@ Relay không giữ lại gì về những gì nó nghe được. Cấu hình `ho
 
 ### Thông tin xác thực trong tệp thiết bị (4.15.0)
 
-Trình điều khiển OPC UA của Relay là của Gateway, nên một thiết bị có thể mang `username` và `password` OPC UA (cùng các tùy chọn bảo mật trong [Giao thức và trình điều khiển](/vi/iot/protocols/#opc-ua-security-and-credentials)) trong khối `config` của nó, và thiết bị của bất kỳ giao thức nào khác cũng vậy (mật khẩu MQTT và HTTP, tiêu đề HTTP, thông tin xác thực trong địa chỉ). Những giá trị này nằm trong tệp thiết bị dưới dạng văn bản thuần, và Relay không có API nào để che chúng (việc che trong API được thêm vào Gateway ở 4.15.1 không áp dụng cho nó; xem [Xác thực và người dùng](/vi/iot/authentication/#nơi-thông-tin-xác-thực-vẫn-ở-dạng-rõ)), nên nơi đặt tệp rất quan trọng:
+Trình điều khiển OPC UA của Relay là của Gateway, nên một thiết bị có thể mang `username` và `password` OPC UA (cùng các tùy chọn bảo mật trong [Giao thức và trình điều khiển](/vi/iot/protocols/#opc-ua-bảo-mật-và-thông-tin-xác-thực)) trong khối `config` của nó, và thiết bị của bất kỳ giao thức nào khác cũng vậy (mật khẩu MQTT và HTTP, tiêu đề HTTP, thông tin xác thực trong địa chỉ). Những giá trị này nằm trong tệp thiết bị dưới dạng văn bản thuần, và Relay không có API nào để che chúng (việc che trong API được thêm vào Gateway ở 4.15.1 không áp dụng cho nó; xem [Xác thực và người dùng](/vi/iot/authentication/#nơi-thông-tin-xác-thực-vẫn-ở-dạng-rõ)), nên nơi đặt tệp rất quan trọng:
 
 - **Trong biểu đồ Helm, hãy dùng `devicesSecret`.** Các thiết bị đặt trong giá trị `devices` và `tags` của biểu đồ được kết xuất thành một ConfigMap, mà bất kỳ ai được phép đọc ConfigMap trong không gian tên đều đọc được, và chúng cũng được lưu trong bản ghi phát hành Helm. Với các thiết bị có thông tin xác thực, hãy đặt cả tệp thiết bị vào một Secret dưới khóa `devices.json` và khai tên nó trong `devicesSecret`; Secret được gắn thay cho ConfigMap, và ConfigMap khi đó không được tạo.
 - **Một tệp thiết bị được đẩy xuống cũng mang chúng.** Một tệp được đẩy bằng `POST /api/fleet/{id}/config` được phát hành, ở dạng retained, lên một chủ đề MQTT, nên broker phải dùng TLS và hạn chế ai được đọc `hotloop/edge-relay-config/#`, nếu không bất kỳ ai đăng ký được đều đọc được mọi thông tin xác thực trong đó. Relay ghi tệp được đẩy xuống với chế độ `0600`, trên ổ dữ liệu của nó (`/data/pushed-devices.json` trong biểu đồ và trong đơn vị Quadlet), nên nó cũng nằm trên PVC chứ không phải trong một Secret.

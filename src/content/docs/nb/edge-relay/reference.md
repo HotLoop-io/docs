@@ -47,7 +47,7 @@ Alt etter en spørring, driveren, tagg-bussen, Sparkplug-utgiveren og videresend
 }
 ```
 
-En tagg tar alt Gateways tagger tar, `noData` inkludert: en liste med rå verdier som betyr «ingen måling» (en logers 0x8005), hver med en årsak, slik at en død kanal vises som dårlig på relayen og i Sparkplug-strømmen i stedet for som et tall. Se [Verdier uten data](/nb/iot/protocols/#no-data-values).
+En tagg tar alt Gateways tagger tar, `noData` inkludert: en liste med rå verdier som betyr «ingen måling» (en logers 0x8005), hver med en årsak, slik at en død kanal vises som dårlig på relayen og i Sparkplug-strømmen i stedet for som et tall. Se [Verdier uten data](/nb/iot/protocols/#verdier-uten-data).
 
 Alle Gateways sju protokolldrivere er kompilert inn: OPC UA, Modbus, MQTT/Sparkplug B, EtherNet/IP, S7comm, MTConnect og HTTP. Ingenting i formatet på enhetsfilen er spesifikt for edge relay.
 
@@ -90,7 +90,7 @@ En relay beholder ingenting av det den hørte. Konfigurasjonene fra `homeassista
 
 ### Legitimasjon i enhetsfilen (4.15.0)
 
-Relayens OPC UA-driver er Gateways, så en enhet kan ha et OPC UA-`username` og -`password` (og sikkerhetsvalgene i [Protokoller og drivere](/nb/iot/protocols/#opc-ua-security-and-credentials)) i `config`-blokken sin, og det kan en enhet med et hvilket som helst annet protokoll også (MQTT- og HTTP-passord, HTTP-headere, legitimasjon i en adresse). Disse står i klartekst i enhetsfilen, og relayen har ikke noe API å skjule dem bak (API-sladdingen som ble lagt til Gateway i 4.15.1 gjelder ikke den; se [Autentisering og brukere](/nb/iot/authentication/#hvor-legitimasjon-fortsatt-ligger-i-klartekst)), så det har betydning hvor filen ligger:
+Relayens OPC UA-driver er Gateways, så en enhet kan ha et OPC UA-`username` og -`password` (og sikkerhetsvalgene i [Protokoller og drivere](/nb/iot/protocols/#opc-ua-sikkerhet-og-legitimasjon)) i `config`-blokken sin, og det kan en enhet med et hvilket som helst annet protokoll også (MQTT- og HTTP-passord, HTTP-headere, legitimasjon i en adresse). Disse står i klartekst i enhetsfilen, og relayen har ikke noe API å skjule dem bak (API-sladdingen som ble lagt til Gateway i 4.15.1 gjelder ikke den; se [Autentisering og brukere](/nb/iot/authentication/#hvor-legitimasjon-fortsatt-ligger-i-klartekst)), så det har betydning hvor filen ligger:
 
 - **I Helm-charten, bruk `devicesSecret`.** Enheter satt i chartens verdier `devices` og `tags` rendres til et ConfigMap, som alle med lov til å lese ConfigMaps i namespacet kan lese, og de blir liggende i Helm-releasens post. For enheter med legitimasjon legger du hele enhetsfilen i en Secret under nøkkelen `devices.json` og navngir den i `devicesSecret`; Secreten monteres i stedet for ConfigMapet, som da ikke lages.
 - **En sendt enhetsfil har dem også.** En fil sendt med `POST /api/fleet/{id}/config` publiseres, retained, til et MQTT-topic, så megleren må bruke TLS og begrense hvem som kan lese `hotloop/edge-relay-config/#`, ellers kan alle som kan abonnere på det, lese all legitimasjonen i det. Relayen skriver en sendt fil med modus `0600` på datavolumet sitt (`/data/pushed-devices.json` i charten og Quadlet-enheten), så den ligger også på PVC-en, ikke i en Secret.
