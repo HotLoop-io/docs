@@ -3,6 +3,10 @@ title: "协议与驱动"
 description: "支持 OPC UA、Modbus、MQTT 与 Sparkplug B、EtherNet/IP、S7comm、MTConnect 和 HTTP，并说明每个驱动已在真实设备上验证到什么程度。"
 ---
 
+:::note[也涵盖即将推出的内容]
+本页也涵盖了一些比最新版本 HotLoop core 4.24.0 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
+:::
+
 本文准确说明网关支持哪些协议、每个驱动已验证到什么程度，以及其余协议该怎么处理。请先读这一篇，与它不一致时，以它为准。
 
 原生协议列表来自编译进二进制文件的驱动。`/api/protocols`、协议界面和 MCP 的 `describe_protocol` 工具读取的是同一个注册表，因此目录不会宣称二进制文件中没有的协议。
@@ -255,14 +259,29 @@ HotLoop 的 Sparkplug 边缘节点和 Edge Relay 与 Ignition 的 MQTT Engine �
 | `HOTLOOP_UADP_PUBLISH_KEY_FRAME_EVERY` | `10` | 关键帧之间最多相隔这么多个间隔 |
 | `HOTLOOP_UADP_PUBLISH_DATAVALUE` | `false` | 用 DataValue 字段(值、状态、时间)代替 Variant |
 | `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES` | `false` | 发生变化的 DataSet 在关键帧之间以增量帧(只含变化的字段)发出 |
+| `HOTLOOP_UADP_PUBLISH_METADATA_EVERY` | `10` | 每个 DataSet 的字段名和类型每隔这么多个间隔通告一次；`0` 表示不发送 |
 | `HOTLOOP_UADP_PUBLISH_INTERFACE`, `_TTL` | 系统默认，`1` | 组播发出所用的网卡，及其跳数限制 |
 
-每个 DataSet 通过自己的 DataSetWriter 发出，每次一个 NetworkMessage。值发生变化的 DataSet 作为关键帧(所有字段)发出，没有变化的作为 keep alive 发出，并且至少每 `KEY_FRAME_EVERY` 个间隔发一个关键帧，让晚加入的订阅者能赶上。增量帧默认关闭：关键帧是完整的，所以丢一个数据报只损失一个间隔，而不会留下错误的值。设置 `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true` 后，发生变化的 DataSet 改以增量帧发出，只携带自上一条消息以来变化的字段及其位置，关键帧仍至少每 `KEY_FRAME_EVERY` 个间隔出现一次；此时丢失一个增量帧，字段最多会陈旧那么多个间隔，这是在慢速链路上换取更小消息的代价。HotLoop 自己的订阅者可以读取增量帧。value。bad 的变量以其状态发布，从不以其最后一个值发布；尚未读到任何内容的变量以 `BadWaitingForInitialData` 发布。数值会被限制在其发布的类型范围内，而不是回绕。不支持消息安全，所以这应当用在工厂信任的网络上。同一布局的变量可以由另一台设备上 HotLoop 自己的订阅者读取。
+每个 DataSet 通过自己的 DataSetWriter 发出，每个一条 NetworkMessage。值发生变化的 DataSet 作为 key frame（每个字段）发出，没有变化的作为 keep alive 发出，并且至少每 `KEY_FRAME_EVERY` 个间隔发一次 key frame，使晚加入的订阅方能够趋于一致。key frame 是完整的，所以丢失一个数据报只损失一个间隔，而不会出现错误的值。设置 `HOTLOOP_UADP_PUBLISH_DELTA_FRAMES=true` 后，发生变化的 DataSet 改为作为 delta frame 发出，只携带自上一条消息以来变化的字段及其位置，key frame 仍至少每 `KEY_FRAME_EVERY` 个间隔出现一次；此时丢失一个 delta 最多会让某个字段过时这么多个间隔，这就是在慢速链路上换取更小消息的代价。HotLoop 自己的订阅方可以读取 delta frame。value。状态不好的变量会以其状态发布，绝不以其最后一个值发布；尚未读到任何内容的变量发布为 `BadWaitingForInitialData`。值会被限制在其发布的类型内，不会回绕。不支持消息安全，所以这应放在工厂信任的网络上。同一布局的变量可以由另一台设备上 HotLoop 自己的订阅方读取。
 
-**已证明的内容。**一个独立的 OPC UA PubSub 协议栈向 HotLoop 的订阅者发布，并通过组播订阅 HotLoop 的发布者，而且 HotLoop 的发布者能被 HotLoop 自己的订阅者正确读取。
+**已证明的内容。**一个独立的 OPC UA PubSub 协议栈向 HotLoop 的订阅方发布，并通过多播订阅 HotLoop 的发布方，而 HotLoop 的发布方可被 HotLoop 自己的订阅方正确读取。**消息安全。**订阅方设备可以要求其发布方的 NetworkMessage 经过签名，或经过签名和加密（OPC 10000-14 7.2.4.4.3），使用规范定义的两种策略，`PubSub-Aes128-CTR` 和 `PubSub-Aes256-CTR`：
+
+```json
+{"publisherId":"2234","security":{"mode":"signAndEncrypt","policy":"PubSub-Aes128-CTR",
+ "keys":[{"keyId":1,"signingKey":"<64 hex digits>","encryptingKey":"<32 hex digits>","keyNonce":"<8 hex digits>"}]}}
+```
+
+密钥是静态的：在两端设置于一个 SecurityTokenId（`keyId`）之下，十六进制或 base64。它们是密钥，显示为 `[redacted]`，保存时保持不变。持有两个密钥的设备可以接受从一个切换到另一个的发布方。设置了 `security` 时，未签名（或在 `signAndEncrypt` 下未加密）、用另一个密钥签名或在途中被改动的消息，在读取其中任何内容之前就会被拒绝并计数（`unsecured`、`signature`、`security_key`）。未实现 Security Key Service（GetSecurityKeys，轮换密钥）。发布方用 `HOTLOOP_UADP_PUBLISH_SECURITY_MODE`（`sign` 或 `signAndEncrypt`）、`_POLICY`、`_KEY_ID`、`_SIGNING_KEY`、`_ENCRYPTING_KEY` 和 `_KEY_NONCE` 进行签名。
+
+**元数据与发现。**发布方会以携带 DataSetMetaData 的发现响应通告其 DataSet 叫什么、由什么组成，较大时分块发送（7.2.4.4.4、7.2.4.6）。订阅方设备会读取它们：字段在 Browse 中被命名（`writer1001_<field name>`），RawData DataSet 无需在配置中写 `dataSets` 类型，因为元数据会给出其布局，而更改了配置版本的 DataSet 会从下一个 key frame 起重新开始。两者都有时，配置中的 `dataSets` 仍然优先。订阅方的发现请求不会发送，发布方也不会应答任何发现请求。
+
+**结构体字段、事件。**元数据说明是结构体的字段会被读作其成员，变量把它们寻址为 `1001/0.Value`（结构体数组的元素则是 `1001/7[2].Angle`）；在 Variant 中发送的结构体在元数据对其有描述时会被读取。带可选字段的结构体和联合体按名称报告，而不是猜测。Event DataSetMessage 与其所携带的字段一样被应用，并且不动其余内容（设备统计中的 `Events`）；其布局是 key frame 的布局（7.2.4.5.7），是从规范中读出的，没有对照另一个协议栈检查过。有些发布方会在 RawData key frame 之前写一个 FieldCount，而规范并没有这样做；可用 `"rawFieldCount":true` 告知设备。
+
 ### CODESYS
 
 运行 CODESYS Control 运行时(Linux SL、ARM64、Raspberry Pi、Windows、虚拟 PLC)的 PLC，按程序员给变量起的名字读写：`Application.GVL_Line.rTemp`，而不是节点 id。它是在 OPC UA 驱动之上加了 CODESYS PLC 所需内容的驱动，所以 [OPC UA:安全与凭据](#opc-ua安全与凭据)下的一切都适用于它，它的选项就是那些选项。
+
+**PLC 自身的报警。**带有 Alarm Configuration 的项目把其报警保存在 PLC 的报警管理器中。当项目中有 HotLoop Alarms 库的功能块时（参见 CODESYS alarms），HotLoop 会从设备连接的那一刻起，在其报警列表中显示这些报警，并且在 HotLoop 中做出的确认会回传给报警管理器。已针对真实的 CODESYS Control for Linux SL 4.22.0.0 运行时现场验证：触发、确认、复位和确认完成。报警管理器自身的文本列表，以及已试过的两个之外的类，未经验证。
 
 **为什么用 OPC UA 服务器，这对 PLC 意味着什么。**CODESYS 为第三方读取控制器变量只记载了一种方式，就是运行时自己的 OPC UA 服务器：应用的 Symbol Configuration(或从 CODESYS 3.5 SP18 起，Communication Manager 下的 IEC Symbol Set)指明哪些变量被发布以及访问权限，服务器负责提供它们。CODESYS Gateway 的通道协议没有面向第三方记载，这个驱动也不使用它。所以 PLC 必须发布你想看到的内容：
 
@@ -289,7 +308,7 @@ nsu=CODESYSSPV3/3S/IecVarAccess;s=|var|CODESYS Control for Linux SL.Application.
 
 数组只列出前 32 个元素(`arrayElements`)，因为一千个元素的缓冲区对仪表板来说不是一千样东西，而变量仍可以按符号寻址任意元素。列表在 `browseMaxNodes` 处停止并说明这一点；把 `browseRoot` 设为某个符号(`Application.GVL_Demo`)会列出应用的一部分。浏览按广度优先，所以一个列表中的变量先于它的数组元素出现，应答的大小被控制在运行时可接受的范围内(对于一百个各有一千个元素的数组的应答，它会关闭连接)。
 
-配置：OPC UA 选项，以及 `device`(PLC 的名称，仅当运行时列出多个时需要)、`application`(仅当没有一个叫 Application 时需要)、`arrayElements`。拼错的选项会产生一个列出有效选项的错误。密码是机密，像所有设备机密一样保存并隐去。
+配置：OPC UA 选项，以及 `device`（PLC 的名称，仅当运行时列出不止一个时）、`application`（仅当没有一个叫 Application 时）、`arrayElements`、`alarmSymbol`（HotLoop Alarms 功能块，仅用于跳过对它的搜索）。拼错的选项会产生一个列出有效选项的错误。密码是密钥，像每个设备密钥一样被存储和隐藏。
 
 **运行时对客户端的要求。**它发布的 `OperationLimits` 是每个请求 100 次读取、浏览和监控项，并以 `BadTooManyOperations` 拒绝更大的请求。驱动在连接时读取这些限制，并把每个请求切分到限制以内，对每个 OPC UA 设备都是如此(CODESYS 运行时是第一个有影响的：此前驱动把每个发现的变量都报告为 float，并且读不到变量超过 100 个的设备上的任何变量)。采样默认为一秒，队列为一项，因为 PLC 有自己的扫描要保证，已经在读取它的 Ignition 网关不应被抢走这一点；需要更多时，请设置 `samplingIntervalMs`。
 
@@ -411,11 +430,37 @@ $.data.temperature            a leading $. is accepted
 
 ### 设备健康
 
-HotLoop 所运行的机器，作为只读设备：`cpu_util_pct`(自上次读取以来 CPU 非空闲的时间)、`mem_util_pct`(MemTotal 对比 MemAvailable)、`disk_util_pct`(设备的磁盘，对以只读方式挂载在 `diskPath`(默认 `/host`)的主机根目录做 statfs)、`data_util_pct`(`dataPath` 即 `/data` 处的卷)，以及当 `jitterFile` 指定实时代理会重写的 JSON 文件 `{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}` 时的 `rtos_jitter_core1_us` 到 `core3_us`(超过五分钟的文件读为 bad)。CPU 和内存来自 `procRoot`(`/proc`，挂载了主机的目录时为 `/host/proc`)。无法读取的值是带原因的 bad 质量，绝不是零。该设备由 `HOTLOOP_BOX_HEALTH_NODE` 创建([OPC UA 服务器](/zh-hans/edge/opc-ua-server/#设备健康面向-embernet-仪表板))。
+HotLoop 运行所在的机器，作为只读设备：`cpu_util_pct`（自上次读取以来非空闲的 CPU 时间）、`mem_util_pct`（MemTotal 相对于 MemAvailable）、`disk_util_pct`（机器的磁盘，即以只读方式挂载在 `diskPath` 的主机根目录的 statfs，默认为 `/host`）、`data_util_pct`（位于 `dataPath` 的卷，即 `/data`，或者那里尚未挂载任何东西时上面最近的现有文件夹），以及当 `jitterFile` 指向实时代理重写的 JSON 文件 `{"core1_us":3.2,"core2_us":2.9,"core3_us":4.1}` 时的 `rtos_jitter_core1_us` 到 `core3_us`（超过五分钟的文件读作坏值）。CPU 和内存来自 `procRoot`（`/proc`，或在挂载了主机的 proc 时为 `/host/proc`）。无法读取的值是带原因的坏质量，绝不是零。该设备由 `HOTLOOP_BOX_HEALTH_NODE` 创建（[OPC UA 服务器](/zh-hans/edge/opc-ua-server/#设备健康面向-embernet-仪表板)）。
+
+### Shelly
+
+任意世代的 Shelly，直接与其通信，中间没有 broker。参见 SHELLY.md。用协议 `shelly` 和设备地址添加设备；如果设置了登录，则用 `{"password":"..."}`（用户是 `admin`；Gen2 及更高版本的设备用其 SHA-256 摘要质询应答，Gen1 设备用 Basic）。`/shelly` 会说明它是哪一代。Gen2、Gen3 或 Gen4 设备用 `Shelly.GetStatus`（`POST /rpc`）读取，它报告的每个组件都会变成自动添加的变量，在有人使其处于待命状态之前保持只读：`switch:0.output`、`switch:0.apower`、`switch:0.aenergy.total`、`switch:0.temperature.tC`、`input:0.state`、`cover:0.current_pos`、`pm1:0.apower`、`em:0.total_act_power`、`temperature:100.tC`、`humidity:100.rh`，以及设备的 `sys.uptime` 和 `wifi.rssi`。设备没有发送的字段不会成为变量。开关的输出（`Switch.Set`）、灯的输出和亮度、卷帘的位置（`Cover.GoToPosition`）以及恒温器的目标值可以被设为待命以便写入。
+
+Gen2 及更高版本的设备还会得到一个 websocket（`ws://<device>/rpc`）：驱动按 Shelly 的 RPC 通道页面在设备发出通知之前所要求的，发送一个带 `src` 的请求帧，用文档说明的 `auth` 对象（对 `dummy_method:dummy_uri` 的 SHA-256）应答 401 帧，并把 `NotifyStatus` 和 `NotifyFullStatus` 合并进它自己的状态副本，因此变化会立即到达变量，而其间的轮询读取的是副本而不是设备。`NotifyEvent`（按键、配置更改）会记入该设备名下的日志。当 websocket 断开，或最近没有确认状态（45 秒没有帧或 pong，2 分钟没有完整读取）时，轮询会通过 HTTP 读取设备。
+
+Gen1 设备（`/status` 和简单的 GET 控制路径，Basic 登录）用它自己的词汇得到同样形态的变量：`relay:0.output`、`meter:0.power`、`meter:0.total`（瓦分钟换算为 Wh）、`light:0.output` 和 `.brightness`、`roller:0.current_pos`、`input:0.state`、`temperature:0.tC`，对于电能表和传感器还有 `emeter:0.power`、`humidity:0.rh`、`flood:0.alarm`。继电器用 `/relay/<id>?turn=on|off` 写入，灯用 `/light/<id>?turn=&brightness=`，卷帘用 `/roller/<id>?go=to_pos&roller_pos=`。根据 Shelly 已发布的 Gen1 和 Gen2 文档构建，并针对真实设备（一个 Plus 1、一个 Plug S 和一个 Vintage 灯泡）的录制数据测试过；尚未针对测试台上的设备测试。Gen1 的电能表、湿度、电池和漏水字段来自文档，没有录制数据作为依据。
+
+### Firmata
+
+一块 Arduino，或任何运行 Firmata 固件的开发板，通过 USB 串口或 TCP，中间没有主机程序。参见 FIRMATA.md。用协议 `firmata` 和串口（`/dev/ttyACM0`、`serial:/dev/ttyUSB0`）或 `host:port` 添加设备；选项 `{"baudRate":57600,"samplingMs":19,"bootWaitMs":5000}`。驱动等待开发板的协议版本（每 300 ms 询问一次），询问其固件、能力和模拟映射，并为开发板上的每个数字引脚和模拟输入创建一个只读变量。变量的地址说明对引脚做什么：`D13`、`D2:in`、`D2:pullup`、`D13:out`、`D9:pwm`、`D10:servo`、`A0`、`I2C:0x48:0x00:2`。数字输入是开发板在变化时发送的端口报告，模拟输入是每个采样间隔的报告，并且每次轮询都会询问协议版本，所以消失的开发板在一次轮询内就能发现；未经询问而到达的固件报告说明开发板重启过。变量没有提到的引脚不会被触碰，简单的 `D<n>` 变量会在驱动连接时把其引脚设为输入，在第一次写入时设为输出。根据协议 2.8.0（github.com/firmata/protocol 中的 protocol.md 和 i2c.md）构建，并针对模拟的 ATmega328P 上的 StandardFirmata 2.5.9 运行：其数字引脚、上拉、0、2.5 和 5 V 的模拟输入、PWM 比较寄存器、舵机的引脚和 I2C 设备的寄存器都是从芯片读回的，而不是从驱动读回的。没有在实体板卡上运行过。
+
+### ONVIF
+
+IP 摄像头、编码器或 NVR。参见 ONVIF.md。用协议 `onvif`、摄像头地址和 `{"username":"...","password":"..."}` 添加设备。驱动先读取 GetSystemDateAndTime，并用摄像头自己的时钟给其 WS-Security UsernameToken 打时间戳（Core Specification 5.12：摘要是 `base64(SHA-1(nonce + created + password))`），读取 GetDeviceInformation 和 GetServices（较旧的摄像头用 GetCapabilities），摄像头列出 Media2 时使用 Media2，否则使用 Media，并读取每个配置文件的编码器、分辨率、流地址和快照地址。需要在 SOAP post 上使用 HTTP Digest 或 Basic 的摄像头会得到相应的应答。服务地址使用添加设备时用的主机访问，除非设置了 `"keepXAddrHosts":true`。PTZ 配置文件会从 GetStatus 添加 `ptz.<token>.pan`、`.tilt`、`.zoom` 和 `.moving`，以及可设为待命的命令 `.move`（ContinuousMove，带可选超时）、`.absolute`（AbsoluteMove）、`.goto_preset`（GotoPreset，按令牌或名称）、`.stop` 和 `.home`。事件来自 pull point（CreatePullPointSubscription、PullMessages、Renew、Unsubscribe），并变成自动添加的变量 `event.<topic>|<source>|<item>`，每次变化都记入日志。快照是 `GET /api/onvif/<device>/profiles/<token>/snapshot`，发现是 `POST /api/onvif/discover`（WS-Discovery，针对 `NetworkVideoTransmitter` 的多播 Probe）。
+
+根据 ONVIF 的 Core、Media、Media2、PTZ 和 Event 规范（onvif.org/specs）构建。它发送的每个请求都符合 ONVIF 的 WSDL 和 XSD 文件（xmllint，放宽了 libxml2 因唯一粒子归属而拒绝的 33 个类型和一个元素，请求用到的没有一个在其中），并针对 onvif_srvd 运行，这是一个独立的 ONVIF 协议栈，它解析 WS-Security 标头但不检查它，所以登录的摘要改为对照 zeep 4.3.3 的摘要校验。事件服务和 WS-Discovery 只有根据规范编写的脚本可供运行。没有在实体摄像头上运行过。
 
 ### UniFi Network
 
 把工厂网络作为一台设备：一个 UniFi 控制台上的一个站点，其交换机、每个交换机端口、PoE 功耗、WAN 链路以及站点健康状况，以随设备被纳管而自动创建的变量呈现，在启用之前为只读。每个控制台一次登录，证书被固定，控制台密码在数据库中加密。它只通过人启用的少数命令变量来改变控制台(定位 LED、重启、端口的 PoE 断电重启；参见 UNIFI.md)。它还会监听控制台的事件 websocket，所以交换机掉线会在发生时记入日志簿，底层仍以轮询为准，UniFi 选项卡会绘制概览、地图、面板示意图、客户端、网络和 WiFi。有关它的一切都在 [UniFi Network](/zh-hans/iot/unifi/) 中。
+
+### UniFi Protect
+
+Protect NVR 的摄像头、传感器、灯和警报器，通过 Protect Integration API，使用控制台 Integrations 页面中的 API 密钥（密钥放入 `{"apiKey":"..."}`，像控制台密码一样被封存，证书像 UniFi Network 一样用 `certFingerprint` 固定）。用协议 `unifi-protect` 和控制台地址添加设备。变量会自动添加，在被设为待命之前保持只读：`cam.<id>.online`、`.motion`，以及摄像头支持的类型对应的 `.smart_person`、`.smart_vehicle`、`.smart_package`、`.smart_licensePlate`、`.smart_face` 和 `.smart_animal`；`sen.<id>.online`、`.open`、`.motion`、`.leak`、`.tamper`、`.temp_c`、`.humidity_pct`、`.light_lux`；`light.<id>.online`、`.on`、`.motion`；`siren.<id>.online`。摄像头的移动和智能检测来自控制台的事件 websocket，因为 REST 记录中没有这些，所以在它断开期间它们读作坏值，绝不是“没有移动”。每个事件都在该设备名下的日志中。警报器的 `.play` 被设为待命以便写入（`true` 播放，`false` 停止），`alarm.<trigger>.fire` 也是如此，它为人在 Protect 中创建的触发器 id 发送报警管理器的 webhook，所以写入它的 HotLoop 报警会让摄像头录像。摄像头的快照是 `GET /api/unifi-protect/<device>/cameras/<camera>/snapshot`，在被请求时获取的 JPEG。根据 Ubiquiti 针对 Protect 7.4.102 的 OpenAPI 文档构建；尚未针对控制台运行。参见 [UniFi Network](/zh-hans/iot/unifi/#unifi-protect)。
+
+### UniFi Access
+
+Access 控制台的门，通过端口 12445 上的 Access 开发者 API，使用其高级设置中的 API 令牌（`{"token":"..."}`，已封存）。用协议 `unifi-access` 和控制台地址添加设备。每扇门有 `door.<id>.open`（位置传感器；没有传感器的门读作坏值，绝不是已关闭）、`door.<id>.unlocked`（锁继电器），以及 `door.<id>.unlock`，它由人设为待命，写入 `true` 时会开锁，经过写入关口，并像任何写入一样被审计；控制台会按自己的规则再次锁上。通知 websocket 在两次轮询之间让位置和锁保持最新，每次变化（“1F - Front: opened”、“unlocked”）都在该设备名下的日志中。根据维护中的开源客户端（py-unifi-access，MIT）所使用的 API 构建；尚未针对控制台运行。参见 [UniFi Network](/zh-hans/iot/unifi/#unifi-access)。
 
 ### SNMP
 
