@@ -3,6 +3,10 @@ title: "Máy chủ OPC UA"
 description: "Công bố thiết bị và tag đã cấu hình thành không gian địa chỉ OPC UA chỉ đọc, để SCADA bạn đang dùng thấy mọi tag mà không cần trình điều khiển mới."
 ---
 
+:::note[Có cả những gì sắp tới]
+Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
+:::
+
 Máy chủ OPC UA của HotLoop, từ phiên bản 4.13.0, công bố các thiết bị và tag đã cấu hình trong Gateway thành một không gian địa chỉ OPC UA. Nhờ vậy một client OPC UA của bên thứ ba, một gói SCADA, một HMI, một historian hay một công cụ kiểm thử như UaExpert có thể đọc các tag trực tiếp của Gateway mà không ai phải viết trình điều khiển HotLoop cho phía bên kia.
 
 Mặc định bật (`HOTLOOP_OPCUA_SERVER_ENABLED`), trong tệp thực thi và trong Helm chart. Máy chủ khởi động với xác thực HotLoop đang bật và một tài khoản đăng nhập riêng, `opcua-reader`, do HotLoop tạo với mật khẩu sinh tự động mà mục Cài đặt hiển thị cho quản trị viên (`GET /api/opcua/server`); tài khoản này chỉ đọc được tag và giá trị, không làm gì khác. Khi xác thực HotLoop tắt thì không có người dùng nào để đăng nhập, nên máy chủ chờ và thông báo điều đó (nó không từ chối khởi động). Nếu cổng 4840 đã bị một máy chủ OPC UA khác trên thiết bị chiếm, nó chờ và thông báo; một cổng bạn tự chọn mà không mở được là lỗi: mở một listener trên mạng nhà máy là việc một lần triển khai làm có chủ ý. Cổng mặc định 4840.
