@@ -20,7 +20,7 @@ En sikkerhetskopi er en katalog: én fil per tabell pluss en liten `manifest.jso
 
 Sikkerhetskopifiler er sensitive. Filen `users.copy` inneholder bcrypt-hasher av passord og kiosk-PIN-koder, og `sessions.copy` og `write_audit.copy` inneholder øktposter og revisjonssporet for skriving. Filer opprettes med modus `0640` (og sikkerhetskopikatalogen med `0750`), og en fil som allerede finnes, er en feil i stedet for å bli overskrevet, men det er et minimum og ingen erstatning for å beskytte volumet: ha sikkerhetskopivolumet på lagring som er kryptert i hvile, begrens hvem og hva som kan lese det, og vis samme omsorg for enhver kopi utenfor enheten som driftspersonell lager.
 
-Filen `devices.copy` inneholder adressen og protokollkonfigurasjonen til hver enhet slik de er lagret, inkludert legitimasjonen driverne logger inn med. Hvor lesbare de er, avhenger av nøkkelen, nedenfor. Siden 4.15.1 skjuler API-et all enhetslegitimasjon for alle roller, administrator inkludert; en sikkerhetskopifil ligger ikke bak API-et. Se [Autentisering og brukere](/nb/iot/authentication/#where-credentials-are-still-in-the-clear).
+Filen `devices.copy` inneholder adressen og protokollkonfigurasjonen til hver enhet slik de er lagret, inkludert legitimasjonen driverne logger inn med. Hvor lesbare de er, avhenger av nøkkelen, nedenfor. Siden 4.15.1 skjuler API-et all enhetslegitimasjon for alle roller, administrator inkludert; en sikkerhetskopifil ligger ikke bak API-et. Se [Autentisering og brukere](/nb/iot/authentication/#hvor-legitimasjon-fortsatt-ligger-i-klartekst).
 
 ## Enhetslegitimasjon og den hemmelige nøkkelen
 

@@ -30,7 +30,7 @@ description: "Sparkplug の誕生と終了で Edge Relay を追跡し、現地�
 
 リレーは受信時に再度検証します。このアプリは、そのトピックに発行するのが Gateway だけだとは仮定できず、自分自身が壊れたものを発行しないようにするだけです。
 
-**デバイスファイルには認証情報が含まれることがあり、プッシュするとそれが発行されます。** デバイスの `config` ブロックには、ドライバーがログインに使う値、たとえば OPC UA の `username` と `password`(4.15.0)が入り、ファイルはそのまま retained で発行されます。`hotloop/edge-relay-config/#` を購読できる人は誰でも読めるため、認証情報を含むファイルをプッシュする前に、ブローカーにそのトピックの TLS と ACL が必要です。Gateway の API は 4.15.1 からデバイスの認証情報をすべてのロールに対して隠しますが、プッシュされたファイルは API の背後になく、この変更の影響を受けません。[Edge Relay リファレンス](/ja/edge-relay/reference/#credentials-in-the-device-file-4150)と[認証とユーザー](/ja/iot/authentication/#where-credentials-are-still-in-the-clear)を参照してください。
+**デバイスファイルには認証情報が含まれることがあり、プッシュするとそれが発行されます。** デバイスの `config` ブロックには、ドライバーがログインに使う値、たとえば OPC UA の `username` と `password`(4.15.0)が入り、ファイルはそのまま retained で発行されます。`hotloop/edge-relay-config/#` を購読できる人は誰でも読めるため、認証情報を含むファイルをプッシュする前に、ブローカーにそのトピックの TLS と ACL が必要です。Gateway の API は 4.15.1 からデバイスの認証情報をすべてのロールに対して隠しますが、プッシュされたファイルは API の背後になく、この変更の影響を受けません。[Edge Relay リファレンス](/ja/edge-relay/reference/#credentials-in-the-device-file-4150)と[認証とユーザー](/ja/iot/authentication/#資格情報がまだ平文の場所)を参照してください。
 
 **プッシュはその場で適用され、何も再起動しません。** 4.17 まではプッシュはファイルを置くだけで、反映には 2 つ目の操作、`POST /api/fleet/{id}/restart` が必要で、タグ 1 つを変えるためにリレーのブローカーセッションと保持しているすべてのデバイスセッションを切っていました。現在は次のとおりです。
 

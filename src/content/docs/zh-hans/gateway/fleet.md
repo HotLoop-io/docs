@@ -30,7 +30,7 @@ description: "通过 Sparkplug 的出生与死亡消息跟踪每个 Edge Relay�
 
 中继在收到时会再次校验：本应用不能假定只有 Gateway 会发布到该主题，只能保证自己不发布有问题的内容。
 
-**设备文件可能带有凭据，推送会把它发布出去。** 设备的 `config` 块包含其驱动登录所用的信息，例如 OPC UA 的 `username` 和 `password`（4.15.0），文件会原样以保留消息发布。任何能订阅 `hotloop/edge-relay-config/#` 的人都能读取，所以在推送带凭据的文件之前，代理需要对该主题启用 TLS 和 ACL。自 4.15.1 起，Gateway 的 API 对所有角色隐藏设备凭据，但推送的文件不在 API 之后，也不受此影响。参见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#credentials-in-the-device-file-4150)和[认证与用户](/zh-hans/iot/authentication/#where-credentials-are-still-in-the-clear)。
+**设备文件可能带有凭据，推送会把它发布出去。** 设备的 `config` 块包含其驱动登录所用的信息，例如 OPC UA 的 `username` 和 `password`（4.15.0），文件会原样以保留消息发布。任何能订阅 `hotloop/edge-relay-config/#` 的人都能读取，所以在推送带凭据的文件之前，代理需要对该主题启用 TLS 和 ACL。自 4.15.1 起，Gateway 的 API 对所有角色隐藏设备凭据，但推送的文件不在 API 之后，也不受此影响。参见 [Edge Relay 参考](/zh-hans/edge-relay/reference/#credentials-in-the-device-file-4150)和[认证与用户](/zh-hans/iot/authentication/#凭据仍是明文的地方)。
 
 **推送即时生效，而且绝不重启任何东西。** 到 4.17 为止，推送只是把文件备好，要让它生效还得再做一次操作，即 `POST /api/fleet/{id}/restart`，为了改一个变量，它会断开中继与代理的会话以及它持有的每个设备会话。现在：
 
