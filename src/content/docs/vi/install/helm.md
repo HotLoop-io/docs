@@ -309,7 +309,7 @@ Bốn thiết lập là danh tính của nhà máy chứ không phải hành vi,
 | Múi giờ | `HOTLOOP_TIMEZONE` |
 | Xác nhận trước khi ghi | `HOTLOOP_CONFIRM_WRITES` |
 
-Dưới các thiết lập có những thẻ là dữ liệu chứ không phải cấu hình, và được sửa vì cùng lý do: **Người dùng** ([Xác thực và người dùng](/vi/iot/authentication/)), **Leo thang cảnh báo**, cho biết ai được báo tiếp theo khi không ai xác nhận một cảnh báo và khi nào ([Thông báo cảnh báo](/vi/iot/notifications/#escalation)), cùng các đích của historian và đăng nhập MQTT. Các kênh mà một leo thang có thể dùng vẫn thuộc về bản triển khai, đặt bởi `HOTLOOP_NOTIFY_*`.
+Dưới các thiết lập có những thẻ là dữ liệu chứ không phải cấu hình, và được sửa vì cùng lý do: **Người dùng** ([Xác thực và người dùng](/vi/iot/authentication/)), **Leo thang cảnh báo**, cho biết ai được báo tiếp theo khi không ai xác nhận một cảnh báo và khi nào ([Thông báo cảnh báo](/vi/iot/notifications/#leo-thang)), cùng các đích của historian và đăng nhập MQTT. Các kênh mà một leo thang có thể dùng vẫn thuộc về bản triển khai, đặt bởi `HOTLOOP_NOTIFY_*`.
 
 Giá trị đã lưu thắng biến môi trường, nên giá trị của chart trở thành điểm xuất phát chứ không phải lời cuối. Một múi giờ mà máy không phân giải được sẽ bị từ chối thay vì được chấp nhận rồi âm thầm bỏ qua, điều sẽ khiến mọi dấu thời gian rơi về UTC mà không có gì nói vì sao.
 

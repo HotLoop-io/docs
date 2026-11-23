@@ -1578,7 +1578,7 @@ El registro de auditoría de alarmas, de la más reciente a la más antigua. `?a
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` es `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` o `escalation-ended`. Los dos últimos los escribe la escalada de alarmas (`actor` es `escalation`), y su `note` dice a quién se avisó y por qué la cadena se detuvo. Véase [Notificaciones de alarmas](/es/iot/notifications/#escalation).
+`type` es `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` o `escalation-ended`. Los dos últimos los escribe la escalada de alarmas (`actor` es `escalation`), y su `note` dice a quién se avisó y por qué la cadena se detuvo. Véase [Notificaciones de alarmas](/es/iot/notifications/#escalado).
 
 ## Automatizaciones
 
@@ -2016,7 +2016,7 @@ Reemplaza la política entera, no es un parche, y responde lo que respondería `
 
 `minPriority` es `critical`, `high` (el predeterminado), `medium` o `low`. Un paso vence `afterMinutes` (de 1 a 1440) después del anterior, el primero tras la activación, y nombra `contacts` de la lista, `channels` que tenga el despliegue, o ambos. Como máximo 10 pasos, 50 contactos y 20 repeticiones. Los campos desconocidos se rechazan.
 
-`400` con el motivo cuando la política no puede funcionar, con palabras que se pueden aplicar: un paso que no nombra a nadie, un contacto que no está en la lista, un canal que este HotLoop no ha configurado (la respuesta lista los que tiene), un tema de ntfy sin ntfy configurado o una dirección sin correo configurado, una dirección que no es sencilla, una repetición sin intervalo. No se guarda nada cuando se rechaza. Guardarla queda en el registro del sistema, sin los temas. Véase [Notificaciones de alarmas](/es/iot/notifications/#escalation).
+`400` con el motivo cuando la política no puede funcionar, con palabras que se pueden aplicar: un paso que no nombra a nadie, un contacto que no está en la lista, un canal que este HotLoop no ha configurado (la respuesta lista los que tiene), un tema de ntfy sin ntfy configurado o una dirección sin correo configurado, una dirección que no es sencilla, una repetición sin intervalo. No se guarda nada cuando se rechaza. Guardarla queda en el registro del sistema, sin los temas. Véase [Notificaciones de alarmas](/es/iot/notifications/#escalado).
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ Es un reconocimiento corriente a través del motor de alarmas, auditado bajo `no
 | 410 | Auténtico, pero caducado |
 | 503 | No se pudo guardar el reconocimiento; el enlace se devuelve para que una segunda pulsación aún pueda funcionar |
 
-La respuesta lleva `Access-Control-Allow-Origin: *` para que la aplicación web de ntfy pueda pulsarlo desde su propio origen; nada en esta ruta lee una cookie. El token nunca se registra ni se devuelve en ningún sitio. Véase [Notificaciones de alarmas](/es/iot/notifications/#acknowledge-links).
+La respuesta lleva `Access-Control-Allow-Origin: *` para que la aplicación web de ntfy pueda pulsarlo desde su propio origen; nada en esta ruta lee una cookie. El token nunca se registra ni se devuelve en ningún sitio. Véase [Notificaciones de alarmas](/es/iot/notifications/#enlaces-de-reconocimiento).
 
 ## Copias de seguridad
 

@@ -309,7 +309,7 @@ secretKey:
 | 时区 | `HOTLOOP_TIMEZONE` |
 | 写入前确认 | `HOTLOOP_CONFIRM_WRITES` |
 
-设置之下有一些卡片是数据而不是配置，出于同样的原因可以编辑：**用户**（[认证和用户](/zh-hans/iot/authentication/)）、**报警升级**（说明无人确认报警时接下来通知谁以及何时通知，见[报警通知](/zh-hans/iot/notifications/#escalation)），以及历史记录器目标和 MQTT 登录。升级可以使用的渠道仍属于部署，由 `HOTLOOP_NOTIFY_*` 设置。
+设置之下有一些卡片是数据而不是配置，出于同样的原因可以编辑：**用户**（[认证和用户](/zh-hans/iot/authentication/)）、**报警升级**（说明无人确认报警时接下来通知谁以及何时通知，见[报警通知](/zh-hans/iot/notifications/#升级)），以及历史记录器目标和 MQTT 登录。升级可以使用的渠道仍属于部署，由 `HOTLOOP_NOTIFY_*` 设置。
 
 已存储的值优先于环境变量，所以 chart 的值成为起点，而不是最终决定。机器无法解析的时区会被拒绝，而不是被接受后悄悄忽略，否则每个时间戳都会退回到 UTC，却没有任何提示说明原因。
 

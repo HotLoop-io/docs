@@ -1578,7 +1578,7 @@ CODESYS IDE の Export Alarms が書き出すファイル(アラームグルー�
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type` は `raised`、`acked`、`cleared`、`shelved`、`unshelved`、`suppressed`、`unsuppressed`、`escalated`、`escalation-ended` のいずれかです。最後の2つはアラームのエスカレーションが書き込み(`actor` は `escalation`)、`note` に誰に通知したか、なぜ連鎖が止まったかが入ります。[アラーム通知](/ja/iot/notifications/#escalation)を参照してください。
+`type` は `raised`、`acked`、`cleared`、`shelved`、`unshelved`、`suppressed`、`unsuppressed`、`escalated`、`escalation-ended` のいずれかです。最後の2つはアラームのエスカレーションが書き込み(`actor` は `escalation`)、`note` に誰に通知したか、なぜ連鎖が止まったかが入ります。[アラーム通知](/ja/iot/notifications/#エスカレーション)を参照してください。
 
 ## オートメーション
 
@@ -2016,7 +2016,7 @@ CODESYS IDE の Export Alarms が書き出すファイル(アラームグルー�
 
 `minPriority` は `critical`、`high`(既定)、`medium`、`low` です。ステップは前のステップから `afterMinutes`(1 から 1440)後に予定され(最初のステップは発生後)、一覧の `contacts`、デプロイに存在する `channels`、またはその両方を指定します。ステップは最大 10、連絡先は 50、繰り返しは 20 までです。未知のフィールドは拒否されます。
 
-ポリシーが機能しない場合は、対処できる言葉で理由を付けて `400` になります。誰も指定していないステップ、一覧にない連絡先、この HotLoop に設定されていないチャネル(応答は設定されているものを挙げます)、ntfy が設定されていない ntfy トピックやメールが設定されていないアドレス、単純でないアドレス、間隔のない繰り返しです。拒否された場合は何も保存されません。保存はトピックを除いてシステムログに残ります。[アラーム通知](/ja/iot/notifications/#escalation)を参照してください。
+ポリシーが機能しない場合は、対処できる言葉で理由を付けて `400` になります。誰も指定していないステップ、一覧にない連絡先、この HotLoop に設定されていないチャネル(応答は設定されているものを挙げます)、ntfy が設定されていない ntfy トピックやメールが設定されていないアドレス、単純でないアドレス、間隔のない繰り返しです。拒否された場合は何も保存されません。保存はトピックを除いてシステムログに残ります。[アラーム通知](/ja/iot/notifications/#エスカレーション)を参照してください。
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ ntfy 通知の**確認**ボタンです。これを押す携帯電話には送�
 | 410 | 本物だが期限切れ |
 | 503 | 確認を保存できませんでした。2回目の押下がまだ有効になるようリンクは返されます |
 
-応答には `Access-Control-Allow-Origin: *` が付き、ntfy の Web アプリが自身のオリジンからこれを押せます。このルートでクッキーは読み取られません。トークンはどこにも記録も返却もされません。[アラーム通知](/ja/iot/notifications/#acknowledge-links)を参照してください。
+応答には `Access-Control-Allow-Origin: *` が付き、ntfy の Web アプリが自身のオリジンからこれを押せます。このルートでクッキーは読み取られません。トークンはどこにも記録も返却もされません。[アラーム通知](/ja/iot/notifications/#確認応答リンク)を参照してください。
 
 ## バックアップ
 

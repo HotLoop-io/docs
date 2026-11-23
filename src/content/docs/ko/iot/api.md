@@ -1578,7 +1578,7 @@ CODESYS IDE의 Export Alarms가 쓰는 파일(알람 그룹 내보내기, `.csv`
 [{"id":2,"definitionId":"extruder-temp-hi","type":"acked","fromState":"unack-active","toState":"ack-active","value":23.192472931395088,"message":"extruder-1/Temperature at 22.80197037650447 C, limit 5","actor":"admin","note":"checking the heater bands","at":"2026-09-27T20:25:22.920251Z"}]
 ```
 
-`type`은 `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` 또는 `escalation-ended`입니다. 마지막 두 개는 알람 에스컬레이션이 기록하며(`actor`는 `escalation`), `note`에 누구에게 알렸고 체인이 왜 멈췄는지 적힙니다. [알람 알림](/ko/iot/notifications/#escalation)을 참고하세요.
+`type`은 `raised`, `acked`, `cleared`, `shelved`, `unshelved`, `suppressed`, `unsuppressed`, `escalated` 또는 `escalation-ended`입니다. 마지막 두 개는 알람 에스컬레이션이 기록하며(`actor`는 `escalation`), `note`에 누구에게 알렸고 체인이 왜 멈췄는지 적힙니다. [알람 알림](/ko/iot/notifications/#에스컬레이션)을 참고하세요.
 
 ## 자동화
 
@@ -2016,7 +2016,7 @@ CODESYS IDE의 Export Alarms가 쓰는 파일(알람 그룹 내보내기, `.csv`
 
 `minPriority`는 `critical`, `high`(기본), `medium`, `low`입니다. 단계는 앞 단계 후 `afterMinutes`(1에서 1440)에 예정되며(첫 단계는 알람 발생 후), 목록의 `contacts`, 배포에 있는 `channels`, 또는 둘 다를 지정합니다. 단계는 최대 10개, 연락처는 50개, 반복은 20회입니다. 알 수 없는 필드는 거부됩니다.
 
-정책이 작동할 수 없을 때 이유와 함께 `400`이 되며, 조치할 수 있는 말로 알려 줍니다. 아무도 지정하지 않은 단계, 목록에 없는 연락처, 이 HotLoop에 구성되지 않은 채널(응답에 있는 채널이 나열됨), ntfy가 구성되지 않은 ntfy 토픽이나 이메일이 구성되지 않은 주소, 단순하지 않은 주소, 간격이 없는 반복입니다. 거부되면 아무것도 저장되지 않습니다. 저장은 토픽을 뺀 채 시스템 로그에 남습니다. [알람 알림](/ko/iot/notifications/#escalation)을 참고하세요.
+정책이 작동할 수 없을 때 이유와 함께 `400`이 되며, 조치할 수 있는 말로 알려 줍니다. 아무도 지정하지 않은 단계, 목록에 없는 연락처, 이 HotLoop에 구성되지 않은 채널(응답에 있는 채널이 나열됨), ntfy가 구성되지 않은 ntfy 토픽이나 이메일이 구성되지 않은 주소, 단순하지 않은 주소, 간격이 없는 반복입니다. 거부되면 아무것도 저장되지 않습니다. 저장은 토픽을 뺀 채 시스템 로그에 남습니다. [알람 알림](/ko/iot/notifications/#에스컬레이션)을 참고하세요.
 
 ### `POST /api/notify/ack/{token}`
 
@@ -2042,7 +2042,7 @@ ntfy 알림의 **확인** 버튼입니다. 이를 누르는 휴대폰에는 보�
 | 410 | 진짜이지만 만료됨 |
 | 503 | 확인을 저장하지 못했습니다. 두 번째 누름이 여전히 작동할 수 있도록 링크가 반환됩니다 |
 
-응답에는 `Access-Control-Allow-Origin: *`가 있어 ntfy 웹 앱이 자신의 출처에서 이를 누를 수 있습니다. 이 경로에서는 쿠키를 읽지 않습니다. 토큰은 어디에도 기록되거나 반환되지 않습니다. [알람 알림](/ko/iot/notifications/#acknowledge-links)을 참고하세요.
+응답에는 `Access-Control-Allow-Origin: *`가 있어 ntfy 웹 앱이 자신의 출처에서 이를 누를 수 있습니다. 이 경로에서는 쿠키를 읽지 않습니다. 토큰은 어디에도 기록되거나 반환되지 않습니다. [알람 알림](/ko/iot/notifications/#확인-링크)을 참고하세요.
 
 ## 백업
 

@@ -309,7 +309,7 @@ Quatre paramètres relèvent de l'identité de l'usine et non du comportement, e
 | Fuseau horaire | `HOTLOOP_TIMEZONE` |
 | Confirmer avant d'écrire | `HOTLOOP_CONFIRM_WRITES` |
 
-Sous les paramètres se trouvent des cartes qui sont des données et non de la configuration, et elles sont modifiables pour la même raison : **Utilisateurs** ([Authentification et utilisateurs](/fr/iot/authentication/)), **Escalade des alarmes**, qui dit qui est prévenu ensuite quand personne n'acquitte une alarme et quand ([Notifications d'alarme](/fr/iot/notifications/#escalation)), et les cibles de l'historien et les identifiants MQTT. Les canaux qu'une escalade peut utiliser restent ceux du déploiement, définis par `HOTLOOP_NOTIFY_*`.
+Sous les paramètres se trouvent des cartes qui sont des données et non de la configuration, et elles sont modifiables pour la même raison : **Utilisateurs** ([Authentification et utilisateurs](/fr/iot/authentication/)), **Escalade des alarmes**, qui dit qui est prévenu ensuite quand personne n'acquitte une alarme et quand ([Notifications d'alarme](/fr/iot/notifications/#escalade)), et les cibles de l'historien et les identifiants MQTT. Les canaux qu'une escalade peut utiliser restent ceux du déploiement, définis par `HOTLOOP_NOTIFY_*`.
 
 Une valeur stockée l'emporte sur la variable d'environnement : la valeur du chart devient donc le point de départ plutôt que le dernier mot. Un fuseau horaire que la machine ne sait pas résoudre est refusé plutôt qu'accepté puis ignoré en silence, ce qui ferait retomber tous les horodatages sur UTC sans que rien n'explique pourquoi.
 
