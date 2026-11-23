@@ -1076,7 +1076,7 @@ Ein Tag auf einem erkannten Gerät, das niemand übernommen hat, kann nicht scha
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`, oder `404`. Der Verlauf bleibt. Die Entitäten des Tags werden zu Waisen (siehe [Entitäten](/de/iot/entities/#deleted-tags-orphans-and-re-adoption)).
+`{"deleted":"tank-farm/level"}`, oder `404`. Der Verlauf bleibt. Die Entitäten des Tags werden zu Waisen (siehe [Entitäten](/de/iot/entities/#gelöschte-tags-verwaiste-entitäten-und-wiederübernahme)).
 
 ## Werte, das Board und Schreibvorgänge
 
@@ -1260,7 +1260,7 @@ Legt ein Verbundobjekt an. Der Body nennt die Domäne und bindet Tags an ihre Ro
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-Außerdem `entity_id` (sonst aus dem Namen erzeugt), `device_class`, `unit_of_measurement`, `icon`, `entity_category` und `options`. Welche Rollen und Optionen jede Domäne nimmt, steht unter [Entitäten](/de/iot/entities/#composite-equipment). Antwortet `201` `{"entity": {...}, "warnings": [...]}`. `400` bei einer Domäne, die hier nicht angelegt wird (ein `sensor` kommt von seinem Tag, ein `alarm` von seiner Definition), einer fehlenden Rolle oder einem Tag, der sie nicht ausfüllen kann, `409` bei vergebener entity_id.
+Außerdem `entity_id` (sonst aus dem Namen erzeugt), `device_class`, `unit_of_measurement`, `icon`, `entity_category` und `options`. Welche Rollen und Optionen jede Domäne nimmt, steht unter [Entitäten](/de/iot/entities/#zusammengesetzte-anlagen). Antwortet `201` `{"entity": {...}, "warnings": [...]}`. `400` bei einer Domäne, die hier nicht angelegt wird (ein `sensor` kommt von seinem Tag, ein `alarm` von seiner Definition), einer fehlenden Rolle oder einem Tag, der sie nicht ausfüllen kann, `409` bei vergebener entity_id.
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ Steuert eine Entität an: `switch/turn_on`, `number/set_value`, `motor/start`, `
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` ist Pflicht und ist eine Entität, keine Liste; `reason` ist optional; alles andere sind die Daten des Dienstes (`value`, `option`, `position`, `mode`, `minutes`, `note`). Zahlen behalten den Typ, als der sie eingegeben wurden. Die Domäne im Pfad muss die der Entität sein. Jeder Dienst und seine Daten stehen unter [Entitäten](/de/iot/entities/#what-each-domain-takes).
+`entity_id` ist Pflicht und ist eine Entität, keine Liste; `reason` ist optional; alles andere sind die Daten des Dienstes (`value`, `option`, `position`, `mode`, `minutes`, `note`). Zahlen behalten den Typ, als der sie eingegeben wurden. Die Domäne im Pfad muss die der Entität sein. Jeder Dienst und seine Daten stehen unter [Entitäten](/de/iot/entities/#was-jede-domäne-annimmt).
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ Ein fehlgeschlagener Aufruf antwortet mit dem Status des Fehlers und demselben B
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-Eine Anfrage, die der echte Aufruf vor jeder Prüfung abweisen würde (keine solche Entität, ein unbekannter Dienst, Daten, die der Dienst nicht annimmt, ein Umschalten ohne bekannten Zustand), antwortet mit Status und Fehler des echten Aufrufs; ebenso eine fehlende Berechtigung. `dry_run` ist `true` oder `false` und sonst nichts: `yes` ist ein 400, kein Raten, weil falsches Raten aus einer Frage einen Befehl macht. Siehe [Entitäten](/de/iot/entities/#asking-first-the-dry-run).
+Eine Anfrage, die der echte Aufruf vor jeder Prüfung abweisen würde (keine solche Entität, ein unbekannter Dienst, Daten, die der Dienst nicht annimmt, ein Umschalten ohne bekannten Zustand), antwortet mit Status und Fehler des echten Aufrufs; ebenso eine fehlende Berechtigung. `dry_run` ist `true` oder `false` und sonst nichts: `yes` ist ein 400, kein Raten, weil falsches Raten aus einer Frage einen Befehl macht. Siehe [Entitäten](/de/iot/entities/#erst-fragen-der-probelauf).
 
 **Warum die Berechtigung im Handler geprüft wird.** Er braucht `values.write`, dasselbe wie das direkte Schreiben des Tags, weil das alles ist, was er ist; die Dienste einer `alarm`-Entität brauchen stattdessen `alarms.ack`, wie der Alarmbildschirm, die eines Helpers brauchen `helpers.write`, das ein Bediener hat, die eines Skripts brauchen `scripts.run`, wie `POST /api/scripts/{id}/run`, und die einer Szene brauchen `recipes.apply` und die eigene Berechtigung des Rezepts, wenn es eine nennt, wie `POST /api/recipes/{id}/apply`. Die Prüfung geschieht im Handler statt davor, damit eine Ablehnung wegen ihres Fehlens an das Schreib-Gate geht und wie jede andere Ablehnung **gegen die Entität auditiert** wird, mit dem Wert, der verlangt wurde. Ein Benutzer ohne die Berechtigung bekommt ein 403 und eine Zeile in `GET /api/writes?entity=...`, nicht ein 403 und nichts. Ein Helper schreibt keinen Tag, also ist die Ablehnung eines Helpers, diese eingeschlossen, stattdessen eine Warnung im Systemprotokoll (`GET /api/events`) gegen den Helper, und ebenso die eines Skripts. Die Ablehnung einer Szene ist eine abgelehnte Anwendung im Verlauf des Rezepts, mit dem Benutzer darauf.
 

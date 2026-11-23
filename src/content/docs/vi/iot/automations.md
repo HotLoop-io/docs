@@ -187,7 +187,7 @@ Hoặc tính toán:
 
 ### call_service
 
-Điều khiển một thực thể qua dịch vụ của nó, giống `POST /api/services/...` và công cụ MCP `call_service`. Xem [Thực thể](/vi/iot/entities/#services) để biết mỗi miền nhận gì.
+Điều khiển một thực thể qua dịch vụ của nó, giống `POST /api/services/...` và công cụ MCP `call_service`. Xem [Thực thể](/vi/iot/entities/#dịch-vụ) để biết mỗi miền nhận gì.
 
 ```json
 {

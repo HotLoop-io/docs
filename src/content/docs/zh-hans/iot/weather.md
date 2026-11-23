@@ -9,7 +9,7 @@ description: "屋顶气象站作为一个实体，露点、热指数和风寒由
 
 ## 创建
 
-天气实体的创建方式与电机相同（见[实体](/zh-hans/iot/entities/#composite-equipment)）：由管理员指定变量。在实体界面选择新建设备，再选天气。也可以通过 API：
+天气实体的创建方式与电机相同（见[实体](/zh-hans/iot/entities/#复合设备)）：由管理员指定变量。在实体界面选择新建设备，再选天气。也可以通过 API：
 
 ```json
 POST /api/entities

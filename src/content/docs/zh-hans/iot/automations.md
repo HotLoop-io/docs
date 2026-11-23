@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-通过实体的服务来控制它，就像 `POST /api/services/...` 和 MCP 的 `call_service` 工具那样。每个域接受什么，参见[实体](/zh-hans/iot/entities/#services)。
+通过实体的服务来控制它，就像 `POST /api/services/...` 和 MCP 的 `call_service` 工具那样。每个域接受什么，参见[实体](/zh-hans/iot/entities/#服务)。
 
 ```json
 {

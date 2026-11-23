@@ -9,7 +9,7 @@ Không dịch vụ thời tiết, không khóa API, không internet. Một đị
 
 ## Tạo một trạm
 
-Một thực thể thời tiết được tạo giống như một động cơ (xem [Thực thể](/vi/iot/entities/#composite-equipment)): quản trị viên đặt tên các tag. Trên màn hình Thực thể, chọn Thiết bị mới, Thời tiết. Hoặc qua API:
+Một thực thể thời tiết được tạo giống như một động cơ (xem [Thực thể](/vi/iot/entities/#thiết-bị-ghép)): quản trị viên đặt tên các tag. Trên màn hình Thực thể, chọn Thiết bị mới, Thời tiết. Hoặc qua API:
 
 ```json
 POST /api/entities

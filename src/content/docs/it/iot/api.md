@@ -1076,7 +1076,7 @@ Un tag di un dispositivo rilevato che nessuno ha accettato non si può armare: `
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`, oppure `404`. Lo storico resta. Le entità del tag diventano orfane (vedere [Entità](/it/iot/entities/#deleted-tags-orphans-and-re-adoption)).
+`{"deleted":"tank-farm/level"}`, oppure `404`. Lo storico resta. Le entità del tag diventano orfane (vedere [Entità](/it/iot/entities/#tag-eliminati-orfane-e-riadozione)).
 
 ## Valori, la lavagna e scritture
 
@@ -1260,7 +1260,7 @@ Crea un composito. Il corpo nomina il dominio e associa i tag ai suoi ruoli:
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-Anche `entity_id` (altrimenti generato dal nome), `device_class`, `unit_of_measurement`, `icon`, `entity_category` e `options`. Quali ruoli e opzioni accetta ogni dominio è in [Entità](/it/iot/entities/#composite-equipment). Risponde `201` `{"entity": {...}, "warnings": [...]}`. `400` per un dominio che non si crea qui (un `sensor` viene dal suo tag, un `alarm` dalla sua definizione), un ruolo mancante o un tag che non può ricoprirlo, `409` per un entity_id già preso.
+Anche `entity_id` (altrimenti generato dal nome), `device_class`, `unit_of_measurement`, `icon`, `entity_category` e `options`. Quali ruoli e opzioni accetta ogni dominio è in [Entità](/it/iot/entities/#apparecchiature-composite). Risponde `201` `{"entity": {...}, "warnings": [...]}`. `400` per un dominio che non si crea qui (un `sensor` viene dal suo tag, un `alarm` dalla sua definizione), un ruolo mancante o un tag che non può ricoprirlo, `409` per un entity_id già preso.
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ Comanda un'entità: `switch/turn_on`, `number/set_value`, `motor/start`, `alarm/
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` è obbligatorio ed è un'entità, non un elenco; `reason` è facoltativo; tutto il resto sono i dati del servizio (`value`, `option`, `position`, `mode`, `minutes`, `note`). I numeri mantengono il tipo con cui sono stati scritti. Il dominio nel percorso deve essere quello dell'entità. Ogni servizio e i suoi dati sono in [Entità](/it/iot/entities/#what-each-domain-takes).
+`entity_id` è obbligatorio ed è un'entità, non un elenco; `reason` è facoltativo; tutto il resto sono i dati del servizio (`value`, `option`, `position`, `mode`, `minutes`, `note`). I numeri mantengono il tipo con cui sono stati scritti. Il dominio nel percorso deve essere quello dell'entità. Ogni servizio e i suoi dati sono in [Entità](/it/iot/entities/#che-cosa-accetta-ogni-dominio).
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ Una chiamata fallita risponde con lo stato dell'errore e lo stesso corpo più `e
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-Una richiesta che la chiamata vera respingerebbe prima di ogni controllo (entità inesistente, servizio sconosciuto, dati che il servizio non accetta, un'alternanza senza stato noto) risponde con lo stato e l'errore della chiamata vera; lo stesso vale per un permesso mancante. `dry_run` è `true` o `false` e nient'altro: `yes` è un 400, non un'ipotesi, perché indovinare male trasforma una domanda in un comando. Vedere [Entità](/it/iot/entities/#asking-first-the-dry-run).
+Una richiesta che la chiamata vera respingerebbe prima di ogni controllo (entità inesistente, servizio sconosciuto, dati che il servizio non accetta, un'alternanza senza stato noto) risponde con lo stato e l'errore della chiamata vera; lo stesso vale per un permesso mancante. `dry_run` è `true` o `false` e nient'altro: `yes` è un 400, non un'ipotesi, perché indovinare male trasforma una domanda in un comando. Vedere [Entità](/it/iot/entities/#chiedere-prima-la-simulazione).
 
 **Perché il permesso viene controllato nell'handler.** Serve `values.write`, come per scrivere direttamente il tag, perché è tutto ciò che è; i servizi di un'entità `alarm` richiedono `alarms.ack`, come la schermata degli allarmi, quelli di un helper richiedono `helpers.write`, che un operatore ha, quelli di uno script richiedono `scripts.run`, come `POST /api/scripts/{id}/run`, e quelli di una scena richiedono `recipes.apply` e il permesso proprio della ricetta quando ne nomina uno, come `POST /api/recipes/{id}/apply`. Il controllo viene fatto dentro l'handler e non davanti perché un rifiuto per la sua mancanza passi dal gate di scrittura e sia **sottoposto ad audit sull'entità** come ogni altro rifiuto, con il valore richiesto. Un utente senza il permesso riceve un 403 e una riga in `GET /api/writes?entity=...`, non un 403 e nulla. Un helper non scrive alcun tag, quindi il rifiuto di un helper, questo compreso, è invece un avviso nel log di sistema (`GET /api/events`) sull'helper, e lo stesso vale per uno script. Il rifiuto di una scena è un'applicazione rifiutata nello storico della ricetta, con l'utente.
 

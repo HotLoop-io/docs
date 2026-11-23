@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-Управлява същност чрез нейната услуга, както правят `POST /api/services/...` и MCP инструментът `call_service`. Виж [Същности](/bg/iot/entities/#services) за това, което приема всеки домейн.
+Управлява същност чрез нейната услуга, както правят `POST /api/services/...` и MCP инструментът `call_service`. Виж [Същности](/bg/iot/entities/#услуги) за това, което приема всеки домейн.
 
 ```json
 {

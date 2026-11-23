@@ -187,7 +187,7 @@ attrs['switch.press_01_pump']['armed'] == true
 
 ### call_service
 
-Χειρίζεται μια οντότητα μέσω της υπηρεσίας της, όπως κάνουν το `POST /api/services/...` και το εργαλείο MCP `call_service`. Δες [Οντότητες](/el/iot/entities/#services) για το τι δέχεται κάθε τομέας.
+Χειρίζεται μια οντότητα μέσω της υπηρεσίας της, όπως κάνουν το `POST /api/services/...` και το εργαλείο MCP `call_service`. Δες [Οντότητες](/el/iot/entities/#υπηρεσίες) για το τι δέχεται κάθε τομέας.
 
 ```json
 {

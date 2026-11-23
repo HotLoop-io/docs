@@ -1076,7 +1076,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`، أو `404`. يبقى السجل التاريخي. تصبح كيانات الوسم يتيمة (راجع [الكيانات](/ar/iot/entities/#deleted-tags-orphans-and-re-adoption)).
+`{"deleted":"tank-farm/level"}`، أو `404`. يبقى السجل التاريخي. تصبح كيانات الوسم يتيمة (راجع [الكيانات](/ar/iot/entities/#الوسوم-المحذوفة-والكيانات-اليتيمة-وإعادة-التبنّي)).
 
 ## القيم واللوحة وعمليات الكتابة
 
@@ -1239,7 +1239,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 |---|---|---|
 | `entity_id` | string | إعادة تسمية. لا يتحرك `unique_id` |
 | `name`, `icon`, `device_class`, `state_class`, `unit_of_measurement`, `entity_category` | string | |
-| `options` | object | بحسب المجال؛ راجع [الكيانات](/ar/iot/entities/#api) |
+| `options` | object | بحسب المجال؛ راجع [الكيانات](/ar/iot/entities/#واجهة-api) |
 | `disabled`, `hidden` | bool | الكيان المعطّل لا حالة له ولا يمكن إصدار أوامر إليه |
 | `equipment_id` | int or null | يضعه في الشجرة؛ و`null` يجعله يتبع جهازه من جديد |
 | `labels` | string[] | المجموعة كاملة |
@@ -1260,7 +1260,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-وكذلك `entity_id` (وإلا يُولَّد من الاسم) و`device_class` و`unit_of_measurement` و`icon` و`entity_category` و`options`. الأدوار والخيارات التي يقبلها كل مجال في [الكيانات](/ar/iot/entities/#composite-equipment). يردّ بـ `201` `{"entity": {...}, "warnings": [...]}`. `400` لمجال لا يُنشأ هنا (`sensor` يأتي من وسمه و`alarm` من تعريفه) أو دور ناقص أو وسم لا يستطيع ملأه، و`409` لـ entity_id مأخوذ.
+وكذلك `entity_id` (وإلا يُولَّد من الاسم) و`device_class` و`unit_of_measurement` و`icon` و`entity_category` و`options`. الأدوار والخيارات التي يقبلها كل مجال في [الكيانات](/ar/iot/entities/#المعدات-المركّبة). يردّ بـ `201` `{"entity": {...}, "warnings": [...]}`. `400` لمجال لا يُنشأ هنا (`sensor` يأتي من وسمه و`alarm` من تعريفه) أو دور ناقص أو وسم لا يستطيع ملأه، و`409` لـ entity_id مأخوذ.
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` مطلوب وهو كيان واحد، لا قائمة؛ و`reason` اختياري؛ وكل ما عدا ذلك بيانات الخدمة (`value` و`option` و`position` و`mode` و`minutes` و`note`). تحتفظ الأرقام بالنوع الذي كُتبت به. ويجب أن يكون المجال في المسار هو مجال الكيان. كل خدمة وبياناتها في [الكيانات](/ar/iot/entities/#what-each-domain-takes).
+`entity_id` مطلوب وهو كيان واحد، لا قائمة؛ و`reason` اختياري؛ وكل ما عدا ذلك بيانات الخدمة (`value` و`option` و`position` و`mode` و`minutes` و`note`). تحتفظ الأرقام بالنوع الذي كُتبت به. ويجب أن يكون المجال في المسار هو مجال الكيان. كل خدمة وبياناتها في [الكيانات](/ar/iot/entities/#ما-يقبله-كل-نطاق).
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ Readiness. يرسل ping إلى قاعدة البيانات بمهلة 5 ثوا�
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-الطلب الذي كان الاستدعاء الحقيقي سيرده قبل أي فحص (لا كيان كهذا، أو خدمة غير معروفة، أو بيانات لا تقبلها الخدمة، أو تبديل بلا حالة معروفة) يردّ بحالة الاستدعاء الحقيقي وخطئه؛ وكذلك غياب الصلاحية. و`dry_run` هي `true` أو `false` ولا شيء غير ذلك: `yes` هي 400، لا تخمين، لأن التخمين الخاطئ يحوّل السؤال إلى أمر. راجع [الكيانات](/ar/iot/entities/#asking-first-the-dry-run).
+الطلب الذي كان الاستدعاء الحقيقي سيرده قبل أي فحص (لا كيان كهذا، أو خدمة غير معروفة، أو بيانات لا تقبلها الخدمة، أو تبديل بلا حالة معروفة) يردّ بحالة الاستدعاء الحقيقي وخطئه؛ وكذلك غياب الصلاحية. و`dry_run` هي `true` أو `false` ولا شيء غير ذلك: `yes` هي 400، لا تخمين، لأن التخمين الخاطئ يحوّل السؤال إلى أمر. راجع [الكيانات](/ar/iot/entities/#السؤال-أولًا-التشغيل-التجريبي).
 
 **لماذا تُفحص الصلاحية في المعالج.** يحتاج إلى `values.write`، كما في الكتابة المباشرة على الوسم، لأن هذا هو كل ما هو عليه؛ وخدمات كيان `alarm` تحتاج بدلًا من ذلك إلى `alarms.ack`، كشاشة الإنذارات، وخدمات الـ helper تحتاج إلى `helpers.write` الذي يملكه المشغّل، وخدمات السكربت تحتاج إلى `scripts.run`، كما في `POST /api/scripts/{id}/run`، وخدمات المشهد تحتاج إلى `recipes.apply` وإلى صلاحية الوصفة نفسها حين تسمّي واحدة، كما في `POST /api/recipes/{id}/apply`. يُجرى الفحص داخل المعالج لا أمامه حتى يُرسَل الرفض بسبب غيابها إلى بوابة الكتابة و**يُدقَّق مقابل الكيان** كأي رفض آخر، مع القيمة التي طُلبت. والمستخدم الذي لا يملك الصلاحية يحصل على 403 وسطر في `GET /api/writes?entity=...`، لا 403 ولا شيء. والـ helper لا يكتب وسمًا، فرفض الـ helper، بما فيه هذا، تحذير بدلًا من ذلك في سجل النظام (`GET /api/events`) بحق الـ helper، وكذلك السكربت. ورفض المشهد تطبيق مرفوض في سجل الوصفة، مع المستخدم عليه.
 

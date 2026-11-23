@@ -9,7 +9,7 @@ Pas de service météo, pas de clé d'API, pas d'internet. Un site dont la liais
 
 ## La construire
 
-Une entité météo se construit comme un moteur (voir [Entités](/fr/iot/entities/#composite-equipment)) : un administrateur nomme les tags. Sur l'écran Entités, Nouvel équipement, Météo. Ou par l'API :
+Une entité météo se construit comme un moteur (voir [Entités](/fr/iot/entities/#équipements-composites)) : un administrateur nomme les tags. Sur l'écran Entités, Nouvel équipement, Météo. Ou par l'API :
 
 ```json
 POST /api/entities

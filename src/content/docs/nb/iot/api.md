@@ -1076,7 +1076,7 @@ En tag på en oppdaget enhet ingen har godtatt, kan ikke armeres: `400`, «accep
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`, eller `404`. Historikken blir. Taggens entiteter blir foreldreløse (se [Entiteter](/nb/iot/entities/#deleted-tags-orphans-and-re-adoption)).
+`{"deleted":"tank-farm/level"}`, eller `404`. Historikken blir. Taggens entiteter blir foreldreløse (se [Entiteter](/nb/iot/entities/#slettede-tags-foreldreløse-entiteter-og-gjenovertakelse)).
 
 ## Verdier, tavla og skrivinger
 
@@ -1260,7 +1260,7 @@ Lager en sammensatt entitet. Bodyen navngir domenet og binder tags til rollene:
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-Også `entity_id` (ellers laget ut fra navnet), `device_class`, `unit_of_measurement`, `icon`, `entity_category` og `options`. Hvilke roller og alternativer hvert domene tar, står i [Entiteter](/nb/iot/entities/#composite-equipment). Svarer `201` `{"entity": {...}, "warnings": [...]}`. `400` for et domene som ikke lages her (en `sensor` kommer fra taggen sin, en `alarm` fra definisjonen sin), en rolle som mangler eller en tag som ikke kan fylle den, `409` for en entity_id som er tatt.
+Også `entity_id` (ellers laget ut fra navnet), `device_class`, `unit_of_measurement`, `icon`, `entity_category` og `options`. Hvilke roller og alternativer hvert domene tar, står i [Entiteter](/nb/iot/entities/#sammensatt-utstyr). Svarer `201` `{"entity": {...}, "warnings": [...]}`. `400` for et domene som ikke lages her (en `sensor` kommer fra taggen sin, en `alarm` fra definisjonen sin), en rolle som mangler eller en tag som ikke kan fylle den, `409` for en entity_id som er tatt.
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ Kommanderer én entitet: `switch/turn_on`, `number/set_value`, `motor/start`, `a
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` er påkrevd og er én entitet, ikke en liste; `reason` er valgfri; alt annet er tjenestens data (`value`, `option`, `position`, `mode`, `minutes`, `note`). Tall beholder typen de ble skrevet som. Domenet i stien må være entitetens. Hver tjeneste og dens data står i [Entiteter](/nb/iot/entities/#what-each-domain-takes).
+`entity_id` er påkrevd og er én entitet, ikke en liste; `reason` er valgfri; alt annet er tjenestens data (`value`, `option`, `position`, `mode`, `minutes`, `note`). Tall beholder typen de ble skrevet som. Domenet i stien må være entitetens. Hver tjeneste og dens data står i [Entiteter](/nb/iot/entities/#hva-hvert-domene-tar).
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ Et mislykket kall svarer med feilens status og samme body pluss `error`, så du 
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-En forespørsel det ekte kallet ville avvist før noen sjekk (ingen slik entitet, en ukjent tjeneste, data tjenesten ikke tar, et bytte uten kjent tilstand) svarer med det ekte kallets status og feil; det samme gjelder en manglende tillatelse. `dry_run` er `true` eller `false` og ingenting annet: `yes` er en 400, ikke en gjetning, fordi å gjette feil gjør et spørsmål til en kommando. Se [Entiteter](/nb/iot/entities/#asking-first-the-dry-run).
+En forespørsel det ekte kallet ville avvist før noen sjekk (ingen slik entitet, en ukjent tjeneste, data tjenesten ikke tar, et bytte uten kjent tilstand) svarer med det ekte kallets status og feil; det samme gjelder en manglende tillatelse. `dry_run` er `true` eller `false` og ingenting annet: `yes` er en 400, ikke en gjetning, fordi å gjette feil gjør et spørsmål til en kommando. Se [Entiteter](/nb/iot/entities/#spørre-først-prøvekjøringen).
 
 **Hvorfor tillatelsen sjekkes i handleren.** Den trenger `values.write`, det samme som å skrive taggen direkte, fordi det er alt det er; tjenestene til en `alarm`-entitet trenger `alarms.ack` i stedet, det samme som alarmskjermen, en helpers trenger `helpers.write`, som en operatør har, et skripts trenger `scripts.run`, det samme som `POST /api/scripts/{id}/run`, og en scenes trenger `recipes.apply` og oppskriftens egen tillatelse når den navngir en, det samme som `POST /api/recipes/{id}/apply`. Sjekken gjøres inne i handleren og ikke foran den slik at et avslag for manglende tillatelse sendes til skrive-porten og **revideres mot entiteten** som alle andre avslag, med verdien det ble bedt om. En bruker uten tillatelsen får en 403 og en linje i `GET /api/writes?entity=...`, ikke en 403 og ingenting. En helper skriver ingen tag, så en helpers avslag, dette inkludert, er i stedet en advarsel i systemloggen (`GET /api/events`) mot helperen, og det samme gjelder et skript. En scenes avslag er en avvist bruk i oppskriftens historikk, med brukeren på.
 

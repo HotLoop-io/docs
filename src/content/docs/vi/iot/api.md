@@ -1076,7 +1076,7 @@ Tag trên thiết bị đã khám phá mà chưa ai chấp nhận không thể k
 
 ### `DELETE /api/tags/{device}/{name}`
 
-`{"deleted":"tank-farm/level"}`, hoặc `404`. Lịch sử được giữ lại. Các thực thể của tag trở thành mồ côi (xem [Thực thể](/vi/iot/entities/#deleted-tags-orphans-and-re-adoption)).
+`{"deleted":"tank-farm/level"}`, hoặc `404`. Lịch sử được giữ lại. Các thực thể của tag trở thành mồ côi (xem [Thực thể](/vi/iot/entities/#tag-bị-xóa-thực-thể-mồ-côi-và-việc-nhận-lại)).
 
 ## Giá trị, bảng và thao tác ghi
 
@@ -1260,7 +1260,7 @@ Tạo một thực thể ghép. Phần thân nêu miền và gắn các tag vào
 {"name":"Transfer pump","domain":"motor","bindings":[{"role":"run_command","device_id":"tank-farm","tag_name":"pump"},{"role":"running","device_id":"tank-farm","tag_name":"pump"}]}
 ```
 
-Cũng có `entity_id` (nếu không thì sinh từ tên), `device_class`, `unit_of_measurement`, `icon`, `entity_category` và `options`. Mỗi miền nhận những vai trò và tùy chọn nào nằm ở [Thực thể](/vi/iot/entities/#composite-equipment). Trả về `201` `{"entity": {...}, "warnings": [...]}`. `400` cho miền không được tạo ở đây (`sensor` đến từ tag của nó, `alarm` từ định nghĩa của nó), vai trò bị thiếu hoặc tag không thể lấp vai trò đó, `409` cho entity_id đã có người dùng.
+Cũng có `entity_id` (nếu không thì sinh từ tên), `device_class`, `unit_of_measurement`, `icon`, `entity_category` và `options`. Mỗi miền nhận những vai trò và tùy chọn nào nằm ở [Thực thể](/vi/iot/entities/#thiết-bị-ghép). Trả về `201` `{"entity": {...}, "warnings": [...]}`. `400` cho miền không được tạo ở đây (`sensor` đến từ tag của nó, `alarm` từ định nghĩa của nó), vai trò bị thiếu hoặc tag không thể lấp vai trò đó, `409` cho entity_id đã có người dùng.
 
 ### `DELETE /api/entities/{entity_id}`
 
@@ -1355,7 +1355,7 @@ Ra lệnh cho một thực thể: `switch/turn_on`, `number/set_value`, `motor/s
 {"entity_id":"switch.tank_farm_pump","reason":"start of shift"}
 ```
 
-`entity_id` là bắt buộc và là một thực thể, không phải danh sách; `reason` là tùy chọn; mọi thứ còn lại là dữ liệu của dịch vụ (`value`, `option`, `position`, `mode`, `minutes`, `note`). Số giữ kiểu mà chúng được gõ. Miền trong đường dẫn phải là miền của thực thể. Mọi dịch vụ và dữ liệu của nó nằm ở [Thực thể](/vi/iot/entities/#what-each-domain-takes).
+`entity_id` là bắt buộc và là một thực thể, không phải danh sách; `reason` là tùy chọn; mọi thứ còn lại là dữ liệu của dịch vụ (`value`, `option`, `position`, `mode`, `minutes`, `note`). Số giữ kiểu mà chúng được gõ. Miền trong đường dẫn phải là miền của thực thể. Mọi dịch vụ và dữ liệu của nó nằm ở [Thực thể](/vi/iot/entities/#mỗi-miền-nhận-gì).
 
 ```json
 {"call_id":"5c9f8545a93b5443","entity_id":"switch.tank_farm_pump","service":"switch.turn_on","writes":[{"tag":"tank-farm/pump","value":"true","status":"written"}]}
@@ -1393,7 +1393,7 @@ Một lệnh gọi thất bại trả lời bằng trạng thái của lỗi và
 {"dry_run":true,"error":"value is outside the tag's configured range: 150 is outside 0..95","entity_id":"number.tank_farm_level_sp","service":"number.set_value","writes":[{"tag":"tank-farm/level_sp","value":"150","status":"not_sent","error":"value is outside the tag's configured range: 150 is outside 0..95"}]}
 ```
 
-Một yêu cầu mà lệnh gọi thật sẽ từ chối trước mọi kiểm tra (không có thực thể như vậy, dịch vụ không xác định, dữ liệu mà dịch vụ không nhận, một chuyển đổi không có trạng thái đã biết) trả lời bằng trạng thái và lỗi của lệnh gọi thật; thiếu quyền cũng vậy. `dry_run` là `true` hoặc `false` và không gì khác: `yes` là 400, không phải một sự đoán, vì đoán sai biến một câu hỏi thành một mệnh lệnh. Xem [Thực thể](/vi/iot/entities/#asking-first-the-dry-run).
+Một yêu cầu mà lệnh gọi thật sẽ từ chối trước mọi kiểm tra (không có thực thể như vậy, dịch vụ không xác định, dữ liệu mà dịch vụ không nhận, một chuyển đổi không có trạng thái đã biết) trả lời bằng trạng thái và lỗi của lệnh gọi thật; thiếu quyền cũng vậy. `dry_run` là `true` hoặc `false` và không gì khác: `yes` là 400, không phải một sự đoán, vì đoán sai biến một câu hỏi thành một mệnh lệnh. Xem [Thực thể](/vi/iot/entities/#hỏi-trước-chạy-thử).
 
 **Vì sao quyền được kiểm tra trong handler.** Nó cần `values.write`, giống như ghi tag trực tiếp, vì đó là tất cả những gì nó là; dịch vụ của thực thể `alarm` cần `alarms.ack` thay vào đó, giống màn hình báo động, dịch vụ của helper cần `helpers.write`, mà operator có, dịch vụ của script cần `scripts.run`, giống `POST /api/scripts/{id}/run`, và dịch vụ của cảnh cần `recipes.apply` và quyền riêng của công thức khi nó nêu một quyền, giống `POST /api/recipes/{id}/apply`. Việc kiểm tra được làm bên trong handler chứ không phải phía trước để một lần từ chối vì thiếu quyền được gửi tới cổng ghi và **được kiểm toán theo thực thể** như mọi lần từ chối khác, kèm giá trị đã được yêu cầu. Người dùng không có quyền nhận 403 và một dòng trong `GET /api/writes?entity=...`, không phải 403 mà không có gì. Helper không ghi tag nào, nên lần từ chối cho helper, kể cả lần này, thay vào đó là một cảnh báo trong nhật ký hệ thống (`GET /api/events`) đối với helper, và script cũng vậy. Lần từ chối cho cảnh là một lần áp dụng bị từ chối trong lịch sử của công thức, kèm người dùng.
 

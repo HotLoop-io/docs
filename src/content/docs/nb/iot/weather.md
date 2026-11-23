@@ -9,7 +9,7 @@ Ingen værtjeneste, ingen API-nøkkel, ikke noe internett. Et anlegg som mistet 
 
 ## Slik bygger du en
 
-En vær-entitet lages på samme måte som en motor (se [Entiteter](/nb/iot/entities/#composite-equipment)): en administrator navngir taggene. På Entiteter-skjermen, Nytt utstyr, Vær. Eller over API-et:
+En vær-entitet lages på samme måte som en motor (se [Entiteter](/nb/iot/entities/#sammensatt-utstyr)): en administrator navngir taggene. På Entiteter-skjermen, Nytt utstyr, Vær. Eller over API-et:
 
 ```json
 POST /api/entities

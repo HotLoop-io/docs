@@ -187,7 +187,7 @@ Oppure calcolato:
 
 ### call_service
 
-Comanda un'entità tramite il suo servizio, come fanno `POST /api/services/...` e lo strumento MCP `call_service`. Vedi [Entità](/it/iot/entities/#services) per cosa accetta ogni dominio.
+Comanda un'entità tramite il suo servizio, come fanno `POST /api/services/...` e lo strumento MCP `call_service`. Vedi [Entità](/it/iot/entities/#servizi) per cosa accetta ogni dominio.
 
 ```json
 {
