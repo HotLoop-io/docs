@@ -118,7 +118,7 @@ API로는 `POST /api/blueprints/{id}/instantiate`이며, 확인에는 `?dry_run=
 
 ## 에이전트
 
-에이전트는 `list_blueprints`, `preview_blueprint`, `instantiate_blueprint`(그리고 `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint`, `delete_blueprint`)를 받습니다. 알맞은 블루프린트를 찾고, 입력을 정리하고, 규칙이 무엇을 할지 보여 주고, 화면이 쓰는 것과 같은 경로로 같은 입력 검사를 거쳐 규칙을 만들며, 작업 일지에는 에이전트의 이름이 남습니다. 규칙은 트리거가 발생할 때마다 설비에 명령을 내리는 상시 지시이므로 미리보기가 먼저이며, 규칙이 이후에 하는 모든 쓰기는 쓰기 게이트를 만납니다. [MCP](/ko/iot/mcp/#blueprints)를 참고하세요.
+에이전트는 `list_blueprints`, `preview_blueprint`, `instantiate_blueprint`(그리고 `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint`, `delete_blueprint`)를 받습니다. 알맞은 블루프린트를 찾고, 입력을 정리하고, 규칙이 무엇을 할지 보여 주고, 화면이 쓰는 것과 같은 경로로 같은 입력 검사를 거쳐 규칙을 만들며, 작업 일지에는 에이전트의 이름이 남습니다. 규칙은 트리거가 발생할 때마다 설비에 명령을 내리는 상시 지시이므로 미리보기가 먼저이며, 규칙이 이후에 하는 모든 쓰기는 쓰기 게이트를 만납니다. [MCP](/ko/iot/mcp/#블루프린트)를 참고하세요.
 
 ## 모든 것이 저장되는 곳
 

@@ -108,7 +108,7 @@ Todo cambio queda en el registro del sistema, categoría `config`, sujeto `equip
 
 ## MCP
 
-`list_devices` y `describe_device` responden a partir del texto, como siempre, y su salida no cambia. Una prueba la fija byte a byte a lo que respondía la versión anterior al árbol, y después reorganiza el árbol alrededor del dispositivo (una empresa sobre su sitio, una celda bajo su línea, una etiqueta) y comprueba que nada de lo que ve un agente se movió. Cuando el árbol sí cambia el texto, por ejemplo con un cambio de nombre, el agente ve el texto nuevo, igual que si alguien lo hubiera escrito en el dispositivo. `list_entities` es donde los agentes ven el árbol: filtra por un nodo y todo lo que hay bajo él, y da el lugar de cada entidad. Consulte [MCP](/es/iot/mcp/#entities).
+`list_devices` y `describe_device` responden a partir del texto, como siempre, y su salida no cambia. Una prueba la fija byte a byte a lo que respondía la versión anterior al árbol, y después reorganiza el árbol alrededor del dispositivo (una empresa sobre su sitio, una celda bajo su línea, una etiqueta) y comprueba que nada de lo que ve un agente se movió. Cuando el árbol sí cambia el texto, por ejemplo con un cambio de nombre, el agente ve el texto nuevo, igual que si alguien lo hubiera escrito en el dispositivo. `list_entities` es donde los agentes ven el árbol: filtra por un nodo y todo lo que hay bajo él, y da el lugar de cada entidad. Consulte [MCP](/es/iot/mcp/#entidades).
 
 ## Copia de seguridad y restauración
 

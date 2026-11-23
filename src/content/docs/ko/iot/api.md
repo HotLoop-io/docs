@@ -2122,7 +2122,7 @@ HTML은 `sandbox` Content-Security-Policy와 함께 제공됩니다. 보고서�
 
 ### `GET /api/sites`
 
-Gateway가 연합하는 모든 사이트에 MCP로 공장 상태를 병렬로 요청합니다. 사이트당 6초이므로 죽은 사이트 하나가 나머지를 붙잡지 못합니다. 사이트는 설정의 아웃바운드 MCP 서버입니다. [MCP](/ko/iot/mcp/#federating-sites)를 참고하세요.
+Gateway가 연합하는 모든 사이트에 MCP로 공장 상태를 병렬로 요청합니다. 사이트당 6초이므로 죽은 사이트 하나가 나머지를 붙잡지 못합니다. 사이트는 설정의 아웃바운드 MCP 서버입니다. [MCP](/ko/iot/mcp/#사이트-연합)를 참고하세요.
 
 ```json
 {"configured":true,

@@ -168,7 +168,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 它以规则 `automation:<id>` 或脚本 `script:<id>` 的身份应用，每次写入都带有该次运行的来源，应用的父级就是那次运行。除非每个目标都已写入，否则该步骤会失败；未确认的值不会使它失败，跟踪中会写明 `NOT confirmed by read-back`。脚本的试运行也会检查该配方。
 
-通过 MCP，`list_recipes` 显示每个配方及其目标和参数，`validate_recipe` 询问某个配方现在能否应用，`apply_recipe` 应用它，并带有一个**必填**的原因。代理的写入带有来源 `mcp`，所以闸门对其中的每一次都适用，并且在写入关闭（`HOTLOOP_ALLOW_WRITES`）时，`apply_recipe` 会在检查任何内容之前就被拒绝。参见 [MCP](/zh-hans/iot/mcp/#recipes)。
+通过 MCP，`list_recipes` 显示每个配方及其目标和参数，`validate_recipe` 询问某个配方现在能否应用，`apply_recipe` 应用它，并带有一个**必填**的原因。代理的写入带有来源 `mcp`，所以闸门对其中的每一次都适用，并且在写入关闭（`HOTLOOP_ALLOW_WRITES`）时，`apply_recipe` 会在检查任何内容之前就被拒绝。参见 [MCP](/zh-hans/iot/mcp/#配方)。
 
 ## 它的实体
 

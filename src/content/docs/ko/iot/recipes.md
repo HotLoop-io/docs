@@ -168,7 +168,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 규칙 `automation:<id>` 또는 스크립트 `script:<id>`로서 적용하며, 모든 쓰기에 해당 실행의 출처가 붙고 적용의 상위는 그 실행입니다. 모든 대상이 쓰이지 않으면 단계는 실패합니다. 확인되지 않은 값은 실패시키지 않으며, 추적에는 `NOT confirmed by read-back`이라고 표시됩니다. 스크립트의 모의 실행도 레시피를 검사합니다.
 
-MCP에서는 `list_recipes`가 모든 레시피를 대상과 매개변수와 함께 보여 주고, `validate_recipe`가 지금 적용될지 묻고, `apply_recipe`가 **필수** 사유와 함께 적용합니다. 에이전트의 쓰기에는 출처 `mcp`가 붙으므로 게이트가 모든 쓰기에 적용되며, 쓰기가 꺼져 있으면(`HOTLOOP_ALLOW_WRITES`) `apply_recipe`는 아무것도 검사하기 전에 거부됩니다. [MCP](/ko/iot/mcp/#recipes)를 참고하세요.
+MCP에서는 `list_recipes`가 모든 레시피를 대상과 매개변수와 함께 보여 주고, `validate_recipe`가 지금 적용될지 묻고, `apply_recipe`가 **필수** 사유와 함께 적용합니다. 에이전트의 쓰기에는 출처 `mcp`가 붙으므로 게이트가 모든 쓰기에 적용되며, 쓰기가 꺼져 있으면(`HOTLOOP_ALLOW_WRITES`) `apply_recipe`는 아무것도 검사하기 전에 거부됩니다. [MCP](/ko/iot/mcp/#레시피)를 참고하세요.
 
 ## 레시피의 엔티티
 

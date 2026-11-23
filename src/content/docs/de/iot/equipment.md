@@ -108,7 +108,7 @@ Jede Änderung landet im Systemprotokoll, Kategorie `config`, Betreff `equipment
 
 ## MCP
 
-`list_devices` und `describe_device` antworten wie immer aus dem Text, und ihre Ausgabe ändert sich nicht. Ein Test hält sie Byte für Byte auf dem, was die Version vor dem Baum geantwortet hat, ordnet dann den Baum um das Gerät herum um (ein Unternehmen über seinem Standort, eine Zelle unter seiner Linie, eine Bezeichnung) und prüft, dass sich nichts bewegt hat, was ein Agent sieht. Ändert der Baum den Text doch, etwa durch eine Umbenennung, sieht der Agent den neuen Text, genau als hätte ihn jemand in das Gerät getippt. `list_entities` ist der Ort, an dem Agenten den Baum sehen: Es filtert nach einem Knoten und allem darunter und gibt den Platz jeder Entität an. Siehe [MCP](/de/iot/mcp/#entities).
+`list_devices` und `describe_device` antworten wie immer aus dem Text, und ihre Ausgabe ändert sich nicht. Ein Test hält sie Byte für Byte auf dem, was die Version vor dem Baum geantwortet hat, ordnet dann den Baum um das Gerät herum um (ein Unternehmen über seinem Standort, eine Zelle unter seiner Linie, eine Bezeichnung) und prüft, dass sich nichts bewegt hat, was ein Agent sieht. Ändert der Baum den Text doch, etwa durch eine Umbenennung, sieht der Agent den neuen Text, genau als hätte ihn jemand in das Gerät getippt. `list_entities` ist der Ort, an dem Agenten den Baum sehen: Es filtert nach einem Knoten und allem darunter und gibt den Platz jeder Entität an. Siehe [MCP](/de/iot/mcp/#entitäten).
 
 ## Sicherung und Wiederherstellung
 

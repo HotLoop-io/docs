@@ -2122,7 +2122,7 @@ HTML được phục vụ với Content-Security-Policy `sandbox`: báo cáo là
 
 ### `GET /api/sites`
 
-Mọi địa điểm mà Gateway liên kết, được hỏi trạng thái nhà máy qua MCP song song, mỗi địa điểm 6 giây, để một địa điểm chết không thể giữ chân các địa điểm còn lại. Các địa điểm là các máy chủ MCP đi ra trong cấu hình. Xem [MCP](/vi/iot/mcp/#federating-sites).
+Mọi địa điểm mà Gateway liên kết, được hỏi trạng thái nhà máy qua MCP song song, mỗi địa điểm 6 giây, để một địa điểm chết không thể giữ chân các địa điểm còn lại. Các địa điểm là các máy chủ MCP đi ra trong cấu hình. Xem [MCP](/vi/iot/mcp/#liên-hợp-các-địa-điểm).
 
 ```json
 {"configured":true,

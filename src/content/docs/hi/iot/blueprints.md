@@ -118,7 +118,7 @@ API से यह `POST /api/blueprints/{id}/instantiate` है, जाँच �
 
 ## एजेंट
 
-एजेंट को `list_blueprints`, `preview_blueprint` और `instantiate_blueprint` मिलते हैं (और `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` और `delete_blueprint`): वह सही Blueprint ढूँढता है, इनपुट तय करता है, दिखाता है कि नियम क्या करेगा, और उसे बनाता है, उसी रास्ते से जो स्क्रीन इस्तेमाल करती है, उन्हीं इनपुट जाँचों के साथ और लॉगबुक में उसके खिलाफ़ एजेंट के नाम के साथ। नियम एक स्थायी आदेश है कि जब भी उसका ट्रिगर चले, उपकरण को कमांड दो, इसलिए पूर्वावलोकन पहले आता है, और नियम आगे जो भी लिखता है वह राइट गेट से मिलता है। [MCP](/hi/iot/mcp/#blueprints) देखें।
+एजेंट को `list_blueprints`, `preview_blueprint` और `instantiate_blueprint` मिलते हैं (और `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` और `delete_blueprint`): वह सही Blueprint ढूँढता है, इनपुट तय करता है, दिखाता है कि नियम क्या करेगा, और उसे बनाता है, उसी रास्ते से जो स्क्रीन इस्तेमाल करती है, उन्हीं इनपुट जाँचों के साथ और लॉगबुक में उसके खिलाफ़ एजेंट के नाम के साथ। नियम एक स्थायी आदेश है कि जब भी उसका ट्रिगर चले, उपकरण को कमांड दो, इसलिए पूर्वावलोकन पहले आता है, और नियम आगे जो भी लिखता है वह राइट गेट से मिलता है। [MCP](/hi/iot/mcp/#ब्लूप्रिंट) देखें।
 
 ## सब कुछ कहाँ जाता है
 

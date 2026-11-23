@@ -168,7 +168,7 @@ En regel eller et skript bruker én med et `apply_recipe`-trinn (se [Automasjone
 
 Den brukes som regelen, `automation:<id>`, eller skriptet, `script:<id>`, med kjøringens kilde på hver skriving, og anvendelsens overordnede er kjøringen. Trinnet feiler med mindre hvert mål ble skrevet; en ubekreftet verdi får det ikke til å feile, og sporet sier `NOT confirmed by read-back`. Et skripts prøvekjøring kontrollerer også oppskriften.
 
-Over MCP viser `list_recipes` hver oppskrift med målene og parameterne, `validate_recipe` spør om en ville blitt brukt akkurat nå, og `apply_recipe` bruker den, med en **påkrevd** begrunnelse. En agents skrivinger bærer kilden `mcp`, så porten gjelder for hver av dem, og med skriving slått av (`HOTLOOP_ALLOW_WRITES`) avvises `apply_recipe` før noe er kontrollert. Se [MCP](/nb/iot/mcp/#recipes).
+Over MCP viser `list_recipes` hver oppskrift med målene og parameterne, `validate_recipe` spør om en ville blitt brukt akkurat nå, og `apply_recipe` bruker den, med en **påkrevd** begrunnelse. En agents skrivinger bærer kilden `mcp`, så porten gjelder for hver av dem, og med skriving slått av (`HOTLOOP_ALLOW_WRITES`) avvises `apply_recipe` før noe er kontrollert. Se [MCP](/nb/iot/mcp/#oppskrifter).
 
 ## Entiteten
 

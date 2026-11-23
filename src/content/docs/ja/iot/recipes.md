@@ -168,7 +168,7 @@ PARTIAL v3: 2 of 5 written before one failed, nothing undone
 
 ルール `automation:<id>` またはスクリプト `script:<id>` として適用し、すべての書き込みにその実行のソースが付き、適用の親はその実行です。すべての対象が書き込まれなければ、ステップは失敗します。未確認の値では失敗せず、トレースには `NOT confirmed by read-back` と表示されます。スクリプトのドライランもレシピを検査します。
 
-MCP では、`list_recipes` がすべてのレシピを対象とパラメーターとともに表示し、`validate_recipe` が今適用されるかどうかを尋ね、`apply_recipe` が**必須**の理由とともに適用します。エージェントの書き込みにはソース `mcp` が付くため、ゲートはそのすべてに適用され、書き込みがオフ(`HOTLOOP_ALLOW_WRITES`)のときは、何かを検査する前に `apply_recipe` が拒否されます。[MCP](/ja/iot/mcp/#recipes) を参照してください。
+MCP では、`list_recipes` がすべてのレシピを対象とパラメーターとともに表示し、`validate_recipe` が今適用されるかどうかを尋ね、`apply_recipe` が**必須**の理由とともに適用します。エージェントの書き込みにはソース `mcp` が付くため、ゲートはそのすべてに適用され、書き込みがオフ(`HOTLOOP_ALLOW_WRITES`)のときは、何かを検査する前に `apply_recipe` が拒否されます。[MCP](/ja/iot/mcp/#レシピ) を参照してください。
 
 ## レシピのエンティティ
 

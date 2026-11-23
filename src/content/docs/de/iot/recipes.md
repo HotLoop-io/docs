@@ -168,7 +168,7 @@ Eine Regel oder ein Skript wendet eines mit einem `apply_recipe`-Schritt an (sie
 
 Es wendet es als die Regel, `automation:<id>`, oder das Skript, `script:<id>`, an, mit der Quelle dieses Laufs bei jedem Schreibzugriff, und das Elternteil der Anwendung ist der Lauf. Der Schritt schlägt fehl, sofern nicht jedes Ziel geschrieben wurde; ein unbestätigter Wert lässt ihn nicht fehlschlagen, und das Ablaufprotokoll sagt `NOT confirmed by read-back`. Der Probelauf eines Skripts prüft das Rezept ebenfalls.
 
-Über MCP zeigt `list_recipes` jedes Rezept mit seinen Zielen und Parametern, `validate_recipe` fragt, ob eines jetzt angewendet würde, und `apply_recipe` wendet es an, mit einem **erforderlichen** Grund. Die Schreibzugriffe eines Agenten tragen die Quelle `mcp`, sodass das Gate für jeden davon gilt, und bei ausgeschalteten Schreibzugriffen (`HOTLOOP_ALLOW_WRITES`) wird `apply_recipe` abgelehnt, bevor irgendetwas geprüft wird. Siehe [MCP](/de/iot/mcp/#recipes).
+Über MCP zeigt `list_recipes` jedes Rezept mit seinen Zielen und Parametern, `validate_recipe` fragt, ob eines jetzt angewendet würde, und `apply_recipe` wendet es an, mit einem **erforderlichen** Grund. Die Schreibzugriffe eines Agenten tragen die Quelle `mcp`, sodass das Gate für jeden davon gilt, und bei ausgeschalteten Schreibzugriffen (`HOTLOOP_ALLOW_WRITES`) wird `apply_recipe` abgelehnt, bevor irgendetwas geprüft wird. Siehe [MCP](/de/iot/mcp/#rezepte).
 
 ## Seine Entität
 

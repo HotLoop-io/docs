@@ -108,7 +108,7 @@ Hver endring havner i systemloggen, kategori `config`, emne `equipment:<id>` ell
 
 ## MCP
 
-`list_devices` og `describe_device` svarer fra teksten, som de alltid har gjort, og utdataene er uendret. En test fester dem byte for byte til det versjonen før treet svarte, og omorganiserer så treet rundt enheten (et foretak over lokasjonen, en celle under linja, en etikett) og sjekker at ingenting en agent ser har flyttet seg. Når treet endrer teksten, for eksempel ved omdøping, ser agenten den nye teksten, akkurat som om noen hadde skrevet den inn i enheten. `list_entities` er stedet agenter ser treet: den filtrerer på en node og alt under, og gir hver entitets plassering. Se [MCP](/nb/iot/mcp/#entities).
+`list_devices` og `describe_device` svarer fra teksten, som de alltid har gjort, og utdataene er uendret. En test fester dem byte for byte til det versjonen før treet svarte, og omorganiserer så treet rundt enheten (et foretak over lokasjonen, en celle under linja, en etikett) og sjekker at ingenting en agent ser har flyttet seg. Når treet endrer teksten, for eksempel ved omdøping, ser agenten den nye teksten, akkurat som om noen hadde skrevet den inn i enheten. `list_entities` er stedet agenter ser treet: den filtrerer på en node og alt under, og gir hver entitets plassering. Se [MCP](/nb/iot/mcp/#entiteter).
 
 ## Sikkerhetskopi og gjenoppretting
 

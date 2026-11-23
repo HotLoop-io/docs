@@ -2122,7 +2122,7 @@ HTML wird mit einer `sandbox`-Content-Security-Policy ausgeliefert: Ein Bericht 
 
 ### `GET /api/sites`
 
-Jeder Standort, den das Gateway föderiert, nach seinem Anlagenstatus über MCP parallel gefragt, je 6 Sekunden, sodass ein toter Standort die übrigen nicht aufhalten kann. Die Standorte sind die ausgehenden MCP-Server in der Konfiguration. Siehe [MCP](/de/iot/mcp/#federating-sites).
+Jeder Standort, den das Gateway föderiert, nach seinem Anlagenstatus über MCP parallel gefragt, je 6 Sekunden, sodass ein toter Standort die übrigen nicht aufhalten kann. Die Standorte sind die ausgehenden MCP-Server in der Konfiguration. Siehe [MCP](/de/iot/mcp/#standorte-föderieren).
 
 ```json
 {"configured":true,

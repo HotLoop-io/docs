@@ -118,7 +118,7 @@ L'eliminazione di un blueprint da cui è stata creata una regola viene rifiutata
 
 ## Agenti
 
-Un agente ottiene `list_blueprints`, `preview_blueprint` e `instantiate_blueprint` (e `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` e `delete_blueprint`): trova il blueprint giusto, ricava gli ingressi, mostra che cosa farebbe la regola e la crea, per la stessa via che usa la schermata, con gli stessi controlli sugli ingressi e il nome dell'agente accanto nel registro di bordo. Una regola è un ordine permanente di comandare le apparecchiature ogni volta che scatta il suo trigger, quindi l'anteprima viene prima, e ogni scrittura che la regola fa in seguito incontra il cancello di scrittura. Vedi [MCP](/it/iot/mcp/#blueprints).
+Un agente ottiene `list_blueprints`, `preview_blueprint` e `instantiate_blueprint` (e `upgrade_blueprint_automation`, `create_blueprint`, `update_blueprint` e `delete_blueprint`): trova il blueprint giusto, ricava gli ingressi, mostra che cosa farebbe la regola e la crea, per la stessa via che usa la schermata, con gli stessi controlli sugli ingressi e il nome dell'agente accanto nel registro di bordo. Una regola è un ordine permanente di comandare le apparecchiature ogni volta che scatta il suo trigger, quindi l'anteprima viene prima, e ogni scrittura che la regola fa in seguito incontra il cancello di scrittura. Vedi [MCP](/it/iot/mcp/#blueprint).
 
 ## Dove finisce tutto
 
