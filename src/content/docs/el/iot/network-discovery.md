@@ -17,7 +17,7 @@ description: "Το HotLoop ακούει με mDNS, SSDP και DHCP και δε�
 
 Το να ρωτάς είναι **ανίχνευση**, και ενεργοποιείται ανά δίκτυο, από την ανάπτυξη, ποτέ με κουμπί:
 
-| Μεταβλητή | Προεπιλογή | <span class="sr-only">Details</span> |
+| Μεταβλητή | Προεπιλογή | <span class="sr-only">Λεπτομέρειες</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | ακούει για mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | ακούει για SSDP |

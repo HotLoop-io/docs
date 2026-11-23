@@ -297,7 +297,7 @@ Chaque ligne est une session neuve avec cette politique et ce mode, lisant des v
 
 ## Configuration
 
-| Variable | Par défaut | <span class="sr-only">Details</span> |
+| Variable | Par défaut | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Activé dans le binaire et le chart ; `false` arrête le serveur |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Port TCP, sur toutes les interfaces |

@@ -37,7 +37,7 @@ import { IMAGE_ROOT, imageTarget } from './sync-images.mjs';
 import { render as renderLegal, status as legalStatus } from './sync-legal.mjs';
 import { oxfordHeadings } from './oxford.mjs';
 import { scan } from './forbidden.mjs';
-import { report as translationReport } from './i18n-source.mjs';
+import { report as translationReport, bump as bumpVersions } from './i18n-source.mjs';
 import { applyLens } from './sales-lens.mjs';
 import { GLOBAL as LENS_GLOBAL, PAGE as LENS_PAGE, PRE as LENS_PRE } from './sales-lens-rules.mjs';
 import { GLOBAL_RULES, SLUG_RULES, PAGES, PRODUCTS, RELEASE_NOTES, REPOS, SKIPPED_SECTIONS, CODESYS } from './sync-manifest.mjs';
@@ -614,6 +614,8 @@ if (CHECK) {
   for (const p of staleAssets) { console.log(`stale image  ${relative(PUBLIC, p).split('\\').join('/')}`); drift++; }
   // The translated pages, against the English this run would write.
   const translated = translationReport(translationOverlay());
+  // A translation that still says the release before the latest one.
+  for (const b of bumpVersions({ dry: true })) { console.log(`old version  ${b.id} ${b.lang}`); drift++; }
   if (drift) fail(`${drift} file(s) differ from a fresh sync. Run it and commit the result.`);
   if (!translated) fail('a translated page is behind its English, or a link between translated pages is broken. See above; retranslate exactly those segments (README, Translations), then run this again.');
   log('sync-docs: committed pages match a fresh sync');
@@ -629,6 +631,8 @@ for (const [k, v] of out) {
   writeFileSync(p, v);
 }
 log2.forEach((l) => log(l));
+// A release moves the version the English names; the translations that name the latest one get the new number in their own line.
+for (const b of bumpVersions()) log(`sync-docs: ${b.id} ${b.lang}: ${b.touched} line(s) now name the latest release`);
 // A release changes the English, and a translation keeps the English it was made from. Name every translated page this run
 // left behind, with the segments, so the retranslation happens before the pull request and not after a red build.
 if (!translationReport(translationOverlay())) log('sync-docs: translated pages are behind this run. Retranslate exactly the segments listed above (README, Translations) before the pull request: the build fails until they are.');

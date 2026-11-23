@@ -17,7 +17,7 @@ Trên mạng OT mà bạn đọc, người ta không quét. Việc quét cổng 
 
 Việc hỏi là **thăm dò**, và nó được bật theo từng mạng, bởi bản triển khai, không bao giờ bằng một nút bấm:
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | lắng nghe mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | lắng nghe SSDP |

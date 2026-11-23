@@ -11,7 +11,7 @@ HotLoopは自前の履歴を保持しており、それは変わりません。�
 
 HotLoopが書き込めるデータベース:
 
-| 種類 | 動作確認したバージョン | <span class="sr-only">Details</span> |
+| 種類 | 動作確認したバージョン | <span class="sr-only">詳細</span> |
 |---|---|---|
 | PostgreSQLとTimescaleDB | PostgreSQL 16とTimescaleDB 2.30 | [下記](#postgresqlとtimescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [下記](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoopが書き込めるデータベース:
 
 HotLoop自身の履歴と同じ6列なので、一方向けに書いたクエリがもう一方でもそのまま読めます。
 
-| 列 | <span class="sr-only">Details</span> |
+| 列 | <span class="sr-only">詳細</span> |
 |---|---|
 | `ts` | 測定値を取得した時刻、UTC、マイクロ秒単位 |
 | `device_id` | デバイス |

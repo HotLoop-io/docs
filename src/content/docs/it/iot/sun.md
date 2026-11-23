@@ -9,7 +9,7 @@ Dite a HotLoop dove si trova l'impianto e saprà dov'è il sole. Alba, tramonto,
 
 Due variabili, in gradi decimali, con nord ed est positivi:
 
-| Variabile | Esempio | <span class="sr-only">Details</span> |
+| Variabile | Esempio | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | nord positivo |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | est positivo, quindi tutte le Americhe sono negative |
@@ -20,7 +20,7 @@ Se le omettete, non ci sono entità del sole e una regola con un trigger solare 
 
 ## Le entità
 
-| Entità | Stato | <span class="sr-only">Details</span> |
+| Entità | Stato | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | `on` dall'alba al tramonto | attributi `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, nel fuso orario del sito |
 | `sensor.sun_elevation` | gradi sopra l'orizzonte, negativo sotto | gradi interi |

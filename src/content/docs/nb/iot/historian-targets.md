@@ -11,7 +11,7 @@ Mål finnes i HotLoop IoT, Edge og Gateway. Ikke i Edge Relay: Den har ingen ege
 
 Databaser HotLoop skriver til:
 
-| Type | Versjoner testet mot | <span class="sr-only">Details</span> |
+| Type | Versjoner testet mot | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | PostgreSQL og TimescaleDB | PostgreSQL 16 med TimescaleDB 2.30 | [nedenfor](#postgresql-og-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [nedenfor](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop lager tabellen hvis den ikke finnes. Hvis den finnes, men ikke er en Hot
 
 De samme seks kolonnene som HotLoops egen historikk har, slik at et søk skrevet for den ene leser den andre:
 
-| Kolonne | <span class="sr-only">Details</span> |
+| Kolonne | <span class="sr-only">Detaljer</span> |
 |---|---|
 | `ts` | Når målingen ble tatt, UTC, til mikrosekundet |
 | `device_id` | Enheten |

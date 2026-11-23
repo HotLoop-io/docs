@@ -297,7 +297,7 @@ Ogni riga è una sessione nuova con quella policy e quella modalità, che legge 
 
 ## Configurazione
 
-| Variabile | Predefinito | <span class="sr-only">Details</span> |
+| Variabile | Predefinito | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Attivo nel binario e nel chart; `false` spegne il server |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Porta TCP, su tutte le interfacce |

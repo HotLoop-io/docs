@@ -152,7 +152,7 @@ Restore it with HotLoop <its version> or a later release
 
 ## 設定
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | これを設定するまで、APIルートを含め、この機能はオフです |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | バックアップの書き込み先。PVC(チャートの`backup.persistence`)にすることを想定しています |

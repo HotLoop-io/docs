@@ -88,8 +88,8 @@
     }
   ],
   "codesys": {
-    "version": "0.3.8",
-    "needsCore": "4.22.0",
+    "version": "0.3.10",
+    "needsCore": "4.24.0",
     "chartRepo": "https://hotloop.io/hotloop-codesys/"
   },
   "pages": [

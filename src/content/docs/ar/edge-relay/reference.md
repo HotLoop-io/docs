@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## الإعداد
 
-| المتغير | الافتراضي | <span class="sr-only">Details</span> |
+| المتغير | الافتراضي | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | غير متاح | مطلوب. مسار ملف الأجهزة أعلاه |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | غير مضبوط | مكان حفظ ملف الأجهزة المدفوع، وهو يغلب الملف أعلاه ما دام موجودًا. يجب أن يكون قابلًا للكتابة ودائمًا؛ يستخدم المخطط ووحدة Quadlet المسار `/data/pushed-devices.json`. راجع [أين يوجد الملف المدفوع](#أين-يوجد-الملف-المدفوع-وأي-ملف-يغلب) |

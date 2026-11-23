@@ -297,7 +297,7 @@ Ignition Gateway(ポート 8088 の Web UI)では、次のようにします。
 
 ## 設定
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | バイナリでもチャートでもオン。`false` でサーバーを止めます |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP ポート。すべてのインターフェースで待ち受けます |

@@ -286,7 +286,7 @@ Con le connessioni anonime consentite sul broker integrato, chiunque nella rete 
 
 Il rilevamento gira sul broker integrato (vedi [il broker MQTT integrato](/it/iot/broker/)), attivo per impostazione predefinita ogni volta che lo è il broker. Il client di HotLoop accede con un accesso creato a ogni avvio e tenuto solo in memoria: non c'è nulla da configurare e nulla in un backup che possa trapelare. Pubblica una sola cosa sua, la nascita (`<prefix>/status` = `online`), che fa annunciare di nuovo i publisher che la ascoltano.
 
-| Variabile | Predefinito | <span class="sr-only">Details</span> |
+| Variabile | Predefinito | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | Ascolta gli annunci sul broker integrato |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | Il prefisso di topic sotto cui arrivano |

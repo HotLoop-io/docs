@@ -17,7 +17,7 @@ description: "يستمع HotLoop عبر mDNS وSSDP وDHCP ويعرض ما عل�
 
 السؤال هو **المسح الاستقصائي**، ويُفعَّل لكل شبكة، بواسطة النشر، لا بزر أبدًا:
 
-| المتغير | الافتراضي | <span class="sr-only">Details</span> |
+| المتغير | الافتراضي | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | الاستماع إلى mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | الاستماع إلى SSDP |

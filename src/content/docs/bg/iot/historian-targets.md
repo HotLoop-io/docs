@@ -11,7 +11,7 @@ HotLoop пази собствена история и това не се про�
 
 Бази данни, в които HotLoop записва:
 
-| Вид | Версии, с които е изпробвано | <span class="sr-only">Details</span> |
+| Вид | Версии, с които е изпробвано | <span class="sr-only">Подробности</span> |
 |---|---|---|
 | PostgreSQL и TimescaleDB | PostgreSQL 16 с TimescaleDB 2.30 | [по-долу](#postgresql-и-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [по-долу](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop създава таблицата, ако я няма. Ако я има,
 
 Същите шест колони, които има собствената история на HotLoop, така че заявка, написана за едната, чете и другата:
 
-| Колона | <span class="sr-only">Details</span> |
+| Колона | <span class="sr-only">Подробности</span> |
 |---|---|
 | `ts` | Кога е взето измерването, UTC, с точност до микросекунда |
 | `device_id` | Устройството |

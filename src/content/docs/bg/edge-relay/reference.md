@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## Конфигурация
 
-| Променлива | По подразбиране | <span class="sr-only">Details</span> |
+| Променлива | По подразбиране | <span class="sr-only">Подробности</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | n/a | Задължително. Път до описания по-горе файл с устройства |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | unset | Къде се пази изпратен файл с устройства; той печели пред горния, докато съществува. Трябва да е записваем и устойчив; чартът и Quadlet модулът използват `/data/pushed-devices.json`. Вижте [Къде стои изпратеният файл](#къде-стои-изпратеният-файл-и-кой-файл-печели) |

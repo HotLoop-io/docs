@@ -71,7 +71,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ما يصل:
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">التفاصيل</span> | <span class="sr-only">التفاصيل</span> |
 |---|---|
 | العنوان | اسم الإنذار |
 | النص | رسالة الإنذار وأولويته ومصدره (`device/tag`) ووقت تفعيله |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### ما يصل
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">التفاصيل</span> | <span class="sr-only">التفاصيل</span> |
 |---|---|
 | النص | `[Critical] Boiler Trip`، وهو ما يعرضه إشعار الهاتف. في الإنذار الحرج، يسبقه ذكر للدور المضبوط |
 | عنوان الرسالة المضمّنة | نفسه، ويرتبط بقائمة إنذارات HotLoop عند ضبط `HOTLOOP_PUBLIC_URL` |
@@ -305,7 +305,7 @@ WARN NOBODY can acknowledge alarms from Discord, because HOTLOOP_NOTIFY_DISCORD_
 
 ### السياسة
 
-| الحقل | <span class="sr-only">Details</span> |
+| الحقل | <span class="sr-only">التفاصيل</span> |
 |---|---|
 | `enabled` | معطّلة إلى أن تفعّلها. السياسة المعطّلة لا تصعّد شيئًا |
 | `minPriority` | أخف إنذار يُصعَّد: `critical` أو `high` أو `medium` أو `low`. الافتراضي `high`. إنذار متوسط بقي ساعة هو أمر عمل، وليس مكالمة في الساعة 03:00 |
@@ -412,7 +412,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## الإعدادات
 
-| المتغير | الافتراضي | <span class="sr-only">Details</span> |
+| المتغير | الافتراضي | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | الميزة معطّلة إلى أن يُضبط هذا |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## API
 
-| المسار | الإذن | <span class="sr-only">Details</span> |
+| المسار | الإذن | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | يرسل إشعارًا تجريبيًا مصطنعًا عبر كل قناة مضبوطة الآن |
 | `POST /api/notify/ack/{token}` | لا يوجد؛ الرمز هو التخويل | يُقرّ بتفعيل الإنذار الذي صدر الرمز من أجله. راجع "روابط الإقرار" |

@@ -7,7 +7,7 @@ description: "HotLoop를 주소를 아는 장치에 연결해 실제 내용을 �
 
 장치가 HotLoop에 들어오는 방법은 세 가지이며, 서로 함께 쓰도록 만들어졌습니다.
 
-| <span class="sr-only">Details</span> | 시작하는 쪽 | 필요한 것 |
+| <span class="sr-only">상세</span> | 시작하는 쪽 | 필요한 것 |
 |---|---|---|
 | [MQTT 디스커버리](/ko/iot/mqtt-discovery/) | 장치가 브로커에 스스로를 알림 | 지원하는 형식 중 하나로 발행하는 퍼블리셔 |
 | [네트워크 디스커버리](/ko/iot/network-discovery/) | 네트워크를 엿들음 | 장치에서는 아무것도 필요 없음. 들은 내용과 HotLoop가 어떻게 통신할 수 있는지 알려 줍니다 |

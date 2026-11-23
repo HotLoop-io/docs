@@ -67,7 +67,7 @@ La livraison est **au moins une fois**. Un morceau que le broker a pris mais n'a
 
 Tout cela est mesuré avec un vrai HotLoop Edge qui scrute 20 appareils HTTP de 25 tags chacun toutes les 250 ms (2000 lectures par seconde), en publiant vers un vrai Mosquitto. Chaque appareil répond à chaque scrutation par un compteur supérieur d'une unité au précédent, de sorte qu'un juge côté hôte sait exactement quelle lecture a manqué, laquelle est revenue deux fois et laquelle est sortie dans le désordre. La liaison montante est coupée en débranchant le broker du réseau : le socket de l'Edge devient silencieux, sans reset ni raccrochage. Pour arrêter le processus avec rien en vol, l'usine s'interrompt quelques secondes avant le SIGKILL (« quiesced ») ; les autres arrêts tombent là où en est la scrutation (« instant »). Les exécutions du 2026-10-12, avec une borne de 64 MiB. « Before » est `15419f1`, la version qui précède ce travail. « Write-ahead » est `165411f`, qui écrivait chaque lecture sur disque d'abord et que nous avons retirée. « Now » est la mémoire tant que la liaison est active et le disque pendant une panne :
 
-| <span class="sr-only">Details</span> | Avant | Écriture préalable | Maintenant |
+| <span class="sr-only">Détails</span> | Avant | Écriture préalable | Maintenant |
 |---|---|---|---|
 | Régime établi, liaison montante active, 2 000 readings/s | 2 018 readings/s, 0 bytes/s vers le disque, 9 % d'un CPU | 2 031 readings/s, 5,4 Mo/s vers le disque (450 Go par jour), 14 % d'un CPU | 10 minutes : 2 002 readings/s, 0 bytes écrits sur le disque (0 bytes par jour), 0 page écrite du magasin de file embarqué, fichier de file de 32 768 bytes avant et après, 9 % d'un CPU |
 | Rejeu d'une panne de 5 minutes, alors que les lectures arrivent toujours à 2 000 readings/s | 829 745 lectures en 4 m 11 s, 3 308 par seconde | de 194 247 à 308 582 par seconde | 244 335 lectures en 824 ms, 296 523 par seconde |
@@ -93,7 +93,7 @@ HotLoop a été exécuté sur du vrai matériel et de vrais serveurs, et sur du 
 
 ## Configuration
 
-| Variable | Par défaut | <span class="sr-only">Details</span> |
+| Variable | Par défaut | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_PUBLISH_ENABLED` | `false` | La fonction est désactivée tant que ceci n'est pas défini |
 | `HOTLOOP_EDGE_PUBLISH_BROKER` | s. o. | Hôte seul, `host:port`, ou une URL complète |

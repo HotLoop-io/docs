@@ -152,7 +152,7 @@ Lo que se comprueba al entrar es lo que se comprueba en cualquier restauración:
 
 ## Configuración
 
-| Variable | Valor por defecto | <span class="sr-only">Details</span> |
+| Variable | Valor por defecto | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | La función está desactivada, incluidas las rutas de la API, hasta que se define esto |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Dónde se escriben las copias; pensado para ser un PVC (`backup.persistence` en el chart) |

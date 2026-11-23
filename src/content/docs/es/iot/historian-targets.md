@@ -11,7 +11,7 @@ Los destinos están en HotLoop IoT, Edge y Gateway. No en el Edge Relay: no tien
 
 Bases de datos en las que escribe HotLoop:
 
-| Tipo | Versiones probadas | <span class="sr-only">Details</span> |
+| Tipo | Versiones probadas | <span class="sr-only">Detalles</span> |
 |---|---|---|
 | PostgreSQL y TimescaleDB | PostgreSQL 16 con TimescaleDB 2.30 | [abajo](#postgresql-y-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [abajo](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop crea la tabla si no existe. Si existe pero no es una que HotLoop haya cr
 
 Las mismas seis columnas que tiene el historial propio de HotLoop, de modo que una consulta escrita para uno sirve para el otro:
 
-| Columna | <span class="sr-only">Details</span> |
+| Columna | <span class="sr-only">Detalles</span> |
 |---|---|
 | `ts` | Cuándo se tomó la lectura, en UTC, al microsegundo |
 | `device_id` | El dispositivo |

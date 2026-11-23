@@ -152,7 +152,7 @@ Ciò che viene controllato in ingresso è ciò che viene controllato per qualsia
 
 ## Configurazione
 
-| Variabile | Valore predefinito | <span class="sr-only">Details</span> |
+| Variabile | Valore predefinito | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | La funzione è disattivata, comprese le route dell'API, finché questo non è impostato |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Dove vengono scritti i backup; pensata per essere un PVC (`backup.persistence` nel chart) |

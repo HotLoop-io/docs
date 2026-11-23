@@ -71,7 +71,7 @@ URLはサーバーだけを指します。トピックはURLに入れず、独�
 
 届く内容は次のとおりです。
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">詳細</span> | <span class="sr-only">詳細</span> |
 |---|---|
 | タイトル | アラーム名 |
 | 本文 | アラームのメッセージ、優先度、発生元(`device/tag`)、発生時刻 |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### 届く内容
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">詳細</span> | <span class="sr-only">詳細</span> |
 |---|---|
 | テキスト | `[Critical] Boiler Trip`。スマートフォンのプッシュ通知に表示される内容です。重大なアラームでは、その前に設定したロールへのメンションが付きます |
 | 埋め込みタイトル | 同じ内容で、`HOTLOOP_PUBLIC_URL`が設定されていればHotLoopのアラーム一覧へのリンクになります |
@@ -305,7 +305,7 @@ N分間誰もアラームを確認応答しなければ、次の人に届きま�
 
 ### ポリシー
 
-| フィールド | <span class="sr-only">Details</span> |
+| フィールド | <span class="sr-only">詳細</span> |
 |---|---|
 | `enabled` | オンにするまではオフです。オフのポリシーは何もエスカレーションしません |
 | `minPriority` | エスカレーションする最も軽いアラーム: `critical`、`high`、`medium`、`low`。既定は`high`。1時間放置された中のアラームは、午前3時の電話ではなく作業指示です |
@@ -412,7 +412,7 @@ TLS専用のリスナーを持つ実際のSMTPサーバーライブラリと、`
 
 ## 設定
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | これを設定するまで機能はオフです |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ Helmチャートでは、これらは`notify.ntfy`、`notify.gotify`、`notify.d
 
 ## API
 
-| ルート | 権限 | <span class="sr-only">Details</span> |
+| ルート | 権限 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | 設定済みのすべてのチャンネルへ、疑似のテスト通知をいますぐ送ります |
 | `POST /api/notify/ack/{token}` | なし。トークンが認可です | トークンが発行されたアラームの発生を確認応答します。「確認応答リンク」を参照してください |

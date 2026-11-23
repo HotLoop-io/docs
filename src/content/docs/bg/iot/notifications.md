@@ -71,7 +71,7 @@ URL адресът е само сървърът. Темата се задава 
 
 Какво пристига:
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">Подробности</span> | <span class="sr-only">Подробности</span> |
 |---|---|
 | Заглавие | Името на алармата |
 | Текст | Съобщението на алармата, нейният приоритет, откъде идва (`device/tag`) и кога е възникнала |
@@ -116,7 +116,7 @@ HOTLOOP_PUBLIC_URL=https://hotloop.plant.example
 
 ### Какво пристига
 
-| <span class="sr-only">Details</span> | <span class="sr-only">Details</span> |
+| <span class="sr-only">Подробности</span> | <span class="sr-only">Подробности</span> |
 |---|---|
 | Текст | `[Critical] Boiler Trip`, което показва насоченото известие на телефона. При Критична аларма отпред стои споменаване на настроената роля |
 | Заглавие на блока | Същото, като връзка към списъка с аларми на HotLoop, когато `HOTLOOP_PUBLIC_URL` е зададен |
@@ -305,7 +305,7 @@ Discord дава на бота три секунди да отговори на 
 
 ### Политиката
 
-| Поле | <span class="sr-only">Details</span> |
+| Поле | <span class="sr-only">Подробности</span> |
 |---|---|
 | `enabled` | Изключена, докато не я включите. Изключена политика не ескалира нищо |
 | `minPriority` | Най-слабата аларма, която ескалира: `critical`, `high`, `medium` или `low`. По подразбиране `high`. Средна аларма, стояла един час, е работна поръчка, а не телефонно обаждане в 03:00 |
@@ -412,7 +412,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## Конфигурация
 
-| Променлива | По подразбиране | <span class="sr-only">Details</span> |
+| Променлива | По подразбиране | <span class="sr-only">Подробности</span> |
 |---|---|---|
 | `HOTLOOP_NOTIFY_ENABLED` | `false` | Функцията е изключена, докато това не се зададе |
 | `HOTLOOP_NOTIFY_WEBHOOK_ENABLED` | `false` | |
@@ -462,7 +462,7 @@ HOTLOOP_NOTIFY_SMTP_PORT=465
 
 ## API
 
-| Маршрут | Право | <span class="sr-only">Details</span> |
+| Маршрут | Право | <span class="sr-only">Подробности</span> |
 |---|---|---|
 | `POST /api/notify/test` | `notify.test` | Изпраща синтетично тестово известие през всеки настроен канал веднага |
 | `POST /api/notify/ack/{token}` | няма; токенът е разрешението | Потвърждава събитието на алармата, за което е издаден токенът. Вижте „Връзки за потвърждаване“ |

@@ -17,7 +17,7 @@ Su una rete OT che leggete, non si scansiona. Una scansione delle porte ha già 
 
 Chiedere è **sondare**, e si attiva per rete, dall'installazione, mai con un pulsante:
 
-| Variabile | Predefinito | <span class="sr-only">Details</span> |
+| Variabile | Predefinito | <span class="sr-only">Dettagli</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | ascolta mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | ascolta SSDP |

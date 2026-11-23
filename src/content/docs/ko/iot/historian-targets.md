@@ -11,7 +11,7 @@ HotLoop은 자체 이력을 보관하며, 이 점은 달라지지 않습니다. 
 
 HotLoop이 기록하는 데이터베이스:
 
-| 종류 | 검증한 버전 | <span class="sr-only">Details</span> |
+| 종류 | 검증한 버전 | <span class="sr-only">상세</span> |
 |---|---|---|
 | PostgreSQL 및 TimescaleDB | PostgreSQL 16과 TimescaleDB 2.30 | [아래](#postgresql-및-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [아래](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop이 기록하는 데이터베이스:
 
 HotLoop 자체 이력과 같은 여섯 개 열이므로, 한쪽에 맞춰 쓴 쿼리가 다른 쪽도 읽습니다.
 
-| 열 | <span class="sr-only">Details</span> |
+| 열 | <span class="sr-only">상세</span> |
 |---|---|
 | `ts` | 측정값을 취한 시각, UTC, 마이크로초 단위 |
 | `device_id` | 장치 |

@@ -62,7 +62,7 @@ SMTP चैनल के एक ही कनेक्शन में STARTTLS 
 
 ## कॉन्फ़िगरेशन
 
-| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">Details</span> |
+| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | जब तक यह सेट न हो, सुविधा बंद रहती है |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | सादा TCP लिसनर |

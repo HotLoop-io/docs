@@ -27,7 +27,7 @@ POST /api/entities
 
 Bare `temperature` er påkrevd. En stasjon uten regnmåler har ingen `rain_rate` og viser ingen regnrad. Hver rolle tar en tall-tag, og ingen av dem skrives: en stasjon leses, den kommanderes aldri, så ingen tag må armeres og entiteten tar ingen tjeneste.
 
-| Rolle | <span class="sr-only">Details</span> | Attributt den lager |
+| Rolle | <span class="sr-only">Detaljer</span> | Attributt den lager |
 |---|---|---|
 | `temperature` | påkrevd, tilstanden | `unit_of_measurement` |
 | `humidity` | relativ fuktighet, i prosent | `humidity` |

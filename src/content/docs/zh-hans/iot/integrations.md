@@ -7,7 +7,7 @@ description: "把 HotLoop 指向您知道地址的设备，查看实际内容，
 
 设备进入 HotLoop 有三种方式，它们设计为并存：
 
-| <span class="sr-only">Details</span> | 由谁发起 | 需要什么 |
+| <span class="sr-only">详情</span> | 由谁发起 | 需要什么 |
 |---|---|---|
 | [MQTT 发现](/zh-hans/iot/mqtt-discovery/) | 设备，通过在 broker 上自我宣告 | 一个使用其中一种格式的发布者 |
 | [网络发现](/zh-hans/iot/network-discovery/) | 网络，通过被监听 | 不需要设备做任何事；它会告诉您它听到了什么，以及 HotLoop 如何与它通信 |

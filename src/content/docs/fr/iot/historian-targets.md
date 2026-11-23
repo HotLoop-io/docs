@@ -11,7 +11,7 @@ Les cibles existent dans HotLoop IoT, Edge et Gateway. Pas dans l'Edge Relay : i
 
 Bases de données dans lesquelles HotLoop écrit :
 
-| Type | Versions testées | <span class="sr-only">Details</span> |
+| Type | Versions testées | <span class="sr-only">Détails</span> |
 |---|---|---|
 | PostgreSQL et TimescaleDB | PostgreSQL 16 avec TimescaleDB 2.30 | [ci-dessous](#postgresql-et-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [ci-dessous](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop crée la table si elle n'existe pas. Si elle existe mais n'a pas été c
 
 Les six mêmes colonnes que l'historique propre de HotLoop, si bien qu'une requête écrite pour l'un lit l'autre :
 
-| Colonne | <span class="sr-only">Details</span> |
+| Colonne | <span class="sr-only">Détails</span> |
 |---|---|
 | `ts` | Moment où la mesure a été prise, en UTC, à la microseconde |
 | `device_id` | L'appareil |

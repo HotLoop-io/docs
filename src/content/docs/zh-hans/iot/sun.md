@@ -9,7 +9,7 @@ description: "日出、日落、黎明、黄昏和太阳位置，由盒子根据
 
 两个变量，单位是十进制度，北纬和东经为正：
 
-| 变量 | 示例 | <span class="sr-only">Details</span> |
+| 变量 | 示例 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | 北为正 |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | 东为正，所以整个美洲都是负数 |
@@ -20,7 +20,7 @@ description: "日出、日落、黎明、黄昏和太阳位置，由盒子根据
 
 ## 实体
 
-| 实体 | 状态 | <span class="sr-only">Details</span> |
+| 实体 | 状态 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | 从日出到日落为 `on` | 属性 `next_dawn`、`next_sunrise`、`next_noon`、`next_sunset`、`next_dusk`，按现场的时区 |
 | `sensor.sun_elevation` | 地平线以上的度数，以下为负 | 整数度 |

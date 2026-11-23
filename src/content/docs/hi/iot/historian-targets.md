@@ -11,7 +11,7 @@ HotLoop अपना इतिहास खुद रखता है और य
 
 HotLoop जिन डेटाबेस में लिखता है:
 
-| प्रकार | जिन संस्करणों पर परखा गया | <span class="sr-only">Details</span> |
+| प्रकार | जिन संस्करणों पर परखा गया | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | PostgreSQL और TimescaleDB | PostgreSQL 16 और TimescaleDB 2.30 | [नीचे](#postgresql-और-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [नीचे](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop जिन डेटाबेस में लिखता है:
 
 वही छह कॉलम जो HotLoop के अपने इतिहास में हैं, ताकि एक के लिए लिखी क्वेरी दूसरे को भी पढ़ सके:
 
-| कॉलम | <span class="sr-only">Details</span> |
+| कॉलम | <span class="sr-only">विवरण</span> |
 |---|---|
 | `ts` | माप कब लिया गया, UTC में, माइक्रोसेकंड तक |
 | `device_id` | डिवाइस |

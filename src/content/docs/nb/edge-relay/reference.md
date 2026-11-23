@@ -207,7 +207,7 @@ Bevisst ingen autentisering foran noen av dem: en edge relay har ingen brukerdat
 
 ## Konfigurasjon
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | n/a | Påkrevd. Sti til enhetsfilen beskrevet ovenfor |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | unset | Hvor en sendt enhetsfil oppbevares, og den vinner over den ovenfor så lenge den finnes. Må være skrivbar og persistent; charten og Quadlet-enheten bruker `/data/pushed-devices.json`. Se [Hvor en sendt fil ligger](#hvor-en-sendt-fil-ligger-og-hvilken-fil-som-vinner) |

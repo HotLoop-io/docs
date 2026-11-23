@@ -9,7 +9,7 @@ description: "الشروق والغروب والفجر والشفق وموضع �
 
 متغيران، بالدرجات العشرية، والشمال والشرق موجبان:
 
-| المتغير | مثال | <span class="sr-only">Details</span> |
+| المتغير | مثال | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | الشمال موجب |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | الشرق موجب، لذا فالأمريكتان كلها سالبة |
@@ -20,7 +20,7 @@ description: "الشروق والغروب والفجر والشفق وموضع �
 
 ## الكيانات
 
-| الكيان | الحالة | <span class="sr-only">Details</span> |
+| الكيان | الحالة | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | `on` من الشروق إلى الغروب | السمات `next_dawn` و`next_sunrise` و`next_noon` و`next_sunset` و`next_dusk`، بتوقيت الموقع |
 | `sensor.sun_elevation` | درجات فوق الأفق، وسالبة تحته | درجات صحيحة |

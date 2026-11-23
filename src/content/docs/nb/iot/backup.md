@@ -152,7 +152,7 @@ Det som kontrolleres på vei inn, er det som kontrolleres for enhver gjenopprett
 
 ## Konfigurasjon
 
-| Variabel | Standard | <span class="sr-only">Details</span> |
+| Variabel | Standard | <span class="sr-only">Detaljer</span> |
 |---|---|---|
 | `HOTLOOP_BACKUP_ENABLED` | `false` | Funksjonen er av, API-rutene inkludert, til dette er satt |
 | `HOTLOOP_BACKUP_DIR` | `/data/backups` | Hvor sikkerhetskopier skrives; ment å være en PVC (`backup.persistence` i chartet) |

@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## 設定
 
-| 変数 | 既定値 | <span class="sr-only">Details</span> |
+| 変数 | 既定値 | <span class="sr-only">詳細</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | なし | 必須です。上のデバイスファイルのパス |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | 未設定 | プッシュされたデバイスファイルの保管場所で、存在する間は上のファイルより優先されます。書き込み可能で永続的である必要があります。チャートと Quadlet ユニットは `/data/pushed-devices.json` を使います。[プッシュされたファイルの場所](#プッシュされたファイルの場所とどちらが優先されるか)を参照 |

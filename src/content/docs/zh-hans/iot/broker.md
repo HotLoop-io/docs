@@ -62,7 +62,7 @@ broker 启用后，明文 TCP 监听器（`HOTLOOP_BROKER_LISTEN_ADDR`，默认 
 
 ## 配置
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | 在设置它之前，该功能处于关闭状态 |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | 明文 TCP 监听器 |

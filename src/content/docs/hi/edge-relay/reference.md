@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## कॉन्फ़िगरेशन
 
-| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">Details</span> |
+| वेरिएबल | डिफ़ॉल्ट | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | लागू नहीं | आवश्यक। ऊपर की डिवाइस फ़ाइल का पथ |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | सेट नहीं | पुश की गई डिवाइस फ़ाइल कहाँ रखी जाती है, और जब तक वह मौजूद है वह ऊपर वाली पर भारी पड़ती है। लिखने योग्य और स्थायी होनी चाहिए; चार्ट और Quadlet यूनिट `/data/pushed-devices.json` इस्तेमाल करते हैं। [पुश की गई फ़ाइल कहाँ रहती है](#पुश-की-गई-फ़ाइल-कहाँ-रहती-है-और-कौन-सी-फ़ाइल-जीतती-है) देखें |

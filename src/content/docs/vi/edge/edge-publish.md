@@ -67,7 +67,7 @@ Việc giao là **ít nhất một lần**. Một khối mà broker đã nhận 
 
 Tất cả được đo bằng một HotLoop Edge thật thăm dò 20 thiết bị HTTP, mỗi thiết bị 25 tag, cứ 250 ms một lần (2000 giá trị đọc mỗi giây), xuất bản lên một Mosquitto thật. Mỗi thiết bị trả lời mỗi lần thăm dò bằng một bộ đếm lớn hơn lần trước một đơn vị, nên một bộ phân xử phía host biết chính xác giá trị đọc nào bị mất, cái nào quay lại hai lần và cái nào ra sai thứ tự. Đường lên bị cắt bằng cách rút broker khỏi mạng: socket của Edge im lặng, không reset, không ngắt. Để kill khi không có gì đang bay, nhà máy tạm dừng vài giây trước SIGKILL ("quiesced"); các lần kill khác rơi vào bất cứ chỗ nào việc thăm dò đang diễn ra ("instant"). Các lần chạy ngày 2026-10-12, với giới hạn 64 MiB. "Before" là `15419f1`, bản dựng trước công việc này. "Write-ahead" là `165411f`, bản ghi mọi giá trị đọc xuống đĩa trước và chúng tôi đã gỡ ra. "Now" là bộ nhớ khi đường lên còn hoạt động và đĩa trong một sự cố:
 
-| <span class="sr-only">Details</span> | Trước | Ghi trước | Hiện tại |
+| <span class="sr-only">Chi tiết</span> | Trước | Ghi trước | Hiện tại |
 |---|---|---|---|
 | Trạng thái ổn định, đường lên hoạt động, 2.000 readings/s | 2.018 readings/s, 0 bytes/s xuống đĩa, 9% một CPU | 2.031 readings/s, 5,4 MB/s xuống đĩa (450 GB một ngày), 14% một CPU | 10 phút: 2.002 readings/s, 0 bytes được ghi xuống đĩa (0 bytes một ngày), 0 trang kho hàng đợi nhúng được ghi, tệp hàng đợi 32.768 bytes trước và sau, 9% một CPU |
 | Phát lại một sự cố 5 phút, trong khi các giá trị đọc vẫn đến ở 2.000 readings/s | 829.745 giá trị trong 4 m 11 s, 3.308 mỗi giây | 194.247 đến 308.582 mỗi giây | 244.335 giá trị trong 824 ms, 296.523 mỗi giây |
@@ -93,7 +93,7 @@ HotLoop đã được chạy với thiết bị thật và máy chủ thật, v�
 
 ## Cấu hình
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_PUBLISH_ENABLED` | `false` | Tính năng tắt cho đến khi biến này được đặt |
 | `HOTLOOP_EDGE_PUBLISH_BROKER` | không có | Chỉ tên máy, `host:port`, hoặc một URL đầy đủ |

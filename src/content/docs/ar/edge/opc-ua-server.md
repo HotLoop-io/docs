@@ -297,7 +297,7 @@ description: "انشر الأجهزة والوسوم المهيأة كمساحة
 
 ## الإعداد
 
-| المتغير | الافتراضي | <span class="sr-only">Details</span> |
+| المتغير | الافتراضي | <span class="sr-only">التفاصيل</span> |
 |---|---|---|
 | `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | مفعّل في الملف التنفيذي وفي chart؛ والقيمة `false` توقف الخادم |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | منفذ TCP، على كل الواجهات |

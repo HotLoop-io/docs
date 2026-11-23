@@ -11,7 +11,7 @@ HotLoop 保存自己的历史记录，这一点不会变。但工厂本来就有
 
 HotLoop 可以写入的数据库：
 
-| 类型 | 已验证的版本 | <span class="sr-only">Details</span> |
+| 类型 | 已验证的版本 | <span class="sr-only">详情</span> |
 |---|---|---|
 | PostgreSQL 和 TimescaleDB | PostgreSQL 16 搭配 TimescaleDB 2.30 | [见下文](#postgresql-和-timescaledb) |
 | Microsoft SQL Server | SQL Server 2025 CU9 | [见下文](#microsoft-sql-server) |
@@ -31,7 +31,7 @@ HotLoop 可以写入的数据库：
 
 与 HotLoop 自身历史相同的六列，所以为一方写的查询也能读取另一方：
 
-| 列 | <span class="sr-only">Details</span> |
+| 列 | <span class="sr-only">详情</span> |
 |---|---|
 | `ts` | 读数的采集时间，UTC，精确到微秒 |
 | `device_id` | 设备 |

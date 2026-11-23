@@ -9,7 +9,7 @@ HotLoop को बताइए कि प्लांट कहाँ है, �
 
 दो वेरिएबल, दशमलव डिग्री में, उत्तर और पूर्व धनात्मक:
 
-| वेरिएबल | उदाहरण | <span class="sr-only">Details</span> |
+| वेरिएबल | उदाहरण | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `HOTLOOP_SITE_LATITUDE` | `41.4993` | उत्तर धनात्मक |
 | `HOTLOOP_SITE_LONGITUDE` | `-81.6944` | पूर्व धनात्मक, इसलिए पूरा अमेरिका ऋणात्मक है |
@@ -20,7 +20,7 @@ HotLoop को बताइए कि प्लांट कहाँ है, �
 
 ## एंटिटी
 
-| एंटिटी | अवस्था | <span class="sr-only">Details</span> |
+| एंटिटी | अवस्था | <span class="sr-only">विवरण</span> |
 |---|---|---|
 | `binary_sensor.sun_up` | सूर्योदय से सूर्यास्त तक `on` | विशेषताएँ `next_dawn`, `next_sunrise`, `next_noon`, `next_sunset`, `next_dusk`, साइट के समय क्षेत्र में |
 | `sensor.sun_elevation` | क्षितिज के ऊपर डिग्री, नीचे ऋणात्मक | पूरी डिग्री |

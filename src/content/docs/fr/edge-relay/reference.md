@@ -207,7 +207,7 @@ Délibérément aucune authentification devant l'un ou l'autre : un edge relay n
 
 ## Configuration
 
-| Variable | Par défaut | <span class="sr-only">Details</span> |
+| Variable | Par défaut | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | n/a | Obligatoire. Chemin du fichier d'appareils décrit plus haut |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | unset | Où est conservé un fichier d'appareils poussé ; il l'emporte sur celui ci-dessus tant qu'il existe. Doit être inscriptible et persistant ; le chart et l'unité Quadlet utilisent `/data/pushed-devices.json`. Voir [Où vit un fichier poussé](#où-vit-un-fichier-poussé-et-quel-fichier-lemporte) |

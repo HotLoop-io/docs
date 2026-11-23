@@ -286,7 +286,7 @@ Khi cho phép kết nối ẩn danh trên broker nhúng, bất kỳ ai trên m�
 
 Khám phá chạy trên broker nhúng (xem [broker MQTT nhúng](/vi/iot/broker/)), bật theo mặc định bất cứ khi nào broker bật. Máy khách riêng của HotLoop đăng nhập bằng thông tin đăng nhập được tạo ở mỗi lần khởi động và chỉ giữ trong bộ nhớ: không có gì để cấu hình và không có gì trong bản sao lưu có thể bị rò rỉ. Nó xuất bản đúng một thứ của riêng mình, birth (`<prefix>/status` = `online`), khiến các nhà xuất bản lắng nghe nó thông báo lại.
 
-| Biến | Mặc định | <span class="sr-only">Details</span> |
+| Biến | Mặc định | <span class="sr-only">Chi tiết</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_DISCOVERY` | `true` | Lắng nghe các thông báo trên broker nhúng |
 | `HOTLOOP_BROKER_DISCOVERY_PREFIX` | `homeassistant` | Tiền tố topic mà chúng đến dưới đó |

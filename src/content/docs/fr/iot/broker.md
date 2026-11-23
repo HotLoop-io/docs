@@ -62,7 +62,7 @@ Ce paquet ne génère pas de certificat de lui-même, auto-signé ou autre, car 
 
 ## Configuration
 
-| Variable | Par défaut | <span class="sr-only">Details</span> |
+| Variable | Par défaut | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_BROKER_ENABLED` | `false` | La fonctionnalité est désactivée tant que ce n'est pas défini |
 | `HOTLOOP_BROKER_LISTEN_ADDR` | `:1883` | Le listener TCP en clair |

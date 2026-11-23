@@ -27,7 +27,7 @@ POST /api/entities
 
 Chỉ `temperature` là bắt buộc. Trạm không có máy đo mưa thì không có `rain_rate` và không hiển thị dòng mưa. Mỗi vai trò nhận một tag số và không vai trò nào được ghi: trạm chỉ được đọc, không bao giờ bị ra lệnh, nên không tag nào cần kích hoạt và thực thể không nhận dịch vụ.
 
-| Vai trò | <span class="sr-only">Details</span> | Thuộc tính tạo ra |
+| Vai trò | <span class="sr-only">Chi tiết</span> | Thuộc tính tạo ra |
 |---|---|---|
 | `temperature` | bắt buộc, là trạng thái | `unit_of_measurement` |
 | `humidity` | độ ẩm tương đối, phần trăm | `humidity` |

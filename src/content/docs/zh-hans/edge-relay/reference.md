@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## 配置
 
-| 变量 | 默认值 | <span class="sr-only">Details</span> |
+| 变量 | 默认值 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | 无 | 必需。上述设备文件的路径 |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | 未设置 | 推送的设备文件保存的位置，只要它存在就优先于上面的文件。必须可写且持久；图表和 Quadlet 单元使用 `/data/pushed-devices.json`。见[推送的文件放在哪里](#推送的文件放在哪里以及哪个文件优先) |

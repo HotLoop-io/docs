@@ -17,7 +17,7 @@ Sur un réseau OT que vous lisez, on ne scanne pas. Un balayage de ports a déj�
 
 Demander, c'est **sonder**, et cela s'active réseau par réseau, par le déploiement, jamais par un bouton :
 
-| Variable | Par défaut | <span class="sr-only">Details</span> |
+| Variable | Par défaut | <span class="sr-only">Détails</span> |
 |---|---|---|
 | `HOTLOOP_NETDISC_MDNS` | `true` | écouter le mDNS |
 | `HOTLOOP_NETDISC_SSDP` | `true` | écouter le SSDP |
