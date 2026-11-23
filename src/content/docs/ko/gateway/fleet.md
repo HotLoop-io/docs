@@ -30,7 +30,7 @@ description: "Sparkplug 생성과 종료로 모든 Edge Relay를 추적하고, �
 
 릴레이는 수신 시 다시 검증합니다. 이 앱은 그 토픽에 Gateway만 게시한다고 가정할 수 없고, 스스로 망가진 것을 게시하지 않아야 한다는 것만 보장합니다.
 
-**장치 파일에는 자격 증명이 들어 있을 수 있고, 푸시하면 그것이 게시됩니다.** 장치의 `config` 블록에는 드라이버가 로그인에 쓰는 값, 예를 들어 OPC UA `username`과 `password`(4.15.0)가 들어 있고, 파일은 그대로 retained로 게시됩니다. `hotloop/edge-relay-config/#`를 구독할 수 있는 사람은 누구나 읽을 수 있으므로, 자격 증명이 든 파일을 푸시하기 전에 브로커에 TLS와 그 토픽에 대한 ACL이 필요합니다. Gateway의 API는 4.15.1부터 모든 역할에게 장치 자격 증명을 숨기지만, 푸시한 파일은 API 뒤에 있지 않아 이 변경의 영향을 받지 않습니다. [Edge Relay 레퍼런스](/ko/edge-relay/reference/#credentials-in-the-device-file-4150)와 [인증과 사용자](/ko/iot/authentication/#where-credentials-are-still-in-the-clear)를 참고하세요.
+**장치 파일에는 자격 증명이 들어 있을 수 있고, 푸시하면 그것이 게시됩니다.** 장치의 `config` 블록에는 드라이버가 로그인에 쓰는 값, 예를 들어 OPC UA `username`과 `password`(4.15.0)가 들어 있고, 파일은 그대로 retained로 게시됩니다. `hotloop/edge-relay-config/#`를 구독할 수 있는 사람은 누구나 읽을 수 있으므로, 자격 증명이 든 파일을 푸시하기 전에 브로커에 TLS와 그 토픽에 대한 ACL이 필요합니다. Gateway의 API는 4.15.1부터 모든 역할에게 장치 자격 증명을 숨기지만, 푸시한 파일은 API 뒤에 있지 않아 이 변경의 영향을 받지 않습니다. [Edge Relay 레퍼런스](/ko/edge-relay/reference/#credentials-in-the-device-file-4150)와 [인증과 사용자](/ko/iot/authentication/#자격-증명이-여전히-평문인-곳)를 참고하세요.
 
 **푸시는 즉시 적용되며 아무것도 재시작하지 않습니다.** 4.17까지는 푸시가 파일을 준비만 했고, 적용하려면 `POST /api/fleet/{id}/restart`라는 두 번째 동작이 필요했으며, 태그 하나를 바꾸려고 릴레이의 브로커 세션과 장치 세션 전부를 끊었습니다. 이제는 다음과 같습니다.
 

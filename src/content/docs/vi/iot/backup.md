@@ -20,7 +20,7 @@ Một bản sao lưu là một thư mục: một tệp cho mỗi bảng cùng m�
 
 Các tệp sao lưu là dữ liệu nhạy cảm. Tệp `users.copy` chứa mã băm bcrypt của mật khẩu và mã PIN kiosk, còn `sessions.copy` và `write_audit.copy` chứa bản ghi phiên và nhật ký kiểm toán các lần ghi. Các tệp được tạo với chế độ `0640` (và thư mục sao lưu với `0750`), và một tệp đã tồn tại là lỗi chứ không bị ghi đè, nhưng đó chỉ là mức tối thiểu, không thay thế cho việc bảo vệ ổ lưu: hãy để ổ sao lưu trên nơi lưu trữ được mã hóa khi nghỉ, hạn chế ai và cái gì được đọc nó, và áp dụng sự cẩn trọng tương tự cho mọi bản sao ngoài thiết bị mà người vận hành tạo ra.
 
-Tệp `devices.copy` chứa địa chỉ và cấu hình giao thức của từng thiết bị đúng như được lưu, bao gồm cả thông tin xác thực mà các driver dùng để đăng nhập. Chúng đọc được đến mức nào tùy thuộc vào khóa, bên dưới. Từ 4.15.1, API ẩn mọi thông tin xác thực thiết bị khỏi mọi vai trò, kể cả quản trị viên; tệp sao lưu không nằm sau API. Xem [Xác thực và người dùng](/vi/iot/authentication/#where-credentials-are-still-in-the-clear).
+Tệp `devices.copy` chứa địa chỉ và cấu hình giao thức của từng thiết bị đúng như được lưu, bao gồm cả thông tin xác thực mà các driver dùng để đăng nhập. Chúng đọc được đến mức nào tùy thuộc vào khóa, bên dưới. Từ 4.15.1, API ẩn mọi thông tin xác thực thiết bị khỏi mọi vai trò, kể cả quản trị viên; tệp sao lưu không nằm sau API. Xem [Xác thực và người dùng](/vi/iot/authentication/#nơi-thông-tin-xác-thực-vẫn-ở-dạng-rõ).
 
 ## Thông tin xác thực thiết bị và khóa bí mật
 

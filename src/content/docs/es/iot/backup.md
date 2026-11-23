@@ -20,7 +20,7 @@ Una copia de seguridad es un directorio: un archivo por tabla más un pequeño `
 
 Los archivos de copia son sensibles. El archivo `users.copy` contiene hashes bcrypt de contraseñas y de PIN de quiosco, y `sessions.copy` y `write_audit.copy` contienen registros de sesiones y el rastro de auditoría de escrituras. Los archivos se crean con modo `0640` (y el directorio de copias con `0750`), y un archivo que ya existe es un error en lugar de sobrescribirse, pero eso es un mínimo y no sustituye la protección del volumen: mantenga el volumen de copias en almacenamiento cifrado en reposo, restrinja quién y qué puede leerlo, y aplique el mismo cuidado a cualquier copia fuera del equipo que haga quien opera.
 
-El archivo `devices.copy` contiene la dirección y la configuración de protocolo de cada dispositivo tal como están guardadas, lo que incluye las credenciales con las que se conectan los controladores. Lo legibles que sean depende de la clave, más abajo. Desde la 4.15.1 la API oculta toda credencial de dispositivo a todos los roles, administrador incluido; un archivo de copia no está detrás de la API. Consulte [Autenticación y usuarios](/es/iot/authentication/#where-credentials-are-still-in-the-clear).
+El archivo `devices.copy` contiene la dirección y la configuración de protocolo de cada dispositivo tal como están guardadas, lo que incluye las credenciales con las que se conectan los controladores. Lo legibles que sean depende de la clave, más abajo. Desde la 4.15.1 la API oculta toda credencial de dispositivo a todos los roles, administrador incluido; un archivo de copia no está detrás de la API. Consulte [Autenticación y usuarios](/es/iot/authentication/#dónde-siguen-las-credenciales-en-claro).
 
 ## Credenciales de dispositivos y la clave secreta
 

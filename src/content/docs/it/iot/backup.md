@@ -20,7 +20,7 @@ Un backup è una directory: un file per tabella più un piccolo `manifest.json` 
 
 I file di backup sono sensibili. Il file `users.copy` contiene gli hash bcrypt delle password e dei PIN del chiosco, mentre `sessions.copy` e `write_audit.copy` contengono i record delle sessioni e la traccia di audit delle scritture. I file vengono creati con modalità `0640` (e la directory dei backup con `0750`), e un file già esistente è un errore anziché essere sovrascritto, ma questo è un minimo, non un sostituto della protezione del volume: tenga il volume dei backup su un'archiviazione cifrata a riposo, limiti chi e che cosa può leggerlo e applichi la stessa cura a qualsiasi copia fuori macchina fatta da chi gestisce l'impianto.
 
-Il file `devices.copy` contiene l'indirizzo e la configurazione di protocollo di ogni dispositivo così come sono memorizzati, il che include le credenziali con cui i driver accedono. Quanto siano leggibili dipende dalla chiave, qui sotto. Dalla 4.15.1 l'API nasconde ogni credenziale di dispositivo a ogni ruolo, amministratore compreso; un file di backup non sta dietro l'API. Vedere [Autenticazione e utenti](/it/iot/authentication/#where-credentials-are-still-in-the-clear).
+Il file `devices.copy` contiene l'indirizzo e la configurazione di protocollo di ogni dispositivo così come sono memorizzati, il che include le credenziali con cui i driver accedono. Quanto siano leggibili dipende dalla chiave, qui sotto. Dalla 4.15.1 l'API nasconde ogni credenziale di dispositivo a ogni ruolo, amministratore compreso; un file di backup non sta dietro l'API. Vedere [Autenticazione e utenti](/it/iot/authentication/#dove-le-credenziali-restano-in-chiaro).
 
 ## Credenziali dei dispositivi e chiave segreta
 
