@@ -1003,7 +1003,7 @@ Die Punkte werden gegen das Gerät geprüft, wie es jetzt ist, nicht gegen das, 
 
 ## MQTT-Broker
 
-Andere Broker als HotLoops eigener, auf die die Erkennung lauscht: das Mosquitto einer Anlage, der Broker, den eine Zigbee2MQTT-Box mitgebracht hat. Siehe [MQTT-Erkennung](/de/iot/mqtt-discovery/#other-brokers). Ihre Passwörter sind mit dem Gerätezugangsschlüssel (`HOTLOOP_SECRET_KEY_FILE`) versiegelt und werden nie zurückgegeben; `passwordSet` sagt, ob eines gespeichert ist, und `passwordProblem`, warum ein gespeichertes sich nicht öffnen lässt. Jede Änderung kommt ins Protokoll und wirkt sofort: Der Listener und die Geräte dieses Brokers verbinden sich neu.
+Andere Broker als HotLoops eigener, auf die die Erkennung lauscht: das Mosquitto einer Anlage, der Broker, den eine Zigbee2MQTT-Box mitgebracht hat. Siehe [MQTT-Erkennung](/de/iot/mqtt-discovery/#andere-broker). Ihre Passwörter sind mit dem Gerätezugangsschlüssel (`HOTLOOP_SECRET_KEY_FILE`) versiegelt und werden nie zurückgegeben; `passwordSet` sagt, ob eines gespeichert ist, und `passwordProblem`, warum ein gespeichertes sich nicht öffnen lässt. Jede Änderung kommt ins Protokoll und wirkt sofort: Der Listener und die Geräte dieses Brokers verbinden sich neu.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ Legt den Tag an, wenn `deviceId` und `name` neu sind, und ersetzt ihn sonst.
 
 Antwortet mit dem gespeicherten Tag. Das Speichern eines mit `writable: true` wird als solches protokolliert: Einen Tag scharfzuschalten ist eine Sicherheitsentscheidung und bekommt einen Namen dazu. Die Entitäten des Tags werden vor der Antwort angelegt oder aktualisiert, sodass ein Client sie gleich abfragen kann.
 
-Ein Tag auf einem erkannten Gerät, das niemand übernommen hat, kann nicht scharfgeschaltet werden: `400`, »accept the device first«. Siehe [MQTT-Erkennung](/de/iot/mqtt-discovery/#commands).
+Ein Tag auf einem erkannten Gerät, das niemand übernommen hat, kann nicht scharfgeschaltet werden: `400`, »accept the device first«. Siehe [MQTT-Erkennung](/de/iot/mqtt-discovery/#befehle).
 
 ### `DELETE /api/tags/{device}/{name}`
 

@@ -1003,7 +1003,7 @@ mDNS, SSDP, DHCP로 공장 네트워크에서 들린 장치와, 각 장치에 �
 
 ## MQTT 브로커
 
-HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입니다. 공장의 Mosquitto나 Zigbee2MQTT 장비가 가져온 브로커 등입니다. [MQTT 디스커버리](/ko/iot/mqtt-discovery/#other-brokers)를 참고하십시오. 비밀번호는 장치 자격 증명 키(`HOTLOOP_SECRET_KEY_FILE`)로 봉인되며 응답으로 돌려주지 않습니다. `passwordSet`은 저장된 것이 있는지, `passwordProblem`은 저장된 것을 열 수 없는 이유를 알려 줍니다. 모든 변경은 로그에 남고 즉시 적용되며, 그 브로커의 리스너와 장치가 다시 연결됩니다.
+HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입니다. 공장의 Mosquitto나 Zigbee2MQTT 장비가 가져온 브로커 등입니다. [MQTT 디스커버리](/ko/iot/mqtt-discovery/#다른-브로커)를 참고하십시오. 비밀번호는 장치 자격 증명 키(`HOTLOOP_SECRET_KEY_FILE`)로 봉인되며 응답으로 돌려주지 않습니다. `passwordSet`은 저장된 것이 있는지, `passwordProblem`은 저장된 것을 열 수 없는 이유를 알려 줍니다. 모든 변경은 로그에 남고 즉시 적용되며, 그 브로커의 리스너와 장치가 다시 연결됩니다.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 저장된 태그를 응답합니다. `writable: true`로 저장하면 그대로 로그에 남습니다. 태그를 활성화하는 것은 안전에 관한 결정이므로 이름이 함께 기록됩니다. 태그의 엔티티는 응답 전에 만들거나 갱신되므로, 클라이언트는 바로 요청할 수 있습니다.
 
-아무도 수락하지 않은 발견된 장치의 태그는 활성화할 수 없습니다. `400`, "accept the device first"입니다. [MQTT 디스커버리](/ko/iot/mqtt-discovery/#commands)를 참고하십시오.
+아무도 수락하지 않은 발견된 장치의 태그는 활성화할 수 없습니다. `400`, "accept the device first"입니다. [MQTT 디스커버리](/ko/iot/mqtt-discovery/#명령)를 참고하십시오.
 
 ### `DELETE /api/tags/{device}/{name}`
 

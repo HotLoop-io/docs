@@ -1003,7 +1003,7 @@ Các điểm được kiểm tra với thiết bị như hiện tại, không ph
 
 ## Broker MQTT
 
-Các broker khác broker riêng của HotLoop mà việc khám phá lắng nghe: Mosquitto của nhà máy, broker mà một thiết bị Zigbee2MQTT mang theo. Xem [Khám phá MQTT](/vi/iot/mqtt-discovery/#other-brokers). Mật khẩu của chúng được niêm phong bằng khóa thông tin xác thực thiết bị (`HOTLOOP_SECRET_KEY_FILE`) và không bao giờ được trả về; `passwordSet` cho biết có mật khẩu nào được lưu không, và `passwordProblem` vì sao mật khẩu đã lưu không mở được. Mỗi thay đổi đi vào nhật ký và có hiệu lực ngay: bộ lắng nghe và các thiết bị từ broker đó kết nối lại.
+Các broker khác broker riêng của HotLoop mà việc khám phá lắng nghe: Mosquitto của nhà máy, broker mà một thiết bị Zigbee2MQTT mang theo. Xem [Khám phá MQTT](/vi/iot/mqtt-discovery/#các-broker-khác). Mật khẩu của chúng được niêm phong bằng khóa thông tin xác thực thiết bị (`HOTLOOP_SECRET_KEY_FILE`) và không bao giờ được trả về; `passwordSet` cho biết có mật khẩu nào được lưu không, và `passwordProblem` vì sao mật khẩu đã lưu không mở được. Mỗi thay đổi đi vào nhật ký và có hiệu lực ngay: bộ lắng nghe và các thiết bị từ broker đó kết nối lại.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ Tạo tag nếu `deviceId` và `name` là mới, thay thế nếu không.
 
 Trả về tag đã lưu. Lưu một tag với `writable: true` được ghi nhật ký đúng như vậy: kích hoạt một tag là quyết định về an toàn và có tên người kèm theo. Các thực thể của tag được tạo hoặc cập nhật trước khi trả lời, nên máy khách có thể yêu cầu chúng ngay.
 
-Tag trên thiết bị đã khám phá mà chưa ai chấp nhận không thể kích hoạt: `400`, "accept the device first". Xem [Khám phá MQTT](/vi/iot/mqtt-discovery/#commands).
+Tag trên thiết bị đã khám phá mà chưa ai chấp nhận không thể kích hoạt: `400`, "accept the device first". Xem [Khám phá MQTT](/vi/iot/mqtt-discovery/#lệnh).
 
 ### `DELETE /api/tags/{device}/{name}`
 

@@ -1003,7 +1003,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 
 ## MQTT 代理
 
-除 HotLoop 自己的之外、发现功能所监听的代理：工厂的 Mosquitto，或 Zigbee2MQTT 盒子自带的代理。参见 [MQTT 发现](/zh-hans/iot/mqtt-discovery/#other-brokers)。它们的密码用设备凭据密钥（`HOTLOOP_SECRET_KEY_FILE`）加封，绝不会返回；`passwordSet` 说明是否存有密码，`passwordProblem` 说明已存的密码为何无法打开。每项更改都会记入日志并立即生效：该代理的监听器和来自它的设备会重新连接。
+除 HotLoop 自己的之外、发现功能所监听的代理：工厂的 Mosquitto，或 Zigbee2MQTT 盒子自带的代理。参见 [MQTT 发现](/zh-hans/iot/mqtt-discovery/#其他代理)。它们的密码用设备凭据密钥（`HOTLOOP_SECRET_KEY_FILE`）加封，绝不会返回；`passwordSet` 说明是否存有密码，`passwordProblem` 说明已存的密码为何无法打开。每项更改都会记入日志并立即生效：该代理的监听器和来自它的设备会重新连接。
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ HotLoop 拥有的每个 UniFi 设备，无论是否在运行，供 UniFi 界面�
 
 返回已保存的变量。用 `writable: true` 保存会如实记入日志：启用变量是一项安全决定，会记下是谁做的。变量的实体在响应之前就已创建或更新，所以客户端可以立即请求它们。
 
-尚无人接受的已发现设备上的变量不能被启用：返回 `400`，“accept the device first”。参见 [MQTT 发现](/zh-hans/iot/mqtt-discovery/#commands)。
+尚无人接受的已发现设备上的变量不能被启用：返回 `400`，“accept the device first”。参见 [MQTT 发现](/zh-hans/iot/mqtt-discovery/#命令)。
 
 ### `DELETE /api/tags/{device}/{name}`
 

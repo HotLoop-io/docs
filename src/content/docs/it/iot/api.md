@@ -1003,7 +1003,7 @@ I punti vengono controllati rispetto al dispositivo com'è adesso, non rispetto 
 
 ## Broker MQTT
 
-Broker diversi da quello di HotLoop che il rilevamento ascolta: il Mosquitto di uno stabilimento, il broker che una macchina Zigbee2MQTT ha portato con sé. Vedere [Rilevamento MQTT](/it/iot/mqtt-discovery/#other-brokers). Le loro password sono sigillate con la chiave delle credenziali dei dispositivi (`HOTLOOP_SECRET_KEY_FILE`) e non vengono mai restituite; `passwordSet` dice se ne è memorizzata una, e `passwordProblem` perché una memorizzata non si riesce ad aprire. Ogni modifica finisce nel registro e ha effetto subito: il listener e i dispositivi di quel broker si riconnettono.
+Broker diversi da quello di HotLoop che il rilevamento ascolta: il Mosquitto di uno stabilimento, il broker che una macchina Zigbee2MQTT ha portato con sé. Vedere [Rilevamento MQTT](/it/iot/mqtt-discovery/#altri-broker). Le loro password sono sigillate con la chiave delle credenziali dei dispositivi (`HOTLOOP_SECRET_KEY_FILE`) e non vengono mai restituite; `passwordSet` dice se ne è memorizzata una, e `passwordProblem` perché una memorizzata non si riesce ad aprire. Ogni modifica finisce nel registro e ha effetto subito: il listener e i dispositivi di quel broker si riconnettono.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ Crea il tag se `deviceId` e `name` sono nuovi, lo sostituisce altrimenti.
 
 Risponde con il tag salvato. Salvarne uno con `writable: true` viene registrato come tale: armare un tag è una decisione di sicurezza e porta un nome accanto. Le entità del tag vengono create o aggiornate prima della risposta, quindi un client può chiederle subito.
 
-Un tag di un dispositivo rilevato che nessuno ha accettato non si può armare: `400`, «accept the device first». Vedere [Rilevamento MQTT](/it/iot/mqtt-discovery/#commands).
+Un tag di un dispositivo rilevato che nessuno ha accettato non si può armare: `400`, «accept the device first». Vedere [Rilevamento MQTT](/it/iot/mqtt-discovery/#comandi).
 
 ### `DELETE /api/tags/{device}/{name}`
 

@@ -1003,7 +1003,7 @@ Los puntos se comprueban contra el dispositivo tal como está ahora, no contra l
 
 ## Brokers MQTT
 
-Brokers distintos del propio de HotLoop a los que escucha el descubrimiento: el Mosquitto de una planta, el broker que trajo una caja de Zigbee2MQTT. Consulte [Descubrimiento MQTT](/es/iot/mqtt-discovery/#other-brokers). Sus contraseñas se sellan con la clave de credenciales de dispositivo (`HOTLOOP_SECRET_KEY_FILE`) y nunca se devuelven; `passwordSet` dice si hay una guardada, y `passwordProblem` por qué una guardada no se puede abrir. Cada cambio queda en el registro y surte efecto al instante: el oyente y los dispositivos de ese broker se vuelven a conectar.
+Brokers distintos del propio de HotLoop a los que escucha el descubrimiento: el Mosquitto de una planta, el broker que trajo una caja de Zigbee2MQTT. Consulte [Descubrimiento MQTT](/es/iot/mqtt-discovery/#otros-brokers). Sus contraseñas se sellan con la clave de credenciales de dispositivo (`HOTLOOP_SECRET_KEY_FILE`) y nunca se devuelven; `passwordSet` dice si hay una guardada, y `passwordProblem` por qué una guardada no se puede abrir. Cada cambio queda en el registro y surte efecto al instante: el oyente y los dispositivos de ese broker se vuelven a conectar.
 
 ### `GET /api/mqtt/brokers`
 
@@ -1072,7 +1072,7 @@ Crea el tag si `deviceId` y `name` son nuevos, y lo reemplaza si no.
 
 Responde con el tag guardado. Guardar uno con `writable: true` se registra como tal: armar un tag es una decisión de seguridad y lleva un nombre al lado. Las entidades del tag se crean o actualizan antes de la respuesta, así que un cliente puede pedirlas de inmediato.
 
-Un tag de un dispositivo descubierto que nadie ha aceptado no se puede armar: `400`, «accept the device first». Consulte [Descubrimiento MQTT](/es/iot/mqtt-discovery/#commands).
+Un tag de un dispositivo descubierto que nadie ha aceptado no se puede armar: `400`, «accept the device first». Consulte [Descubrimiento MQTT](/es/iot/mqtt-discovery/#comandos).
 
 ### `DELETE /api/tags/{device}/{name}`
 
