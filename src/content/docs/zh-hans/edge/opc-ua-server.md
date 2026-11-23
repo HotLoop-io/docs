@@ -5,7 +5,7 @@ description: "把配置好的设备和变量发布为只读的 OPC UA 地址空�
 
 HotLoop 的 OPC UA 服务器自 4.13.0 起，把 Gateway 中配置的设备和变量发布为 OPC UA 地址空间。第三方 OPC UA 客户端、SCADA 软件包、HMI、历史数据库，或 UaExpert 这类测试工具，都可以读取 Gateway 的实时变量，无需任何人为另一端编写 HotLoop 驱动。
 
-默认关闭（`HOTLOOP_OPCUA_SERVER_ENABLED`）：在工厂网络上打开监听器，是部署方有意去做的事。默认端口 4840。
+默认开启（`HOTLOOP_OPCUA_SERVER_ENABLED`），二进制文件和 Helm chart 都是如此。它在 HotLoop 认证开启的状态下启动，并有自己的登录账号 `opcua-reader`，HotLoop 用生成的密码创建该账号，设置页面会向管理员显示这个密码（`GET /api/opcua/server`）；它只能读取变量和数值，别的都不能做。HotLoop 认证关闭时没有可登录的用户，因此服务器会等待并说明原因（它不会拒绝启动）。如果设备上另一个 OPC UA 服务器已占用 4840，它会等待并说明；您自己选择的端口无法打开则是错误：在工厂网络上打开监听器，是部署方有意去做的事。默认端口 4840。
 
 **它是只读的。** 参见[为什么只读](#为什么只读)。它也提供每个变量的历史：参见[历史](#历史)。
 
@@ -295,7 +295,7 @@ OPC UA 既认证用户，也认证应用。服务器在 `<PKI_DIR>/trusted/` 中
 
 | 变量 | 默认值 | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | 设置之前，该功能处于关闭状态 |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | 二进制文件和 chart 中均开启；设为 `false` 即关闭服务器 |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP 端口，在所有接口上 |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | 本机主机名 | 告诉客户端连接什么；也会写入生成的证书。**请设置它。** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | 必须在重启之间保持稳定；必须是 URI |

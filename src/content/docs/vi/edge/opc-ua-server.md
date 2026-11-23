@@ -5,7 +5,7 @@ description: "Công bố thiết bị và tag đã cấu hình thành không gia
 
 Máy chủ OPC UA của HotLoop, từ phiên bản 4.13.0, công bố các thiết bị và tag đã cấu hình trong Gateway thành một không gian địa chỉ OPC UA. Nhờ vậy một client OPC UA của bên thứ ba, một gói SCADA, một HMI, một historian hay một công cụ kiểm thử như UaExpert có thể đọc các tag trực tiếp của Gateway mà không ai phải viết trình điều khiển HotLoop cho phía bên kia.
 
-Mặc định tắt (`HOTLOOP_OPCUA_SERVER_ENABLED`): mở một listener trên mạng nhà máy là việc một lần triển khai làm có chủ ý. Cổng mặc định 4840.
+Mặc định bật (`HOTLOOP_OPCUA_SERVER_ENABLED`), trong tệp thực thi và trong Helm chart. Máy chủ khởi động với xác thực HotLoop đang bật và một tài khoản đăng nhập riêng, `opcua-reader`, do HotLoop tạo với mật khẩu sinh tự động mà mục Cài đặt hiển thị cho quản trị viên (`GET /api/opcua/server`); tài khoản này chỉ đọc được tag và giá trị, không làm gì khác. Khi xác thực HotLoop tắt thì không có người dùng nào để đăng nhập, nên máy chủ chờ và thông báo điều đó (nó không từ chối khởi động). Nếu cổng 4840 đã bị một máy chủ OPC UA khác trên thiết bị chiếm, nó chờ và thông báo; một cổng bạn tự chọn mà không mở được là lỗi: mở một listener trên mạng nhà máy là việc một lần triển khai làm có chủ ý. Cổng mặc định 4840.
 
 **Máy chủ chỉ đọc.** Xem [Vì sao chỉ đọc](#vì-sao-chỉ-đọc). Máy chủ cũng cung cấp lịch sử của mọi tag: xem [Lịch sử](#lịch-sử).
 
@@ -295,7 +295,7 @@ Mỗi hàng là một phiên mới với chính sách và chế độ đó, đ�
 
 | Biến | Mặc định | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | Tính năng tắt cho đến khi đặt biến này |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Bật trong tệp thực thi và chart; `false` tắt máy chủ |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Cổng TCP, trên mọi giao diện |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | tên máy chủ của máy này | Điều mà client được bảo kết nối tới; cũng được ghi vào chứng chỉ được sinh. **Hãy đặt biến này.** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | Phải ổn định qua các lần khởi động lại; phải là một URI |

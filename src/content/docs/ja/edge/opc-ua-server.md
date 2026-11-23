@@ -5,7 +5,7 @@ description: "設定済みのデバイスとタグを読み取り専用の OPC U
 
 HotLoop の OPC UA サーバーは 4.13.0 から、Gateway に設定されたデバイスとタグを OPC UA のアドレス空間として公開します。サードパーティの OPC UA クライアント、SCADA パッケージ、HMI、ヒストリアン、UaExpert のようなテストツールが、相手側のために HotLoop ドライバーを書かなくても、Gateway のライブのタグを読み取れます。
 
-既定ではオフです(`HOTLOOP_OPCUA_SERVER_ENABLED`)。プラントのネットワークでリスナーを開くのは、デプロイが意図して行うことだからです。既定のポートは 4840 です。
+既定でオンです(`HOTLOOP_OPCUA_SERVER_ENABLED`)。バイナリでも Helm チャートでも同じです。HotLoop の認証がオンの状態で起動し、専用のログイン `opcua-reader` を持ちます。HotLoop は生成したパスワードでこのログインを作り、設定画面が管理者にそのパスワードを表示します(`GET /api/opcua/server`)。このログインはタグと値を読めるだけで、それ以外のことはできません。HotLoop の認証がオフならログインできるユーザーがいないため、サーバーは待機してそのことを知らせます(起動を拒否はしません)。機器上の別の OPC UA サーバーが 4840 を使っていれば待機して知らせ、自分で選んだポートを開けない場合はエラーです。プラントのネットワークでリスナーを開くのは、デプロイが意図して行うことだからです。既定のポートは 4840 です。
 
 **読み取り専用です。** [読み取り専用である理由](#読み取り専用である理由)を参照してください。すべてのタグの履歴も提供します。[履歴](#履歴)を参照してください。
 
@@ -295,7 +295,7 @@ Ignition Gateway(ポート 8088 の Web UI)では、次のようにします。
 
 | 変数 | 既定値 | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | これを設定するまで、この機能はオフです |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | バイナリでもチャートでもオン。`false` でサーバーを止めます |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP ポート。すべてのインターフェースで待ち受けます |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | このマシンのホスト名 | クライアントに接続先として伝える名前。生成される証明書にも書き込まれます。**必ず設定してください。** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | 再起動をまたいで変わらないこと。URI であること |

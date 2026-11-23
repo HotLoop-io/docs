@@ -5,7 +5,7 @@ description: "Pubblica i dispositivi e i tag configurati come spazio degli indir
 
 Il server OPC UA di HotLoop, dalla versione 4.13.0, pubblica i dispositivi e i tag configurati nel Gateway come spazio degli indirizzi OPC UA, così un client OPC UA di terze parti, un pacchetto SCADA, un HMI, uno storico o uno strumento di prova come UaExpert può leggere i tag in tempo reale del Gateway senza che nessuno scriva un driver HotLoop per l'altro lato.
 
-Disattivato per impostazione predefinita (`HOTLOOP_OPCUA_SERVER_ENABLED`): aprire un listener su una rete di stabilimento è una scelta che un deployment fa di proposito. Porta predefinita 4840.
+Attivo per impostazione predefinita (`HOTLOOP_OPCUA_SERVER_ENABLED`), nel binario e nel chart Helm. Si avvia con l'autenticazione HotLoop attiva e un accesso tutto suo, `opcua-reader`, che HotLoop crea con una password generata che Impostazioni mostra a un amministratore (`GET /api/opcua/server`); può leggere tag e valori e nient'altro. Con l'autenticazione HotLoop disattivata non ci sono utenti con cui accedere, quindi il server resta in attesa e lo segnala (non si rifiuta di avviarsi). Se la 4840 è già occupata da un altro server OPC UA sulla macchina, resta in attesa e lo segnala; una porta che hai scelto e che non si può aprire è un errore: aprire un listener su una rete di stabilimento è una scelta che un deployment fa di proposito. Porta predefinita 4840.
 
 **È in sola lettura.** Vedi [Perché è in sola lettura](#perché-è-in-sola-lettura). Serve anche lo storico di ogni tag: vedi [Storico](#storico).
 
@@ -295,7 +295,7 @@ Ogni riga è una sessione nuova con quella policy e quella modalità, che legge 
 
 | Variabile | Predefinito | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | La funzione è disattivata finché non viene impostato |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Attivo nel binario e nel chart; `false` spegne il server |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Porta TCP, su tutte le interfacce |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | il nome host di questa macchina | A che cosa si dice ai client di connettersi; viene anche scritto in un certificato generato. **Impostalo.** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | Deve restare stabile tra i riavvii; deve essere un URI |

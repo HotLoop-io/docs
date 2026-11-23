@@ -5,7 +5,7 @@ description: "Publica los dispositivos y tags configurados como un espacio de di
 
 El servidor OPC UA de HotLoop, desde la versión 4.13.0, publica los dispositivos y tags configurados en el Gateway como un espacio de direcciones OPC UA, de modo que un cliente OPC UA de terceros, un paquete SCADA, un HMI, un historiador o una herramienta de pruebas como UaExpert pueda leer los tags en vivo del Gateway sin que nadie tenga que escribir un controlador de HotLoop para el otro lado.
 
-Viene desactivado de forma predeterminada (`HOTLOOP_OPCUA_SERVER_ENABLED`): abrir un listener en una red de planta es algo que un despliegue hace a propósito. Puerto predeterminado 4840.
+Activado de forma predeterminada (`HOTLOOP_OPCUA_SERVER_ENABLED`), en el binario y en el chart de Helm. Arranca con la autenticación de HotLoop activada y un inicio de sesión propio, `opcua-reader`, que HotLoop crea con una contraseña generada que Ajustes muestra a un administrador (`GET /api/opcua/server`); puede leer etiquetas y valores y nada más. Con la autenticación de HotLoop desactivada no hay usuarios con los que iniciar sesión, así que el servidor queda en espera y lo indica (no se niega a arrancar). Si otro servidor OPC UA del equipo ya ocupa el 4840, queda en espera y lo indica; un puerto que usted eligió y que no se puede abrir es un error: abrir un listener en una red de planta es algo que un despliegue hace a propósito. Puerto predeterminado 4840.
 
 **Es de solo lectura.** Consulte [Por qué es de solo lectura](#por-qué-es-de-solo-lectura). También sirve el historial de cada tag: consulte [Historial](#historial).
 
@@ -295,7 +295,7 @@ Cada fila es una sesión nueva con esa política y ese modo, leyendo valores en 
 
 | Variable | Por defecto | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | La función está desactivada hasta que se define |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | Activado en el binario y en el chart; `false` apaga el servidor |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | Puerto TCP, en todas las interfaces |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | el nombre de host de esta máquina | A qué se les dice a los clientes que se conecten; también se escribe en un certificado generado. **Defínalo.** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | Debe mantenerse estable entre reinicios; debe ser un URI |

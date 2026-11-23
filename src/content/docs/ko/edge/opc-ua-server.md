@@ -5,7 +5,7 @@ description: "설정한 장치와 태그를 읽기 전용 OPC UA 주소 공간�
 
 HotLoop의 OPC UA 서버는 4.13.0부터 Gateway에 설정된 장치와 태그를 OPC UA 주소 공간으로 게시합니다. 그래서 타사 OPC UA 클라이언트, SCADA 패키지, HMI, 히스토리안, UaExpert 같은 테스트 도구가 상대편을 위한 HotLoop 드라이버를 따로 만들 필요 없이 Gateway의 실시간 태그를 읽을 수 있습니다.
 
-기본값은 꺼짐입니다(`HOTLOOP_OPCUA_SERVER_ENABLED`). 공장 네트워크에서 리스너를 여는 일은 배포가 의도해서 하는 일이기 때문입니다. 기본 포트는 4840입니다.
+기본값은 켜짐입니다(`HOTLOOP_OPCUA_SERVER_ENABLED`). 바이너리와 Helm 차트 모두 그렇습니다. HotLoop 인증이 켜진 상태로 시작하며 전용 로그인 `opcua-reader`를 갖습니다. HotLoop는 생성된 비밀번호로 이 로그인을 만들고, 설정 화면이 관리자에게 그 비밀번호를 보여 줍니다(`GET /api/opcua/server`). 이 로그인은 태그와 값을 읽을 수 있을 뿐 그 밖의 일은 하지 못합니다. HotLoop 인증이 꺼져 있으면 로그인할 사용자가 없으므로 서버는 대기하며 그 사실을 알립니다(시작을 거부하지는 않습니다). 장비의 다른 OPC UA 서버가 이미 4840을 쓰고 있으면 대기하며 알리고, 직접 고른 포트를 열 수 없으면 오류입니다. 공장 네트워크에서 리스너를 여는 일은 배포가 의도해서 하는 일이기 때문입니다. 기본 포트는 4840입니다.
 
 **읽기 전용입니다.** [읽기 전용인 이유](#읽기-전용인-이유)를 참조하세요. 모든 태그의 이력도 제공합니다. [이력](#이력)을 참조하세요.
 
@@ -295,7 +295,7 @@ Ignition Gateway(포트 8088의 웹 UI)에서는 다음과 같이 합니다.
 
 | 변수 | 기본값 | <span class="sr-only">Details</span> |
 |---|---|---|
-| `HOTLOOP_OPCUA_SERVER_ENABLED` | `false` | 이 값을 설정하기 전까지 기능이 꺼져 있습니다 |
+| `HOTLOOP_OPCUA_SERVER_ENABLED` | `true` | 바이너리와 차트에서 켜짐. `false`로 서버를 끕니다 |
 | `HOTLOOP_OPCUA_SERVER_PORT` | `4840` | TCP 포트, 모든 인터페이스에서 |
 | `HOTLOOP_OPCUA_SERVER_ENDPOINT_HOST` | 이 장비의 호스트 이름 | 클라이언트에 연결하라고 알려 주는 대상이며 생성된 인증서에도 기록됩니다. **반드시 설정하세요.** |
 | `HOTLOOP_OPCUA_SERVER_APPLICATION_URI` | `urn:hotloop:gateway[:<siteId>]` | 재시작해도 안정적이어야 하며 URI여야 합니다 |
