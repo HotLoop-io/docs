@@ -40,11 +40,19 @@ Comme Count vaut 1, la charge utile n'a pas de tableau Sizes. Le bloc n'envoie n
 | 2 | FieldCount | Variant uniquement. Omis pour RawData (7.2.4.5.5) |
 | ... | les champs | dans l'ordre où ils ont été ajoutés |
 
+## Plusieurs DataSetMessages dans un NetworkMessage
+
+Après `AddDataSet`, le Count du PayloadHeader est le nombre de DataSets et liste chaque DataSetWriterId, et la charge utile commence par le tableau Sizes, une taille en octets UInt16 par DataSetMessage (7.2.4.5.3), puis les DataSetMessages l’un après l’autre. Le DataSet 1 utilise le writer id, le numéro de séquence et la ConfigurationVersion propres au bloc ; chacun des autres DataSets a son propre writer id, sa version majeure et son numéro de séquence de DataSetMessage. Le Timestamp du NetworkMessage et celui de chaque DataSetMessage sont le même instant. Sans `AddDataSet`, le message est exactement ce qu’il était, Count 1 et pas de Sizes.
+
+## Trames delta et KeepAlive
+
+Avec `bDeltaFrames`, le type de DataSetMessage dans DataSetFlags2 (bits 0 à 3) vaut 0 pour une trame clé, 1 pour un Data Delta Frame et 3 pour un KeepAlive, et le bit Timestamp reste comme avant. Une trame clé part en premier, puis tous les `uiKeyFrameEvery` messages. Entre elles, le bloc compare la variable de chaque champ (et son statut) à ce que portait le dernier message : une trame delta est `FieldCount` des champs modifiés (UInt16), puis pour chacun son `FieldIndex` à base zéro (UInt16) et son Variant ; quand rien n’a changé, le message est un KeepAlive, l’en-tête du DataSetMessage sans charge utile. Un KeepAlive porte le numéro de séquence du prochain DataSetMessage et ne le consomme pas, tandis que le numéro de séquence du NetworkMessage le compte bien. Les DataSets RawData envoient toujours des trames clés.
+
 ## L'horodatage
 
-Le bloc lit l'horloge temps réel de l'automate une fois par message avec `SysTimeRtcGet` (la bibliothèque système SysTimeRtc, que fournit le runtime), qui donne des secondes entières depuis 1970-01-01 UTC, et écrit `(seconds + 11644473600) * 10000000` comme DateTime. Les deux horodatages d'un message sont cette valeur unique. Deux choses en découlent :
+Le bloc lit l’horloge temps réel de l’automate une fois par message avec `SysTimeRtcHighResGet` (la bibliothèque système SysTimeRtc, fournie par le runtime), soit des millisecondes depuis 1970-01-01 UTC, et écrit `milliseconds * 10000 + 11644473600 * 10000000` comme DateTime. Les deux horodatages d’un message sont cette valeur unique. Si le runtime ne peut pas répondre à l’appel haute résolution, ou si `bHighResTimestamp` vaut FALSE, il lit `SysTimeRtcGet` (secondes entières) et écrit `(seconds + 11644473600) * 10000000`, comme la 1.1.0. Deux choses en découlent :
 
-* La résolution est d'une seconde. Un récepteur voit le même horodatage sur chaque message d'une même seconde, et il a jusqu'à une seconde de retard sur l'instant où le message a été construit. Les horodatages sous la seconde sont sur la feuille de route.
+* La résolution est d’une milliseconde (`bStampHighRes` indique quelle horloge le dernier message a utilisée). Avec le repli sur les secondes entières, un récepteur voit le même horodatage sur tous les messages d’une même seconde.
 * L'heure n'est exacte que si l'horloge de l'automate l'est. Un contrôleur dont l'horloge n'est pas réglée horodate son message 1970. Quand l'horloge ne peut pas être lue (`diLastClockResult` n'est pas 0), le message part sans horodatage, ce que la partie 14 autorise, plutôt que de ne pas partir.
 
 Incrémentez `udiConfigMajor` chaque fois que la liste de champs change. Un récepteur qui conserve une disposition indexée sur la version peut alors refuser un message construit pour une autre liste au lieu de le décoder de travers.
@@ -67,9 +75,13 @@ Chaque champ est un octet EncodingMask, puis la valeur. Les bits 0 à 5 du masqu
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | longueur Int32 en octets, puis UTF-8 (5.2.2.4) |
+| un champ avec un statut Bad ou Uncertain (`SetStatus`) | 19 StatusCode | 4, le statut UInt32, à la place de la valeur (Variant seulement) |
+| WSTRING | 12 String | Longueur Int32 en octets, puis UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | millisecondes, c'est ainsi qu'un TIME CODESYS est stocké |
 
 Une STRING CODESYS stocke un octet par caractère. Les octets jusqu'à `7F` sont de l'ASCII et sortent inchangés. Les octets au-dessus de `7F` sont lus comme de l'ISO 8859-1 et écrits sous leur forme UTF-8 sur deux octets. C'est une hypothèse sur la page de codes de l'automate, et c'est le seul endroit où le bloc interprète du texte.
+
+Un WSTRING CODESYS est de l’UTF-16 et n’exige aucune hypothèse : chaque unité de 16 bits est écrite en UTF-8 (un, deux ou trois octets), une paire de substitution bien formée devient l’unique caractère de quatre octets, et un substitut isolé devient U+FFFD, de sorte que le texte est toujours de l’UTF-8 valide. En RawData, le MaxStringLength d’un `WSTRING(N)` est de `3 * N` octets, le maximum qu’il puisse occuper.
 
 ## Champs, encodage RawData (partie 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ Pas de masque et pas de nombre : chaque champ est simplement sa valeur, dans l'o
 * **Les tableaux** sont un nombre d'éléments Int32 puis les éléments (partie 6, 5.2.5 : "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). Le bloc envoie toujours tous les éléments qu'on lui a donnés, donc le nombre est égal à la taille déclarée du tableau et il n'y a pas de remplissage derrière.
 * **Les chaînes** sont une longueur Int32 en octets et les octets UTF-8, puis des octets nuls jusqu'à MaxStringLength, donc le champ fait toujours 4 + MaxStringLength octets (7.2.4.5.11 : "the field shall be padded with bytes with value zero"). Le bloc utilise le N de `STRING(N)` comme MaxStringLength, en octets. Un texte plus long est coupé à une limite de caractère, parce que le champ ne peut pas grandir. Les métadonnées de champ du récepteur doivent porter le même MaxStringLength et une entrée ArrayDimensions pour chaque tableau.
 
-C'est la lecture de la pile de référence de l'OPC Foundation elle-même. Dans UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` lignes 389 à 403 disent qu'une chaîne est "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", et que pour un tableau "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` aux lignes 593 à 648 l'implémente, et `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` l'affirme. La [page de preuves](/fr/transmitter/proof/) donne le reste.
+C’est la lecture de la pile de référence de l’OPC Foundation elle-même. Dans UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, lignes 389 à 403, dit qu’une chaîne est "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", et que pour un tableau "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray`, aux lignes 593 à 648, l’implémente, et `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` le vérifie. `docs/PROOF.md` contient le reste.
 
 ## Taille
 

@@ -40,11 +40,19 @@ description: "رسالتا NetworkMessage وDataSetMessage اللتان يرسل
 | 2 | FieldCount | لـ Variant فقط. يُحذف مع RawData (7.2.4.5.5) |
 | ... | الحقول | بالترتيب الذي أُضيفت به |
 
+## عدة DataSetMessage في NetworkMessage واحدة
+
+بعد `AddDataSet` يكون Count في PayloadHeader هو عدد DataSet ويسرد كل DataSetWriterId، ويبدأ الحمل بمصفوفة Sizes، حجم بالبايت UInt16 لكل DataSetMessage (7.2.4.5.3)، ثم DataSetMessage واحدة تلو الأخرى. يستخدم DataSet 1 معرّف writer ورقم التسلسل وConfigurationVersion الخاصة بالكتلة؛ ولكل DataSet آخر معرّف writer ونسخة رئيسية ورقم تسلسل DataSetMessage خاصة به. Timestamp لـ NetworkMessage ولكل DataSetMessage هو اللحظة نفسها. من دون `AddDataSet` تكون الرسالة كما كانت تمامًا، Count 1 ولا Sizes.
+
+## إطارات delta وKeepAlive
+
+مع `bDeltaFrames` يكون نوع DataSetMessage في DataSetFlags2 (البتات 0 إلى 3) هو 0 للإطار الرئيسي و1 لـ Data Delta Frame و3 لـ KeepAlive، ويبقى بت Timestamp كما كان. يخرج إطار رئيسي أولًا ثم كل `uiKeyFrameEvery` رسالة. وبينها تقارن الكتلة متغير كل حقل (وحالته) بما حملته الرسالة الأخيرة: إطار delta هو `FieldCount` للحقول التي تغيرت (UInt16)، ثم لكل حقل `FieldIndex` بدءًا من الصفر (UInt16) وVariant الخاص به؛ وإذا لم يتغير شيء تكون الرسالة KeepAlive، أي ترويسة DataSetMessage بلا حمل. تحمل KeepAlive رقم تسلسل DataSetMessage التالية ولا تستهلكه، بينما يحسبها رقم تسلسل NetworkMessage. تُرسل مجموعات RawData إطارات رئيسية دائمًا.
+
 ## الطابع الزمني
 
-تقرأ الكتلة ساعة الزمن الحقيقي في PLC مرة لكل رسالة بواسطة `SysTimeRtcGet` (مكتبة النظام SysTimeRtc التي توفرها بيئة التشغيل)، وهي تعطي ثواني كاملة منذ 1970-01-01 UTC، وتكتب `(seconds + 11644473600) * 10000000` بصفته DateTime. والطابعان الزمنيان في الرسالة كلاهما هذه القيمة الواحدة. ويترتب على ذلك أمران:
+تقرأ الكتلة ساعة الزمن الحقيقي في PLC مرة لكل رسالة بـ `SysTimeRtcHighResGet` (مكتبة النظام SysTimeRtc التي يوفرها وقت التشغيل)، وهي مللي ثانية منذ 1970-01-01 UTC، وتكتب `milliseconds * 10000 + 11644473600 * 10000000` بوصفها DateTime. الطابعان الزمنيان في الرسالة هما هذه القيمة الواحدة. إذا لم يستطع وقت التشغيل الرد على الاستدعاء عالي الدقة، أو كان `bHighResTimestamp` يساوي FALSE، تقرأ `SysTimeRtcGet` (ثوانٍ كاملة) وتكتب `(seconds + 11644473600) * 10000000`، كما كان في 1.1.0. ويتبع ذلك أمران:
 
-* الدقة ثانية واحدة. يرى المستقبِل الطابع نفسه على كل رسالة داخل الثانية، ويتأخر عن لحظة بناء الرسالة بما يصل إلى ثانية. والطوابع بدقة أقل من الثانية على خارطة الطريق.
+* الدقة مللي ثانية واحدة (يبيّن `bStampHighRes` أي ساعة استخدمتها الرسالة الأخيرة). مع الرجوع إلى الثواني الكاملة يرى المستقبل الطابع نفسه على كل رسالة خلال الثانية.
 * الوقت صحيح بقدر صحة ساعة PLC. وحدة تحكم لم تُضبط ساعتها تختم رسالتها بعام 1970. وحين يتعذر قراءة الساعة (`diLastClockResult` لا يساوي 0) تخرج الرسالة دون ختم، وهو ما يسمح به الجزء 14، بدلًا من ألا تخرج أصلًا.
 
 ارفع `udiConfigMajor` كلما تغيّرت قائمة الحقول. عندها يستطيع مستقبِل يحتفظ بتخطيط مرتبط بالإصدار أن يرفض رسالة بُنيت لقائمة مختلفة بدل أن يفكّها خطأً.
@@ -67,9 +75,13 @@ description: "رسالتا NetworkMessage وDataSetMessage اللتان يرسل
 | REAL | 10 Float | 4، IEEE 754 |
 | LREAL | 11 Double | 8، IEEE 754 |
 | STRING | 12 String | طول Int32 بالبايتات، ثم UTF-8 (5.2.2.4) |
+| حقل بحالة Bad أو Uncertain (`SetStatus`) | 19 StatusCode | 4، حالة UInt32 بدل القيمة (Variant فقط) |
+| WSTRING | 12 String | طول Int32 بالبايت، ثم UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | ميلي ثانية، وهكذا يُخزَّن TIME في CODESYS |
 
 تخزّن STRING في CODESYS بايتًا واحدًا لكل حرف. البايتات حتى `7F` هي ASCII وتخرج دون تغيير. أما البايتات فوق `7F` فتُقرأ على أنها ISO 8859-1 وتُكتب بصيغتها UTF-8 ذات البايتين. وهذا افتراض عن صفحة رموز PLC، وهو الموضع الوحيد الذي تفسّر فيه الكتلة نصًا.
+
+WSTRING في CODESYS هو UTF-16 ولا يحتاج إلى أي افتراض: تُكتب كل وحدة من 16 بت بترميز UTF-8 (بايت واحد أو اثنان أو ثلاثة)، ويصبح زوج البدائل السليم حرفًا واحدًا من أربعة بايتات، ويصبح البديل المنفرد U+FFFD، فيكون النص دائمًا UTF-8 صالحًا. في RawData يكون MaxStringLength لـ `WSTRING(N)` هو `3 * N` بايت، أقصى ما يمكن أن يشغله.
 
 ## الحقول، ترميز RawData (الجزء 14، 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ description: "رسالتا NetworkMessage وDataSetMessage اللتان يرسل
 * **المصفوفات** هي عدد عناصر بصيغة Int32 ثم العناصر (الجزء 6، 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). ترسل الكتلة دائمًا كل عنصر أُعطيته، فالعدد يساوي الحجم المعلن للمصفوفة ولا حشو بعدها.
 * **السلاسل** هي طول Int32 بالبايتات وبايتات UTF-8، ثم بايتات صفرية حتى MaxStringLength، فيكون الحقل دائمًا 4 + MaxStringLength بايتًا (7.2.4.5.11: "the field shall be padded with bytes with value zero"). تستخدم الكتلة N من `STRING(N)` على أنه MaxStringLength بالبايتات. ويُقطع النص الأطول عند حدّ حرف، لأن الحقل لا يستطيع أن ينمو. ويجب أن تحمل بيانات الحقول الوصفية لدى المستقبِل MaxStringLength نفسه ومدخل ArrayDimensions لكل مصفوفة.
 
-هذه قراءة حزمة المرجع لدى OPC Foundation نفسها. في UA-.NETStandard (الالتزام `fcfc84eab5c105780d7268474a47d344d100aca1`) تقول الأسطر 389 إلى 403 من `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` إن السلسلة "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding"، وإن المصفوفة "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". وتنفّذ ذلك `TryReadPaddedArray` في الأسطر 593 إلى 648، ويؤكده `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs`. وفي [صفحة الإثبات](/ar/transmitter/proof/) بقية الأمر.
+هذه هي قراءة حزمة المرجع التابعة لـ OPC Foundation نفسها. في UA-.NETStandard (الإيداع `fcfc84eab5c105780d7268474a47d344d100aca1`) يقول `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`، السطور 389 إلى 403، إن السلسلة "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding"، وإنه بالنسبة إلى المصفوفة "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". ينفذ `TryReadPaddedArray` في السطور 593 إلى 648 ذلك، ويتحقق منه `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs`. ويحتوي `docs/PROOF.md` على الباقي.
 
 ## الحجم
 

@@ -28,7 +28,7 @@ HotLoop 제품을 제대로 운영하는 방법은 두 가지입니다. k3s 또�
 | [HotLoop Flow](/ko/flow/overview/) | 2.17.1 | 예 | 예 | [Flow 설치](/ko/flow/install/) |
 | [HotLoop Cascade](/ko/cascade/overview/) | 1.5.1 | 예, 로그인 불필요 | 예, 로그인 불필요, 참고: [Podman Quadlet로 Cascade 실행](/ko/cascade/quadlet/) | [Cascade 실행](/ko/cascade/running/) |
 | [HotLoop for CODESYS](/ko/codesys/overview/) | 0.3.10 | 예, 또는 EmberCORE App Store | 아니요 | [HotLoop for CODESYS 설치](/ko/codesys/install/) |
-| [HotLoop Transmitter](/ko/transmitter/overview/) | 1.2.0 | 아니요, CODESYS 라이브러리입니다 | 아니요, CODESYS 라이브러리입니다 | [Transmitter 설치](/ko/transmitter/install/) |
+| [HotLoop Transmitter](/ko/transmitter/overview/) | 1.3.0 | 아니요, CODESYS 라이브러리입니다 | 아니요, CODESYS 라이브러리입니다 | [Transmitter 설치](/ko/transmitter/install/) |
 
 HotLoop IoT, Edge, Gateway, Edge Relay는 하나의 태그에서 함께 나오므로 같은 버전 번호를 씁니다. Flow, Cascade, HotLoop for CODESYS, Transmitter는 각자의 버전이 있습니다. IoT, Edge, Gateway의 Quadlet 유닛에는 Podman 5.0 이상이 필요하고, 릴레이 유닛은 Podman 4.9.3에서 실행해 보았습니다. Raspberry Pi OS Bookworm에는 Quadlet이 아예 없는 4.3이 들어 있으므로, Pi에는 Trixie 이상이 필요합니다.
 

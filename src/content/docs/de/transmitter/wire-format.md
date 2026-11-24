@@ -40,11 +40,19 @@ Weil Count 1 ist, hat die Nutzlast kein Sizes-Array. Der Baustein sendet keine s
 | 2 | FieldCount | nur Variant. Bei RawData ausgelassen (7.2.4.5.5) |
 | ... | die Felder | in der Reihenfolge, in der sie hinzugefügt wurden |
 
+## Mehrere DataSetMessages in einer NetworkMessage
+
+Nach `AddDataSet` ist der Count des PayloadHeader die Anzahl der DataSets und listet jede DataSetWriterId, und die Nutzlast beginnt mit dem Sizes-Array, einer UInt16-Bytegröße je DataSetMessage (7.2.4.5.3), danach die DataSetMessages nacheinander. DataSet 1 nutzt die eigene Writer-ID, Sequenznummer und ConfigurationVersion des Bausteins; jedes weitere DataSet hat seine eigene Writer-ID, Hauptversion und DataSetMessage-Sequenznummer. Der Timestamp der NetworkMessage und jeder DataSetMessage sind derselbe Zeitpunkt. Ohne `AddDataSet` ist die Nachricht genau die bisherige, Count 1 und kein Sizes.
+
+## Delta Frames und KeepAlives
+
+Mit `bDeltaFrames` ist der DataSetMessage-Typ in DataSetFlags2 (Bits 0 bis 3) 0 für einen Key Frame, 1 für einen Data Delta Frame und 3 für einen KeepAlive, und das Timestamp-Bit bleibt wie zuvor. Ein Key Frame geht zuerst hinaus und danach alle `uiKeyFrameEvery` Nachrichten. Dazwischen vergleicht der Baustein die Variable jedes Felds (und seinen Status) mit dem, was die letzte Nachricht trug: ein Delta Frame ist `FieldCount` der geänderten Felder (UInt16), dann für jedes sein nullbasierter `FieldIndex` (UInt16) und sein Variant; hat sich nichts geändert, ist die Nachricht ein KeepAlive, der DataSetMessage-Header ohne Nutzlast. Ein KeepAlive trägt die Sequenznummer der nächsten DataSetMessage und verbraucht sie nicht, während die Sequenznummer der NetworkMessage ihn mitzählt. RawData-DataSets senden immer Key Frames.
+
 ## Der Zeitstempel
 
-Der Baustein liest die Echtzeituhr der SPS einmal pro Nachricht mit `SysTimeRtcGet` (die Systembibliothek SysTimeRtc, die die Runtime bereitstellt), das ganze Sekunden seit 1970-01-01 UTC liefert, und schreibt `(seconds + 11644473600) * 10000000` als DateTime. Beide Zeitstempel in einer Nachricht sind dieser eine Wert. Daraus folgen zwei Dinge:
+Der Baustein liest die Echtzeituhr der SPS einmal je Nachricht mit `SysTimeRtcHighResGet` (die Systembibliothek SysTimeRtc, die die Runtime bereitstellt), das sind Millisekunden seit 1970-01-01 UTC, und schreibt `milliseconds * 10000 + 11644473600 * 10000000` als DateTime. Beide Zeitstempel einer Nachricht sind dieser eine Wert. Kann die Runtime den hochauflösenden Aufruf nicht beantworten oder ist `bHighResTimestamp` FALSE, liest er `SysTimeRtcGet` (ganze Sekunden) und schreibt `(seconds + 11644473600) * 10000000`, wie 1.1.0. Daraus folgen zwei Dinge:
 
-* Die Auflösung beträgt eine Sekunde. Ein Empfänger sieht innerhalb einer Sekunde auf jeder Nachricht denselben Zeitstempel, und er liegt bis zu eine Sekunde hinter dem Augenblick zurück, in dem die Nachricht gebaut wurde. Zeitstempel unterhalb einer Sekunde stehen auf der Roadmap.
+* Die Auflösung ist eine Millisekunde (`bStampHighRes` sagt, welche Uhr die letzte Nachricht benutzte). Beim Rückfall auf ganze Sekunden sieht ein Empfänger denselben Zeitstempel auf jeder Nachricht innerhalb einer Sekunde.
 * Die Zeit ist nur so richtig wie die Uhr der SPS. Eine Steuerung mit ungesetzter Uhr stempelt ihre Nachricht mit 1970. Lässt sich die Uhr nicht lesen (`diLastClockResult` ist nicht 0), geht die Nachricht ungestempelt hinaus, was Teil 14 erlaubt, statt gar nicht.
 
 Erhöhen Sie `udiConfigMajor`, sobald sich die Feldliste ändert. Ein Empfänger, der ein nach Version geordnetes Layout vorhält, kann dann eine für eine andere Liste gebaute Nachricht ablehnen, statt sie falsch zu dekodieren.
@@ -67,9 +75,13 @@ Jedes Feld ist ein EncodingMask-Byte, dann der Wert. Die Bits 0 bis 5 der Maske 
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | Int32-Länge in Bytes, dann UTF-8 (5.2.2.4) |
+| ein Feld mit Status Bad oder Uncertain (`SetStatus`) | 19 StatusCode | 4, der UInt32-Status, anstelle des Werts (nur Variant) |
+| WSTRING | 12 String | Int32-Länge in Bytes, dann UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | Millisekunden, so wird ein CODESYS-TIME gehalten |
 
 Ein CODESYS-STRING hält ein Byte pro Zeichen. Bytes bis `7F` sind ASCII und gehen unverändert hinaus. Bytes über `7F` werden als ISO 8859-1 gelesen und in ihrer zweibyteigen UTF-8-Form geschrieben. Das ist eine Annahme über die Codepage der SPS und die einzige Stelle, an der der Baustein Text interpretiert.
+
+Ein CODESYS-WSTRING ist UTF-16 und braucht keine Annahme: Jede 16-Bit-Einheit wird als UTF-8 geschrieben (ein, zwei oder drei Bytes), ein wohlgeformtes Ersatzpaar wird zu dem einen Vier-Byte-Zeichen, und ein einzelnes Ersatzzeichen wird zu U+FFFD, sodass der Text immer gültiges UTF-8 ist. In RawData ist das MaxStringLength eines `WSTRING(N)` `3 * N` Bytes, das Meiste, was es belegen kann.
 
 ## Felder, RawData-Kodierung (Teil 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ Keine Maske und keine Zahl: Jedes Feld ist einfach sein Wert, der Reihe nach, de
 * **Arrays** sind eine Int32-Elementzahl und dann die Elemente (Teil 6, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). Der Baustein sendet immer jedes Element, das ihm gegeben wurde, die Zahl entspricht also der deklarierten Größe des Arrays und danach gibt es kein Padding.
 * **Strings** sind eine Int32-Länge in Bytes und die UTF-8-Bytes, dann Nullbytes bis MaxStringLength, das Feld ist also immer 4 + MaxStringLength Bytes lang (7.2.4.5.11: "the field shall be padded with bytes with value zero"). Der Baustein nimmt das N aus `STRING(N)` als MaxStringLength, in Bytes. Längerer Text wird an einer Zeichengrenze abgeschnitten, weil das Feld nicht wachsen kann. Die Feldmetadaten eines Empfängers müssen dasselbe MaxStringLength und für jedes Array einen ArrayDimensions-Eintrag tragen.
 
-Das ist die Lesart des Referenzstacks der OPC Foundation selbst. In UA-.NETStandard (Commit `fcfc84eab5c105780d7268474a47d344d100aca1`) sagen `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` Zeilen 389 bis 403, ein String wird "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", und für ein Array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` in den Zeilen 593 bis 648 setzt das um, und `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` prüft es. Die [Nachweisseite](/de/transmitter/proof/) hat den Rest.
+Das ist die Lesart des Referenz-Stacks der OPC Foundation selbst. In UA-.NETStandard (Commit `fcfc84eab5c105780d7268474a47d344d100aca1`) sagt `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, Zeilen 389 bis 403, ein String werde "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", und für ein Array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` in den Zeilen 593 bis 648 setzt das um, und `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` prüft es. `docs/PROOF.md` enthält den Rest.
 
 ## Größe
 

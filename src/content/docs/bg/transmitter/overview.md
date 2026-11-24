@@ -15,7 +15,7 @@ HotLoop Transmitter пуска стойностите на PLC в мрежата
 
 ## Как се използва
 
-1. Инсталирайте `HotLoopTransmitter-1.2.0.library` в хранилището за библиотеки на CODESYS (Tools, Library Repository, Install) или инсталирайте `HotLoopTransmitter-1.2.0.package` с CODESYS Installer, след което я добавете в Library Manager на проекта. [Страницата за инсталиране](/bg/transmitter/install/) има изтеглянията и подробностите.
+1. Инсталирайте `HotLoopTransmitter-1.3.0.library` в хранилището за библиотеки на CODESYS (Tools, Library Repository, Install) или инсталирайте `HotLoopTransmitter-1.3.0.package` с CODESYS Installer, след което я добавете в Library Manager на проекта. [Страницата за инсталиране](/bg/transmitter/install/) има изтеглянията и подробностите.
 2. Декларирайте публикуващ блок, добавете веднъж при стартиране променливите, които искате да публикувате, и го викайте на всеки цикъл:
 
 ```iecst

@@ -5,9 +5,17 @@ description: "HotLoop Transmitter 已经做成的功能、接下来要做的，�
 
 如今包里有什么，接下来是什么，以及刻意不计划什么。一条内容只有在真实的 4.22.0.0 运行时上运行过、并有接收端读取过之后，才会移到“已发布”。
 
+## 1.3.0 中已发布
+
+* 取自时钟高分辨率时间的毫秒级时间戳。`bHighResTimestamp` 可切回整秒。
+* WSTRING 字段,以 UTF-8 在 Variant 和 RawData 中发送(`AddWString`)。
+* 每个字段的状态,使 Bad 值以 Bad 发送(`SetStatus`)。
+* 一个 NetworkMessage 中包含多个 DataSetMessage,配合 Sizes 数组,使一个数据报可承载多个 writer(`AddDataSet`)。
+* Data Delta Frame 与 KeepAlive 消息,用于减少基本稳定的数据集的字节数。这是一项设置 `bDeltaFrames`,默认关闭。
+
 ## 1.2.0 中已发布
 
-* HotLoop Alarms，一个把 CODESYS 报警管理器中处于激活、等待和已确认状态的报警读入普通变量，并执行 HotLoop 写回的确认的库。它在真实的 4.22.0.0 运行时上运行过，HotLoop 的报警列表读到了它。
+* HotLoop Alarms (`alarms/`)，一个把 CODESYS 报警管理器中处于激活、等待和已确认状态的报警读入普通变量，并执行 HotLoop 写回的确认的库。它在真实的 4.22.0.0 运行时上运行过，HotLoop 的报警列表读到了它。
 
 ## 1.1.0 中已发布
 
@@ -21,14 +29,6 @@ description: "HotLoop Transmitter 已经做成的功能、接下来要做的，�
 * BOOL、SINT、USINT、INT、UINT、DINT、UDINT、LINT、ULINT、REAL、LREAL、STRING 和 TIME 字段，以及除 STRING 外各类型的数组，两种编码都支持。
 * 单播和组播目标、publisher id、writer group id、dataset writer id、发布间隔、组版本和配置版本，全部作为功能块的输入设置。
 * 非阻塞发送，每次调用的开销有上限，已发送、被拒绝和被跳过的计数器，以及永远不会让应用出现故障的错误状态。
-
-## 下一步
-
-* 亚秒级时间戳。1.1.0 的时间戳是实时时钟的整秒。
-* 一条 NetworkMessage 中放多条 DataSetMessage（Sizes 数组），让一个数据报能携带多个 writer。
-* Data Delta Frame 和 KeepAlive 消息，减少基本不变的数据集所占的字节。
-* WSTRING 字段。
-* 每个字段的状态，让 Bad 的值能以 Bad 发送。
 
 ## 不计划
 

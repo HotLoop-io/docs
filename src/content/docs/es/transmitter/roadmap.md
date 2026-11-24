@@ -5,9 +5,17 @@ description: "Lo que HotLoop Transmitter ya tiene construido, lo que viene despu
 
 Qué hay hoy en la caja, qué viene después y qué deliberadamente no está previsto. Una línea pasa a "Publicado" solo cuando se ha ejecutado en el runtime real 4.22.0.0 y un receptor la ha leído.
 
+## Publicado en 1.3.0
+
+* Marcas de tiempo al milisegundo, a partir de la hora de alta resolución del reloj. `bHighResTimestamp` vuelve a los segundos completos.
+* Campos WSTRING, enviados como UTF-8 en Variant y RawData (`AddWString`).
+* Un estado por campo, para que un valor Bad se envíe como Bad (`SetStatus`).
+* Varios DataSetMessages en un NetworkMessage, con el array Sizes, de modo que un datagrama pueda llevar más de un writer (`AddDataSet`).
+* Data Delta Frames y mensajes KeepAlive, para reducir los bytes de un conjunto de datos casi estable. Es un ajuste, `bDeltaFrames`, desactivado por defecto.
+
 ## Publicado en 1.2.0
 
-* HotLoop Alarms, una biblioteca que lee las alarmas activas, en espera y reconocidas del propio gestor de alarmas de CODESYS en variables simples y ejecuta el acuse que HotLoop escribe de vuelta. Se ejecutó en el runtime real 4.22.0.0 y la lista de alarmas de HotLoop la leyó.
+* HotLoop Alarms (`alarms/`), una biblioteca que lee las alarmas activas, en espera y reconocidas del propio gestor de alarmas de CODESYS en variables simples y ejecuta el acuse que HotLoop escribe de vuelta. Se ejecutó en el runtime real 4.22.0.0 y la lista de alarmas de HotLoop la leyó.
 
 ## Publicado en 1.1.0
 
@@ -21,14 +29,6 @@ Qué hay hoy en la caja, qué viene después y qué deliberadamente no está pre
 * Campos BOOL, SINT, USINT, INT, UINT, DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING y TIME, y arrays de todos ellos salvo STRING, en ambas codificaciones.
 * Destinos unicast y multicast, publisher id, writer group id, dataset writer id, intervalo de publicación, versión de grupo y versión de configuración, todos como entradas del bloque.
 * Un envío no bloqueante, un coste acotado por llamada, contadores de enviados, rechazados y omitidos, y un estado de error que nunca provoca un fallo de la aplicación.
-
-## Siguiente
-
-* Marcas de tiempo por debajo del segundo. La marca de 1.1.0 son los segundos completos del reloj de tiempo real.
-* Varios DataSetMessages en un NetworkMessage (el array Sizes), de modo que un datagrama pueda llevar más de un writer.
-* Data Delta Frames y mensajes KeepAlive, para reducir los bytes de un conjunto de datos casi estable.
-* Campos WSTRING.
-* Un estado por campo, para poder enviar un valor Bad como Bad.
 
 ## No previsto
 

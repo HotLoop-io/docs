@@ -21,7 +21,10 @@ description: "HotLoop Transmitter 퍼블리셔 펑션 블록의 모든 입력, �
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` 또는 `RawData`. 비활성 상태에서 변경하세요 |
 | `udiGroupVersion` | UDINT | 1 | 그룹 헤더의 GroupVersion |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | DataSet ConfigurationVersion. 필드 목록이 바뀔 때마다 major를 올리세요 |
-| `bTimestamp` | BOOL | TRUE | 모든 메시지에 PLC 시계의 타임스탬프를 NetworkMessage와 DataSetMessage에 찍습니다(정수 초, [선로에 실리는 내용](/ko/transmitter/wire-format/) 참조). FALSE이면 1.0.0과 같은 바이트를 보내며 17바이트 더 짧습니다 |
+| `bTimestamp` | BOOL | TRUE | 모든 메시지에 PLC 클록의 시각을 NetworkMessage와 DataSetMessage에 찍습니다(밀리초 단위, `WIRE-FORMAT.md` 참고). FALSE는 1.0.0의 바이트를 보내며 17바이트 더 짧습니다 |
+| `bDeltaFrames` | BOOL | FALSE | Variant 인코딩에서만 사용합니다. 키 프레임 사이에 변경된 필드만(각각 인덱스와 함께) 담은 Data Delta Frame을 보내고, 아무것도 바뀌지 않으면 KeepAlive를 보냅니다. FALSE는 매번 모든 구독자가 읽을 수 있는 전체 키 프레임을 보냅니다. 델타 프레임을 버리는 구독자는 다음 키 프레임에서 변경을 보게 됩니다 |
+| `uiKeyFrameEvery` | UINT | 10 | `bDeltaFrames`와 함께: 이 개수의 메시지마다 전체 키 프레임을 보내, 늦게 들어온 구독자도 그 안에 전체 그림을 얻습니다 |
+| `bHighResTimestamp` | BOOL | TRUE | 런타임이 지원하면 클록의 밀리초 시각으로 타임스탬프를 찍습니다. FALSE는 1.1.0처럼 정수 초로 찍습니다 |
 | `tRetry` | TIME | T#2S | 연속 열 번 전송에 실패한 뒤 소켓을 다시 열기까지 기다리는 시간 |
 
 ## 출력
@@ -37,6 +40,9 @@ description: "HotLoop Transmitter 퍼블리셔 펑션 블록의 모든 입력, �
 | `uiMessageSize` | UINT | 마지막 메시지의 바이트 수 |
 | `diLastSocketResult` | UDINT | 소켓 호출에서 받은 마지막 런타임 오류 코드, 0이면 정상 |
 | `diLastClockResult` | UDINT | 타임스탬프를 위해 PLC 시계를 읽은 마지막 결과, 0이면 정상. 0이 아니면 메시지는 타임스탬프 없이 나갑니다 |
+| `bDeltaActive` | BOOL | 델타 프레임을 사용하는 동안 TRUE: `bDeltaFrames`가 켜져 있고, DataSet이 Variant이며, 필드가 이전 값의 4096바이트 사본에 들어갈 때 |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | 전송된 Data Delta Frame과 KeepAlive 메시지 |
+| `bStampHighRes` | BOOL | 마지막 메시지의 타임스탬프가 클록의 밀리초 시각을 담았으면 TRUE, 정수 초로 되돌아갔거나 타임스탬프 없이 나갔으면 FALSE |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | 블록의 마지막 호출에 쓴 마이크로초와, 활성화 또는 `Clear()` 이후 가장 긴 값 |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | 활성화 또는 `Clear()` 이후, 메시지 하나를 만드는 데 걸린 가장 긴 시간과 전송 호출 자체에 걸린 가장 긴 시간 |
 
@@ -48,7 +54,10 @@ description: "HotLoop Transmitter 퍼블리셔 펑션 블록의 모든 입력, �
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | 스칼라 하나. `pValue`는 `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | STRING 하나. `uiMaxLen`은 `STRING(N)`의 N |
-| `AddArray(pFirst, eType, uiCount)` | STRING을 제외한 임의 타입의 `uiCount`개 요소 배열. `pFirst`는 `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | WSTRING 하나를 UTF-8로 전송합니다. `uiMaxLen`은 `WSTRING(N)`의 N입니다 |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | 같은 NetworkMessage 안에 DataSet을 하나 더 시작합니다. 이후 추가하는 필드는 이 DataSet에 속합니다. 그러면 게시 주기마다 NetworkMessage 하나가 DataSet당 DataSetMessage 하나를 실어, 여러 writer가 데이터그램 하나를 공유합니다. 최대 8개의 DataSet이며, DataSet이 둘 이상이면 델타 프레임은 꺼집니다 |
+| `SetStatus(pStatus)` | 마지막에 추가한 필드에 상태를 줍니다. `pStatus`는 OPC UA StatusCode를 담은 UDINT의 `ADR`입니다. 0이 아닌 동안 필드는 값 대신 그 StatusCode로 나가고(Variant 인코딩), 수신 측은 나쁜 품질로 읽습니다. 0이면 값을 보냅니다. RawData에는 상태가 없으므로 RawData 퍼블리셔는 계속 값을 보냅니다 |
+| `AddArray(pFirst, eType, uiCount)` | STRING과 WSTRING을 제외한 모든 타입의 요소 `uiCount`개로 된 배열. `pFirst`는 `ADR(array[first])`입니다 |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | 다른 메서드들이 호출하는 일반 형태 |
 | `Clear()` | 필드 목록과 최대 호출 시간을 지움 |
 

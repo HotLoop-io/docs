@@ -28,7 +28,7 @@ editUrl: false
 | [HotLoop Flow](/zh-hans/flow/overview/) | 2.17.1 | 支持 | 支持 | [安装 Flow](/zh-hans/flow/install/) |
 | [HotLoop Cascade](/zh-hans/cascade/overview/) | 1.5.1 | 支持，无需登录 | 支持，无需登录, 参见 [用 Podman Quadlet 运行 Cascade](/zh-hans/cascade/quadlet/) | [运行 Cascade](/zh-hans/cascade/running/) |
 | [HotLoop for CODESYS](/zh-hans/codesys/overview/) | 0.3.10 | 支持，或通过 EmberCORE App Store | 不支持 | [安装 HotLoop for CODESYS](/zh-hans/codesys/install/) |
-| [HotLoop Transmitter](/zh-hans/transmitter/overview/) | 1.2.0 | 不支持，它是 CODESYS 库 | 不支持，它是 CODESYS 库 | [安装 Transmitter](/zh-hans/transmitter/install/) |
+| [HotLoop Transmitter](/zh-hans/transmitter/overview/) | 1.3.0 | 不支持，它是 CODESYS 库 | 不支持，它是 CODESYS 库 | [安装 Transmitter](/zh-hans/transmitter/install/) |
 
 HotLoop IoT、Edge、Gateway 和 Edge Relay 出自同一个标签，同步发布，所以共用一个版本号。Flow、Cascade、HotLoop for CODESYS 和 Transmitter 各有自己的版本号。IoT、Edge 和 Gateway 的 Quadlet 单元需要 Podman 5.0 或更高，中继的单元在 Podman 4.9.3 上运行过。Raspberry Pi OS Bookworm 自带 4.3，完全没有 Quadlet，所以 Pi 需要 Trixie 或更新的系统。
 

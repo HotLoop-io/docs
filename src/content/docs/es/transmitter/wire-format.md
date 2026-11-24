@@ -40,11 +40,19 @@ Como Count es 1, la carga útil no tiene array Sizes. El bloque no envía mensaj
 | 2 | FieldCount | solo Variant. Se omite en RawData (7.2.4.5.5) |
 | ... | los campos | en el orden en que se añadieron |
 
+## Varios DataSetMessages en un NetworkMessage
+
+Tras `AddDataSet`, el Count del PayloadHeader es el número de DataSets y lista cada DataSetWriterId, y la carga útil empieza con el array Sizes, un tamaño en bytes UInt16 por DataSetMessage (7.2.4.5.3), seguido de los DataSetMessages uno tras otro. El DataSet 1 usa el writer id, el número de secuencia y la ConfigurationVersion propios del bloque; cada uno de los demás DataSets tiene su propio writer id, versión mayor y número de secuencia de DataSetMessage. El Timestamp del NetworkMessage y el de cada DataSetMessage son el mismo instante. Sin `AddDataSet` el mensaje es exactamente el de siempre, Count 1 y sin Sizes.
+
+## Tramas delta y KeepAlives
+
+Con `bDeltaFrames`, el tipo de DataSetMessage en DataSetFlags2 (bits 0 a 3) es 0 para una trama clave, 1 para un Data Delta Frame y 3 para un KeepAlive, y el bit de Timestamp sigue igual. Una trama clave sale primero y cada `uiKeyFrameEvery` mensajes. Entre ellas, el bloque compara la variable de cada campo (y su estado) con lo que llevó el último mensaje: una trama delta es `FieldCount` de los campos cambiados (UInt16), luego, para cada uno, su `FieldIndex` desde cero (UInt16) y su Variant; si nada cambió, el mensaje es un KeepAlive, la cabecera del DataSetMessage sin carga útil. Un KeepAlive lleva el número de secuencia del siguiente DataSetMessage y no lo consume, mientras que el número de secuencia del NetworkMessage sí lo cuenta. Los DataSets RawData envían siempre tramas clave.
+
 ## La marca de tiempo
 
-El bloque lee el reloj de tiempo real del PLC una vez por mensaje con `SysTimeRtcGet` (la biblioteca de sistema SysTimeRtc, que aporta el runtime), que da segundos completos desde 1970-01-01 UTC, y escribe `(seconds + 11644473600) * 10000000` como DateTime. Las dos marcas de un mensaje son ese único valor. De ello se desprenden dos cosas:
+El bloque lee el reloj de tiempo real del PLC una vez por mensaje con `SysTimeRtcHighResGet` (la biblioteca de sistema SysTimeRtc, que aporta el runtime), que son milisegundos desde 1970-01-01 UTC, y escribe `milliseconds * 10000 + 11644473600 * 10000000` como DateTime. Ambas marcas de un mensaje son ese único valor. Si el runtime no puede responder a la llamada de alta resolución, o `bHighResTimestamp` es FALSE, lee `SysTimeRtcGet` (segundos completos) y escribe `(seconds + 11644473600) * 10000000`, como hacía 1.1.0. De ahí se siguen dos cosas:
 
-* La resolución es de un segundo. Un receptor ve la misma marca en todos los mensajes dentro de un segundo, y llega a ir hasta un segundo por detrás del instante en que se construyó el mensaje. Las marcas por debajo del segundo están en la hoja de ruta.
+* La resolución es de un milisegundo (`bStampHighRes` indica qué reloj usó el último mensaje). Con el recurso a segundos completos, un receptor ve la misma marca en todos los mensajes dentro de un segundo.
 * La hora es tan correcta como el reloj del PLC. Un controlador con el reloj sin configurar marca su mensaje con 1970. Cuando no se puede leer el reloj (`diLastClockResult` no es 0) el mensaje sale sin marca, lo que permite la Parte 14, en lugar de no salir.
 
 Incremente `udiConfigMajor` siempre que cambie la lista de campos. Así, un receptor que guarde un diseño indexado por versión puede rechazar un mensaje construido para otra lista en lugar de decodificarlo mal.
@@ -67,9 +75,13 @@ Cada campo es un byte EncodingMask y después el valor. Los bits 0 a 5 de la má
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | longitud Int32 en bytes, después UTF-8 (5.2.2.4) |
+| un campo con estado Bad o Uncertain (`SetStatus`) | 19 StatusCode | 4, el estado UInt32, en lugar del valor (solo Variant) |
+| WSTRING | 12 String | Longitud Int32 en bytes y luego UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | milisegundos, que es como se guarda un TIME de CODESYS |
 
 Una STRING de CODESYS guarda un byte por carácter. Los bytes hasta `7F` son ASCII y salen sin cambios. Los bytes por encima de `7F` se leen como ISO 8859-1 y se escriben en su forma UTF-8 de dos bytes. Eso es una suposición sobre la página de códigos del PLC, y es el único punto en que el bloque interpreta texto.
+
+Un WSTRING de CODESYS es UTF-16 y no necesita suposición alguna: cada unidad de 16 bits se escribe como UTF-8 (uno, dos o tres bytes), un par sustituto bien formado se convierte en el único carácter de cuatro bytes, y un sustituto suelto se convierte en U+FFFD, de modo que el texto es siempre UTF-8 válido. En RawData el MaxStringLength de un `WSTRING(N)` es `3 * N` bytes, lo máximo que puede ocupar.
 
 ## Campos, codificación RawData (Parte 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ Sin máscara y sin recuento: cada campo es solo su valor, en orden, así que el 
 * **Los arrays** son un recuento de elementos Int32 y después los elementos (Parte 6, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). El bloque siempre envía todos los elementos que se le dieron, así que el recuento es igual al tamaño declarado del array y no hay relleno después.
 * **Las cadenas** son una longitud Int32 en bytes y los bytes UTF-8, y después bytes cero hasta MaxStringLength, así que el campo siempre ocupa 4 + MaxStringLength bytes (7.2.4.5.11: "the field shall be padded with bytes with value zero"). El bloque usa la N de `STRING(N)` como MaxStringLength, en bytes. El texto más largo se corta en un límite de carácter, porque el campo no puede crecer. Los metadatos de campo del receptor deben llevar el mismo MaxStringLength y una entrada ArrayDimensions por cada array.
 
-Esta es la lectura de la propia pila de referencia de la OPC Foundation. En UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` líneas 389 a 403 dicen que una cadena se "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", y que para un array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` en las líneas 593 a 648 lo implementa, y `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` lo comprueba. La [página de pruebas](/es/transmitter/proof/) tiene el resto.
+Esta es la lectura de la pila de referencia de la propia OPC Foundation. En UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, líneas 389 a 403, dicen que una cadena se "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", y que para un array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray`, en las líneas 593 a 648, lo implementa, y `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` lo comprueba. `docs/PROOF.md` tiene el resto.
 
 ## Tamaño
 

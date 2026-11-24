@@ -5,9 +5,17 @@ description: "Những gì HotLoop Transmitter đã xây dựng, những gì sắ
 
 Hiện có gì trong hộp, tiếp theo là gì và cố ý không có kế hoạch cho điều gì. Một dòng chỉ chuyển sang "Đã phát hành" khi nó đã chạy trên runtime 4.22.0.0 thật và một bộ nhận đã đọc được.
 
+## Phát hành trong 1.3.0
+
+* Dấu thời gian chính xác đến mili giây, từ thời gian độ phân giải cao của đồng hồ. `bHighResTimestamp` chuyển về giây nguyên.
+* Trường WSTRING, gửi dưới dạng UTF-8 trong Variant và RawData (`AddWString`).
+* Trạng thái theo từng trường, để giá trị Bad được gửi đi là Bad (`SetStatus`).
+* Nhiều DataSetMessage trong một NetworkMessage, với mảng Sizes, để một datagram mang được nhiều hơn một writer (`AddDataSet`).
+* Data Delta Frame và thông điệp KeepAlive, để giảm số byte của tập dữ liệu gần như đứng yên. Đây là một thiết lập, `bDeltaFrames`, mặc định tắt.
+
 ## Phát hành trong 1.2.0
 
-* HotLoop Alarms, một thư viện đọc các cảnh báo đang hoạt động, đang chờ và đã xác nhận của trình quản lý cảnh báo CODESYS vào các biến đơn giản và thực hiện xác nhận mà HotLoop ghi ngược lại. Nó đã chạy trên runtime thật 4.22.0.0 và danh sách cảnh báo của HotLoop đã đọc nó.
+* HotLoop Alarms (`alarms/`), một thư viện đọc các cảnh báo đang hoạt động, đang chờ và đã xác nhận của trình quản lý cảnh báo CODESYS vào các biến đơn giản và thực hiện xác nhận mà HotLoop ghi ngược lại. Nó đã chạy trên runtime thật 4.22.0.0 và danh sách cảnh báo của HotLoop đã đọc nó.
 
 ## Phát hành trong 1.1.0
 
@@ -21,14 +29,6 @@ Hiện có gì trong hộp, tiếp theo là gì và cố ý không có kế ho�
 * Các trường BOOL, SINT, USINT, INT, UINT, DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING và TIME, và mảng của mọi kiểu trừ STRING, ở cả hai kiểu mã hóa.
 * Đích unicast và multicast, publisher id, writer group id, dataset writer id, khoảng xuất bản, phiên bản nhóm và phiên bản cấu hình, tất cả đặt làm đầu vào của khối.
 * Gửi không chặn, chi phí mỗi lần gọi có giới hạn, bộ đếm số đã gửi, bị từ chối và bị bỏ qua, và một trạng thái lỗi không bao giờ làm ứng dụng bị lỗi.
-
-## Tiếp theo
-
-* Dấu thời gian dưới một giây. Dấu của 1.1.0 là số giây nguyên của đồng hồ thời gian thực.
-* Nhiều DataSetMessage trong một NetworkMessage (mảng Sizes), để một datagram mang được nhiều hơn một writer.
-* Data Delta Frame và thông điệp KeepAlive, để giảm số byte của bộ dữ liệu gần như không đổi.
-* Trường WSTRING.
-* Trạng thái cho từng trường, để một giá trị Bad có thể gửi đi là Bad.
 
 ## Không có kế hoạch
 

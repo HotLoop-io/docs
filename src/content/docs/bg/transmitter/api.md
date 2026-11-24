@@ -21,7 +21,10 @@ description: "Всеки вход, изход и метод на функцио�
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` или `RawData`. Сменете го, докато блокът е изключен |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion в заглавката на групата |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | ConfigurationVersion на DataSet. Увеличавайте major винаги когато списъкът с полета се променя |
-| `bTimestamp` | BOOL | TRUE | слага върху всяко съобщение марка от часовника на PLC, в NetworkMessage и в DataSetMessage (цели секунди, вижте [Какво върви по кабела](/bg/transmitter/wire-format/)). FALSE изпраща байтовете от 1.0.0, с 17 байта по-къси |
+| `bTimestamp` | BOOL | TRUE | поставя печат с часовника на PLC върху всяко съобщение, в NetworkMessage и в DataSetMessage (до милисекунда, вж. `WIRE-FORMAT.md`). FALSE изпраща байтовете от 1.0.0, с 17 байта по-къси |
+| `bDeltaFrames` | BOOL | FALSE | Само кодиране Variant. Изпраща Data Delta Frame (само променените полета, всяко с индекса си) между ключовите кадри и KeepAlive, когато нищо не се е променило. FALSE изпраща пълен ключов кадър всеки път, който чете всеки абонат. Абонат, който отхвърля делта кадрите, показва промяната при следващия ключов кадър |
+| `uiKeyFrameEvery` | UINT | 10 | с `bDeltaFrames`: пълен ключов кадър на всеки толкова съобщения, така че абонат, който се е включил по-късно, да има пълната картина в този интервал |
+| `bHighResTimestamp` | BOOL | TRUE | поставя печат с времето в милисекунди на часовника, когато средата за изпълнение го има. FALSE поставя цели секунди, както правеше 1.1.0 |
 | `tRetry` | TIME | T#2S | колко да се изчака, преди сокетът да се отвори отново след десет поредни неуспешни изпращания |
 
 ## Изходи
@@ -37,6 +40,9 @@ description: "Всеки вход, изход и метод на функцио�
 | `uiMessageSize` | UINT | байтове в последното съобщение |
 | `diLastSocketResult` | UDINT | последният код за грешка от runtime при извикване на сокет, 0 е наред |
 | `diLastClockResult` | UDINT | последният резултат от четенето на часовника на PLC за времева марка, 0 е наред. Когато не е 0, съобщението излиза без марка |
+| `bDeltaActive` | BOOL | TRUE докато се използват делта кадри: `bDeltaFrames` е включен, DataSet е Variant и полетата се побират в 4096-байтовото копие на предишните стойности |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | изпратени Data Delta Frames и KeepAlive съобщения |
+| `bStampHighRes` | BOOL | TRUE, когато печатът на последното съобщение е носел времето в милисекунди на часовника, FALSE, когато е паднал до цели секунди или е излязъл без печат |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | микросекунди, прекарани в последното извикване на блока, и най-дългото от разрешаването или от `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | най-дългото време за изграждане на едно съобщение и в самото извикване за изпращане, от разрешаването или от `Clear()` |
 
@@ -48,7 +54,10 @@ description: "Всеки вход, изход и метод на функцио�
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | един скалар. `pValue` е `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | един STRING. `uiMaxLen` е N в `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | масив от `uiCount` елемента от всеки тип освен STRING. `pFirst` е `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | един WSTRING, изпратен като UTF-8. `uiMaxLen` е N в `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | започва друг DataSet в същия NetworkMessage: полетата, добавени след това, принадлежат на него. Във всеки интервал на публикуване един NetworkMessage носи по един DataSetMessage на DataSet, така че няколко writer-а споделят една дейтаграма. До 8 DataSet-а; делта кадрите са изключени, когато има повече от един |
+| `SetStatus(pStatus)` | дава статус на последно добавеното поле. `pStatus` е `ADR` на UDINT, който държи OPC UA StatusCode. Докато не е 0, полето излиза като този StatusCode вместо със стойността си (кодиране Variant), а получателят го чете като лошо качество. 0 изпраща стойността. RawData няма статус, така че RawData публикуващият продължава да изпраща стойността |
+| `AddArray(pFirst, eType, uiCount)` | масив от `uiCount` елемента от всеки тип освен STRING и WSTRING. `pFirst` е `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | общата форма, която останалите викат |
 | `Clear()` | забравя списъка с полета и максималното време за извикване |
 

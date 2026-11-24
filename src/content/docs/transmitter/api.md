@@ -21,7 +21,10 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` or `RawData`. Change it while disabled |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion in the group header |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | DataSet ConfigurationVersion. Bump the major whenever the field list changes |
-| `bTimestamp` | BOOL | TRUE | stamp every message with the PLC clock, in the NetworkMessage and the DataSetMessage (whole seconds, see [What goes on the wire](/transmitter/wire-format/)). FALSE sends the 1.0.0 bytes, 17 bytes shorter |
+| `bTimestamp` | BOOL | TRUE | stamp every message with the PLC clock, in the NetworkMessage and the DataSetMessage (to the millisecond, see `WIRE-FORMAT.md`). FALSE sends the 1.0.0 bytes, 17 bytes shorter |
+| `bDeltaFrames` | BOOL | FALSE | Variant encoding only. Send a Data Delta Frame (only the fields that changed, each with its index) between key frames, and a KeepAlive when nothing changed. FALSE sends a full key frame every time, which every subscriber reads. A subscriber that discards delta frames shows a change at the next key frame |
+| `uiKeyFrameEvery` | UINT | 10 | with `bDeltaFrames`: a full key frame every this many messages, so a subscriber that joined late has the whole picture within that |
+| `bHighResTimestamp` | BOOL | TRUE | stamp with the clock's millisecond time when the runtime has it. FALSE stamps whole seconds, as 1.1.0 did |
 | `tRetry` | TIME | T#2S | how long to wait before reopening the socket after ten sends in a row failed |
 
 ## Outputs
@@ -37,6 +40,9 @@ Everything is in the `HLTX` namespace. The block is `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | bytes in the last message |
 | `diLastSocketResult` | UDINT | the last runtime error code from a socket call, 0 is fine |
 | `diLastClockResult` | UDINT | the last result of reading the PLC clock for a timestamp, 0 is fine. When it is not 0 the message goes out unstamped |
+| `bDeltaActive` | BOOL | TRUE while delta frames are in use: `bDeltaFrames` is on, the DataSet is Variant and the fields fit the 4096 byte copy of previous values |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | Data Delta Frames and KeepAlive messages sent |
+| `bStampHighRes` | BOOL | TRUE when the last message's timestamp carried the clock's millisecond time, FALSE when it fell back to whole seconds or went out unstamped |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microseconds spent in the last call of the block, and the longest since enable or `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | the longest time spent building one message, and in the send call itself, since enable or `Clear()` |
 
@@ -49,7 +55,10 @@ was accepted. Up to 128 fields.
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | one scalar. `pValue` is `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | one STRING. `uiMaxLen` is the N in `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | an array of `uiCount` elements of any type but STRING. `pFirst` is `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | one WSTRING, sent as UTF-8. `uiMaxLen` is the N in `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | starts another DataSet in the same NetworkMessage: the fields added after it belong to it. Each publishing interval one NetworkMessage then carries one DataSetMessage per DataSet, so several writers share a datagram. Up to 8 DataSets; delta frames are off when there is more than one |
+| `SetStatus(pStatus)` | gives the field added last a status. `pStatus` is `ADR` of a UDINT holding an OPC UA StatusCode. While it is not 0 the field goes out as that StatusCode in place of its value (Variant encoding), and a receiver reads it as bad quality. 0 sends the value. RawData has no status, so a RawData publisher keeps sending the value |
+| `AddArray(pFirst, eType, uiCount)` | an array of `uiCount` elements of any type but STRING and WSTRING. `pFirst` is `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | the general form the others call |
 | `Clear()` | forgets the field list and the maximum call time |
 

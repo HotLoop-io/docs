@@ -6,9 +6,17 @@ description: "What HotLoop Transmitter has built, what is next, and what is deli
 What is in the box today, what is next, and what is deliberately not planned. A line moves to "Shipped" only
 when it has run on the real 4.22.0.0 runtime and a receiver has read it.
 
+## Shipped in 1.3.0
+
+* Timestamps to the millisecond, from the clock's high resolution time. `bHighResTimestamp` switches back to whole seconds.
+* WSTRING fields, sent as UTF-8 in Variant and RawData (`AddWString`).
+* A per-field status, so a Bad value is sent as Bad (`SetStatus`).
+* Several DataSetMessages in one NetworkMessage, with the Sizes array, so one datagram can carry more than one writer (`AddDataSet`).
+* Data Delta Frames and KeepAlive messages, to cut the bytes of a mostly steady dataset. A setting, `bDeltaFrames`, off by default.
+
 ## Shipped in 1.2.0
 
-* HotLoop Alarms, a library that reads the CODESYS alarm manager's own active, waiting and acknowledged alarms into plain variables and carries out an acknowledge that HotLoop writes back. It ran on the real 4.22.0.0 runtime, and HotLoop's alarm list read it.
+* HotLoop Alarms (`alarms/`): a library that reads the CODESYS alarm manager's own active, waiting and acknowledged alarms into plain variables, and carries out an acknowledge that HotLoop writes back. It ran on the real 4.22.0.0 runtime, and HotLoop's alarm list read it.
 
 ## Shipped in 1.1.0
 
@@ -26,14 +34,6 @@ when it has run on the real 4.22.0.0 runtime and a receiver has read it.
   group version and configuration version, all set as inputs of the block.
 * A non-blocking send, a bounded cost per call, counters for sent, refused and skipped, and an error state that
   never faults the application.
-
-## Next
-
-* Sub-second timestamps. The 1.1.0 stamp is the real-time clock's whole seconds.
-* Several DataSetMessages in one NetworkMessage (the Sizes array), so one datagram can carry more than one writer.
-* Data Delta Frames and KeepAlive messages, to cut the bytes of a mostly steady dataset.
-* WSTRING fields.
-* A per-field status, so a Bad value can be sent as Bad.
 
 ## Not planned
 

@@ -15,7 +15,7 @@ Ogni nuovo strumento HotLoop è scritto in Go, salvo un motivo reale. Questo è 
 
 ## Come usarla
 
-1. Installi `HotLoopTransmitter-1.2.0.library` nel repository delle librerie CODESYS (Tools, Library Repository, Install), oppure installi `HotLoopTransmitter-1.2.0.package` con il CODESYS Installer, poi la aggiunga al Library Manager del progetto. La [pagina di installazione](/it/transmitter/install/) ha i download e i dettagli.
+1. Installi `HotLoopTransmitter-1.3.0.library` nel repository delle librerie CODESYS (Tools, Library Repository, Install), oppure installi `HotLoopTransmitter-1.3.0.package` con il CODESYS Installer, poi la aggiunga al Library Manager del progetto. La [pagina di installazione](/it/transmitter/install/) ha i download e i dettagli.
 2. Dichiari un publisher, aggiunga una volta all'avvio le variabili da pubblicare e lo chiami a ogni ciclo:
 
 ```iecst

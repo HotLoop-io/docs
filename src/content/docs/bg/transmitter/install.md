@@ -7,17 +7,17 @@ description: "Инсталирайте библиотеката в хранил�
 
 ## От CODESYS Installer
 
-От 1.1.0 изданието има и `HotLoopTransmitter-1.2.0.package` на адрес https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.package. Инсталирайте го с CODESYS Installer (в IDE: Tools, CODESYS Installer) или без прозорец с неговия команден ред, `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`. Installer поставя библиотеката в хранилището за библиотеки на този профил, под компанията HotLoop, и вие преминавате към стъпка 3 по-долу. Пакетът е същата библиотека като файла `.library`, в ZIP, който Installer чете, така че двата пътя дават една и съща библиотека.
+От 1.1.0 изданието има и `HotLoopTransmitter-1.3.0.package` на адрес https://hotloop.io/hotloop-transmitter/1.3.0/HotLoopTransmitter-1.3.0.package. Инсталирайте го с CODESYS Installer (в IDE: Tools, CODESYS Installer) или без прозорец с неговия команден ред, `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`. Installer поставя библиотеката в хранилището за библиотеки на този профил, под компанията HotLoop, и вие преминавате към стъпка 3 по-долу. Пакетът е същата библиотека като файла `.library`, в ZIP, който Installer чете, така че двата пътя дават една и съща библиотека.
 
 ## От файла на библиотеката
 
-1. Изтеглете `HotLoopTransmitter-1.2.0.library` от https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library и го проверете със `SHA256SUMS` в същата папка (`sha256sum -c SHA256SUMS`).
+1. Изтеглете `HotLoopTransmitter-1.3.0.library` от https://hotloop.io/hotloop-transmitter/1.3.0/HotLoopTransmitter-1.3.0.library и го проверете със `SHA256SUMS` в същата папка (`sha256sum -c SHA256SUMS`).
 2. В IDE на CODESYS: Tools, Library Repository, Install, изберете файла. Вече е в хранилището под компанията HotLoop.
 3. В проекта си отворете Library Manager на приложението, Add Library и изберете HotLoop Transmitter. SysSocket, SysTimeRtc и техните интерфейсни библиотеки идват с нея като зависимости и не изискват нищо от вас.
 4. Декларирайте `HLTX.FB_HLTX_Publisher`, добавете полетата си и го викайте на всеки цикъл (README има примера).
 5. Заредете в контролера. Местоназначението трябва да е достъпно от мрежата на контролера; за multicast суичовете в мрежата трябва да пренасят групата.
 
-Файлът `.compiled-library` е същата библиотека без изходния код. Инсталирайте него, ако не искате Structured Text да се вижда в Library Manager. Намира се в същата папка като `HotLoopTransmitter-1.2.0.compiled-library`.
+Файлът `.compiled-library` е същата библиотека без изходния код. Инсталирайте него, ако не искате Structured Text да се вижда в Library Manager. Намира се в същата папка като `HotLoopTransmitter-1.3.0.compiled-library`.
 
 За да проверите какво пристига, върши работа всеки UDP слушател на порта на местоназначението. Малка програма на Go, която слуша на порт или се присъединява към multicast група и отпечатва всяка датаграма като ред JSON с нейния шестнадесетичен вид, върши добра работа.
 

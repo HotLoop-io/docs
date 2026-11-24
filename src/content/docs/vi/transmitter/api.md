@@ -21,7 +21,10 @@ Mọi thứ nằm trong không gian tên `HLTX`. Khối là `HLTX.FB_HLTX_Publis
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` hoặc `RawData`. Đổi khi khối đang bị tắt |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion trong tiêu đề nhóm |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | ConfigurationVersion của DataSet. Tăng major mỗi khi danh sách trường thay đổi |
-| `bTimestamp` | BOOL | TRUE | đóng dấu mỗi thông điệp bằng đồng hồ PLC, trong NetworkMessage và DataSetMessage (số giây nguyên, xem [Những gì đi trên đường truyền](/vi/transmitter/wire-format/)). FALSE gửi các byte của 1.0.0, ngắn hơn 17 byte |
+| `bTimestamp` | BOOL | TRUE | gắn dấu thời gian của đồng hồ PLC vào mọi thông điệp, trong NetworkMessage và DataSetMessage (chính xác đến mili giây, xem `WIRE-FORMAT.md`). FALSE gửi các byte của 1.0.0, ngắn hơn 17 byte |
+| `bDeltaFrames` | BOOL | FALSE | Chỉ với mã hóa Variant. Gửi Data Delta Frame (chỉ các trường đã đổi, mỗi trường kèm chỉ số) giữa các khung khóa, và KeepAlive khi không có gì đổi. FALSE mỗi lần đều gửi khung khóa đầy đủ mà mọi bên đăng ký đều đọc được. Bên đăng ký bỏ qua khung delta sẽ thấy thay đổi ở khung khóa kế tiếp |
+| `uiKeyFrameEvery` | UINT | 10 | với `bDeltaFrames`: cứ chừng này thông điệp lại có một khung khóa đầy đủ, để bên đăng ký vào muộn có bức tranh đầy đủ trong khoảng đó |
+| `bHighResTimestamp` | BOOL | TRUE | gắn dấu thời gian bằng thời gian mili giây của đồng hồ khi runtime có. FALSE gắn giây nguyên, như 1.1.0 |
 | `tRetry` | TIME | T#2S | thời gian chờ trước khi mở lại socket sau mười lần gửi liên tiếp thất bại |
 
 ## Đầu ra
@@ -37,6 +40,9 @@ Mọi thứ nằm trong không gian tên `HLTX`. Khối là `HLTX.FB_HLTX_Publis
 | `uiMessageSize` | UINT | số byte của thông điệp gần nhất |
 | `diLastSocketResult` | UDINT | mã lỗi runtime gần nhất từ một lệnh gọi socket, 0 là bình thường |
 | `diLastClockResult` | UDINT | kết quả gần nhất của việc đọc đồng hồ PLC để lấy dấu thời gian, 0 là bình thường. Khi khác 0, thông điệp đi ra không có dấu |
+| `bDeltaActive` | BOOL | TRUE khi đang dùng khung delta: `bDeltaFrames` bật, DataSet là Variant và các trường vừa với bản sao 4096 byte của giá trị trước |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | Data Delta Frame và thông điệp KeepAlive đã gửi |
+| `bStampHighRes` | BOOL | TRUE khi dấu thời gian của thông điệp gần nhất mang thời gian mili giây của đồng hồ, FALSE khi lùi về giây nguyên hoặc gửi đi không có dấu |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | số micro giây dùng trong lần gọi gần nhất của khối, và lâu nhất kể từ khi bật hoặc `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | thời gian lâu nhất để dựng một thông điệp, và trong chính lệnh gọi gửi, kể từ khi bật hoặc `Clear()` |
 
@@ -48,7 +54,10 @@ Thêm các trường một lần, trước lần gọi đầu tiên, theo thứ 
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | một giá trị vô hướng. `pValue` là `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | một STRING. `uiMaxLen` là N trong `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | một mảng `uiCount` phần tử của bất kỳ kiểu nào trừ STRING. `pFirst` là `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | một WSTRING, gửi dưới dạng UTF-8. `uiMaxLen` là N trong `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | bắt đầu thêm một DataSet trong cùng NetworkMessage: các trường thêm sau đó thuộc về nó. Mỗi chu kỳ xuất bản, một NetworkMessage khi đó mang một DataSetMessage cho mỗi DataSet, nên nhiều writer dùng chung một datagram. Tối đa 8 DataSet; khung delta bị tắt khi có nhiều hơn một |
+| `SetStatus(pStatus)` | gán trạng thái cho trường vừa thêm gần nhất. `pStatus` là `ADR` của một UDINT chứa OPC UA StatusCode. Khi nó khác 0, trường được gửi đi dưới dạng StatusCode đó thay cho giá trị (mã hóa Variant), và bên nhận đọc là chất lượng xấu. 0 thì gửi giá trị. RawData không có trạng thái nên publisher RawData vẫn gửi giá trị |
+| `AddArray(pFirst, eType, uiCount)` | mảng gồm `uiCount` phần tử thuộc bất kỳ kiểu nào trừ STRING và WSTRING. `pFirst` là `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | dạng tổng quát mà các phương thức khác gọi |
 | `Clear()` | quên danh sách trường và thời gian gọi lâu nhất |
 

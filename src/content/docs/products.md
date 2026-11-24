@@ -23,7 +23,7 @@ PLC on your bench. Features split them. Protocols don't.
 | **HotLoop Flow** | Flow | <a href="/flow/overview/">Docs</a> | <a href="/flow/install/">Install</a> | <a href="/releases/#hotloop-flow">Notes</a> | <a href="/flow/roadmap/">Roadmap</a> |
 | **HotLoop Cascade** | Cascade | <a href="/cascade/overview/">Docs</a> | <a href="/cascade/running/">Install</a> | <a href="/releases/#hotloop-cascade">Notes</a> | <a href="/cascade/roadmap/">Roadmap</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/codesys/overview/">Docs</a> | <a href="/codesys/install/">Install</a> | <a href="/releases/codesys-0-3-10/">Notes</a> | <a href="/codesys/roadmap/">Roadmap</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/transmitter/overview/">Docs</a> | <a href="/transmitter/install/">Install</a> | <a href="/releases/transmitter-1-2-0/">Notes</a> | <a href="/transmitter/roadmap/">Roadmap</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/transmitter/overview/">Docs</a> | <a href="/transmitter/install/">Install</a> | <a href="/releases/transmitter-1-3-0/">Notes</a> | <a href="/transmitter/roadmap/">Roadmap</a> |
 
 The table that follows compares the four core products.
 

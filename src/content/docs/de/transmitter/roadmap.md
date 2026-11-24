@@ -5,9 +5,17 @@ description: "Was HotLoop Transmitter schon kann, was als Nächstes kommt und wa
 
 Was heute im Paket steckt, was als Nächstes kommt und was bewusst nicht geplant ist. Eine Zeile rückt erst unter „Ausgeliefert“, wenn sie auf der echten Runtime 4.22.0.0 gelaufen ist und ein Empfänger sie gelesen hat.
 
+## Ausgeliefert in 1.3.0
+
+* Zeitstempel auf die Millisekunde genau, aus der hochauflösenden Zeit der Uhr. `bHighResTimestamp` schaltet auf ganze Sekunden zurück.
+* WSTRING-Felder, als UTF-8 in Variant und RawData gesendet (`AddWString`).
+* Ein Status je Feld, damit ein ungültiger Wert als Bad gesendet wird (`SetStatus`).
+* Mehrere DataSetMessages in einer NetworkMessage, mit dem Sizes-Array, sodass ein Datagramm mehr als einen Writer tragen kann (`AddDataSet`).
+* Data Delta Frames und KeepAlive-Nachrichten, um die Bytes eines weitgehend gleichbleibenden Datensatzes zu senken. Eine Einstellung, `bDeltaFrames`, standardmäßig aus.
+
 ## Ausgeliefert in 1.2.0
 
-* HotLoop Alarms, eine Bibliothek, die die aktiven, wartenden und quittierten Alarme des CODESYS-Alarmmanagers in einfache Variablen liest und die Quittierung ausführt, die HotLoop zurückschreibt. Sie lief auf der echten Runtime 4.22.0.0, und die Alarmliste von HotLoop hat sie gelesen.
+* HotLoop Alarms (`alarms/`), eine Bibliothek, die die aktiven, wartenden und quittierten Alarme des CODESYS-Alarmmanagers in einfache Variablen liest und die Quittierung ausführt, die HotLoop zurückschreibt. Sie lief auf der echten Runtime 4.22.0.0, und die Alarmliste von HotLoop hat sie gelesen.
 
 ## Ausgeliefert in 1.1.0
 
@@ -21,14 +29,6 @@ Was heute im Paket steckt, was als Nächstes kommt und was bewusst nicht geplant
 * Felder vom Typ BOOL, SINT, USINT, INT, UINT, DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING und TIME sowie Arrays von allen außer STRING, in beiden Kodierungen.
 * Unicast- und Multicast-Ziele, Publisher-ID, Writer-Group-ID, DataSetWriter-ID, Veröffentlichungsintervall, Gruppenversion und Konfigurationsversion, alle als Eingänge des Bausteins einstellbar.
 * Ein nicht blockierendes Senden, begrenzte Kosten pro Aufruf, Zähler für gesendet, abgelehnt und übersprungen und ein Fehlerzustand, der die Anwendung nie ausfallen lässt.
-
-## Als Nächstes
-
-* Zeitstempel unter einer Sekunde. Der Stempel in 1.1.0 zeigt ganze Sekunden der Echtzeituhr.
-* Mehrere DataSetMessages in einer NetworkMessage (das Sizes-Array), damit ein Datagramm mehr als einen Writer tragen kann.
-* Data Delta Frames und KeepAlive-Nachrichten, um die Bytes eines weitgehend gleichbleibenden Datensatzes zu senken.
-* WSTRING-Felder.
-* Ein Status pro Feld, damit ein ungültiger Wert als Bad gesendet werden kann.
 
 ## Nicht geplant
 

@@ -5,9 +5,17 @@ description: "Ce que HotLoop Transmitter a déjà construit, ce qui vient ensuit
 
 Ce qu'il y a aujourd'hui dans la boîte, ce qui vient ensuite et ce qui n'est volontairement pas prévu. Une ligne passe dans « Livré » seulement quand elle a tourné sur le vrai runtime 4.22.0.0 et qu'un récepteur l'a lue.
 
+## Livré en 1.3.0
+
+* Horodatages à la milliseconde, à partir de l'heure haute résolution de l'horloge. `bHighResTimestamp` revient aux secondes entières.
+* Champs WSTRING, envoyés en UTF-8 en Variant et en RawData (`AddWString`).
+* Un statut par champ, pour qu’une valeur Bad soit envoyée comme Bad (`SetStatus`).
+* Plusieurs DataSetMessages dans un NetworkMessage, avec le tableau Sizes, pour qu’un datagramme puisse porter plus d’un writer (`AddDataSet`).
+* Data Delta Frames et messages KeepAlive, pour réduire les octets d’un jeu de données presque stable. C’est un réglage, `bDeltaFrames`, désactivé par défaut.
+
 ## Livré en 1.2.0
 
-* HotLoop Alarms, une bibliothèque qui lit les alarmes actives, en attente et acquittées du gestionnaire d'alarmes de CODESYS dans des variables simples et exécute l'acquittement que HotLoop écrit en retour. Elle a tourné sur le vrai runtime 4.22.0.0 et la liste d'alarmes de HotLoop l'a lue.
+* HotLoop Alarms (`alarms/`), une bibliothèque qui lit les alarmes actives, en attente et acquittées du gestionnaire d'alarmes de CODESYS dans des variables simples et exécute l'acquittement que HotLoop écrit en retour. Elle a tourné sur le vrai runtime 4.22.0.0 et la liste d'alarmes de HotLoop l'a lue.
 
 ## Livré en 1.1.0
 
@@ -21,14 +29,6 @@ Ce qu'il y a aujourd'hui dans la boîte, ce qui vient ensuite et ce qui n'est vo
 * Champs BOOL, SINT, USINT, INT, UINT, DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING et TIME, et tableaux de chacun sauf STRING, dans les deux encodages.
 * Destinations unicast et multicast, publisher id, writer group id, dataset writer id, intervalle de publication, version de groupe et version de configuration, tous réglés comme entrées du bloc.
 * Un envoi non bloquant, un coût borné par appel, des compteurs d'envoyés, de refusés et d'ignorés, et un état d'erreur qui ne met jamais l'application en défaut.
-
-## Ensuite
-
-* Des horodatages sous la seconde. L'horodatage de 1.1.0 est en secondes entières de l'horloge temps réel.
-* Plusieurs DataSetMessages dans un NetworkMessage (le tableau Sizes), pour qu'un datagramme puisse porter plus d'un writer.
-* Des Data Delta Frames et des messages KeepAlive, pour réduire les octets d'un jeu de données presque stable.
-* Des champs WSTRING.
-* Un statut par champ, pour qu'une valeur Bad puisse être envoyée comme Bad.
 
 ## Pas prévu
 

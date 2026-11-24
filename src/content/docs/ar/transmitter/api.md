@@ -21,7 +21,10 @@ description: "كل مدخل ومخرج وطريقة في الكتلة الوظي
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` أو `RawData`. غيّره والكتلة معطّلة |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion في ترويسة المجموعة |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | ConfigurationVersion لـ DataSet. ارفع major كلما تغيّرت قائمة الحقول |
-| `bTimestamp` | BOOL | TRUE | يختم كل رسالة بساعة PLC، في NetworkMessage وفي DataSetMessage (ثوانٍ كاملة، انظر [ما يمر على الخط](/ar/transmitter/wire-format/)). FALSE يرسل بايتات 1.0.0، أقصر بـ 17 بايت |
+| `bTimestamp` | BOOL | TRUE | يضع على كل رسالة طابع ساعة PLC، في NetworkMessage وDataSetMessage (بدقة المللي ثانية، انظر `WIRE-FORMAT.md`). FALSE يرسل بايتات 1.0.0، أقصر بـ 17 بايت |
+| `bDeltaFrames` | BOOL | FALSE | ترميز Variant فقط. يرسل Data Delta Frame (الحقول التي تغيرت فقط، لكل منها فهرسه) بين الإطارات الرئيسية، وKeepAlive عند عدم تغير شيء. FALSE يرسل إطارًا رئيسيًا كاملًا في كل مرة، ويقرؤه كل مشترك. المشترك الذي يتجاهل إطارات delta يرى التغيير عند الإطار الرئيسي التالي |
+| `uiKeyFrameEvery` | UINT | 10 | مع `bDeltaFrames`: إطار رئيسي كامل كل هذا العدد من الرسائل، ليحصل المشترك الذي انضم متأخرًا على الصورة الكاملة خلال ذلك |
+| `bHighResTimestamp` | BOOL | TRUE | يضع الطابع بوقت الساعة بالمللي ثانية عندما يتوفر في وقت التشغيل. FALSE يضع ثواني كاملة، كما كان في 1.1.0 |
 | `tRetry` | TIME | T#2S | مدة الانتظار قبل إعادة فتح المقبس بعد فشل عشر عمليات إرسال متتالية |
 
 ## المخارج
@@ -37,6 +40,9 @@ description: "كل مدخل ومخرج وطريقة في الكتلة الوظي
 | `uiMessageSize` | UINT | بايتات الرسالة الأخيرة |
 | `diLastSocketResult` | UDINT | آخر رمز خطأ من بيئة التشغيل لاستدعاء مقبس، و0 يعني سليم |
 | `diLastClockResult` | UDINT | آخر نتيجة لقراءة ساعة PLC من أجل طابع زمني، و0 يعني سليم. وعندما لا يكون 0 تخرج الرسالة دون ختم |
+| `bDeltaActive` | BOOL | TRUE أثناء استخدام إطارات delta: `bDeltaFrames` مفعّل، وDataSet من نوع Variant، وتتسع الحقول في نسخة القيم السابقة البالغة 4096 بايت |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | عدد إطارات Data Delta Frame ورسائل KeepAlive المرسلة |
+| `bStampHighRes` | BOOL | TRUE عندما حمل طابع آخر رسالة وقت الساعة بالمللي ثانية، وFALSE عندما رجع إلى الثواني الكاملة أو خرج بلا طابع |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | الميكروثواني المستغرقة في آخر استدعاء للكتلة، وأطولها منذ التفعيل أو `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | أطول زمن استُغرق في بناء رسالة واحدة وفي استدعاء الإرسال نفسه، منذ التفعيل أو `Clear()` |
 
@@ -48,7 +54,10 @@ description: "كل مدخل ومخرج وطريقة في الكتلة الوظي
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | قيمة أحادية. و`pValue` هو `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | STRING واحدة. و`uiMaxLen` هو N في `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | مصفوفة من `uiCount` عنصرًا من أي نوع عدا STRING. و`pFirst` هو `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | WSTRING واحد، يُرسل بترميز UTF-8. `uiMaxLen` هو N في `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | يبدأ DataSet آخر في NetworkMessage نفسها: الحقول المضافة بعده تنتمي إليه. في كل فاصل نشر تحمل NetworkMessage واحدة DataSetMessage لكل DataSet، فيتشارك عدة writer في datagram واحد. حتى 8 DataSet؛ وتتوقف إطارات delta عند وجود أكثر من واحد |
+| `SetStatus(pStatus)` | يعطي الحقل المضاف أخيرًا حالة. `pStatus` هو `ADR` لـ UDINT يحمل OPC UA StatusCode. ما دام غير 0 يخرج الحقل بهذا الـ StatusCode بدل قيمته (ترميز Variant)، ويقرؤه المستقبل بجودة سيئة. 0 يرسل القيمة. لا حالة في RawData، فيواصل ناشر RawData إرسال القيمة |
+| `AddArray(pFirst, eType, uiCount)` | مصفوفة من `uiCount` عنصرًا من أي نوع عدا STRING وWSTRING. `pFirst` هو `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | الصيغة العامة التي تستدعيها الطرائق الأخرى |
 | `Clear()` | تنسى قائمة الحقول وأطول زمن استدعاء |
 

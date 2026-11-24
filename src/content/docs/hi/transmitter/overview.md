@@ -15,7 +15,7 @@ HotLoop का हर नया टूल Go में लिखा जाता
 
 ## कैसे इस्तेमाल करें
 
-1. `HotLoopTransmitter-1.2.0.library` को CODESYS लाइब्रेरी रिपॉज़िटरी में इंस्टॉल करें (Tools, Library Repository, Install), या `HotLoopTransmitter-1.2.0.package` को CODESYS Installer से इंस्टॉल करें, फिर उसे प्रोजेक्ट के Library Manager में जोड़ें। [इंस्टॉल पेज](/hi/transmitter/install/) पर डाउनलोड और ब्योरा है।
+1. `HotLoopTransmitter-1.3.0.library` को CODESYS लाइब्रेरी रिपॉज़िटरी में इंस्टॉल करें (Tools, Library Repository, Install), या `HotLoopTransmitter-1.3.0.package` को CODESYS Installer से इंस्टॉल करें, फिर उसे प्रोजेक्ट के Library Manager में जोड़ें। [इंस्टॉल पेज](/hi/transmitter/install/) पर डाउनलोड और ब्योरा है।
 2. एक पब्लिशर घोषित करें, जो वेरिएबल प्रकाशित करने हैं उन्हें शुरू में एक बार जोड़ें, और हर चक्र में उसे कॉल करें:
 
 ```iecst

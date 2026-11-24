@@ -18,7 +18,7 @@ Escono su cinque linee di rilascio. **HotLoop core** è composto da IoT, Edge, G
 | **HotLoop Flow** | Flow | <a href="/it/flow/overview/">Documentazione</a> | <a href="/it/flow/install/">Installazione</a> | <a href="/it/releases/#hotloop-flow">Note</a> | <a href="/it/flow/roadmap/">Roadmap</a> |
 | **HotLoop Cascade** | Cascade | <a href="/it/cascade/overview/">Documentazione</a> | <a href="/it/cascade/running/">Installazione</a> | <a href="/it/releases/#hotloop-cascade">Note</a> | <a href="/it/cascade/roadmap/">Roadmap</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/it/codesys/overview/">Documentazione</a> | <a href="/it/codesys/install/">Installazione</a> | <a href="/it/releases/codesys-0-3-10/">Note</a> | <a href="/it/codesys/roadmap/">Roadmap</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/it/transmitter/overview/">Documentazione</a> | <a href="/it/transmitter/install/">Installazione</a> | <a href="/it/releases/transmitter-1-2-0/">Note</a> | <a href="/it/transmitter/roadmap/">Roadmap</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/it/transmitter/overview/">Documentazione</a> | <a href="/it/transmitter/install/">Installazione</a> | <a href="/it/releases/transmitter-1-3-0/">Note</a> | <a href="/it/transmitter/roadmap/">Roadmap</a> |
 
 La tabella seguente confronta i quattro prodotti del core.
 

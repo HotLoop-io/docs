@@ -18,7 +18,7 @@ HotLoop ثمانية منتجات لأرض المصنع: أربعة تنمو م�
 | **HotLoop Flow** | Flow | <a href="/ar/flow/overview/">التوثيق</a> | <a href="/ar/flow/install/">التثبيت</a> | <a href="/ar/releases/#hotloop-flow">الملاحظات</a> | <a href="/ar/flow/roadmap/">خارطة الطريق</a> |
 | **HotLoop Cascade** | Cascade | <a href="/ar/cascade/overview/">التوثيق</a> | <a href="/ar/cascade/running/">التثبيت</a> | <a href="/ar/releases/#hotloop-cascade">الملاحظات</a> | <a href="/ar/cascade/roadmap/">خارطة الطريق</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/ar/codesys/overview/">التوثيق</a> | <a href="/ar/codesys/install/">التثبيت</a> | <a href="/ar/releases/codesys-0-3-10/">الملاحظات</a> | <a href="/ar/codesys/roadmap/">خارطة الطريق</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/ar/transmitter/overview/">التوثيق</a> | <a href="/ar/transmitter/install/">التثبيت</a> | <a href="/ar/releases/transmitter-1-2-0/">الملاحظات</a> | <a href="/ar/transmitter/roadmap/">خارطة الطريق</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/ar/transmitter/overview/">التوثيق</a> | <a href="/ar/transmitter/install/">التثبيت</a> | <a href="/ar/releases/transmitter-1-3-0/">الملاحظات</a> | <a href="/ar/transmitter/roadmap/">خارطة الطريق</a> |
 
 يقارن الجدول التالي بين منتجات الـ core الأربعة.
 

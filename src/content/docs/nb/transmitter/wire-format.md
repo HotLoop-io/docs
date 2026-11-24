@@ -40,11 +40,19 @@ Fordi Count er 1, har nyttelasten ingen Sizes-matrise. Blokken sender ikke oppde
 | 2 | FieldCount | bare Variant. Utelatt for RawData (7.2.4.5.5) |
 | ... | feltene | i den rekkefølgen de ble lagt til |
 
+## Flere DataSetMessages i én NetworkMessage
+
+Etter `AddDataSet` er Count i PayloadHeader antall DataSet og lister hver DataSetWriterId, og nyttelasten starter med Sizes-arrayen, én UInt16-bytestørrelse per DataSetMessage (7.2.4.5.3), så DataSetMessage-ene etter hverandre. DataSet 1 bruker blokkens egen writer-id, sekvensnummer og ConfigurationVersion; hvert av de andre DataSet-ene har sin egen writer-id, hovedversjon og DataSetMessage-sekvensnummer. Timestamp for NetworkMessage og for hver DataSetMessage er samme tidspunkt. Uten `AddDataSet` er meldingen nøyaktig som før, Count 1 og ingen Sizes.
+
+## Deltarammer og KeepAlive
+
+Med `bDeltaFrames` er DataSetMessage-typen i DataSetFlags2 (bit 0 til 3) 0 for en nøkkelramme, 1 for en Data Delta Frame og 3 for en KeepAlive, og Timestamp-biten er som før. En nøkkelramme går først og så hver `uiKeyFrameEvery` melding. Mellom dem sammenligner blokken hvert felts variabel (og status) med det forrige melding bar: en deltaramme er `FieldCount` for feltene som endret seg (UInt16), så for hvert av dem dets nullbaserte `FieldIndex` (UInt16) og dets Variant; når ingenting endret seg, er meldingen en KeepAlive, DataSetMessage-headeren uten nyttelast. En KeepAlive bærer sekvensnummeret til neste DataSetMessage og bruker det ikke opp, mens sekvensnummeret til NetworkMessage teller den. RawData-DataSet sender alltid nøkkelrammer.
+
 ## Tidsstempelet
 
-Blokken leser PLS-ens sanntidsklokke én gang per melding med `SysTimeRtcGet` (systembiblioteket SysTimeRtc, som kjøretiden leverer), som gir hele sekunder siden 1970-01-01 UTC, og skriver `(seconds + 11644473600) * 10000000` som DateTime. Begge tidsstemplene i en melding er denne ene verdien. To ting følger av det:
+Blokken leser PLS-ens sanntidsklokke én gang per melding med `SysTimeRtcHighResGet` (systembiblioteket SysTimeRtc, som runtime leverer), som er millisekunder siden 1970-01-01 UTC, og skriver `milliseconds * 10000 + 11644473600 * 10000000` som DateTime. Begge tidsstemplene i en melding er den ene verdien. Hvis runtime ikke kan svare på det høyoppløselige kallet, eller `bHighResTimestamp` er FALSE, leser den `SysTimeRtcGet` (hele sekunder) og skriver `(seconds + 11644473600) * 10000000`, slik 1.1.0 gjorde. To ting følger av det:
 
-* Oppløsningen er ett sekund. En mottaker ser samme tidsstempel på hver melding innenfor et sekund, og det ligger opptil et sekund bak øyeblikket meldingen ble bygget. Tidsstempler under ett sekund står på veikartet.
+* Oppløsningen er ett millisekund (`bStampHighRes` sier hvilken klokke siste melding brukte). Med tilbakefall til hele sekunder ser en mottaker samme tidsstempel på alle meldinger innenfor et sekund.
 * Tiden er bare så riktig som PLS-ens klokke. En kontroller med uinnstilt klokke stempler meldingen sin 1970. Når klokken ikke kan leses (`diLastClockResult` er ikke 0), går meldingen ut ustemplet, noe del 14 tillater, i stedet for ikke å gå ut i det hele tatt.
 
 Øk `udiConfigMajor` hver gang feltlisten endres. En mottaker som har et oppsett knyttet til versjonen, kan da avvise en melding bygget for en annen liste i stedet for å dekode den feil.
@@ -67,9 +75,13 @@ Hvert felt er en EncodingMask-byte, så verdien. Bit 0 til 5 i masken er den inn
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | Int32-lengde i byte, så UTF-8 (5.2.2.4) |
+| et felt med status Bad eller Uncertain (`SetStatus`) | 19 StatusCode | 4, UInt32-statusen, i stedet for verdien (bare Variant) |
+| WSTRING | 12 String | Int32-lengde i byte, så UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | millisekunder, slik en CODESYS TIME lagres |
 
 En CODESYS STRING har én byte per tegn. Byte opp til `7F` er ASCII og går ut uendret. Byte over `7F` leses som ISO 8859-1 og skrives i sin to-byte UTF-8-form. Det er en antakelse om PLS-ens kodeside, og det er det eneste stedet blokken tolker tekst.
+
+En CODESYS-WSTRING er UTF-16 og trenger ingen antakelse: hver 16-biters enhet skrives som UTF-8 (ett, to eller tre byte), et velformet surrogatpar blir det ene fire-byte-tegnet, og en enslig surrogat blir U+FFFD, slik at teksten alltid er gyldig UTF-8. I RawData er MaxStringLength for en `WSTRING(N)` `3 * N` byte, det mest den kan oppta.
 
 ## Felt, RawData-koding (del 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ Ingen maske og ingen telling: hvert felt er bare verdien sin, i rekkefølge, så
 * **Matriser** er et Int32-elementantall og så elementene (del 6, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). Blokken sender alltid alle elementene den ble gitt, så antallet er lik matrisens deklarerte størrelse, og det er ingen utfylling etter den.
 * **Strenger** er en Int32-lengde i byte og UTF-8-bytene, så nullbyte opp til MaxStringLength, slik at feltet alltid er 4 + MaxStringLength byte (7.2.4.5.11: "the field shall be padded with bytes with value zero"). Blokken bruker N fra `STRING(N)` som MaxStringLength, i byte. Lengre tekst kuttes ved en tegngrense, fordi feltet ikke kan vokse. Mottakerens feltmetadata må ha samme MaxStringLength og en ArrayDimensions-oppføring for hver matrise.
 
-Dette er lesemåten til OPC Foundations egen referansestack. I UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`) sier `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` linje 389 til 403 at en streng blir "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", og at for en matrise "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` på linje 593 til 648 implementerer det, og `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` hevder det. [Bevissiden](/nb/transmitter/proof/) har resten.
+Dette er lesemåten til OPC Foundations egen referansestakk. I UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`) sier `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, linje 389 til 403, at en streng "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", og at for en array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` på linje 593 til 648 implementerer det, og `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` hevder det. `docs/PROOF.md` har resten.
 
 ## Størrelse
 
