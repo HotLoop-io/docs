@@ -28,7 +28,7 @@ Ci sono due modi per far girare davvero un prodotto HotLoop: Helm su k3s o su qu
 | [HotLoop Flow](/it/flow/overview/) | 2.17.1 | Sì | Sì | [Installa Flow](/it/flow/install/) |
 | [HotLoop Cascade](/it/cascade/overview/) | 1.5.1 | Sì, senza login | Sì, senza login, vedi [Cascade con Podman Quadlet](/it/cascade/quadlet/) | [Eseguire Cascade](/it/cascade/running/) |
 | [HotLoop for CODESYS](/it/codesys/overview/) | 0.3.10 | Sì, oppure l'App Store di EmberCORE | No | [Installa HotLoop for CODESYS](/it/codesys/install/) |
-| [HotLoop Transmitter](/it/transmitter/overview/) | 1.2.0 | No, è una libreria CODESYS | No, è una libreria CODESYS | [Installa Transmitter](/it/transmitter/install/) |
+| [HotLoop Transmitter](/it/transmitter/overview/) | 1.3.0 | No, è una libreria CODESYS | No, è una libreria CODESYS | [Installa Transmitter](/it/transmitter/install/) |
 
 HotLoop IoT, Edge, Gateway ed Edge Relay escono da un solo tag, in blocco, quindi condividono un numero di versione. Flow, Cascade, HotLoop for CODESYS e Transmitter hanno il proprio. Le unità Quadlet di IoT, Edge e Gateway richiedono Podman 5.0 o successivo, e quella del relay è stata eseguita su Podman 4.9.3. Raspberry Pi OS Bookworm include la 4.3, che non ha affatto Quadlet, quindi un Pi richiede Trixie o successivo.
 

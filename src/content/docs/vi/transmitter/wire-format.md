@@ -40,11 +40,19 @@ Vì Count là 1, phần tải không có mảng Sizes. Khối không gửi thôn
 | 2 | FieldCount | chỉ Variant. Bỏ qua với RawData (7.2.4.5.5) |
 | ... | các trường | theo thứ tự đã thêm |
 
+## Nhiều DataSetMessage trong một NetworkMessage
+
+Sau `AddDataSet`, Count của PayloadHeader là số DataSet và liệt kê từng DataSetWriterId, còn payload bắt đầu bằng mảng Sizes, mỗi DataSetMessage một kích thước byte UInt16 (7.2.4.5.3), rồi đến các DataSetMessage nối tiếp nhau. DataSet 1 dùng writer id, số thứ tự và ConfigurationVersion riêng của khối; mỗi DataSet khác có writer id, phiên bản chính và số thứ tự DataSetMessage riêng. Timestamp của NetworkMessage và của mọi DataSetMessage là cùng một thời điểm. Không có `AddDataSet`, thông điệp đúng như trước, Count 1 và không có Sizes.
+
+## Khung delta và KeepAlive
+
+Với `bDeltaFrames`, loại DataSetMessage trong DataSetFlags2 (bit 0 đến 3) là 0 cho khung khóa, 1 cho Data Delta Frame và 3 cho KeepAlive, còn bit Timestamp giữ nguyên. Khung khóa được gửi trước rồi cứ mỗi `uiKeyFrameEvery` thông điệp. Ở giữa, khối so sánh biến của từng trường (và trạng thái của nó) với những gì thông điệp trước mang: khung delta là `FieldCount` của các trường đã đổi (UInt16), rồi với mỗi trường là `FieldIndex` tính từ không (UInt16) và Variant của nó; khi không có gì đổi, thông điệp là KeepAlive, phần đầu DataSetMessage không có payload. KeepAlive mang số thứ tự của DataSetMessage kế tiếp và không dùng hết nó, trong khi số thứ tự NetworkMessage vẫn đếm nó. DataSet RawData luôn gửi khung khóa.
+
 ## Dấu thời gian
 
-Khối đọc đồng hồ thời gian thực của PLC một lần mỗi thông điệp bằng `SysTimeRtcGet` (thư viện hệ thống SysTimeRtc, do runtime cung cấp), cho ra số giây nguyên kể từ 1970-01-01 UTC, và ghi `(seconds + 11644473600) * 10000000` làm DateTime. Cả hai dấu thời gian trong một thông điệp đều là giá trị duy nhất đó. Từ đó suy ra hai điều:
+Khối đọc đồng hồ thời gian thực của PLC mỗi thông điệp một lần bằng `SysTimeRtcHighResGet` (thư viện hệ thống SysTimeRtc, do runtime cung cấp), là số mili giây kể từ 1970-01-01 UTC, và ghi `milliseconds * 10000 + 11644473600 * 10000000` làm DateTime. Cả hai dấu thời gian của một thông điệp là giá trị duy nhất đó. Nếu runtime không trả lời được lệnh gọi độ phân giải cao, hoặc `bHighResTimestamp` là FALSE, khối đọc `SysTimeRtcGet` (giây nguyên) và ghi `(seconds + 11644473600) * 10000000`, như 1.1.0. Từ đó có hai điều:
 
-* Độ phân giải là một giây. Bên nhận thấy cùng một dấu thời gian trên mọi thông điệp trong vòng một giây, và nó trễ tới một giây so với thời điểm thông điệp được dựng. Dấu thời gian dưới một giây nằm trong lộ trình.
+* Độ phân giải là một mili giây (`bStampHighRes` cho biết thông điệp gần nhất dùng đồng hồ nào). Khi lùi về giây nguyên, bên nhận thấy cùng một dấu thời gian trên mọi thông điệp trong một giây.
 * Thời gian chỉ đúng bằng đồng hồ của PLC. Một bộ điều khiển chưa đặt đồng hồ sẽ đóng dấu thông điệp là 1970. Khi không đọc được đồng hồ (`diLastClockResult` khác 0), thông điệp đi ra không có dấu, điều mà Phần 14 cho phép, thay vì không đi ra.
 
 Hãy tăng `udiConfigMajor` mỗi khi danh sách trường thay đổi. Khi đó một bên nhận giữ bố cục theo phiên bản có thể từ chối thông điệp dựng cho danh sách khác thay vì giải mã sai.
@@ -67,9 +75,13 @@ Mỗi trường là một byte EncodingMask, rồi đến giá trị. Bit 0 đ�
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | độ dài Int32 tính bằng byte, rồi UTF-8 (5.2.2.4) |
+| trường có trạng thái Bad hoặc Uncertain (`SetStatus`) | 19 StatusCode | 4, trạng thái UInt32, thay cho giá trị (chỉ Variant) |
+| WSTRING | 12 String | Độ dài Int32 tính bằng byte, rồi UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | mili giây, cách một TIME của CODESYS được lưu |
 
 Một STRING của CODESYS lưu một byte cho mỗi ký tự. Các byte đến `7F` là ASCII và đi ra không đổi. Các byte trên `7F` được đọc như ISO 8859-1 và ghi dưới dạng UTF-8 hai byte. Đó là một giả định về bảng mã của PLC, và là nơi duy nhất khối diễn giải văn bản.
+
+WSTRING của CODESYS là UTF-16 và không cần giả định nào: mỗi đơn vị 16 bit được ghi thành UTF-8 (một, hai hoặc ba byte), một cặp thay thế hợp lệ trở thành một ký tự bốn byte, và một thay thế lẻ trở thành U+FFFD, nên văn bản luôn là UTF-8 hợp lệ. Trong RawData, MaxStringLength của `WSTRING(N)` là `3 * N` byte, mức tối đa nó có thể chiếm.
 
 ## Trường, mã hóa RawData (Phần 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ Không có mặt nạ và không có số đếm: mỗi trường chỉ là giá
 * **Mảng** là số phần tử Int32 rồi đến các phần tử (Phần 6, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). Khối luôn gửi mọi phần tử được đưa vào, nên số đếm bằng kích thước khai báo của mảng và không có phần đệm phía sau.
 * **Chuỗi** là độ dài Int32 tính bằng byte và các byte UTF-8, rồi các byte không đến MaxStringLength, nên trường luôn dài 4 + MaxStringLength byte (7.2.4.5.11: "the field shall be padded with bytes with value zero"). Khối dùng N của `STRING(N)` làm MaxStringLength, tính bằng byte. Văn bản dài hơn bị cắt ở ranh giới ký tự, vì trường không thể lớn thêm. Metadata trường của bên nhận phải mang cùng MaxStringLength và một mục ArrayDimensions cho mỗi mảng.
 
-Đây là cách đọc của chính ngăn xếp tham chiếu của OPC Foundation. Trong UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` dòng 389 đến 403 nói một chuỗi được "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", và với mảng thì "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` ở dòng 593 đến 648 hiện thực điều đó, và `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` khẳng định nó. [Trang bằng chứng](/vi/transmitter/proof/) có phần còn lại.
+Đây là cách đọc của chính ngăn xếp tham chiếu của OPC Foundation. Trong UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, dòng 389 đến 403, nói rằng một chuỗi được "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", và với mảng thì "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` ở dòng 593 đến 648 hiện thực điều đó, và `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` kiểm chứng nó. `docs/PROOF.md` có phần còn lại.
 
 ## Kích thước
 

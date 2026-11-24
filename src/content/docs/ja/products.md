@@ -18,7 +18,7 @@ HotLoop は現場のための 8 つの製品です。サイトとともに成長
 | **HotLoop Flow** | Flow | <a href="/ja/flow/overview/">ドキュメント</a> | <a href="/ja/flow/install/">インストール</a> | <a href="/ja/releases/#hotloop-flow">ノート</a> | <a href="/ja/flow/roadmap/">ロードマップ</a> |
 | **HotLoop Cascade** | Cascade | <a href="/ja/cascade/overview/">ドキュメント</a> | <a href="/ja/cascade/running/">インストール</a> | <a href="/ja/releases/#hotloop-cascade">ノート</a> | <a href="/ja/cascade/roadmap/">ロードマップ</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/ja/codesys/overview/">ドキュメント</a> | <a href="/ja/codesys/install/">インストール</a> | <a href="/ja/releases/codesys-0-3-10/">ノート</a> | <a href="/ja/codesys/roadmap/">ロードマップ</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/ja/transmitter/overview/">ドキュメント</a> | <a href="/ja/transmitter/install/">インストール</a> | <a href="/ja/releases/transmitter-1-2-0/">ノート</a> | <a href="/ja/transmitter/roadmap/">ロードマップ</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/ja/transmitter/overview/">ドキュメント</a> | <a href="/ja/transmitter/install/">インストール</a> | <a href="/ja/releases/transmitter-1-3-0/">ノート</a> | <a href="/ja/transmitter/roadmap/">ロードマップ</a> |
 
 次の表は、コア 4 製品を比較したものです。
 

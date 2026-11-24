@@ -40,11 +40,19 @@ Count가 1이므로 페이로드에는 Sizes 배열이 없습니다. 블록은 �
 | 2 | FieldCount | Variant에서만. RawData에서는 생략(7.2.4.5.5) |
 | ... | 필드들 | 추가한 순서대로 |
 
+## 하나의 NetworkMessage에 담긴 여러 DataSetMessage
+
+`AddDataSet` 이후 PayloadHeader의 Count는 DataSet의 수이고 각 DataSetWriterId를 나열하며, 페이로드는 Sizes 배열(DataSetMessage당 UInt16 바이트 크기 하나, 7.2.4.5.3)로 시작하고 그 뒤에 DataSetMessage가 차례로 이어집니다. DataSet 1은 블록 자체의 writer id, 시퀀스 번호, ConfigurationVersion을 쓰고, 나머지 DataSet은 각자의 writer id, 주 버전, DataSetMessage 시퀀스 번호를 가집니다. NetworkMessage의 Timestamp와 모든 DataSetMessage의 Timestamp는 같은 시각입니다. `AddDataSet`이 없으면 메시지는 예전과 똑같이 Count 1에 Sizes가 없습니다.
+
+## 델타 프레임과 KeepAlive
+
+`bDeltaFrames`를 켜면 DataSetFlags2(비트 0~3)의 DataSetMessage 유형이 키 프레임은 0, Data Delta Frame은 1, KeepAlive는 3이며 Timestamp 비트는 그대로입니다. 키 프레임이 먼저 나가고 이후 `uiKeyFrameEvery` 메시지마다 나갑니다. 그 사이에 블록은 각 필드의 변수(와 그 상태)를 마지막 메시지가 실은 값과 비교합니다. 델타 프레임은 변경된 필드의 `FieldCount`(UInt16) 뒤에 각 필드의 0부터 시작하는 `FieldIndex`(UInt16)와 Variant가 옵니다. 아무것도 바뀌지 않았으면 메시지는 KeepAlive, 즉 페이로드 없는 DataSetMessage 헤더입니다. KeepAlive는 다음 DataSetMessage의 시퀀스 번호를 싣고 그 번호를 소모하지 않으며, NetworkMessage 시퀀스 번호는 이를 셉니다. RawData DataSet은 항상 키 프레임을 보냅니다.
+
 ## 타임스탬프
 
-블록은 메시지마다 `SysTimeRtcGet`(런타임이 제공하는 SysTimeRtc 시스템 라이브러리)으로 PLC의 실시간 시계를 한 번 읽습니다. 이 값은 1970-01-01 UTC 이후의 정수 초이며, 블록은 `(seconds + 11644473600) * 10000000`을 DateTime으로 씁니다. 메시지 안의 두 타임스탬프는 이 하나의 값입니다. 여기서 두 가지가 따라옵니다.
+블록은 메시지마다 한 번 `SysTimeRtcHighResGet`(런타임이 제공하는 시스템 라이브러리 SysTimeRtc)으로 PLC의 실시간 클록을 읽습니다. 이는 1970-01-01 UTC 이후의 밀리초이며, `milliseconds * 10000 + 11644473600 * 10000000`을 DateTime으로 씁니다. 한 메시지의 두 타임스탬프는 이 하나의 값입니다. 런타임이 고해상도 호출에 답하지 못하거나 `bHighResTimestamp`가 FALSE이면 `SysTimeRtcGet`(정수 초)을 읽고 1.1.0처럼 `(seconds + 11644473600) * 10000000`을 씁니다. 여기서 두 가지가 따라옵니다:
 
-* 해상도는 1초입니다. 수신자는 같은 1초 안의 모든 메시지에서 같은 타임스탬프를 보며, 메시지를 만든 순간보다 최대 1초 뒤처집니다. 1초 미만 타임스탬프는 로드맵에 있습니다.
+* 해상도는 1밀리초입니다(`bStampHighRes`가 마지막 메시지가 어느 클록을 썼는지 알려 줍니다). 정수 초로 되돌아가면 수신 측은 1초 안의 모든 메시지에서 같은 타임스탬프를 보게 됩니다.
 * 시간은 PLC 시계만큼만 정확합니다. 시계를 설정하지 않은 컨트롤러는 메시지에 1970년을 찍습니다. 시계를 읽을 수 없으면(`diLastClockResult`가 0이 아님) 메시지를 아예 안 보내지 않고 타임스탬프 없이 보내며, 14부가 이를 허용합니다.
 
 필드 목록이 바뀔 때마다 `udiConfigMajor`를 올리세요. 그러면 버전별로 레이아웃을 보관하는 수신자가 다른 목록용으로 만든 메시지를 잘못 디코드하는 대신 거부할 수 있습니다.
@@ -67,9 +75,13 @@ Count가 1이므로 페이로드에는 Sizes 배열이 없습니다. 블록은 �
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | 바이트 단위 Int32 길이, 그다음 UTF-8(5.2.2.4) |
+| Bad 또는 Uncertain 상태의 필드(`SetStatus`) | 19 StatusCode | 4, 값 대신 UInt32 상태(Variant만 해당) |
+| WSTRING | 12 String | 바이트 단위 Int32 길이, 그다음 UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | 밀리초. CODESYS TIME이 저장되는 방식 |
 
 CODESYS STRING은 문자당 한 바이트를 가집니다. `7F`까지의 바이트는 ASCII이며 그대로 나갑니다. `7F`를 넘는 바이트는 ISO 8859-1로 읽어 두 바이트 UTF-8 형태로 씁니다. 이것은 PLC 코드 페이지에 대한 가정이며, 블록이 텍스트를 해석하는 유일한 곳입니다.
+
+CODESYS WSTRING은 UTF-16이며 어떤 가정도 필요하지 않습니다. 16비트 단위 각각을 UTF-8(1, 2 또는 3바이트)로 쓰고, 올바르게 짝지어진 서로게이트 쌍은 하나의 4바이트 문자가 되며, 짝 없는 서로게이트는 U+FFFD가 되어 텍스트는 항상 유효한 UTF-8입니다. RawData에서 `WSTRING(N)`의 MaxStringLength는 차지할 수 있는 최대인 `3 * N` 바이트입니다.
 
 ## 필드, RawData 인코딩 (14부, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ CODESYS STRING은 문자당 한 바이트를 가집니다. `7F`까지의 바이�
 * **배열**은 Int32 요소 개수와 그다음 요소들입니다(6부, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). 블록은 받은 모든 요소를 항상 보내므로 개수는 배열의 선언된 크기와 같고 뒤에 패딩이 없습니다.
 * **문자열**은 바이트 단위 Int32 길이와 UTF-8 바이트, 그다음 MaxStringLength까지 0 바이트이므로 필드는 항상 4 + MaxStringLength바이트입니다(7.2.4.5.11: "the field shall be padded with bytes with value zero"). 블록은 `STRING(N)`의 N을 바이트 단위 MaxStringLength로 씁니다. 더 긴 텍스트는 필드가 커질 수 없으므로 문자 경계에서 잘립니다. 수신자의 필드 메타데이터에는 같은 MaxStringLength와 배열마다 ArrayDimensions 항목이 있어야 합니다.
 
-이것은 OPC Foundation 자체 참조 스택의 해석입니다. UA-.NETStandard(커밋 `fcfc84eab5c105780d7268474a47d344d100aca1`)의 `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` 389행에서 403행은 문자열을 "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding"이라고, 배열은 "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements"라고 합니다. 593행에서 648행의 `TryReadPaddedArray`가 이를 구현하고 `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs`가 검증합니다. 나머지는 [검증 페이지](/ko/transmitter/proof/)에 있습니다.
+이것은 OPC Foundation 자체 참조 스택의 해석입니다. UA-.NETStandard(커밋 `fcfc84eab5c105780d7268474a47d344d100aca1`)의 `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` 389~403행은 문자열이 "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding" 라고 하고, 배열에 대해서는 "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements" 라고 합니다. 593~648행의 `TryReadPaddedArray`가 이를 구현하며 `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs`가 이를 검증합니다. 나머지는 `docs/PROOF.md`에 있습니다.
 
 ## 크기
 

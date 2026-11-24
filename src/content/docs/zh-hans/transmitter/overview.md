@@ -15,7 +15,7 @@ HotLoop 的每一个新工具都用 Go 编写，除非有真正的理由。这�
 
 ## 如何使用
 
-1. 把 `HotLoopTransmitter-1.2.0.library` 安装到 CODESYS 库仓库（Tools、Library Repository、Install），或用 CODESYS Installer 安装 `HotLoopTransmitter-1.2.0.package`，然后把它添加到工程的 Library Manager。[安装页面](/zh-hans/transmitter/install/)有下载和详细说明。
+1. 把 `HotLoopTransmitter-1.3.0.library` 安装到 CODESYS 库仓库（Tools、Library Repository、Install），或用 CODESYS Installer 安装 `HotLoopTransmitter-1.3.0.package`，然后把它添加到工程的 Library Manager。[安装页面](/zh-hans/transmitter/install/)有下载和详细说明。
 2. 声明一个发布器，在启动时一次性添加要发布的变量，然后每个周期调用它：
 
 ```iecst

@@ -21,7 +21,10 @@ Alles liegt im Namensraum `HLTX`. Der Baustein ist `HLTX.FB_HLTX_Publisher`.
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` oder `RawData`. Im deaktivierten Zustand ändern |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion im Gruppen-Header |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | ConfigurationVersion des DataSets. Erhöhen Sie das Major, sobald sich die Feldliste ändert |
-| `bTimestamp` | BOOL | TRUE | versieht jede Nachricht mit der SPS-Uhr, in der NetworkMessage und in der DataSetMessage (ganze Sekunden, siehe [Was auf der Leitung steht](/de/transmitter/wire-format/)). FALSE sendet die Bytes von 1.0.0, 17 Byte kürzer |
+| `bTimestamp` | BOOL | TRUE | versieht jede Nachricht mit der Zeit der SPS-Uhr, in der NetworkMessage und der DataSetMessage (auf die Millisekunde genau, siehe `WIRE-FORMAT.md`). FALSE sendet die Bytes von 1.0.0, 17 Bytes kürzer |
+| `bDeltaFrames` | BOOL | FALSE | Nur Variant-Kodierung. Sendet zwischen den Key Frames einen Data Delta Frame (nur die geänderten Felder, jedes mit seinem Index) und einen KeepAlive, wenn sich nichts geändert hat. FALSE sendet jedes Mal einen vollständigen Key Frame, den jeder Subscriber liest. Ein Subscriber, der Delta Frames verwirft, zeigt eine Änderung erst beim nächsten Key Frame |
+| `uiKeyFrameEvery` | UINT | 10 | mit `bDeltaFrames`: alle so viele Nachrichten ein vollständiger Key Frame, damit ein Subscriber, der später dazukam, das ganze Bild innerhalb dieser Spanne hat |
+| `bHighResTimestamp` | BOOL | TRUE | stempelt mit der Millisekundenzeit der Uhr, wenn die Runtime sie hat. FALSE stempelt ganze Sekunden, wie 1.1.0 es tat |
 | `tRetry` | TIME | T#2S | wie lange gewartet wird, bevor der Socket nach zehn fehlgeschlagenen Sendungen in Folge neu geöffnet wird |
 
 ## Ausgänge
@@ -37,6 +40,9 @@ Alles liegt im Namensraum `HLTX`. Der Baustein ist `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | Bytes der letzten Nachricht |
 | `diLastSocketResult` | UDINT | der letzte Runtime-Fehlercode eines Socket-Aufrufs, 0 ist in Ordnung |
 | `diLastClockResult` | UDINT | das letzte Ergebnis beim Lesen der SPS-Uhr für einen Zeitstempel, 0 ist in Ordnung. Ist es nicht 0, geht die Nachricht ohne Zeitstempel hinaus |
+| `bDeltaActive` | BOOL | TRUE, solange Delta Frames verwendet werden: `bDeltaFrames` ist an, das DataSet ist Variant und die Felder passen in die 4096 Byte große Kopie der vorherigen Werte |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | gesendete Data Delta Frames und KeepAlive-Nachrichten |
+| `bStampHighRes` | BOOL | TRUE, wenn der Zeitstempel der letzten Nachricht die Millisekundenzeit der Uhr trug, FALSE, wenn er auf ganze Sekunden zurückfiel oder ohne Zeitstempel ging |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | Mikrosekunden im letzten Aufruf des Bausteins und der längste seit Aktivierung oder `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | die längste Zeit für den Aufbau einer Nachricht und im Sendeaufruf selbst, seit Aktivierung oder `Clear()` |
 
@@ -48,7 +54,10 @@ Fügen Sie die Felder einmal vor dem ersten Aufruf hinzu, in der Reihenfolge, in
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | einen Skalar. `pValue` ist `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | einen STRING. `uiMaxLen` ist das N in `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | ein Array mit `uiCount` Elementen eines beliebigen Typs außer STRING. `pFirst` ist `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | ein WSTRING, als UTF-8 gesendet. `uiMaxLen` ist das N in `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | beginnt ein weiteres DataSet in derselben NetworkMessage: die danach hinzugefügten Felder gehören dazu. In jedem Veröffentlichungsintervall trägt eine NetworkMessage dann eine DataSetMessage je DataSet, sodass mehrere Writer ein Datagramm teilen. Bis zu 8 DataSets; Delta Frames sind aus, sobald es mehr als eines gibt |
+| `SetStatus(pStatus)` | gibt dem zuletzt hinzugefügten Feld einen Status. `pStatus` ist `ADR` eines UDINT mit einem OPC-UA-StatusCode. Solange er nicht 0 ist, geht das Feld als dieser StatusCode statt seines Werts hinaus (Variant-Kodierung), und ein Empfänger liest es als schlechte Qualität. 0 sendet den Wert. RawData hat keinen Status, ein RawData-Publisher sendet also weiter den Wert |
+| `AddArray(pFirst, eType, uiCount)` | ein Array aus `uiCount` Elementen jedes Typs außer STRING und WSTRING. `pFirst` ist `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | die allgemeine Form, die die anderen aufrufen |
 | `Clear()` | vergisst die Feldliste und die maximale Aufrufzeit |
 

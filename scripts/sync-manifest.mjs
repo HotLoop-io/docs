@@ -249,7 +249,7 @@ Object.assign(SLUG_RULES, {
          ['Flow', 'Flow', 'flow/overview', 'flow/install', 'releases/#hotloop-flow', 'flow/roadmap'],
          ['Cascade', 'Cascade', 'cascade/overview', 'cascade/running', 'releases/#hotloop-cascade', 'cascade/roadmap'],
          ['for CODESYS', 'HotLoop for CODESYS', 'codesys/overview', 'codesys/install', `releases/codesys-${CODESYS.version.replace(/\./g, '-')}`, 'codesys/roadmap'],
-         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-2-0', 'transmitter/roadmap']]
+         ['Transmitter', 'Transmitter', 'transmitter/overview', 'transmitter/install', 'releases/transmitter-1-3-0', 'transmitter/roadmap']]
         .map(([n, l, d, i, r, m]) => `| **HotLoop ${n}** | ${l} | <a href="/${d}/">Docs</a> | <a href="/${i}/">Install</a> | <a href="/${r}${r.includes('#') ? '' : '/'}">Notes</a> | <a href="/${m}/">Roadmap</a> |`).join('\n')
       + '\n\nThe table that follows compares the four core products.'],
   ],

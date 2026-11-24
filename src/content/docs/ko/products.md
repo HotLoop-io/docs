@@ -18,7 +18,7 @@ HotLoop은 현장을 위한 여덟 가지 제품입니다. 사이트와 함께 �
 | **HotLoop Flow** | Flow | <a href="/ko/flow/overview/">문서</a> | <a href="/ko/flow/install/">설치</a> | <a href="/ko/releases/#hotloop-flow">노트</a> | <a href="/ko/flow/roadmap/">로드맵</a> |
 | **HotLoop Cascade** | Cascade | <a href="/ko/cascade/overview/">문서</a> | <a href="/ko/cascade/running/">설치</a> | <a href="/ko/releases/#hotloop-cascade">노트</a> | <a href="/ko/cascade/roadmap/">로드맵</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/ko/codesys/overview/">문서</a> | <a href="/ko/codesys/install/">설치</a> | <a href="/ko/releases/codesys-0-3-10/">노트</a> | <a href="/ko/codesys/roadmap/">로드맵</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/ko/transmitter/overview/">문서</a> | <a href="/ko/transmitter/install/">설치</a> | <a href="/ko/releases/transmitter-1-2-0/">노트</a> | <a href="/ko/transmitter/roadmap/">로드맵</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/ko/transmitter/overview/">문서</a> | <a href="/ko/transmitter/install/">설치</a> | <a href="/ko/releases/transmitter-1-3-0/">노트</a> | <a href="/ko/transmitter/roadmap/">로드맵</a> |
 
 다음 표는 코어 네 제품을 비교합니다.
 

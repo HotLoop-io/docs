@@ -18,7 +18,7 @@ HotLoop са осем продукта за производствения це�
 | **HotLoop Flow** | Flow | <a href="/bg/flow/overview/">Документация</a> | <a href="/bg/flow/install/">Инсталиране</a> | <a href="/bg/releases/#hotloop-flow">Бележки</a> | <a href="/bg/flow/roadmap/">Пътна карта</a> |
 | **HotLoop Cascade** | Cascade | <a href="/bg/cascade/overview/">Документация</a> | <a href="/bg/cascade/running/">Инсталиране</a> | <a href="/bg/releases/#hotloop-cascade">Бележки</a> | <a href="/bg/cascade/roadmap/">Пътна карта</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/bg/codesys/overview/">Документация</a> | <a href="/bg/codesys/install/">Инсталиране</a> | <a href="/bg/releases/codesys-0-3-10/">Бележки</a> | <a href="/bg/codesys/roadmap/">Пътна карта</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/bg/transmitter/overview/">Документация</a> | <a href="/bg/transmitter/install/">Инсталиране</a> | <a href="/bg/releases/transmitter-1-2-0/">Бележки</a> | <a href="/bg/transmitter/roadmap/">Пътна карта</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/bg/transmitter/overview/">Документация</a> | <a href="/bg/transmitter/install/">Инсталиране</a> | <a href="/bg/releases/transmitter-1-3-0/">Бележки</a> | <a href="/bg/transmitter/roadmap/">Пътна карта</a> |
 
 Следващата таблица сравнява четирите продукта на core.
 

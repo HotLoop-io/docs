@@ -40,11 +40,19 @@ description: "HotLoop Transmitter जो NetworkMessage और DataSetMessage �
 | 2 | FieldCount | केवल Variant। RawData के लिए छोड़ा जाता है (7.2.4.5.5) |
 | ... | फ़ील्ड | जिस क्रम में जोड़े गए |
 
+## एक NetworkMessage में कई DataSetMessage
+
+`AddDataSet` के बाद PayloadHeader का Count DataSet की संख्या है और हर DataSetWriterId सूचीबद्ध करता है, और पेलोड Sizes ऐरे से शुरू होता है, हर DataSetMessage के लिए एक UInt16 बाइट आकार (7.2.4.5.3), फिर DataSetMessage एक के बाद एक आते हैं। DataSet 1 ब्लॉक का अपना writer id, सीक्वेंस नंबर और ConfigurationVersion उपयोग करता है; हर दूसरे DataSet का अपना writer id, मेजर संस्करण और DataSetMessage सीक्वेंस नंबर होता है। NetworkMessage का Timestamp और हर DataSetMessage का Timestamp एक ही क्षण हैं। `AddDataSet` के बिना संदेश ठीक वही है जो था, Count 1 और कोई Sizes नहीं।
+
+## डेल्टा फ़्रेम और KeepAlive
+
+`bDeltaFrames` के साथ DataSetFlags2 (बिट 0 से 3) में DataSetMessage का प्रकार की फ़्रेम के लिए 0, Data Delta Frame के लिए 1 और KeepAlive के लिए 3 होता है, और Timestamp बिट पहले जैसा रहता है। पहले एक की फ़्रेम जाता है और फिर हर `uiKeyFrameEvery` संदेशों पर। इनके बीच ब्लॉक हर फ़ील्ड के वेरिएबल (और उसके स्टेटस) की तुलना उससे करता है जो पिछले संदेश में गया था: डेल्टा फ़्रेम बदले हुए फ़ील्ड का `FieldCount` (UInt16) है, फिर हर एक का शून्य-आधारित `FieldIndex` (UInt16) और उसका Variant; कुछ न बदला हो तो संदेश KeepAlive होता है, बिना पेलोड का DataSetMessage हेडर। KeepAlive अगले DataSetMessage का सीक्वेंस नंबर ले जाता है और उसे खर्च नहीं करता, जबकि NetworkMessage का सीक्वेंस नंबर उसे गिनता है। RawData DataSet हमेशा की फ़्रेम भेजते हैं।
+
 ## टाइमस्टैम्प
 
-ब्लॉक हर संदेश पर `SysTimeRtcGet` (SysTimeRtc सिस्टम लाइब्रेरी, जो रनटाइम देता है) से PLC की रियल-टाइम घड़ी एक बार पढ़ता है, जो 1970-01-01 UTC से पूरे सेकंड देती है, और `(seconds + 11644473600) * 10000000` को DateTime के रूप में लिखता है। संदेश के दोनों टाइमस्टैम्प यही एक मान हैं। इससे दो बातें निकलती हैं:
+ब्लॉक प्रति संदेश एक बार `SysTimeRtcHighResGet` (SysTimeRtc सिस्टम लाइब्रेरी, जो रनटाइम देता है) से PLC की रियल-टाइम घड़ी पढ़ता है, जो 1970-01-01 UTC से मिलीसेकंड है, और `milliseconds * 10000 + 11644473600 * 10000000` को DateTime के रूप में लिखता है। एक संदेश के दोनों टाइमस्टैम्प यही एक मान हैं। अगर रनटाइम उच्च रिज़ॉल्यूशन वाली कॉल का उत्तर नहीं दे सकता, या `bHighResTimestamp` FALSE है, तो वह `SysTimeRtcGet` (पूरे सेकंड) पढ़ता है और 1.1.0 की तरह `(seconds + 11644473600) * 10000000` लिखता है। इससे दो बातें निकलती हैं:
 
-* रिज़ॉल्यूशन एक सेकंड है। रिसीवर को एक सेकंड के भीतर हर संदेश पर वही टाइमस्टैम्प दिखता है, और वह संदेश बनने के क्षण से एक सेकंड तक पीछे हो सकता है। एक सेकंड से छोटे स्टैम्प रोडमैप पर हैं।
+* रिज़ॉल्यूशन एक मिलीसेकंड है (`bStampHighRes` बताता है कि अंतिम संदेश ने कौन-सी घड़ी उपयोग की)। पूरे सेकंड पर लौटने पर रिसीवर एक सेकंड के भीतर हर संदेश पर वही टाइमस्टैम्प देखता है।
 * समय उतना ही सही है जितनी PLC की घड़ी। जिस कंट्रोलर की घड़ी सेट नहीं है वह अपने संदेश पर 1970 की मुहर लगाता है। जब घड़ी पढ़ी नहीं जा सकती (`diLastClockResult` 0 नहीं है) तो संदेश बिल्कुल न जाने के बजाय बिना मुहर के जाता है, जिसे भाग 14 अनुमति देता है।
 
 जब भी फ़ील्ड सूची बदले, `udiConfigMajor` बढ़ाएँ। तब जो रिसीवर संस्करण के आधार पर लेआउट रखता है, वह किसी दूसरी सूची के लिए बने संदेश को गलत डिकोड करने के बजाय अस्वीकार कर सकता है।
@@ -67,9 +75,13 @@ description: "HotLoop Transmitter जो NetworkMessage और DataSetMessage �
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | बाइट में Int32 लंबाई, फिर UTF-8 (5.2.2.4) |
+| Bad या Uncertain स्टेटस वाला फ़ील्ड (`SetStatus`) | 19 StatusCode | 4, मान की जगह UInt32 स्टेटस (केवल Variant) |
+| WSTRING | 12 String | बाइट में Int32 लंबाई, फिर UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | मिलीसेकंड, CODESYS का TIME इसी तरह रखा जाता है |
 
 CODESYS का STRING हर अक्षर के लिए एक बाइट रखता है। `7F` तक के बाइट ASCII हैं और बिना बदले जाते हैं। `7F` से ऊपर के बाइट ISO 8859-1 के रूप में पढ़े जाते हैं और उनके दो बाइट वाले UTF-8 रूप में लिखे जाते हैं। यह PLC के कोड पेज के बारे में एक मान्यता है, और यही एकमात्र जगह है जहाँ ब्लॉक पाठ की व्याख्या करता है।
+
+CODESYS का WSTRING UTF-16 है और उसे किसी अनुमान की ज़रूरत नहीं: हर 16 बिट इकाई UTF-8 (एक, दो या तीन बाइट) के रूप में लिखी जाती है, सही बनी सरोगेट जोड़ी एक चार-बाइट वर्ण बन जाती है, और अकेला सरोगेट U+FFFD बन जाता है, इसलिए पाठ हमेशा वैध UTF-8 रहता है। RawData में `WSTRING(N)` का MaxStringLength `3 * N` बाइट है, जो वह अधिकतम ले सकता है।
 
 ## फ़ील्ड, RawData एन्कोडिंग (भाग 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ CODESYS का STRING हर अक्षर के लिए एक बाइ�
 * **ऐरे** एक Int32 तत्व-संख्या और फिर तत्व हैं (भाग 6, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value")। ब्लॉक हमेशा हर वह तत्व भेजता है जो उसे दिया गया, इसलिए संख्या ऐरे के घोषित आकार के बराबर है और उसके बाद कोई पैडिंग नहीं है।
 * **स्ट्रिंग** बाइट में Int32 लंबाई और UTF-8 बाइट हैं, फिर MaxStringLength तक शून्य बाइट, इसलिए फ़ील्ड हमेशा 4 + MaxStringLength बाइट का है (7.2.4.5.11: "the field shall be padded with bytes with value zero")। ब्लॉक `STRING(N)` के N को बाइट में MaxStringLength के रूप में लेता है। इससे लंबा पाठ अक्षर की सीमा पर काट दिया जाता है, क्योंकि फ़ील्ड बढ़ नहीं सकता। रिसीवर के फ़ील्ड मेटाडेटा में वही MaxStringLength और हर ऐरे के लिए एक ArrayDimensions प्रविष्टि होनी चाहिए।
 
-यह OPC Foundation के अपने संदर्भ स्टैक की व्याख्या है। UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`) में `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` की पंक्तियाँ 389 से 403 कहती हैं कि स्ट्रिंग "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding" है, और ऐरे के लिए "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements"। पंक्तियाँ 593 से 648 में `TryReadPaddedArray` इसे लागू करता है, और `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` इसे सिद्ध करता है। बाक़ी [प्रमाण पेज](/hi/transmitter/proof/) पर है।
+यह OPC Foundation के अपने रेफ़रेंस स्टैक की व्याख्या है। UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`) में `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, पंक्तियाँ 389 से 403, कहती है कि स्ट्रिंग "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", और ऐरे के लिए "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements"। पंक्तियाँ 593 से 648 में `TryReadPaddedArray` इसे लागू करता है, और `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` इसकी पुष्टि करता है। बाकी `docs/PROOF.md` में है।
 
 ## आकार
 

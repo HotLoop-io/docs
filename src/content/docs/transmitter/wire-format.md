@@ -46,11 +46,19 @@ promoted fields or a security header, and a receiver that requires one of those 
 | 2 | FieldCount | Variant only. Omitted for RawData (7.2.4.5.5) |
 | ... | the fields | in the order they were added |
 
+## Several DataSetMessages in one NetworkMessage
+
+After `AddDataSet` the PayloadHeader Count is the number of DataSets and lists each DataSetWriterId, and the payload starts with the Sizes array, one UInt16 byte size per DataSetMessage (7.2.4.5.3), then the DataSetMessages one after the other. DataSet 1 uses the block's own writer id, sequence number and ConfigurationVersion; every other DataSet has its own writer id, major version and DataSetMessage sequence number. The NetworkMessage Timestamp and every DataSetMessage Timestamp are the same instant. Without `AddDataSet` the message is exactly what it was, Count 1 and no Sizes.
+
+## Delta frames and KeepAlives
+
+With `bDeltaFrames` the DataSetMessage type in DataSetFlags2 (bits 0 to 3) is 0 for a key frame, 1 for a Data Delta Frame and 3 for a KeepAlive, and the Timestamp bit stays as before. A key frame goes out first and every `uiKeyFrameEvery` messages. Between them the block compares every field's variable (and its status) with what the last message carried: a delta frame is `FieldCount` of the changed fields (UInt16), then for each its zero based `FieldIndex` (UInt16) and its Variant; when nothing changed the message is a KeepAlive, the DataSetMessage header and no payload. A KeepAlive carries the sequence number of the next DataSetMessage and does not use it up, while the NetworkMessage sequence number still counts it. RawData DataSets always send key frames.
+
 ## The timestamp
 
-The block reads the PLC's real-time clock once per message with `SysTimeRtcGet` (the SysTimeRtc system library, which the runtime provides), which is whole seconds since 1970-01-01 UTC, and writes `(seconds + 11644473600) * 10000000` as the DateTime. Both timestamps in a message are that one value. Two things follow from it:
+The block reads the PLC's real-time clock once per message with `SysTimeRtcHighResGet` (the SysTimeRtc system library, which the runtime provides), which is milliseconds since 1970-01-01 UTC, and writes `milliseconds * 10000 + 11644473600 * 10000000` as the DateTime. Both timestamps in a message are that one value. If the runtime cannot answer the high resolution call, or `bHighResTimestamp` is FALSE, it reads `SysTimeRtcGet` (whole seconds) and writes `(seconds + 11644473600) * 10000000`, as 1.1.0 did. Two things follow from it:
 
-* The resolution is one second. A receiver sees the same timestamp on every message inside a second, and it is up to a second behind the instant the message was built. Sub-second stamps are on the roadmap.
+* The resolution is one millisecond (`bStampHighRes` says which clock the last message used). With the whole second fallback a receiver sees the same timestamp on every message inside a second.
 * The time is only as right as the PLC's clock. A controller with an unset clock stamps its message 1970. When the clock cannot be read (`diLastClockResult` is not 0) the message goes out unstamped, which Part 14 allows, rather than not at all.
 
 Bump `udiConfigMajor` whenever the field list changes. A receiver that keeps a layout keyed on the version can then
@@ -75,11 +83,17 @@ table 1), and bit 7 says the value is an array, in which case an Int32 element c
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | Int32 length in bytes, then UTF-8 (5.2.2.4) |
+| a field with a Bad or Uncertain status (`SetStatus`) | 19 StatusCode | 4, the UInt32 status, in place of the value (Variant only) |
+| WSTRING | 12 String | Int32 length in bytes, then UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | milliseconds, which is how a CODESYS TIME is held |
 
 A CODESYS STRING holds one byte per character. Bytes up to `7F` are ASCII and go out unchanged. Bytes above `7F` are
 read as ISO 8859-1 and written as their two byte UTF-8 form. That is an assumption about the PLC's code page, and it
 is the one place the block interprets text.
+
+A CODESYS WSTRING is UTF-16, and it needs no assumption: each 16 bit unit is written as UTF-8 (one, two or three
+bytes), a well formed surrogate pair becomes the one four byte character, and an unpaired surrogate becomes U+FFFD so
+the text is always valid UTF-8. In RawData the MaxStringLength of a `WSTRING(N)` is `3 * N` bytes, the most it can take.
 
 ## Fields, RawData encoding (Part 14, 7.2.4.5.11)
 
@@ -96,7 +110,7 @@ fields are "handled like a Structure DataType", so each value is encoded as a St
   because the field cannot grow. A receiver's field metadata must carry the same MaxStringLength and an
   ArrayDimensions entry for each array.
 
-This is the reading of the OPC Foundation's own reference stack. In UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` lines 389 to 403 say a string is "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", and that for an array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` at lines 593 to 648 implements it, and `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` asserts it. The [proof page](/transmitter/proof/) has the rest.
+This is the reading of the OPC Foundation's own reference stack. In UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`), `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` lines 389 to 403 say a string is "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", and that for an array "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` at lines 593 to 648 implements it, and `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` asserts it. `docs/PROOF.md` has the rest.
 
 ## Size
 

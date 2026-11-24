@@ -18,7 +18,7 @@ De utgis på fem utgivelseslinjer. **HotLoop core** er IoT, Edge, Gateway og Edg
 | **HotLoop Flow** | Flow | <a href="/nb/flow/overview/">Dokumentasjon</a> | <a href="/nb/flow/install/">Installasjon</a> | <a href="/nb/releases/#hotloop-flow">Notater</a> | <a href="/nb/flow/roadmap/">Veikart</a> |
 | **HotLoop Cascade** | Cascade | <a href="/nb/cascade/overview/">Dokumentasjon</a> | <a href="/nb/cascade/running/">Installasjon</a> | <a href="/nb/releases/#hotloop-cascade">Notater</a> | <a href="/nb/cascade/roadmap/">Veikart</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/nb/codesys/overview/">Dokumentasjon</a> | <a href="/nb/codesys/install/">Installasjon</a> | <a href="/nb/releases/codesys-0-3-10/">Notater</a> | <a href="/nb/codesys/roadmap/">Veikart</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/nb/transmitter/overview/">Dokumentasjon</a> | <a href="/nb/transmitter/install/">Installasjon</a> | <a href="/nb/releases/transmitter-1-2-0/">Notater</a> | <a href="/nb/transmitter/roadmap/">Veikart</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/nb/transmitter/overview/">Dokumentasjon</a> | <a href="/nb/transmitter/install/">Installasjon</a> | <a href="/nb/releases/transmitter-1-3-0/">Notater</a> | <a href="/nb/transmitter/roadmap/">Veikart</a> |
 
 Tabellen under sammenligner de fire kjerneproduktene.
 

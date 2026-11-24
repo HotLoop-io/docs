@@ -40,11 +40,19 @@ description: "HotLoop Transmitter 发送的 NetworkMessage 和 DataSetMessage，
 | 2 | FieldCount | 仅 Variant。RawData 省略（7.2.4.5.5） |
 | ... | 各字段 | 按添加顺序 |
 
+## 一个 NetworkMessage 中的多个 DataSetMessage
+
+调用 `AddDataSet` 后,PayloadHeader 的 Count 是 DataSet 的数量并列出每个 DataSetWriterId,载荷以 Sizes 数组开头(每个 DataSetMessage 一个 UInt16 字节大小,7.2.4.5.3),随后是依次排列的 DataSetMessage。DataSet 1 使用功能块自身的 writer id、序列号和 ConfigurationVersion;其他每个 DataSet 有自己的 writer id、主版本号和 DataSetMessage 序列号。NetworkMessage 的 Timestamp 与每个 DataSetMessage 的 Timestamp 是同一时刻。没有 `AddDataSet` 时,消息与以前完全一样,Count 为 1 且没有 Sizes。
+
+## 增量帧与 KeepAlive
+
+启用 `bDeltaFrames` 后,DataSetFlags2(位 0 到 3)中的 DataSetMessage 类型,关键帧为 0,Data Delta Frame 为 1,KeepAlive 为 3,Timestamp 位保持不变。先发送一个关键帧,之后每 `uiKeyFrameEvery` 条消息发送一次。其间,功能块把每个字段的变量(及其状态)与上一条消息所携带的内容比较:增量帧是变化字段的 `FieldCount`(UInt16),随后每个字段是其从零开始的 `FieldIndex`(UInt16)和 Variant;若没有变化,消息就是 KeepAlive,即没有载荷的 DataSetMessage 头。KeepAlive 携带下一个 DataSetMessage 的序列号且不消耗它,而 NetworkMessage 序列号仍会计数。RawData 的 DataSet 始终发送关键帧。
+
 ## 时间戳
 
-功能块每条消息用 `SysTimeRtcGet`（由运行时提供的 SysTimeRtc 系统库）读取一次 PLC 的实时时钟，得到自 1970-01-01 UTC 起的整秒数，并把 `(seconds + 11644473600) * 10000000` 写成 DateTime。一条消息中的两个时间戳都是这同一个值。由此得出两点：
+功能块每条消息用 `SysTimeRtcHighResGet`(运行时提供的系统库 SysTimeRtc)读取一次 PLC 的实时时钟,其值为自 1970-01-01 UTC 起的毫秒数,并把 `milliseconds * 10000 + 11644473600 * 10000000` 写为 DateTime。一条消息中的两个时间戳是同一个值。若运行时无法响应高分辨率调用,或 `bHighResTimestamp` 为 FALSE,则读取 `SysTimeRtcGet`(整秒)并写入 `(seconds + 11644473600) * 10000000`,与 1.1.0 相同。由此得出两点:
 
-* 分辨率是一秒。接收端会在同一秒内的每条消息上看到相同的时间戳，并且它最多比消息构建的瞬间落后一秒。亚秒级时间戳在路线图上。
+* 分辨率为一毫秒(`bStampHighRes` 表明上一条消息使用了哪个时钟)。回退为整秒时,接收方在同一秒内的每条消息上看到相同的时间戳。
 * 时间只和 PLC 的时钟一样准。时钟未设置的控制器会给消息打上 1970 年。当无法读取时钟（`diLastClockResult` 不为 0）时，消息会不带时间戳发出，这是第 14 部分允许的，而不是干脆不发。
 
 字段列表每次变化时都要增加 `udiConfigMajor`。这样，按版本保存布局的接收端就可以拒绝为另一份列表构建的消息，而不是错误地解码它。
@@ -67,9 +75,13 @@ description: "HotLoop Transmitter 发送的 NetworkMessage 和 DataSetMessage，
 | REAL | 10 Float | 4，IEEE 754 |
 | LREAL | 11 Double | 8，IEEE 754 |
 | STRING | 12 String | 以字节计的 Int32 长度，然后是 UTF-8（5.2.2.4） |
+| 状态为 Bad 或 Uncertain 的字段(`SetStatus`) | 19 StatusCode | 4,以 UInt32 状态代替值(仅限 Variant) |
+| WSTRING | 12 String | 以字节计的 Int32 长度,然后是 UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | 毫秒，CODESYS 的 TIME 就是这样存放的 |
 
 CODESYS 的 STRING 每个字符一个字节。`7F` 以内的字节是 ASCII，原样发出。高于 `7F` 的字节按 ISO 8859-1 读取，并写成其两字节的 UTF-8 形式。这是对 PLC 代码页的一个假设，也是功能块解释文本的唯一一处。
+
+CODESYS 的 WSTRING 是 UTF-16,无需任何假设:每个 16 位单元写为 UTF-8(一、二或三字节),格式正确的代理对变为一个四字节字符,孤立的代理项变为 U+FFFD,因此文本始终是有效的 UTF-8。在 RawData 中,`WSTRING(N)` 的 MaxStringLength 为 `3 * N` 字节,即它可能占用的最大值。
 
 ## 字段，RawData 编码（第 14 部分，7.2.4.5.11）
 
@@ -79,7 +91,7 @@ CODESYS 的 STRING 每个字符一个字节。`7F` 以内的字节是 ASCII，�
 * **数组**是一个 Int32 元素个数，然后是各元素（第 6 部分，5.2.5："One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"）。功能块总是发送给它的每个元素，所以个数等于数组声明的大小，后面没有填充。
 * **字符串**是以字节计的 Int32 长度和 UTF-8 字节，然后是零字节直到 MaxStringLength，所以字段总是 4 + MaxStringLength 字节（7.2.4.5.11："the field shall be padded with bytes with value zero"）。功能块把 `STRING(N)` 的 N 作为以字节计的 MaxStringLength。更长的文本会在字符边界处被截断，因为字段无法增长。接收端的字段元数据必须带有相同的 MaxStringLength，并为每个数组提供一个 ArrayDimensions 条目。
 
-这是 OPC Foundation 自己参考协议栈的读法。在 UA-.NETStandard（提交 `fcfc84eab5c105780d7268474a47d344d100aca1`）中，`src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` 第 389 到 403 行说字符串 "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding"，而对于数组 "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements"。第 593 到 648 行的 `TryReadPaddedArray` 实现了它，`tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` 对它做了断言。其余内容见[验证页面](/zh-hans/transmitter/proof/)。
+这是 OPC Foundation 自己的参考栈的读法。在 UA-.NETStandard(提交 `fcfc84eab5c105780d7268474a47d344d100aca1`)中,`src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` 第 389 到 403 行说明字符串被"read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding",而对于数组"the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements"。第 593 到 648 行的 `TryReadPaddedArray` 实现了它,`tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` 对其进行断言。其余内容见 `docs/PROOF.md`。
 
 ## 大小
 

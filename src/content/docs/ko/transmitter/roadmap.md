@@ -5,9 +5,17 @@ description: "HotLoop Transmitter가 이미 만든 것, 다음에 올 것, 그�
 
 오늘 패키지에 들어 있는 것, 다음에 올 것, 의도적으로 계획하지 않은 것입니다. 한 항목은 실제 4.22.0.0 런타임에서 실행되고 수신기가 읽어 본 뒤에야 "출시됨"으로 옮겨집니다.
 
+## 1.3.0에서 출시
+
+* 클록의 고해상도 시간에서 가져온 밀리초 단위 타임스탬프. `bHighResTimestamp`로 정수 초 단위로 되돌릴 수 있습니다.
+* Variant와 RawData에서 UTF-8로 전송되는 WSTRING 필드(`AddWString`).
+* 필드별 상태. Bad 값이 Bad로 전송됩니다(`SetStatus`).
+* Sizes 배열을 사용해 하나의 NetworkMessage에 여러 DataSetMessage를 담아, 데이터그램 하나가 둘 이상의 writer를 실을 수 있습니다(`AddDataSet`).
+* 거의 변하지 않는 데이터셋의 바이트를 줄이는 Data Delta Frame과 KeepAlive 메시지. 설정(`bDeltaFrames`)이며 기본값은 꺼짐입니다.
+
 ## 1.2.0에서 출시
 
-* HotLoop Alarms, CODESYS 알람 관리자의 활성, 대기, 확인된 알람을 일반 변수로 읽고 HotLoop이 되써 주는 확인 응답을 수행하는 라이브러리입니다. 실제 4.22.0.0 런타임에서 실행했고 HotLoop의 알람 목록이 이를 읽었습니다.
+* HotLoop Alarms (`alarms/`), CODESYS 알람 관리자의 활성, 대기, 확인된 알람을 일반 변수로 읽고 HotLoop이 되써 주는 확인 응답을 수행하는 라이브러리입니다. 실제 4.22.0.0 런타임에서 실행했고 HotLoop의 알람 목록이 이를 읽었습니다.
 
 ## 1.1.0에서 출시
 
@@ -21,14 +29,6 @@ description: "HotLoop Transmitter가 이미 만든 것, 다음에 올 것, 그�
 * BOOL, SINT, USINT, INT, UINT, DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, TIME 필드와 STRING을 뺀 모든 타입의 배열, 두 인코딩 모두.
 * 유니캐스트와 멀티캐스트 대상, publisher id, writer group id, dataset writer id, 발행 주기, 그룹 버전, 구성 버전. 모두 블록의 입력으로 설정합니다.
 * 논블로킹 전송, 호출당 제한된 비용, 전송, 거부, 건너뜀 카운터, 그리고 애플리케이션을 폴트시키지 않는 오류 상태.
-
-## 다음
-
-* 1초 미만 타임스탬프. 1.1.0의 타임스탬프는 실시간 시계의 정수 초입니다.
-* 하나의 NetworkMessage에 여러 DataSetMessage(Sizes 배열)를 담아 데이터그램 하나가 writer를 둘 이상 실을 수 있게 합니다.
-* 거의 변하지 않는 데이터셋의 바이트 수를 줄이는 Data Delta Frame과 KeepAlive 메시지.
-* WSTRING 필드.
-* 필드별 상태. Bad 값을 Bad로 보낼 수 있습니다.
 
 ## 계획 없음
 

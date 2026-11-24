@@ -21,7 +21,10 @@ description: "HotLoop Transmitter पब्लिशर फ़ंक्शन �
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` या `RawData`। इसे तब बदलें जब ब्लॉक अक्षम हो |
 | `udiGroupVersion` | UDINT | 1 | समूह हेडर में GroupVersion |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | DataSet का ConfigurationVersion। जब भी फ़ील्ड सूची बदले, major बढ़ाएँ |
-| `bTimestamp` | BOOL | TRUE | हर संदेश पर PLC घड़ी की मुहर लगाता है, NetworkMessage और DataSetMessage दोनों में (पूरे सेकंड, देखें [तार पर क्या जाता है](/hi/transmitter/wire-format/))। FALSE 1.0.0 वाले बाइट भेजता है, 17 बाइट छोटे |
+| `bTimestamp` | BOOL | TRUE | हर संदेश पर PLC घड़ी का टाइमस्टैम्प लगाता है, NetworkMessage और DataSetMessage दोनों में (मिलीसेकंड तक, देखें `WIRE-FORMAT.md`)। FALSE 1.0.0 के बाइट भेजता है, 17 बाइट छोटे |
+| `bDeltaFrames` | BOOL | FALSE | केवल Variant एन्कोडिंग। की फ़्रेमों के बीच एक Data Delta Frame भेजता है (केवल बदले फ़ील्ड, हर एक अपने इंडेक्स के साथ), और कुछ न बदलने पर KeepAlive। FALSE हर बार पूरा की फ़्रेम भेजता है, जिसे हर सब्सक्राइबर पढ़ता है। जो सब्सक्राइबर डेल्टा फ़्रेम छोड़ देता है उसे बदलाव अगले की फ़्रेम पर दिखता है |
+| `uiKeyFrameEvery` | UINT | 10 | `bDeltaFrames` के साथ: इतने संदेशों पर एक पूरा की फ़्रेम, ताकि देर से जुड़े सब्सक्राइबर को उसी अवधि में पूरी तस्वीर मिल जाए |
+| `bHighResTimestamp` | BOOL | TRUE | रनटाइम के पास होने पर घड़ी के मिलीसेकंड समय से स्टैम्प लगाता है। FALSE पूरे सेकंड का स्टैम्प लगाता है, जैसा 1.1.0 करता था |
 | `tRetry` | TIME | T#2S | लगातार दस बार भेजना विफल होने के बाद सॉकेट दोबारा खोलने से पहले कितना रुकना है |
 
 ## आउटपुट
@@ -37,6 +40,9 @@ description: "HotLoop Transmitter पब्लिशर फ़ंक्शन �
 | `uiMessageSize` | UINT | आख़िरी संदेश के बाइट |
 | `diLastSocketResult` | UDINT | सॉकेट कॉल से आया आख़िरी रनटाइम त्रुटि कोड, 0 ठीक है |
 | `diLastClockResult` | UDINT | टाइमस्टैम्प के लिए PLC घड़ी पढ़ने का आख़िरी नतीजा, 0 ठीक है। 0 न हो तो संदेश बिना मुहर के जाता है |
+| `bDeltaActive` | BOOL | डेल्टा फ़्रेम उपयोग में होने पर TRUE: `bDeltaFrames` चालू है, DataSet Variant है और फ़ील्ड पिछले मानों की 4096 बाइट की प्रति में समा जाते हैं |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | भेजे गए Data Delta Frame और KeepAlive संदेश |
+| `bStampHighRes` | BOOL | TRUE जब अंतिम संदेश के टाइमस्टैम्प में घड़ी का मिलीसेकंड समय था, FALSE जब वह पूरे सेकंड पर लौट गया या बिना स्टैम्प के गया |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | ब्लॉक की आख़िरी कॉल में लगे माइक्रोसेकंड, और सक्षम करने या `Clear()` के बाद से सबसे लंबा |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | सक्षम करने या `Clear()` के बाद से, एक संदेश बनाने में और भेजने की कॉल में ही लगा सबसे लंबा समय |
 
@@ -48,7 +54,10 @@ description: "HotLoop Transmitter पब्लिशर फ़ंक्शन �
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | एक स्केलर। `pValue` है `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | एक STRING। `uiMaxLen` `STRING(N)` का N है |
-| `AddArray(pFirst, eType, uiCount)` | STRING को छोड़कर किसी भी प्रकार के `uiCount` तत्वों का ऐरे। `pFirst` है `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | एक WSTRING, UTF-8 के रूप में भेजा जाता है। `uiMaxLen`, `WSTRING(N)` का N है |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | उसी NetworkMessage में एक और DataSet शुरू करता है: इसके बाद जोड़े गए फ़ील्ड उसी के होते हैं। हर प्रकाशन अंतराल पर एक NetworkMessage प्रति DataSet एक DataSetMessage ले जाता है, इसलिए कई writer एक डेटाग्राम साझा करते हैं। अधिकतम 8 DataSet; एक से अधिक होने पर डेल्टा फ़्रेम बंद रहते हैं |
+| `SetStatus(pStatus)` | अंतिम जोड़े गए फ़ील्ड को स्टेटस देता है। `pStatus` एक UDINT का `ADR` है जिसमें OPC UA StatusCode है। जब तक वह 0 नहीं है, फ़ील्ड मान की जगह वही StatusCode बनकर जाता है (Variant एन्कोडिंग), और रिसीवर उसे खराब गुणवत्ता के रूप में पढ़ता है। 0 मान भेजता है। RawData में स्टेटस नहीं होता, इसलिए RawData पब्लिशर मान भेजता रहता है |
+| `AddArray(pFirst, eType, uiCount)` | STRING और WSTRING को छोड़कर किसी भी प्रकार के `uiCount` तत्वों का ऐरे। `pFirst` है `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | सामान्य रूप, जिसे बाक़ी कॉल करते हैं |
 | `Clear()` | फ़ील्ड सूची और अधिकतम कॉल समय भुला देता है |
 

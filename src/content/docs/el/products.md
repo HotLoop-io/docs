@@ -18,7 +18,7 @@ description: "Οκτώ προϊόντα σε πέντε γραμμές εκδό�
 | **HotLoop Flow** | Flow | <a href="/el/flow/overview/">Τεκμηρίωση</a> | <a href="/el/flow/install/">Εγκατάσταση</a> | <a href="/el/releases/#hotloop-flow">Σημειώσεις</a> | <a href="/el/flow/roadmap/">Οδικός χάρτης</a> |
 | **HotLoop Cascade** | Cascade | <a href="/el/cascade/overview/">Τεκμηρίωση</a> | <a href="/el/cascade/running/">Εγκατάσταση</a> | <a href="/el/releases/#hotloop-cascade">Σημειώσεις</a> | <a href="/el/cascade/roadmap/">Οδικός χάρτης</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/el/codesys/overview/">Τεκμηρίωση</a> | <a href="/el/codesys/install/">Εγκατάσταση</a> | <a href="/el/releases/codesys-0-3-10/">Σημειώσεις</a> | <a href="/el/codesys/roadmap/">Οδικός χάρτης</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/el/transmitter/overview/">Τεκμηρίωση</a> | <a href="/el/transmitter/install/">Εγκατάσταση</a> | <a href="/el/releases/transmitter-1-2-0/">Σημειώσεις</a> | <a href="/el/transmitter/roadmap/">Οδικός χάρτης</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/el/transmitter/overview/">Τεκμηρίωση</a> | <a href="/el/transmitter/install/">Εγκατάσταση</a> | <a href="/el/releases/transmitter-1-3-0/">Σημειώσεις</a> | <a href="/el/transmitter/roadmap/">Οδικός χάρτης</a> |
 
 Ο πίνακας που ακολουθεί συγκρίνει τα τέσσερα προϊόντα του core.
 

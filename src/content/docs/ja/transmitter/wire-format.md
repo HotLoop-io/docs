@@ -40,11 +40,19 @@ Count が 1 なので、ペイロードに Sizes 配列はありません。ブ�
 | 2 | FieldCount | Variant のみ。RawData では省略 (7.2.4.5.5) |
 | ... | フィールド | 追加した順 |
 
+## 1 つの NetworkMessage 内の複数の DataSetMessage
+
+`AddDataSet` の後、PayloadHeader の Count は DataSet の数で、各 DataSetWriterId を並べ、ペイロードは Sizes 配列(DataSetMessage ごとに UInt16 のバイトサイズ 1 つ、7.2.4.5.3)で始まり、続いて DataSetMessage が順に並びます。DataSet 1 はブロック自身の writer id、シーケンス番号、ConfigurationVersion を使い、他の DataSet はそれぞれ独自の writer id、メジャーバージョン、DataSetMessage シーケンス番号を持ちます。NetworkMessage の Timestamp とすべての DataSetMessage の Timestamp は同じ時刻です。`AddDataSet` がなければ、メッセージは従来どおり Count 1 で Sizes はありません。
+
+## デルタフレームと KeepAlive
+
+`bDeltaFrames` を使うと、DataSetFlags2(ビット 0~3)の DataSetMessage タイプは、キーフレームが 0、Data Delta Frame が 1、KeepAlive が 3 になり、Timestamp ビットは従来どおりです。最初にキーフレームが出て、以降 `uiKeyFrameEvery` メッセージごとに出ます。その間、ブロックは各フィールドの変数(とそのステータス)を直前のメッセージが運んだ内容と比べます。デルタフレームは、変化したフィールドの `FieldCount`(UInt16)に続き、各フィールドの 0 始まりの `FieldIndex`(UInt16)とその Variant が並びます。何も変わらなければ、メッセージは KeepAlive、つまりペイロードのない DataSetMessage ヘッダーです。KeepAlive は次の DataSetMessage のシーケンス番号を運び、その番号は消費せず、NetworkMessage のシーケンス番号は数えます。RawData の DataSet は常にキーフレームを送ります。
+
 ## タイムスタンプ
 
-ブロックはメッセージごとに 1 回、`SysTimeRtcGet` (ランタイムが提供する SysTimeRtc システムライブラリ) で PLC のリアルタイムクロックを読みます。これは 1970-01-01 UTC からの整数秒で、ブロックは `(seconds + 11644473600) * 10000000` を DateTime として書きます。メッセージ内の 2 つのタイムスタンプは、この同じ値です。ここから 2 つのことが言えます。
+ブロックはメッセージごとに 1 回、`SysTimeRtcHighResGet`(ランタイムが提供するシステムライブラリ SysTimeRtc)で PLC のリアルタイムクロックを読みます。値は 1970-01-01 UTC からのミリ秒で、`milliseconds * 10000 + 11644473600 * 10000000` を DateTime として書きます。1 つのメッセージの 2 つのタイムスタンプは、この 1 つの値です。ランタイムが高分解能の呼び出しに答えられない場合や `bHighResTimestamp` が FALSE の場合は、`SysTimeRtcGet`(整数秒)を読み、1.1.0 と同じく `(seconds + 11644473600) * 10000000` を書きます。ここから次の 2 点が言えます:
 
-* 分解能は 1 秒です。受信側は、同じ 1 秒の間は全メッセージで同じタイムスタンプを見ることになり、メッセージを組み立てた瞬間より最大 1 秒遅れます。1 秒未満のタイムスタンプはロードマップにあります。
+* 分解能は 1 ミリ秒です(`bStampHighRes` が直近のメッセージがどちらの時計を使ったかを示します)。整数秒に戻った場合、受信側は 1 秒の間のすべてのメッセージで同じタイムスタンプを見ます。
 * 時刻は PLC の時計の正確さまでです。時計が未設定のコントローラは、メッセージに 1970 年を付けます。時計を読めない場合 (`diLastClockResult` が 0 でない場合)、メッセージを出さないのではなく、パート 14 が認めているとおりタイムスタンプなしで出します。
 
 フィールドリストを変えるたびに `udiConfigMajor` を上げてください。バージョンをキーにレイアウトを保持している受信側は、別のリスト用に作られたメッセージを誤ってデコードするのではなく、拒否できます。
@@ -67,9 +75,13 @@ Count が 1 なので、ペイロードに Sizes 配列はありません。ブ�
 | REAL | 10 Float | 4、IEEE 754 |
 | LREAL | 11 Double | 8、IEEE 754 |
 | STRING | 12 String | バイト単位の Int32 長、続いて UTF-8 (5.2.2.4) |
+| Bad または Uncertain のステータスを持つフィールド(`SetStatus`) | 19 StatusCode | 4、値の代わりに UInt32 のステータス(Variant のみ) |
+| WSTRING | 12 String | バイト単位の Int32 の長さ、続いて UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | ミリ秒。CODESYS の TIME はこう保持されます |
 
 CODESYS の STRING は 1 文字 1 バイトです。`7F` までのバイトは ASCII でそのまま出ます。`7F` を超えるバイトは ISO 8859-1 として読み、2 バイトの UTF-8 形式で書きます。これは PLC のコードページについての仮定で、ブロックがテキストを解釈する唯一の箇所です。
+
+CODESYS の WSTRING は UTF-16 で、何の仮定も要りません。16 ビット単位ごとに UTF-8(1、2、または 3 バイト)で書き、正しく対になったサロゲートペアは 1 つの 4 バイト文字になり、対のないサロゲートは U+FFFD になるので、テキストは常に有効な UTF-8 です。RawData では `WSTRING(N)` の MaxStringLength は、取りうる最大の `3 * N` バイトです。
 
 ## フィールド、RawData エンコーディング (パート 14、7.2.4.5.11)
 
@@ -79,7 +91,7 @@ CODESYS の STRING は 1 文字 1 バイトです。`7F` までのバイトは A
 * **配列**は Int32 の要素数と、それに続く要素です (パート 6、5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value")。ブロックは渡された要素を常にすべて送るので、数は配列の宣言サイズと等しく、後ろにパディングはありません。
 * **文字列**はバイト単位の Int32 長と UTF-8 のバイト列、続いて MaxStringLength までのゼロバイトなので、フィールドは常に 4 + MaxStringLength バイトです (7.2.4.5.11: "the field shall be padded with bytes with value zero")。ブロックは `STRING(N)` の N をバイト単位の MaxStringLength として使います。それより長いテキストは、フィールドが伸びられないため文字の境界で切り詰められます。受信側のフィールドメタデータには、同じ MaxStringLength と、配列ごとの ArrayDimensions エントリが必要です。
 
-これは OPC Foundation 自身の参照スタックでの解釈です。UA-.NETStandard (コミット `fcfc84eab5c105780d7268474a47d344d100aca1`) の `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` の 389 行から 403 行は、文字列を "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding" と述べ、配列については "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements" と述べています。593 行から 648 行の `TryReadPaddedArray` がそれを実装し、`tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` がそれを検証しています。残りは[検証のページ](/ja/transmitter/proof/)にあります。
+これは OPC Foundation 自身のリファレンススタックの読み方です。UA-.NETStandard(コミット `fcfc84eab5c105780d7268474a47d344d100aca1`)の `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` の 389 行目から 403 行目は、文字列は "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding" と述べ、配列については "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements" と述べています。593 行目から 648 行目の `TryReadPaddedArray` がそれを実装し、`tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` がそれを検証します。残りは `docs/PROOF.md` にあります。
 
 ## サイズ
 

@@ -40,11 +40,19 @@ description: "NetworkMessage и DataSetMessage, които HotLoop Transmitter �
 | 2 | FieldCount | само Variant. Пропуска се при RawData (7.2.4.5.5) |
 | ... | полетата | в реда, в който са добавени |
 
+## Няколко DataSetMessage в един NetworkMessage
+
+След `AddDataSet` Count в PayloadHeader е броят на DataSet-овете и изброява всеки DataSetWriterId, а полезният товар започва с масива Sizes, по един UInt16 размер в байтове за всеки DataSetMessage (7.2.4.5.3), последван от DataSetMessage-ите един след друг. DataSet 1 използва собствените writer id, пореден номер и ConfigurationVersion на блока; всеки друг DataSet има свой writer id, главна версия и пореден номер на DataSetMessage. Timestamp на NetworkMessage и на всеки DataSetMessage са един и същ момент. Без `AddDataSet` съобщението е точно каквото е било, Count 1 и без Sizes.
+
+## Делта кадри и KeepAlive
+
+С `bDeltaFrames` типът на DataSetMessage в DataSetFlags2 (битове 0 до 3) е 0 за ключов кадър, 1 за Data Delta Frame и 3 за KeepAlive, а битът за Timestamp остава както преди. Първо излиза ключов кадър, след това на всеки `uiKeyFrameEvery` съобщения. Между тях блокът сравнява променливата на всяко поле (и статуса му) с това, което е носило последното съобщение: делта кадърът е `FieldCount` на променените полета (UInt16), след това за всяко неговият `FieldIndex` с отчитане от нула (UInt16) и неговият Variant; когато нищо не се е променило, съобщението е KeepAlive, заглавката на DataSetMessage без полезен товар. KeepAlive носи поредния номер на следващия DataSetMessage и не го изразходва, докато поредният номер на NetworkMessage го отчита. RawData DataSet-овете винаги изпращат ключови кадри.
+
 ## Времевата марка
 
-Блокът чете часовника за реално време на PLC веднъж на съобщение чрез `SysTimeRtcGet` (системната библиотека SysTimeRtc, която runtime осигурява), който дава цели секунди от 1970-01-01 UTC, и записва `(seconds + 11644473600) * 10000000` като DateTime. И двете времеви марки в съобщението са тази една стойност. От това следват две неща:
+Блокът чете часовника в реално време на PLC веднъж на съобщение с `SysTimeRtcHighResGet` (системната библиотека SysTimeRtc, която осигурява средата за изпълнение), което са милисекунди от 1970-01-01 UTC, и записва `milliseconds * 10000 + 11644473600 * 10000000` като DateTime. И двата времеви печата в съобщението са тази единствена стойност. Ако средата за изпълнение не може да отговори на повикването с висока разделителна способност, или `bHighResTimestamp` е FALSE, чете `SysTimeRtcGet` (цели секунди) и записва `(seconds + 11644473600) * 10000000`, както правеше 1.1.0. От това следват две неща:
 
-* Резолюцията е една секунда. Приемникът вижда една и съща марка на всяко съобщение в рамките на секунда, и тя изостава до една секунда от момента, в който съобщението е изградено. Марки под секунда са в пътната карта.
+* Разделителната способност е една милисекунда (`bStampHighRes` казва кой часовник е използвало последното съобщение). При връщането към цели секунди получателят вижда един и същ печат на всяко съобщение в рамките на секундата.
 * Времето е толкова вярно, колкото е часовникът на PLC. Контролер с ненастроен часовник слага на съобщението си 1970. Когато часовникът не може да се прочете (`diLastClockResult` не е 0), съобщението излиза без марка, което част 14 позволява, вместо да не излезе изобщо.
 
 Увеличавайте `udiConfigMajor` всеки път, когато списъкът с полета се променя. Приемник, който пази разположение по версия, тогава може да откаже съобщение, изградено за друг списък, вместо да го декодира погрешно.
@@ -67,9 +75,13 @@ description: "NetworkMessage и DataSetMessage, които HotLoop Transmitter �
 | REAL | 10 Float | 4, IEEE 754 |
 | LREAL | 11 Double | 8, IEEE 754 |
 | STRING | 12 String | дължина Int32 в байтове, после UTF-8 (5.2.2.4) |
+| поле със статус Bad или Uncertain (`SetStatus`) | 19 StatusCode | 4, UInt32 статусът, вместо стойността (само Variant) |
+| WSTRING | 12 String | Int32 дължина в байтове, след това UTF-8 (5.2.2.4) |
 | TIME | 7 UInt32 | милисекунди, така се съхранява TIME в CODESYS |
 
 STRING в CODESYS съхранява по един байт на символ. Байтовете до `7F` са ASCII и излизат непроменени. Байтовете над `7F` се четат като ISO 8859-1 и се записват в двубайтовата им UTF-8 форма. Това е предположение за кодовата страница на PLC и е единственото място, където блокът тълкува текст.
+
+WSTRING в CODESYS е UTF-16 и не изисква предположение: всяка 16-битова единица се записва като UTF-8 (един, два или три байта), правилно оформена сурогатна двойка става един четирибайтов знак, а единичен сурогат става U+FFFD, така че текстът винаги е валиден UTF-8. В RawData MaxStringLength на `WSTRING(N)` е `3 * N` байта, най-многото, което може да заеме.
 
 ## Полета, кодиране RawData (част 14, 7.2.4.5.11)
 
@@ -79,7 +91,7 @@ STRING в CODESYS съхранява по един байт на символ. �
 * **Масивите** са брой елементи като Int32 и после елементите (част 6, 5.2.5: "One dimensional Arrays are encoded as a sequence of elements preceded by the number of elements encoded as an Int32 value"). Блокът винаги изпраща всеки елемент, който му е даден, така че броят е равен на декларирания размер на масива и след него няма допълване.
 * **Низовете** са дължина Int32 в байтове и байтовете UTF-8, после нулеви байтове до MaxStringLength, така че полето е винаги 4 + MaxStringLength байта (7.2.4.5.11: "the field shall be padded with bytes with value zero"). Блокът използва N от `STRING(N)` като MaxStringLength, в байтове. По-дълъг текст се отрязва на граница на символ, защото полето не може да расте. Метаданните на полетата на приемника трябва да носят същия MaxStringLength и запис ArrayDimensions за всеки масив.
 
-Това е четенето на собствения референтен стек на OPC Foundation. В UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`) `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs` редове 389 до 403 казват, че низът се "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", а за масив "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` на редове 593 до 648 го реализира, а `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` го потвърждава. [Страницата с доказателства](/bg/transmitter/proof/) има останалото.
+Това е четенето на собствения референтен стек на OPC Foundation. В UA-.NETStandard (commit `fcfc84eab5c105780d7268474a47d344d100aca1`) `src/Opc.Ua.PubSub/Encoding/Uadp/UadpBinaryReader.cs`, редове 389 до 403, казва, че низът се "read like a Structure field (Int32 length prefix and value) from a fixed-size 4 + MaxStringLength byte block whose remainder is zero padding", а за масив "the array's Part 6 length (or dimensions) prefix gives the actual element count and the block is padded to product(arrayDimensions) elements". `TryReadPaddedArray` на редове 593 до 648 го реализира, а `tests/Opc.Ua.PubSub.Tests/Encoding/Uadp/UadpRawDataPaddingTests.cs` го проверява. `docs/PROOF.md` съдържа останалото.
 
 ## Размер
 

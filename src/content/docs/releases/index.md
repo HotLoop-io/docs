@@ -109,6 +109,7 @@ IoT, Edge, Gateway and Edge Relay release together from one tag, so they share [
 
 ## HotLoop Transmitter
 
+- [HotLoop Transmitter 1.3.0 release notes](/releases/transmitter-1-3-0/)
 - [HotLoop Transmitter 1.2.0 release notes](/releases/transmitter-1-2-0/)
 - [HotLoop Transmitter 1.1.0 release notes](/releases/transmitter-1-1-0/)
 - [HotLoop Transmitter 1.0.0 release notes](/releases/transmitter-1-0-0/)

@@ -21,7 +21,10 @@ Tutto è nel namespace `HLTX`. Il blocco è `HLTX.FB_HLTX_Publisher`.
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` o `RawData`. Lo cambi a blocco disabilitato |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion nell'intestazione di gruppo |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | ConfigurationVersion del DataSet. Incrementi il major ogni volta che cambia la lista di campi |
-| `bTimestamp` | BOOL | TRUE | marca ogni messaggio con l'orologio del PLC, nel NetworkMessage e nel DataSetMessage (secondi interi, vedi [Cosa va sul cavo](/it/transmitter/wire-format/)). FALSE invia i byte della 1.0.0, 17 byte più corti |
+| `bTimestamp` | BOOL | TRUE | marca ogni messaggio con l’orologio del PLC, nel NetworkMessage e nel DataSetMessage (al millisecondo, vedi `WIRE-FORMAT.md`). FALSE invia i byte della 1.0.0, 17 byte in meno |
+| `bDeltaFrames` | BOOL | FALSE | Solo codifica Variant. Invia un Data Delta Frame (solo i campi cambiati, ciascuno con il suo indice) tra i frame chiave, e un KeepAlive quando nulla è cambiato. FALSE invia ogni volta un frame chiave completo, che ogni sottoscrittore legge. Un sottoscrittore che scarta i frame delta mostra una modifica al frame chiave successivo |
+| `uiKeyFrameEvery` | UINT | 10 | con `bDeltaFrames`: un frame chiave completo ogni tanti messaggi, così un sottoscrittore arrivato in ritardo ha il quadro completo entro quel tempo |
+| `bHighResTimestamp` | BOOL | TRUE | marca con l’ora in millisecondi dell’orologio quando il runtime la ha. FALSE marca i secondi interi, come faceva la 1.1.0 |
 | `tRetry` | TIME | T#2S | quanto attendere prima di riaprire il socket dopo dieci invii consecutivi falliti |
 
 ## Uscite
@@ -37,6 +40,9 @@ Tutto è nel namespace `HLTX`. Il blocco è `HLTX.FB_HLTX_Publisher`.
 | `uiMessageSize` | UINT | byte dell'ultimo messaggio |
 | `diLastSocketResult` | UDINT | l'ultimo codice di errore del runtime da una chiamata di socket, 0 va bene |
 | `diLastClockResult` | UDINT | l'ultimo risultato della lettura dell'orologio del PLC per un timestamp, 0 va bene. Quando non è 0 il messaggio parte senza timestamp |
+| `bDeltaActive` | BOOL | TRUE mentre i frame delta sono in uso: `bDeltaFrames` è attivo, il DataSet è Variant e i campi stanno nella copia di 4096 byte dei valori precedenti |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | Data Delta Frame e messaggi KeepAlive inviati |
+| `bStampHighRes` | BOOL | TRUE quando la marca dell’ultimo messaggio portava l’ora in millisecondi dell’orologio, FALSE quando è tornata ai secondi interi o è partita senza marca |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | microsecondi trascorsi nell'ultima chiamata del blocco, e il massimo da abilitazione o da `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | il tempo massimo impiegato a costruire un messaggio e nella chiamata di invio stessa, da abilitazione o da `Clear()` |
 
@@ -48,7 +54,10 @@ Aggiunga i campi una volta, prima della prima chiamata, nell'ordine in cui un ri
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | uno scalare. `pValue` è `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | una STRING. `uiMaxLen` è la N di `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | un array di `uiCount` elementi di qualsiasi tipo tranne STRING. `pFirst` è `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | un WSTRING, inviato come UTF-8. `uiMaxLen` è la N di `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | avvia un altro DataSet nello stesso NetworkMessage: i campi aggiunti dopo gli appartengono. A ogni intervallo di pubblicazione un NetworkMessage porta quindi un DataSetMessage per DataSet, così più writer condividono un datagramma. Fino a 8 DataSet; i frame delta sono disattivati quando ce n’è più di uno |
+| `SetStatus(pStatus)` | dà all’ultimo campo aggiunto uno stato. `pStatus` è `ADR` di un UDINT con uno StatusCode OPC UA. Finché non è 0, il campo esce come quello StatusCode al posto del suo valore (codifica Variant), e un ricevitore lo legge come qualità cattiva. 0 invia il valore. RawData non ha stato, quindi un publisher RawData continua a inviare il valore |
+| `AddArray(pFirst, eType, uiCount)` | un array di `uiCount` elementi di qualsiasi tipo tranne STRING e WSTRING. `pFirst` è `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | la forma generale che gli altri chiamano |
 | `Clear()` | dimentica la lista dei campi e il tempo massimo di chiamata |
 

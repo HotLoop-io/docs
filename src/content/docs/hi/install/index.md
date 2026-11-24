@@ -28,7 +28,7 @@ HotLoop उत्पाद को असल में चलाने के द
 | [HotLoop Flow](/hi/flow/overview/) | 2.17.1 | हां | हां | [Flow इंस्टॉल करें](/hi/flow/install/) |
 | [HotLoop Cascade](/hi/cascade/overview/) | 1.5.1 | हां, लॉगिन की ज़रूरत नहीं | हां, लॉगिन की ज़रूरत नहीं, देखें [Podman Quadlet के साथ Cascade](/hi/cascade/quadlet/) | [Cascade चलाना](/hi/cascade/running/) |
 | [HotLoop for CODESYS](/hi/codesys/overview/) | 0.3.10 | हां, या EmberCORE App Store | नहीं | [HotLoop for CODESYS इंस्टॉल करें](/hi/codesys/install/) |
-| [HotLoop Transmitter](/hi/transmitter/overview/) | 1.2.0 | नहीं, यह एक CODESYS लाइब्रेरी है | नहीं, यह एक CODESYS लाइब्रेरी है | [Transmitter इंस्टॉल करें](/hi/transmitter/install/) |
+| [HotLoop Transmitter](/hi/transmitter/overview/) | 1.3.0 | नहीं, यह एक CODESYS लाइब्रेरी है | नहीं, यह एक CODESYS लाइब्रेरी है | [Transmitter इंस्टॉल करें](/hi/transmitter/install/) |
 
 HotLoop IoT, Edge, Gateway और Edge Relay एक ही टैग से, एक साथ निकलते हैं, इसलिए इनका संस्करण संख्या एक है। Flow, Cascade, HotLoop for CODESYS और Transmitter की अपनी है। IoT, Edge और Gateway की Quadlet यूनिट को Podman 5.0 या नया चाहिए, और रिले की यूनिट Podman 4.9.3 पर चलाई गई थी। Raspberry Pi OS Bookworm के साथ 4.3 आता है, जिसमें Quadlet है ही नहीं, इसलिए Pi को Trixie या नया चाहिए।
 

@@ -21,7 +21,10 @@ description: "Κάθε είσοδος, έξοδος και μέθοδος του
 | `eEncoding` | `E_HLTX_Encoding` | `Variant` | `Variant` ή `RawData`. Αλλάξτε το όσο το block είναι απενεργοποιημένο |
 | `udiGroupVersion` | UDINT | 1 | GroupVersion στην κεφαλίδα ομάδας |
 | `udiConfigMajor`, `udiConfigMinor` | UDINT | 1, 0 | ConfigurationVersion του DataSet. Αυξήστε το major κάθε φορά που αλλάζει η λίστα πεδίων |
-| `bTimestamp` | BOOL | TRUE | σφραγίζει κάθε μήνυμα με το ρολόι του PLC, στο NetworkMessage και στο DataSetMessage (ολόκληρα δευτερόλεπτα, δείτε [Τι πάει στη γραμμή](/el/transmitter/wire-format/)). FALSE στέλνει τα bytes του 1.0.0, 17 bytes συντομότερα |
+| `bTimestamp` | BOOL | TRUE | σημαίνει κάθε μήνυμα με το ρολόι του PLC, στο NetworkMessage και στο DataSetMessage (με ακρίβεια χιλιοστού του δευτερολέπτου, βλ. `WIRE-FORMAT.md`). Το FALSE στέλνει τα byte της 1.0.0, 17 byte πιο σύντομα |
+| `bDeltaFrames` | BOOL | FALSE | Μόνο κωδικοποίηση Variant. Στέλνει ένα Data Delta Frame (μόνο τα πεδία που άλλαξαν, το καθένα με τον δείκτη του) ανάμεσα στα βασικά πλαίσια, και ένα KeepAlive όταν δεν άλλαξε τίποτα. Το FALSE στέλνει κάθε φορά ένα πλήρες βασικό πλαίσιο, που το διαβάζει κάθε συνδρομητής. Ένας συνδρομητής που απορρίπτει τα delta πλαίσια δείχνει την αλλαγή στο επόμενο βασικό πλαίσιο |
+| `uiKeyFrameEvery` | UINT | 10 | με το `bDeltaFrames`: ένα πλήρες βασικό πλαίσιο ανά τόσα μηνύματα, ώστε ένας συνδρομητής που ήρθε αργότερα να έχει την πλήρη εικόνα μέσα σε αυτό το διάστημα |
+| `bHighResTimestamp` | BOOL | TRUE | σημαίνει με την ώρα του ρολογιού σε χιλιοστά του δευτερολέπτου όταν την έχει το runtime. Το FALSE σημαίνει με ακέραια δευτερόλεπτα, όπως η 1.1.0 |
 | `tRetry` | TIME | T#2S | πόσο θα περιμένει πριν ξανανοίξει το socket μετά από δέκα συνεχόμενες αποτυχημένες αποστολές |
 
 ## Έξοδοι
@@ -37,6 +40,9 @@ description: "Κάθε είσοδος, έξοδος και μέθοδος του
 | `uiMessageSize` | UINT | bytes του τελευταίου μηνύματος |
 | `diLastSocketResult` | UDINT | ο τελευταίος κωδικός σφάλματος του runtime από κλήση socket, το 0 είναι εντάξει |
 | `diLastClockResult` | UDINT | το τελευταίο αποτέλεσμα ανάγνωσης του ρολογιού του PLC για χρονοσφραγίδα, το 0 είναι εντάξει. Όταν δεν είναι 0 το μήνυμα φεύγει χωρίς σφραγίδα |
+| `bDeltaActive` | BOOL | TRUE όσο χρησιμοποιούνται delta πλαίσια: το `bDeltaFrames` είναι ενεργό, το DataSet είναι Variant και τα πεδία χωρούν στο αντίγραφο 4096 byte των προηγούμενων τιμών |
+| `udiDeltaSent`, `udiKeepAliveSent` | UDINT | Data Delta Frames και μηνύματα KeepAlive που στάλθηκαν |
+| `bStampHighRes` | BOOL | TRUE όταν η χρονοσήμανση του τελευταίου μηνύματος έφερε την ώρα του ρολογιού σε χιλιοστά του δευτερολέπτου, FALSE όταν επέστρεψε σε ακέραια δευτερόλεπτα ή έφυγε χωρίς χρονοσήμανση |
 | `udiLastCallUs`, `udiMaxCallUs` | UDINT | μικροδευτερόλεπτα που δαπανήθηκαν στην τελευταία κλήση του block, και το μεγαλύτερο από την ενεργοποίηση ή το `Clear()` |
 | `udiMaxEncodeUs`, `udiMaxSendUs` | UDINT | ο μεγαλύτερος χρόνος για την κατασκευή ενός μηνύματος και μέσα στην ίδια την κλήση αποστολής, από την ενεργοποίηση ή το `Clear()` |
 
@@ -48,7 +54,10 @@ description: "Κάθε είσοδος, έξοδος και μέθοδος του
 |---|---|
 | `AddBool(pValue)`, `AddSInt`, `AddUSInt`, `AddInt`, `AddUInt`, `AddDInt`, `AddUDInt`, `AddLInt`, `AddULInt`, `AddReal`, `AddLReal`, `AddTime` | έναν scalar. Το `pValue` είναι `ADR(variable)` |
 | `AddString(pValue, uiMaxLen)` | ένα STRING. Το `uiMaxLen` είναι το N του `STRING(N)` |
-| `AddArray(pFirst, eType, uiCount)` | έναν πίνακα `uiCount` στοιχείων οποιουδήποτε τύπου εκτός από STRING. Το `pFirst` είναι `ADR(array[first])` |
+| `AddWString(pValue, uiMaxLen)` | ένα WSTRING, που αποστέλλεται ως UTF-8. Το `uiMaxLen` είναι το N του `WSTRING(N)` |
+| `AddDataSet(uiWriterId, udiConfigMajor)` | ξεκινά ένα ακόμη DataSet στο ίδιο NetworkMessage: τα πεδία που προστίθενται μετά ανήκουν σε αυτό. Σε κάθε διάστημα δημοσίευσης ένα NetworkMessage μεταφέρει τότε ένα DataSetMessage ανά DataSet, ώστε αρκετοί writer να μοιράζονται ένα datagram. Έως 8 DataSet· τα delta πλαίσια είναι απενεργοποιημένα όταν υπάρχουν περισσότερα από ένα |
+| `SetStatus(pStatus)` | δίνει στο τελευταίο πεδίο που προστέθηκε μια κατάσταση. Το `pStatus` είναι το `ADR` ενός UDINT που κρατά ένα OPC UA StatusCode. Όσο δεν είναι 0, το πεδίο φεύγει ως αυτό το StatusCode αντί για την τιμή του (κωδικοποίηση Variant) και ο παραλήπτης το διαβάζει ως κακή ποιότητα. Το 0 στέλνει την τιμή. Το RawData δεν έχει κατάσταση, άρα ένας RawData publisher συνεχίζει να στέλνει την τιμή |
+| `AddArray(pFirst, eType, uiCount)` | ένας πίνακας `uiCount` στοιχείων οποιουδήποτε τύπου εκτός από STRING και WSTRING. Το `pFirst` είναι το `ADR(array[first])` |
 | `AddField(pData, eType, uiCount, uiMaxLen)` | τη γενική μορφή που καλούν οι άλλες |
 | `Clear()` | ξεχνά τη λίστα πεδίων και τον μέγιστο χρόνο κλήσης |
 

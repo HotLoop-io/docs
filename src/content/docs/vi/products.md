@@ -18,7 +18,7 @@ Chúng được phát hành trên năm dòng phiên bản. **HotLoop core** gồ
 | **HotLoop Flow** | Flow | <a href="/vi/flow/overview/">Tài liệu</a> | <a href="/vi/flow/install/">Cài đặt</a> | <a href="/vi/releases/#hotloop-flow">Ghi chú</a> | <a href="/vi/flow/roadmap/">Lộ trình</a> |
 | **HotLoop Cascade** | Cascade | <a href="/vi/cascade/overview/">Tài liệu</a> | <a href="/vi/cascade/running/">Cài đặt</a> | <a href="/vi/releases/#hotloop-cascade">Ghi chú</a> | <a href="/vi/cascade/roadmap/">Lộ trình</a> |
 | **HotLoop for CODESYS** | HotLoop for CODESYS | <a href="/vi/codesys/overview/">Tài liệu</a> | <a href="/vi/codesys/install/">Cài đặt</a> | <a href="/vi/releases/codesys-0-3-10/">Ghi chú</a> | <a href="/vi/codesys/roadmap/">Lộ trình</a> |
-| **HotLoop Transmitter** | Transmitter | <a href="/vi/transmitter/overview/">Tài liệu</a> | <a href="/vi/transmitter/install/">Cài đặt</a> | <a href="/vi/releases/transmitter-1-2-0/">Ghi chú</a> | <a href="/vi/transmitter/roadmap/">Lộ trình</a> |
+| **HotLoop Transmitter** | Transmitter | <a href="/vi/transmitter/overview/">Tài liệu</a> | <a href="/vi/transmitter/install/">Cài đặt</a> | <a href="/vi/releases/transmitter-1-3-0/">Ghi chú</a> | <a href="/vi/transmitter/roadmap/">Lộ trình</a> |
 
 Bảng sau so sánh bốn sản phẩm của core.
 

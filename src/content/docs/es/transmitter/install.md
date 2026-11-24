@@ -7,17 +7,17 @@ Necesita un sistema de desarrollo CODESYS 3.5 SP22 o posterior, y un runtime cuy
 
 ## Desde el CODESYS Installer
 
-Desde 1.1.0 la versión incluye también `HotLoopTransmitter-1.2.0.package`, en https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.package. Instálelo con el CODESYS Installer (en el IDE: Tools, CODESYS Installer), o sin ventana con su línea de comandos, `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`. El Installer coloca la biblioteca en el repositorio de bibliotecas de ese perfil, bajo la empresa HotLoop, y usted pasa al paso 3 de abajo. El paquete es la misma biblioteca que el archivo `.library`, en un ZIP que lee el Installer, así que las dos vías dan la misma biblioteca.
+Desde 1.1.0 la versión incluye también `HotLoopTransmitter-1.3.0.package`, en https://hotloop.io/hotloop-transmitter/1.3.0/HotLoopTransmitter-1.3.0.package. Instálelo con el CODESYS Installer (en el IDE: Tools, CODESYS Installer), o sin ventana con su línea de comandos, `PackageManagerCLI.exe --profile="<your profile>" --install=<file>.package --targetProfiles="<your profile>"`. El Installer coloca la biblioteca en el repositorio de bibliotecas de ese perfil, bajo la empresa HotLoop, y usted pasa al paso 3 de abajo. El paquete es la misma biblioteca que el archivo `.library`, en un ZIP que lee el Installer, así que las dos vías dan la misma biblioteca.
 
 ## Desde el archivo de la biblioteca
 
-1. Descargue `HotLoopTransmitter-1.2.0.library` desde https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library y compruébelo con `SHA256SUMS` de la misma carpeta (`sha256sum -c SHA256SUMS`).
+1. Descargue `HotLoopTransmitter-1.3.0.library` desde https://hotloop.io/hotloop-transmitter/1.3.0/HotLoopTransmitter-1.3.0.library y compruébelo con `SHA256SUMS` de la misma carpeta (`sha256sum -c SHA256SUMS`).
 2. En el IDE de CODESYS: Tools, Library Repository, Install, y elija el archivo. Ya está en el repositorio bajo la empresa HotLoop.
 3. En su proyecto, abra el Library Manager de la aplicación, Add Library, y elija HotLoop Transmitter. SysSocket, SysTimeRtc y sus bibliotecas de interfaz vienen con ella como dependencias y no necesitan nada de usted.
 4. Declare un `HLTX.FB_HLTX_Publisher`, añada sus campos y llámelo en cada ciclo (el README tiene el ejemplo).
 5. Descargue al controlador. El destino debe ser alcanzable desde la red del controlador; para multicast, los switches de la red deben transportar el grupo.
 
-El archivo `.compiled-library` es la misma biblioteca sin su código fuente. Instale ese si no quiere que el Structured Text sea visible en el Library Manager. Está en la misma carpeta, como `HotLoopTransmitter-1.2.0.compiled-library`.
+El archivo `.compiled-library` es la misma biblioteca sin su código fuente. Instale ese si no quiere que el Structured Text sea visible en el Library Manager. Está en la misma carpeta, como `HotLoopTransmitter-1.3.0.compiled-library`.
 
 Para comprobar lo que llega, sirve cualquier receptor UDP en el puerto de destino. Un programa pequeño en Go que escuche en un puerto o se una a un grupo multicast e imprima cada datagrama como una línea de JSON con su hexadecimal funciona bien.
 
