@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | चल रही फ़्लो फ़ाइल, बाइट दर बाइट, या इतिहास से `-deployment N`। |
 | `hotloop-flow token` | एक नया API टोकन और उसके लिए कॉन्फ़िगर करने का हैश। |
 | `hotloop-flow bench` | वह बेंचमार्क ढाँचा जिसने [आंकड़े](/hi/flow/overview/#आंकड़े) बनाए। |
-| `hotloop-flow version` | वर्शन। |
+| `hotloop-flow version` | संस्करण, फिर वह कमिट जिससे इमेज बनी थी। |

@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | 稼働中のフローファイルをバイト単位でそのまま、または履歴から `-deployment N` で書き出します。 |
 | `hotloop-flow token` | 新しい API トークンと、それ用に設定するハッシュを作ります。 |
 | `hotloop-flow bench` | [数値](/ja/flow/overview/#数値)を出したベンチマークの仕組みです。 |
-| `hotloop-flow version` | バージョンです。 |
+| `hotloop-flow version` | バージョン。続けてイメージのビルド元のコミット。 |

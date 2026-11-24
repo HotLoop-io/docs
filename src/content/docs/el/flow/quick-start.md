@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | Το εκτελούμενο αρχείο ροής, byte προς byte, ή `-deployment N` από το ιστορικό. |
 | `hotloop-flow token` | Ένα νέο token API και το hash που ρυθμίζεται γι' αυτό. |
 | `hotloop-flow bench` | Η δοκιμαστική διάταξη που παρήγαγε [τους αριθμούς](/el/flow/overview/#οι-αριθμοί). |
-| `hotloop-flow version` | Η έκδοση. |
+| `hotloop-flow version` | Η έκδοση, και μετά το commit από το οποίο χτίστηκε η εικόνα. |

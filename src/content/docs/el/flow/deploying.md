@@ -46,7 +46,7 @@ kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base6
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Distroless nonroot ως uid 65532, σύστημα αρχείων root μόνο �
 **1. Κρατήστε τα δύο μυστικά έξω από το αρχείο unit.** Τα μυστικά του Podman ζουν έξω από αυτό, ώστε το unit να αντιγράφεται, να γίνεται commit και να ελέγχεται χωρίς να μεταφέρει τίποτα σημαντικό.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.16.8
+Image=ghcr.io/hotloop-io/hotloop-flow:2.17.1
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ Secret=hotloop-flow-lease-url,type=mount,target=flow-lease-url
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.1
 ```
 
 Μετά ανοίξτε το <http://localhost:1880>. Αυτό το μυστικό διαπιστευτηρίων είναι καινούριο κάθε φορά που τρέχετε την εντολή, οπότε ένα διαπιστευτήριο που αποθηκεύτηκε σε μια εκτέλεση δεν μπορεί να διαβαστεί στην επόμενη. Εντάξει για μια ματιά. Γι' αυτό ακριβώς η εγκατάσταση Quadlet το κρατά σε μυστικό Podman.

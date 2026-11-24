@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | ملف التدفق قيد التشغيل، بايتًا ببايت، أو `-deployment N` من السجل. |
 | `hotloop-flow token` | رمز API جديد والتجزئة التي تُضبط له. |
 | `hotloop-flow bench` | أداة القياس التي أنتجت [الأرقام](/ar/flow/overview/#الأرقام). |
-| `hotloop-flow version` | الإصدار. |
+| `hotloop-flow version` | الإصدار، ثم الـ commit الذي بُنيت منه الصورة. |

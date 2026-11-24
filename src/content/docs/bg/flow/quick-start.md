@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | Работещият файл с потоци, байт по байт, или `-deployment N` от историята. |
 | `hotloop-flow token` | Нов API токен и хешът, който се конфигурира за него. |
 | `hotloop-flow bench` | Бенчмарк средата, която произведе [числата](/bg/flow/overview/#числата). |
-| `hotloop-flow version` | Версията. |
+| `hotloop-flow version` | Версията, след това къмитът, от който е построен образът. |
