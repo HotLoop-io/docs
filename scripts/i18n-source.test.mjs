@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parse, segs, hashes, diff, headingSlugs, normalizeVersions, currentHashes, versionMap, examine, releasePages } from './i18n-source.mjs';
+import { parse, segs, hashes, diff, headingSlugs, normalizeVersions, currentHashes, versionMap, examine, releasePages, bump, view } from './i18n-source.mjs';
 
 const page = (body) => `---\ntitle: "T"\ndescription: "D"\n---\n\n${body}\n`;
 
@@ -101,4 +101,24 @@ test('a new release page with no translations fails, and a translated or pending
   const listed = new Map(overlay).set('src/i18n-releases-pending.json', JSON.stringify({ pages: ['releases/flow-9-9-9'] }));
   assert.equal(examine(listed).problems.filter((p) => p.includes('flow-9-9-9') && /needs its 13/.test(p)).length, 0);
   assert.ok(releasePages({ walk: () => ['src/content/docs/releases/flow-2-1-0.md', 'src/content/docs/releases/index.md', 'src/content/docs/de/releases/flow-2-1-0.md'], exists: () => false, read: () => '' }).every((id) => /^releases\/flow-/.test(id)));
+});
+
+// The sync moves the number in a translated line that names the latest release. A release page names the version it was
+// written for, and its English also names the follow-up release, which became the latest: the sync used to swap the page's
+// own version for the follow-up's in every translation (the Flow 2.17.1 page's Image line said 2.17.2). An older release
+// page stays as it was written, and a page that is not a release page still moves.
+test('an older release page keeps its own version when a newer release is out, and a living page still moves', () => {
+  const en = (v) => `---\ntitle: "T"\ndescription: "D"\n---\n\nUpgrade to the ${v} image. The follow-up, 2.17.2, brings arm64.\n`;
+  const de = (v) => `---\ntitle: "T"\ndescription: "D"\n---\n\nAktualisieren Sie auf das Image ${v}. Der Folge-Release, 2.17.2, bringt arm64.\n`;
+  const overlay = new Map([['src/data/sync.json', syncJson('4.24.3', '2.17.2', '1.5.1')]]);
+  for (const id of ['releases/flow-2-17-1', 'flow/overview']) {
+    overlay.set(`src/content/docs/${id}.md`, en('2.17.1'));
+    overlay.set(`src/content/docs/de/${id}.md`, de('2.17.1'));
+    overlay.set(`src/i18n-source/${id.replace(/\//g, '__')}.json`, JSON.stringify({
+      page: id, english: `src/content/docs/${id}.md`,
+      langs: { de: hashes(en('2.17.1'), { flow: '2.17.1' }) }, versions: { de: { flow: '2.17.1' } },
+    }));
+  }
+  const moved = bump({ dry: true, v: view(overlay) }).map((b) => b.id);
+  assert.deepEqual(moved, ['flow/overview']);
 });

@@ -129,7 +129,7 @@ export function headingSlugs(text) {
 // ---- files -----------------------------------------------------------------------------
 // A view of the tree: the files on disk, with `overlay` (path under ROOT -> text) on top, so the sync can ask
 // about the pages it is about to write.
-function view(overlay = new Map()) {
+export function view(overlay = new Map()) {
   const exists = (p) => overlay.has(p) || existsSync(join(ROOT, p));
   const read = (p) => (overlay.has(p) ? overlay.get(p) : readFileSync(join(ROOT, p), 'utf8')).replace(/\r\n/g, '\n');
   const walk = (dir) => {
@@ -413,10 +413,13 @@ export function report(overlay = new Map(), out = console.log) {
 // only difference from the English is the version, it rewrites the old version in each segment where the English says the
 // latest one, in the translation's own line, and records the page again. A segment the English really changed is left for
 // the retranslation, and a version in a segment where the English names an older release is history and is not touched.
+// A release page is history all the way down: it names the version it was written for, and a line in it that mentions the
+// next release (a follow-up bump, say) must not drag the page's own version forward, so a release page is never bumped.
 export function bump({ dry = false, v = view() } = {}) {
   const now = versionMap(v);
   const done = [];
   for (const [id, langs] of translatedPages(v)) {
+    if (RELEASE_PAGE.test(id)) continue;
     const ep = englishPath(v, id);
     const rec = ep ? readRecord(v, id) : null;
     if (!rec) continue;
