@@ -17,7 +17,7 @@ Ce que cela veut dire par une mauvaise nuit :
 
 Il exécute aussi vos flux existants tels quels. C'est [plus bas](/fr/flow/migrating-from-node-red/), parce que c'est une fonctionnalité, pas l'essentiel.
 
-La version actuelle est `2.17.1`. L'image est `ghcr.io/hotloop-io/hotloop-flow:2.17.1` pour amd64 (arm64 suit dans 2.17.2), le dépôt Helm est `https://hotloop.io/hotloop-flow/`, et [Déployer Flow](/fr/flow/deploying/) couvre Kubernetes, Podman et Quadlet. Il a 117 types de nœuds pour les messages et 39 pour les diagrammes FlowLab. L'usage domestique et de laboratoire est gratuit, tout comme celui des écoles, des associations et des administrations, et l'usage via EmberNet, une plateforme partenaire, usage professionnel compris, est illimité, sous le HotLoop Source License Agreement.
+La version actuelle est `2.17.2`. L'image est `ghcr.io/hotloop-io/hotloop-flow:2.17.2` pour amd64 et arm64, le dépôt Helm est `https://hotloop.io/hotloop-flow/`, et [Déployer Flow](/fr/flow/deploying/) couvre Kubernetes, Podman et Quadlet. Il a 117 types de nœuds pour les messages et 39 pour les diagrammes FlowLab. L'usage domestique et de laboratoire est gratuit, tout comme celui des écoles, des associations et des administrations, et l'usage via EmberNet, une plateforme partenaire, usage professionnel compris, est illimité, sous le HotLoop Source License Agreement.
 
 ## Les chiffres
 

@@ -46,7 +46,7 @@ For å velge dine egne i stedet:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Du trenger en Podman som leveres med Quadlet (`/usr/libexec/podman/quadlet` finn
 **1. Hold de to hemmelighetene utenfor enhetsfilen.** Podman-hemmeligheter ligger utenfor den, så enheten kan kopieres rundt, sjekkes inn og gjennomgås uten å bære noe som betyr noe.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.17.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.17.2
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ For å prøve, ikke for å drive en linje på:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.17.1
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
 Åpne så <http://localhost:1880>. Den legitimasjonshemmeligheten er ny hver gang du kjører kommandoen, så en legitimasjon lagret i én kjøring kan ikke leses i den neste. Greit for å ta en titt. Det er nettopp derfor Quadlet-installasjonen holder den i en Podman-hemmelighet.

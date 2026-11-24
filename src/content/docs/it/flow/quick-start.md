@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
-Si genera l'hash con `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. L'immagine è distroless, non root e senza shell, quindi non c'è nulla in cui fare `exec` e nulla su cui far leva per chi ottenesse l'esecuzione di codice.
+Si genera l'hash con `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long'`. L'immagine è distroless, non root e senza shell, quindi non c'è nulla in cui fare `exec` e nulla su cui far leva per chi ottenesse l'esecuzione di codice.
 
 Poi si apre <http://localhost:1880>. Si mette un `flows.json` nella directory dei dati e si riavvia, oppure si costruisce il flusso direttamente nell'editor. L'editor è Astro con isole Svelte su una tela di TypeScript puro e SVG nativo, compilato in file statici dentro il binario: 190.7 kB di JS e 30.1 kB di CSS minificati, 62.5 kB e 6.8 kB con gzip, letti da `web/dist/_astro` dopo `npm run build`. Nulla viene scaricato da nessuna parte, quindi funziona su una macchina senza internet.
 
@@ -50,4 +50,4 @@ Poi si apre <http://localhost:1880>. Si mette un `flows.json` nella directory de
 | `hotloop-flow export` | Il file di flusso in esecuzione, byte per byte, oppure `-deployment N` dalla cronologia. |
 | `hotloop-flow token` | Un nuovo token API e l'hash da configurare per esso. |
 | `hotloop-flow bench` | Il banco di prova che ha prodotto [i numeri](/it/flow/overview/#i-numeri). |
-| `hotloop-flow version` | La versione, poi il commit da cui è stata costruita l'immagine. |
+| `hotloop-flow version` | La versione. |

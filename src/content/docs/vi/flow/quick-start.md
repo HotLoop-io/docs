@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
-Tạo hash bằng `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. Image là distroless không chạy bằng root và không có shell, nên không có gì để `exec` vào và không có gì để kẻ giành được quyền thực thi mã làm bàn đạp.
+Tạo hash bằng `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long'`. Image là distroless không chạy bằng root và không có shell, nên không có gì để `exec` vào và không có gì để kẻ giành được quyền thực thi mã làm bàn đạp.
 
 Sau đó mở <http://localhost:1880>. Thả một tệp `flows.json` vào thư mục dữ liệu rồi khởi động lại, hoặc cứ dựng luồng ngay trong trình soạn thảo. Trình soạn thảo là Astro với các đảo Svelte trên một canvas TypeScript thuần và SVG gốc, được dựng thành tệp tĩnh bên trong tệp nhị phân: JS 190.7 kB và CSS 30.1 kB đã rút gọn, 62.5 kB và 6.8 kB khi nén gzip, đọc từ `web/dist/_astro` sau `npm run build`. Không có gì trong đó được tải từ nơi nào khác, nên nó chạy được trên máy không có internet.
 
@@ -50,4 +50,4 @@ Sau đó mở <http://localhost:1880>. Thả một tệp `flows.json` vào thư 
 | `hotloop-flow export` | Tệp luồng đang chạy, từng byte, hoặc `-deployment N` từ lịch sử. |
 | `hotloop-flow token` | Một token API mới và hash cần cấu hình cho nó. |
 | `hotloop-flow bench` | Bộ đo hiệu năng đã tạo ra [các con số](/vi/flow/overview/#các-con-số). |
-| `hotloop-flow version` | Phiên bản, rồi đến commit mà image được dựng từ đó. |
+| `hotloop-flow version` | Phiên bản. |

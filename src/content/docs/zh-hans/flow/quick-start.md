@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
-用 `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'` 生成哈希。镜像是以非 root 运行的 distroless，里面没有 shell，所以没有可以 `exec` 进去的地方，也没有可供获得代码执行权限的人用来横向移动的东西。
+用 `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long'` 生成哈希。镜像是以非 root 运行的 distroless，里面没有 shell，所以没有可以 `exec` 进去的地方，也没有可供获得代码执行权限的人用来横向移动的东西。
 
 然后打开 <http://localhost:1880>。把 `flows.json` 放进数据目录并重启，或者直接在编辑器里构建流程。编辑器是 Astro，在纯 TypeScript 和原生 SVG 的画布之上加 Svelte 岛，构建成二进制文件内的静态文件：压缩后 JS 190.7 kB、CSS 30.1 kB，gzip 后 62.5 kB 和 6.8 kB，数据取自 `npm run build` 之后的 `web/dist/_astro`。其中没有任何内容是从别处获取的，所以在没有互联网的机器上也能运行。
 
@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | 运行中的流程文件，按字节原样导出，或用 `-deployment N` 从历史中导出。 |
 | `hotloop-flow token` | 一个新的 API 令牌，以及要为它配置的哈希。 |
 | `hotloop-flow bench` | 产出[这些数据](/zh-hans/flow/overview/#数据)的基准测试工具。 |
-| `hotloop-flow version` | 版本号，然后是镜像构建所用的提交。 |
+| `hotloop-flow version` | 版本。 |
