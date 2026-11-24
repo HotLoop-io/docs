@@ -27,7 +27,7 @@ POST /api/entities
 
 `temperature`만 필수입니다. 우량계가 없는 관측소는 `rain_rate`가 없고 비 행을 표시하지 않습니다. 모든 역할은 숫자 태그 하나를 받으며 어느 것도 쓰기 대상이 아닙니다. 관측소는 읽기만 하고 명령하지 않으므로 활성화할 태그가 없고 엔티티는 서비스를 받지 않습니다.
 
-| 역할 | <span class="sr-only">상세</span> | 만들어지는 속성 |
+| 역할 | <span class="sr-only">세부 정보</span> | 만들어지는 속성 |
 |---|---|---|
 | `temperature` | 필수, 상태 | `unit_of_measurement` |
 | `humidity` | 상대 습도, 퍼센트 | `humidity` |

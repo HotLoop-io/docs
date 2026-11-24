@@ -31,7 +31,7 @@ ABI는 [README](/ko/flow/sandboxes/)에 있는 것과 같습니다. `hotloop_flo
 
 `plugin.json`은 엄격하게 읽습니다. Flow가 모르는 필드는 거부 사유이므로, 잘못 쓴 `"capabilites"`는 아무것도 요청하지 않은 채 조용히 지나가는 플러그인이 되지 않고 잡힙니다.
 
-| 필드 | <span class="sr-only">상세</span> |
+| 필드 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `format` | `1`. 필수. |
 | `name` | 소문자, 숫자, 하이픈, 최대 40자, 문자로 시작. `plugins.grants`와 플로 파일이 쓰는 이름이므로 디렉터리 이름과 일치해야 합니다. |

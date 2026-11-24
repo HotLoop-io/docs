@@ -67,7 +67,7 @@ export HOTLOOP_EDGE_PUBLISH_QUEUE_PATH=/data/forward.db
 
 이 모든 것은 실제 HotLoop Edge가 HTTP 장치 20개에서 각각 태그 25개를 250 ms마다(초당 2000개의 읽기값) 폴링하며 실제 Mosquitto에 게시하는 상태에서 측정했습니다. 각 장치는 폴링마다 이전보다 하나 큰 카운터로 응답하므로, 호스트 쪽 판정기는 어느 읽기값이 사라졌고, 어느 것이 두 번 돌아왔고, 어느 것이 순서를 벗어났는지 정확히 압니다. 업링크는 브로커를 네트워크에서 뽑아서 끊습니다. Edge의 소켓은 리셋도 끊김 신호도 없이 조용해집니다. 처리 중인 것이 없는 상태에서 종료하기 위해 공장은 SIGKILL 전에 몇 초 멈춥니다("quiesced"). 다른 종료는 폴링이 어디에 있든 그 지점에서 일어납니다("instant"). 실행은 2026-10-12이며 64 MiB 제한입니다. "Before"는 이 작업 이전 빌드인 `15419f1`입니다. "Write-ahead"는 모든 읽기값을 먼저 디스크에 기록했고 우리가 다시 걷어낸 `165411f`입니다. "Now"는 링크가 살아 있는 동안은 메모리, 장애 중에는 디스크입니다.
 
-| <span class="sr-only">상세</span> | 이전 | 선기록 | 현재 |
+| <span class="sr-only">세부 정보</span> | 이전 | 선기록 | 현재 |
 |---|---|---|---|
 | 정상 상태, 업링크 정상, 2,000 readings/s | 2,018 readings/s, 디스크에 0 bytes/s, CPU 9% | 2,031 readings/s, 디스크에 5.4 MB/s (하루 450 GB), CPU 14% | 10분: 2,002 readings/s, 디스크에 기록된 0 bytes (하루 0 bytes), 기록된 내장 큐 스토어 페이지 0, 큐 파일은 전후 모두 32,768 bytes, CPU 9% |
 | 5분 장애의 재전송, 읽기값이 2,000 readings/s로 계속 도착하는 상태 | 829,745개를 4 m 11 s에, 초당 3,308개 | 초당 194,247에서 308,582개 | 244,335개를 824 ms에, 초당 296,523개 |
@@ -93,7 +93,7 @@ HotLoop는 실제 장비와 실제 서버를 대상으로 실행했으며, 2026-
 
 ## 구성
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_PUBLISH_ENABLED` | `false` | 이것이 설정될 때까지 기능은 꺼져 있습니다 |
 | `HOTLOOP_EDGE_PUBLISH_BROKER` | 해당 없음 | 호스트만, `host:port`, 또는 전체 URL |

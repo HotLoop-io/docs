@@ -163,7 +163,7 @@ description: "히스토리언 수치를 일정에 따라 CSV 또는 HTML로 만�
 
 ## API
 
-| 경로 | 권한 | <span class="sr-only">상세</span> |
+| 경로 | 권한 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `GET /api/reports` | `reports.read` | 모든 정의와 각각의 `nextRunAt` 및 가장 최근 실행 |
 | `POST /api/reports` | `reports.write` | 생성. id가 이미 있으면 `409` |
@@ -194,7 +194,7 @@ description: "히스토리언 수치를 일정에 따라 CSV 또는 HTML로 만�
 
 ## 설정
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_REPORTS_ENABLED` | `false` | 이것을 설정하기 전까지 스케줄러를 포함해 기능이 꺼져 있음 |
 | `HOTLOOP_REPORTS_DIR` | `/data/reports` | 각 실행의 파일을 쓰는 위치. PVC(차트의 `reports.persistence`)를 전제로 함 |

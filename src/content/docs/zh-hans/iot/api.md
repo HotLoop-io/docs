@@ -457,7 +457,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
 
 按设计不需要会话。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `username` | string | 必填。忽略大小写和前后的空格 |
 | `password` | string | 必填 |
@@ -472,7 +472,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
 
 按[认证与用户](/zh-hans/iot/authentication/#自助终端面板pin-或工牌以及空闲退出)所述，在共用面板上用 PIN 或工牌登录。按设计不需要会话。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `code` | string | 必填。PIN，或键盘模拟式工牌读卡器输入的值。忽略前后的空格 |
 | `username` | string | 可选。带上它时，只检查该账户的 PIN，输错会计入该账户的锁定次数。不带时，会在所有账户的代码中查找 |
@@ -507,7 +507,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
 
 修改您自己的密码。不需要权限：知道当前密码本身就是凭证。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `currentPassword` | string | 必填 |
 | `newPassword` | string | 必填，至少 8 个字符 |
@@ -528,7 +528,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
 
 ### `POST /api/users`
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `username` | string | 必填。小写字母、数字、点、下划线、连字符，以字母或数字开头，2 到 64 个字符 |
 | `password` | string | 必填，至少 8 个字符 |
@@ -539,7 +539,7 @@ Readiness。用 5 秒的时间预算对数据库做 ping。
 
 ### `PUT /api/users/{username}`
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `role` | string | 必填，除非设置了 `permissions` |
 | `permissions` | string[] | 可选。为空表示“使用角色” |
@@ -670,7 +670,7 @@ Gateway 知道的每一种协议，以及本构建是否带有它的驱动。
 
 如果 `id` 是新的就创建设备，否则替换它。没有 `PUT`。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `id` | string | 必填。1 到 64 个字母、数字、`.`、`_`、`-`，以字母或数字开头。它会出现在 URL、MQTT 主题和 MCP 参数里 |
 | `name` | string | 必填 |
@@ -1059,7 +1059,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 ### `GET /api/tags`
 
-| 查询 | <span class="sr-only">详细信息</span> |
+| 查询 | <span class="sr-only">详情</span> |
 |---|---|
 | `device` | 仅该设备的变量。没有 `limit` 时返回全部 |
 | `q` | 搜索：设备 id、变量名或描述中包含的子串，不区分大小写。可与 `device` 一起使用 |
@@ -1077,7 +1077,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 如果 `deviceId` 和 `name` 是新的就创建变量，否则替换它。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `deviceId` | string | 必填。设备必须存在（不存在则返回 `404`） |
 | `name` | string | 必填。不含控制字符 |
@@ -1148,7 +1148,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 通过写入门向一个变量写入一个值。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `tag` | string | 必填。`device/tag` |
 | `value` | bool, number or string | 必填。`true` 是布尔值，`42` 是整数，`42.5` 是浮点数，`"42"` 是字符串：JSON 类型就是写入的类型，因为线圈、字和实数在线路上是三种不同的东西 |
@@ -1174,7 +1174,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 ### `GET /api/history`
 
-| 查询 | <span class="sr-only">详细信息</span> |
+| 查询 | <span class="sr-only">详情</span> |
 |---|---|
 | `tag` | 必填，可重复，最多 50 个：`?tag=a/x&tag=b/y` |
 | `minutes` | 从现在往回多久。默认 60 |
@@ -1203,7 +1203,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 写入审计，最新的在前。每一次尝试都在这里，包括被拒绝的，因为“我们不知道那条命令有没有发出去”是工厂能得到的最糟的答案。
 
-| 查询 | <span class="sr-only">详细信息</span> |
+| 查询 | <span class="sr-only">详情</span> |
 |---|---|
 | `tag` | 一个变量，`device/tag` |
 | `device` | 一台设备的所有变量（设置了 `tag` 时忽略） |
@@ -1226,7 +1226,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 每个实体，包括孤儿实体。
 
-| 查询 | <span class="sr-only">详细信息</span> |
+| 查询 | <span class="sr-only">详情</span> |
 |---|---|
 | `domain` | `sensor`、`switch`、`motor` 等 |
 | `device` | 一台设备上的实体 |
@@ -1257,7 +1257,7 @@ ONVIF 摄像头配置文件的当前画面，一张 JPEG（`Content-Type` 与摄
 
 只修改您发送的字段。仅限管理员：entity_id 是每个自动化、仪表板和代理引用该实体所用的名称，修改它属于配置。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `entity_id` | string | 重命名。`unique_id` 不会改变 |
 | `name`, `icon`, `device_class`, `state_class`, `unit_of_measurement`, `entity_category` | string | |
@@ -1543,7 +1543,7 @@ ISA-18.2：触发、确认和恢复正常是三件不同的事，日志能分清
 
 创建或替换一个定义。
 
-| 字段 | 类型 | <span class="sr-only">详细信息</span> |
+| 字段 | 类型 | <span class="sr-only">详情</span> |
 |---|---|---|
 | `id`, `name` | string | 必填。`id` 遵循设备 id 规则 |
 | `deviceId`, `tagName` | string | 必填 |

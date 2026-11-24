@@ -207,7 +207,7 @@ error="write /etc/edge-relay/devices.json.tmp: open /etc/edge-relay/devices.json
 
 ## 구성
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_EDGE_RELAY_DEVICES_FILE` | 해당 없음 | 필수입니다. 위 장치 파일의 경로 |
 | `HOTLOOP_EDGE_RELAY_PUSHED_FILE` | 설정 안 함 | 푸시된 장치 파일이 보관되는 위치이며, 존재하는 동안은 위의 파일보다 우선합니다. 쓰기가 가능하고 영속적이어야 합니다. 차트와 Quadlet 유닛은 `/data/pushed-devices.json`을 사용합니다. [푸시된 파일의 위치](#푸시된-파일의-위치와-우선하는-파일) 참조 |

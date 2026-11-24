@@ -22,7 +22,7 @@ HotLoop은 현장을 위한 여덟 가지 제품입니다. 사이트와 함께 �
 
 다음 표는 코어 네 제품을 비교합니다.
 
-| <span class="sr-only">세부 사항</span> | HotLoop IoT | HotLoop Edge | HotLoop Gateway | HotLoop Edge Relay |
+| <span class="sr-only">세부 정보</span> | HotLoop IoT | HotLoop Edge | HotLoop Gateway | HotLoop Edge Relay |
 |---|---|---|---|---|
 | 용도 | 자동화의 기반. Pi, NUC, 캐비닛 속 박스 | 기계 옆 박스. 상위 연결이 끊겨도 계속 동작합니다 | 사이트의 두뇌 | 폴링하고, 전달하고, 살아남습니다. 데이터베이스도 UI도 없습니다 |
 | 엔티티, 자동화, 헬퍼, 스크립트, 레시피, 블루프린트, 대시보드, 로그북, 알림, MCP, 디스커버리를 지원하는 MQTT, ISA-18.2 알람, 백업, 모든 드라이버 | 예 | 예 | 예 | 드라이버만 |
@@ -64,7 +64,7 @@ Gateway는 4.17.0까지 출시된 이름을 그대로 씁니다. 이미지는 `g
 
 이미지는 바이너리에 기본 구성 약 3 MB를 더한 크기입니다.
 
-| <span class="sr-only">세부 사항</span> | amd64 이미지 / 바이너리 | arm64 이미지 / 바이너리 | arm/v7 이미지 / 바이너리 |
+| <span class="sr-only">세부 정보</span> | amd64 이미지 / 바이너리 | arm64 이미지 / 바이너리 | arm/v7 이미지 / 바이너리 |
 |---|---|---|---|
 | IoT | 31.2 / 28.0 MB | 29.1 / 26.0 MB | 29.2 / 26.0 MB |
 | Edge | 36.5 / 33.3 MB | 34.2 / 31.0 MB | 34.3 / 31.1 MB |

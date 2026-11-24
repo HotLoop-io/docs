@@ -249,7 +249,7 @@ HotLoop의 Sparkplug 에지 노드와 Edge Relay를 Ignition의 MQTT Engine과 �
   {"device":"press-01","tag":"Cycle","type":"UInt32"}]}]}
 ```
 
-| 변수 | 기본값 | <span class="sr-only">상세</span> |
+| 변수 | 기본값 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `HOTLOOP_UADP_PUBLISH_ADDRESS` | | 멀티캐스트 그룹은 `udp://239.0.0.1:4840`, 구독자 한 곳은 `udp://host:4840` |
 | `HOTLOOP_UADP_PUBLISH_LAYOUT_FILE` 또는 `_LAYOUT` | | 위의 레이아웃을 파일 또는 인라인으로 지정(파일이 우선) |
@@ -621,7 +621,7 @@ multi-state-value:2           present value of a multi-state value
 
 이 여덟 가지는 DX 통신 매뉴얼(IM 04L41B01-17E, 4.3절, 4-35쪽)에 나오는 Yokogawa DX 계열의 코드입니다. HotLoop에만 있는 것이 아니라 모든 프로토콜의 모든 태그에 있는 같은 필드이며, DX 목록은 우리가 가장 먼저 겪은 것일 뿐입니다. 각 코드는 태그에 있으므로, 다른 단위로 실제로 0x7F7F를 읽을 수 있는 기록계 채널은 그것을 읽기 값으로 유지합니다.
 
-| 필드 | <span class="sr-only">상세</span> |
+| 필드 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `raw` | 장치의 코드이며, 매뉴얼에 인쇄된 방식으로 씁니다. `"0x8005"`(16진수), `"-32763"` 또는 `32773`(10진수). 문자열 또는 숫자 그대로. 필수 |
 | `reason` | 읽기 값의 품질이 말하는 내용. 최대 120자. 생략하면 `raw value 0x8005 means no measurement`로 읽히므로, 읽기 값은 이유를 말하지 않고 bad가 되는 일이 없습니다 |

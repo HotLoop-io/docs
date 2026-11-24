@@ -457,7 +457,7 @@ Readiness입니다. 5초의 시간 제한으로 데이터베이스에 핑을 보
 
 설계상 세션이 필요 없습니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `username` | string | 필수. 대소문자와 앞뒤 공백은 무시합니다 |
 | `password` | string | 필수 |
@@ -472,7 +472,7 @@ Readiness입니다. 5초의 시간 제한으로 데이터베이스에 핑을 보
 
 [인증과 사용자](/ko/iot/authentication/#키오스크-패널-pin-또는-배지-그리고-유휴-로그아웃)에서 설명하는 방식으로, 공용 패널에서 PIN이나 배지로 로그인합니다. 설계상 세션이 필요 없습니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `code` | string | 필수. PIN, 또는 키보드 웨지 배지 리더가 입력한 값입니다. 앞뒤 공백은 무시합니다 |
 | `username` | string | 선택. 지정하면 해당 계정의 PIN만 검사하고, 틀리면 그 계정의 잠금 횟수에 들어갑니다. 지정하지 않으면 모든 계정의 코드 중에서 찾습니다 |
@@ -507,7 +507,7 @@ Readiness입니다. 5초의 시간 제한으로 데이터베이스에 핑을 보
 
 자신의 비밀번호를 바꿉니다. 권한은 필요 없습니다. 현재 비밀번호를 아는 것이 곧 자격입니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `currentPassword` | string | 필수 |
 | `newPassword` | string | 필수, 8자 이상 |
@@ -528,7 +528,7 @@ Readiness입니다. 5초의 시간 제한으로 데이터베이스에 핑을 보
 
 ### `POST /api/users`
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `username` | string | 필수. 소문자, 숫자, 점, 밑줄, 하이픈을 쓰며 글자나 숫자로 시작하고 2자에서 64자까지입니다 |
 | `password` | string | 필수, 8자 이상 |
@@ -539,7 +539,7 @@ Readiness입니다. 5초의 시간 제한으로 데이터베이스에 핑을 보
 
 ### `PUT /api/users/{username}`
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `role` | string | `permissions`를 지정하지 않으면 필수 |
 | `permissions` | string[] | 선택. 비어 있으면 "역할을 사용"한다는 뜻입니다 |
@@ -670,7 +670,7 @@ Gateway가 아는 모든 프로토콜과, 이 빌드에 그 드라이버가 있�
 
 `id`가 새것이면 장치를 만들고, 아니면 대체합니다. `PUT`은 없습니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `id` | string | 필수. 영문자, 숫자, `.`, `_`, `-` 1자에서 64자이며 영문자나 숫자로 시작합니다. URL, MQTT 토픽, MCP 인수에 그대로 들어갑니다 |
 | `name` | string | 필수 |
@@ -1059,7 +1059,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 ### `GET /api/tags`
 
-| 쿼리 | <span class="sr-only">상세</span> |
+| 쿼리 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `device` | 이 장치의 태그만 반환합니다. `limit`이 없으면 모두 응답합니다 |
 | `q` | 검색입니다. 장치 id, 태그 이름, 설명에 대소문자 구분 없이 포함된 부분 문자열입니다. `device`와 함께 쓸 수 있습니다 |
@@ -1077,7 +1077,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 `deviceId`와 `name`이 새것이면 태그를 만들고, 아니면 대체합니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `deviceId` | string | 필수. 장치가 있어야 합니다(없으면 `404`) |
 | `name` | string | 필수. 제어 문자는 안 됩니다 |
@@ -1148,7 +1148,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 쓰기 게이트를 거쳐 한 태그에 값 하나를 씁니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `tag` | string | 필수. `device/tag` |
 | `value` | bool, number or string | 필수. `true`는 bool, `42`는 정수, `42.5`는 실수, `"42"`는 문자열입니다. JSON 타입이 곧 쓰는 타입입니다. 코일, 워드, 실수는 선로상에서 서로 다른 세 가지이기 때문입니다 |
@@ -1174,7 +1174,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 ### `GET /api/history`
 
-| 쿼리 | <span class="sr-only">상세</span> |
+| 쿼리 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `tag` | 필수, 반복 가능, 최대 50개: `?tag=a/x&tag=b/y` |
 | `minutes` | 지금부터 얼마나 거슬러 올라갈지입니다. 기본값 60 |
@@ -1203,7 +1203,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 최신순의 쓰기 감사입니다. 거부된 것을 포함해 모든 시도가 여기 있습니다. "그 명령이 나갔는지 모른다"는 공장이 들을 수 있는 가장 나쁜 대답이기 때문입니다.
 
-| 쿼리 | <span class="sr-only">상세</span> |
+| 쿼리 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `tag` | 태그 하나, `device/tag` |
 | `device` | 장치 하나의 모든 태그(`tag`를 지정하면 무시) |
@@ -1226,7 +1226,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 고아 엔티티를 포함한 모든 엔티티를 반환합니다.
 
-| 쿼리 | <span class="sr-only">상세</span> |
+| 쿼리 | <span class="sr-only">세부 정보</span> |
 |---|---|
 | `domain` | `sensor`, `switch`, `motor`... |
 | `device` | 한 장치의 엔티티 |
@@ -1257,7 +1257,7 @@ HotLoop 자체 브로커가 아닌, 디스커버리가 수신하는 브로커입
 
 보낸 필드만 변경합니다. 관리자 전용입니다. entity_id는 모든 자동화, 대시보드, 에이전트가 엔티티를 가리키는 이름이므로 이를 바꾸는 것은 구성 변경입니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `entity_id` | string | 이름 변경입니다. `unique_id`는 바뀌지 않습니다 |
 | `name`, `icon`, `device_class`, `state_class`, `unit_of_measurement`, `entity_category` | string | |
@@ -1543,7 +1543,7 @@ ISA-18.2: 발생, 확인, 정상 복귀는 서로 다른 일이며, 로그는 �
 
 정의를 만들거나 교체합니다.
 
-| 필드 | 유형 | <span class="sr-only">상세</span> |
+| 필드 | 유형 | <span class="sr-only">세부 정보</span> |
 |---|---|---|
 | `id`, `name` | string | 필수. `id`는 장치 id 규칙을 따릅니다 |
 | `deviceId`, `tagName` | string | 필수 |
