@@ -17,7 +17,7 @@ Was das in einer schlechten Nacht bedeutet:
 
 Er führt auch Ihre bestehenden Flows unverändert aus. Das steht [weiter unten](/de/flow/migrating-from-node-red/), weil es eine Funktion ist, nicht der Kern.
 
-Die aktuelle Version ist `2.17.1`. Das Image ist `ghcr.io/hotloop-io/hotloop-flow:2.17.1` für amd64 (arm64 folgt in 2.17.2), das Helm-Repository ist `https://hotloop.io/hotloop-flow/`, und [Flow bereitstellen](/de/flow/deploying/) behandelt Kubernetes, Podman und Quadlet. Es hat 117 Knotentypen für Nachrichten und 39 für FlowLab-Diagramme. Die Nutzung zu Hause und im Labor ist kostenlos, ebenso die durch Schulen, gemeinnützige Organisationen und Behörden, und die Nutzung über EmberNet, eine Partnerplattform, einschließlich geschäftlicher Nutzung, ist unbeschränkt, unter dem HotLoop Source License Agreement.
+Die aktuelle Version ist `2.17.2`. Das Image ist `ghcr.io/hotloop-io/hotloop-flow:2.17.2` für amd64 und arm64, das Helm-Repository ist `https://hotloop.io/hotloop-flow/`, und [Flow bereitstellen](/de/flow/deploying/) behandelt Kubernetes, Podman und Quadlet. Es hat 117 Knotentypen für Nachrichten und 39 für FlowLab-Diagramme. Die Nutzung zu Hause und im Labor ist kostenlos, ebenso die durch Schulen, gemeinnützige Organisationen und Behörden, und die Nutzung über EmberNet, eine Partnerplattform, einschließlich geschäftlicher Nutzung, ist unbeschränkt, unter dem HotLoop Source License Agreement.
 
 ## Die Zahlen
 

@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
-Δημιουργήστε το hash με `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'`. Η εικόνα είναι distroless χωρίς root και δεν έχει shell, άρα δεν υπάρχει πού να γίνει `exec` και τίποτα για να χρησιμοποιήσει όποιος αποκτήσει εκτέλεση κώδικα.
+Δημιουργήστε το hash με `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long'`. Η εικόνα είναι distroless χωρίς root και δεν έχει shell, άρα δεν υπάρχει πού να γίνει `exec` και τίποτα για να χρησιμοποιήσει όποιος αποκτήσει εκτέλεση κώδικα.
 
 Μετά ανοίξτε το <http://localhost:1880>. Ρίξτε ένα `flows.json` στον κατάλογο δεδομένων και κάντε επανεκκίνηση, ή φτιάξτε απλώς τη ροή στον επεξεργαστή. Ο επεξεργαστής είναι Astro με νησίδες Svelte πάνω από καμβά καθαρής TypeScript και native SVG, χτισμένος σε στατικά αρχεία μέσα στο δυαδικό: 190.7 kB JS και 30.1 kB CSS minified, 62.5 kB και 6.8 kB με gzip, διαβασμένα από το `web/dist/_astro` μετά το `npm run build`. Τίποτα σε αυτόν δεν κατεβαίνει από πουθενά, οπότε δουλεύει σε μηχάνημα χωρίς internet.
 
@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | Το εκτελούμενο αρχείο ροής, byte προς byte, ή `-deployment N` από το ιστορικό. |
 | `hotloop-flow token` | Ένα νέο token API και το hash που ρυθμίζεται γι' αυτό. |
 | `hotloop-flow bench` | Η δοκιμαστική διάταξη που παρήγαγε [τους αριθμούς](/el/flow/overview/#οι-αριθμοί). |
-| `hotloop-flow version` | Η έκδοση, και μετά το commit από το οποίο χτίστηκε η εικόνα. |
+| `hotloop-flow version` | Η έκδοση. |

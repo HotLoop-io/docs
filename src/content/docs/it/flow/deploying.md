@@ -46,7 +46,7 @@ Per sceglierle voi:
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Serve un Podman che includa Quadlet (esiste `/usr/libexec/podman/quadlet`). I pa
 **1. Tenete i due segreti fuori dal file di unità.** I segreti Podman vivono fuori da esso, così l'unità può essere copiata, committata e revisionata senza portare con sé nulla di importante.
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.17.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.17.2
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ Per provare, non per far girare una linea:
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.17.1
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
 Poi aprite <http://localhost:1880>. Quel segreto delle credenziali è nuovo a ogni esecuzione del comando, quindi una credenziale salvata in un'esecuzione non può essere letta nella successiva. Va bene per dare un'occhiata. È esattamente per questo che l'installazione Quadlet lo tiene in un segreto Podman.

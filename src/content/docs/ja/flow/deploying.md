@@ -46,7 +46,7 @@ kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base6
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Quadlet を同梱する Podman が必要です(`/usr/libexec/podman/quadlet` が
 **1. 2 つのシークレットをユニットファイルの外に置きます。** Podman のシークレットはその外にあるので、重要なものを含まないまま、ユニットをコピーし、コミットし、レビューできます。
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.17.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.17.2
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ OT セグメントでのディスカバリーでは、`Network=host` がコン�
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.17.1
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
 そのあと <http://localhost:1880> を開いてください。この資格情報シークレットはコマンドを実行するたびに新しくなるので、ある実行で保存した資格情報は次の実行では読めません。ちょっと見てみるにはそれで十分です。Quadlet のインストールがこれを Podman シークレットに保持する理由が、まさにそれです。

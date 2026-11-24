@@ -25,7 +25,7 @@ Det er to måter å kjøre et HotLoop-produkt på for alvor: Helm på k3s eller 
 | [HotLoop Edge](/nb/edge/overview/) | 4.24.2 | Ja | Ja | [Installer Edge](/nb/edge/install/) |
 | [HotLoop Gateway](/nb/gateway/overview/) | 4.24.2 | Ja | Ja | [Installer Gateway](/nb/gateway/install/) |
 | [HotLoop Edge Relay](/nb/edge-relay/overview/) | 4.24.2 | Ja | Ja | [Installer Edge Relay](/nb/edge-relay/install/) |
-| [HotLoop Flow](/nb/flow/overview/) | 2.17.1 | Ja | Ja | [Installer Flow](/nb/flow/install/) |
+| [HotLoop Flow](/nb/flow/overview/) | 2.17.2 | Ja | Ja | [Installer Flow](/nb/flow/install/) |
 | [HotLoop Cascade](/nb/cascade/overview/) | 1.5.1 | Ja, uten innlogging | Ja, uten innlogging, se [Cascade med Podman Quadlet](/nb/cascade/quadlet/) | [Kjøre Cascade](/nb/cascade/running/) |
 | [HotLoop for CODESYS](/nb/codesys/overview/) | 0.3.10 | Ja, eller EmberCORE App Store | Nei | [Installer HotLoop for CODESYS](/nb/codesys/install/) |
 | [HotLoop Transmitter](/nb/transmitter/overview/) | 1.2.0 | Nei, det er et CODESYS-bibliotek | Nei, det er et CODESYS-bibliotek | [Installer Transmitter](/nb/transmitter/install/) |

@@ -28,10 +28,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
-ハッシュは `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-password -password 'something-long'` で生成します。イメージは distroless の非 root で、中にシェルがないため、`exec` で入る先も、コード実行を得た人が足場にできるものもありません。
+ハッシュは `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long'` で生成します。イメージは distroless の非 root で、中にシェルがないため、`exec` で入る先も、コード実行を得た人が足場にできるものもありません。
 
 次に <http://localhost:1880> を開きます。データディレクトリに `flows.json` を置いて再起動するか、エディタでそのままフローを作ってください。エディタは、素の TypeScript とネイティブ SVG のキャンバスの上に Svelte アイランドを載せた Astro で、バイナリ内の静的ファイルとしてビルドされます。ミニファイ後で JS 190.7 kB と CSS 30.1 kB、gzip で 62.5 kB と 6.8 kB で、`npm run build` のあとに `web/dist/_astro` から読み取った値です。どこからも何も取得しないので、インターネットのないマシンでも動きます。
 
@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | 稼働中のフローファイルをバイト単位でそのまま、または履歴から `-deployment N` で書き出します。 |
 | `hotloop-flow token` | 新しい API トークンと、それ用に設定するハッシュを作ります。 |
 | `hotloop-flow bench` | [数値](/ja/flow/overview/#数値)を出したベンチマークの仕組みです。 |
-| `hotloop-flow version` | バージョン。続けてイメージのビルド元のコミット。 |
+| `hotloop-flow version` | バージョンです。 |

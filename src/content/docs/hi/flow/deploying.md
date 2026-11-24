@@ -46,7 +46,7 @@ kubectl get secret line3-flows-auth -o jsonpath='{.data.admin-password}' | base6
 
 ```bash
 helm install line3-flows hotloop-flow/hotloop-flow \
-  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  --set auth.passwordHash="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   --set hotloopFlow.credentialSecret="$(openssl rand -hex 32)"
 ```
 
@@ -148,7 +148,7 @@ Service 8080 पर सुनती है और बाइनरी के 1880
 **1. दोनों सीक्रेट को यूनिट फ़ाइल से बाहर रखें।** Podman सीक्रेट उसके बाहर रहते हैं, इसलिए यूनिट को कॉपी, कमिट और समीक्षा बिना किसी ज़रूरी चीज़ के साथ ले जाए बिना की जा सकती है।
 
 ```bash
-printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 \
+printf '%s' "$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 \
   hash-password -password 'something-long')" | podman secret create hotloop-flow-admin-hash -
 printf '%s' "$(openssl rand -hex 32)" | podman secret create hotloop-flow-credential-secret -
 ```
@@ -165,7 +165,7 @@ After=network-online.target
 
 [Container]
 ContainerName=hotloop-flow
-Image=ghcr.io/hotloop-io/hotloop-flow:2.17.1
+Image=ghcr.io/hotloop-io/hotloop-flow:2.17.2
 PublishPort=1880:1880
 Volume=hotloop-flow-data:/data
 Environment=HOTLOOP_FLOW_ADMIN_USER=admin
@@ -232,9 +232,9 @@ OT सेगमेंट पर डिस्कवरी के लिए `Netwo
 ```bash
 podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
-  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1 hash-password -password 'something-long')" \
+  -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH="$(podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.2 hash-password -password 'something-long')" \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.17.1
+  ghcr.io/hotloop-io/hotloop-flow:2.17.2
 ```
 
 फिर <http://localhost:1880> खोलें। वह क्रेडेंशियल सीक्रेट हर बार नया होता है जब आप कमांड चलाते हैं, इसलिए एक रन में सहेजा गया क्रेडेंशियल अगले रन में पढ़ा नहीं जा सकता। एक नज़र डालने के लिए ठीक है। ठीक इसी वजह से Quadlet इंस्टॉलेशन इसे Podman सीक्रेट में रखता है।
