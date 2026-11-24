@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[IoT 已发布，首个版本是 4.18.10]
-镜像是 `ghcr.io/hotloop-io/hotloop-iot:4.24.2`，为 amd64、arm64 和 arm/v7 构建，amd64 上约 31 MB，Pi 上约 29 MB，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-iot`。两者都无需登录即可拉取。Quadlet 单元在 [Podman Quadlet](/zh-hans/install/quadlet/) 的 `iot/` 目录中。[安装它](/zh-hans/iot/install/)。本节的页面会说明每项功能是对照什么运行过的，如果某一页跟随的是 `main` 而不是发布版本，也会说明。
+镜像是 `ghcr.io/hotloop-io/hotloop-iot:4.24.3`，为 amd64、arm64 和 arm/v7 构建，amd64 上约 31 MB，Pi 上约 29 MB，图表是来自 `https://hotloop.io/hotloop` 的 `hotloop-iot`。两者都无需登录即可拉取。Quadlet 单元在 [Podman Quadlet](/zh-hans/install/quadlet/) 的 `iot/` 目录中。[安装它](/zh-hans/iot/install/)。本节的页面会说明每项功能是对照什么运行过的，如果某一页跟随的是 `main` 而不是发布版本，也会说明。
 :::
 
 IoT 是 Edge 和 Gateway 所构建的基础。如果你面前的盒子是一块 Pi、柜子里的 NUC、一排智能插座和传感器，或者工作台上的一台 PLC，就选它。它是三个完整产品中最小的镜像，却带着让 HotLoop 有用的一切：实体、规则、报警，以及什么都绕不过的那一个写入关口。

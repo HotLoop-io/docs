@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge متاح، وأول إصدار له 4.18.10]
-الصورة هي `ghcr.io/hotloop-io/hotloop-edge:4.24.2` مبنية لمعماريات amd64 وarm64 وarm/v7، بحجم نحو 37 ميغابايت على amd64 و34 ميغابايت على arm، والمخطط هو `hotloop-edge` من `https://hotloop.io/hotloop`. يُسحب كلاهما دون تسجيل دخول. وحدات Quadlet في المجلد `edge/` من [Podman Quadlet](/ar/install/quadlet/). [ثبّته](/ar/edge/install/). قبل 4.18.10 كان بإمكان Gateway أن يعمل على الحافة وينشر Sparkplug إلى الأعلى، وهو يفعل ذلك منذ 4.5.0، لكن ذلك كان يتطلب Gateway كاملًا.
+الصورة هي `ghcr.io/hotloop-io/hotloop-edge:4.24.3` مبنية لمعماريات amd64 وarm64 وarm/v7، بحجم نحو 37 ميغابايت على amd64 و34 ميغابايت على arm، والمخطط هو `hotloop-edge` من `https://hotloop.io/hotloop`. يُسحب كلاهما دون تسجيل دخول. وحدات Quadlet في المجلد `edge/` من [Podman Quadlet](/ar/install/quadlet/). [ثبّته](/ar/edge/install/). قبل 4.18.10 كان بإمكان Gateway أن يعمل على الحافة وينشر Sparkplug إلى الأعلى، وهو يفعل ذلك منذ 4.5.0، لكن ذلك كان يتطلب Gateway كاملًا.
 :::
 
 Edge صندوق يُثبَّت بجانب خط الإنتاج. يقرأ الآلة، وينفّذ القواعد على الآلة، ويواصل العمل عند سقوط WAN، ويخبر بقية المصنع بما رآه. ويعمل عبر بوابة الكتابة نفسها التي يعمل بها كل شيء آخر.

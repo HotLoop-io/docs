@@ -2,14 +2,14 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "aa013ec153f776610221fdeeb123a75d3496c3f0",
-      "sha": "aa013ec153f776610221fdeeb123a75d3496c3f0",
+      "ref": "origin/main",
+      "sha": "2b4c446ece12592ad6c19bf0fade0da9795d00c6",
       "release": {
-        "tag": "v4.24.2",
-        "version": "4.24.2",
+        "tag": "v4.24.3",
+        "version": "4.24.3",
         "prerelease": false,
-        "publishedAt": "2026-11-24T00:12:31Z",
-        "sha": "aa013ec153f776610221fdeeb123a75d3496c3f0"
+        "publishedAt": "2026-11-24T08:19:24Z",
+        "sha": "2b4c446ece12592ad6c19bf0fade0da9795d00c6"
       }
     },
     "flow": {
@@ -1257,6 +1257,17 @@
       "status": "released",
       "repo": "hotloop",
       "source": "docs/releases/4.24.2.md",
+      "release": true
+    },
+    {
+      "slug": "releases/hotloop-4-24-3",
+      "product": "releases",
+      "group": "HotLoop core",
+      "title": "HotLoop core 4.24.3 release notes",
+      "label": "4.24.3",
+      "status": "released",
+      "repo": "hotloop",
+      "source": "docs/releases/4.24.3.md",
       "release": true
     },
     {

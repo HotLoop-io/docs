@@ -21,10 +21,10 @@ HotLoop 제품을 제대로 운영하는 방법은 두 가지입니다. k3s 또�
 
 | 제품 | 최신 릴리스 | Helm | Quadlet | 시작하기 |
 |---|---|---|---|---|
-| [HotLoop IoT](/ko/iot/overview/) | 4.24.2 | 예 | 예 | [IoT 설치](/ko/iot/install/) |
-| [HotLoop Edge](/ko/edge/overview/) | 4.24.2 | 예 | 예 | [Edge 설치](/ko/edge/install/) |
-| [HotLoop Gateway](/ko/gateway/overview/) | 4.24.2 | 예 | 예 | [Gateway 설치](/ko/gateway/install/) |
-| [HotLoop Edge Relay](/ko/edge-relay/overview/) | 4.24.2 | 예 | 예 | [Edge Relay 설치](/ko/edge-relay/install/) |
+| [HotLoop IoT](/ko/iot/overview/) | 4.24.3 | 예 | 예 | [IoT 설치](/ko/iot/install/) |
+| [HotLoop Edge](/ko/edge/overview/) | 4.24.3 | 예 | 예 | [Edge 설치](/ko/edge/install/) |
+| [HotLoop Gateway](/ko/gateway/overview/) | 4.24.3 | 예 | 예 | [Gateway 설치](/ko/gateway/install/) |
+| [HotLoop Edge Relay](/ko/edge-relay/overview/) | 4.24.3 | 예 | 예 | [Edge Relay 설치](/ko/edge-relay/install/) |
 | [HotLoop Flow](/ko/flow/overview/) | 2.17.2 | 예 | 예 | [Flow 설치](/ko/flow/install/) |
 | [HotLoop Cascade](/ko/cascade/overview/) | 1.5.1 | 예, 로그인 불필요 | 예, 로그인 불필요, 참고: [Podman Quadlet로 Cascade 실행](/ko/cascade/quadlet/) | [Cascade 실행](/ko/cascade/running/) |
 | [HotLoop for CODESYS](/ko/codesys/overview/) | 0.3.10 | 예, 또는 EmberCORE App Store | 아니요 | [HotLoop for CODESYS 설치](/ko/codesys/install/) |

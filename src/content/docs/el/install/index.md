@@ -21,10 +21,10 @@ editUrl: false
 
 | Προϊόν | Τελευταία έκδοση | Helm | Quadlet | Ξεκινήστε από εδώ |
 |---|---|---|---|---|
-| [HotLoop IoT](/el/iot/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του IoT](/el/iot/install/) |
-| [HotLoop Edge](/el/edge/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του Edge](/el/edge/install/) |
-| [HotLoop Gateway](/el/gateway/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του Gateway](/el/gateway/install/) |
-| [HotLoop Edge Relay](/el/edge-relay/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του Edge Relay](/el/edge-relay/install/) |
+| [HotLoop IoT](/el/iot/overview/) | 4.24.3 | Ναι | Ναι | [Εγκατάσταση του IoT](/el/iot/install/) |
+| [HotLoop Edge](/el/edge/overview/) | 4.24.3 | Ναι | Ναι | [Εγκατάσταση του Edge](/el/edge/install/) |
+| [HotLoop Gateway](/el/gateway/overview/) | 4.24.3 | Ναι | Ναι | [Εγκατάσταση του Gateway](/el/gateway/install/) |
+| [HotLoop Edge Relay](/el/edge-relay/overview/) | 4.24.3 | Ναι | Ναι | [Εγκατάσταση του Edge Relay](/el/edge-relay/install/) |
 | [HotLoop Flow](/el/flow/overview/) | 2.17.2 | Ναι | Ναι | [Εγκατάσταση του Flow](/el/flow/install/) |
 | [HotLoop Cascade](/el/cascade/overview/) | 1.5.1 | Ναι, χωρίς σύνδεση χρήστη | Ναι, χωρίς σύνδεση χρήστη, δείτε [Cascade με Podman Quadlet](/el/cascade/quadlet/) | [Λειτουργία του Cascade](/el/cascade/running/) |
 | [HotLoop for CODESYS](/el/codesys/overview/) | 0.3.10 | Ναι, ή το App Store του EmberCORE | Όχι | [Εγκατάσταση του HotLoop for CODESYS](/el/codesys/install/) |

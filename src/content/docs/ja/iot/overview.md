@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[IoT が公開されました。最初のリリースは 4.18.10 です]
-イメージは amd64、arm64、arm/v7 向けにビルドされた `ghcr.io/hotloop-io/hotloop-iot:4.24.2` で、amd64 で約 31 MB、Pi で約 29 MB です。チャートは `https://hotloop.io/hotloop` の `hotloop-iot` です。どちらもログインなしで取得できます。Quadlet ユニットは [Podman Quadlet](/ja/install/quadlet/) の `iot/` ディレクトリにあります。[インストールしてください](/ja/iot/install/)。このセクションの各ページには、各機能を何に対して実行したかが書かれており、ページがリリースではなく `main` に従っている場合は、それも書かれています。
+イメージは amd64、arm64、arm/v7 向けにビルドされた `ghcr.io/hotloop-io/hotloop-iot:4.24.3` で、amd64 で約 31 MB、Pi で約 29 MB です。チャートは `https://hotloop.io/hotloop` の `hotloop-iot` です。どちらもログインなしで取得できます。Quadlet ユニットは [Podman Quadlet](/ja/install/quadlet/) の `iot/` ディレクトリにあります。[インストールしてください](/ja/iot/install/)。このセクションの各ページには、各機能を何に対して実行したかが書かれており、ページがリリースではなく `main` に従っている場合は、それも書かれています。
 :::
 
 IoT は、Edge と Gateway が土台にしている基盤です。目の前のボックスが Pi、押し入れの NUC、スマートプラグとセンサーのラック、あるいは作業台の PLC 1 台なら、これを使います。完全な 3 製品の中で最小のイメージですが、HotLoop を役立つものにするすべて、つまりエンティティ、ルール、アラーム、そして何も迂回できない 1 つの書き込みゲートを備えています。

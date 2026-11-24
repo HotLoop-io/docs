@@ -21,10 +21,10 @@ editUrl: false
 
 | المنتج | أحدث إصدار | Helm | Quadlet | ابدأ من هنا |
 |---|---|---|---|---|
-| [HotLoop IoT](/ar/iot/overview/) | 4.24.2 | نعم | نعم | [تثبيت IoT](/ar/iot/install/) |
-| [HotLoop Edge](/ar/edge/overview/) | 4.24.2 | نعم | نعم | [تثبيت Edge](/ar/edge/install/) |
-| [HotLoop Gateway](/ar/gateway/overview/) | 4.24.2 | نعم | نعم | [تثبيت Gateway](/ar/gateway/install/) |
-| [HotLoop Edge Relay](/ar/edge-relay/overview/) | 4.24.2 | نعم | نعم | [تثبيت Edge Relay](/ar/edge-relay/install/) |
+| [HotLoop IoT](/ar/iot/overview/) | 4.24.3 | نعم | نعم | [تثبيت IoT](/ar/iot/install/) |
+| [HotLoop Edge](/ar/edge/overview/) | 4.24.3 | نعم | نعم | [تثبيت Edge](/ar/edge/install/) |
+| [HotLoop Gateway](/ar/gateway/overview/) | 4.24.3 | نعم | نعم | [تثبيت Gateway](/ar/gateway/install/) |
+| [HotLoop Edge Relay](/ar/edge-relay/overview/) | 4.24.3 | نعم | نعم | [تثبيت Edge Relay](/ar/edge-relay/install/) |
 | [HotLoop Flow](/ar/flow/overview/) | 2.17.2 | نعم | نعم | [تثبيت Flow](/ar/flow/install/) |
 | [HotLoop Cascade](/ar/cascade/overview/) | 1.5.1 | نعم، دون تسجيل دخول | نعم، دون تسجيل دخول, انظر [Cascade مع Podman Quadlet](/ar/cascade/quadlet/) | [تشغيل Cascade](/ar/cascade/running/) |
 | [HotLoop for CODESYS](/ar/codesys/overview/) | 0.3.10 | نعم، أو متجر تطبيقات EmberCORE | لا | [تثبيت HotLoop for CODESYS](/ar/codesys/install/) |
