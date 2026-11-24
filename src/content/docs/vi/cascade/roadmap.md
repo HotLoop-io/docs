@@ -15,11 +15,11 @@ Không có đoạn nào trong mã kiểm tra giấy phép. Mỗi giai đoạn k�
 
 ## 1.0.x đã mang lại gì
 
-1.0.0 là 0.1.0 cộng 0.2.0 cộng trình chỉnh sửa mới, và không có gì khác. Chúng tôi gọi nó là 1.0.0 vì trình chỉnh sửa là mảnh cuối cùng chúng tôi muốn trước khi đặt tên mình dưới con số, chứ không phải vì mọi thứ bên dưới đã xong.
+1.0.0 là 0.1.0 cộng 0.2.0 cộng trình soạn thảo mới, tất cả trong một bản phát hành. Trình soạn thảo là mảnh cuối cùng chúng tôi muốn có trước khi đặt tên mình dưới con số đó.
 
 1.0.1 sửa một lỗi khi đăng nhập: cơ sở dữ liệu không đọc được từng trả lời "chưa đăng nhập" và xóa cookie, nên một sự cố ngắn làm mọi người bị đăng xuất và có thể biến một yếu tố thứ hai đúng thành mã sai. Giờ nó trả lời "hãy thử lại" và giữ phiên. 1.0.2 cho phép bước Code ký và xác minh bằng khóa HMAC lưu như thông tin đăng nhập, và cho phép webhook nêu các nguồn web được gọi nó từ trình duyệt. Giữa 1.0.0 và 1.0.2 không có gì phải di chuyển.
 
-Một quy trình đã lưu hiện nay giữ những điều sau: tệp cho biết nó thuộc phiên bản nào của định dạng (`cascade: 1`), mỗi bước mang phiên bản riêng của nó, và một quy trình nêu tên một bước không còn tồn tại sẽ không qua được kiểm tra hợp lệ và không khởi động, thay vì bị lặng lẽ thay đổi. Đó là cách các bước EmberOps được gỡ ra trong 1.0.0. Chưa có lời hứa nào về định dạng hay API ngoài điều đó, và chưa có bài kiểm tra nâng cấp từ mọi bản phát hành trước: những gì được kiểm tra nằm trong `RELEASE_CHECKLIST.md`, vốn nâng cấp từ bản phát hành gần nhất bằng tay. Một lời hứa sẽ vào đây khi chúng tôi giữ được nó, và không sớm hơn.
+Điều một quy trình đã lưu tuân theo hôm nay: tệp nói nó thuộc phiên bản nào của định dạng (`cascade: 1`), mỗi bước mang phiên bản riêng, và một quy trình nêu tên một bước không còn tồn tại sẽ không qua được bước kiểm tra và không chạy, thay vì bị lặng lẽ sửa đổi. Đó là cách các bước EmberOps được gỡ ra trong 1.0.0. Mỗi bản phát hành được khởi động trên dữ liệu của bản trước khi phát hành: quy trình vẫn còn đó và thông tin xác thực vẫn mở được.
 
 ## 1.3.0, trình soạn thảo bằng 14 ngôn ngữ
 
@@ -51,28 +51,33 @@ Một quy trình đã lưu hiện nay giữ những điều sau: tệp cho biế
 
 Và các màn hình mà trình soạn thảo còn thiếu: Thông tin đăng nhập, Dự án (thành viên và tài khoản dịch vụ), Người dùng, nhật ký kiểm toán, Cài đặt và trang Tài khoản với khóa API, mỗi màn hình có cùng quyền như API và được thử trong trình duyệt thật với từng vai trò. Trang đăng nhập giờ thuộc về trình soạn thảo, với màu sắc và phông chữ của nó, chứ không còn là trang Go cũ.
 
-## Chưa xây dựng: môi trường và quy mô
+## 1.6.0, phê duyệt, AI, Git và trình kết nối
+
+Đã xong. Bốn thứ từng nằm trên trang này với tư cách chưa xây dựng nay có trong một bản phát hành: biểu mẫu có bước phê duyệt của con người, các bước AI, quản lý mã nguồn bằng Git với các môi trường và phiên bản được bảo vệ, và đặc tả trình kết nối khai báo cùng các công cụ quanh nó. Mỗi thứ có một phần riêng bên dưới.
+
+## Biểu mẫu có bước phê duyệt của con người
+
+Đã xong. Bước Yêu cầu phê duyệt dừng một lần chạy và hỏi một người. Họ mở liên kết phê duyệt của lần chạy trên điện thoại, đọc điều bạn viết, điền biểu mẫu nếu có và bấm Phê duyệt hoặc Từ chối; lần chạy tiếp tục từ Đã phê duyệt hoặc Đã từ chối kèm ai đã trả lời, khi nào và nói gì, và Cascade giữ câu trả lời thành một bản ghi bạn đọc được trong trình soạn thảo, API (`GET /api/v1/approvals`) và máy chủ MCP (`list_approvals`), với một dòng kiểm toán cho mỗi cái. Trang là HTML thuần không có script, bằng mười bốn ngôn ngữ của trình soạn thảo. Nó nêu người phê duyệt bằng tên họ gõ vào hoặc bằng tài khoản đã đăng nhập.
+
+## Quản lý mã nguồn bằng Git, môi trường và phiên bản được bảo vệ
+
+Đã xong. Các quy trình của một dự án nằm trong một kho Git, mỗi quy trình một tệp, đặt theo tên quy trình và mang id của nó. Push ghi chúng và commit với tư cách người đã push; pull làm dự án khớp với kho, giữ nguyên id, để các quy trình mới ở trạng thái tắt, biến các quy trình đã đổi thành phiên bản mới và để yên thay đổi được làm ở cả hai phía trừ khi bạn nói bên nào thắng. Đó là một màn hình của dự án, sáu tuyến API và sáu công cụ MCP. Một phiên bản có thể được đặt tên, hiện ở đầu mọi màn hình, và phiên bản được bảo vệ từ chối cho tạo, sửa, khôi phục hay xóa quy trình bằng tay trong trình soạn thảo, API hoặc MCP: chúng đến bằng cách pull từ Git, còn thông tin xác thực, biến, các lần chạy và việc bật hay tắt một quy trình vẫn mở.
+
+## Quy mô
 
 Đã xây dựng từ giai đoạn này: vai trò webhook (Deployment riêng trong dạng tách rời của chart), giới hạn đồng thời cho từng quy trình, và nhiều main chạy trên một cơ sở dữ liệu. Điều chúng tôi chưa làm là bài kiểm thử đặt ra cho giai đoạn này: tắt một main trong lúc có lịch chạy theo phút và không thấy lần chạy trùng hay lần chạy bị bỏ sót nào trong một giờ.
 
-Chưa xây dựng, chưa có lịch:
-
-- Quản lý mã nguồn bằng Git và các môi trường.
-- Các phiên bản được bảo vệ.
-
-## Chưa xây dựng: trình kết nối và con người
+## Trình kết nối
 
 Các trình kết nối trong danh sách đã duyệt đã được xây dựng thì đều có: HTTP, ntfy, Discord, Gotify, email, HotLoop, MQTT, cơ sở dữ liệu, tệp, và các kho blob S3 và Azure. Trình kết nối EmberOps có trong 0.1.x và đã bị gỡ trong 1.0.0.
 
-Chưa xây dựng, chưa có lịch:
+Và một trình kết nối giờ có thể là một tệp: đặc tả trình kết nối khai báo đã được công bố (một định dạng có phiên bản với JSON Schema), và bất kỳ API nào một tệp mô tả đều trở thành các bước không cần mã. Các công cụ để viết, thử, xuất bản và cài một trình kết nối nằm trong tệp nhị phân (`connector init`, `validate`, `call`, `index` và `install`), và một chỉ mục là một tệp tĩnh ai cũng có thể lưu trữ, có một mã băm cho mỗi tệp.
 
-- Đặc tả khai báo đã công bố cho trình kết nối.
-- Một SDK plugin và một chỉ mục.
-- Biểu mẫu có bước phê duyệt của con người. Việc phê duyệt phải chạy được từ điện thoại, vì người duyệt thay đổi công thức đang đứng ở dây chuyền chứ không ngồi ở bàn làm việc. (Bước Wait vốn đã giữ một lần chạy cho đến khi ai đó gọi URL tiếp tục của nó, nên hôm nay đã có thể dựng phê duyệt bằng một liên kết; còn thiếu là biểu mẫu để người duyệt mở và bản ghi ai đã duyệt.)
+## Các bước AI
 
-## Chưa xây dựng: các bước AI
+Đã xong. Hỏi một mô hình và Chạy một tác tử. Mô hình là của bạn, một máy chủ cục bộ như Ollama hoặc một dịch vụ lưu trữ dùng khóa của bạn, được chỉ định bằng một thông tin xác thực, và cả giao thức của OpenAI lẫn của Anthropic đều được hỗ trợ. Một tác tử dùng các quy trình khác làm công cụ và chờ giữa các lượt trong cơ sở dữ liệu.
 
-Các bước LLM và tác tử, cùng một bộ dựng dùng chính mô hình của bạn. Mang khóa của bạn đến hoặc chạy cục bộ. Chưa có gì trong số đó tồn tại và chưa ai lên lịch. Không có dịch vụ lưu trữ sẵn và sẽ không có. (Máy chủ MCP, cho phép một tác tử điều khiển Cascade từ bên ngoài, đã được xây dựng: xem 1.1.0.)
+Chưa xây dựng, chưa lên lịch: một trợ lý viết quy trình bằng mô hình của bạn. Không có dịch vụ lưu trữ và sẽ không có. (Máy chủ MCP, cho phép một tác tử điều khiển Cascade từ bên ngoài, đã xây dựng xong: xem 1.1.0.)
 
 ## Giao diện trình soạn thảo mới
 

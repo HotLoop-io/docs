@@ -15,11 +15,11 @@ Bygget, og levert i 1.0.0 sammen med den nye editoren. SAML, LDAP og AD, SCIM, e
 
 ## Hva 1.0.x leverte
 
-1.0.0 er 0.1.0 pluss 0.2.0 pluss den nye editoren, og ikke noe mer. Vi kalte den 1.0.0 fordi editoren var den siste biten vi ville ha før vi setter navnet vårt under nummeret, ikke fordi alt under er ferdig.
+1.0.0 er 0.1.0 pluss 0.2.0 pluss det nye redigeringsvinduet, alt i én utgivelse. Redigeringsvinduet var den siste biten vi ville ha før vi satte navnet vårt under nummeret.
 
 1.0.1 rettet en feil i innloggingen: en database som ikke kunne leses, svarte «ikke logget inn» og slettet cookien, så et kort avbrudd logget alle ut og kunne gjøre en riktig andre faktor om til en feil kode. Nå svarer den «prøv igjen» og beholder økten. 1.0.2 lot et Code-trinn signere og verifisere med en HMAC-nøkkel lagret som legitimasjon, og lot en webhook oppgi hvilke nettopprinnelser som kan kalle den fra en nettleser. Ingenting ble migrert mellom 1.0.0 og 1.0.2.
 
-Hva en lagret arbeidsflyt holder seg til i dag: filen sier hvilken versjon av formatet den er (`cascade: 1`), hvert steg har sin egen versjon, og en arbeidsflyt som nevner et steg som ikke finnes lenger, består ikke valideringen og starter ikke, i stedet for å bli endret i det stille. Slik ble EmberOps-stegene tatt ut i 1.0.0. Det finnes ennå ikke noe løfte om formatet eller API-et utover dette, og ingen oppgraderingstest fra hver tidligere utgivelse: det som testes står i `RELEASE_CHECKLIST.md`, som oppgraderer fra forrige utgivelse for hånd. Et løfte kommer hit når vi kan holde det, og ikke før.
+Det en lagret arbeidsflyt holder seg til i dag: filen sier hvilken versjon av formatet den er i (`cascade: 1`), hvert steg har sin egen versjon, og en arbeidsflyt som nevner et steg som ikke finnes lenger, består ikke valideringen og starter ikke, i stedet for å bli endret i stillhet. Slik ble EmberOps-stegene tatt ut i 1.0.0. Hver utgivelse startes på forrige utgivelses data før den sendes ut: arbeidsflyten er der fortsatt og legitimasjonen åpnes fortsatt.
 
 ## 1.3.0, editoren på 14 språk
 
@@ -51,28 +51,33 @@ Bygget, og dette er utgivelsen. MCP-serveren på `/mcp`: 79 verktøy, hvert en r
 
 Og skjermene editoren manglet: legitimasjon, prosjekter (medlemmer og tjenestekontoer), brukere, revisjonsloggen, innstillinger og en kontoside med API-nøkler, hver med de samme tillatelsene som API-et og prøvd i en ekte nettleser med hver rolle. Innloggingssiden er editorens nå, i dens farger og skrift, og ikke den gamle Go-siden.
 
-## Ikke bygget: miljøer og skala
+## 1.6.0, godkjenninger, KI, Git og kontakter
+
+Ferdig. Fire ting som sto på denne siden som ikke bygget, kommer i én utgivelse: skjemaer med menneskelige godkjenningssteg, KI-steg, Git-kildekontroll med miljøer og beskyttede instanser, og den deklarative kontaktspesifikasjonen med verktøyene rundt. Hver har sin egen seksjon nedenfor.
+
+## Skjemaer med menneskelige godkjenningssteg
+
+Ferdig. Steget Be om godkjenning stopper en kjøring og spør en person. Personen åpner kjøringens godkjenningslenke på telefonen, leser det du skrev, fyller ut et skjema hvis det finnes ett og trykker Godkjenn eller Avvis; kjøringen går videre ut av Godkjent eller Avvist med hvem som svarte, når og hva de sa, og Cascade lagrer svaret som en post du kan lese i redigeringsvinduet, API-et (`GET /api/v1/approvals`) og MCP-serveren (`list_approvals`), med en revisjonsrad for hver. Siden er enkel HTML uten skript, på redigeringsvinduets fjorten språk. Den navngir den som godkjenner med et navn vedkommende skriver inn eller med den innloggede kontoen.
+
+## Git-kildekontroll, miljøer og beskyttede instanser
+
+Ferdig. Et prosjekts arbeidsflyter bor i et Git-depot, én fil hver, oppkalt etter arbeidsflyten og med dens id. Push skriver dem og committer som personen som pushet; pull får prosjektet til å stemme med depotet, beholder id-ene, lar nye arbeidsflyter stå avslått, gjør endrede til nye versjoner og lar en endring gjort på begge sider være i fred med mindre du sier hvem som vinner. Det er en skjerm på prosjektet, seks API-ruter og seks MCP-verktøy. En instans kan få et navn, vist øverst på hver skjerm, og en beskyttet instans nekter å få arbeidsflytene sine opprettet, redigert, gjenopprettet eller slettet for hånd i redigeringsvinduet, API-et eller MCP: de kommer ved å hente fra Git, og legitimasjon, variabler, kjøringer og å slå en arbeidsflyt av og på forblir åpne.
+
+## Skala
 
 Bygget fra denne fasen: webhook-rollen (en egen Deployment i den delte formen av chartet), en samtidighetsgrense per arbeidsflyt og mange mains mot én database. Det vi ikke har gjort, er testen vi satte for denne fasen: å drepe en main under en tidsplan på minuttnivå og ikke finne noen duplikat eller manglende kjøring over en time.
 
-Ikke bygget, ikke planlagt:
-
-- Kildekodekontroll med Git og miljøer.
-- Beskyttede instanser.
-
-## Ikke bygget: koblinger og mennesker
+## Kontakter
 
 Koblingene på den godkjente listen som ble bygget, er med: HTTP, ntfy, Discord, Gotify, e-post, HotLoop, MQTT, databaser, filer og blob-lagrene for S3 og Azure. EmberOps-koblingen var i 0.1.x og er borte i 1.0.0.
 
-Ikke bygget, ikke planlagt:
+Og en kontakt kan nå være en fil: den deklarative kontaktspesifikasjonen er publisert (et versjonert format med et JSON Schema), og enhver API en fil beskriver, blir til steg uten kode. Verktøyene for å skrive, prøve, publisere og installere en ligger i binærfilen (`connector init`, `validate`, `call`, `index` og `install`), og en indeks er en statisk fil hvem som helst kan være vert for, med en hash for hver fil.
 
-- Den publiserte deklarative koblingsspesifikasjonen.
-- Et plugin-SDK og en indeks.
-- Skjemaer med godkjenningstrinn for mennesker. Godkjenninger må fungere fra en telefon, fordi den som godkjenner en endring i en oppskrift, står ved linjen og ikke sitter ved et skrivebord. (Wait-trinnet holder allerede en kjøring til noen kaller gjenopptakelses-URL-en, så en godkjenning kan bygges av en lenke i dag; det som mangler, er skjemaet godkjenneren åpner og en logg over hvem som godkjente.)
+## KI-steg
 
-## Ikke bygget: KI-trinn
+Ferdig. Spør en modell og Kjør en agent. Modellen er din egen, en lokal server som Ollama eller en vertstjeneste med din nøkkel, navngitt av legitimasjon, og både OpenAI- og Anthropic-protokollen snakkes. En agent bruker andre arbeidsflyter som verktøy og venter mellom rundene i databasen.
 
-LLM- og agenttrinn, og en bygger som bruker din egen modell. Ta med din egen nøkkel eller kjør den lokalt. Ingenting av dette finnes ennå, og ingen har planlagt det. Det finnes ingen driftet tjeneste og kommer ikke til å gjøre det. (MCP-serveren, som lar en agent styre Cascade utenfra, er bygget: se 1.1.0.)
+Ikke bygget, ikke planlagt: en hjelper som skriver arbeidsflyter med din modell. Det finnes ingen vertstjeneste og det kommer ikke til å finnes. (MCP-serveren, som lar en agent styre Cascade utenfra, er bygget: se 1.1.0.)
 
 ## Det nye editorgrensesnittet
 

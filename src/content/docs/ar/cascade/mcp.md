@@ -1,11 +1,11 @@
 ---
 title: "خادم MCP"
-description: "لدى Cascade خادم MCP يقرأ ويكتب: 83 أداة، كل منها مسار API يمر عبر معالجه الخاص، مع إذنه وسببه وسطر تدقيق."
+description: "لدى Cascade خادم MCP يقرأ ويكتب: 91 أداة، كل منها مسار API يمر عبر معالجه الخاص، مع إذنه وسببه وسطر تدقيق."
 ---
 
 لدى Cascade خادم MCP، وهو يقرأ ويكتب. يُشحن مفعّلًا، على `/mcp` في العنوان نفسه الخاص بـ API والمحرر، ويستطيع الوكيل الذي يتصل به أن يفعل ما يستطيعه صاحب مفتاحه، ولا شيء بعد ذلك. لا يوجد وضع للقراءة فقط تحتاج إلى الالتفاف حوله، لأن الخادم الذي يستطيع الوكيل أن ينظر إليه ولا يلمسه ليس سوى صفحة حالة، ولديك واحدة بالفعل.
 
-84 أداة، وكل واحدة منها مسار من مسارات REST API. لا يمرّ الاستدعاء بجانب المسار بل عبره: يتحقق معالج المسار نفسه من الإذن، ويتحقق من صحة المحتوى، وينفّذ التغيير، ويكتب سطر التدقيق. لم يُنسخ إلى خادم MCP شيء قد ينحرف، ولم يُترك خارجه شيء ليُتجاوَز.
+91 أداة، وكل واحدة منها مسار من مسارات REST API. لا يمرّ الاستدعاء بجانب المسار بل عبره: يتحقق معالج المسار نفسه من الإذن، ويتحقق من صحة المحتوى، وينفّذ التغيير، ويكتب سطر التدقيق. لم يُنسخ إلى خادم MCP شيء قد ينحرف، ولم يُترك خارجه شيء ليُتجاوَز.
 
 وما معنى ذلك لك: إن كان سير العمل أو بيانات الاعتماد أو المشروع أو الشخص شيئًا تستطيع تغييره من المحرر، فيستطيع وكيل يحمل مفتاحك تغييره أيضًا، ضمن حدود دورك، ويذكر سجل التدقيق أنه كان وكيلًا وأي وكيل.
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | قراءة |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | قراءة |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | قراءة |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | كتابة |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | كتابة |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | كتابة |

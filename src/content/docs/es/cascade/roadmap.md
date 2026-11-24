@@ -15,11 +15,11 @@ Construido, y publicado dentro de 1.0.0 con el editor nuevo. SAML, LDAP y AD, SC
 
 ## Lo que trajo 1.0.x
 
-1.0.0 es 0.1.0 más 0.2.0 más el editor nuevo, y nada más. Lo llamamos 1.0.0 porque el editor era la última pieza que queríamos antes de poner nuestro nombre bajo el número, no porque todo lo de abajo esté terminado.
+1.0.0 es 0.1.0 más 0.2.0 más el nuevo editor, todo en una sola versión. El editor era la última pieza que queríamos antes de poner nuestro nombre bajo el número.
 
 1.0.1 corrigió un error en el inicio de sesión: una base de datos que no se podía leer respondía «no ha iniciado sesión» y borraba la cookie, así que una caída breve cerraba la sesión de todos y podía convertir un segundo factor correcto en un código erróneo. Ahora responde «vuelva a intentarlo» y conserva la sesión. 1.0.2 permitió que un paso Code firme y verifique con una clave HMAC guardada como credencial, y que un webhook indique los orígenes web que pueden llamarlo desde un navegador. Entre 1.0.0 y 1.0.2 no hubo nada que migrar.
 
-A qué se atiene hoy un flujo de trabajo guardado: el archivo indica qué versión de su formato es (`cascade: 1`), cada paso lleva su propia versión, y un flujo de trabajo que nombra un paso que ya no existe no valida y no arranca, en lugar de cambiarse en silencio. Así se retiraron los pasos de EmberOps en 1.0.0. Todavía no hay ninguna promesa sobre el formato ni la API más allá de eso, ni una prueba de actualización desde cada versión anterior: lo que se prueba está en `RELEASE_CHECKLIST.md`, que actualiza desde la última versión a mano. Una promesa entrará aquí cuando podamos cumplirla, y no antes.
+Lo que un workflow guardado cumple hoy: el archivo dice de qué versión de su formato es (`cascade: 1`), cada paso lleva su propia versión, y un workflow que nombra un paso que ya no existe no pasa la validación y no arranca, en lugar de cambiarse en silencio. Así se quitaron los pasos de EmberOps en 1.0.0. Cada versión se arranca sobre los datos de la anterior antes de publicarse: el workflow sigue ahí y la credencial sigue abriéndose.
 
 ## 1.3.0, el editor en 14 idiomas
 
@@ -51,28 +51,33 @@ Construido, y esta es la versión. El servidor MCP en `/mcp`: 79 herramientas, c
 
 Y las pantallas que le faltaban al editor: credenciales, proyectos (miembros y cuentas de servicio), usuarios, el registro de auditoría, los ajustes y una página de cuenta con claves de API, cada una con los mismos permisos que la API y probada en un navegador real con cada rol. La página de inicio de sesión ya es la del editor, con sus colores y su tipografía, y no la antigua página en Go.
 
-## No construido: entornos y escala
+## 1.6.0, aprobaciones, IA, Git y conectores
+
+Hecho. Cuatro cosas que estaban en esta página como pendientes llegan en una sola versión: formularios con pasos de aprobación humana, pasos de IA, control de código con Git con entornos e instancias protegidas, y la especificación declarativa de conectores con las herramientas que la rodean. Cada una tiene su sección más abajo.
+
+## Formularios con pasos de aprobación humana
+
+Hecho. El paso Pedir aprobación detiene una ejecución y se lo pregunta a una persona. Abre en el teléfono el enlace de aprobación de la ejecución, lee lo que escribiste, rellena un formulario si lo hay y pulsa Aprobar o Rechazar; la ejecución sigue por Aprobada o Rechazada con quién respondió, cuándo y qué dijo, y Cascade guarda la respuesta como un registro que puedes leer en el editor, en la API (`GET /api/v1/approvals`) y en el servidor MCP (`list_approvals`), con una fila de auditoría por cada una. La página es HTML sencillo sin scripts, en los catorce idiomas del editor. Nombra al aprobador por el nombre que escribe o por su cuenta con sesión iniciada.
+
+## Control de código con Git, entornos e instancias protegidas
+
+Hecho. Los workflows de un proyecto viven en un repositorio Git, un archivo cada uno, con el nombre del workflow y su id. Push los escribe y los confirma como la persona que lo hizo; pull hace que el proyecto coincida con el repositorio, conservando los ids, dejando desactivados los workflows nuevos, convirtiendo los cambiados en versiones nuevas y dejando intacto un cambio hecho en ambos lados salvo que digas quién gana. Es una pantalla del proyecto, seis rutas de la API y seis herramientas MCP. Una instancia puede recibir un nombre, que se muestra arriba en cada pantalla, y una instancia protegida no deja crear, editar, restaurar ni eliminar sus workflows a mano en el editor, la API o MCP: llegan haciendo pull desde Git, y las credenciales, las variables, las ejecuciones y activar o desactivar un workflow siguen abiertos.
+
+## Escala
 
 Construido de esta fase: el rol de webhook (su propio Deployment en la variante dividida del chart), un límite de concurrencia por flujo de trabajo y varios mains contra una misma base de datos. Lo que no hemos hecho es la prueba que fijamos para esta fase: matar un main durante una programación de nivel de minuto y no encontrar ninguna ejecución duplicada ni perdida en una hora.
 
-No construido, no programado:
-
-- Control de código fuente con Git y entornos.
-- Instancias protegidas.
-
-## No construido: conectores y personas
+## Conectores
 
 Los conectores de la lista aprobada que se construyeron ya están: HTTP, ntfy, Discord, Gotify, correo electrónico, HotLoop, MQTT, bases de datos, archivos y los almacenes de blobs en S3 y Azure. El conector de EmberOps estaba en 0.1.x y se retiró en 1.0.0.
 
-No construido, no programado:
+Y ahora un conector puede ser un archivo: la especificación declarativa de conectores está publicada (un formato versionado con un JSON Schema), y cualquier API que describa un archivo se convierte en pasos sin código. Las herramientas para escribir, probar, publicar e instalar uno vienen en el binario (`connector init`, `validate`, `call`, `index` e `install`), y un índice es un archivo estático que cualquiera puede alojar, con un hash por cada archivo.
 
-- La especificación declarativa de conectores publicada.
-- Un SDK de plugins y un índice.
-- Formularios con pasos de aprobación humana. Las aprobaciones tienen que funcionar desde un teléfono, porque quien aprueba el cambio de una receta está de pie en la línea, no sentado ante un escritorio. (El paso Wait ya retiene una ejecución hasta que alguien llama a su URL de reanudación, así que hoy se puede construir una aprobación con un enlace; lo que falta es el formulario que abre quien aprueba y un registro de quién aprobó.)
+## Pasos de IA
 
-## No construido: pasos de IA
+Hecho. Preguntar a un modelo y Ejecutar un agente. El modelo es tuyo, un servidor local como Ollama o un servicio alojado con tu clave, indicado por una credencial, y se hablan tanto el protocolo de OpenAI como el de Anthropic. Un agente usa otros workflows como herramientas y espera entre turnos en la base de datos.
 
-Pasos de LLM y de agentes, y un constructor que use su propio modelo. Traiga su propia clave o ejecútelo en local. Nada de eso existe todavía y nadie lo ha programado. No hay servicio alojado ni lo habrá. (El servidor MCP, que permite que un agente maneje Cascade desde fuera, está construido: véase 1.1.0.)
+Pendiente, sin fecha: un asistente que escriba workflows con tu modelo. No hay servicio alojado y no lo habrá. (El servidor MCP, que permite a un agente manejar Cascade desde fuera, está hecho: véase 1.1.0.)
 
 ## La nueva interfaz del editor
 

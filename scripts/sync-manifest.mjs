@@ -160,9 +160,13 @@ export const PAGES = [
   { product: 'cascade', group: 'Start here', slug: 'cascade/status', repo: 'cascade', file: 'README.md', sections: ['Where it stands'], title: 'Where Cascade stands', description: 'Cascade is released: what is in it, what is not in it yet, and where the image and chart live.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/editor', repo: 'cascade', file: 'README.md', sections: ['The editor'], title: 'The editor', description: 'The editor is built into the Cascade binary: folders, a canvas with run to here, runs drawn step by step, credentials, projects, users, the audit log, settings.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/running', repo: 'cascade', file: 'README.md', sections: ['Running it'], title: 'Running Cascade', description: 'Run Cascade with Podman Quadlet or Helm on k3s, on SQLite or Postgres, with the health check the units and the chart probes use.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/approvals', repo: 'cascade', file: 'README.md', sections: ['Asking a person'], title: 'Asking a person', description: 'A run stops and asks someone on their phone, and keeps who said yes: approvals in every language, a record in the editor, the API and the audit log.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/ai', repo: 'cascade', file: 'docs/AI.md', title: 'AI steps', description: 'Ask a model you run or have a key for, or let an agent use your other workflows as its tools, with nothing sent anywhere the credential does not name.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/connectors', repo: 'cascade', file: 'docs/CONNECTORS.md', title: 'Connectors as files', description: 'Describe a web API in one file and every call becomes a step: the published spec, the tools to write and try one, and an index to share them.' },
+  { product: 'cascade', group: 'Governance', slug: 'cascade/git', repo: 'cascade', file: 'docs/GIT.md', title: 'Git, environments and protected instances', description: 'Keep a project\'s workflows in a Git repository, name an instance development or production, and make production change only by pulling.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/importing', repo: 'cascade', file: 'README.md', sections: ['Bringing a workflow in'], title: 'Bringing a workflow in', description: 'Import an existing workflow into Cascade, what maps across and what the importer tells you it could not carry.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/observability', repo: 'cascade', file: 'README.md', sections: ['Watching it'], title: 'Watching it', description: 'Health, readiness, Prometheus metrics and traces for every run and step, so a stuck job shows up on a graph and not in a complaint.' },
-  { product: 'cascade', group: 'Use it', slug: 'cascade/mcp', repo: 'cascade', file: 'docs/MCP.md', title: 'The MCP server', description: 'Cascade has an MCP server that reads and writes: 83 tools, each an API route run through its own handler, with its permission, a reason and an audit row.' },
+  { product: 'cascade', group: 'Use it', slug: 'cascade/mcp', repo: 'cascade', file: 'docs/MCP.md', title: 'The MCP server', description: 'Cascade has an MCP server that reads and writes: 91 tools, each an API route run through its own handler, with its permission, a reason and an audit row.' },
   { product: 'cascade', group: 'Use it', slug: 'cascade/file-steps', repo: 'cascade', file: 'README.md', sections: ['The file steps'], title: 'The file steps', description: 'The steps that read, write, list and move files, build CSV or Excel, and read a PDF, all fenced to one directory and off until you set it.' },
   { product: 'cascade', group: 'Identity', slug: 'cascade/identity', repo: 'cascade', file: 'docs/IDENTITY.md', title: 'Identity and access', description: 'Custom roles, sign-in with LDAP, Active Directory and SAML, and SCIM provisioning, all in every Cascade with no paid tier.' },
   { product: 'cascade', group: 'Governance', slug: 'cascade/governance', repo: 'cascade', file: 'docs/GOVERNANCE.md', title: 'Governing a Cascade instance', description: 'Variables, folders, annotated runs, redaction, insights, outside secrets and log streaming, for a plant with a growing pile of workflows.' },
@@ -177,7 +181,7 @@ export const RELEASE_NOTES = [
   { repo: 'hotloop', dir: 'docs/releases', slugPrefix: 'releases/hotloop-', label: 'HotLoop core', skip: ['4.19.6', '4.19.7'] },
   { repo: 'flow', dir: 'docs/releases', slugPrefix: 'releases/flow-', label: 'HotLoop Flow' },
   // 0.1.0 was tagged and never published anything, so it gets no page. A note for a release that does not exist is a claim that it does.
-  { repo: 'cascade', dir: 'docs/release-notes', slugPrefix: 'releases/cascade-', label: 'HotLoop Cascade', skip: ['0.1.0'] },
+  { repo: 'cascade', dir: 'docs/release-notes', slugPrefix: 'releases/cascade-', label: 'HotLoop Cascade', skip: ['0.1.0', '1.6.0-rc.2'] },
 ];
 
 // README sections that are deliberately not on the site, so a new section nobody
@@ -193,7 +197,8 @@ export const SKIPPED_SECTIONS = {
     ],
   },
   cascade: {
-    'README.md': ['License', 'MCP'], // MCP is its own page, from docs/MCP.md
+    // MCP, AI steps, Git and Connectors are their own pages, from docs/MCP.md, AI.md, GIT.md and CONNECTORS.md
+    'README.md': ['License', 'MCP', 'AI steps', 'Git, environments and protected instances', 'Connectors as files'],
   },
 };
 
