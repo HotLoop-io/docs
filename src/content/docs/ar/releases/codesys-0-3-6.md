@@ -9,7 +9,7 @@ editUrl: false
 
 ## ما الذي تغيّر
 
-0.3.6 في الفهرس `{{codesysChartRepo}}`، نُشر في 2026-11-19.
+0.3.6 في الفهرس `https://hotloop.io/hotloop-codesys/`، نُشر في 2026-11-19.
 
 - **يذكر تعليق الترخيص اتفاقية HotLoop Source License Agreement 1.0،** من HotLoop LLC.
 - **لم يتغير شيء آخر.** القوالب والقيم وHotLoop الذي يغلّفه (4.20.2) هي نفسها في [0.3.5](/ar/releases/codesys-0-3-5/).

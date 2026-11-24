@@ -3,10 +3,6 @@ title: "Lộ trình HotLoop"
 description: "HotLoop là gì, còn gì phải xây và cái gì đang hỏng, theo thứ tự sẽ làm, cho HotLoop core. Flow và Cascade có lộ trình riêng được liên kết tại đây."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 HotLoop là gì, còn gì phải xây và cái gì đang hỏng. Cái gì không có trong danh sách này thì sẽ không được làm, nên hãy đưa nó vào danh sách.
 
 ## HotLoop là gì
@@ -165,7 +161,7 @@ Historian tích hợp vẫn ở lại. Bên trên nó, HotLoop ghi lịch sử r
 - [ ] Bảo mật thông điệp (NetworkMessages đã ký và mã hóa). Còn lại: một Security Key Service (khóa là tĩnh), và một publisher của Siemens hoặc Beckhoff. Xem [Giao thức và driver](/vi/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Khung delta từ nhà công bố, như một tùy chọn (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): chỉ các trường thay đổi giữa các khung khóa. Xem [Giao thức và trình điều khiển](/vi/iot/protocols/)
 - [ ] DataSetMetaData và các thông điệp khám phá để một subscriber có thể gọi tên các trường; trường mảng và cấu trúc trong những gì publisher gửi, và trường cấu trúc trong những gì subscriber đọc; sự kiện. Đã xây: các chunk, phản hồi khám phá và DataSetMetaData được đọc và ghi, các trường cấu trúc của subscriber, RawData bố trí từ siêu dữ liệu, các thông điệp Event, các thông báo của publisher; đã đọc đối chiếu với các khung bắt được từ một publisher Siemens thật. Còn lại: trường mảng và cấu trúc trong những gì HotLoop phát hành (một tag là một số hoặc một văn bản), gửi và trả lời các yêu cầu khám phá
-- [ ] Với nhà công bố của Siemens hoặc Beckhoff, và qua router (định tuyến multicast và TTL)
+- [ ] Với một publisher của Siemens hoặc Beckhoff, và qua bộ định tuyến (định tuyến multicast và TTL). Qua bộ định tuyến đã được kiểm chứng: giới hạn hop bằng 2 của publisher đi qua một bộ định tuyến multicast (smcroute, ba network namespace trong một VM) và subscriber của Gateway đọc được giá trị, giới hạn hop bằng 1 dừng lại ở bộ định tuyến, và khi bộ định tuyến bị dừng thì không có gì đến. Còn lại: một publisher của Siemens hoặc Beckhoff
 
 ---
 

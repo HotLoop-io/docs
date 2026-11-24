@@ -21,10 +21,10 @@ Il y a deux façons d'exécuter un produit HotLoop pour de bon : Helm sur k3s o
 
 | Produit | Dernière version | Helm | Quadlet | Pour commencer |
 |---|---|---|---|---|
-| [HotLoop IoT](/fr/iot/overview/) | 4.24.0 | Oui | Oui | [Installer IoT](/fr/iot/install/) |
-| [HotLoop Edge](/fr/edge/overview/) | 4.24.0 | Oui | Oui | [Installer Edge](/fr/edge/install/) |
-| [HotLoop Gateway](/fr/gateway/overview/) | 4.24.0 | Oui | Oui | [Installer Gateway](/fr/gateway/install/) |
-| [HotLoop Edge Relay](/fr/edge-relay/overview/) | 4.24.0 | Oui | Oui | [Installer Edge Relay](/fr/edge-relay/install/) |
+| [HotLoop IoT](/fr/iot/overview/) | 4.24.2 | Oui | Oui | [Installer IoT](/fr/iot/install/) |
+| [HotLoop Edge](/fr/edge/overview/) | 4.24.2 | Oui | Oui | [Installer Edge](/fr/edge/install/) |
+| [HotLoop Gateway](/fr/gateway/overview/) | 4.24.2 | Oui | Oui | [Installer Gateway](/fr/gateway/install/) |
+| [HotLoop Edge Relay](/fr/edge-relay/overview/) | 4.24.2 | Oui | Oui | [Installer Edge Relay](/fr/edge-relay/install/) |
 | [HotLoop Flow](/fr/flow/overview/) | 2.16.8 | Oui | Oui | [Installer Flow](/fr/flow/install/) |
 | [HotLoop Cascade](/fr/cascade/overview/) | 1.5.1 | Oui, sans connexion | Oui, sans connexion, voir [Cascade avec Podman Quadlet](/fr/cascade/quadlet/) | [Exécuter Cascade](/fr/cascade/running/) |
 | [HotLoop for CODESYS](/fr/codesys/overview/) | 0.3.10 | Oui, ou l'App Store EmberCORE | Non | [Installer HotLoop for CODESYS](/fr/codesys/install/) |

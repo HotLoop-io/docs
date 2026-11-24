@@ -9,7 +9,7 @@ editUrl: false
 
 ## Was sich geändert hat
 
-0.3.10 steht im Index `{{codesysChartRepo}}`, veröffentlicht am 2026-11-23. Es ist das, was Sie installieren sollten, und es trägt alles, was 0.3.9 hinzufügte.
+0.3.10 steht im Index `https://hotloop.io/hotloop-codesys/`, veröffentlicht am 2026-11-23. Es ist das, was Sie installieren sollten, und es trägt alles, was 0.3.9 hinzufügte.
 
 - **Es umhüllt HotLoop 4.24.0,** das die eigenen Alarme einer CODESYS-SPS in der Alarmliste zeigt und Bildschirmseiten als P&ID zeichnet.
 - **Es führt den Provisioner 0.4.1 aus.** Ein Profil nimmt eine Liste von Bildschirmseiten neben der einen, sodass ein Projekt mit mehreren WebVisu-Seiten vollständig zurückkommt.

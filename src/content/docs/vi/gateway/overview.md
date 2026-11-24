@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.24.0 đã ra mắt]
-Bốn sản phẩm từ một tag: [IoT](/vi/iot/overview/), [Edge](/vi/edge/overview/), Gateway và [Edge Relay](/vi/edge-relay/overview/), mỗi sản phẩm có image và chart riêng. Cả bốn đều được build cho amd64 và arm64 trong 4.24.0, và ba sản phẩm nhỏ còn build cho cả arm/v7. Gateway giữ nguyên `ghcr.io/hotloop-io/hotloop:4.24.0` và chart `hotloop` từ `https://hotloop.io/hotloop`, cả hai đều tải về mà không cần đăng nhập. [Cài đặt](/vi/gateway/install/). Đang dùng 4.18.11? Đó là một lệnh `helm upgrade`, và sau đó các tác tử có thể ghi, nên hãy đọc hai thay đổi này. Đang dùng 4.17.0? Đó là một lệnh `helm upgrade` thông thường, nhưng không dùng `--reuse-values`, và vài giá trị mặc định đã đổi. Đang dùng 4.16.0 hoặc 4.3.1? Bạn đi qua 4.17.0 trước. Dù thế nào, hãy [đọc phần nâng cấp trước](/vi/gateway/upgrading/). Biết điều này ở đây vẫn hơn là biết qua một lần triển khai bị kẹt.
+:::note[4.24.2 đã ra mắt]
+Bốn sản phẩm từ một tag: [IoT](/vi/iot/overview/), [Edge](/vi/edge/overview/), Gateway và [Edge Relay](/vi/edge-relay/overview/), mỗi sản phẩm có image và chart riêng. Cả bốn đều được build cho amd64 và arm64 trong 4.24.2, và ba sản phẩm nhỏ còn build cho cả arm/v7. Gateway giữ nguyên `ghcr.io/hotloop-io/hotloop:4.24.2` và chart `hotloop` từ `https://hotloop.io/hotloop`, cả hai đều tải về mà không cần đăng nhập. [Cài đặt](/vi/gateway/install/). Đang dùng 4.18.11? Đó là một lệnh `helm upgrade`, và sau đó các tác tử có thể ghi, nên hãy đọc hai thay đổi này. Đang dùng 4.17.0? Đó là một lệnh `helm upgrade` thông thường, nhưng không dùng `--reuse-values`, và vài giá trị mặc định đã đổi. Đang dùng 4.16.0 hoặc 4.3.1? Bạn đi qua 4.17.0 trước. Dù thế nào, hãy [đọc phần nâng cấp trước](/vi/gateway/upgrading/). Biết điều này ở đây vẫn hơn là biết qua một lần triển khai bị kẹt.
 :::
 
 HotLoop Gateway đọc nhà máy của bạn. Nó thăm dò PLC và máy chủ bằng giao thức riêng của chúng, lưu từng giá trị đọc cùng chất lượng vào một Historian, phát báo động ISA-18.2 có thể gọi vào điện thoại, chạy tự động hóa trên toàn bộ dữ liệu và đưa cả nhà máy cho các tác tử qua MCP. Một địa điểm chỉ chạy một chart, gồm Gateway và cơ sở dữ liệu của nó, thay vì một Historian, một máy chủ báo động, một bộ máy quy tắc và một đống keo dán, mỗi thứ hỏng theo lịch riêng.
@@ -19,7 +19,7 @@ Nó được viết bằng Go, từ đầu: một tệp nhị phân tĩnh trên 
 
 ## Bắt đầu từ đâu
 
-Phần nền tảng, trong 4.24.0 và mọi bản phát hành về tới 4.16.0:
+Phần nền tảng, trong 4.24.2 và mọi bản phát hành về tới 4.16.0:
 
 - [Cài đặt](/vi/gateway/install/) là Helm từ chart đã công bố hoặc Podman Quadlet trên một máy, khóa cần sao lưu và vài giá trị cần đặt trước khi một nhà máy thật nhìn thấy nó.
 - [Nâng cấp](/vi/gateway/upgrading/) là quy trình giữ nguyên dữ liệu của bạn, từ 4.17.0, 4.16.0 hoặc 4.3.1, cùng mọi thay đổi API mà một script sẽ vấp phải.
@@ -64,7 +64,7 @@ Mới trong 4.17.0, không có trong 4.16.0:
 
 HotLoop là một mã nguồn được giao thành bốn sản phẩm, tất cả phát hành cùng nhau từ một tag: IoT, Edge, Gateway và Edge Relay. Gateway là đỉnh của dòng này: mọi thứ trong IoT và Edge, cộng với quản lý đội thiết bị, tổng hợp nhiều địa điểm và báo cáo theo lịch. Tính năng phân chia các sản phẩm. Giao thức thì không bao giờ: mọi sản phẩm nói mọi giao thức chúng tôi có, để không ai phải mua bậc cao hơn chỉ để đọc PLC trên bàn thử của mình. [Dòng sản phẩm](/vi/products/) cho biết mỗi sản phẩm có gì.
 
-Cả bốn đều cài đặt được ngay hôm nay, tất cả là 4.24.0. Relay có image và chart riêng, khoảng 15 MB so với 37 MB của Gateway, không có cơ sở dữ liệu và không có giao diện. Phần quản lý đội thiết bị của Gateway theo dõi và ra lệnh cho mọi relay đã đăng ký, và chỉ qua API (`/api/fleet`): giao diện không có màn hình Đội thiết bị.
+Cả bốn đều cài đặt được ngay hôm nay, tất cả là 4.24.2. Relay có image và chart riêng, khoảng 15 MB so với 37 MB của Gateway, không có cơ sở dữ liệu và không có giao diện. Phần quản lý đội thiết bị của Gateway theo dõi và ra lệnh cho mọi relay đã đăng ký, và chỉ qua API (`/api/fleet`): giao diện không có màn hình Đội thiết bị.
 
 Dùng ở nhà máy? [Dùng HotLoop trong doanh nghiệp](/vi/business/) nói về giấy phép và cách liên hệ với chúng tôi.
 

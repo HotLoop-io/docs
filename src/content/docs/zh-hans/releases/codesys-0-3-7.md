@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.7 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-19。
+0.3.7 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-19。
 
 - **它封装 HotLoop 4.22.0,** 它让同一地址和端口上的每个 OPC UA PubSub 设备共用一个套接字,所以两个监听器可以放在同一个 UDP 端口上。
 - **provisioner 接受同一端口上的两个监听器。** provisioner 0.3.2 不再拒绝把两个 `opcua-pubsub` 设备放在同一端口的配置文件。

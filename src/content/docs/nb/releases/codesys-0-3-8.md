@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.8 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-19.
+0.3.8 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-19.
 
 - **Det kjører provisioner 0.3.3,** det første provisioner-imaget bygget for amd64 og for arm64, så chartet installeres på en arm64-node.
 - **Ingenting annet endret seg.** Malene, verdiene og HotLoop det omslutter (4.22.0) er de samme som i [0.3.7](/nb/releases/codesys-0-3-7/).

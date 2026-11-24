@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.3 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-15。provisioner 与 0.3.2 运行的相同。
+0.3.3 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-15。provisioner 与 0.3.2 运行的相同。
 
 - **它封装 HotLoop 4.20.0。** 新的 Web 界面是 `/` 处的页面,代理可以通过 MCP 在写入门之后更改它能读取的一切。
 

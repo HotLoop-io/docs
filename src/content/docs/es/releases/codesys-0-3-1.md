@@ -9,7 +9,7 @@ editUrl: false
 
 ## Qué cambió
 
-0.3.1 está en el índice `{{codesysChartRepo}}`, publicada el 2026-11-05, y fue el chart que había que instalar hasta [0.3.2](/es/releases/codesys-0-3-2/). Sigue envolviendo HotLoop 4.19.4 y ejecuta el provisioner 0.3.0, que se descarga sin inicio de sesión.
+0.3.1 está en el índice `https://hotloop.io/hotloop-codesys/`, publicada el 2026-11-05, y fue el chart que había que instalar hasta [0.3.2](/es/releases/codesys-0-3-2/). Sigue envolviendo HotLoop 4.19.4 y ejecuta el provisioner 0.3.0, que se descarga sin inicio de sesión.
 
 - **Cualquier nombre de versión instala.** El provisioner ahora encuentra el Service de HotLoop y su Secret de credenciales por la nomenclatura que usa el propio chart de HotLoop, que es el nombre de la versión. La regla anterior adivinaba otro nombre para una versión sin `hotloop-codesys` en él, y el pod de HotLoop no tenía ese nombre.
 - **El perfil de ejemplo es correcto.** `example-devices.json` ya no enumera Variant como tipo RawData, porque no lo es.

@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.6 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-19。
+0.3.6 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-19。
 
 - **许可证注解写明 HotLoop LLC 的 HotLoop Source License Agreement 1.0。**
 - **其他都没变。** 模板、值以及它封装的 HotLoop(4.20.2)都与 [0.3.5](/zh-hans/releases/codesys-0-3-5/) 相同。

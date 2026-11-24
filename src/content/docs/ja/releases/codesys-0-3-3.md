@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.3 は 2026-11-15 に `{{codesysChartRepo}}` のインデックスに公開されました。provisioner は 0.3.2 が実行していたものと同じです。
+0.3.3 は 2026-11-15 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開されました。provisioner は 0.3.2 が実行していたものと同じです。
 
 - **HotLoop 4.20.0 をラップします。** 新しい Web UI は `/` のページで、エージェントは読めるものすべてを、書き込みゲートの内側で MCP を通じて変更できます。
 

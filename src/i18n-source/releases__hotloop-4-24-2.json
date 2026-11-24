@@ -1,0 +1,34 @@
+{
+  "page": "releases/hotloop-4-24-2",
+  "english": "src/content/docs/releases/hotloop-4-24-2.md",
+  "langs": {
+    "es": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "fr": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "it": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "de": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "nb": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "bg": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "el": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "ko": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "ja": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "vi": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "hi": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "zh-hans": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"],
+    "ar": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","ec56b9a23f2b","00afaed120cf","f686c5086ff1","af8dc5e2cb01","c56632e26ddb","9859f4374478","d1870395bff7","eb0979307396","342d02024f28","5533463caac4","ee8b441232ee","091d0a124d90","cefc6af66e13","638be05a242a","903ea500e7cc","21cbd16e00e3","2f66b433161e","cdd15babb1cc","ffd50ce3b43c","713a07ca8145","165c4931f179","913f26323708"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.2","flow":"2.16.8","cascade":"1.5.1"}
+  }
+}

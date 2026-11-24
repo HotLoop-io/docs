@@ -9,7 +9,7 @@ editUrl: false
 
 ## Τι άλλαξε
 
-Το 0.3.6 είναι στο ευρετήριο `{{codesysChartRepo}}`, δημοσιευμένο στις 2026-11-19.
+Το 0.3.6 είναι στο ευρετήριο `https://hotloop.io/hotloop-codesys/`, δημοσιευμένο στις 2026-11-19.
 
 - **Η σημείωση της άδειας κατονομάζει την HotLoop Source License Agreement 1.0,** της HotLoop LLC.
 - **Τίποτε άλλο δεν άλλαξε.** Τα templates, οι τιμές και το HotLoop που περιβάλλει (4.20.2) είναι του [0.3.5](/el/releases/codesys-0-3-5/).

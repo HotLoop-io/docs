@@ -15,11 +15,11 @@ Không có đoạn nào trong mã kiểm tra giấy phép. Mỗi giai đoạn k�
 
 ## 1.0.x đã mang lại gì
 
-1.0.0 là 0.1.0 cộng 0.2.0 cộng trình soạn thảo mới, gói trong một bản phát hành. Trình soạn thảo là mảnh cuối cùng chúng tôi muốn có trước khi đặt tên mình dưới con số đó.
+1.0.0 là 0.1.0 cộng 0.2.0 cộng trình chỉnh sửa mới, và không có gì khác. Chúng tôi gọi nó là 1.0.0 vì trình chỉnh sửa là mảnh cuối cùng chúng tôi muốn trước khi đặt tên mình dưới con số, chứ không phải vì mọi thứ bên dưới đã xong.
 
 1.0.1 sửa một lỗi khi đăng nhập: cơ sở dữ liệu không đọc được từng trả lời "chưa đăng nhập" và xóa cookie, nên một sự cố ngắn làm mọi người bị đăng xuất và có thể biến một yếu tố thứ hai đúng thành mã sai. Giờ nó trả lời "hãy thử lại" và giữ phiên. 1.0.2 cho phép bước Code ký và xác minh bằng khóa HMAC lưu như thông tin đăng nhập, và cho phép webhook nêu các nguồn web được gọi nó từ trình duyệt. Giữa 1.0.0 và 1.0.2 không có gì phải di chuyển.
 
-Một quy trình đã lưu hôm nay tuân theo những gì: tệp ghi rõ định dạng của nó là phiên bản nào (`cascade: 1`), mỗi bước mang phiên bản riêng, và quy trình nêu một bước không còn tồn tại sẽ không qua được bước xác thực và không chạy, thay vì bị âm thầm sửa đổi. Các bước EmberOps được gỡ ra trong 1.0.0 theo cách đó. Mỗi bản phát hành đều được khởi động trên dữ liệu của bản trước khi phát hành: quy trình vẫn còn đó và thông tin xác thực vẫn mở được.
+Một quy trình đã lưu hiện nay giữ những điều sau: tệp cho biết nó thuộc phiên bản nào của định dạng (`cascade: 1`), mỗi bước mang phiên bản riêng của nó, và một quy trình nêu tên một bước không còn tồn tại sẽ không qua được kiểm tra hợp lệ và không khởi động, thay vì bị lặng lẽ thay đổi. Đó là cách các bước EmberOps được gỡ ra trong 1.0.0. Chưa có lời hứa nào về định dạng hay API ngoài điều đó, và chưa có bài kiểm tra nâng cấp từ mọi bản phát hành trước: những gì được kiểm tra nằm trong `RELEASE_CHECKLIST.md`, vốn nâng cấp từ bản phát hành gần nhất bằng tay. Một lời hứa sẽ vào đây khi chúng tôi giữ được nó, và không sớm hơn.
 
 ## 1.3.0, trình soạn thảo bằng 14 ngôn ngữ
 

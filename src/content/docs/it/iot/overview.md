@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[IoT è disponibile, dalla versione 4.18.10]
-L'immagine è `ghcr.io/hotloop-io/hotloop-iot:4.24.0`, compilata per amd64, arm64 e arm/v7, circa 31 MB su amd64 e 29 MB su un Pi, e il chart è `hotloop-iot` da `https://hotloop.io/hotloop`. Entrambi si scaricano senza accesso. Le unità Quadlet sono nella directory `iot/` di [Podman Quadlet](/it/install/quadlet/). [Installalo](/it/iot/install/). Le pagine di questa sezione dicono con che cosa è stata provata ogni funzione, e dove una pagina segue `main` e non la release, lo dicono.
+L'immagine è `ghcr.io/hotloop-io/hotloop-iot:4.24.2`, compilata per amd64, arm64 e arm/v7, circa 31 MB su amd64 e 29 MB su un Pi, e il chart è `hotloop-iot` da `https://hotloop.io/hotloop`. Entrambi si scaricano senza accesso. Le unità Quadlet sono nella directory `iot/` di [Podman Quadlet](/it/install/quadlet/). [Installalo](/it/iot/install/). Le pagine di questa sezione dicono con che cosa è stata provata ogni funzione, e dove una pagina segue `main` e non la release, lo dicono.
 :::
 
 IoT è la base su cui sono costruiti Edge e il Gateway. Se la scatola che avete davanti è un Pi, un NUC in uno sgabuzzino, un insieme di prese e sensori smart o un PLC su un banco, questo è il prodotto giusto. È l'immagine più piccola dei tre prodotti completi, e porta comunque tutto ciò che rende utile HotLoop: le entità, le regole, gli allarmi e l'unica porta di scrittura che nulla aggira.

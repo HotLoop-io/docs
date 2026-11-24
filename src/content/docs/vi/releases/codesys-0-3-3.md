@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.3 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-15. Provisioner là cái mà 0.3.2 đã chạy.
+0.3.3 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-15. Provisioner là cái mà 0.3.2 đã chạy.
 
 - **Nó bao bọc HotLoop 4.20.0.** Giao diện web mới là trang ở `/`, và một agent có thể đổi mọi thứ nó đọc được qua MCP, sau cổng ghi.
 

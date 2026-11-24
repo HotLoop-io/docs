@@ -9,7 +9,7 @@ editUrl: false
 
 ## Cosa è cambiato
 
-0.3.2 è nell'indice `{{codesysChartRepo}}`, pubblicato il 2026-11-15, e l'immagine del provisioner che esegue si scarica senza accesso. Niente in esso scrive sul PLC.
+0.3.2 è nell'indice `https://hotloop.io/hotloop-codesys/`, pubblicato il 2026-11-15, e l'immagine del provisioner che esegue si scarica senza accesso. Niente in esso scrive sul PLC.
 
 - **Avvolge HotLoop 4.19.11** ed esegue il provisioner 0.3.1.
 - **La pagina di HotLoop ascolta sulla 8090 dentro il pod.** Un runtime sulla rete del nodo occupa la porta host 8080, e lo scheduler rifiutava di collocare la pagina di HotLoop accanto. Il Service resta sulla 8080, quindi il tile dell'App Store e il provisioner raggiungono HotLoop come prima. Qualsiasi cosa parlasse direttamente con il pod sulla 8080 passa alla 8090.

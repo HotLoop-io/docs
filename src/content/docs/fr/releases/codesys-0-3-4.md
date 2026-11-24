@@ -9,7 +9,7 @@ editUrl: false
 
 ## Ce qui a changé
 
-0.3.4 est dans l'index `{{codesysChartRepo}}`, publié le 2026-11-16.
+0.3.4 est dans l'index `https://hotloop.io/hotloop-codesys/`, publié le 2026-11-16.
 
 - **Il enveloppe HotLoop 4.20.1,** la version qui porte les images arm que les testeurs téléchargent. Le provisioner reste en 0.3.1.
 

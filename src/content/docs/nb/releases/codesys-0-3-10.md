@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.10 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-23. Det er den du skal installere, og den bærer alt 0.3.9 la til.
+0.3.10 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-23. Det er den du skal installere, og den bærer alt 0.3.9 la til.
 
 - **Det omslutter HotLoop 4.24.0,** som viser en CODESYS-PLS-s egne alarmer i alarmlisten og tegner skjermbilder som P&ID.
 - **Det kjører provisioner 0.4.1.** En profil tar en liste over skjermbilder ved siden av det ene, så et prosjekt med flere WebVisu-sider kommer tilbake helt.

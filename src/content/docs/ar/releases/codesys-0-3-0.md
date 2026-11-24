@@ -9,7 +9,7 @@ editUrl: false
 
 ## ما هذا
 
-0.3.0 هو أول chart لـ HotLoop for CODESYS في الفهرس `{{codesysChartRepo}}`، نُشر في 2026-11-05: HotLoop Edge بجانب runtime لـ CODESYS، يُعدّ من ملف تعريف دون أن ينقر أحد. يغلّف HotLoop 4.19.4 ويشغّل provisioner 0.3.0. [0.3.1](/ar/releases/codesys-0-3-1/) صدر في اليوم نفسه وهو الذي يُثبَّت.
+0.3.0 هو أول chart لـ HotLoop for CODESYS في الفهرس `https://hotloop.io/hotloop-codesys/`، نُشر في 2026-11-05: HotLoop Edge بجانب runtime لـ CODESYS، يُعدّ من ملف تعريف دون أن ينقر أحد. يغلّف HotLoop 4.19.4 ويشغّل provisioner 0.3.0. [0.3.1](/ar/releases/codesys-0-3-1/) صدر في اليوم نفسه وهو الذي يُثبَّت.
 
 - **chart يغلّف HotLoop Edge**، بقيم افتراضية لـ runtime على العقدة نفسها: SQLite على تخزين العقدة نفسها، بلا pod لقاعدة بيانات، ونسخة واحدة، مع إيقاف خادم OPC UA والوسيط ونشر Edge والنسخ الاحتياطية.
 - **provisioner**، ملف ثنائي ثابت بلغة Go وصورة عامة، يقرأ [ملف تعريف](/ar/codesys/profile/) (الجهاز والمتغيرات المراد الاحتفاظ بها والإنذارات وشاشة واحدة) ويُعدّ كل ذلك بمجرد أن يستجيب runtime الخاص بـ PLC. ويعيد النظر كل خمس دقائق.

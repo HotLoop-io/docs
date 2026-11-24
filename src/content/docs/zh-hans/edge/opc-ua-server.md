@@ -3,10 +3,6 @@ title: "OPC UA 服务器"
 description: "把配置好的设备和变量发布为只读的 OPC UA 地址空间，让您现有的 SCADA 无需新驱动就能看到每个变量。"
 ---
 
-:::note[也涵盖即将推出的内容]
-本页也涵盖了一些比最新版本 HotLoop core 4.24.0 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
-:::
-
 HotLoop 的 OPC UA 服务器自 4.13.0 起，把 Gateway 中配置的设备和变量发布为 OPC UA 地址空间。第三方 OPC UA 客户端、SCADA 软件包、HMI、历史数据库，或 UaExpert 这类测试工具，都可以读取 Gateway 的实时变量，无需任何人为另一端编写 HotLoop 驱动。
 
 默认开启（`HOTLOOP_OPCUA_SERVER_ENABLED`），二进制文件和 Helm chart 都是如此。它在 HotLoop 认证开启的状态下启动，并有自己的登录账号 `opcua-reader`，HotLoop 用生成的密码创建该账号，设置页面会向管理员显示这个密码（`GET /api/opcua/server`）；它只能读取变量和数值，别的都不能做。HotLoop 认证关闭时没有可登录的用户，因此服务器会等待并说明原因（它不会拒绝启动）。如果设备上另一个 OPC UA 服务器已占用 4840，它会等待并说明；您自己选择的端口无法打开则是错误：在工厂网络上打开监听器，是部署方有意去做的事。默认端口 4840。
@@ -207,6 +203,8 @@ OPC UA 既认证用户，也认证应用。服务器在 `<PKI_DIR>/trusted/` 中
 **HotLoop 自己的客户端**也以这种方式登录：参见[协议和驱动](/zh-hans/iot/protocols/#opc-ua)中的 `userCertificate` 和 `userPrivateKey`。
 
 未构建的内容：被信任为客户端证书担保的认证机构，以及把它们映射到用户的名称规则。注册表适用于逐个附加客户端证书的工厂；CA 会是对它的补充，而不是替代。
+
+**RsaEncryptedSecret，OPC UA 对超过 64 字节的密码所要求的格式。** OPC 10000-4 7.40.4 规定，客户端在 RSA 安全策略下，把超过 64 字节的密码加密为 RsaEncryptedSecret（7.40.2.4），而不是旧格式。OPC Foundation 自己的客户端正是这样做的，现在 HotLoop 的 OPC UA 客户端也是这样。服务器两种都读。它先看令牌的开头：对 RsaEncryptedSecret，会检查其安全策略、证书、签名时间、签名、填充和会话的 nonce，只有全部成立才交出密码；其他情况都交给旧解码器，因此以旧格式发送超过 64 字节密码的客户端仍然可以登录。所有 RSA 策略都在覆盖范围内，即 `Basic256Sha256`、`Aes128_Sha256_RsaOaep` 和 `Aes256_Sha256_RsaPss`，以及启用时的 `Basic128Rsa15` 和 `Basic256`。已对照 OPC Foundation 的 Reference Server 和 ConsoleReferenceClient（UA-.NETStandard 2.0.2）在两个方向上验证，所用用户的密码长度分别为 10、64、65、72、100 和 200 字节。
 
 ### 服务器诊断已移除
 

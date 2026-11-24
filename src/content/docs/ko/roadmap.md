@@ -3,10 +3,6 @@ title: "HotLoop 로드맵"
 description: "HotLoop core를 기준으로 HotLoop이 무엇인지, 무엇을 더 만들어야 하는지, 무엇이 고장 났는지를 처리 순서대로 정리했습니다. Flow와 Cascade는 각자 로드맵이 있습니다."
 ---
 
-:::note[앞으로 나올 내용 포함]
-이 페이지에는 최신 릴리스인 HotLoop core 4.24.0보다 새로운 내용도 일부 들어 있습니다. 설치하신 버전에는 없는 부분이 있을 수 있습니다. 무엇이 바뀌었는지는 [릴리스 노트](/ko/releases/)에 나와 있습니다.
-:::
-
 HotLoop이 무엇인지, 무엇을 더 만들어야 하는지, 무엇이 고장 났는지를 정리한 문서입니다. 이 목록에 없으면 하지 않는 일이므로, 필요한 것은 목록에 올려 주세요.
 
 ## HotLoop이란
@@ -165,7 +161,7 @@ Ubiquiti가 공개한 API로 구축했습니다. 모두 4.23.6에 포함되며, 
 - [ ] 메시지 보안(서명 및 암호화된 NetworkMessages). 남은 것: Security Key Service(키가 정적임), Siemens 또는 Beckhoff 퍼블리셔. [프로토콜과 드라이버](/ko/iot/protocols/#opc-ua-pubsub-uadp)를 참조하십시오
 - [x] 퍼블리셔의 델타 프레임, 옵션(`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): 키 프레임 사이에 바뀐 필드만 보냅니다. [프로토콜과 드라이버](/ko/iot/protocols/)를 참조하세요
 - [ ] 구독자가 필드 이름을 알 수 있도록 하는 DataSetMetaData와 탐색 메시지, 퍼블리셔가 보내는 내용의 배열과 구조 필드, 구독자가 읽는 내용의 구조 필드, 이벤트. 구축 완료: 청크, 탐색 응답과 DataSetMetaData의 읽기와 쓰기, 구독자의 구조 필드, 메타데이터로부터 배치한 RawData, Event 메시지, 퍼블리셔의 공지. 실제 Siemens 퍼블리셔가 캡처한 프레임에 대해 읽어 확인했습니다. 남은 것: HotLoop이 퍼블리시하는 내용의 배열과 구조 필드(태그는 숫자 하나 또는 텍스트 하나), 탐색 요청의 전송과 응답
-- [ ] Siemens나 Beckhoff 퍼블리셔와의 연동, 그리고 라우터 경유(멀티캐스트 라우팅과 TTL)
+- [ ] Siemens 또는 Beckhoff 퍼블리셔를 상대로, 그리고 라우터를 건너서(멀티캐스트 라우팅과 TTL). 라우터를 건너는 것은 검증되었습니다. 퍼블리셔의 홉 제한 2는 멀티캐스트 라우터(smcroute, VM 안의 네트워크 네임스페이스 3개)를 건너 Gateway의 구독자가 값을 읽고, 홉 제한 1은 라우터에서 멈추며, 라우터를 멈추면 아무것도 도착하지 않습니다. 남은 것: Siemens 또는 Beckhoff 퍼블리셔
 
 ---
 

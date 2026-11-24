@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.2 は 2026-11-15 に `{{codesysChartRepo}}` のインデックスに公開され、実行する provisioner イメージはログインなしで取得できます。PLC には何も書き込みません。
+0.3.2 は 2026-11-15 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開され、実行する provisioner イメージはログインなしで取得できます。PLC には何も書き込みません。
 
 - **HotLoop 4.19.11 をラップし、**provisioner 0.3.1 を実行します。
 - **HotLoop のページはポッド内で 8090 で待ち受けます。** ノードのネットワーク上のランタイムがホストポート 8080 を使っており、スケジューラーは HotLoop のページをその隣に置くのを拒みました。Service は 8080 のままなので、App Store のタイルと provisioner は従来どおり HotLoop に届きます。8080 でポッドと直接通信していたものは 8090 に移ります。

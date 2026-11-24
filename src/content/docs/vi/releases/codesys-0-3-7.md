@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.7 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-19.
+0.3.7 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-19.
 
 - **Nó bao bọc HotLoop 4.22.0,** cho mọi thiết bị OPC UA PubSub trên cùng một địa chỉ và cổng một socket dùng chung, nên hai bên lắng nghe có thể ở trên một cổng UDP.
 - **Provisioner nhận hai bên lắng nghe trên một cổng.** Provisioner 0.3.2 không còn từ chối hồ sơ đặt hai thiết bị `opcua-pubsub` trên một cổng.

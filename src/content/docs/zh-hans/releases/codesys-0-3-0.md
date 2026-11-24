@@ -9,7 +9,7 @@ editUrl: false
 
 ## 这是什么
 
-0.3.0 是 HotLoop for CODESYS 在索引 `{{codesysChartRepo}}` 中的第一个 chart,发布于 2026-11-05:在 CODESYS 运行时旁边的 HotLoop Edge,由配置文件设置,无需任何人点击。它封装 HotLoop 4.19.4 并运行 provisioner 0.3.0。[0.3.1](/zh-hans/releases/codesys-0-3-1/) 在同一天发布,应安装的是它。
+0.3.0 是 HotLoop for CODESYS 在索引 `https://hotloop.io/hotloop-codesys/` 中的第一个 chart,发布于 2026-11-05:在 CODESYS 运行时旁边的 HotLoop Edge,由配置文件设置,无需任何人点击。它封装 HotLoop 4.19.4 并运行 provisioner 0.3.0。[0.3.1](/zh-hans/releases/codesys-0-3-1/) 在同一天发布,应安装的是它。
 
 - **一个封装 HotLoop Edge 的 chart**,为同一节点上的运行时提供默认值:节点自身存储上的 SQLite,没有数据库 pod,一个副本,OPC UA 服务器、broker、Edge 发布和备份均关闭。
 - **一个 provisioner**,一个静态 Go 二进制文件和一个公开镜像,读取[配置文件](/zh-hans/codesys/profile/)(设备、要保留的变量、报警和一个画面),一旦 PLC 的运行时应答就设置好一切。它每五分钟再看一次。

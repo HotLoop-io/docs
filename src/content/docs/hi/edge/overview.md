@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge जारी हो चुका है, पहली बार 4.18.10 में]
-इमेज `ghcr.io/hotloop-io/hotloop-edge:4.24.0` है, जो amd64, arm64 और arm/v7 के लिए बनी है, amd64 पर लगभग 37 MB और arm पर लगभग 34 MB, और चार्ट `https://hotloop.io/hotloop` से `hotloop-edge` है। दोनों बिना लॉगिन के पुल होते हैं। Quadlet यूनिट [Podman Quadlet](/hi/install/quadlet/) की `edge/` डायरेक्टरी में हैं। [इसे इंस्टॉल करें](/hi/edge/install/)। 4.18.10 से पहले Gateway एज पर चलकर Sparkplug को ऊपर प्रकाशित कर सकता था, और 4.5.0 से कर रहा है, पर इसके लिए पूरा Gateway चाहिए था।
+इमेज `ghcr.io/hotloop-io/hotloop-edge:4.24.2` है, जो amd64, arm64 और arm/v7 के लिए बनी है, amd64 पर लगभग 37 MB और arm पर लगभग 34 MB, और चार्ट `https://hotloop.io/hotloop` से `hotloop-edge` है। दोनों बिना लॉगिन के पुल होते हैं। Quadlet यूनिट [Podman Quadlet](/hi/install/quadlet/) की `edge/` डायरेक्टरी में हैं। [इसे इंस्टॉल करें](/hi/edge/install/)। 4.18.10 से पहले Gateway एज पर चलकर Sparkplug को ऊपर प्रकाशित कर सकता था, और 4.5.0 से कर रहा है, पर इसके लिए पूरा Gateway चाहिए था।
 :::
 
 Edge लाइन के बगल में लगा एक बॉक्स है। यह मशीन को पढ़ता है, मशीन पर ही नियम चलाता है, WAN बंद होने पर भी चलता रहता है और प्लांट के बाकी हिस्से को बताता है कि उसने क्या देखा। यह बाकी सब की तरह उसी राइट गेट पर चलता है।

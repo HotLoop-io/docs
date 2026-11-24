@@ -15,11 +15,11 @@ Gebaut und mit dem neuen Editor in 1.0.0 ausgeliefert. SAML, LDAP und AD, SCIM, 
 
 ## Was 1.0.x gebracht hat
 
-1.0.0 ist 0.1.0 plus 0.2.0 plus der neue Editor, alles in einem Release. Der Editor war das letzte Stück, das wir haben wollten, bevor wir unseren Namen unter die Nummer setzen.
+1.0.0 ist 0.1.0 plus 0.2.0 plus der neue Editor, und sonst nichts. Wir haben sie 1.0.0 genannt, weil der Editor das letzte Stück war, das wir wollten, bevor wir unseren Namen unter die Nummer setzen, nicht weil alles darunter fertig ist.
 
 1.0.1 behob einen Fehler bei der Anmeldung: Eine nicht lesbare Datenbank beantwortete die Anfrage mit „nicht angemeldet“ und löschte das Cookie, sodass ein kurzer Ausfall alle abmeldete und einen richtigen zweiten Faktor in einen falschen Code verwandeln konnte. Jetzt kommt „bitte erneut versuchen“, und die Sitzung bleibt erhalten. 1.0.2 ließ einen Code-Schritt mit einem als Zugangsdaten gespeicherten HMAC-Schlüssel signieren und prüfen und ließ einen Webhook die Web-Origins nennen, die ihn aus einem Browser aufrufen dürfen. Zwischen 1.0.0 und 1.0.2 gab es nichts zu migrieren.
 
-Woran sich ein gespeicherter Workflow heute hält: Die Datei sagt, in welcher Version ihr Format ist (`cascade: 1`), jeder Schritt trägt seine eigene Version, und ein Workflow, der einen nicht mehr vorhandenen Schritt nennt, besteht die Prüfung nicht und startet nicht, statt stillschweigend geändert zu werden. So wurden die EmberOps-Schritte in 1.0.0 entfernt. Jedes Release wird vor der Auslieferung auf den Daten des vorherigen gestartet: Der Workflow ist noch da, und die Zugangsdaten lassen sich weiterhin öffnen.
+Woran sich ein gespeicherter Workflow heute hält: Die Datei sagt, welche Version ihres Formats sie ist (`cascade: 1`), jeder Schritt trägt seine eigene Version, und ein Workflow, der einen Schritt nennt, den es nicht mehr gibt, besteht die Validierung nicht und startet nicht, statt stillschweigend verändert zu werden. So wurden die EmberOps-Schritte in 1.0.0 entfernt. Über das Format oder die API hinaus gibt es noch kein Versprechen und keinen Update-Test von jeder früheren Version: Was getestet wird, steht in `RELEASE_CHECKLIST.md`, das von der letzten Version aus von Hand aktualisiert. Ein Versprechen kommt hierher, wenn wir es halten können, und nicht früher.
 
 ## 1.3.0, der Editor in 14 Sprachen
 

@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.2는 2026-11-15에 `{{codesysChartRepo}}` 인덱스에 게시되었으며, 실행하는 provisioner 이미지는 로그인 없이 받을 수 있습니다. PLC에는 아무것도 쓰지 않습니다.
+0.3.2는 2026-11-15에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었으며, 실행하는 provisioner 이미지는 로그인 없이 받을 수 있습니다. PLC에는 아무것도 쓰지 않습니다.
 
 - **HotLoop 4.19.11을 감싸고** provisioner 0.3.1을 실행합니다.
 - **HotLoop의 페이지가 파드 안에서 8090으로 듣습니다.** 노드 네트워크의 런타임이 호스트 포트 8080을 쓰고 있어, 스케줄러가 HotLoop 페이지를 그 옆에 배치하기를 거부했습니다. Service는 8080에 그대로 있으므로 App Store 타일과 provisioner는 전처럼 HotLoop에 닿습니다. 8080으로 파드와 직접 통신하던 것은 8090으로 옮겨야 합니다.

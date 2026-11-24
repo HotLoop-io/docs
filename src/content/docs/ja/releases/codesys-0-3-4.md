@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.4 は 2026-11-16 に `{{codesysChartRepo}}` のインデックスに公開されました。
+0.3.4 は 2026-11-16 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開されました。
 
 - **HotLoop 4.20.1 をラップします。** テスターが取得する arm イメージを含むリリースです。provisioner は 0.3.1 のままです。
 

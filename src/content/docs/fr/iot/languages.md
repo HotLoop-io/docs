@@ -3,10 +3,6 @@ title: "Langues de l'interface web"
 description: "L'interface web en anglais et treize autres langues, l'arabe étant disposé de droite à gauche, à choisir dans la barre du haut ou sur la carte de connexion."
 ---
 
-:::note[Couvre ce qui arrive]
-Cette page couvre aussi quelques éléments plus récents que HotLoop core 4.24.0, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
-:::
-
 L'interface web de HotLoop IoT, Edge et Gateway (et de HotLoop for CODESYS, qui exécute l'interface d'Edge) existe en anglais et en 13 autres langues : espagnol (es), français (fr), italien (it), allemand (de), norvégien bokmål (nb), bulgare (bg), grec (el), coréen (ko), japonais (ja), vietnamien (vi), hindi (hi), chinois simplifié (zh-Hans) et arabe (ar, disposé de droite à gauche).
 
 Choisissez-en une dans la liste des langues de la barre du haut, ou sur la carte de connexion. Le choix est conservé dans ce navigateur. Sans choix, la page prend la première des langues du navigateur que HotLoop propose, et l'anglais si aucune ne correspond. Une langue n'apparaît dans la liste que lorsque son fichier est complet.

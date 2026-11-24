@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.5 は 2026-11-16 に `{{codesysChartRepo}}` のインデックスに公開され、インストールすべきチャートです。
+0.3.5 は 2026-11-16 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開され、インストールすべきチャートです。
 
 - **HotLoop 4.20.2 をラップします。** EtherNet/IP のバッチ修正と、設定なしで出力される `version` コマンドを含みます。provisioner は 0.3.1 のままです。
 - **[0.3.2](/ja/releases/codesys-0-3-2/) から [0.3.4](/ja/releases/codesys-0-3-4/) までのすべてがそのまま残っており、**PLC には何も書き込まず、以前のチャートはすべてインデックスに残ります。

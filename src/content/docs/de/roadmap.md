@@ -3,10 +3,6 @@ title: "HotLoop-Roadmap"
 description: "Was HotLoop ist, was noch zu bauen ist und was kaputt ist, in der Reihenfolge der Erledigung, für HotLoop core. Flow und Cascade verlinken ihre eigene."
 ---
 
-:::note[Enthält, was kommt]
-Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop core 4.24.0, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
-:::
-
 Was HotLoop ist, was noch zu bauen ist und was kaputt ist. Was nicht auf dieser Liste steht, wird nicht gemacht, also setzen Sie es auf die Liste.
 
 ## Was HotLoop ist
@@ -165,7 +161,7 @@ Der eingebaute Historian bleibt. Darüber schreibt HotLoop den Verlauf in die Da
 - [ ] Nachrichtensicherheit (signierte und verschlüsselte NetworkMessages). Offen: ein Security Key Service (die Schlüssel sind statisch) und ein Siemens- oder Beckhoff-Publisher. Siehe [Protokolle und Treiber](/de/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Delta-Frames vom Publisher, als Option (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): nur die geänderten Felder zwischen Key-Frames. Siehe [Protokolle und Treiber](/de/iot/protocols/)
 - [ ] DataSetMetaData und Discovery-Nachrichten, damit ein Subscriber die Felder benennen kann; Array- und Strukturfelder in dem, was der Publisher sendet, und Strukturfelder in dem, was der Subscriber liest; Ereignisse. Gebaut: Chunks, Discovery-Antworten und DataSetMetaData gelesen und geschrieben, die Strukturfelder des Subscribers, RawData aus den Metadaten angelegt, Event-Nachrichten, die Ankündigungen des Publishers; gelesen gegen die mitgeschnittenen Frames eines echten Siemens-Publishers. Offen: Array- und Strukturfelder in dem, was HotLoop veröffentlicht (ein Tag ist eine Zahl oder ein Text), Discovery-Anfragen senden und beantworten
-- [ ] Gegen einen Siemens- oder Beckhoff-Publisher und über einen Router (Multicast-Routing und das TTL)
+- [ ] Gegen einen Siemens- oder Beckhoff-Publisher und über einen Router (Multicast-Routing und TTL). Über einen Router ist bewiesen: Das Hop-Limit 2 des Publishers überquert einen Multicast-Router (smcroute, drei Netzwerk-Namespaces in einer VM) und der Subscriber des Gateways liest den Wert, ein Hop-Limit 1 endet am Router, und bei gestopptem Router kommt nichts an. Offen: ein Siemens- oder Beckhoff-Publisher
 
 ---
 

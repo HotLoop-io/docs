@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.7 は 2026-11-19 に `{{codesysChartRepo}}` のインデックスに公開されました。
+0.3.7 は 2026-11-19 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開されました。
 
 - **HotLoop 4.22.0 をラップします。** 同じアドレスとポートのすべての OPC UA PubSub デバイスに共有ソケットを与えるので、2 つのリスナーが 1 つの UDP ポートに置けます。
 - **provisioner は 1 つのポートの 2 つのリスナーを受け付けます。** provisioner 0.3.2 は、2 つの `opcua-pubsub` デバイスを 1 つのポートに置くプロファイルをもう拒否しません。

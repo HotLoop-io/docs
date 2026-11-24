@@ -21,10 +21,10 @@ Có hai cách để chạy một sản phẩm HotLoop cho thật: Helm trên k3s
 
 | Sản phẩm | Bản phát hành mới nhất | Helm | Quadlet | Bắt đầu từ đây |
 |---|---|---|---|---|
-| [HotLoop IoT](/vi/iot/overview/) | 4.24.0 | Có | Có | [Cài đặt IoT](/vi/iot/install/) |
-| [HotLoop Edge](/vi/edge/overview/) | 4.24.0 | Có | Có | [Cài đặt Edge](/vi/edge/install/) |
-| [HotLoop Gateway](/vi/gateway/overview/) | 4.24.0 | Có | Có | [Cài đặt Gateway](/vi/gateway/install/) |
-| [HotLoop Edge Relay](/vi/edge-relay/overview/) | 4.24.0 | Có | Có | [Cài đặt Edge Relay](/vi/edge-relay/install/) |
+| [HotLoop IoT](/vi/iot/overview/) | 4.24.2 | Có | Có | [Cài đặt IoT](/vi/iot/install/) |
+| [HotLoop Edge](/vi/edge/overview/) | 4.24.2 | Có | Có | [Cài đặt Edge](/vi/edge/install/) |
+| [HotLoop Gateway](/vi/gateway/overview/) | 4.24.2 | Có | Có | [Cài đặt Gateway](/vi/gateway/install/) |
+| [HotLoop Edge Relay](/vi/edge-relay/overview/) | 4.24.2 | Có | Có | [Cài đặt Edge Relay](/vi/edge-relay/install/) |
 | [HotLoop Flow](/vi/flow/overview/) | 2.16.8 | Có | Có | [Cài đặt Flow](/vi/flow/install/) |
 | [HotLoop Cascade](/vi/cascade/overview/) | 1.5.1 | Có, không cần đăng nhập | Có, không cần đăng nhập, xem [Cascade với Podman Quadlet](/vi/cascade/quadlet/) | [Chạy Cascade](/vi/cascade/running/) |
 | [HotLoop for CODESYS](/vi/codesys/overview/) | 0.3.10 | Có, hoặc App Store của EmberCORE | Không | [Cài đặt HotLoop for CODESYS](/vi/codesys/install/) |

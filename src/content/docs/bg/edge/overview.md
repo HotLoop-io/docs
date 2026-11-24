@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge е излязъл, за първи път в 4.18.10]
-Образът е `ghcr.io/hotloop-io/hotloop-edge:4.24.0`, изграден за amd64, arm64 и arm/v7, около 37 MB за amd64 и 34 MB за arm, а чартът е `hotloop-edge` от `https://hotloop.io/hotloop`. И двете се теглят без вход. Quadlet единиците са в директорията `edge/` на [Podman Quadlet](/bg/install/quadlet/). [Инсталирайте го](/bg/edge/install/). Преди 4.18.10 Gateway можеше да работи в периферията и да публикува Sparkplug нагоре, и може от 4.5.0, но за това трябваше целият Gateway.
+Образът е `ghcr.io/hotloop-io/hotloop-edge:4.24.2`, изграден за amd64, arm64 и arm/v7, около 37 MB за amd64 и 34 MB за arm, а чартът е `hotloop-edge` от `https://hotloop.io/hotloop`. И двете се теглят без вход. Quadlet единиците са в директорията `edge/` на [Podman Quadlet](/bg/install/quadlet/). [Инсталирайте го](/bg/edge/install/). Преди 4.18.10 Gateway можеше да работи в периферията и да публикува Sparkplug нагоре, и може от 4.5.0, но за това трябваше целият Gateway.
 :::
 
 Edge е кутия, закрепена до една линия. Чете машината, изпълнява правилата върху машината, продължава да работи, когато WAN падне, и казва на останалата част от завода какво е видяла. Работи през същата врата за запис като всичко останало.

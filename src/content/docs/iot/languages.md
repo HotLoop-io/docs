@@ -5,10 +5,6 @@ description: "The web UI in English and thirteen more languages, with Arabic lai
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 The web UI of HotLoop IoT, Edge and Gateway (and HotLoop for CODESYS, which runs the Edge UI) comes in English and 13 more languages: Spanish (es), French (fr), Italian (it), German (de), Norwegian Bokmal (nb), Bulgarian (bg), Greek (el), Korean (ko), Japanese (ja), Vietnamese (vi), Hindi (hi), Simplified Chinese (zh-Hans) and Arabic (ar, laid out right to left).
 
 Pick one in the language box in the top bar, or on the sign-in card. The choice is kept in this browser. With nothing chosen, the page uses the first of the browser's languages that HotLoop has, and English when none matches. A language is in the picker only when its file is complete.

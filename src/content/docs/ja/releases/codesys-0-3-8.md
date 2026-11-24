@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.8 は 2026-11-19 に `{{codesysChartRepo}}` のインデックスに公開されました。
+0.3.8 は 2026-11-19 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開されました。
 
 - **provisioner 0.3.3 を実行します。** amd64 と arm64 向けにビルドした最初の provisioner イメージなので、チャートは arm64 ノードにもインストールできます。
 - **ほかに変わったものはありません。** テンプレート、値、ラップする HotLoop(4.22.0)は [0.3.7](/ja/releases/codesys-0-3-7/) と同じです。

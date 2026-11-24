@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.5 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-16, og er chartet å installere.
+0.3.5 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-16, og er chartet å installere.
 
 - **Det omslutter HotLoop 4.20.2,** som bærer EtherNet/IP-batchrettingen og en `version`-kommando som skriver ut uten konfigurasjon. Provisioneren blir på 0.3.1.
 - **Alt fra [0.3.2](/nb/releases/codesys-0-3-2/) til [0.3.4](/nb/releases/codesys-0-3-4/) er fortsatt her,** ingenting skriver til PLS-en, og hvert tidligere chart blir i indeksen.

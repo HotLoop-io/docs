@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.8는 2026-11-19에 `{{codesysChartRepo}}` 인덱스에 게시되었습니다.
+0.3.8는 2026-11-19에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었습니다.
 
 - **provisioner 0.3.3을 실행합니다.** amd64와 arm64용으로 빌드한 첫 provisioner 이미지이므로, 차트가 arm64 노드에도 설치됩니다.
 - **그 외에는 바뀐 것이 없습니다.** 템플릿, 값, 감싸는 HotLoop(4.22.0)은 [0.3.7](/ko/releases/codesys-0-3-7/)와 같습니다.

@@ -3,10 +3,6 @@ title: "Le serveur OPC UA"
 description: "Publiez les appareils et tags configurés sous forme d'espace d'adressage OPC UA en lecture seule : votre SCADA voit chaque tag sans nouveau pilote."
 ---
 
-:::note[Couvre ce qui arrive]
-Cette page couvre aussi quelques éléments plus récents que HotLoop core 4.24.0, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
-:::
-
 Le serveur OPC UA de HotLoop, depuis la version 4.13.0, publie les appareils et les tags configurés dans le Gateway sous forme d'espace d'adressage OPC UA. Un client OPC UA tiers, un logiciel SCADA, un IHM, un historien ou un outil de test comme UaExpert peut ainsi lire les tags en direct du Gateway sans que personne n'écrive de pilote HotLoop pour l'autre côté.
 
 Activé par défaut (`HOTLOOP_OPCUA_SERVER_ENABLED`), dans le binaire et dans le chart Helm. Il démarre avec l'authentification HotLoop activée et un identifiant qui lui est propre, `opcua-reader`, que HotLoop crée avec un mot de passe généré que les Paramètres montrent à un administrateur (`GET /api/opcua/server`) ; il peut lire les tags et les valeurs, rien de plus. Avec l'authentification HotLoop désactivée, il n'y a aucun utilisateur avec qui se connecter, donc le serveur reste en attente et le signale (il ne refuse pas de démarrer). Si un autre serveur OPC UA de la machine occupe déjà le 4840, il reste en attente et le signale ; un port que vous avez choisi et qui ne peut pas être ouvert est une erreur : ouvrir un listener sur un réseau d'usine est une décision qu'un déploiement prend en connaissance de cause. Port par défaut 4840.
@@ -207,6 +203,8 @@ Un client peut se connecter avec un certificat au lieu d'un mot de passe. Désac
 **Le client propre de HotLoop** se connecte aussi de cette façon : voir `userCertificate` et `userPrivateKey` dans [Protocoles et pilotes](/fr/iot/protocols/#opc-ua).
 
 Non construit : une autorité de certification à laquelle on ferait confiance pour se porter garante des certificats clients, et une règle de nommage qui les associe aux utilisateurs. Le registre couvre une usine qui attache ses certificats clients un par un ; une autorité s'ajouterait à lui, elle ne le remplacerait pas.
+
+**RsaEncryptedSecret, le format qu'OPC UA demande au-delà de 64 octets.** OPC 10000-4 7.40.4 dit qu'un client chiffre un mot de passe de plus de 64 octets sur une politique de sécurité RSA sous forme de RsaEncryptedSecret (7.40.2.4), et non dans l'ancien format. Le client propre à l'OPC Foundation fait exactement cela, et le client OPC UA de HotLoop aussi désormais. Le serveur lit les deux. Il regarde d'abord le début du jeton : un RsaEncryptedSecret est vérifié pour sa politique de sécurité, son certificat, son heure de signature, sa signature, son bourrage et le nonce de la session, et ne livre le mot de passe que si tout est correct ; tout le reste va à l'ancien décodeur, de sorte qu'un client qui envoie l'ancien format au-delà de 64 octets se connecte toujours. Toutes les politiques RSA sont couvertes, `Basic256Sha256`, `Aes128_Sha256_RsaOaep` et `Aes256_Sha256_RsaPss`, ainsi que `Basic128Rsa15` et `Basic256` lorsqu'elles sont activées. C'est éprouvé face au Reference Server et au ConsoleReferenceClient de l'OPC Foundation (UA-.NETStandard 2.0.2) dans les deux sens, avec un utilisateur dont le mot de passe fait 10, 64, 65, 72, 100 et 200 octets.
 
 ### Les diagnostics du serveur sont retirés
 

@@ -9,7 +9,7 @@ editUrl: false
 
 ## 개요
 
-0.3.0은 2026-11-05에 `{{codesysChartRepo}}` 인덱스에 게시된 HotLoop for CODESYS의 첫 차트입니다. CODESYS 런타임 옆의 HotLoop Edge를 프로필로 설정하며, 아무도 클릭할 필요가 없습니다. HotLoop 4.19.4를 감싸고 provisioner 0.3.0을 실행합니다. [0.3.1](/ko/releases/codesys-0-3-1/)이 같은 날 나왔으며 설치할 것은 이쪽입니다.
+0.3.0은 2026-11-05에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시된 HotLoop for CODESYS의 첫 차트입니다. CODESYS 런타임 옆의 HotLoop Edge를 프로필로 설정하며, 아무도 클릭할 필요가 없습니다. HotLoop 4.19.4를 감싸고 provisioner 0.3.0을 실행합니다. [0.3.1](/ko/releases/codesys-0-3-1/)이 같은 날 나왔으며 설치할 것은 이쪽입니다.
 
 - **HotLoop Edge를 감싸는 차트**. 같은 노드의 런타임을 위한 기본값은 노드 자체 스토리지의 SQLite, 데이터베이스 파드 없음, 레플리카 하나이며, OPC UA 서버, 브로커, Edge 게시, 백업은 꺼져 있습니다.
 - **provisioner**. 정적 Go 바이너리 하나와 공개 이미지로, [프로필](/ko/codesys/profile/)(장치, 보관할 변수, 알람, 화면 하나)을 읽고 PLC 런타임이 응답하는 즉시 모두 설정합니다. 5분마다 다시 확인합니다.

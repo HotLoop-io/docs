@@ -9,7 +9,7 @@ editUrl: false
 
 ## ما الذي تغيّر
 
-0.3.1 في الفهرس `{{codesysChartRepo}}`، نُشر في 2026-11-05، وكان الـ chart الذي يُثبَّت حتى [0.3.2](/ar/releases/codesys-0-3-2/). ما زال يغلّف HotLoop 4.19.4 ويشغّل provisioner 0.3.0، الذي يُسحب دون تسجيل دخول.
+0.3.1 في الفهرس `https://hotloop.io/hotloop-codesys/`، نُشر في 2026-11-05، وكان الـ chart الذي يُثبَّت حتى [0.3.2](/ar/releases/codesys-0-3-2/). ما زال يغلّف HotLoop 4.19.4 ويشغّل provisioner 0.3.0، الذي يُسحب دون تسجيل دخول.
 
 - **يُثبَّت بأي اسم إصدار.** يجد provisioner الآن الخدمة Service الخاصة بـ HotLoop وسر بيانات الاعتماد Secret الخاص بها من التسمية التي يستخدمها chart الخاص بـ HotLoop نفسه، وهي اسم الإصدار. كانت القاعدة القديمة تخمّن اسماً مختلفاً لإصدار لا يحتوي اسمه على `hotloop-codesys`، ولم يكن لـ pod الخاص بـ HotLoop ذلك الاسم.
 - **ملف التعريف النموذجي صحيح.** لم يعد `example-devices.json` يسرد Variant كنوع RawData، لأنه ليس كذلك.

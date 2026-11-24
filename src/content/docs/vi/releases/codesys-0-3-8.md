@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.8 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-19.
+0.3.8 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-19.
 
 - **Nó chạy provisioner 0.3.3,** image provisioner đầu tiên build cho amd64 và arm64, nên chart cài được trên nút arm64.
 - **Không có gì khác thay đổi.** Các template, các giá trị và HotLoop mà nó bao bọc (4.22.0) là của [0.3.7](/vi/releases/codesys-0-3-7/).

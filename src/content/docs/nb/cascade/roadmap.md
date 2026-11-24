@@ -15,11 +15,11 @@ Bygget, og levert i 1.0.0 sammen med den nye editoren. SAML, LDAP og AD, SCIM, e
 
 ## Hva 1.0.x leverte
 
-1.0.0 er 0.1.0 pluss 0.2.0 pluss den nye editoren, alt i én utgivelse. Editoren var den siste brikken vi ville ha før vi satte navnet vårt under tallet.
+1.0.0 er 0.1.0 pluss 0.2.0 pluss den nye editoren, og ikke noe mer. Vi kalte den 1.0.0 fordi editoren var den siste biten vi ville ha før vi setter navnet vårt under nummeret, ikke fordi alt under er ferdig.
 
 1.0.1 rettet en feil i innloggingen: en database som ikke kunne leses, svarte «ikke logget inn» og slettet cookien, så et kort avbrudd logget alle ut og kunne gjøre en riktig andre faktor om til en feil kode. Nå svarer den «prøv igjen» og beholder økten. 1.0.2 lot et Code-trinn signere og verifisere med en HMAC-nøkkel lagret som legitimasjon, og lot en webhook oppgi hvilke nettopprinnelser som kan kalle den fra en nettleser. Ingenting ble migrert mellom 1.0.0 og 1.0.2.
 
-Hva en lagret arbeidsflyt holder seg til i dag: filen sier hvilken versjon av formatet den har (`cascade: 1`), hvert trinn har sin egen versjon, og en arbeidsflyt som nevner et trinn som ikke finnes lenger, består ikke valideringen og starter ikke, i stedet for å bli endret i det stille. Slik ble EmberOps-trinnene tatt ut i 1.0.0. Hver utgivelse startes på forrige utgivelses data før den sendes ut: arbeidsflyten er der fortsatt, og legitimasjonen åpnes fortsatt.
+Hva en lagret arbeidsflyt holder seg til i dag: filen sier hvilken versjon av formatet den er (`cascade: 1`), hvert steg har sin egen versjon, og en arbeidsflyt som nevner et steg som ikke finnes lenger, består ikke valideringen og starter ikke, i stedet for å bli endret i det stille. Slik ble EmberOps-stegene tatt ut i 1.0.0. Det finnes ennå ikke noe løfte om formatet eller API-et utover dette, og ingen oppgraderingstest fra hver tidligere utgivelse: det som testes står i `RELEASE_CHECKLIST.md`, som oppgraderer fra forrige utgivelse for hånd. Et løfte kommer hit når vi kan holde det, og ikke før.
 
 ## 1.3.0, editoren på 14 språk
 

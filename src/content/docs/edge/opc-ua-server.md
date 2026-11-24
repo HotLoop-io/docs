@@ -5,10 +5,6 @@ description: "Publish configured devices and tags as a read-only OPC UA address 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 HotLoop's OPC UA server, since 4.13.0, publishes the Gateway's configured
 devices and tags as an OPC UA address space, so a third-party OPC UA client, a
 SCADA package, an HMI, a historian, a test tool such as UaExpert, can read the
@@ -414,6 +410,21 @@ next. A length claiming more than arrived is still refused, so a client cannot
 make the server allocate what it did not send. Upstream `main` (checked
 2026-11-16) still has the cap; the change is offered upstream as a pull request
 from HotLoop-io/opcua.
+
+**RsaEncryptedSecret, the format OPC UA asks for over 64 bytes.** OPC 10000-4
+7.40.4 says a client encrypts a password longer than 64 bytes on an RSA security
+policy as an RsaEncryptedSecret (7.40.2.4), not in the legacy format. The OPC
+Foundation's own client does exactly that, and so does HotLoop's OPC UA client
+now. The server reads both. It looks at the start of the token first: an
+RsaEncryptedSecret is checked for its security policy, its certificate, its
+signing time, its signature, its padding and the session's nonce, and gives up
+the password only when all of them hold; anything else goes to the legacy
+decoder, so a client that sends the legacy format over 64 bytes still signs in.
+Every RSA policy is covered, `Basic256Sha256`, `Aes128_Sha256_RsaOaep` and
+`Aes256_Sha256_RsaPss`, and `Basic128Rsa15` and `Basic256` when they are
+switched on. It is proved against the OPC Foundation's Reference Server and
+ConsoleReferenceClient (UA-.NETStandard 2.0.2) in both directions, with a user
+whose password is 10, 64, 65, 72, 100 and 200 bytes.
 
 ### X.509 user certificates
 

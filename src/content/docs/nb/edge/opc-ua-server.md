@@ -3,10 +3,6 @@ title: "OPC UA-serveren"
 description: "Publiser konfigurerte enheter og tags som et skrivebeskyttet OPC UA-adresserom, så SCADA-systemet du allerede eier ser alle tags uten ny driver."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 OPC UA-serveren i HotLoop publiserer, siden 4.13.0, enhetene og taggene som er konfigurert i Gateway som et OPC UA-adresserom. En OPC UA-klient fra en tredjepart, en SCADA-pakke, en HMI, en historian eller et testverktøy som UaExpert kan dermed lese Gatewayens live tags uten at noen skriver en HotLoop-driver for den andre siden.
 
 På som standard (`HOTLOOP_OPCUA_SERVER_ENABLED`), i binærfilen og i Helm-chartet. Den starter med HotLoop-autentisering på og en egen innlogging, `opcua-reader`, som HotLoop lager med et generert passord som Innstillinger viser en administrator (`GET /api/opcua/server`); den kan lese tagger og verdier og ingenting annet. Med HotLoop-autentisering av finnes det ingen brukere å logge inn som, så serveren venter og sier fra (den nekter ikke å starte). Er 4840 allerede tatt av en annen OPC UA-server på boksen, venter den og sier fra; en port du valgte som ikke kan åpnes, er en feil: å åpne en lytter på et anleggsnettverk er noe en driftsetting gjør med vilje. Standardport 4840.
@@ -207,6 +203,8 @@ En klient kan logge inn med et sertifikat i stedet for et passord. Av som standa
 **HotLoops egen klient** logger inn på denne måten også: se `userCertificate` og `userPrivateKey` i [Protokoller og drivere](/nb/iot/protocols/#opc-ua).
 
 Ikke bygget: en sertifiseringsinstans det stoles på for å gå god for klientsertifikater, og en navneregel som kobler dem til brukere. Registeret dekker et anlegg som kobler klientsertifikatene sine til én og én; en CA ville vært et tillegg til det, ikke en erstatning.
+
+**RsaEncryptedSecret, formatet OPC UA ber om over 64 byte.** OPC 10000-4 7.40.4 sier at en klient krypterer et passord på over 64 byte på en RSA-sikkerhetspolicy som en RsaEncryptedSecret (7.40.2.4), ikke i det gamle formatet. OPC Foundations egen klient gjør akkurat det, og det gjør nå også HotLoops OPC UA-klient. Serveren leser begge. Den ser først på starten av tokenet: En RsaEncryptedSecret kontrolleres for sikkerhetspolicy, sertifikat, signeringstidspunkt, signatur, utfylling og øktens nonce, og gir fra seg passordet bare når alt stemmer; alt annet går til den gamle dekoderen, slik at en klient som sender det gamle formatet over 64 byte fortsatt logger inn. Alle RSA-policyer er dekket, `Basic256Sha256`, `Aes128_Sha256_RsaOaep` og `Aes256_Sha256_RsaPss`, og `Basic128Rsa15` og `Basic256` når de er slått på. Det er bevist mot OPC Foundations Reference Server og ConsoleReferenceClient (UA-.NETStandard 2.0.2) i begge retninger, med en bruker hvis passord er på 10, 64, 65, 72, 100 og 200 byte.
 
 ### Serverdiagnostikk er fjernet
 

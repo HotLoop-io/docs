@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.6 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-19.
+0.3.6 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-19.
 
 - **Lisensmerknaden nevner HotLoop Source License Agreement 1.0,** fra HotLoop LLC.
 - **Ingenting annet endret seg.** Malene, verdiene og HotLoop det omslutter (4.20.2) er de samme som i [0.3.5](/nb/releases/codesys-0-3-5/).

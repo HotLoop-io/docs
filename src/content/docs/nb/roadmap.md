@@ -3,10 +3,6 @@ title: "HotLoop-veikart"
 description: "Hva HotLoop er, hva som gjenstår å bygge og hva som er ødelagt, i den rekkefølgen det gjøres, for HotLoop core. Flow og Cascade lenker til sine egne."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Hva HotLoop er, hva som gjenstår å bygge og hva som er ødelagt. Står det ikke på denne listen, blir det ikke gjort, så sett det på listen.
 
 ## Hva HotLoop er
@@ -165,7 +161,7 @@ Den innebygde historianen blir. Oppå den skriver HotLoop historikk ut til datab
 - [ ] Meldingssikkerhet (signerte og krypterte NetworkMessages). Igjen: en Security Key Service (nøklene er statiske), og en Siemens- eller Beckhoff-publiserer. Se [Protokoller og drivere](/nb/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Delta-rammer fra utgiveren, som et alternativ (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): bare de endrede feltene mellom nøkkelrammer. Se [Protokoller og drivere](/nb/iot/protocols/)
 - [ ] DataSetMetaData og oppdagelsesmeldinger slik at en abonnent kan navngi feltene; array- og strukturfelt i det publisereren sender, og strukturfelt i det abonnenten leser; hendelser. Bygget: biter, oppdagelsessvar og DataSetMetaData lest og skrevet, abonnentens strukturfelt, RawData lagt ut fra metadataene, Event-meldinger, publisererens kunngjøringer; lest mot de fangede rammene fra en virkelig Siemens-publiserer. Igjen: array- og strukturfelt i det HotLoop publiserer (en tag er ett tall eller én tekst), sending og besvarelse av oppdagelsesforespørsler
-- [ ] Mot en Siemens- eller Beckhoff-utgiver, og over en ruter (multicast-ruting og TTL)
+- [ ] Mot en Siemens- eller Beckhoff-publisher, og over en ruter (multicast-ruting og TTL). Over en ruter er bevist: publisherens hopp-grense på 2 krysser en multicast-ruter (smcroute, tre nettverks-namespaces i en VM) og Gatewayens subscriber leser verdien, en hopp-grense på 1 stopper ved ruteren, og med ruteren stoppet kommer ingenting fram. Igjen: en Siemens- eller Beckhoff-publisher
 
 ---
 

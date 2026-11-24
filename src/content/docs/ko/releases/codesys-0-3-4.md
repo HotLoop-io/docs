@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.4는 2026-11-16에 `{{codesysChartRepo}}` 인덱스에 게시되었습니다.
+0.3.4는 2026-11-16에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었습니다.
 
 - **HotLoop 4.20.1을 감쌉니다.** 테스터가 받는 arm 이미지를 담은 릴리스입니다. provisioner는 0.3.1에 머뭅니다.
 

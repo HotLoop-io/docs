@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.3은 2026-11-15에 `{{codesysChartRepo}}` 인덱스에 게시되었습니다. provisioner는 0.3.2가 실행하던 것과 같습니다.
+0.3.3은 2026-11-15에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었습니다. provisioner는 0.3.2가 실행하던 것과 같습니다.
 
 - **HotLoop 4.20.0을 감쌉니다.** 새 웹 UI는 `/`의 페이지이며, 에이전트는 읽을 수 있는 모든 것을 쓰기 게이트 뒤에서 MCP로 바꿀 수 있습니다.
 

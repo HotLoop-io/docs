@@ -3,10 +3,6 @@ title: "Giao thức và trình điều khiển"
 description: "OPC UA, Modbus, MQTT và Sparkplug B, EtherNet/IP, S7comm, MTConnect và HTTP, cùng mức độ mỗi trình điều khiển đã được kiểm chứng trên thiết bị thật."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Tài liệu này nói chính xác gateway nói được những gì, mỗi trình điều khiển đã được kiểm chứng đến đâu và phải làm gì với mọi thứ còn lại. Đây là tài liệu nên đọc đầu tiên, và là tài liệu đáng tin khi có điều gì mâu thuẫn với nó.
 
 Danh sách giao thức gốc được lấy từ các trình điều khiển được biên dịch vào tệp nhị phân. `/api/protocols`, màn hình Giao thức và công cụ MCP `describe_protocol` đều đọc cùng một sổ đăng ký, nên danh mục không thể quảng cáo một giao thức mà tệp nhị phân không có.

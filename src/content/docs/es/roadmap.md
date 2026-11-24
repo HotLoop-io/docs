@@ -3,10 +3,6 @@ title: "Hoja de ruta de HotLoop"
 description: "Qué es HotLoop, qué falta por construir y qué está roto, en el orden en que se hace, para HotLoop core. Flow y Cascade enlazan la suya."
 ---
 
-:::note[Incluye lo que viene]
-Esta página también recoge algunas cosas más nuevas que HotLoop core 4.24.0, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
-:::
-
 Qué es HotLoop, qué falta por construir y qué está roto. Si algo no está en esta lista, no se va a hacer, así que póngalo en la lista.
 
 ## Qué es HotLoop
@@ -165,7 +161,7 @@ El historiador integrado se mantiene. Además, HotLoop escribe el historial en l
 - [ ] Seguridad de mensajes (NetworkMessages firmados y cifrados). Falta: un Security Key Service (las claves son estáticas) y un publicador de Siemens o Beckhoff. Vea [Protocolos y drivers](/es/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Tramas delta desde el publicador, como opción (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): solo los campos que cambian entre tramas clave. Vea [Protocolos y drivers](/es/iot/protocols/)
 - [ ] DataSetMetaData y mensajes de descubrimiento para que un suscriptor pueda nombrar los campos; campos de array y de estructura en lo que envía el publicador, y campos de estructura en lo que lee el suscriptor; eventos. Construido: fragmentos, respuestas de descubrimiento y DataSetMetaData leídos y escritos, los campos de estructura del suscriptor, RawData dispuesto a partir de los metadatos, mensajes Event, los anuncios del publicador; leído contra las tramas capturadas de un publicador Siemens real. Falta: campos de array y de estructura en lo que publica HotLoop (un tag es un número o un texto), enviar y responder solicitudes de descubrimiento
-- [ ] Contra un publicador de Siemens o Beckhoff, y a través de un router (enrutamiento multicast y el TTL)
+- [ ] Contra un publicador de Siemens o Beckhoff, y a través de un router (enrutamiento multicast y el TTL). A través de un router está probado: el límite de saltos de 2 del publicador cruza un router multicast (smcroute, tres espacios de nombres de red en una VM) y el suscriptor del Gateway lee el valor, un límite de saltos de 1 se detiene en el router, y con el router detenido no llega nada. Pendiente: un publicador de Siemens o Beckhoff
 
 ---
 

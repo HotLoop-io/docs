@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.4 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-16.
+0.3.4 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-16.
 
 - **Det omslutter HotLoop 4.20.1,** utgivelsen som bærer arm-imagene testerne laster ned. Provisioneren blir på 0.3.1.
 

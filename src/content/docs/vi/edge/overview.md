@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge đã ra mắt, lần đầu trong 4.18.10]
-Image là `ghcr.io/hotloop-io/hotloop-edge:4.24.0`, build cho amd64, arm64 và arm/v7, khoảng 37 MB trên amd64 và 34 MB trên arm, còn chart là `hotloop-edge` từ `https://hotloop.io/hotloop`. Cả hai đều tải về không cần đăng nhập. Các unit Quadlet nằm trong thư mục `edge/` của [Podman Quadlet](/vi/install/quadlet/). [Cài đặt nó](/vi/edge/install/). Trước 4.18.10, Gateway có thể chạy ở biên và phát hành Sparkplug lên trên, và làm được từ 4.5.0, nhưng phải dùng cả Gateway.
+Image là `ghcr.io/hotloop-io/hotloop-edge:4.24.2`, build cho amd64, arm64 và arm/v7, khoảng 37 MB trên amd64 và 34 MB trên arm, còn chart là `hotloop-edge` từ `https://hotloop.io/hotloop`. Cả hai đều tải về không cần đăng nhập. Các unit Quadlet nằm trong thư mục `edge/` của [Podman Quadlet](/vi/install/quadlet/). [Cài đặt nó](/vi/edge/install/). Trước 4.18.10, Gateway có thể chạy ở biên và phát hành Sparkplug lên trên, và làm được từ 4.5.0, nhưng phải dùng cả Gateway.
 :::
 
 Edge là một hộp được bắt vít cạnh dây chuyền. Nó đọc máy, chạy các quy tắc ngay trên máy, vẫn hoạt động khi WAN mất và báo cho phần còn lại của nhà máy biết nó đã thấy gì. Nó chạy qua cùng cổng ghi như mọi thứ khác.

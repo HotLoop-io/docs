@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.5 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-16, và là chart nên cài.
+0.3.5 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-16, và là chart nên cài.
 
 - **Nó bao bọc HotLoop 4.20.2,** mang bản sửa lô EtherNet/IP và lệnh `version` in ra mà không cần cấu hình. Provisioner vẫn ở 0.3.1.
 - **Mọi thứ từ [0.3.2](/vi/releases/codesys-0-3-2/) đến [0.3.4](/vi/releases/codesys-0-3-4/) vẫn còn đây,** không có gì ghi vào PLC, và mọi chart trước đó vẫn nằm trong chỉ mục.
