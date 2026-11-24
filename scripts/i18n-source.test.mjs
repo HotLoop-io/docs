@@ -108,17 +108,18 @@ test('a new release page with no translations fails, and a translated or pending
 // own version for the follow-up's in every translation (the Flow 2.17.1 page's Image line said 2.17.2). An older release
 // page stays as it was written, and a page that is not a release page still moves.
 test('an older release page keeps its own version when a newer release is out, and a living page still moves', () => {
-  const en = (v) => `---\ntitle: "T"\ndescription: "D"\n---\n\nUpgrade to the ${v} image. The follow-up, 2.17.2, brings arm64.\n`;
-  const de = (v) => `---\ntitle: "T"\ndescription: "D"\n---\n\nAktualisieren Sie auf das Image ${v}. Der Folge-Release, 2.17.2, bringt arm64.\n`;
-  const overlay = new Map([['src/data/sync.json', syncJson('4.24.3', '2.17.2', '1.5.1')]]);
-  for (const id of ['releases/flow-2-17-1', 'flow/overview']) {
-    overlay.set(`src/content/docs/${id}.md`, en('2.17.1'));
-    overlay.set(`src/content/docs/de/${id}.md`, de('2.17.1'));
+  const en = (v) => `---\ntitle: "T"\ndescription: "D"\n---\n\nUpgrade to the ${v} image. The follow-up, 9.9.2, brings arm64.\n`;
+  const de = (v) => `---\ntitle: "T"\ndescription: "D"\n---\n\nAktualisieren Sie auf das Image ${v}. Der Folge-Release, 9.9.2, bringt arm64.\n`;
+  const overlay = new Map([['src/data/sync.json', syncJson('4.24.3', '9.9.2', '1.5.1')]]);
+  for (const id of ['releases/flow-9-9-1', 'flow/bump-fixture']) {
+    overlay.set(`src/content/docs/${id}.md`, en('9.9.1'));
+    overlay.set(`src/content/docs/de/${id}.md`, de('9.9.1'));
     overlay.set(`src/i18n-source/${id.replace(/\//g, '__')}.json`, JSON.stringify({
       page: id, english: `src/content/docs/${id}.md`,
-      langs: { de: hashes(en('2.17.1'), { flow: '2.17.1' }) }, versions: { de: { flow: '2.17.1' } },
+      langs: { de: hashes(en('9.9.1'), { flow: '9.9.1' }) }, versions: { de: { flow: '9.9.1' } },
     }));
   }
-  const moved = bump({ dry: true, v: view(overlay) }).map((b) => b.id);
-  assert.deepEqual(moved, ['flow/overview']);
+  // The real pages on disk are in view too, and they move against these invented versions, so only the fixtures are read.
+  const moved = bump({ dry: true, v: view(overlay) }).map((b) => b.id).filter((id) => id === 'flow/bump-fixture' || id === 'releases/flow-9-9-1');
+  assert.deepEqual(moved, ['flow/bump-fixture']);
 });
