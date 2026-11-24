@@ -1,11 +1,11 @@
 ---
 title: "MCP сървърът"
-description: "Cascade има MCP сървър, който чете и записва: 83 инструмента, всеки маршрут на API със собствен обработчик, свое право, причина и ред в одита."
+description: "Cascade има MCP сървър, който чете и записва: 91 инструмента, всеки маршрут на API със собствен обработчик, свое право, причина и ред в одита."
 ---
 
 Cascade има MCP сървър и той чете и записва. Доставя се включен, на `/mcp`, на същия адрес като API и редактора, и агент, който се свърже с него, може да прави каквото може човекът зад неговия ключ и нищо повече. Няма режим само за четене, който да заобикаляте, защото сървър, който агентът може да гледа, но не и да докосва, е страница за състояние, а такава вече имате.
 
-84 инструмента, и всеки от тях е маршрут на REST API. Повикването не минава встрани от маршрута, а през него: собственият обработчик на маршрута проверява разрешението, валидира тялото, прави промяната и записва реда в одита. Нищо не е копирано в MCP сървъра, което да се разминава, и нищо не е изпуснато от него, за да се заобиколи нещо.
+91 инструмента, и всеки от тях е маршрут на REST API. Повикването не минава встрани от маршрута, а през него: собственият обработчик на маршрута проверява разрешението, валидира тялото, прави промяната и записва реда в одита. Нищо не е копирано в MCP сървъра, което да се разминава, и нищо не е изпуснато от него, за да се заобиколи нещо.
 
 Какво означава това за вас: ако работен процес, данни за вход, проект или човек е нещо, което можете да промените от редактора, агент с вашия ключ също може да го промени, в границите на вашата роля, а журналът за одит казва, че е бил агент, и кой.
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | четене |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | четене |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | четене |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | запис |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | запис |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | запис |

@@ -1,11 +1,11 @@
 ---
 title: "MCPサーバー"
-description: "Cascadeには読み書きできるMCPサーバーがあります。83個のツールはそれぞれ専用ハンドラーを通るAPIルートで、権限、理由、監査の行が付きます。"
+description: "Cascadeには読み書きできるMCPサーバーがあります。91個のツールはそれぞれ専用ハンドラーを通るAPIルートで、権限、理由、監査の行が付きます。"
 ---
 
 CascadeにはMCPサーバーがあり、読み取りも書き込みもできます。標準で有効で、APIやエディターと同じアドレスの`/mcp`にあります。接続したエージェントは、そのキーの持ち主ができることをでき、それ以上はできません。回り込むべき読み取り専用モードはありません。エージェントが見られても触れないサーバーはステータスページにすぎず、それはすでにお持ちだからです。
 
-ツールは84個あり、そのすべてがREST APIのルートです。呼び出しはルートの脇を通らず、ルートそのものを通ります。ルート自身のハンドラーが権限を確認し、ボディを検証し、変更を行い、監査の行を書き込みます。MCPサーバーにコピーされて食い違うものはなく、迂回できるように外されたものもありません。
+ツールは91個あり、そのすべてがREST APIのルートです。呼び出しはルートの脇を通らず、ルートそのものを通ります。ルート自身のハンドラーが権限を確認し、ボディを検証し、変更を行い、監査の行を書き込みます。MCPサーバーにコピーされて食い違うものはなく、迂回できるように外されたものもありません。
 
 これが意味すること。エディターから変更できるワークフロー、認証情報、プロジェクト、ユーザーは、あなたのキーを持つエージェントも、あなたのロールの範囲内で変更できます。そして監査ログには、エージェントが行ったこととどのエージェントかが残ります。
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | 読み取り |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | 読み取り |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | 読み取り |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | 書き込み |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | 書き込み |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | 書き込み |

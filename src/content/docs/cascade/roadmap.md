@@ -27,9 +27,8 @@ screen in the editor.
 
 ## What 1.0.x shipped
 
-1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, and nothing else. We called it 1.0.0
-because the editor was the last piece we wanted before we put our name under the
-number, not because everything below is done.
+1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, all in one release. The editor was the
+last piece we wanted before we put our name under the number.
 
 1.0.1 fixed one mistake in sign-in: a database that couldn't be read used to answer
 "not signed in" and clear the cookie, so a short outage signed everyone out and
@@ -41,11 +40,9 @@ browser. Nothing migrated between 1.0.0 and 1.0.2.
 What a saved workflow holds to today: the file says which version of its format it
 is (`cascade: 1`), every step carries its own version, and a workflow that names a
 step that no longer exists fails to validate and does not start, instead of being
-quietly changed. That is how the EmberOps steps were taken out in 1.0.0. There is
-no promise yet about the format or the API beyond that, and no upgrade test from
-every earlier release: what is tested is in `RELEASE_CHECKLIST.md`, which upgrades
-from the last release by hand. A promise goes here when we can keep it, and not
-before.
+quietly changed. That is how the EmberOps steps were taken out in 1.0.0. Every
+release is started on the previous release's data before it ships: the workflow is
+still there and the credential still opens.
 
 ## 1.3.0, the editor in 14 languages
 
@@ -111,7 +108,38 @@ keys, each with the same permissions as the API and tried in a real browser as
 every role. The sign-in page is the editor's now, in its colors and type, and not
 the old Go page.
 
-## Not built: environments and scale
+## 1.6.0, approvals, AI, Git and connectors
+
+Built. Four things that were on this page as not built are in one release: forms with
+human approval steps, AI steps, Git source control with environments and protected
+instances, and the declarative connector spec with the tools around it. Each has its
+own section below.
+
+## Forms with human approval steps
+
+Built. The Ask for approval step stops a run and asks a person. They open the run's
+approval link on a phone, read what you wrote, fill in a form if there is one, and
+press Approve or Reject; the run carries on out of Approved or Rejected with who
+answered, when and what they said, and Cascade keeps the answer as a record you can
+read in the editor, the API (`GET /api/v1/approvals`) and the MCP server
+(`list_approvals`), with an audit row for each. The page is plain HTML with no script,
+in the editor's fourteen languages. It names the approver by a name they type or by
+their signed-in account.
+
+## Git source control, environments, and protected instances
+
+Built. A project's workflows live in a Git repository, one file each, named for
+the workflow and carrying its id. Push writes them and commits as the person who
+pushed; pull makes the project match the repository, keeping the ids, turning new
+workflows off, making changed ones new versions, and leaving a change made on both
+sides alone unless you say who wins. It is a screen on the project, six API routes
+and six MCP tools. An
+instance can be given a name, shown at the top of every screen, and a protected
+instance refuses to have its workflows created, edited, restored or deleted by hand
+in the editor, the API or MCP: they arrive by pulling from Git, and credentials,
+variables, runs and turning a workflow on or off stay open.
+
+## Scale
 
 Built from this phase: the webhook role (its own Deployment in the split shape
 of the chart), a concurrency limit per workflow, and many mains against one
@@ -119,31 +147,26 @@ database. What we have not done is the test we set for this phase, killing a mai
 during a minute-level schedule and finding no duplicate and no missed run over an
 hour.
 
-Not built, not scheduled:
-
-- Git source control and environments.
-- Protected instances.
-
-## Not built: connectors and people
+## Connectors
 
 The connectors on the approved list that were built are in: HTTP, ntfy, Discord,
 Gotify, email, HotLoop, MQTT, databases, files, and the S3 and Azure blob
 stores. The EmberOps connector was in 0.1.x and is gone in 1.0.0.
 
-Not built, not scheduled:
+And a connector can now be a file: the declarative connector spec is published (a
+versioned format with a JSON Schema), and any API a file describes becomes steps with no
+code. The tools to write, try, publish and install one are in the binary
+(`connector init`, `validate`, `call`, `index` and `install`), and an index is a static
+file anyone can host, with a hash for every file.
 
-- The published declarative connector spec.
-- A plugin SDK and an index.
-- Forms with human approval steps. Approvals have to work from a phone, because
-  the person approving a recipe change is standing at the line, not sitting at a
-  desk. (The Wait step already holds a run until someone calls its resume URL, so
-  an approval can be built from a link today; what's missing is the form the
-  approver opens and a record of who approved.)
+## AI steps
 
-## Not built: AI steps
+Built. Ask a model and Run an agent. The model is your own, a local server such as
+Ollama or a hosted service with your key, named by a credential, and the OpenAI and
+Anthropic protocols are both spoken. An agent uses other workflows as its tools and
+waits between turns in the database.
 
-LLM and agent steps, and a builder that uses your own model. Bring your own key or
-run it local. None of it exists yet, and nobody has scheduled it. There is no
+Not built, not scheduled: a builder that writes workflows with your model. There is no
 hosted service and there won't be one. (The MCP server, which lets an agent work
 Cascade from outside, is built: see 1.1.0.)
 

@@ -1,11 +1,11 @@
 ---
 title: "El servidor MCP"
-description: "Cascade tiene un servidor MCP que lee y escribe: 83 herramientas, cada una una ruta de la API con su propio manejador, permiso, motivo y fila de auditoría."
+description: "Cascade tiene un servidor MCP que lee y escribe: 91 herramientas, cada una una ruta de la API con su propio manejador, permiso, motivo y fila de auditoría."
 ---
 
 Cascade tiene un servidor MCP, y lee y escribe. Se entrega activado, en `/mcp`, en la misma dirección que la API y el editor, y un agente que se conecta a él puede hacer lo que puede hacer la persona dueña de su clave y nada más. No hay un modo de solo lectura que rodear, porque un servidor que un agente puede mirar y no tocar es una página de estado, y ya tiene una.
 
-84 herramientas, y cada una de ellas es una ruta de la API REST. Una llamada no va junto a la ruta, va a través de ella: el propio manejador de la ruta comprueba el permiso, valida el cuerpo, hace el cambio y escribe la fila de auditoría. No se copió nada en el servidor MCP que pueda desviarse, y no se dejó nada fuera de él para saltarse algo.
+91 herramientas, y cada una de ellas es una ruta de la API REST. Una llamada no va junto a la ruta, va a través de ella: el propio manejador de la ruta comprueba el permiso, valida el cuerpo, hace el cambio y escribe la fila de auditoría. No se copió nada en el servidor MCP que pueda desviarse, y no se dejó nada fuera de él para saltarse algo.
 
 Lo que significa para usted: si un flujo de trabajo, una credencial, un proyecto o una persona es algo que puede cambiar desde el editor, un agente con su clave también puede cambiarlo, con los límites de su rol, y el registro de auditoría dice que fue un agente y cuál.
 
@@ -127,6 +127,13 @@ Las herramientas con cuerpo reciben un `body`, el mismo JSON que acepta la API R
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | lectura |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | lectura |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | lectura |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | escritura |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | escritura |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | escritura |

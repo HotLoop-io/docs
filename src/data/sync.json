@@ -2,7 +2,7 @@
   "repos": {
     "hotloop": {
       "slug": "HotLoop-io/hotloop",
-      "ref": "origin/main",
+      "ref": "2b4c446ece12592ad6c19bf0fade0da9795d00c6",
       "sha": "2b4c446ece12592ad6c19bf0fade0da9795d00c6",
       "release": {
         "tag": "v4.24.3",
@@ -14,7 +14,7 @@
     },
     "flow": {
       "slug": "HotLoop-io/hotloop-flow",
-      "ref": "origin/main",
+      "ref": "f4fc0e0ad20b851b9716ce86351995b9c2e72431",
       "sha": "f4fc0e0ad20b851b9716ce86351995b9c2e72431",
       "release": {
         "tag": "v2.17.2",
@@ -26,14 +26,14 @@
     },
     "cascade": {
       "slug": "HotLoop-io/hotloop-cascade",
-      "ref": "3e2344e1ed947af5d5029ba4b122866527a01ef1",
-      "sha": "3e2344e1ed947af5d5029ba4b122866527a01ef1",
+      "ref": "beb5fb766bd91c3d5d602fa4e54c4f5f7ff76925",
+      "sha": "beb5fb766bd91c3d5d602fa4e54c4f5f7ff76925",
       "release": {
-        "tag": "v1.5.1",
-        "version": "1.5.1",
+        "tag": "v1.6.0",
+        "version": "1.6.0",
         "prerelease": false,
-        "publishedAt": "2026-11-23T06:10:07Z",
-        "sha": "e0e312c6f2781d885373613f21025a3fbd39c5c8"
+        "publishedAt": "2026-11-24T16:47:04Z",
+        "sha": "beb5fb766bd91c3d5d602fa4e54c4f5f7ff76925"
       }
     }
   },
@@ -894,6 +894,50 @@
       "status": "released",
       "repo": "cascade",
       "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/approvals",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "Asking a person",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "README.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/ai",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "AI steps",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/AI.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/connectors",
+      "product": "cascade",
+      "group": "Use it",
+      "title": "Connectors as files",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/CONNECTORS.md",
+      "release": false
+    },
+    {
+      "slug": "cascade/git",
+      "product": "cascade",
+      "group": "Governance",
+      "title": "Git, environments and protected instances",
+      "label": null,
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/GIT.md",
       "release": false
     },
     {
@@ -1851,6 +1895,17 @@
       "status": "released",
       "repo": "cascade",
       "source": "docs/release-notes/1.5.1.md",
+      "release": true
+    },
+    {
+      "slug": "releases/cascade-1-6-0",
+      "product": "releases",
+      "group": "HotLoop Cascade",
+      "title": "HotLoop Cascade 1.6.0 release notes",
+      "label": "1.6.0",
+      "status": "released",
+      "repo": "cascade",
+      "source": "docs/release-notes/1.6.0.md",
       "release": true
     }
   ],

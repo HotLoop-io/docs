@@ -10,6 +10,14 @@ const ws = (s) => new RegExp(s.trim().split(/\s+/).map((w) => w.replace(/[.*+?^$
 
 // Every page. These never have to match.
 export const GLOBAL = [
+  // Cascade's own docs name one another by file. On this site each is a page, and the sentence that only points at a file goes.
+  { sub: [/,? and `docs\/(?:APPROVALS|AI|GIT|CONNECTORS)\.md` has [^.]*\./g, '.'], only: /^(?:cascade\/|releases\/cascade-)/ },
+  { cut: /`docs\/(?:APPROVALS|AI|GIT|CONNECTORS)\.md` has /, only: /^(?:cascade\/|releases\/cascade-)/ },
+  { cut: /`docs\/connectors\/open-meteo\.yaml`\s+is\s+a\s+complete\s+one/, only: /^(?:cascade\/|releases\/cascade-)/ },
+  // How the thing was tried belongs on the release's own record, not on a page a buyer reads.
+  { sub: [/,\s+tried\s+against\s+a\s+real\s+Git\s+server\s+serving\s+a\s+real\s+repository/g, ''], only: /^(?:cascade\/|releases\/cascade-)/ },
+  { cut: /The\s+OpenAI\s+protocol\s+is\s+tried\s+against\s+a\s+real\s+model\s+on\s+a\s+real\s+Ollama\./, only: /^(?:cascade\/|releases\/cascade-)/ },
+  { section: 'What is not here', only: /^cascade\/ai$/ },
   // An example server is named for no real place.
   { sub: [/\bmacedonia\b/g, 'plant-b'] },
   // A path in a parenthesis, at the end of a thought, is an aside about our source tree.

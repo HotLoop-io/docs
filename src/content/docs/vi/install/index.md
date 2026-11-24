@@ -26,7 +26,7 @@ Có hai cách để chạy một sản phẩm HotLoop cho thật: Helm trên k3s
 | [HotLoop Gateway](/vi/gateway/overview/) | 4.24.3 | Có | Có | [Cài đặt Gateway](/vi/gateway/install/) |
 | [HotLoop Edge Relay](/vi/edge-relay/overview/) | 4.24.3 | Có | Có | [Cài đặt Edge Relay](/vi/edge-relay/install/) |
 | [HotLoop Flow](/vi/flow/overview/) | 2.17.2 | Có | Có | [Cài đặt Flow](/vi/flow/install/) |
-| [HotLoop Cascade](/vi/cascade/overview/) | 1.5.1 | Có, không cần đăng nhập | Có, không cần đăng nhập, xem [Cascade với Podman Quadlet](/vi/cascade/quadlet/) | [Chạy Cascade](/vi/cascade/running/) |
+| [HotLoop Cascade](/vi/cascade/overview/) | 1.6.0 | Có, không cần đăng nhập | Có, không cần đăng nhập, xem [Cascade với Podman Quadlet](/vi/cascade/quadlet/) | [Chạy Cascade](/vi/cascade/running/) |
 | [HotLoop for CODESYS](/vi/codesys/overview/) | 0.3.10 | Có, hoặc App Store của EmberCORE | Không | [Cài đặt HotLoop for CODESYS](/vi/codesys/install/) |
 | [HotLoop Transmitter](/vi/transmitter/overview/) | 1.3.0 | Không, nó là một thư viện CODESYS | Không, nó là một thư viện CODESYS | [Cài đặt Transmitter](/vi/transmitter/install/) |
 

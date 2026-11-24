@@ -1,11 +1,11 @@
 ---
 title: "Ο διακομιστής MCP"
-description: "Το Cascade έχει διακομιστή MCP που διαβάζει και γράφει: 83 εργαλεία, καθένα διαδρομή του API με δικό του χειριστή, δικαίωμα, αιτιολογία και γραμμή ελέγχου."
+description: "Το Cascade έχει διακομιστή MCP που διαβάζει και γράφει: 91 εργαλεία, καθένα διαδρομή του API με δικό του χειριστή, δικαίωμα, αιτιολογία και γραμμή ελέγχου."
 ---
 
 Το Cascade έχει διακομιστή MCP, και διαβάζει και γράφει. Παραδίδεται ενεργοποιημένος, στο `/mcp`, στην ίδια διεύθυνση με το API και τον επεξεργαστή, και ένας πράκτορας που συνδέεται σε αυτόν μπορεί να κάνει ό,τι μπορεί το άτομο πίσω από το κλειδί του και τίποτα παραπάνω. Δεν υπάρχει λειτουργία μόνο ανάγνωσης να παρακάμψετε, γιατί ένας διακομιστής που ένας πράκτορας μπορεί να κοιτάζει και να μην αγγίζει είναι σελίδα κατάστασης, και έχετε ήδη μία.
 
-84 εργαλεία, και καθένα από αυτά είναι μια διαδρομή του REST API. Μια κλήση δεν περνά δίπλα από τη διαδρομή, περνά μέσα από αυτήν: ο ίδιος ο χειριστής της διαδρομής ελέγχει την άδεια, επικυρώνει το σώμα, κάνει την αλλαγή και γράφει τη γραμμή ελέγχου. Τίποτα δεν αντιγράφηκε στον διακομιστή MCP ώστε να αποκλίνει, και τίποτα δεν αφέθηκε έξω από αυτόν ώστε να παρακαμφθεί.
+91 εργαλεία, και καθένα από αυτά είναι μια διαδρομή του REST API. Μια κλήση δεν περνά δίπλα από τη διαδρομή, περνά μέσα από αυτήν: ο ίδιος ο χειριστής της διαδρομής ελέγχει την άδεια, επικυρώνει το σώμα, κάνει την αλλαγή και γράφει τη γραμμή ελέγχου. Τίποτα δεν αντιγράφηκε στον διακομιστή MCP ώστε να αποκλίνει, και τίποτα δεν αφέθηκε έξω από αυτόν ώστε να παρακαμφθεί.
 
 Τι σημαίνει αυτό για εσάς: αν μια ροή εργασίας, ένα διαπιστευτήριο, ένα έργο ή ένας χρήστης είναι κάτι που μπορείτε να αλλάξετε από τον επεξεργαστή, ένας πράκτορας με το κλειδί σας μπορεί να το αλλάξει κι αυτός, με τα όρια του ρόλου σας, και το αρχείο ελέγχου λέει ότι ήταν πράκτορας και ποιος.
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | ανάγνωση |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | ανάγνωση |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | ανάγνωση |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | εγγραφή |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | εγγραφή |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | εγγραφή |

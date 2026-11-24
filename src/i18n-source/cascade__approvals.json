@@ -1,0 +1,34 @@
+{
+  "page": "cascade/approvals",
+  "english": "src/content/docs/cascade/approvals.md",
+  "langs": {
+    "es": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "fr": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "it": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "de": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "nb": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "bg": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "el": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "ko": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "ja": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "vi": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "hi": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "zh-hans": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"],
+    "ar": ["76fb59ebcc01","3a482a0648d5","51a616662d5b"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "fr": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "it": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "de": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "nb": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "bg": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "el": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "ko": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "ja": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "vi": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "hi": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "zh-hans": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"},
+    "ar": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.6.0"}
+  }
+}

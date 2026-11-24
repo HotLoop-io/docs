@@ -1,11 +1,11 @@
 ---
 title: "MCP 서버"
-description: "Cascade에는 읽고 쓰는 MCP 서버가 있습니다. 83개 도구는 각각 자체 핸들러를 거치는 API 경로이며 권한, 사유, 감사 행이 함께합니다."
+description: "Cascade에는 읽고 쓰는 MCP 서버가 있습니다. 91개 도구는 각각 자체 핸들러를 거치는 API 경로이며 권한, 사유, 감사 행이 함께합니다."
 ---
 
 Cascade에는 MCP 서버가 있으며, 읽기와 쓰기를 모두 합니다. 기본으로 켜져 있고 API, 편집기와 같은 주소의 `/mcp`에 있으며, 여기에 연결한 에이전트는 키를 가진 사람이 할 수 있는 일을 할 수 있고 그 이상은 할 수 없습니다. 돌아가야 할 읽기 전용 모드는 없습니다. 에이전트가 볼 수만 있고 손댈 수 없는 서버는 상태 페이지이고, 상태 페이지는 이미 있기 때문입니다.
 
-도구 84개이며, 모두 REST API의 라우트입니다. 호출은 라우트 옆으로 가지 않고 라우트를 통과합니다. 라우트 자체의 핸들러가 권한을 확인하고, 본문을 검증하고, 변경을 수행하고, 감사 행을 기록합니다. MCP 서버에 복사되어 어긋날 수 있는 것은 없고, 건너뛸 수 있도록 빠진 것도 없습니다.
+도구 91개이며, 모두 REST API의 라우트입니다. 호출은 라우트 옆으로 가지 않고 라우트를 통과합니다. 라우트 자체의 핸들러가 권한을 확인하고, 본문을 검증하고, 변경을 수행하고, 감사 행을 기록합니다. MCP 서버에 복사되어 어긋날 수 있는 것은 없고, 건너뛸 수 있도록 빠진 것도 없습니다.
 
 이것이 의미하는 바는 다음과 같습니다. 편집기에서 바꿀 수 있는 워크플로, 자격 증명, 프로젝트, 사용자는 당신의 키를 가진 에이전트도 당신 역할의 한도 안에서 바꿀 수 있으며, 감사 로그에는 에이전트가 했다는 사실과 어느 에이전트인지가 남습니다.
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | 읽기 |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | 읽기 |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | 읽기 |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | 쓰기 |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | 쓰기 |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | 쓰기 |

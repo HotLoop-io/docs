@@ -1,11 +1,11 @@
 ---
 title: "MCP 服务器"
-description: "Cascade 内置可读可写的 MCP 服务器：83 个工具，每个都是经过自身处理程序的 API 路由，带有权限、理由和一条审计记录。"
+description: "Cascade 内置可读可写的 MCP 服务器：91 个工具，每个都是经过自身处理程序的 API 路由，带有权限、理由和一条审计记录。"
 ---
 
 Cascade 有一个 MCP 服务器，既能读也能写。它默认开启，位于 `/mcp`，与 API 和编辑器在同一个地址，连接它的智能体能做的，就是持有该密钥的人能做的，不会更多。这里没有需要绕开的只读模式，因为智能体只能看、不能碰的服务器，其实就是一个状态页，而您已经有一个了。
 
-84 个工具，每一个都是 REST API 的一条路由。调用不会绕过路由，而是经过路由：路由自己的处理程序检查权限、校验请求体、完成修改并写入审计记录。没有任何东西被复制进 MCP 服务器而可能产生偏差，也没有任何东西被排除在外以便被绕过。
+91 个工具，每一个都是 REST API 的一条路由。调用不会绕过路由，而是经过路由：路由自己的处理程序检查权限、校验请求体、完成修改并写入审计记录。没有任何东西被复制进 MCP 服务器而可能产生偏差，也没有任何东西被排除在外以便被绕过。
 
 这对您意味着：如果某个工作流、凭据、项目或用户是您可以在编辑器里修改的，那么持有您密钥的智能体也能修改，受您角色的限制，并且审计日志会记录这是智能体所为，以及是哪一个。
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | 读取 |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | 读取 |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | 读取 |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | 写入 |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | 写入 |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | 写入 |

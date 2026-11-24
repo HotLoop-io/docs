@@ -1,11 +1,11 @@
 ---
 title: "Máy chủ MCP"
-description: "Cascade có máy chủ MCP vừa đọc vừa ghi: 83 công cụ, mỗi công cụ là một tuyến API chạy qua trình xử lý riêng, có quyền, lý do và một dòng kiểm toán."
+description: "Cascade có máy chủ MCP vừa đọc vừa ghi: 91 công cụ, mỗi công cụ là một tuyến API chạy qua trình xử lý riêng, có quyền, lý do và một dòng kiểm toán."
 ---
 
 Cascade có một máy chủ MCP, và nó vừa đọc vừa ghi. Nó được phát hành ở trạng thái bật, tại `/mcp` cùng địa chỉ với API và trình soạn thảo, và một tác tử kết nối vào đó có thể làm những gì người giữ khóa của nó làm được, không hơn. Không có chế độ chỉ đọc nào để bạn phải đi vòng, vì một máy chủ mà tác tử chỉ nhìn được mà không chạm được thì chỉ là một trang trạng thái, và bạn đã có sẵn một trang như vậy rồi.
 
-84 công cụ, và mỗi công cụ đều là một route của REST API. Một lời gọi không đi bên cạnh route, nó đi xuyên qua route: bộ xử lý của chính route kiểm tra quyền, kiểm tra nội dung gửi lên, thực hiện thay đổi và ghi dòng kiểm toán. Không có gì được sao chép vào máy chủ MCP để rồi lệch đi, và không có gì bị bỏ ra khỏi nó để bị bỏ qua.
+91 công cụ, và mỗi công cụ đều là một route của REST API. Một lời gọi không đi bên cạnh route, nó đi xuyên qua route: bộ xử lý của chính route kiểm tra quyền, kiểm tra nội dung gửi lên, thực hiện thay đổi và ghi dòng kiểm toán. Không có gì được sao chép vào máy chủ MCP để rồi lệch đi, và không có gì bị bỏ ra khỏi nó để bị bỏ qua.
 
 Điều đó có nghĩa là: nếu một quy trình, thông tin đăng nhập, dự án hay con người là thứ bạn đổi được từ trình soạn thảo, thì một tác tử cầm khóa của bạn cũng đổi được, trong giới hạn vai trò của bạn, và nhật ký kiểm toán ghi rằng đó là một tác tử và là tác tử nào.
 
@@ -127,6 +127,13 @@ Các công cụ có nội dung nhận một `body`, cùng JSON mà REST API nh�
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | đọc |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | đọc |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | đọc |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | ghi |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | ghi |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | ghi |

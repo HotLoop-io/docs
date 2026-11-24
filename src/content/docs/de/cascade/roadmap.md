@@ -15,11 +15,11 @@ Gebaut und mit dem neuen Editor in 1.0.0 ausgeliefert. SAML, LDAP und AD, SCIM, 
 
 ## Was 1.0.x gebracht hat
 
-1.0.0 ist 0.1.0 plus 0.2.0 plus der neue Editor, und sonst nichts. Wir haben sie 1.0.0 genannt, weil der Editor das letzte Stück war, das wir wollten, bevor wir unseren Namen unter die Nummer setzen, nicht weil alles darunter fertig ist.
+1.0.0 ist 0.1.0 plus 0.2.0 plus der neue Editor, alles in einem Release. Der Editor war das letzte Stück, das wir haben wollten, bevor wir unseren Namen unter die Nummer setzen.
 
 1.0.1 behob einen Fehler bei der Anmeldung: Eine nicht lesbare Datenbank beantwortete die Anfrage mit „nicht angemeldet“ und löschte das Cookie, sodass ein kurzer Ausfall alle abmeldete und einen richtigen zweiten Faktor in einen falschen Code verwandeln konnte. Jetzt kommt „bitte erneut versuchen“, und die Sitzung bleibt erhalten. 1.0.2 ließ einen Code-Schritt mit einem als Zugangsdaten gespeicherten HMAC-Schlüssel signieren und prüfen und ließ einen Webhook die Web-Origins nennen, die ihn aus einem Browser aufrufen dürfen. Zwischen 1.0.0 und 1.0.2 gab es nichts zu migrieren.
 
-Woran sich ein gespeicherter Workflow heute hält: Die Datei sagt, welche Version ihres Formats sie ist (`cascade: 1`), jeder Schritt trägt seine eigene Version, und ein Workflow, der einen Schritt nennt, den es nicht mehr gibt, besteht die Validierung nicht und startet nicht, statt stillschweigend verändert zu werden. So wurden die EmberOps-Schritte in 1.0.0 entfernt. Über das Format oder die API hinaus gibt es noch kein Versprechen und keinen Update-Test von jeder früheren Version: Was getestet wird, steht in `RELEASE_CHECKLIST.md`, das von der letzten Version aus von Hand aktualisiert. Ein Versprechen kommt hierher, wenn wir es halten können, und nicht früher.
+Woran sich ein gespeicherter Workflow heute hält: Die Datei sagt, in welcher Version ihres Formats sie ist (`cascade: 1`), jeder Schritt trägt seine eigene Version, und ein Workflow, der einen nicht mehr vorhandenen Schritt nennt, besteht die Validierung nicht und startet nicht, statt stillschweigend geändert zu werden. So wurden die EmberOps-Schritte in 1.0.0 entfernt. Jedes Release wird vor der Auslieferung auf den Daten des vorigen gestartet: Der Workflow ist noch da und die Zugangsdaten öffnen sich noch.
 
 ## 1.3.0, der Editor in 14 Sprachen
 
@@ -51,28 +51,33 @@ Gebaut, und das ist das Release. Der MCP-Server unter `/mcp`: 79 Werkzeuge, jede
 
 Und die Bildschirme, die dem Editor fehlten: Zugangsdaten, Projekte (Mitglieder und Dienstkonten), Benutzer, das Audit-Log, Einstellungen und eine Kontoseite mit API-Schlüsseln, jeder mit denselben Berechtigungen wie die API und in einem echten Browser mit jeder Rolle erprobt. Die Anmeldeseite gehört jetzt zum Editor, in seinen Farben und seiner Schrift, und nicht mehr die alte Go-Seite.
 
-## Nicht gebaut: Umgebungen und Skalierung
+## 1.6.0, Freigaben, KI, Git und Konnektoren
+
+Fertig. Vier Dinge, die auf dieser Seite als nicht gebaut standen, kommen in einem Release: Formulare mit menschlichen Freigabeschritten, KI-Schritte, Git-Versionsverwaltung mit Umgebungen und geschützten Instanzen sowie die deklarative Konnektor-Spezifikation mit den Werkzeugen drumherum. Jedes hat unten seinen eigenen Abschnitt.
+
+## Formulare mit menschlichen Freigabeschritten
+
+Fertig. Der Schritt Freigabe anfordern hält einen Lauf an und fragt eine Person. Sie öffnet den Freigabelink des Laufs auf dem Handy, liest, was Sie geschrieben haben, füllt ein Formular aus, falls es eines gibt, und tippt auf Freigeben oder Ablehnen; der Lauf geht über Freigegeben oder Abgelehnt weiter, mit Angabe, wer geantwortet hat, wann und was, und Cascade bewahrt die Antwort als Eintrag auf, den Sie im Editor, in der API (`GET /api/v1/approvals`) und im MCP-Server (`list_approvals`) lesen können, mit je einer Audit-Zeile. Die Seite ist schlichtes HTML ohne Skript, in den vierzehn Sprachen des Editors. Sie nennt die freigebende Person mit dem Namen, den sie eintippt, oder mit ihrem angemeldeten Konto.
+
+## Git-Versionsverwaltung, Umgebungen und geschützte Instanzen
+
+Fertig. Die Workflows eines Projekts liegen in einem Git-Repository, je eine Datei, benannt nach dem Workflow und mit seiner ID. Push schreibt sie und committet als die Person, die gepusht hat; Pull gleicht das Projekt mit dem Repository ab, behält die IDs, lässt neue Workflows ausgeschaltet, macht aus geänderten neue Versionen und lässt eine auf beiden Seiten gemachte Änderung unangetastet, solange Sie nicht sagen, wer gewinnt. Es ist ein Bildschirm am Projekt, sechs API-Routen und sechs MCP-Werkzeuge. Eine Instanz kann einen Namen bekommen, der oben auf jedem Bildschirm steht, und eine geschützte Instanz lässt es nicht zu, dass ihre Workflows im Editor, in der API oder über MCP von Hand angelegt, bearbeitet, wiederhergestellt oder gelöscht werden: Sie kommen per Pull aus Git, und Zugangsdaten, Variablen, Läufe und das Ein- und Ausschalten eines Workflows bleiben offen.
+
+## Skalierung
 
 Aus dieser Phase gebaut: die Webhook-Rolle (ein eigenes Deployment in der geteilten Form des Charts), ein Parallelitätslimit pro Workflow und viele Mains gegen eine Datenbank. Was wir nicht gemacht haben, ist der Test, den wir für diese Phase gesetzt haben: einen Main während eines minutengenauen Zeitplans beenden und über eine Stunde keine doppelte und keine verpasste Ausführung finden.
 
-Nicht gebaut, nicht geplant:
-
-- Quellcodeverwaltung mit Git und Umgebungen.
-- Geschützte Instanzen.
-
-## Nicht gebaut: Konnektoren und Menschen
+## Konnektoren
 
 Die gebauten Konnektoren der freigegebenen Liste sind drin: HTTP, ntfy, Discord, Gotify, E-Mail, HotLoop, MQTT, Datenbanken, Dateien und die Blob-Speicher für S3 und Azure. Der EmberOps-Konnektor war in 0.1.x und ist in 1.0.0 entfallen.
 
-Nicht gebaut, nicht geplant:
+Und ein Konnektor kann jetzt eine Datei sein: Die deklarative Konnektor-Spezifikation ist veröffentlicht (ein versioniertes Format mit einem JSON Schema), und jede API, die eine Datei beschreibt, wird zu Schritten ohne Code. Die Werkzeuge zum Schreiben, Ausprobieren, Veröffentlichen und Installieren stecken im Binary (`connector init`, `validate`, `call`, `index` und `install`), und ein Index ist eine statische Datei, die jeder hosten kann, mit einem Hash für jede Datei.
 
-- Die veröffentlichte deklarative Konnektor-Spezifikation.
-- Ein Plugin-SDK und ein Index.
-- Formulare mit Freigabeschritten durch Menschen. Freigaben müssen vom Telefon aus funktionieren, denn wer eine Rezepturänderung freigibt, steht an der Linie und sitzt nicht am Schreibtisch. (Der Wait-Schritt hält eine Ausführung schon jetzt an, bis jemand ihre Fortsetzungs-URL aufruft, also lässt sich heute eine Freigabe aus einem Link bauen; es fehlen das Formular, das der Freigebende öffnet, und ein Nachweis, wer freigegeben hat.)
+## KI-Schritte
 
-## Nicht gebaut: KI-Schritte
+Fertig. Ein Modell fragen und Einen Agenten ausführen. Das Modell ist Ihr eigenes, ein lokaler Server wie Ollama oder ein gehosteter Dienst mit Ihrem Schlüssel, benannt durch Zugangsdaten, und sowohl das OpenAI- als auch das Anthropic-Protokoll werden gesprochen. Ein Agent nutzt andere Workflows als Werkzeuge und wartet zwischen den Runden in der Datenbank.
 
-LLM- und Agenten-Schritte und ein Builder, der Ihr eigenes Modell nutzt. Eigenen Schlüssel mitbringen oder lokal betreiben. Nichts davon existiert bisher, und niemand hat es geplant. Es gibt keinen gehosteten Dienst und wird keinen geben. (Der MCP-Server, über den ein Agent Cascade von außen bedienen kann, ist gebaut: siehe 1.1.0.)
+Nicht gebaut, nicht geplant: ein Assistent, der Workflows mit Ihrem Modell schreibt. Es gibt keinen gehosteten Dienst und es wird keinen geben. (Der MCP-Server, mit dem ein Agent Cascade von außen bedienen kann, ist gebaut: siehe 1.1.0.)
 
 ## Die neue Editor-Oberfläche
 

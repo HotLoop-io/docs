@@ -1,11 +1,11 @@
 ---
 title: "MCP सर्वर"
-description: "Cascade में एक MCP सर्वर है जो पढ़ता और लिखता है: 83 टूल, हर एक API रूट जो अपने हैंडलर, अनुमति, कारण और ऑडिट पंक्ति से होकर चलता है।"
+description: "Cascade में एक MCP सर्वर है जो पढ़ता और लिखता है: 91 टूल, हर एक API रूट जो अपने हैंडलर, अनुमति, कारण और ऑडिट पंक्ति से होकर चलता है।"
 ---
 
 Cascade में एक MCP सर्वर है, और वह पढ़ता भी है और लिखता भी। यह चालू आता है, `/mcp` पर, API और एडिटर वाले उसी पते पर, और इससे जुड़ने वाला एजेंट वही कर सकता है जो उसकी कुंजी के पीछे का व्यक्ति कर सकता है, उससे ज़्यादा कुछ नहीं। कोई केवल-पढ़ने वाला मोड नहीं है जिसके इर्द-गिर्द घूमना पड़े, क्योंकि जिस सर्वर को एजेंट देख तो सके पर छू न सके, वह एक स्टेटस पेज है, और वह आपके पास पहले से है।
 
-84 टूल, और हर एक REST API का एक रूट है। कोई कॉल रूट के बगल से नहीं जाती, रूट के भीतर से जाती है: रूट का अपना हैंडलर अनुमति जांचता है, बॉडी को वैलिडेट करता है, बदलाव करता है और ऑडिट पंक्ति लिखता है। MCP सर्वर में ऐसा कुछ कॉपी नहीं हुआ जो अलग राह पकड़ ले, और उसमें से ऐसा कुछ छोड़ा नहीं गया जिसे लांघा जा सके।
+91 टूल, और हर एक REST API का एक रूट है। कोई कॉल रूट के बगल से नहीं जाती, रूट के भीतर से जाती है: रूट का अपना हैंडलर अनुमति जांचता है, बॉडी को वैलिडेट करता है, बदलाव करता है और ऑडिट पंक्ति लिखता है। MCP सर्वर में ऐसा कुछ कॉपी नहीं हुआ जो अलग राह पकड़ ले, और उसमें से ऐसा कुछ छोड़ा नहीं गया जिसे लांघा जा सके।
 
 आपके लिए इसका मतलब: अगर कोई वर्कफ़्लो, क्रेडेंशियल, प्रोजेक्ट या व्यक्ति ऐसी चीज़ है जिसे आप एडिटर से बदल सकते हैं, तो आपकी कुंजी रखने वाला एजेंट भी उसे बदल सकता है, आपकी भूमिका की सीमाओं के भीतर, और ऑडिट लॉग बताता है कि यह एजेंट था और कौन सा।
 
@@ -127,6 +127,13 @@ detail: {"reason": "the line 4 oven needs a setpoint workflow", "method": "POST"
 | `get_execution` | `GET /api/v1/executions/{execution}` | `execution.read` | पढ़ना |
 | `get_step_output` | `GET /api/v1/executions/{execution}/steps/{step}/output` | `execution.read` | पढ़ना |
 | `get_insights` | `GET /api/v1/insights` | `execution.read` | पढ़ना |
+| `list_approvals` | `GET /api/v1/approvals` | `execution.read` | read |
+| `get_git` | `GET /api/v1/projects/{project}/git` | `workflow.read` | read |
+| `connect_git` | `PUT /api/v1/projects/{project}/git` | `project.update` | write |
+| `disconnect_git` | `DELETE /api/v1/projects/{project}/git` | `project.update` | write |
+| `git_status` | `GET /api/v1/projects/{project}/git/status` | `workflow.read` | read |
+| `git_push` | `POST /api/v1/projects/{project}/git/push` | `workflow.update` | write |
+| `git_pull` | `POST /api/v1/projects/{project}/git/pull` | `workflow.create` | write |
 | `stop_execution` | `POST /api/v1/executions/{execution}/stop` | `execution.stop` | लिखना |
 | `retry_execution` | `POST /api/v1/executions/{execution}/retry` | `execution.retry` | लिखना |
 | `replay_execution` | `POST /api/v1/executions/{execution}/replay` | `execution.retry` | लिखना |
