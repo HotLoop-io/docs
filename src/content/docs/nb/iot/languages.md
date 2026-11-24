@@ -3,10 +3,6 @@ title: "Språk i nettgrensesnittet"
 description: "Nettgrensesnittet på engelsk og tretten språk til, med arabisk satt fra høyre mot venstre, valgt i toppfeltet eller på innloggingskortet."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Nettgrensesnittet til HotLoop IoT, Edge og Gateway (og HotLoop for CODESYS, som kjører Edge-grensesnittet) finnes på engelsk og 13 språk til: spansk (es), fransk (fr), italiensk (it), tysk (de), norsk bokmål (nb), bulgarsk (bg), gresk (el), koreansk (ko), japansk (ja), vietnamesisk (vi), hindi (hi), forenklet kinesisk (zh-Hans) og arabisk (ar, satt fra høyre mot venstre).
 
 Velg ett i språkboksen i toppfeltet, eller på innloggingskortet. Valget huskes i denne nettleseren. Er ikke noe valgt, bruker siden det første av nettleserens språk som HotLoop har, og engelsk hvis ingen passer. Et språk står i valglisten bare når filen er komplett.

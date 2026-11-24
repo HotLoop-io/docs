@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[IoT가 출시되었습니다. 첫 출시는 4.18.10입니다]
-이미지는 amd64, arm64, arm/v7용으로 빌드된 `ghcr.io/hotloop-io/hotloop-iot:4.24.0`이며 amd64에서 약 31 MB, Pi에서 약 29 MB입니다. 차트는 `https://hotloop.io/hotloop`의 `hotloop-iot`입니다. 둘 다 로그인 없이 받을 수 있습니다. Quadlet 유닛은 [Podman Quadlet](/ko/install/quadlet/)의 `iot/` 디렉터리에 있습니다. [설치하세요](/ko/iot/install/). 이 섹션의 페이지는 각 기능을 무엇과 함께 실행해 보았는지 알려 주며, 페이지가 릴리스가 아니라 `main`을 따르는 경우에는 그것도 알려 줍니다.
+이미지는 amd64, arm64, arm/v7용으로 빌드된 `ghcr.io/hotloop-io/hotloop-iot:4.24.2`이며 amd64에서 약 31 MB, Pi에서 약 29 MB입니다. 차트는 `https://hotloop.io/hotloop`의 `hotloop-iot`입니다. 둘 다 로그인 없이 받을 수 있습니다. Quadlet 유닛은 [Podman Quadlet](/ko/install/quadlet/)의 `iot/` 디렉터리에 있습니다. [설치하세요](/ko/iot/install/). 이 섹션의 페이지는 각 기능을 무엇과 함께 실행해 보았는지 알려 주며, 페이지가 릴리스가 아니라 `main`을 따르는 경우에는 그것도 알려 줍니다.
 :::
 
 IoT는 Edge와 Gateway가 그 위에 만들어진 기반입니다. 눈앞의 박스가 Pi, 벽장 속 NUC, 스마트 플러그와 센서 한 랙, 또는 작업대 위의 PLC 한 대라면 이 제품입니다. 완전한 세 제품 중 가장 작은 이미지이지만, HotLoop을 쓸모 있게 만드는 모든 것, 즉 엔티티, 규칙, 알람, 그리고 어떤 것도 우회할 수 없는 하나의 쓰기 게이트를 갖추고 있습니다.

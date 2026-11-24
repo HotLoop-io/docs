@@ -3,10 +3,6 @@ title: "HotLoop 路线图"
 description: "HotLoop 是什么、还有什么要做、什么出了问题，按处理顺序列出，针对 HotLoop core。Flow 和 Cascade 各有自己的路线图。"
 ---
 
-:::note[也涵盖即将推出的内容]
-本页也涵盖了一些比最新版本 HotLoop core 4.24.0 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
-:::
-
 HotLoop 是什么、还有什么要做、什么出了问题。不在这份清单上的事不会去做，所以请把它加进清单。
 
 ## HotLoop 是什么
@@ -165,7 +161,7 @@ HotLoop core 是四款产品，一个代码库，一个标签。每次核心发�
 - [ ] 消息安全（签名和加密的 NetworkMessages）。剩余：Security Key Service（密钥是静态的），以及 Siemens 或 Beckhoff 的发布器。参见[协议与驱动](/zh-hans/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] 来自发布者的增量帧，作为可选项（`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`）：关键帧之间只发送变化的字段。参见[协议与驱动](/zh-hans/iot/protocols/)
 - [ ] DataSetMetaData 和发现消息，使订阅方能够命名字段；发布器所发送内容中的数组和结构体字段，以及订阅方所读取内容中的结构体字段；事件。已构建：块、发现响应和 DataSetMetaData 的读写、订阅方的结构体字段、根据元数据布局的 RawData、Event 消息、发布器的公告；已对照真实 Siemens 发布器捕获的帧进行读取。剩余：HotLoop 所发布内容中的数组和结构体字段（一个变量是一个数字或一段文本）、发送和应答发现请求
-- [ ] 对接西门子或倍福的发布者，并跨路由器（组播路由和 TTL）
+- [ ] 对照西门子或倍福的发布者，并跨路由器（组播路由和 TTL）。跨路由器已经验证：发布者的跳数限制 2 可以越过组播路由器（smcroute，VM 中的三个网络命名空间），Gateway 的订阅者读到该值，跳数限制 1 则在路由器处停下，路由器停止时什么也收不到。剩下：西门子或倍福的发布者
 
 ---
 

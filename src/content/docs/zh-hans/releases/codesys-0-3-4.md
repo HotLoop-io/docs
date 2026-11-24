@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.4 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-16。
+0.3.4 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-16。
 
 - **它封装 HotLoop 4.20.1,** 即带有测试人员所拉取的 arm 镜像的发布。provisioner 仍是 0.3.1。
 

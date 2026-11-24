@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.24.0
+reviewed: hotloop=4.24.2
 title: "Install HotLoop Edge {{hotloop}}"
 description: "Install HotLoop Edge {{hotloop}} on k3s with Helm or on an industrial PC with Podman Quadlet, then turn on the OPC UA server and Sparkplug publishing."
 sidebar:

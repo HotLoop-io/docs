@@ -9,7 +9,7 @@ editUrl: false
 
 ## ما الذي تغيّر
 
-0.3.4 في الفهرس `{{codesysChartRepo}}`، نُشر في 2026-11-16.
+0.3.4 في الفهرس `https://hotloop.io/hotloop-codesys/`، نُشر في 2026-11-16.
 
 - **يغلّف HotLoop 4.20.1،** الإصدار الذي يحمل صور arm التي يسحبها المختبِرون. يبقى provisioner على 0.3.1.
 

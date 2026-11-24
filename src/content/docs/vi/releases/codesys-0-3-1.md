@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.1 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-05, và là chart nên cài cho đến [0.3.2](/vi/releases/codesys-0-3-2/). Nó vẫn bao bọc HotLoop 4.19.4 và chạy provisioner 0.3.0, tải về không cần đăng nhập.
+0.3.1 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-05, và là chart nên cài cho đến [0.3.2](/vi/releases/codesys-0-3-2/). Nó vẫn bao bọc HotLoop 4.19.4 và chạy provisioner 0.3.0, tải về không cần đăng nhập.
 
 - **Mọi tên bản phát hành đều cài được.** Provisioner giờ tìm Service của HotLoop và Secret thông tin xác thực của nó theo cách đặt tên mà chính chart của HotLoop dùng, tức là tên bản phát hành. Quy tắc cũ đoán một tên khác cho bản phát hành không có `hotloop-codesys` trong tên, và pod của HotLoop không có tên đó.
 - **Hồ sơ ví dụ đã đúng.** `example-devices.json` không còn liệt kê Variant như một kiểu RawData, vì nó không phải.

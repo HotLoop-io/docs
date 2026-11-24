@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.24.0 er ute]
-Fire produkter fra én tag: [IoT](/nb/iot/overview/), [Edge](/nb/edge/overview/), Gateway og [Edge Relay](/nb/edge-relay/overview/), hvert med eget image og eget chart. Alle fire bygges for amd64 og arm64 i 4.24.0, og de tre små også for arm/v7. Gateway beholder `ghcr.io/hotloop-io/hotloop:4.24.0` og chartet `hotloop` fra `https://hotloop.io/hotloop`, og begge kan hentes uten innlogging. [Installer det](/nb/gateway/install/). Er du på 4.18.11? Det er en `helm upgrade`, og agenter kan skrive etterpå, så les de to endringene. Er du på 4.17.0? Det er en vanlig `helm upgrade`, men ikke med `--reuse-values`, og et par standardverdier har flyttet seg. Er du på 4.16.0 eller 4.3.1? Da går du via 4.17.0 først. Uansett: [les oppgraderingen først](/nb/gateway/upgrading/). Det er bedre å finne ut av dette her enn av en rollout som står fast.
+:::note[4.24.2 er ute]
+Fire produkter fra én tag: [IoT](/nb/iot/overview/), [Edge](/nb/edge/overview/), Gateway og [Edge Relay](/nb/edge-relay/overview/), hvert med eget image og eget chart. Alle fire bygges for amd64 og arm64 i 4.24.2, og de tre små også for arm/v7. Gateway beholder `ghcr.io/hotloop-io/hotloop:4.24.2` og chartet `hotloop` fra `https://hotloop.io/hotloop`, og begge kan hentes uten innlogging. [Installer det](/nb/gateway/install/). Er du på 4.18.11? Det er en `helm upgrade`, og agenter kan skrive etterpå, så les de to endringene. Er du på 4.17.0? Det er en vanlig `helm upgrade`, men ikke med `--reuse-values`, og et par standardverdier har flyttet seg. Er du på 4.16.0 eller 4.3.1? Da går du via 4.17.0 først. Uansett: [les oppgraderingen først](/nb/gateway/upgrading/). Det er bedre å finne ut av dette her enn av en rollout som står fast.
 :::
 
 HotLoop Gateway leser anlegget ditt. Den henter data fra PLS-er og servere i deres eget protokollspråk, lagrer hver måling og kvaliteten i en historian, utløser ISA-18.2-alarmer som kan varsle en telefon, kjører automasjoner mot alt sammen og gir hele anlegget til agenter via MCP. Én lokasjon kjører ett chart, Gateway og databasen, i stedet for en historian, en alarmserver, en regelmotor og en haug med lim, som hver svikter på sin egen tid.
@@ -19,7 +19,7 @@ Den er skrevet i Go fra bunnen av: én statisk binærfil på et distroless-grunn
 
 ## Hvor du begynner
 
-Grunnmuren, i 4.24.0 og i alle utgivelser tilbake til 4.16.0:
+Grunnmuren, i 4.24.2 og i alle utgivelser tilbake til 4.16.0:
 
 - [Installasjon](/nb/gateway/install/) er Helm fra det publiserte chartet eller Podman Quadlet på en boks, nøkkelen du må sikkerhetskopiere og de få verdiene du setter før et ekte anlegg ser det.
 - [Oppgradering](/nb/gateway/upgrading/) er framgangsmåten som beholder dataene dine, fra 4.17.0, 4.16.0 eller 4.3.1, og hver API-endring et skript kommer til å snuble i.
@@ -64,7 +64,7 @@ Nytt i 4.17.0, og ikke i 4.16.0:
 
 HotLoop er én kodebase levert som fire produkter, alle utgitt sammen fra én tag: IoT, Edge, Gateway og Edge Relay. Gateway er toppen: alt i IoT og Edge, pluss flåtestyring, oppsummeringer på tvers av lokasjoner og planlagte rapporter. Funksjoner skiller produktene. Protokoller gjør aldri det: alle produkter snakker alle protokollene vi har, så ingen må kjøpe seg opp et nivå for å lese PLS-en på benken sin. [Produktlinjen](/nb/products/) viser hva hvert produkt har.
 
-Alle fire kan installeres i dag, alle i 4.24.0. Relayet har eget image og eget chart, omtrent 15 MB mot Gateways 37, uten database og uten grensesnitt. Flåtestyringen i Gateway sporer og styrer hvert registrerte relay, og den er bare API (`/api/fleet`): det finnes ikke noe Flåte-skjermbilde i grensesnittet.
+Alle fire kan installeres i dag, alle i 4.24.2. Relayet har eget image og eget chart, omtrent 15 MB mot Gateways 37, uten database og uten grensesnitt. Flåtestyringen i Gateway sporer og styrer hvert registrerte relay, og den er bare API (`/api/fleet`): det finnes ikke noe Flåte-skjermbilde i grensesnittet.
 
 Bruker du det på et anlegg? [Bruke HotLoop i en bedrift](/nb/business/) forklarer lisensiering og hvordan du når oss.
 

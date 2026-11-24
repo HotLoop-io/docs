@@ -3,10 +3,6 @@ title: "Protokoller og drivere"
 description: "OPC UA, Modbus, MQTT og Sparkplug B, EtherNet/IP, S7comm, MTConnect og HTTP, med hvor langt hver driver er bevist mot ekte utstyr."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Dette dokumentet sier nøyaktig hva gatewayen snakker, nøyaktig hvor langt hver driver er verifisert, og hva du gjør med alt annet. Det er det første du bør lese, og det du kan stole på når noe er uenig med det.
 
 Listen over native protokoller utledes fra driverne som er kompilert inn i binærfilen: `/api/protocols`, Protokoller-skjermen og MCP-verktøyet `describe_protocol` leser alle samme register. Katalogen kan ikke love en protokoll som binærfilen ikke har.

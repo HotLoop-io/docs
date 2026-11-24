@@ -3,10 +3,6 @@ title: "Máy chủ OPC UA"
 description: "Công bố thiết bị và tag đã cấu hình thành không gian địa chỉ OPC UA chỉ đọc, để SCADA bạn đang dùng thấy mọi tag mà không cần trình điều khiển mới."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Máy chủ OPC UA của HotLoop, từ phiên bản 4.13.0, công bố các thiết bị và tag đã cấu hình trong Gateway thành một không gian địa chỉ OPC UA. Nhờ vậy một client OPC UA của bên thứ ba, một gói SCADA, một HMI, một historian hay một công cụ kiểm thử như UaExpert có thể đọc các tag trực tiếp của Gateway mà không ai phải viết trình điều khiển HotLoop cho phía bên kia.
 
 Mặc định bật (`HOTLOOP_OPCUA_SERVER_ENABLED`), trong tệp thực thi và trong Helm chart. Máy chủ khởi động với xác thực HotLoop đang bật và một tài khoản đăng nhập riêng, `opcua-reader`, do HotLoop tạo với mật khẩu sinh tự động mà mục Cài đặt hiển thị cho quản trị viên (`GET /api/opcua/server`); tài khoản này chỉ đọc được tag và giá trị, không làm gì khác. Khi xác thực HotLoop tắt thì không có người dùng nào để đăng nhập, nên máy chủ chờ và thông báo điều đó (nó không từ chối khởi động). Nếu cổng 4840 đã bị một máy chủ OPC UA khác trên thiết bị chiếm, nó chờ và thông báo; một cổng bạn tự chọn mà không mở được là lỗi: mở một listener trên mạng nhà máy là việc một lần triển khai làm có chủ ý. Cổng mặc định 4840.
@@ -207,6 +203,8 @@ Client có thể đăng nhập bằng chứng chỉ thay vì mật khẩu. Mặc
 **Client riêng của HotLoop** cũng đăng nhập theo cách này: xem `userCertificate` và `userPrivateKey` trong [Giao thức và trình điều khiển](/vi/iot/protocols/#opc-ua).
 
 Chưa xây dựng: một tổ chức cấp chứng chỉ được tin cậy để bảo chứng cho chứng chỉ client và một quy tắc tên ánh xạ chúng tới người dùng. Sổ đăng ký phục vụ nhà máy đính kèm từng chứng chỉ client một; một CA sẽ là phần bổ sung cho nó, không phải thay thế.
+
+**RsaEncryptedSecret, định dạng OPC UA yêu cầu cho mật khẩu trên 64 byte.** OPC 10000-4 7.40.4 nói rằng client mã hóa mật khẩu dài hơn 64 byte trên một chính sách bảo mật RSA dưới dạng RsaEncryptedSecret (7.40.2.4), không phải theo định dạng cũ. Client riêng của OPC Foundation làm đúng như vậy, và nay client OPC UA của HotLoop cũng thế. Server đọc cả hai. Nó nhìn phần đầu của token trước: với RsaEncryptedSecret, nó kiểm tra chính sách bảo mật, chứng chỉ, thời điểm ký, chữ ký, phần đệm và nonce của phiên, và chỉ trao mật khẩu khi tất cả đều đúng; mọi thứ khác đi vào bộ giải mã cũ, nên một client gửi định dạng cũ trên 64 byte vẫn đăng nhập được. Mọi chính sách RSA đều được bao phủ, `Basic256Sha256`, `Aes128_Sha256_RsaOaep` và `Aes256_Sha256_RsaPss`, cùng `Basic128Rsa15` và `Basic256` khi chúng được bật. Điều này đã được kiểm chứng với Reference Server và ConsoleReferenceClient của OPC Foundation (UA-.NETStandard 2.0.2) theo cả hai chiều, với một người dùng có mật khẩu dài 10, 64, 65, 72, 100 và 200 byte.
 
 ### Chẩn đoán máy chủ đã bị gỡ
 

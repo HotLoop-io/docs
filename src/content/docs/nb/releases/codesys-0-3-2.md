@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.2 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-15, og provisioner-imaget det kjører lastes ned uten pålogging. Ingenting i det skriver til PLS-en.
+0.3.2 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-15, og provisioner-imaget det kjører lastes ned uten pålogging. Ingenting i det skriver til PLS-en.
 
 - **Det omslutter HotLoop 4.19.11** og kjører provisioner 0.3.1.
 - **HotLoops side lytter på 8090 inne i poden.** En runtime på nodens nett holder vertsport 8080, og planleggeren nektet å plassere HotLoops side ved siden av. Service blir på 8080, så App Store-flisen og provisioneren når HotLoop som før. Alt som snakket direkte med poden på 8080 flytter til 8090.

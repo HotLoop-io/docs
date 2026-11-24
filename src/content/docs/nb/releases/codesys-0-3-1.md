@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.1 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-05, og var chartet å installere frem til [0.3.2](/nb/releases/codesys-0-3-2/). Det omslutter fortsatt HotLoop 4.19.4 og kjører provisioner 0.3.0, som lastes ned uten pålogging.
+0.3.1 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-05, og var chartet å installere frem til [0.3.2](/nb/releases/codesys-0-3-2/). Det omslutter fortsatt HotLoop 4.19.4 og kjører provisioner 0.3.0, som lastes ned uten pålogging.
 
 - **Alle utgivelsesnavn installeres.** Provisioneren finner nå HotLoops Service og dens Secret med påloggingsdata ut fra navngivingen HotLoops eget chart bruker, som er utgivelsesnavnet. Den gamle regelen gjettet et annet navn for en utgivelse uten `hotloop-codesys` i seg, og HotLoop-poden hadde ikke det navnet.
 - **Eksempelprofilen er riktig.** `example-devices.json` lister ikke lenger Variant som en RawData-type, for det er den ikke.

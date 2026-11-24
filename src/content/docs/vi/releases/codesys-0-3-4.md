@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.4 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-16.
+0.3.4 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-16.
 
 - **Nó bao bọc HotLoop 4.20.1,** bản phát hành mang các image arm mà các tester tải về. Provisioner vẫn ở 0.3.1.
 

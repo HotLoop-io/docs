@@ -3,10 +3,6 @@ title: "Protocolos y controladores"
 description: "OPC UA, Modbus, MQTT y Sparkplug B, EtherNet/IP, S7comm, MTConnect y HTTP, con el grado en que cada controlador se ha probado con equipos reales."
 ---
 
-:::note[Incluye lo que viene]
-Esta página también recoge algunas cosas más nuevas que HotLoop core 4.24.0, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
-:::
-
 Este documento dice con exactitud qué habla el gateway, hasta dónde se ha verificado cada controlador y qué hacer con todo lo demás. Es lo primero que hay que leer y aquello en lo que hay que confiar cuando algo no coincide con él.
 
 La lista de protocolos nativos se deriva de los controladores compilados en el binario: `/api/protocols`, la pantalla Protocolos y la herramienta MCP `describe_protocol` leen el mismo registro. El catálogo no puede anunciar un protocolo que el binario no tiene.

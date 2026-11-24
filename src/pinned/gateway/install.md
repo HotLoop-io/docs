@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.24.0
+reviewed: hotloop=4.24.2
 title: "Install HotLoop Gateway {{hotloop}} with Helm"
 description: "Install HotLoop Gateway {{hotloop}} from the published Helm chart on k3s or any Kubernetes, sign in, and set what matters before a real plant sees it."
 sidebar:

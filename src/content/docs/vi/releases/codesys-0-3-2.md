@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.2 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-15, và image provisioner nó chạy tải về không cần đăng nhập. Không có gì trong nó ghi vào PLC.
+0.3.2 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-15, và image provisioner nó chạy tải về không cần đăng nhập. Không có gì trong nó ghi vào PLC.
 
 - **Nó bao bọc HotLoop 4.19.11** và chạy provisioner 0.3.1.
 - **Trang của HotLoop lắng nghe ở 8090 bên trong pod.** Một runtime trên mạng của nút giữ cổng host 8080, và bộ lập lịch từ chối đặt trang của HotLoop cạnh nó. Service vẫn ở 8080, nên ô App Store và provisioner đến HotLoop như trước. Mọi thứ từng nói chuyện trực tiếp với pod ở 8080 chuyển sang 8090.

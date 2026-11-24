@@ -3,10 +3,6 @@ title: "Protocolli e driver"
 description: "OPC UA, Modbus, MQTT e Sparkplug B, EtherNet/IP, S7comm, MTConnect e HTTP, con quanto ogni driver è stato provato su apparecchiature reali."
 ---
 
-:::note[Comprende ciò che sta arrivando]
-Questa pagina comprende anche alcune cose più recenti di HotLoop core 4.24.0, l'ultima versione rilasciata. Una parte potrebbe non essere in ciò che hai installato. Le [note di rilascio](/it/releases/) dicono cosa è cambiato.
-:::
-
 Questo documento dice esattamente che cosa parla il gateway, fino a che punto è stato verificato ogni driver e che cosa fare per tutto il resto. È la prima cosa da leggere e quella di cui fidarsi quando qualcosa non coincide.
 
 L'elenco dei protocolli nativi deriva dai driver compilati nel binario: `/api/protocols`, la schermata Protocolli e lo strumento MCP `describe_protocol` leggono tutti lo stesso registro. Il catalogo non può annunciare un protocollo che il binario non ha.

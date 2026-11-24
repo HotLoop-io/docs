@@ -3,10 +3,6 @@ title: "Ngôn ngữ của giao diện web"
 description: "Giao diện web có tiếng Anh và mười ba ngôn ngữ nữa, tiếng Ả Rập bố trí từ phải sang trái, chọn trên thanh trên cùng hoặc ở thẻ đăng nhập."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Giao diện web của HotLoop IoT, Edge và Gateway (và của HotLoop for CODESYS, chạy giao diện Edge) có tiếng Anh và 13 ngôn ngữ nữa: tiếng Tây Ban Nha (es), tiếng Pháp (fr), tiếng Ý (it), tiếng Đức (de), tiếng Na Uy Bokmål (nb), tiếng Bulgaria (bg), tiếng Hy Lạp (el), tiếng Hàn (ko), tiếng Nhật (ja), tiếng Việt (vi), tiếng Hindi (hi), tiếng Trung giản thể (zh-Hans) và tiếng Ả Rập (ar, bố trí từ phải sang trái).
 
 Chọn một ngôn ngữ trong ô ngôn ngữ ở thanh trên cùng, hoặc ở thẻ đăng nhập. Lựa chọn được lưu trong trình duyệt này. Nếu chưa chọn gì, trang dùng ngôn ngữ đầu tiên trong danh sách của trình duyệt mà HotLoop có, và dùng tiếng Anh nếu không có ngôn ngữ nào khớp. Một ngôn ngữ chỉ xuất hiện trong danh sách chọn khi tệp của nó đã đầy đủ.

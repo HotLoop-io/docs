@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.7 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-19.
+0.3.7 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-19.
 
 - **Det omslutter HotLoop 4.22.0,** som gir hver OPC UA PubSub-enhet på samme adresse og port en delt socket, så to lyttere kan sitte på én UDP-port.
 - **Provisioneren tar to lyttere på én port.** Provisioner 0.3.2 avviser ikke lenger en profil som legger to `opcua-pubsub`-enheter på én port.

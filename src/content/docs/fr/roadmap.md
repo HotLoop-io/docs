@@ -3,10 +3,6 @@ title: "Feuille de route HotLoop"
 description: "Ce qu'est HotLoop, ce qui reste à construire et ce qui est cassé, dans l'ordre où cela se fait, pour HotLoop core. Flow et Cascade ont chacun la leur."
 ---
 
-:::note[Couvre ce qui arrive]
-Cette page couvre aussi quelques éléments plus récents que HotLoop core 4.24.0, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
-:::
-
 Ce qu'est HotLoop, ce qui reste à construire et ce qui est cassé. Si ce n'est pas sur cette liste, ça ne sera pas fait : mettez-le sur la liste.
 
 ## Ce qu'est HotLoop
@@ -165,7 +161,7 @@ L'historien intégré reste. Par-dessus, HotLoop écrit l'historique dans les ba
 - [ ] Sécurité des messages (NetworkMessages signés et chiffrés). Reste : un Security Key Service (les clés sont statiques), et un publieur Siemens ou Beckhoff. Voir [Protocoles et drivers](/fr/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Trames delta de l'éditeur, en option (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`) : seulement les champs modifiés entre deux trames clés. Voir [Protocoles et pilotes](/fr/iot/protocols/)
 - [ ] DataSetMetaData et messages de découverte pour qu'un abonné puisse nommer les champs ; champs de tableau et de structure dans ce que le publieur envoie, et champs de structure dans ce que l'abonné lit ; événements. Réalisé : fragments, réponses de découverte et DataSetMetaData lus et écrits, les champs de structure de l'abonné, RawData disposé d'après les métadonnées, messages Event, les annonces du publieur ; lu contre les trames capturées d'un vrai publieur Siemens. Reste : champs de tableau et de structure dans ce que HotLoop publie (un tag est un nombre ou un texte), envoi et réponse aux demandes de découverte
-- [ ] Face à un éditeur Siemens ou Beckhoff, et à travers un routeur (routage multicast et TTL)
+- [ ] Face à un éditeur Siemens ou Beckhoff, et à travers un routeur (routage multicast et TTL). À travers un routeur, c'est éprouvé : la limite de sauts de 2 de l'éditeur traverse un routeur multicast (smcroute, trois espaces de noms réseau dans une VM) et l'abonné du Gateway lit la valeur, une limite de sauts de 1 s'arrête au routeur, et routeur arrêté rien n'arrive. Reste : un éditeur Siemens ou Beckhoff
 
 ---
 

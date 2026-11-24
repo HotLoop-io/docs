@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.6 は 2026-11-19 に `{{codesysChartRepo}}` のインデックスに公開されました。
+0.3.6 は 2026-11-19 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開されました。
 
 - **ライセンスの注記が、HotLoop LLC の HotLoop Source License Agreement 1.0 を指します。**
 - **ほかに変わったものはありません。** テンプレート、値、ラップする HotLoop(4.20.2)は [0.3.5](/ja/releases/codesys-0-3-5/) と同じです。

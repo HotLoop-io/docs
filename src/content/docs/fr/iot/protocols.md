@@ -3,10 +3,6 @@ title: "Protocoles et pilotes"
 description: "OPC UA, Modbus, MQTT et Sparkplug B, EtherNet/IP, S7comm, MTConnect et HTTP, avec le degré de validation de chaque pilote sur des équipements réels."
 ---
 
-:::note[Couvre ce qui arrive]
-Cette page couvre aussi quelques éléments plus récents que HotLoop core 4.24.0, la dernière version publiée. Une partie peut ne pas figurer dans ce que vous avez installé. Les [notes de version](/fr/releases/) disent ce qui a changé.
-:::
-
 Ce document dit exactement ce que parle la passerelle, jusqu'où chaque pilote a été vérifié et que faire pour tout le reste. C'est la première chose à lire, et celle à laquelle se fier quand quelque chose la contredit.
 
 La liste des protocoles natifs est dérivée des pilotes compilés dans le binaire : `/api/protocols`, l'écran Protocoles et l'outil MCP `describe_protocol` lisent tous le même registre. Le catalogue ne peut pas annoncer un protocole que le binaire n'a pas.

@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.2 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-15,它运行的 provisioner 镜像无需登录即可拉取。其中没有任何内容向 PLC 写入。
+0.3.2 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-15,它运行的 provisioner 镜像无需登录即可拉取。其中没有任何内容向 PLC 写入。
 
 - **它封装 HotLoop 4.19.11,** 并运行 provisioner 0.3.1。
 - **HotLoop 的页面在 pod 内监听 8090。** 节点网络上的运行时占用了主机端口 8080,调度器拒绝把 HotLoop 的页面放在它旁边。Service 仍在 8080,所以 App Store 磁贴和 provisioner 像以前一样访问 HotLoop。任何直接以 8080 与 pod 通信的内容都要改用 8090。

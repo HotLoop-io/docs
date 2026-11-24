@@ -5,10 +5,6 @@ description: "What HotLoop is, what is left to build and what is broken, in the 
 editUrl: false
 ---
 
-:::note[Covers what is coming]
-This page also covers a few things that are newer than HotLoop core 4.24.0, the latest release. Parts of it may not be in what you have installed. The [release notes](/releases/) say what moved.
-:::
-
 What HotLoop is, what's left to build, and what's broken. If it isn't on this
 list it isn't getting done, so put it on the list.
 
@@ -424,7 +420,11 @@ back up and patch, and they are not adopting ours to get a trend.
       captured frames. Left: array and structure fields in what HotLoop publishes
       (a tag is one number or one text), sending and answering discovery requests
 - [ ] Against a Siemens or Beckhoff publisher, and over a router (multicast
-      routing and the TTL)
+      routing and the TTL). Over a router is proven: the publisher's hop limit of 2
+      crosses a multicast router (smcroute, three network namespaces in a VM) and
+      the Gateway's subscriber reads the value, a hop limit of 1 stops at the router,
+      and with the router stopped nothing arrives. Left:
+      a Siemens or Beckhoff publisher
 
 ---
 

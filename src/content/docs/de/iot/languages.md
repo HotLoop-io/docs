@@ -3,10 +3,6 @@ title: "Sprachen der Weboberfläche"
 description: "Die Weboberfläche auf Englisch und dreizehn weiteren Sprachen, Arabisch von rechts nach links gesetzt, wählbar in der oberen Leiste oder auf der Anmeldekarte."
 ---
 
-:::note[Enthält, was kommt]
-Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop core 4.24.0, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
-:::
-
 Die Weboberfläche von HotLoop IoT, Edge und Gateway (und von HotLoop for CODESYS, das die Edge-Oberfläche ausführt) gibt es auf Englisch und in 13 weiteren Sprachen: Spanisch (es), Französisch (fr), Italienisch (it), Deutsch (de), Norwegisch Bokmål (nb), Bulgarisch (bg), Griechisch (el), Koreanisch (ko), Japanisch (ja), Vietnamesisch (vi), Hindi (hi), vereinfachtes Chinesisch (zh-Hans) und Arabisch (ar, von rechts nach links gesetzt).
 
 Wählen Sie eine im Sprachfeld in der oberen Leiste oder auf der Anmeldekarte. Die Wahl wird in diesem Browser gespeichert. Ohne Wahl nimmt die Seite die erste Sprache des Browsers, die HotLoop hat, und Englisch, wenn keine passt. Eine Sprache erscheint in der Auswahl nur, wenn ihre Datei vollständig ist.

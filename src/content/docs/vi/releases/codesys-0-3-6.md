@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.6 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-19.
+0.3.6 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-19.
 
 - **Chú thích giấy phép nêu HotLoop Source License Agreement 1.0,** của HotLoop LLC.
 - **Không có gì khác thay đổi.** Các template, các giá trị và HotLoop mà nó bao bọc (4.20.2) là của [0.3.5](/vi/releases/codesys-0-3-5/).

@@ -9,7 +9,7 @@ editUrl: false
 
 ## Ce qui a changé
 
-0.3.3 est dans l'index `{{codesysChartRepo}}`, publié le 2026-11-15. Le provisioner est le même que celui qu'exécutait 0.3.2.
+0.3.3 est dans l'index `https://hotloop.io/hotloop-codesys/`, publié le 2026-11-15. Le provisioner est le même que celui qu'exécutait 0.3.2.
 
 - **Il enveloppe HotLoop 4.20.0.** La nouvelle interface web est la page à `/`, et un agent peut modifier tout ce qu'il peut lire via MCP, derrière la porte d'écriture.
 

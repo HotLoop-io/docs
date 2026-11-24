@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.5 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-16,是应安装的 chart。
+0.3.5 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-16,是应安装的 chart。
 
 - **它封装 HotLoop 4.20.2,** 其中带有 EtherNet/IP 批量修复和无需任何配置即可输出的 `version` 命令。provisioner 仍是 0.3.1。
 - **从 [0.3.2](/zh-hans/releases/codesys-0-3-2/) 到 [0.3.4](/zh-hans/releases/codesys-0-3-4/) 的一切仍然在这里,** 不向 PLC 写入任何内容,每个更早的 chart 都保留在索引中。

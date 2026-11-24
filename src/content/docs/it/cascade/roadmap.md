@@ -15,11 +15,11 @@ Costruito, e rilasciato dentro la 1.0.0 con il nuovo editor. SAML, LDAP e AD, SC
 
 ## Che cosa ha portato la 1.0.x
 
-La 1.0.0 è la 0.1.0 più la 0.2.0 più il nuovo editor, tutto in un'unica versione. L'editor era l'ultimo pezzo che volevamo prima di mettere il nostro nome sotto quel numero.
+1.0.0 è 0.1.0 più 0.2.0 più il nuovo editor, e nient'altro. L'abbiamo chiamata 1.0.0 perché l'editor era l'ultimo pezzo che volevamo prima di mettere il nostro nome sotto il numero, non perché tutto ciò che sta sotto sia finito.
 
 La 1.0.1 ha corretto un errore nell'accesso: un database illeggibile rispondeva «non autenticato» e cancellava il cookie, così un breve guasto disconnetteva tutti e poteva trasformare un secondo fattore giusto in un codice sbagliato. Ora risponde «riprova» e mantiene la sessione. La 1.0.2 ha permesso a un passaggio Code di firmare e verificare con una chiave HMAC conservata come credenziale, e a un webhook di indicare le origini web che possono chiamarlo da un browser. Fra la 1.0.0 e la 1.0.2 non c'era nulla da migrare.
 
-A che cosa si attiene oggi un flusso di lavoro salvato: il file dice di quale versione del suo formato è (`cascade: 1`), ogni passaggio porta la propria versione, e un flusso di lavoro che nomina un passaggio che non esiste più non supera la validazione e non parte, invece di essere modificato in silenzio. È così che i passaggi EmberOps sono stati tolti nella 1.0.0. Ogni versione viene avviata sui dati della precedente prima di uscire: il flusso di lavoro c'è ancora e la credenziale si apre ancora.
+A cosa si attiene oggi un workflow salvato: il file indica di quale versione del suo formato è (`cascade: 1`), ogni passo porta la propria versione, e un workflow che nomina un passo che non esiste più non supera la validazione e non parte, invece di essere modificato in silenzio. È così che i passi EmberOps sono stati tolti in 1.0.0. Non c'è ancora nessuna promessa sul formato o sull'API oltre a questo, né un test di aggiornamento da ogni versione precedente: ciò che viene testato è in `RELEASE_CHECKLIST.md`, che aggiorna dall'ultima versione a mano. Una promessa verrà messa qui quando potremo mantenerla, e non prima.
 
 ## 1.3.0, l'editor in 14 lingue
 

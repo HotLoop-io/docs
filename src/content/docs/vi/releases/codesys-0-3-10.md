@@ -9,7 +9,7 @@ editUrl: false
 
 ## Có gì thay đổi
 
-0.3.10 có trong chỉ mục `{{codesysChartRepo}}`, công bố ngày 2026-11-23. Đây là bản nên cài, và nó mang mọi thứ 0.3.9 đã thêm.
+0.3.10 có trong chỉ mục `https://hotloop.io/hotloop-codesys/`, công bố ngày 2026-11-23. Đây là bản nên cài, và nó mang mọi thứ 0.3.9 đã thêm.
 
 - **Nó bao bọc HotLoop 4.24.0,** hiển thị các cảnh báo riêng của một PLC CODESYS trong danh sách cảnh báo và vẽ màn hình dưới dạng P&ID.
 - **Nó chạy provisioner 0.4.1.** Hồ sơ nhận một danh sách màn hình bên cạnh màn hình đơn, nên một dự án có nhiều trang WebVisu trở lại đầy đủ.

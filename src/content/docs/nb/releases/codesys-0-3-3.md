@@ -9,7 +9,7 @@ editUrl: false
 
 ## Hva som er endret
 
-0.3.3 er i indeksen `{{codesysChartRepo}}`, publisert 2026-11-15. Provisioneren er den samme som 0.3.2 kjørte.
+0.3.3 er i indeksen `https://hotloop.io/hotloop-codesys/`, publisert 2026-11-15. Provisioneren er den samme som 0.3.2 kjørte.
 
 - **Det omslutter HotLoop 4.20.0.** Det nye nettgrensesnittet er siden på `/`, og en agent kan endre alt den kan lese gjennom MCP, bak skriveporten.
 

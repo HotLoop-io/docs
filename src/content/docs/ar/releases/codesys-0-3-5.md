@@ -9,7 +9,7 @@ editUrl: false
 
 ## ما الذي تغيّر
 
-0.3.5 في الفهرس `{{codesysChartRepo}}`، نُشر في 2026-11-16، وهو الـ chart الذي يُثبَّت.
+0.3.5 في الفهرس `https://hotloop.io/hotloop-codesys/`، نُشر في 2026-11-16، وهو الـ chart الذي يُثبَّت.
 
 - **يغلّف HotLoop 4.20.2،** الذي يحمل إصلاح دفعات EtherNet/IP وأمر `version` الذي يطبع دون أي إعداد. يبقى provisioner على 0.3.1.
 - **كل ما بين [0.3.2](/ar/releases/codesys-0-3-2/) و[0.3.4](/ar/releases/codesys-0-3-4/) ما زال هنا،** ولا شيء يكتب إلى PLC، ويبقى كل chart سابق في الفهرس.

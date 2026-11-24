@@ -3,10 +3,6 @@ title: "Die HTTP-API"
 description: "Jeder Aufruf, den HotLoop über HTTP beantwortet, was er braucht, was er annimmt und was er zurückgibt. Die Web-Oberfläche nutzt nichts anderes."
 ---
 
-:::note[Enthält, was kommt]
-Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop core 4.24.0, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
-:::
-
 Jeder Aufruf, den das Gateway über HTTP beantwortet, was er braucht, was er annimmt und was er zurückgibt. Die Weboberfläche nutzt nichts anderes: Hinter den Bildschirmen steckt keine private API, also kann ein Skript alles, was die Oberfläche kann, mit denselben Aufrufen und denselben Berechtigungen.
 
 Diese Seite wird gegen den Code geprüft. Die Liste der Routen und wer sie aufrufen darf, beschreibt also keine API, wie sie einmal war. Die Formen der Anfragen und Antworten unten stammen von einem laufenden Gateway; die Tests prüfen sie nicht. Wenn Sie einen Handler ändern, ändern Sie deshalb auch seinen Abschnitt hier.

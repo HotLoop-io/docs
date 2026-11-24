@@ -9,7 +9,7 @@ editUrl: false
 
 ## 概要
 
-0.3.0 は、2026-11-05 に `{{codesysChartRepo}}` のインデックスに公開された HotLoop for CODESYS の最初のチャートです。CODESYS ランタイムの隣の HotLoop Edge を、誰もクリックせずにプロファイルから設定します。HotLoop 4.19.4 をラップし、provisioner 0.3.0 を実行します。[0.3.1](/ja/releases/codesys-0-3-1/) は同じ日に出ており、インストールするのはこちらです。
+0.3.0 は、2026-11-05 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開された HotLoop for CODESYS の最初のチャートです。CODESYS ランタイムの隣の HotLoop Edge を、誰もクリックせずにプロファイルから設定します。HotLoop 4.19.4 をラップし、provisioner 0.3.0 を実行します。[0.3.1](/ja/releases/codesys-0-3-1/) は同じ日に出ており、インストールするのはこちらです。
 
 - **HotLoop Edge をラップするチャート**。同じノードのランタイム向けの既定値は、ノード自身のストレージ上の SQLite、データベースポッドなし、レプリカ 1 つで、OPC UA サーバー、ブローカー、Edge の公開、バックアップはオフです。
 - **provisioner**。静的な Go バイナリ 1 つと公開イメージで、[プロファイル](/ja/codesys/profile/)(デバイス、保持する変数、アラーム、画面 1 つ)を読み、PLC のランタイムが応答したらすべて設定します。5 分ごとに再確認します。

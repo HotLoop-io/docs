@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.1은 2026-11-05에 `{{codesysChartRepo}}` 인덱스에 게시되었으며, [0.3.2](/ko/releases/codesys-0-3-2/)까지 설치할 차트였습니다. 여전히 HotLoop 4.19.4를 감싸고, 로그인 없이 받을 수 있는 provisioner 0.3.0을 실행합니다.
+0.3.1은 2026-11-05에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었으며, [0.3.2](/ko/releases/codesys-0-3-2/)까지 설치할 차트였습니다. 여전히 HotLoop 4.19.4를 감싸고, 로그인 없이 받을 수 있는 provisioner 0.3.0을 실행합니다.
 
 - **어떤 릴리스 이름으로도 설치됩니다.** provisioner는 이제 HotLoop 자체 차트가 쓰는 이름 규칙, 즉 릴리스 이름으로 HotLoop의 Service와 자격 증명 Secret을 찾습니다. 이전 규칙은 이름에 `hotloop-codesys`가 없는 릴리스에 다른 이름을 추측했고, HotLoop 파드에는 그 이름이 없었습니다.
 - **예제 프로필이 올바릅니다.** `example-devices.json`은 더 이상 Variant를 RawData 타입으로 나열하지 않습니다. 그렇지 않기 때문입니다.

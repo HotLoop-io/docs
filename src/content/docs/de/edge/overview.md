@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge ist erschienen, erstmals in 4.18.10]
-Das Image ist `ghcr.io/hotloop-io/hotloop-edge:4.24.0`, gebaut für amd64, arm64 und arm/v7, etwa 37 MB auf amd64 und 34 MB auf arm, und das Chart ist `hotloop-edge` von `https://hotloop.io/hotloop`. Beides lässt sich ohne Anmeldung laden. Die Quadlet-Units liegen im Verzeichnis `edge/` von [Podman Quadlet](/de/install/quadlet/). [Installieren Sie es](/de/edge/install/). Vor 4.18.10 konnte das Gateway am Rand laufen und Sparkplug nach oben veröffentlichen, und das kann es seit 4.5.0, aber dafür brauchte es das ganze Gateway.
+Das Image ist `ghcr.io/hotloop-io/hotloop-edge:4.24.2`, gebaut für amd64, arm64 und arm/v7, etwa 37 MB auf amd64 und 34 MB auf arm, und das Chart ist `hotloop-edge` von `https://hotloop.io/hotloop`. Beides lässt sich ohne Anmeldung laden. Die Quadlet-Units liegen im Verzeichnis `edge/` von [Podman Quadlet](/de/install/quadlet/). [Installieren Sie es](/de/edge/install/). Vor 4.18.10 konnte das Gateway am Rand laufen und Sparkplug nach oben veröffentlichen, und das kann es seit 4.5.0, aber dafür brauchte es das ganze Gateway.
 :::
 
 Edge ist eine Box, die neben einer Linie festgeschraubt wird. Sie liest die Maschine, führt die Regeln an der Maschine aus, arbeitet weiter, wenn das WAN ausfällt, und sagt dem Rest des Werks, was sie gesehen hat. Sie nutzt dasselbe Schreib-Gate wie alles andere.

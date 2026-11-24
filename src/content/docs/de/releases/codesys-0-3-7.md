@@ -9,7 +9,7 @@ editUrl: false
 
 ## Was sich geändert hat
 
-0.3.7 steht im Index `{{codesysChartRepo}}`, veröffentlicht am 2026-11-19.
+0.3.7 steht im Index `https://hotloop.io/hotloop-codesys/`, veröffentlicht am 2026-11-19.
 
 - **Es umhüllt HotLoop 4.22.0,** das jedem OPC-UA-PubSub-Gerät auf derselben Adresse und demselben Port einen gemeinsamen Socket gibt, sodass zwei Listener auf einem UDP-Port sitzen können.
 - **Der Provisioner nimmt zwei Listener auf einem Port.** Der Provisioner 0.3.2 weist ein Profil mit zwei `opcua-pubsub`-Geräten auf einem Port nicht mehr ab.

@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.6는 2026-11-19에 `{{codesysChartRepo}}` 인덱스에 게시되었습니다.
+0.3.6는 2026-11-19에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었습니다.
 
 - **라이선스 주석이 HotLoop LLC의 HotLoop Source License Agreement 1.0을 가리킵니다.**
 - **그 외에는 바뀐 것이 없습니다.** 템플릿, 값, 감싸는 HotLoop(4.20.2)은 [0.3.5](/ko/releases/codesys-0-3-5/)와 같습니다.

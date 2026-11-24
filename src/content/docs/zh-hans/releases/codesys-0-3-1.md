@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.1 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-05,在 [0.3.2](/zh-hans/releases/codesys-0-3-2/) 之前一直是应安装的 chart。它仍封装 HotLoop 4.19.4 并运行 provisioner 0.3.0,无需登录即可拉取。
+0.3.1 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-05,在 [0.3.2](/zh-hans/releases/codesys-0-3-2/) 之前一直是应安装的 chart。它仍封装 HotLoop 4.19.4 并运行 provisioner 0.3.0,无需登录即可拉取。
 
 - **任何发布名称都能安装。** provisioner 现在按 HotLoop 自己的 chart 使用的命名,也就是发布名称,找到 HotLoop 的 Service 和它的凭据 Secret。旧规则会为名称中不含 `hotloop-codesys` 的发布猜一个不同的名称,而 HotLoop 的 pod 并没有那个名称。
 - **示例配置文件已正确。** `example-devices.json` 不再把 Variant 列为 RawData 类型,因为它不是。

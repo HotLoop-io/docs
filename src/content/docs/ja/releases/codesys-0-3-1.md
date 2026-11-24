@@ -9,7 +9,7 @@ editUrl: false
 
 ## 変更点
 
-0.3.1 は 2026-11-05 に `{{codesysChartRepo}}` のインデックスに公開され、[0.3.2](/ja/releases/codesys-0-3-2/) までインストールすべきチャートでした。引き続き HotLoop 4.19.4 をラップし、ログインなしで取得できる provisioner 0.3.0 を実行します。
+0.3.1 は 2026-11-05 に `https://hotloop.io/hotloop-codesys/` のインデックスに公開され、[0.3.2](/ja/releases/codesys-0-3-2/) までインストールすべきチャートでした。引き続き HotLoop 4.19.4 をラップし、ログインなしで取得できる provisioner 0.3.0 を実行します。
 
 - **どのリリース名でもインストールできます。** provisioner は、HotLoop 自身のチャートが使う命名、つまりリリース名で、HotLoop の Service とその認証情報 Secret を見つけるようになりました。以前の規則は、名前に `hotloop-codesys` を含まないリリースでは別の名前を推測しており、HotLoop のポッドにはその名前がありませんでした。
 - **サンプルプロファイルが正しくなりました。** `example-devices.json` は Variant を RawData の型として挙げなくなりました。そうではないからです。

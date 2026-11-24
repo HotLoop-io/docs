@@ -9,7 +9,7 @@ editUrl: false
 
 ## Cosa è cambiato
 
-0.3.10 è nell'indice `{{codesysChartRepo}}`, pubblicato il 2026-11-23. È quello da installare, e porta tutto ciò che ha aggiunto 0.3.9.
+0.3.10 è nell'indice `https://hotloop.io/hotloop-codesys/`, pubblicato il 2026-11-23. È quello da installare, e porta tutto ciò che ha aggiunto 0.3.9.
 
 - **Avvolge HotLoop 4.24.0,** che mostra gli allarmi propri di un PLC CODESYS nell'elenco allarmi e disegna le schermate come P&ID.
 - **Esegue il provisioner 0.4.1.** Un profilo accetta un elenco di schermate accanto alla singola, così un progetto con più pagine WebVisu torna completo.

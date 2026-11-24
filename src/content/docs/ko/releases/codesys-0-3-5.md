@@ -9,7 +9,7 @@ editUrl: false
 
 ## 바뀐 내용
 
-0.3.5는 2026-11-16에 `{{codesysChartRepo}}` 인덱스에 게시되었으며, 설치할 차트입니다.
+0.3.5는 2026-11-16에 `https://hotloop.io/hotloop-codesys/` 인덱스에 게시되었으며, 설치할 차트입니다.
 
 - **HotLoop 4.20.2를 감쌉니다.** EtherNet/IP 배치 수정과, 설정 없이 출력되는 `version` 명령이 들어 있습니다. provisioner는 0.3.1에 머뭅니다.
 - **[0.3.2](/ko/releases/codesys-0-3-2/)부터 [0.3.4](/ko/releases/codesys-0-3-4/)까지의 모든 것이 그대로 있고,** PLC에는 아무것도 쓰지 않으며, 이전 차트는 모두 인덱스에 남아 있습니다.

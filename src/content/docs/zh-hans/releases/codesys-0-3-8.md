@@ -9,7 +9,7 @@ editUrl: false
 
 ## 变更内容
 
-0.3.8 在索引 `{{codesysChartRepo}}` 中,发布于 2026-11-19。
+0.3.8 在索引 `https://hotloop.io/hotloop-codesys/` 中,发布于 2026-11-19。
 
 - **它运行 provisioner 0.3.3,** 这是第一个为 amd64 和 arm64 构建的 provisioner 镜像,所以该 chart 可以安装在 arm64 节点上。
 - **其他都没变。** 模板、值以及它封装的 HotLoop(4.22.0)都与 [0.3.7](/zh-hans/releases/codesys-0-3-7/) 相同。

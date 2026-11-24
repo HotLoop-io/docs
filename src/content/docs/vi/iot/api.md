@@ -3,10 +3,6 @@ title: "API HTTP"
 description: "Mọi lệnh gọi mà HotLoop trả lời qua HTTP, nó cần gì, nhận gì và trả về gì. Giao diện web không dùng thứ gì khác."
 ---
 
-:::note[Có cả những gì sắp tới]
-Trang này cũng nói về một vài thứ mới hơn HotLoop core 4.24.0, bản phát hành mới nhất. Một số phần có thể chưa có trong bản bạn đã cài. [Ghi chú phát hành](/vi/releases/) cho biết điều gì đã thay đổi.
-:::
-
 Mọi lệnh gọi mà Gateway trả lời qua HTTP, mỗi lệnh cần gì, nhận gì và trả về gì. Giao diện web không dùng thứ gì khác: không có API riêng nào phía sau các màn hình, nên bất cứ việc gì giao diện làm được, một script cũng làm được bằng đúng những lệnh gọi và đúng những quyền đó.
 
 Trang này được kiểm tra đối chiếu với mã nguồn. Vì vậy danh sách các route và người được gọi chúng không phải là mô tả một API như nó từng là. Hình dạng của các yêu cầu và phản hồi bên dưới được lấy từ một Gateway đang chạy; các bài kiểm thử không kiểm tra chúng, nên nếu bạn đổi một handler, hãy đổi cả mục của nó ở đây.

@@ -9,7 +9,7 @@ editUrl: false
 
 ## Ce qui a changé
 
-0.3.10 est dans l'index `{{codesysChartRepo}}`, publié le 2026-11-23. C'est celui à installer, et il porte tout ce qu'a ajouté 0.3.9.
+0.3.10 est dans l'index `https://hotloop.io/hotloop-codesys/`, publié le 2026-11-23. C'est celui à installer, et il porte tout ce qu'a ajouté 0.3.9.
 
 - **Il enveloppe HotLoop 4.24.0,** qui montre les alarmes propres d'un automate CODESYS dans la liste d'alarmes et dessine les écrans en P&ID.
 - **Il exécute le provisioner 0.4.1.** Un profil accepte une liste d'écrans à côté de l'unique, si bien qu'un projet avec plusieurs pages WebVisu revient complet.

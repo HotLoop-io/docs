@@ -3,10 +3,6 @@ title: "Protokolle und Treiber"
 description: "OPC UA, Modbus, MQTT und Sparkplug B, EtherNet/IP, S7comm, MTConnect und HTTP, mit dem Nachweis, wie weit jeder Treiber an echten Anlagen erprobt ist."
 ---
 
-:::note[Enthält, was kommt]
-Diese Seite behandelt auch einige Dinge, die neuer sind als HotLoop core 4.24.0, die aktuelle Version. Manches davon ist möglicherweise nicht in dem enthalten, was Sie installiert haben. Die [Versionshinweise](/de/releases/) sagen, was sich geändert hat.
-:::
-
 Dieses Dokument sagt genau, was das Gateway spricht, wie weit jeder Treiber verifiziert wurde und was bei allem anderen zu tun ist. Es ist das Erste, was Sie lesen sollten, und das, auf das Sie sich verlassen, wenn etwas davon abweicht.
 
 Die Liste der nativen Protokolle wird aus den in die Binärdatei einkompilierten Treibern abgeleitet: `/api/protocols`, die Protokolle-Ansicht und das MCP-Werkzeug `describe_protocol` lesen alle dieselbe Registry. Der Katalog kann kein Protokoll bewerben, das die Binärdatei nicht hat.

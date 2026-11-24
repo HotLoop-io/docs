@@ -3,10 +3,6 @@ title: "La API HTTP"
 description: "Cada llamada que HotLoop responde por HTTP, lo que necesita, lo que acepta y lo que devuelve. La interfaz web no usa nada más."
 ---
 
-:::note[Incluye lo que viene]
-Esta página también recoge algunas cosas más nuevas que HotLoop core 4.24.0, la última versión publicada. Es posible que parte de ello no esté en lo que usted tiene instalado. Las [notas de la versión](/es/releases/) dicen qué ha cambiado.
-:::
-
 Todas las llamadas que atiende el Gateway por HTTP, lo que necesita cada una, lo que recibe y lo que devuelve. La interfaz web no usa nada más: no hay una API privada detrás de las pantallas, así que todo lo que puede hacer la interfaz lo puede hacer un script con las mismas llamadas y los mismos permisos.
 
 Esta página se comprueba contra el código. Por eso la lista de rutas y de quién puede llamarlas no es una descripción de cómo era la API en otro momento. Las formas de las solicitudes y las respuestas de más abajo se tomaron de un Gateway en ejecución; las pruebas no las comprueban, así que si cambia un manejador, cambie también su sección aquí.

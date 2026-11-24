@@ -9,7 +9,7 @@ editUrl: false
 
 ## क्या बदला
 
-0.3.6 `{{codesysChartRepo}}` इंडेक्स में है, 2026-11-19 को प्रकाशित।
+0.3.6 `https://hotloop.io/hotloop-codesys/` इंडेक्स में है, 2026-11-19 को प्रकाशित।
 
 - **लाइसेंस एनोटेशन HotLoop LLC के HotLoop Source License Agreement 1.0 का नाम लेता है।**
 - **और कुछ नहीं बदला।** टेम्पलेट, मान और जिस HotLoop (4.20.2) को यह लपेटता है, वे [0.3.5](/hi/releases/codesys-0-3-5/) के हैं।

@@ -3,10 +3,6 @@ title: "HTTP-APIet"
 description: "Hvert kall HotLoop svarer på over HTTP, hva det trenger, hva det tar imot og hva det gir tilbake. Nettgrensesnittet bruker ingenting annet."
 ---
 
-:::note[Tar med det som kommer]
-Denne siden tar også med noen ting som er nyere enn HotLoop core 4.24.0, den siste utgivelsen. Deler av det er kanskje ikke i det du har installert. [Utgivelsesnotatene](/nb/releases/) sier hva som har endret seg.
-:::
-
 Hvert kall Gateway svarer på over HTTP, hva det trenger, hva det tar imot og hva det gir tilbake. Nettgrensesnittet bruker ikke noe annet: det finnes ikke noe privat API bak skjermbildene, så alt grensesnittet kan gjøre, kan et skript gjøre med de samme kallene og de samme tillatelsene.
 
 Denne siden kontrolleres mot koden. Listen over ruter og hvem som kan kalle dem er derfor ikke en beskrivelse av API-et slik det en gang var. Formene på forespørslene og svarene nedenfor er hentet fra en Gateway som kjørte; testene sjekker dem ikke, så hvis du endrer en handler, endre seksjonen dens her også.

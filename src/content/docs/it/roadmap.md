@@ -3,10 +3,6 @@ title: "Roadmap di HotLoop"
 description: "Cos'è HotLoop, cosa resta da costruire e cosa è rotto, nell'ordine in cui verrà fatto, per HotLoop core. Flow e Cascade hanno la loro."
 ---
 
-:::note[Comprende ciò che sta arrivando]
-Questa pagina comprende anche alcune cose più recenti di HotLoop core 4.24.0, l'ultima versione rilasciata. Una parte potrebbe non essere in ciò che hai installato. Le [note di rilascio](/it/releases/) dicono cosa è cambiato.
-:::
-
 Cos'è HotLoop, cosa resta da costruire e cosa è rotto. Se non è in questa lista non verrà fatto, quindi mettetelo in lista.
 
 ## Cos'è HotLoop
@@ -165,7 +161,7 @@ L'historian integrato resta. Sopra di esso, HotLoop scrive lo storico nei databa
 - [ ] Sicurezza dei messaggi (NetworkMessages firmati e cifrati). Resta: un Security Key Service (le chiavi sono statiche), e un publisher Siemens o Beckhoff. Vedi [Protocolli e driver](/it/iot/protocols/#opc-ua-pubsub-uadp)
 - [x] Frame delta dal publisher, come opzione (`HOTLOOP_UADP_PUBLISH_DELTA_FRAMES`): solo i campi cambiati tra un key frame e l'altro. Vedi [Protocolli e driver](/it/iot/protocols/)
 - [ ] DataSetMetaData e messaggi di scoperta perché un sottoscrittore possa nominare i campi; campi array e struttura in ciò che il publisher invia, e campi struttura in ciò che il sottoscrittore legge; eventi. Realizzato: chunk, risposte di scoperta e DataSetMetaData letti e scritti, i campi struttura del sottoscrittore, RawData disposto dai metadati, messaggi Event, gli annunci del publisher; letto contro i frame catturati di un vero publisher Siemens. Resta: campi array e struttura in ciò che HotLoop pubblica (un tag è un numero o un testo), invio e risposta alle richieste di scoperta
-- [ ] Contro un publisher Siemens o Beckhoff, e attraverso un router (instradamento multicast e TTL)
+- [ ] Contro un publisher Siemens o Beckhoff, e attraverso un router (instradamento multicast e TTL). Attraverso un router è verificato: il limite di hop di 2 del publisher attraversa un router multicast (smcroute, tre namespace di rete in una VM) e il subscriber del Gateway legge il valore, un limite di hop di 1 si ferma al router, e con il router fermo non arriva nulla. Resta: un publisher Siemens o Beckhoff
 
 ---
 

@@ -27,8 +27,9 @@ screen in the editor.
 
 ## What 1.0.x shipped
 
-1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, all in one release. The editor was the
-last piece we wanted before we put our name under the number.
+1.0.0 is 0.1.0 plus 0.2.0 plus the new editor, and nothing else. We called it 1.0.0
+because the editor was the last piece we wanted before we put our name under the
+number, not because everything below is done.
 
 1.0.1 fixed one mistake in sign-in: a database that couldn't be read used to answer
 "not signed in" and clear the cookie, so a short outage signed everyone out and
@@ -40,9 +41,11 @@ browser. Nothing migrated between 1.0.0 and 1.0.2.
 What a saved workflow holds to today: the file says which version of its format it
 is (`cascade: 1`), every step carries its own version, and a workflow that names a
 step that no longer exists fails to validate and does not start, instead of being
-quietly changed. That is how the EmberOps steps were taken out in 1.0.0. Every
-release is started on the previous release's data before it ships: the workflow is
-still there and the credential still opens.
+quietly changed. That is how the EmberOps steps were taken out in 1.0.0. There is
+no promise yet about the format or the API beyond that, and no upgrade test from
+every earlier release: what is tested is in `RELEASE_CHECKLIST.md`, which upgrades
+from the last release by hand. A promise goes here when we can keep it, and not
+before.
 
 ## 1.3.0, the editor in 14 languages
 

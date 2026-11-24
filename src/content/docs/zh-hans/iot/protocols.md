@@ -3,10 +3,6 @@ title: "协议与驱动"
 description: "支持 OPC UA、Modbus、MQTT 与 Sparkplug B、EtherNet/IP、S7comm、MTConnect 和 HTTP，并说明每个驱动已在真实设备上验证到什么程度。"
 ---
 
-:::note[也涵盖即将推出的内容]
-本页也涵盖了一些比最新版本 HotLoop core 4.24.0 更新的内容。其中有些可能不在您已安装的版本里。[发布说明](/zh-hans/releases/)会告诉您有哪些变化。
-:::
-
 本文准确说明网关支持哪些协议、每个驱动已验证到什么程度，以及其余协议该怎么处理。请先读这一篇，与它不一致时，以它为准。
 
 原生协议列表来自编译进二进制文件的驱动。`/api/protocols`、协议界面和 MCP 的 `describe_protocol` 工具读取的是同一个注册表，因此目录不会宣称二进制文件中没有的协议。

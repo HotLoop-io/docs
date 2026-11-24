@@ -9,7 +9,7 @@ editUrl: false
 
 ## Какво се промени
 
-0.3.6 е в индекса `{{codesysChartRepo}}`, публикуван на 2026-11-19.
+0.3.6 е в индекса `https://hotloop.io/hotloop-codesys/`, публикуван на 2026-11-19.
 
 - **Анотацията на лиценза назовава HotLoop Source License Agreement 1.0,** от HotLoop LLC.
 - **Нищо друго не се промени.** Шаблоните, стойностите и HotLoop, който обвива (4.20.2), са тези на [0.3.5](/bg/releases/codesys-0-3-5/).
