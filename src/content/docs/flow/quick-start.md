@@ -30,10 +30,10 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
   -e HOTLOOP_FLOW_ADMIN_USER=admin \
   -e HOTLOOP_FLOW_ADMIN_PASSWORD_HASH='<bcrypt hash>' \
   -e HOTLOOP_FLOW_CREDENTIAL_SECRET="$(openssl rand -hex 32)" \
-  ghcr.io/hotloop-io/hotloop-flow:2.16.8
+  ghcr.io/hotloop-io/hotloop-flow:2.17.1
 ```
 
-Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8
+Generate the hash with `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.17.1
 hash-password -password 'something-long'`. The image is distroless nonroot with
 no shell in it, so there is nothing to `exec` into and nothing for anybody who
 gets code execution to pivot with.
@@ -60,4 +60,4 @@ is fetched from anywhere, so it works on a box with no internet.
 | `hotloop-flow export` | The running flow file, byte for byte, or `-deployment N` from the history. |
 | `hotloop-flow token` | A new API token and the hash to configure for it. |
 | `hotloop-flow bench` | The benchmark harness that produced [the numbers](/flow/overview/#the-numbers). |
-| `hotloop-flow version` | The version. |
+| `hotloop-flow version` | The version, then the commit the image was built from. |

@@ -1,5 +1,5 @@
 ---
-reviewed: flow=2.16.8
+reviewed: flow=2.17.1
 title: "Install HotLoop Flow with Podman or Helm"
 description: "Run HotLoop Flow {{flow}} with Podman or Quadlet, on Kubernetes with Helm, or from source. It starts locked, so set an admin password first."
 sidebar:

@@ -25,7 +25,7 @@ editUrl: false
 | [HotLoop Edge](/el/edge/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του Edge](/el/edge/install/) |
 | [HotLoop Gateway](/el/gateway/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του Gateway](/el/gateway/install/) |
 | [HotLoop Edge Relay](/el/edge-relay/overview/) | 4.24.2 | Ναι | Ναι | [Εγκατάσταση του Edge Relay](/el/edge-relay/install/) |
-| [HotLoop Flow](/el/flow/overview/) | 2.16.8 | Ναι | Ναι | [Εγκατάσταση του Flow](/el/flow/install/) |
+| [HotLoop Flow](/el/flow/overview/) | 2.17.1 | Ναι | Ναι | [Εγκατάσταση του Flow](/el/flow/install/) |
 | [HotLoop Cascade](/el/cascade/overview/) | 1.5.1 | Ναι, χωρίς σύνδεση χρήστη | Ναι, χωρίς σύνδεση χρήστη, δείτε [Cascade με Podman Quadlet](/el/cascade/quadlet/) | [Λειτουργία του Cascade](/el/cascade/running/) |
 | [HotLoop for CODESYS](/el/codesys/overview/) | 0.3.10 | Ναι, ή το App Store του EmberCORE | Όχι | [Εγκατάσταση του HotLoop for CODESYS](/el/codesys/install/) |
 | [HotLoop Transmitter](/el/transmitter/overview/) | 1.2.0 | Όχι, είναι βιβλιοθήκη CODESYS | Όχι, είναι βιβλιοθήκη CODESYS | [Εγκατάσταση του Transmitter](/el/transmitter/install/) |

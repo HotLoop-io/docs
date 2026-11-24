@@ -50,4 +50,4 @@ Lag hashen med `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.8 hash-pass
 | `hotloop-flow export` | Den kjørende flytfilen, byte for byte, eller `-deployment N` fra historikken. |
 | `hotloop-flow token` | Et nytt API-token og hashen som skal konfigureres for det. |
 | `hotloop-flow bench` | Referansetestoppsettet som ga [tallene](/nb/flow/overview/#tallene). |
-| `hotloop-flow version` | Versjonen. |
+| `hotloop-flow version` | Versjonen, deretter commiten imaget ble bygd fra. |

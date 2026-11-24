@@ -25,7 +25,7 @@ editUrl: false
 | [HotLoop Edge](/bg/edge/overview/) | 4.24.2 | Да | Да | [Инсталиране на Edge](/bg/edge/install/) |
 | [HotLoop Gateway](/bg/gateway/overview/) | 4.24.2 | Да | Да | [Инсталиране на Gateway](/bg/gateway/install/) |
 | [HotLoop Edge Relay](/bg/edge-relay/overview/) | 4.24.2 | Да | Да | [Инсталиране на Edge Relay](/bg/edge-relay/install/) |
-| [HotLoop Flow](/bg/flow/overview/) | 2.16.8 | Да | Да | [Инсталиране на Flow](/bg/flow/install/) |
+| [HotLoop Flow](/bg/flow/overview/) | 2.17.1 | Да | Да | [Инсталиране на Flow](/bg/flow/install/) |
 | [HotLoop Cascade](/bg/cascade/overview/) | 1.5.1 | Да, без вход | Да, без вход, вижте [Cascade с Podman Quadlet](/bg/cascade/quadlet/) | [Пускане на Cascade](/bg/cascade/running/) |
 | [HotLoop for CODESYS](/bg/codesys/overview/) | 0.3.10 | Да, или App Store на EmberCORE | Не | [Инсталиране на HotLoop for CODESYS](/bg/codesys/install/) |
 | [HotLoop Transmitter](/bg/transmitter/overview/) | 1.2.0 | Не, това е библиотека за CODESYS | Не, това е библиотека за CODESYS | [Инсталиране на Transmitter](/bg/transmitter/install/) |

@@ -25,7 +25,7 @@ HotLoop 제품을 제대로 운영하는 방법은 두 가지입니다. k3s 또�
 | [HotLoop Edge](/ko/edge/overview/) | 4.24.2 | 예 | 예 | [Edge 설치](/ko/edge/install/) |
 | [HotLoop Gateway](/ko/gateway/overview/) | 4.24.2 | 예 | 예 | [Gateway 설치](/ko/gateway/install/) |
 | [HotLoop Edge Relay](/ko/edge-relay/overview/) | 4.24.2 | 예 | 예 | [Edge Relay 설치](/ko/edge-relay/install/) |
-| [HotLoop Flow](/ko/flow/overview/) | 2.16.8 | 예 | 예 | [Flow 설치](/ko/flow/install/) |
+| [HotLoop Flow](/ko/flow/overview/) | 2.17.1 | 예 | 예 | [Flow 설치](/ko/flow/install/) |
 | [HotLoop Cascade](/ko/cascade/overview/) | 1.5.1 | 예, 로그인 불필요 | 예, 로그인 불필요, 참고: [Podman Quadlet로 Cascade 실행](/ko/cascade/quadlet/) | [Cascade 실행](/ko/cascade/running/) |
 | [HotLoop for CODESYS](/ko/codesys/overview/) | 0.3.10 | 예, 또는 EmberCORE App Store | 아니요 | [HotLoop for CODESYS 설치](/ko/codesys/install/) |
 | [HotLoop Transmitter](/ko/transmitter/overview/) | 1.2.0 | 아니요, CODESYS 라이브러리입니다 | 아니요, CODESYS 라이브러리입니다 | [Transmitter 설치](/ko/transmitter/install/) |

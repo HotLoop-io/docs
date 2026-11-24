@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | 실행 중인 플로 파일을 바이트 단위 그대로, 또는 `-deployment N`으로 이력의 해당 배포를 내보냅니다. |
 | `hotloop-flow token` | 새 API 토큰과 그에 맞게 설정할 해시를 만듭니다. |
 | `hotloop-flow bench` | [수치](/ko/flow/overview/#수치)를 만든 벤치마크 도구입니다. |
-| `hotloop-flow version` | 버전입니다. |
+| `hotloop-flow version` | 버전, 이어서 이미지를 빌드한 커밋. |

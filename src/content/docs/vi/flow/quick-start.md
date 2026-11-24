@@ -50,4 +50,4 @@ Sau đó mở <http://localhost:1880>. Thả một tệp `flows.json` vào thư 
 | `hotloop-flow export` | Tệp luồng đang chạy, từng byte, hoặc `-deployment N` từ lịch sử. |
 | `hotloop-flow token` | Một token API mới và hash cần cấu hình cho nó. |
 | `hotloop-flow bench` | Bộ đo hiệu năng đã tạo ra [các con số](/vi/flow/overview/#các-con-số). |
-| `hotloop-flow version` | Phiên bản. |
+| `hotloop-flow version` | Phiên bản, rồi đến commit mà image được dựng từ đó. |

@@ -50,4 +50,4 @@ Ouvrez ensuite <http://localhost:1880>. Déposez un `flows.json` dans le répert
 | `hotloop-flow export` | Le fichier de flux en cours d'exécution, octet pour octet, ou `-deployment N` depuis l'historique. |
 | `hotloop-flow token` | Un nouveau jeton d'API et le hash à configurer pour lui. |
 | `hotloop-flow bench` | Le banc d'essai qui a produit [les chiffres](/fr/flow/overview/#les-chiffres). |
-| `hotloop-flow version` | La version. |
+| `hotloop-flow version` | La version, puis le commit à partir duquel l'image a été construite. |

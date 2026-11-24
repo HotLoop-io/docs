@@ -50,4 +50,4 @@ Erzeugen Sie den Hash mit `podman run --rm ghcr.io/hotloop-io/hotloop-flow:2.16.
 | `hotloop-flow export` | Die laufende Flow-Datei, Byte für Byte, oder `-deployment N` aus dem Verlauf. |
 | `hotloop-flow token` | Ein neues API-Token und der Hash, der dafür zu konfigurieren ist. |
 | `hotloop-flow bench` | Der Benchmark-Aufbau, der [die Zahlen](/de/flow/overview/#die-zahlen) erzeugt hat. |
-| `hotloop-flow version` | Die Version. |
+| `hotloop-flow version` | Die Version, danach der Commit, aus dem das Image gebaut wurde. |

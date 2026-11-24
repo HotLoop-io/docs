@@ -25,7 +25,7 @@ Il y a deux façons d'exécuter un produit HotLoop pour de bon : Helm sur k3s o
 | [HotLoop Edge](/fr/edge/overview/) | 4.24.2 | Oui | Oui | [Installer Edge](/fr/edge/install/) |
 | [HotLoop Gateway](/fr/gateway/overview/) | 4.24.2 | Oui | Oui | [Installer Gateway](/fr/gateway/install/) |
 | [HotLoop Edge Relay](/fr/edge-relay/overview/) | 4.24.2 | Oui | Oui | [Installer Edge Relay](/fr/edge-relay/install/) |
-| [HotLoop Flow](/fr/flow/overview/) | 2.16.8 | Oui | Oui | [Installer Flow](/fr/flow/install/) |
+| [HotLoop Flow](/fr/flow/overview/) | 2.17.1 | Oui | Oui | [Installer Flow](/fr/flow/install/) |
 | [HotLoop Cascade](/fr/cascade/overview/) | 1.5.1 | Oui, sans connexion | Oui, sans connexion, voir [Cascade avec Podman Quadlet](/fr/cascade/quadlet/) | [Exécuter Cascade](/fr/cascade/running/) |
 | [HotLoop for CODESYS](/fr/codesys/overview/) | 0.3.10 | Oui, ou l'App Store EmberCORE | Non | [Installer HotLoop for CODESYS](/fr/codesys/install/) |
 | [HotLoop Transmitter](/fr/transmitter/overview/) | 1.2.0 | Non, c'est une bibliothèque CODESYS | Non, c'est une bibliothèque CODESYS | [Installer Transmitter](/fr/transmitter/install/) |

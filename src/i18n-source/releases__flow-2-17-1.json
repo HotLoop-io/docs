@@ -1,0 +1,34 @@
+{
+  "page": "releases/flow-2-17-1",
+  "english": "src/content/docs/releases/flow-2-17-1.md",
+  "langs": {
+    "es": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "fr": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "it": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "de": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "nb": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "bg": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "el": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "ko": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "ja": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "vi": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "hi": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "zh-hans": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"],
+    "ar": ["9f4caf38ee9c","334065b955ca","9977316cd54d","5e09c35874b7","00afaed120cf","ab0aee0a991d","47df64c7ba4c","318208f6f266","c2c2a99c506b","cd6bd1bdbef7","9d2d8ef072e0","51a85eb3bc2d","903ea500e7cc","fa5bd88d028c","2425f56d8685","e63d63c66a19","36a7a7605ddc","fe380fe6423d"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.2","flow":"2.17.1","cascade":"1.5.1"}
+  }
+}

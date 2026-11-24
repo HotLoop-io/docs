@@ -50,4 +50,4 @@ podman run --rm -p 1880:1880 -v hotloop-flow-data:/data \
 | `hotloop-flow export` | 运行中的流程文件，按字节原样导出，或用 `-deployment N` 从历史中导出。 |
 | `hotloop-flow token` | 一个新的 API 令牌，以及要为它配置的哈希。 |
 | `hotloop-flow bench` | 产出[这些数据](/zh-hans/flow/overview/#数据)的基准测试工具。 |
-| `hotloop-flow version` | 版本。 |
+| `hotloop-flow version` | 版本号，然后是镜像构建所用的提交。 |
