@@ -8,7 +8,7 @@ editUrl: false
 ---
 
 :::note[Edge가 출시되었습니다. 첫 출시는 4.18.10입니다]
-이미지는 amd64, arm64, arm/v7용으로 빌드된 `ghcr.io/hotloop-io/hotloop-edge:4.24.2`이며 amd64에서 약 37 MB, arm에서 약 34 MB입니다. 차트는 `https://hotloop.io/hotloop`의 `hotloop-edge`입니다. 둘 다 로그인 없이 받을 수 있습니다. Quadlet 유닛은 [Podman Quadlet](/ko/install/quadlet/)의 `edge/` 디렉터리에 있습니다. [설치하세요](/ko/edge/install/). 4.18.10 이전에도 Gateway는 현장에서 실행하며 Sparkplug를 상위로 게시할 수 있었고 4.5.0부터 그랬지만, 그러려면 Gateway 전체가 필요했습니다.
+이미지는 amd64, arm64, arm/v7용으로 빌드된 `ghcr.io/hotloop-io/hotloop-edge:4.24.3`이며 amd64에서 약 37 MB, arm에서 약 34 MB입니다. 차트는 `https://hotloop.io/hotloop`의 `hotloop-edge`입니다. 둘 다 로그인 없이 받을 수 있습니다. Quadlet 유닛은 [Podman Quadlet](/ko/install/quadlet/)의 `edge/` 디렉터리에 있습니다. [설치하세요](/ko/edge/install/). 4.18.10 이전에도 Gateway는 현장에서 실행하며 Sparkplug를 상위로 게시할 수 있었고 4.5.0부터 그랬지만, 그러려면 Gateway 전체가 필요했습니다.
 :::
 
 Edge는 라인 옆에 설치하는 박스입니다. 기계를 읽고, 기계에서 규칙을 실행하고, WAN이 끊겨도 계속 동작하며, 본 것을 공장의 나머지에 알립니다. 다른 모든 것과 같은 쓰기 게이트로 동작합니다.

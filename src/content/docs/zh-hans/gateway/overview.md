@@ -7,8 +7,8 @@ sidebar:
 editUrl: false
 ---
 
-:::note[4.24.2 已发布]
-一个标签发布四个产品：[IoT](/zh-hans/iot/overview/)、[Edge](/zh-hans/edge/overview/)、Gateway 和 [Edge Relay](/zh-hans/edge-relay/overview/)，各有自己的镜像和 Chart。四个产品在 4.24.2 中都为 amd64 和 arm64 构建，三个小产品还为 arm/v7 构建。Gateway 沿用镜像 `ghcr.io/hotloop-io/hotloop:4.24.2` 和来自 `https://hotloop.io/hotloop` 的 Chart `hotloop`，两者都无需登录即可拉取。[安装它](/zh-hans/gateway/install/)。在用 4.18.11？执行一次 `helm upgrade` 即可，之后智能体可以写入，所以请先读两处变化。在用 4.17.0？这是一次普通的 `helm upgrade`，但不能带 `--reuse-values`，而且有几个默认值变了。在用 4.16.0 或 4.3.1？先经过 4.17.0。无论哪种情况，都请[先读升级说明](/zh-hans/gateway/upgrading/)。在这里弄清楚，好过在卡住的发布里才发现。
+:::note[4.24.3 已发布]
+一个标签发布四个产品：[IoT](/zh-hans/iot/overview/)、[Edge](/zh-hans/edge/overview/)、Gateway 和 [Edge Relay](/zh-hans/edge-relay/overview/)，各有自己的镜像和 Chart。四个产品在 4.24.3 中都为 amd64 和 arm64 构建，三个小产品还为 arm/v7 构建。Gateway 沿用镜像 `ghcr.io/hotloop-io/hotloop:4.24.3` 和来自 `https://hotloop.io/hotloop` 的 Chart `hotloop`，两者都无需登录即可拉取。[安装它](/zh-hans/gateway/install/)。在用 4.18.11？执行一次 `helm upgrade` 即可，之后智能体可以写入，所以请先读两处变化。在用 4.17.0？这是一次普通的 `helm upgrade`，但不能带 `--reuse-values`，而且有几个默认值变了。在用 4.16.0 或 4.3.1？先经过 4.17.0。无论哪种情况，都请[先读升级说明](/zh-hans/gateway/upgrading/)。在这里弄清楚，好过在卡住的发布里才发现。
 :::
 
 HotLoop Gateway 读取你的工厂。它用各自的协议轮询 PLC 和服务器，把每个读数及其质量存入历史数据库，发出能呼叫手机的 ISA-18.2 报警，对所有数据运行自动化，并通过 MCP 把整座工厂交给智能体。一个站点只运行一个 Chart，也就是 Gateway 及其数据库，而不是历史数据库、报警服务器、规则引擎再加一堆胶水代码，各自按各自的节奏出故障。
@@ -19,7 +19,7 @@ HotLoop Gateway 读取你的工厂。它用各自的协议轮询 PLC 和服务�
 
 ## 从哪里开始
 
-基础内容，适用于 4.24.2 以及回溯到 4.16.0 的每个版本：
+基础内容，适用于 4.24.3 以及回溯到 4.16.0 的每个版本：
 
 - [安装](/zh-hans/gateway/install/)讲用已发布 Chart 通过 Helm 安装，或在一台主机上用 Podman Quadlet，需要备份的密钥，以及让真实工厂看到它之前要设置的几个值。
 - [升级](/zh-hans/gateway/upgrading/)讲保留你数据的流程，从 4.17.0、4.16.0 或 4.3.1 升级，以及每一处会让脚本出错的 API 变化。
@@ -64,7 +64,7 @@ HotLoop Gateway 读取你的工厂。它用各自的协议轮询 PLC 和服务�
 
 HotLoop 是一套代码，作为四个产品发布，全部从同一个标签一起发布：IoT、Edge、Gateway 和 Edge Relay。Gateway 是顶端：包含 IoT 和 Edge 的一切，外加设备群管理、多站点汇总和定时报告。功能区分产品，协议绝不区分：每个产品都支持我们拥有的每一种协议，没有人需要为了读取自己工作台上的 PLC 而升级到更高档。[产品阵容](/zh-hans/products/)说明了各个产品包含什么。
 
-四个产品今天都可以安装，版本都是 4.24.2。Relay 有自己的镜像和 Chart，约 15 MB，而 Gateway 是 37 MB，没有数据库也没有界面。Gateway 的设备群管理会跟踪并指挥每一个已注册的 Relay，并且只提供 API（`/api/fleet`）：界面中没有设备群屏幕。
+四个产品今天都可以安装，版本都是 4.24.3。Relay 有自己的镜像和 Chart，约 15 MB，而 Gateway 是 37 MB，没有数据库也没有界面。Gateway 的设备群管理会跟踪并指挥每一个已注册的 Relay，并且只提供 API（`/api/fleet`）：界面中没有设备群屏幕。
 
 要在工厂里使用？[在企业中使用 HotLoop](/zh-hans/business/)介绍了许可以及如何联系我们。
 

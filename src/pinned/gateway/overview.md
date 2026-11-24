@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.24.2
+reviewed: hotloop=4.24.3
 title: "HotLoop Gateway overview"
 description: "An industrial gateway: twelve native protocol drivers, a historian that keeps quality, ISA-18.2 alarms, MCP for agents, and one write gate nothing gets around."
 sidebar:

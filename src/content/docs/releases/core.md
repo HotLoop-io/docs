@@ -7,10 +7,11 @@ sidebar:
 editUrl: false
 ---
 
-HotLoop IoT, Edge, Gateway and Edge Relay are one codebase and release together from one tag, so there is one set of release notes for all four, and this is it. The latest is 4.24.2. The same notes are on [hotloop.io](https://hotloop.io/releases/core/), with the date each one went out. Flow, Cascade, HotLoop for CODESYS and Transmitter have their own, on the [release notes index](/releases/).
+HotLoop IoT, Edge, Gateway and Edge Relay are one codebase and release together from one tag, so there is one set of release notes for all four, and this is it. The latest is 4.24.3. The same notes are on [hotloop.io](https://hotloop.io/releases/core/), with the date each one went out. Flow, Cascade, HotLoop for CODESYS and Transmitter have their own, on the [release notes index](/releases/).
 
 Every release has its own page, written the day it shipped. A note marked "coming in the next release" describes a release that is not out yet, so nothing in it is in what you have installed.
 
+- [HotLoop core 4.24.3 release notes](/releases/hotloop-4-24-3/)
 - [HotLoop core 4.24.2 release notes](/releases/hotloop-4-24-2/)
 - [HotLoop core 4.24.0 release notes](/releases/hotloop-4-24-0/)
 - [HotLoop core 4.23.6 release notes](/releases/hotloop-4-23-6/)

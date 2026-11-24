@@ -21,10 +21,10 @@ HotLoop 製品を本番で動かす方法は 2 つです。k3s など任意の K
 
 | 製品 | 最新リリース | Helm | Quadlet | はじめに |
 |---|---|---|---|---|
-| [HotLoop IoT](/ja/iot/overview/) | 4.24.2 | 可 | 可 | [IoT をインストール](/ja/iot/install/) |
-| [HotLoop Edge](/ja/edge/overview/) | 4.24.2 | 可 | 可 | [Edge をインストール](/ja/edge/install/) |
-| [HotLoop Gateway](/ja/gateway/overview/) | 4.24.2 | 可 | 可 | [Gateway をインストール](/ja/gateway/install/) |
-| [HotLoop Edge Relay](/ja/edge-relay/overview/) | 4.24.2 | 可 | 可 | [Edge Relay をインストール](/ja/edge-relay/install/) |
+| [HotLoop IoT](/ja/iot/overview/) | 4.24.3 | 可 | 可 | [IoT をインストール](/ja/iot/install/) |
+| [HotLoop Edge](/ja/edge/overview/) | 4.24.3 | 可 | 可 | [Edge をインストール](/ja/edge/install/) |
+| [HotLoop Gateway](/ja/gateway/overview/) | 4.24.3 | 可 | 可 | [Gateway をインストール](/ja/gateway/install/) |
+| [HotLoop Edge Relay](/ja/edge-relay/overview/) | 4.24.3 | 可 | 可 | [Edge Relay をインストール](/ja/edge-relay/install/) |
 | [HotLoop Flow](/ja/flow/overview/) | 2.17.2 | 可 | 可 | [Flow をインストール](/ja/flow/install/) |
 | [HotLoop Cascade](/ja/cascade/overview/) | 1.5.1 | 可、ログイン不要 | 可、ログイン不要, 参照: [Podman Quadlet での Cascade](/ja/cascade/quadlet/) | [Cascade を実行](/ja/cascade/running/) |
 | [HotLoop for CODESYS](/ja/codesys/overview/) | 0.3.10 | 可、または EmberCORE App Store | 不可 | [HotLoop for CODESYS をインストール](/ja/codesys/install/) |

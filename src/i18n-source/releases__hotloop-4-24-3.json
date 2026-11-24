@@ -1,0 +1,34 @@
+{
+  "page": "releases/hotloop-4-24-3",
+  "english": "src/content/docs/releases/hotloop-4-24-3.md",
+  "langs": {
+    "es": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "fr": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "it": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "de": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "nb": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "bg": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "el": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "ko": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "ja": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "vi": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "hi": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "zh-hans": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"],
+    "ar": ["9c196da7feab","dfe79ae585d8","ae869b9e8c61","3a8e26013b09","e2b6da098665","2e0aa8003333","18c78df8eaf7"]
+  },
+  "versions": {
+    "es": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "fr": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "it": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "de": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "nb": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "bg": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "el": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "ko": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "ja": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "vi": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "hi": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "zh-hans": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"},
+    "ar": {"hotloop":"4.24.3","flow":"2.17.2","cascade":"1.5.1"}
+  }
+}

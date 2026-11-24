@@ -1,5 +1,5 @@
 ---
-reviewed: hotloop=4.24.2
+reviewed: hotloop=4.24.3
 title: "HotLoop IoT overview"
 description: "HotLoop IoT is the automation base: entities, automations, dashboards, alarms, MQTT discovery, and every protocol driver, on SQLite or PostgreSQL, built in Go."
 sidebar:
