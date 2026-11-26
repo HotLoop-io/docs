@@ -45,7 +45,7 @@ Un projet d'automate figé sur 1.0.0 continue de fonctionner et d'envoyer les oc
 
 ## Fichiers
 
-Téléchargez-les depuis https://hotloop.io/hotloop-transmitter/1.1.0/ et vérifiez-les avec `SHA256SUMS` dans le même dossier.
+Téléchargez-les depuis https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library et vérifiez-les avec `SHA256SUMS` dans le même dossier.
 
 ```
 5ec021b23f5d57460016834a03b2b196d6dbc83aeb5d0ad60ace8d7b4fbbb4a7  HotLoopTransmitter-1.1.0.library

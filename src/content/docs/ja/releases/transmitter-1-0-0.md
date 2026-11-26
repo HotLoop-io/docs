@@ -47,7 +47,7 @@ DataSetMessage と NetworkMessage のタイムスタンプ、KeepAlive と Delta
 
 ## ファイル
 
-https://hotloop.io/hotloop-transmitter/1.0.0/ から 2 つのファイルと `SHA256SUMS` をダウンロードし、CODESYS 3.5 SP22 以降の Tools、Library Repository、Install で `HotLoopTransmitter-1.0.0.library` をインストールしてください。`.compiled-library` は、ソースのない同じライブラリです。
+https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library から 2 つのファイルと `SHA256SUMS` をダウンロードし、CODESYS 3.5 SP22 以降の Tools、Library Repository、Install で `HotLoopTransmitter-1.0.0.library` をインストールしてください。`.compiled-library` は、ソースのない同じライブラリです。
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

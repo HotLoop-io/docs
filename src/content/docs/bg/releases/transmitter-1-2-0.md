@@ -42,7 +42,7 @@ PLC проект, фиксиран към 1.1.0, продължава да ра�
 
 ## Файлове
 
-Изтеглете ги от https://hotloop.io/hotloop-transmitter/1.2.0/ и ги сверете с `SHA256SUMS` в същата папка.
+Изтеглете ги от https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library и ги сверете с `SHA256SUMS` в същата папка.
 
 ```
 e68cfc88e599ddcf278eb208ff500f4f78d3faf74edf12e38f308a009f478594  HotLoopAlarms-1.0.0.0.compiled-library

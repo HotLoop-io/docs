@@ -47,7 +47,7 @@ DataSetMessage와 NetworkMessage 타임스탬프, KeepAlive와 Delta Frame, Netw
 
 ## 파일
 
-https://hotloop.io/hotloop-transmitter/1.0.0/ 에서 두 파일과 `SHA256SUMS`를 내려받은 뒤, CODESYS 3.5 SP22 이상에서 Tools, Library Repository, Install로 `HotLoopTransmitter-1.0.0.library`를 설치하십시오. `.compiled-library`는 소스 없이 같은 라이브러리입니다.
+https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library 에서 두 파일과 `SHA256SUMS`를 내려받은 뒤, CODESYS 3.5 SP22 이상에서 Tools, Library Repository, Install로 `HotLoopTransmitter-1.0.0.library`를 설치하십시오. `.compiled-library`는 소스 없이 같은 라이브러리입니다.
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

@@ -635,7 +635,7 @@ and [IEC Symbol Set](https://content.helpme-codesys.com/en/CODESYS%20Communicati
 (the symbol name is `<application>.<POU>.<variable>`, access is read, write or
 execute per symbol, the groups' rights are on the device's Symbol Rights tab, and
 OPC UA needs a certificate on the controller); the
-[PLCopen OPC UA information model for IEC 61131-3](https://plcopen.org/system/files/downloads/plcopen_opc_ua_information_model_for_iec61131-3_version1.02.pdf)
+[PLCopen OPC UA information model for IEC 61131-3](https://reference.opcfoundation.org/IEC61131-3/v100/docs/)
 (release 1.02, the layout below); OPC UA Part 5 (OperationLimits). The node ids are
 what a 4.22.0.0 runtime answered, which this driver was written against; the
 exact `|var|` spelling is the runtime's, not a published contract, which is why a

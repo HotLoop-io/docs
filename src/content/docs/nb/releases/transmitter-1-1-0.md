@@ -45,7 +45,7 @@ Et PLS-prosjekt festet til 1.0.0 fortsetter å virke og sende bytene fra 1.0.0. 
 
 ## Filer
 
-Last dem ned fra https://hotloop.io/hotloop-transmitter/1.1.0/, og sjekk dem mot `SHA256SUMS` i samme mappe.
+Last dem ned fra https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library, og sjekk dem mot `SHA256SUMS` i samme mappe.
 
 ```
 5ec021b23f5d57460016834a03b2b196d6dbc83aeb5d0ad60ace8d7b4fbbb4a7  HotLoopTransmitter-1.1.0.library

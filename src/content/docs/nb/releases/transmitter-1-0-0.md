@@ -47,7 +47,7 @@ Det finnes ingen tidligere versjon. Nettformatet endres bare når `udiConfigMajo
 
 ## Filer
 
-Last ned begge filene og `SHA256SUMS` fra https://hotloop.io/hotloop-transmitter/1.0.0/, og installer deretter `HotLoopTransmitter-1.0.0.library` via Verktøy, Bibliotekbehandling, Installer i CODESYS 3.5 SP22 eller nyere. `.compiled-library` er det samme biblioteket uten kildekoden.
+Last ned begge filene og `SHA256SUMS` fra https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library, og installer deretter `HotLoopTransmitter-1.0.0.library` via Verktøy, Bibliotekbehandling, Installer i CODESYS 3.5 SP22 eller nyere. `.compiled-library` er det samme biblioteket uten kildekoden.
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

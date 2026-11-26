@@ -47,7 +47,7 @@ description: "Η πρώτη έκδοση του HotLoop Transmitter: μια βι
 
 ## Αρχεία
 
-Κατεβάστε και τα δύο αρχεία και το `SHA256SUMS` από https://hotloop.io/hotloop-transmitter/1.0.0/ και μετά εγκαταστήστε το `HotLoopTransmitter-1.0.0.library` από Tools, Library Repository, Install στο CODESYS 3.5 SP22 ή νεότερο. Το `.compiled-library` είναι η ίδια βιβλιοθήκη χωρίς τον πηγαίο κώδικά της.
+Κατεβάστε και τα δύο αρχεία και το `SHA256SUMS` από https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library και μετά εγκαταστήστε το `HotLoopTransmitter-1.0.0.library` από Tools, Library Repository, Install στο CODESYS 3.5 SP22 ή νεότερο. Το `.compiled-library` είναι η ίδια βιβλιοθήκη χωρίς τον πηγαίο κώδικά της.
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

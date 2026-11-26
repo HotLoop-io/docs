@@ -45,7 +45,7 @@ KeepAlive と Delta Frame、1 つの NetworkMessage に複数の DataSetMessage�
 
 ## ファイル
 
-https://hotloop.io/hotloop-transmitter/1.1.0/ からダウンロードし、同じフォルダーの `SHA256SUMS` と照合してください。
+https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library からダウンロードし、同じフォルダーの `SHA256SUMS` と照合してください。
 
 ```
 5ec021b23f5d57460016834a03b2b196d6dbc83aeb5d0ad60ace8d7b4fbbb4a7  HotLoopTransmitter-1.1.0.library

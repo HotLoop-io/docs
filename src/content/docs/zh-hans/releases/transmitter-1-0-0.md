@@ -47,7 +47,7 @@ DataSetMessage 和 NetworkMessage 的时间戳、KeepAlive 和 Delta Frame、每
 
 ## 文件
 
-从 https://hotloop.io/hotloop-transmitter/1.0.0/ 下载两个文件和 `SHA256SUMS`,然后在 CODESYS 3.5 SP22 或更高版本中通过 Tools、Library Repository、Install 安装 `HotLoopTransmitter-1.0.0.library`。`.compiled-library` 是同一个库,只是不含源代码。
+从 https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library 下载两个文件和 `SHA256SUMS`,然后在 CODESYS 3.5 SP22 或更高版本中通过 Tools、Library Repository、Install 安装 `HotLoopTransmitter-1.0.0.library`。`.compiled-library` 是同一个库,只是不含源代码。
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

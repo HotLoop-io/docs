@@ -42,7 +42,7 @@ Ein SPS-Projekt, das an 1.1.0 gebunden ist, läuft weiter und sendet dieselben B
 
 ## Dateien
 
-Laden Sie sie von https://hotloop.io/hotloop-transmitter/1.2.0/ herunter und prüfen Sie sie mit `SHA256SUMS` im selben Ordner.
+Laden Sie sie von https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library herunter und prüfen Sie sie mit `SHA256SUMS` im selben Ordner.
 
 ```
 e68cfc88e599ddcf278eb208ff500f4f78d3faf74edf12e38f308a009f478594  HotLoopAlarms-1.0.0.0.compiled-library
