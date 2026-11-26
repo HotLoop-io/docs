@@ -47,7 +47,7 @@ DataSetMessage और NetworkMessage टाइमस्टैम्प, KeepAliv
 
 ## फ़ाइलें
 
-https://hotloop.io/hotloop-transmitter/1.0.0/ से दोनों फ़ाइलें और `SHA256SUMS` डाउनलोड करें, फिर CODESYS 3.5 SP22 या नए में Tools, Library Repository, Install से `HotLoopTransmitter-1.0.0.library` इंस्टॉल करें। `.compiled-library` वही लाइब्रेरी है, बिना स्रोत के।
+https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library से दोनों फ़ाइलें और `SHA256SUMS` डाउनलोड करें, फिर CODESYS 3.5 SP22 या नए में Tools, Library Repository, Install से `HotLoopTransmitter-1.0.0.library` इंस्टॉल करें। `.compiled-library` वही लाइब्रेरी है, बिना स्रोत के।
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

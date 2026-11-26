@@ -285,7 +285,7 @@ HotLoop 的 Sparkplug 边缘节点和 Edge Relay 与 Ignition 的 MQTT Engine �
 2. 下载。没有 Symbol Configuration 的 PLC 会用一条消息回应设置，提示去添加一个。
 3. 只有当变量的符号为 `readwrite`，并且它所连接的用户被允许写入时(设备的 *Symbol Rights*)，变量才可以从 HotLoop 写入。HotLoop 会读取访问级别，并说明是两者中的哪一个拒绝了写入。
 
-来源：[CODESYS 帮助，Symbol Configuration](https://content.helpme-codesys.com/en/CODESYS%20Communication/_cds_symbolconfiguration.html)和 [IEC Symbol Set](https://content.helpme-codesys.com/en/CODESYS%20Communication/_comm_symbol_configuration.html)(符号名为 `<application>.<POU>.<variable>`，访问权限按符号分为读、写或执行，各组的权限在设备的 Symbol Rights 选项卡上，OPC UA 需要控制器上有证书);[面向 IEC 61131-3 的 PLCopen OPC UA 信息模型](https://plcopen.org/system/files/downloads/plcopen_opc_ua_information_model_for_iec61131-3_version1.02.pdf)(1.02 版，下面的布局);OPC UA Part 5(OperationLimits)。节点 id 是 4.22.0.0 运行时所应答的，这个驱动就是据此编写的；`|var|` 的确切拼写是运行时自己的，并不是公布的契约，所以变量按符号寻址，由驱动来构造节点 id。
+来源：[CODESYS 帮助，Symbol Configuration](https://content.helpme-codesys.com/en/CODESYS%20Communication/_cds_symbolconfiguration.html)和 [IEC Symbol Set](https://content.helpme-codesys.com/en/CODESYS%20Communication/_comm_symbol_configuration.html)(符号名为 `<application>.<POU>.<variable>`，访问权限按符号分为读、写或执行，各组的权限在设备的 Symbol Rights 选项卡上，OPC UA 需要控制器上有证书);[面向 IEC 61131-3 的 PLCopen OPC UA 信息模型](https://reference.opcfoundation.org/IEC61131-3/v100/docs/)(1.02 版，下面的布局);OPC UA Part 5(OperationLimits)。节点 id 是 4.22.0.0 运行时所应答的，这个驱动就是据此编写的；`|var|` 的确切拼写是运行时自己的，并不是公布的契约，所以变量按符号寻址，由驱动来构造节点 id。
 
 **布局。**运行时在 OPC UA Device Integration 的 `DeviceSet` 中发布一个代表 PLC 的设备，其下是 `Resources`，再往下是应用，应用之下有 `GlobalVars`(变量列表)和 `Programs`。变量的节点是命名空间 `CODESYSSPV3/3S/IecVarAccess` 中的 `ns=<n>;s=|var|<device>.<application>.<list or program>.<variable>`。驱动通过浏览找到设备和应用，所以项目改名后变量依然有效。
 

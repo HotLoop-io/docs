@@ -45,7 +45,7 @@ KeepAlive και Delta Frames, περισσότερα από ένα DataSetMessa
 
 ## Αρχεία
 
-Κατεβάστε τα από https://hotloop.io/hotloop-transmitter/1.1.0/ και ελέγξτε τα με το `SHA256SUMS` στον ίδιο φάκελο.
+Κατεβάστε τα από https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library και ελέγξτε τα με το `SHA256SUMS` στον ίδιο φάκελο.
 
 ```
 5ec021b23f5d57460016834a03b2b196d6dbc83aeb5d0ad60ace8d7b4fbbb4a7  HotLoopTransmitter-1.1.0.library

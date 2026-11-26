@@ -68,7 +68,7 @@ this library version keeps the same fields and bytes.
 
 ## Files
 
-Download both files and `SHA256SUMS` from https://hotloop.io/hotloop-transmitter/1.0.0/, then install `HotLoopTransmitter-1.0.0.library` through Tools, Library Repository, Install in CODESYS 3.5 SP22 or later.
+Download both files and `SHA256SUMS` from https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library, then install `HotLoopTransmitter-1.0.0.library` through Tools, Library Repository, Install in CODESYS 3.5 SP22 or later.
 The `.compiled-library` is the same library without its source.
 
 ```

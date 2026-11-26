@@ -45,7 +45,7 @@ Một dự án PLC ghim vào 1.0.0 vẫn chạy và vẫn gửi các byte của 
 
 ## Tệp
 
-Tải về từ https://hotloop.io/hotloop-transmitter/1.1.0/ và đối chiếu với `SHA256SUMS` trong cùng thư mục.
+Tải về từ https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library và đối chiếu với `SHA256SUMS` trong cùng thư mục.
 
 ```
 5ec021b23f5d57460016834a03b2b196d6dbc83aeb5d0ad60ace8d7b4fbbb4a7  HotLoopTransmitter-1.1.0.library

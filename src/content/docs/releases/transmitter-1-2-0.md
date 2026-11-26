@@ -43,7 +43,7 @@ A PLC project pinned to 1.1.0 keeps working and sends the same bytes. HotLoop Al
 
 ## Files
 
-Download from https://hotloop.io/hotloop-transmitter/1.2.0/, and check them against `SHA256SUMS` in the same folder.
+Download from https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library, and check them against `SHA256SUMS` in the same folder.
 
 ```
 e68cfc88e599ddcf278eb208ff500f4f78d3faf74edf12e38f308a009f478594  HotLoopAlarms-1.0.0.0.compiled-library

@@ -45,7 +45,7 @@ KeepAlive और Delta Frames, प्रति NetworkMessage एक से ज�
 
 ## फ़ाइलें
 
-इन्हें https://hotloop.io/hotloop-transmitter/1.1.0/ से डाउनलोड करें और उसी फ़ोल्डर के `SHA256SUMS` से मिलाएँ।
+इन्हें https://hotloop.io/hotloop-transmitter/1.1.0/HotLoopTransmitter-1.1.0.library से डाउनलोड करें और उसी फ़ोल्डर के `SHA256SUMS` से मिलाएँ।
 
 ```
 5ec021b23f5d57460016834a03b2b196d6dbc83aeb5d0ad60ace8d7b4fbbb4a7  HotLoopTransmitter-1.1.0.library

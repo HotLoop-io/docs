@@ -42,7 +42,7 @@ Un projet d'automate figé sur 1.1.0 continue de fonctionner et envoie les même
 
 ## Fichiers
 
-Téléchargez-les depuis https://hotloop.io/hotloop-transmitter/1.2.0/ et vérifiez-les avec `SHA256SUMS` dans le même dossier.
+Téléchargez-les depuis https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library et vérifiez-les avec `SHA256SUMS` dans le même dossier.
 
 ```
 e68cfc88e599ddcf278eb208ff500f4f78d3faf74edf12e38f308a009f478594  HotLoopAlarms-1.0.0.0.compiled-library

@@ -47,7 +47,7 @@ Non esiste una versione precedente. Il formato sul cavo cambia solo quando cambi
 
 ## File
 
-Scarica entrambi i file e `SHA256SUMS` da https://hotloop.io/hotloop-transmitter/1.0.0/, poi installa `HotLoopTransmitter-1.0.0.library` da Strumenti, Repository librerie, Installa in CODESYS 3.5 SP22 o successivo. Il `.compiled-library` è la stessa libreria senza il suo sorgente.
+Scarica entrambi i file e `SHA256SUMS` da https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library, poi installa `HotLoopTransmitter-1.0.0.library` da Strumenti, Repository librerie, Installa in CODESYS 3.5 SP22 o successivo. Il `.compiled-library` è la stessa libreria senza il suo sorgente.
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

@@ -47,7 +47,7 @@ Không có phiên bản trước. Định dạng trên đường truyền chỉ 
 
 ## Tệp
 
-Tải cả hai tệp và `SHA256SUMS` từ https://hotloop.io/hotloop-transmitter/1.0.0/, rồi cài `HotLoopTransmitter-1.0.0.library` qua Tools, Library Repository, Install trong CODESYS 3.5 SP22 trở lên. `.compiled-library` là cùng thư viện đó nhưng không kèm mã nguồn.
+Tải cả hai tệp và `SHA256SUMS` từ https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library, rồi cài `HotLoopTransmitter-1.0.0.library` qua Tools, Library Repository, Install trong CODESYS 3.5 SP22 trở lên. `.compiled-library` là cùng thư viện đó nhưng không kèm mã nguồn.
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library

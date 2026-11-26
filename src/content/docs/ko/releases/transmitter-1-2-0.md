@@ -42,7 +42,7 @@ KeepAlive와 Delta Frame, NetworkMessage당 둘 이상의 DataSetMessage, WSTRIN
 
 ## 파일
 
-https://hotloop.io/hotloop-transmitter/1.2.0/ 에서 내려받아 같은 폴더의 `SHA256SUMS`와 대조하십시오.
+https://hotloop.io/hotloop-transmitter/1.2.0/HotLoopTransmitter-1.2.0.library 에서 내려받아 같은 폴더의 `SHA256SUMS`와 대조하십시오.
 
 ```
 e68cfc88e599ddcf278eb208ff500f4f78d3faf74edf12e38f308a009f478594  HotLoopAlarms-1.0.0.0.compiled-library
