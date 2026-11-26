@@ -190,6 +190,12 @@ export default defineConfig({
         './src/styles/theme.css',
       ],
       head: [
+        // Microsoft Clarity, HotLoop project. Starlight puts this in every page head,
+        // in every language.
+        {
+          tag: 'script',
+          content: "(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,'clarity','script','zjwibbr2ia');",
+        },
         { tag: 'script', content: DETECT },
         // Structured data. It says what this site is and who publishes it, and
         // nothing else. It ties the docs to the same organization as hotloop.io.
