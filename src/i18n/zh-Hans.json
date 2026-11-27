@@ -70,5 +70,12 @@
   "s.license": "许可证",
   "s.terms": "条款",
   "s.lineup": "产品阵容",
-  "f.community": "社区"
+  "f.community": "社区",
+  "ck.text": "我们想使用 Microsoft Clarity 来了解大家如何使用本网站，以便修复有问题的地方。只有在你点击“接受”后才会加载。没有广告，也不出售任何东西。",
+  "ck.decline": "拒绝",
+  "ck.accept": "接受",
+  "ck.policy": "隐私政策",
+  "ck.settings": "Cookie 设置",
+  "ck.stateYes": "你当前的选择：已接受。",
+  "ck.stateNo": "你当前的选择：已拒绝。"
 }

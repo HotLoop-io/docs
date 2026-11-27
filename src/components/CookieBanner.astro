@@ -1,0 +1,77 @@
+---
+// Shown once, until the visitor picks, and again whenever they open Cookie settings from the footer. The
+// choice is stored where Analytics.astro reads it, and Analytics.astro is what acts on it. Every string comes
+// from the language catalogs, so the banner reads in the visitor's language.
+import { forPage } from '../i18n/page';
+const { t } = forPage(Astro.url.pathname);
+---
+
+<div class="cookie" data-cookie hidden role="region" aria-label={t('ck.settings')}
+     data-yes={t('ck.stateYes')} data-no={t('ck.stateNo')}>
+  <p>
+    {t('ck.text')} <span data-cookie-state></span>
+    <a href="https://hotloop.io/privacy/">{t('ck.policy')}</a>
+  </p>
+  <div class="actions">
+    <button type="button" class="btn" data-cookie-decline>{t('ck.decline')}</button>
+    <button type="button" class="btn primary" data-cookie-accept>{t('ck.accept')}</button>
+  </div>
+</div>
+
+<style>
+  .cookie {
+    position: fixed; left: 50%; bottom: var(--hl-s4); transform: translateX(-50%); z-index: 60;
+    width: min(100% - 2 * var(--hl-s4), 720px);
+    display: grid; grid-template-columns: 1fr auto; gap: var(--hl-s4); align-items: center;
+    padding: var(--hl-s4) var(--hl-s5); border-radius: var(--hl-r-card);
+    background: var(--hl-card); border: 1px solid var(--hl-border); border-top: 4px solid var(--hl-orange); box-shadow: var(--hl-sh-2);
+  }
+  .cookie[hidden] { display: none; }
+  .cookie p { font-size: var(--hl-fs-xs); color: var(--hl-ink-soft); margin: 0; }
+  .cookie [data-cookie-state] { color: var(--hl-ink); font-weight: 600; }
+  .cookie a { color: var(--hl-link); }
+  .actions { display: flex; gap: var(--hl-s2); }
+  .cookie .btn {
+    display: inline-flex; align-items: center; padding: 0.55em 1.2em; font-size: var(--hl-fs-xs); font-weight: 700; cursor: pointer;
+    border-radius: var(--hl-r-pill); border: 1px solid var(--hl-border); background: var(--hl-card); color: var(--hl-ink);
+  }
+  .cookie .btn:hover { border-color: var(--hl-orange); }
+  .cookie .btn.primary { background: var(--hl-gradient); color: var(--hl-on-accent); border-color: transparent; }
+  @media (max-width: 640px) { .cookie { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const KEY = 'hl-cookie-consent';
+  const read = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
+
+  function show(el: HTMLElement) {
+    const seen = read();
+    const state = el.querySelector<HTMLElement>('[data-cookie-state]');
+    if (state) state.textContent = seen ? (seen === 'accepted' ? el.dataset.yes : el.dataset.no) ?? '' : '';
+    el.hidden = false;
+    el.querySelector<HTMLButtonElement>(seen === 'accepted' ? '[data-cookie-decline]' : '[data-cookie-accept]')?.focus();
+  }
+
+  function init() {
+    const el = document.querySelector<HTMLElement>('[data-cookie]');
+    if (!el) return;
+    if (!el.dataset.bound) {
+      el.dataset.bound = '1';
+      if (!read()) show(el);
+      const pick = (v: string) => {
+        try { localStorage.setItem(KEY, v); } catch { /* nothing to persist to */ }
+        el.hidden = true;
+        (window as unknown as { __hlConsent?: (v: string) => void }).__hlConsent?.(v);
+      };
+      el.querySelector('[data-cookie-accept]')?.addEventListener('click', () => pick('accepted'));
+      el.querySelector('[data-cookie-decline]')?.addEventListener('click', () => pick('declined'));
+    }
+    document.querySelectorAll<HTMLButtonElement>('[data-cookie-settings]').forEach((b) => {
+      if (b.dataset.bound) return;
+      b.dataset.bound = '1';
+      b.addEventListener('click', () => show(el));
+    });
+  }
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

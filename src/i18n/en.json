@@ -70,5 +70,12 @@
   "s.license": "License",
   "s.terms": "Terms",
   "s.lineup": "The lineup",
-  "f.community": "Community"
+  "f.community": "Community",
+  "ck.text": "We'd like to use Microsoft Clarity to watch how people use this site, so we can fix what's broken. It loads only if you hit Accept. No ads, nothing sold.",
+  "ck.decline": "Decline",
+  "ck.accept": "Accept",
+  "ck.policy": "Privacy policy",
+  "ck.settings": "Cookie settings",
+  "ck.stateYes": "Your current choice: accepted.",
+  "ck.stateNo": "Your current choice: declined."
 }
