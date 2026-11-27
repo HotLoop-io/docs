@@ -53,7 +53,10 @@ const hasOwnPage = (folder, rest) => {
   return ['.md', '.mdx', '/index.md', '/index.mdx'].some((e) => existsSync(new URL(base + e, import.meta.url)));
 };
 const FOLDERS = Object.keys(LOCALES).filter((k) => k !== 'root');
+// Legal boilerplate answers 200 but is not a page we want found, so it stays out of the sitemap too.
+const NOT_IN_SITEMAP = /^https:\/\/[^/]+\/(?:[a-z-]+\/)?(?:license|terms)\/?$/;
 const sitemapFilter = (page) => {
+  if (NOT_IN_SITEMAP.test(page)) return false;
   const m = /^https:\/\/[^/]+\/([^/]+)\/(.*?)\/?$/.exec(page);
   if (!m || !FOLDERS.includes(m[1])) return true;
   return hasOwnPage(m[1], m[2]);
