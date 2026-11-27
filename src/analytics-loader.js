@@ -61,6 +61,17 @@
       if (v === 'declined' && window.__hlGa) window.gtag('consent', 'update', { analytics_storage: 'denied' });
   };
   window.__hlClarityNow = load;
+  // docs.hotloop.io has no form; its contact path is the footer mail link. A click on any mailto link is told to
+  // Google Analytics and Clarity as contact_click. Both exist only after Accept, so a visitor who declined sends nothing.
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="mailto:"]') : null;
+    if (!a) return;
+    try {
+      if (typeof window.gtag !== 'function') load();
+      if (typeof window.gtag === 'function') window.gtag('event', 'contact_click', { link_url: a.getAttribute('href') });
+      if (typeof window.clarity === 'function') window.clarity('event', 'contact_click');
+    } catch (err) { /* analytics must never break the page */ }
+  });
   // A returning visitor who accepted gets Clarity at idle; everyone else gets nothing.
   if (choice() !== 'accepted') return;
   var start = function () { ('requestIdleCallback' in window) ? requestIdleCallback(load, { timeout: 4000 }) : setTimeout(load, 2500); };
