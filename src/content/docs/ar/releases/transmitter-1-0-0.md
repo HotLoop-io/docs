@@ -47,7 +47,7 @@ description: "أول إصدار من HotLoop Transmitter: مكتبة CODESYS ت�
 
 ## الملفات
 
-نزّل الملفين و`SHA256SUMS` من https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library، ثم ثبّت `HotLoopTransmitter-1.0.0.library` من Tools وLibrary Repository وInstall في CODESYS 3.5 SP22 أو أحدث. الملف `.compiled-library` هو المكتبة نفسها بدون شفرتها المصدرية.
+نزّل الملفين و`SHA256SUMS` من <https://hotloop.io/hotloop-transmitter/1.0.0/HotLoopTransmitter-1.0.0.library>، ثم ثبّت `HotLoopTransmitter-1.0.0.library` من Tools وLibrary Repository وInstall في CODESYS 3.5 SP22 أو أحدث. الملف `.compiled-library` هو المكتبة نفسها بدون شفرتها المصدرية.
 
 ```
 91b8023a73870925082c170588feb43d363e6d07ce008e1471fa8f5ff8db2c0d  HotLoopTransmitter-1.0.0.library
