@@ -199,7 +199,7 @@ Chartens navn er bakt inn i selektorene til Deployment og StatefulSet, og Kubern
 
 Navnene, databasepassordet i Secret-en og volume claim gjengis identisk med 4.3.1, så den nye database-poden monterer de gamle dataene. Gateway migrerer skjemaet fremover ved oppstart, og oppdaterer TimescaleDB fra 2.29.1 til 2.30.1 på samme tid.
 
-Vi sjekket det ved å gjengi begge chartene side om side. Steg 1 er veien din tilbake: hvis oppgraderingen overrasker deg, har du en dump fra fem minutter siden, og vi vil høre om det på [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai).
+Vi sjekket det ved å gjengi begge chartene side om side. Steg 1 er veien din tilbake: hvis oppgraderingen overrasker deg, har du en dump fra fem minutter siden, og vi vil høre om det på [info@hotloop.ai](mailto:info@hotloop.ai).
 
 ### Hva som oppfører seg annerledes
 

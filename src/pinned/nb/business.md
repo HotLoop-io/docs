@@ -15,7 +15,7 @@ Mer enn folk venter, og det er med vilje. Hvis en bedrift eller en annen virksom
 
 ## Komme i gang
 
-Support og lisensiering håndteres av EmberNet, HotLoops Gold Licensee. Send e-post til [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). Fortell oss hva du vil kjøre, på hvor mange maskiner og hvor, så setter vi deg opp med riktig lisens.
+Support og lisensiering håndteres av EmberNet, HotLoops Gold Licensee. Send e-post til [info@hotloop.ai](mailto:info@hotloop.ai). Fortell oss hva du vil kjøre, på hvor mange maskiner og hvor, så setter vi deg opp med riktig lisens.
 
 ## Partnerplattformer
 
@@ -27,4 +27,4 @@ Programvaren leveres som den er, uten garanti. Hjelp fra fellesskapet finner du 
 
 ## Fortsatt usikker?
 
-Spør først. Det er mye billigere enn å finne det ut etter at alt er bygget på en feil antakelse. Send e-post til [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai), så sier vi hvilken side av streken du står på.
+Spør først. Det er mye billigere enn å finne det ut etter at alt er bygget på en feil antakelse. Send e-post til [info@hotloop.ai](mailto:info@hotloop.ai), så sier vi hvilken side av streken du står på.

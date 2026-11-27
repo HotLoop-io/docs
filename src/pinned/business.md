@@ -15,7 +15,7 @@ More than people expect, and that's on purpose. If a business or any other for-p
 
 ## Getting set up
 
-Support and licensing are handled by EmberNet, HotLoop's Gold Licensee. Email [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). Tell us what you want to run, on how many machines, and where, and we'll set you up with the right license for it.
+Support and licensing are handled by EmberNet, HotLoop's Gold Licensee. Email [info@hotloop.ai](mailto:info@hotloop.ai). Tell us what you want to run, on how many machines, and where, and we'll set you up with the right license for it.
 
 ## Partner platforms
 
@@ -27,4 +27,4 @@ The software comes as is, with no warranty. Community help is on [GitHub Discuss
 
 ## Still not sure?
 
-Ask first. It's a lot cheaper than finding out after a whole setup is built on a wrong guess. Email [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) and we'll tell you which side of the line you're on.
+Ask first. It's a lot cheaper than finding out after a whole setup is built on a wrong guess. Email [info@hotloop.ai](mailto:info@hotloop.ai) and we'll tell you which side of the line you're on.

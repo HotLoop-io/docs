@@ -17,7 +17,7 @@ Nhiều hơn người ta nghĩ, và đó là cố ý. Nếu một doanh nghiệp
 
 ## Chuẩn bị
 
-Hỗ trợ và giấy phép do EmberNet, Gold Licensee của HotLoop, đảm nhiệm. Hãy gửi email tới [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). Cho chúng tôi biết bạn muốn chạy gì, trên bao nhiêu máy và ở đâu, chúng tôi sẽ chuẩn bị giấy phép phù hợp.
+Hỗ trợ và giấy phép do EmberNet, Gold Licensee của HotLoop, đảm nhiệm. Hãy gửi email tới [info@hotloop.ai](mailto:info@hotloop.ai). Cho chúng tôi biết bạn muốn chạy gì, trên bao nhiêu máy và ở đâu, chúng tôi sẽ chuẩn bị giấy phép phù hợp.
 
 ## Nền tảng đối tác
 
@@ -29,4 +29,4 @@ Phần mềm được cung cấp nguyên trạng, không bảo hành. Cộng đ�
 
 ## Vẫn chưa chắc?
 
-Hãy hỏi trước. Rẻ hơn nhiều so với việc biết sau khi đã xây mọi thứ trên một giả định sai. Gửi email tới [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) và chúng tôi sẽ cho bạn biết bạn đứng ở phía nào của ranh giới.
+Hãy hỏi trước. Rẻ hơn nhiều so với việc biết sau khi đã xây mọi thứ trên một giả định sai. Gửi email tới [info@hotloop.ai](mailto:info@hotloop.ai) và chúng tôi sẽ cho bạn biết bạn đứng ở phía nào của ranh giới.

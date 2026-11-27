@@ -199,7 +199,7 @@ helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.17.0.tgz --reset-the
 
 名前、Secret のデータベースパスワード、ボリューム要求は 4.3.1 と同一にレンダリングされるため、新しいデータベース Pod は古いデータをマウントします。Gateway は起動時にスキーマを先へ移行し、そのついでに TimescaleDB を 2.29.1 から 2.30.1 に更新します。
 
-これは両方のチャートを並べてレンダリングして確認しました。手順1が戻る道です。アップグレードで想定外のことが起きても、5分前のダンプがあります。その場合は [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) までお知らせください。
+これは両方のチャートを並べてレンダリングして確認しました。手順1が戻る道です。アップグレードで想定外のことが起きても、5分前のダンプがあります。その場合は [info@hotloop.ai](mailto:info@hotloop.ai) までお知らせください。
 
 ### 動作が変わる点
 

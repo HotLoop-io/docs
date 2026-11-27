@@ -197,7 +197,7 @@ Der Name des Charts steckt in den Selektoren des Deployments und des StatefulSet
 
 Die Namen, das Datenbankpasswort des Secrets und der Volume Claim rendern identisch zu 4.3.1, der neue Datenbank-Pod bindet also die alten Daten ein. Das Gateway migriert das Schema beim Start vorwärts und aktualisiert dabei TimescaleDB von 2.29.1 auf 2.30.1.
 
-Wir haben das geprüft, indem wir beide Charts nebeneinander gerendert haben. Schritt 1 ist Ihr Weg zurück: Wenn Sie die Aktualisierung überrascht, haben Sie einen Dump von vor fünf Minuten, und wir wollen es unter [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) hören.
+Wir haben das geprüft, indem wir beide Charts nebeneinander gerendert haben. Schritt 1 ist Ihr Weg zurück: Wenn Sie die Aktualisierung überrascht, haben Sie einen Dump von vor fünf Minuten, und wir wollen es unter [info@hotloop.ai](mailto:info@hotloop.ai) hören.
 
 ### Was sich anders verhält
 
