@@ -25,20 +25,21 @@
     grant();
     loadGa();
   }
-  // Google Analytics under Consent Mode. The default is denied for everything; Accept (the only way this runs)
-  // updates analytics storage to granted. We run no ads, so ad storage and the ad signals stay denied.
+  // Google Analytics under Consent Mode. This only runs after Accept, so the default already is the visitor's choice:
+    // analytics granted, ad storage and the ad signals denied, set before the config. A denied default with an update in the
+    // same tick sends the page_view as gcs=G100, which GA does not report (Google's consent guide: gtag commands are queued
+    // and may not be processed before the next event). A later Decline sends the update to denied.
   function loadGa() {
     if (!GA_ID || window.__hlGa) return;
     window.__hlGa = true;
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
-    window.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' });
+    window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     window.gtag('js', new Date());
     var g = document.createElement('script');
     g.async = true;
     g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
     document.head.appendChild(g);
-    window.gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     window.gtag('config', GA_ID, { anonymize_ip: true });
   }
   // Clarity's own first-party cookies, removed on Decline in case Clarity ran earlier on this browser.
