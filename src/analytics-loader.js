@@ -6,6 +6,10 @@
 // visitors in the EEA, the UK and Switzerland. We run no ads, so ad storage is always denied. The loader waits
 // for the page to be interactive so it never holds up the first paint.
 (function () {
+  // Google Analytics 4 measurement id. Put the G- id here and Google Analytics turns on: it loads after the same
+  // Accept as Clarity, under Consent Mode. Empty means the property does not exist yet and nothing from Google is
+  // requested.
+  var GA_ID = '';
   var CLARITY_ID = 'zjwibbr2ia';
   var KEY = 'hl-cookie-consent';
   function choice() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
@@ -19,10 +23,29 @@
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, 'clarity', 'script', CLARITY_ID);
     grant();
+    loadGa();
+  }
+  // Google Analytics under Consent Mode. The default is denied for everything; Accept (the only way this runs)
+  // updates analytics storage to granted. We run no ads, so ad storage and the ad signals stay denied.
+  function loadGa() {
+    if (!GA_ID || window.__hlGa) return;
+    window.__hlGa = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' });
+    window.gtag('js', new Date());
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(g);
+    window.gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+    window.gtag('config', GA_ID, { anonymize_ip: true });
   }
   // Clarity's own first-party cookies, removed on Decline in case Clarity ran earlier on this browser.
   function eraseCookies() {
-    ['_clck', '_clsk'].forEach(function (n) {
+    var names = ['_clck', '_clsk', '_ga', '_gid', '_gat'];
+      document.cookie.split(';').forEach(function (c) { var n = c.split('=')[0].trim(); if (/^_ga_/.test(n)) names.push(n); });
+      names.forEach(function (n) {
       document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
       document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=' + location.hostname;
       document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + location.hostname.replace(/^www\./, '');
@@ -35,6 +58,7 @@
     // Clarity's own erase: it deletes its cookies and stops tracking on this page. Nothing loads from the next
     // page on, because load() checks KEY.
     if (v === 'declined' && window.__hlAnalytics) window.clarity('consent', false);
+      if (v === 'declined' && window.__hlGa) window.gtag('consent', 'update', { analytics_storage: 'denied' });
   };
   window.__hlClarityNow = load;
   // A returning visitor who accepted gets Clarity at idle; everyone else gets nothing.
