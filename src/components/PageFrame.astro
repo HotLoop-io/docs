@@ -3,6 +3,7 @@
 // wide screen the footer starts where the content column does.
 import Default from '@astrojs/starlight/components/PageFrame.astro';
 import SiteFooter from './SiteFooter.astro';
+import CookieBanner from './CookieBanner.astro';
 ---
 
 <Default {...Astro.props}>
@@ -11,3 +12,4 @@ import SiteFooter from './SiteFooter.astro';
   <slot />
 </Default>
 <SiteFooter />
+<CookieBanner />

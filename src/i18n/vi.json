@@ -70,5 +70,12 @@
   "s.license": "Giấy phép",
   "s.terms": "Điều khoản",
   "s.lineup": "Toàn bộ dòng sản phẩm",
-  "f.community": "Cộng đồng"
+  "f.community": "Cộng đồng",
+  "ck.text": "Chúng tôi muốn dùng Microsoft Clarity để xem mọi người dùng trang này ra sao và sửa những gì chưa ổn. Nó chỉ tải khi bạn bấm Chấp nhận. Không quảng cáo, không bán gì.",
+  "ck.decline": "Từ chối",
+  "ck.accept": "Chấp nhận",
+  "ck.policy": "Chính sách quyền riêng tư",
+  "ck.settings": "Cài đặt cookie",
+  "ck.stateYes": "Lựa chọn hiện tại của bạn: đã chấp nhận.",
+  "ck.stateNo": "Lựa chọn hiện tại của bạn: đã từ chối."
 }

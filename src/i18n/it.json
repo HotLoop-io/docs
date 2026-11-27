@@ -70,5 +70,12 @@
   "s.license": "Licenza",
   "s.terms": "Condizioni",
   "s.lineup": "La gamma",
-  "f.community": "Community"
+  "f.community": "Community",
+  "ck.text": "Vorremmo usare Microsoft Clarity per capire come viene usato questo sito e sistemare ciò che non funziona. Si carica solo se premi Accetta. Niente pubblicità, niente dati venduti.",
+  "ck.decline": "Rifiuta",
+  "ck.accept": "Accetta",
+  "ck.policy": "Informativa sulla privacy",
+  "ck.settings": "Impostazioni dei cookie",
+  "ck.stateYes": "La tua scelta attuale: accettato.",
+  "ck.stateNo": "La tua scelta attuale: rifiutato."
 }

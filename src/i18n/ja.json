@@ -70,5 +70,12 @@
   "s.license": "ライセンス",
   "s.terms": "規約",
   "s.lineup": "製品ラインアップ",
-  "f.community": "コミュニティ"
+  "f.community": "コミュニティ",
+  "ck.text": "このサイトの使われ方を見て、うまく動かない部分を直すために、Microsoft Clarity を使いたいと考えています。同意を押したときだけ読み込まれます。広告はなく、何も販売しません。",
+  "ck.decline": "拒否",
+  "ck.accept": "同意",
+  "ck.policy": "プライバシーポリシー",
+  "ck.settings": "Cookie の設定",
+  "ck.stateYes": "現在の選択: 同意済み。",
+  "ck.stateNo": "現在の選択: 拒否済み。"
 }
