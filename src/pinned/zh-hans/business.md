@@ -15,7 +15,7 @@ sidebar:
 
 ## 做好准备
 
-支持和许可由 HotLoop 的 Gold Licensee EmberNet 负责。请发邮件到 [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai)。告诉我们您想运行什么、在多少台机器上、在哪里，我们会为您配好合适的许可证。
+支持和许可由 HotLoop 的 Gold Licensee EmberNet 负责。请发邮件到 [info@hotloop.ai](mailto:info@hotloop.ai)。告诉我们您想运行什么、在多少台机器上、在哪里，我们会为您配好合适的许可证。
 
 ## 合作伙伴平台
 
@@ -27,4 +27,4 @@ HotLoop 运行在合作伙伴平台上，EmberNet 就是其中之一。每款产
 
 ## 仍然不确定？
 
-先问。这比把一切建在错误假设上之后才发现要便宜得多。发邮件到 [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai)，我们会告诉您处于界线的哪一边。
+先问。这比把一切建在错误假设上之后才发现要便宜得多。发邮件到 [info@hotloop.ai](mailto:info@hotloop.ai)，我们会告诉您处于界线的哪一边。

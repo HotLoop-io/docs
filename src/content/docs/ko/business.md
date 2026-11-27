@@ -17,7 +17,7 @@ editUrl: false
 
 ## 준비하기
 
-지원과 라이선스는 HotLoop의 Gold Licensee인 EmberNet이 맡습니다. [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai)로 문의하세요. 무엇을, 몇 대의 장비에, 어디에서 운영하려는지 알려 주시면 알맞은 라이선스로 준비해 드립니다.
+지원과 라이선스는 HotLoop의 Gold Licensee인 EmberNet이 맡습니다. [info@hotloop.ai](mailto:info@hotloop.ai)로 문의하세요. 무엇을, 몇 대의 장비에, 어디에서 운영하려는지 알려 주시면 알맞은 라이선스로 준비해 드립니다.
 
 ## 파트너 플랫폼
 
@@ -29,4 +29,4 @@ HotLoop은 파트너 플랫폼에서 동작하며 EmberNet이 그중 하나입�
 
 ## 아직 확실하지 않나요?
 
-먼저 물어보세요. 잘못된 가정 위에 모든 것을 구축한 뒤에 알게 되는 것보다 훨씬 저렴합니다. [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai)로 문의하시면 어느 쪽에 해당하는지 알려 드립니다.
+먼저 물어보세요. 잘못된 가정 위에 모든 것을 구축한 뒤에 알게 되는 것보다 훨씬 저렴합니다. [info@hotloop.ai](mailto:info@hotloop.ai)로 문의하시면 어느 쪽에 해당하는지 알려 드립니다.

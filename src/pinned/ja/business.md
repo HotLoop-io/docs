@@ -15,7 +15,7 @@ sidebar:
 
 ## 準備の進め方
 
-サポートとライセンスは、HotLoop の Gold Licensee である EmberNet が担当します。[helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) までご連絡ください。何を、何台で、どこで動かしたいかを伝えていただければ、適切なライセンスをご用意します。
+サポートとライセンスは、HotLoop の Gold Licensee である EmberNet が担当します。[info@hotloop.ai](mailto:info@hotloop.ai) までご連絡ください。何を、何台で、どこで動かしたいかを伝えていただければ、適切なライセンスをご用意します。
 
 ## パートナープラットフォーム
 
@@ -27,4 +27,4 @@ HotLoop はパートナープラットフォーム上で動き、EmberNet はそ
 
 ## まだ迷っていますか?
 
-先に聞いてください。間違った前提で全部を作ってから気づくより、はるかに安く済みます。[helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) までご連絡いただければ、どちら側にあたるかお答えします。
+先に聞いてください。間違った前提で全部を作ってから気づくより、はるかに安く済みます。[info@hotloop.ai](mailto:info@hotloop.ai) までご連絡いただければ、どちら側にあたるかお答えします。

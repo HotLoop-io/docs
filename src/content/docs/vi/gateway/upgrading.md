@@ -199,7 +199,7 @@ Tên chart được ghi cứng trong selector của Deployment và StatefulSet, 
 
 Tên, mật khẩu cơ sở dữ liệu trong Secret và volume claim được render giống hệt của 4.3.1, nên pod cơ sở dữ liệu mới gắn dữ liệu cũ. Gateway migrate lược đồ lên khi khởi động, và nâng TimescaleDB từ 2.29.1 lên 2.30.1 luôn thể.
 
-Chúng tôi đã kiểm tra điều đó bằng cách render hai chart cạnh nhau. Bước 1 là đường quay lại của bạn: nếu việc nâng cấp làm bạn bất ngờ, bạn có một bản dump từ năm phút trước, và chúng tôi muốn nghe về điều đó tại [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai).
+Chúng tôi đã kiểm tra điều đó bằng cách render hai chart cạnh nhau. Bước 1 là đường quay lại của bạn: nếu việc nâng cấp làm bạn bất ngờ, bạn có một bản dump từ năm phút trước, và chúng tôi muốn nghe về điều đó tại [info@hotloop.ai](mailto:info@hotloop.ai).
 
 ### Điều gì hoạt động khác đi
 

@@ -15,7 +15,7 @@ Plus que ce que l'on croit, et c'est voulu. Si une entreprise ou toute autre str
 
 ## Se mettre en place
 
-Le support et les licences sont gérés par EmberNet, Gold Licensee de HotLoop. Écrivez à [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). Dites-nous ce que vous voulez exécuter, sur combien de machines et où, et nous vous mettrons en règle avec la licence qui convient.
+Le support et les licences sont gérés par EmberNet, Gold Licensee de HotLoop. Écrivez à [info@hotloop.ai](mailto:info@hotloop.ai). Dites-nous ce que vous voulez exécuter, sur combien de machines et où, et nous vous mettrons en règle avec la licence qui convient.
 
 ## Plateformes partenaires
 
@@ -27,4 +27,4 @@ Le logiciel est fourni tel quel, sans garantie. L'aide de la communauté se trou
 
 ## Un doute ?
 
-Demandez d'abord. C'est bien moins cher que de le découvrir après avoir tout bâti sur une mauvaise hypothèse. Écrivez à [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) et nous vous dirons de quel côté de la ligne vous êtes.
+Demandez d'abord. C'est bien moins cher que de le découvrir après avoir tout bâti sur une mauvaise hypothèse. Écrivez à [info@hotloop.ai](mailto:info@hotloop.ai) et nous vous dirons de quel côté de la ligne vous êtes.

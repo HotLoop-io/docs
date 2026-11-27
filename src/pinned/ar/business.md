@@ -15,7 +15,7 @@ sidebar:
 
 ## الاستعداد
 
-يتولى EmberNet، الـ Gold Licensee لدى HotLoop، الدعم والترخيص. راسل [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai). أخبرنا بما تريد تشغيله وعلى كم جهاز وأين، وسنجهّزك بالترخيص المناسب.
+يتولى EmberNet، الـ Gold Licensee لدى HotLoop، الدعم والترخيص. راسل [info@hotloop.ai](mailto:info@hotloop.ai). أخبرنا بما تريد تشغيله وعلى كم جهاز وأين، وسنجهّزك بالترخيص المناسب.
 
 ## منصات الشركاء
 
@@ -27,4 +27,4 @@ sidebar:
 
 ## ما زلت غير متأكد؟
 
-اسأل أولًا. هذا أرخص بكثير من اكتشاف الأمر بعد بناء كل شيء على افتراض خاطئ. راسل [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) وسنخبرك في أي جانب من الخط أنت.
+اسأل أولًا. هذا أرخص بكثير من اكتشاف الأمر بعد بناء كل شيء على افتراض خاطئ. راسل [info@hotloop.ai](mailto:info@hotloop.ai) وسنخبرك في أي جانب من الخط أنت.

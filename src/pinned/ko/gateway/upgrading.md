@@ -197,7 +197,7 @@ helm upgrade <release> https://hotloop.io/hotloop/hotloop-4.17.0.tgz --reset-the
 
 이름, Secret의 데이터베이스 비밀번호, 볼륨 클레임은 4.3.1과 동일하게 렌더링되므로 새 데이터베이스 파드가 이전 데이터를 마운트합니다. Gateway는 시작할 때 스키마를 앞으로 마이그레이션하며, 그 김에 TimescaleDB를 2.29.1에서 2.30.1로 올립니다.
 
-두 차트를 나란히 렌더링하여 확인했습니다. 1단계가 되돌아가는 길입니다. 업그레이드가 예상 밖이면 5분 전의 덤프가 있는 것이며, 그 일은 [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai)로 알려 주십시오.
+두 차트를 나란히 렌더링하여 확인했습니다. 1단계가 되돌아가는 길입니다. 업그레이드가 예상 밖이면 5분 전의 덤프가 있는 것이며, 그 일은 [info@hotloop.ai](mailto:info@hotloop.ai)로 알려 주십시오.
 
 ### 동작이 달라지는 것
 

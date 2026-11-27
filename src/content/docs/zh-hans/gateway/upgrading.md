@@ -199,7 +199,7 @@ chart 的名称写死在 Deployment 和 StatefulSet 的选择器里，而 Kubern
 
 名称、Secret 中的数据库密码和卷声明的渲染结果与 4.3.1 完全一致，所以新的数据库 Pod 会挂载旧数据。Gateway 在启动时向前迁移数据库结构，并顺便把 TimescaleDB 从 2.29.1 更新到 2.30.1。
 
-我们是通过把两个 chart 并排渲染来验证的。第 1 步就是您的退路：如果升级出了意外，您手里有五分钟前的导出，我们也希望您通过 [helpdesk@fireballz.ai](mailto:helpdesk@fireballz.ai) 告诉我们。
+我们是通过把两个 chart 并排渲染来验证的。第 1 步就是您的退路：如果升级出了意外，您手里有五分钟前的导出，我们也希望您通过 [info@hotloop.ai](mailto:info@hotloop.ai) 告诉我们。
 
 ### 有哪些行为不同
 
