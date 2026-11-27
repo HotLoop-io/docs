@@ -71,7 +71,7 @@
   "s.terms": "약관",
   "s.lineup": "제품 라인업",
   "f.community": "커뮤니티",
-  "ck.text": "이 사이트가 어떻게 쓰이는지 보고 잘 안 되는 부분을 고치기 위해 Microsoft Clarity를 사용하려 합니다. 수락을 누를 때만 로드됩니다. 광고도 없고 판매하는 것도 없습니다.",
+  "ck.text": "이 사이트가 어떻게 쓰이는지 보고 잘 안 되는 부분을 고치기 위해 Microsoft Clarity와 Google Analytics를 사용하려 합니다. 수락을 누를 때만 로드됩니다. 광고도 없고 판매하는 것도 없습니다.",
   "ck.decline": "거부",
   "ck.accept": "수락",
   "ck.policy": "개인정보 처리방침",
