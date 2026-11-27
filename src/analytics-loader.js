@@ -9,7 +9,7 @@
   // Google Analytics 4 measurement id. Put the G- id here and Google Analytics turns on: it loads after the same
   // Accept as Clarity, under Consent Mode. Empty means the property does not exist yet and nothing from Google is
   // requested.
-  var GA_ID = '';
+  var GA_ID = 'G-SSMX2FKNJE';
   var CLARITY_ID = 'zjwibbr2ia';
   var KEY = 'hl-cookie-consent';
   function choice() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
