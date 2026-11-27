@@ -230,6 +230,14 @@ export default defineConfig({
           { slug: 'install', label: 'Install HotLoop' },
           ...pages('shared').filter((p) => p.slug.startsWith('install/')).map(page),
         ] },
+        { label: 'How-to guides', collapsed: true, items: [
+          { slug: 'guides/modbus-to-mqtt', label: 'Modbus to MQTT' },
+          { slug: 'guides/opc-ua-to-mqtt', label: 'OPC UA to MQTT' },
+          { slug: 'guides/unified-namespace', label: 'Unified namespace' },
+          { slug: 'guides/labview-vi-import', label: 'LabVIEW VI import' },
+          { slug: 'guides/node-red-to-flow', label: 'Node-RED to Flow' },
+          { slug: 'guides/webvisu-to-hotloop', label: 'WebVisu to HotLoop' },
+        ] },
         {
           label: 'HotLoop IoT',
           collapsed: true,
