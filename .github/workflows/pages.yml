@@ -29,12 +29,25 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      # The sitemap dates come from git history, so the checkout is whole, not depth 1 (scripts/sitemap-lastmod.mjs).
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: npm
+
+      # IndexNow (https://www.indexnow.org/documentation): save the sitemap that is live now, so the ping after the deploy
+      # can name exactly the pages that are new or changed.
+      - name: Save the live sitemap
+        if: github.event_name != 'pull_request'
+        env:
+          HOST: docs.hotloop.io
+          KEY: 8aaa323e345bd01f44e6aed315a3cd04
+          ENTRY: sitemap-index.xml
+        run: scripts/indexnow.sh snapshot
 
       - run: npm ci
 
@@ -67,6 +80,17 @@ jobs:
         with:
           path: dist
 
+      - name: Keep the sitemaps for the IndexNow ping
+        if: github.event_name != 'pull_request'
+        run: mkdir -p indexnow/after && cp dist/sitemap-*.xml indexnow/after/
+
+      - name: Hand the sitemaps to the ping job
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow
+          path: indexnow
+
   deploy:
     name: Deploy
     needs: build
@@ -78,3 +102,22 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # IndexNow: only after the deploy job has put the new site live, never at build time. The script waits until the live
+  # site serves the key file and the sitemap just built, then submits the pages that are new or changed.
+  indexnow:
+    name: Ping IndexNow
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v4
+        with:
+          name: indexnow
+          path: indexnow
+      - name: Ping
+        env:
+          HOST: docs.hotloop.io
+          KEY: 8aaa323e345bd01f44e6aed315a3cd04
+          ENTRY: sitemap-index.xml
+        run: scripts/indexnow.sh ping indexnow/after
