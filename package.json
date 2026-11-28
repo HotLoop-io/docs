@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "sync": "node scripts/sync-docs.mjs",
-    "build": "node scripts/i18n-check.mjs && node scripts/i18n-source.mjs && node scripts/og.mjs && astro build && node scripts/seo-audit.mjs dist",
+    "build": "node scripts/i18n-check.mjs && node scripts/i18n-source.mjs && node scripts/og.mjs && astro build && node scripts/sitemap-lastmod.mjs dist && node scripts/seo-audit.mjs dist",
     "preview": "astro preview",
     "audit": "node scripts/seo-audit.mjs dist",
     "i18n": "node scripts/i18n-check.mjs && node scripts/i18n-source.mjs"
